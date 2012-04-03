@@ -1,0 +1,155 @@
+#!/usr/bin/perl
+#
+#
+#  - Check for /dev/actisense*
+#  - While /dev/actisense* exists, keep n2kd running. If it quits, restart it.
+#  - Stop n2kd if /dev/actisense disappears.
+#
+
+use ConfigReader::Simple;
+
+my $configFile = '/etc/default/n2kd';
+my $config = ConfigReader::Simple->new($configFile);
+
+die "Could not read config! $ConfigReader::Simple::ERROR\n" unless ref $config;
+
+my $ACTISENSE_PRIMARY = $config->get('ACTISENSE_PRIMARY');
+my $ACTISENSE_SECONDARY = $config->get('ACTISENSE_SECONDARY');
+die "Configuration file $configFile incomplete: No ACTISENSE_PRIMARY" unless $ACTISENSE_PRIMARY;
+
+my $LOGFILE = '/var/log/n2kd_monitor.log';
+my $N2KD_LOGFILE = '/var/log/n2kd.log';
+my $MONITOR_LOGFILE = '/var/log/n2k-status.log';
+
+my $stat;
+my $n2kd;
+my $monitor;
+my $child;
+my $stop = 0;
+my $last_monitor = 0;
+
+use POSIX();
+
+sub logText($)
+{
+  my ($t) = @_;
+
+  print POSIX::strftime('%Y-%m-%d %T: ', localtime) . $t . "\n";
+}
+
+sub daemonize()
+{
+  chdir '/';
+  open STDIN, '/dev/null' or die "Can't read /dev/null: $!";
+  open STDOUT, '>>', $LOGFILE or die "Can't write $LOGFILE: $!";
+  defined(my $pid = fork) or die "Can't fork: $!";
+  exit if $pid;
+  die "Can't start a new session: $!" if setsid == -1;
+  open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
+}
+
+sub sigHandler()
+{
+  logText("Got signal to quit.\n");
+  $stop = 1;
+}
+
+$SIG{'INT'} = 'sigHandler';
+$SIG{'HUP'} = 'sigHandler';
+
+daemonize();
+
+logText("Delayed start of N2KD monitor.");
+sleep 10;
+logText("Starting N2KD monitor.");
+
+if (!stat($ACTISENSE_PRIMARY))
+{
+  logText("Waiting for $ACTISENSE_PRIMARY to appear.");
+}
+
+for (;;)
+{
+  while (($child = POSIX::waitpid(-1, POSIX::WNOHANG)) > 0)
+  {
+    if ($child == $n2kd)
+    {
+      logText "N2KD monitor port daemon $child finished.";
+      $n2kd = undef;
+    }
+    elsif ($child == $monitor)
+    {
+      $monitor = undef;
+    }
+  }
+
+  if ($stop == 0 and stat($ACTISENSE_PRIMARY))
+  {
+    if (!$stat)
+    {
+      logText("Hardware device $ACTISENSE_PRIMARY found.");
+      $stat = 1;
+    }
+    if (!$n2kd)
+    {
+      if (($n2kd = fork()) == 0)
+      {
+        open STDIN, '/dev/null' or die "Can't read /dev/null: $!";
+        open STDOUT, '>>', $N2KD_LOGFILE or die "Can't write to $N2KD_LOGFILE $!";
+        open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
+        $ENV{'PATH'} = '/usr/local/bin:/bin:/usr/bin';
+        if ($ACTISENSE_SECONDARY)
+        {
+          exec '/bin/bash', '-c', "actisense-serial -r $ACTISENSE_PRIMARY | actisense-serial $ACTISENSE_SECONDARY | analyzer -clocksrc 35 -json | n2kd";
+        }
+        else
+        {
+          exec '/bin/bash', '-c', "actisense-serial -r $ACTISENSE_PRIMARY | analyzer -clocksrc 35 -json | n2kd";
+        }
+      }
+      elsif ($n2kd)
+      {
+        logText("Starting N2K daemon $n2kd.");
+      }
+      else
+      {
+        logText("Fork failed.");
+      }
+      sleep(15);
+    }
+    if (!$monitor && (time > $last_monitor + 30))
+    {
+      $last_monitor = time;
+      if (($monitor = fork()) == 0)
+      {
+        open STDIN, '/dev/null' or die "Can't read /dev/null: $!";
+        open STDOUT, '>>', $MONITOR_LOGFILE or die "Can't write to $MONITOR_LOGFILE $!";
+        open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
+        exec 'php5', '/usr/local/bin/n2k.php', '-monitor';
+      }
+      if (!$monitor)
+      {
+        logText("Fork monitor failed.");
+      }
+    }
+  }
+  else
+  {
+    if ($stop == 0 and $stat)
+    {
+      logText("Hardware device $ACTISENSE_PRIMARY disappeared.");
+      $stat = undef;
+    }
+    if ($n2kd)
+    {
+      logText("Requesting stop for N2K port daemon $n2kd.");
+      kill 2, $n2kd;
+      system 'killall -9 actisense-serial';
+    }
+    if ($stop)
+    {
+      exit(0);
+    }
+  }
+  sleep(5);
+}
