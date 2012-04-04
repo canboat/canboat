@@ -55,6 +55,10 @@ int main(int argc, char ** argv)
     {
       setLogLevel(LOGLEVEL_DEBUG);
     }
+    else if (strcasecmp(argv[1], "-?") == 0)
+    {
+      break;
+    }
     else if (!device)
     {
       device = argv[1];
@@ -70,7 +74,10 @@ int main(int argc, char ** argv)
 
   if (!device)
   {
-    fprintf(stderr, "Usage: nmeareader [-d] device\n\n  For example: nmeareader /dev/ttyUSB0\n\n"COPYRIGHT);
+    fprintf(stderr, "Usage: nmeareader [-r] [-d] device\n\n"
+    "-r : read-only, do not pass stdin to stdout\n"
+    "-d : debug mode\n\n"
+    "Example: nmeareader /dev/ttyUSB0\n\n"COPYRIGHT);
     exit(1);
   }
 
