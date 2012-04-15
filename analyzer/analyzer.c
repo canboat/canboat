@@ -1498,6 +1498,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       if (field.resolution == RES_ASCII)
       {
         int len = (int) bytes;
+        int k;
 
         while (len > 0 && ((data[len - 1] == 0xff) || (data[len - 1] == ' ') || (data[len - 1] == 0)))
         {
@@ -1506,8 +1507,6 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
 
         if (showBytes)
         {
-          int k;
-
           for (k = 0; k < len; k++)
           {
             mprintf("%02x ", data[k]);
@@ -1516,12 +1515,26 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
 
         if (showJson)
         {
-          mprintf("%s\"%s\":\"%.*s\"", getSep(), fieldName, len, data);
+          mprintf("%s\"%s\":\"", getSep(), fieldName);
         }
         else
         {
-          mprintf("%s %s = %.*s", getSep(), fieldName, len, data);
+          mprintf("%s %s = ", getSep(), fieldName);
         }
+
+        for (k = 0; k < len; k++)
+        {
+          if (data[k] >= ' ' && data[k] <= '~')
+          {
+            mprintf("%c", data[k]);
+          }
+        }
+
+        if (showJson)
+        {
+          mprintf("\"");
+        }
+
       }
       else if (field.resolution == RES_STRING)
       {
