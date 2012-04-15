@@ -55,7 +55,7 @@ static int logBase(LogLevel level, const char * format, va_list ap)
     msec = tv.tv_usec / 1000L;
     localtime_r(&t, &tm);
     strftime(strTmp, 60, "%Y-%m-%d %H:%M:%S", &tm);
-    fprintf(stderr, "%s %s,%3.3d [%s] ", logLevels[level], strTmp, msec, progName);
+    fprintf(stderr, "%s %s.%3.3d [%s] ", logLevels[level], strTmp, msec, progName);
   }
   else
   {
@@ -81,7 +81,7 @@ static int logBase(LogLevel level, const char * format, va_list ap)
   _ftime_s(&timebuffer);
   localtime_s(&tm, &timebuffer.time);
   strftime(strTmp, 60, "%Y-%m-%d %H:%M:%S", &tm);
-  fprintf(stderr, "%s %s,%3.3d [%s] ", logLevels[level], strTmp, timebuffer.millitm, progName);
+  fprintf(stderr, "%s %s.%3.3d [%s] ", logLevels[level], strTmp, timebuffer.millitm, progName);
 
   return vfprintf(stderr, format, ap);
 }
