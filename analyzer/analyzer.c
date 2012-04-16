@@ -821,7 +821,28 @@ static bool printTemperature(char * name, uint16_t t)
   }
   else
   {
-    mprintf("%s %s = %5.2fC (%5.1fF)", getSep(), name, c, f);
+    mprintf("%s %s = %5.2f C (%5.1f F)", getSep(), name, c, f);
+  }
+  return true;
+}
+
+static bool printPressure(char * name, uint16_t hp)
+{
+  double bar = hp / 1000.0; /* 1000 hectopascal = 1 Bar */
+  double psi = hp / 14.50377; /* Silly but still used in some parts of the world */
+
+  if (hp >= 0xfffd)
+  {
+    return false;
+  }
+
+  if (showJson)
+  {
+    mprintf("%s\"%s\":\"%"PRIu16"\"", getSep(), name, hp);
+  }
+  else
+  {
+    mprintf("%s %s = %5.3f bar (%5.1f PSI)", getSep(), name, bar, psi);
   }
   return true;
 }
@@ -1605,6 +1626,11 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       {
         memcpy((void *) &valueu16, data, 2);
         printTemperature(fieldName, valueu16);
+      }
+      else if (field.resolution == RES_PRESSURE)
+      {
+        memcpy((void *) &valueu16, data, 2);
+        printPressure(fieldName, valueu16);
       }
       else if (field.resolution == RES_6BITASCII)
       {

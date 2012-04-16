@@ -98,6 +98,7 @@ typedef struct
 # define RES_MANUFACTURER (-11.0)
 # define RES_STRING (-12.0)
 # define RES_FLOAT (-13.0)
+# define RES_PRESSURE (-14.0)
   bool hasSign;
   char * units;
   char * description;
@@ -742,7 +743,7 @@ Pgn pgnList[] =
 { "Engine Parameters, Rapid Update", 127488, true, 8, 0,
   { { "Engine Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Engine Speed", BYTES(2), RES_INTEGER, false, "rpm", "" }
-  , { "Engine Boost Pressure", BYTES(2), 1, false, "hPa", "" }
+  , { "Engine Boost Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Engine Tilt/Trim", BYTES(1), 1, true, "", "" }
   , { 0 }
   }
@@ -751,13 +752,13 @@ Pgn pgnList[] =
 ,
 { "Engine Parameters, Dynamic", 127489, true, 26, 0,
   { { "Engine Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
-  , { "Oil pressure", BYTES(2), 1, false, 0, "hPa" }
+  , { "Oil pressure", BYTES(2), RES_PRESSURE, false, 0, "hPa" }
   , { "Oil temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Alternator Potential", BYTES(2), 0.01, false, "V", "" }
   , { "Fuel Rate", BYTES(2), 0.1, true, "L/h", "" }
   , { "Total Engine hours", BYTES(4), 1.0, false, "s", "" }
-  , { "Coolant Pressure", BYTES(2), 1, false, "hPa", "" }
+  , { "Coolant Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Fuel Pressure", BYTES(2), 1, false, 0, "" }
   , { "Reserved", BYTES(1), 1, false, 0, "" }
   , { "Discrete Status 1", BYTES(2), RES_INTEGER, false, 0, "" }
@@ -2059,7 +2060,7 @@ Pgn pgnList[] =
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Outside Ambient Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
-  , { "Atmospheric Pressure", BYTES(2), 1, false, "hPa", "" }
+  , { "Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { 0 }
   }
 }
@@ -2071,7 +2072,7 @@ Pgn pgnList[] =
   , { "Humidity Instance", 2, RES_LOOKUP, false, ",0=Inside,1=Outside", "" }
   , { "Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Humidity", BYTES(2), 100.0/25000, true, "%", "" }
-  , { "Atmospheric Pressure", BYTES(2), 1, false, "hPa", "" }
+  , { "Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { 0 }
   }
 }
@@ -2181,7 +2182,7 @@ Pgn pgnList[] =
   , { "Wind Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, "" }
   , { "Reserved", 5, RES_BINARY, false, "", "reserved" }
   , { "Wind Gusts", BYTES(2), 0.01, false, "m/s", "" }
-  , { "Atmospheric Pressure", BYTES(2), 1, false, "hPa", "" }
+  , { "Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Ambient Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Station ID", BYTES(2), RES_STRING, false, 0, "" }
   , { "Station Name", BYTES(2), RES_STRING, false, 0, "" }
@@ -2204,7 +2205,7 @@ Pgn pgnList[] =
   , { "Wind Gusts", BYTES(2), 0.01, false, "m/s", "" }
   , { "Wave Height", BYTES(2), 1, false, 0, "" }
   , { "Dominant Wave Period", BYTES(2), 1, false, 0, "" }
-  , { "Atmospheric Pressure", BYTES(2), 1, false, "hPa", "" }
+  , { "Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Pressure Tendency Rate", BYTES(2), 1, false, "", "" }
   , { "Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
