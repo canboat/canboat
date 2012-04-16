@@ -1163,7 +1163,7 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
       }
       else
       {
-        mprintf("%s %s = 0x%llx", getSep(), name, value);
+        mprintf("%s %s = 0x%"PRIx64, getSep(), name, value);
       }
     }
     else if (field->resolution == RES_MANUFACTURER)
@@ -1209,7 +1209,7 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
         int precision = 0;
         double r;
 
-        a = value * field->resolution + (field->resolution / 2.0);
+        a = value * field->resolution;
 
         if (field->resolution == RES_DEGREES)
         {
