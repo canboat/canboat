@@ -1764,7 +1764,7 @@ void printPacket(size_t index, RawMessage * msg)
    * one.
    */
   subIndex = index;
-  for (subIndex = index; subIndex < ARRAY_SIZE(pgnList) && (msg->pgn == pgnList[subIndex].pgn); subIndex++)
+  for (subIndex = index; subIndex < ARRAY_SIZE(pgnList) && (msg->pgn == pgnList[subIndex].pgn || !index); subIndex++)
   {
     if (printPgn(index, subIndex, msg)) /* Only the really matching ones will actually print anything */
     {
