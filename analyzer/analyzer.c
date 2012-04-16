@@ -1363,6 +1363,8 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
   uint32_t currentTime = UINT32_MAX;
   char fieldName[60];
   bool r;
+  bool matchedFixedField;
+  bool hasFixedField;
 
   if (!device[msg->src])
   {
@@ -1376,9 +1378,11 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
   size = device[msg->src]->packetList[index].size;
   dataEnd = dataStart + size;
 
-  for (;(index + 1 < ARRAY_SIZE(pgnList)) && (msg->pgn == pgnList[index + 1].pgn); index++)
+  for (;(index < ARRAY_SIZE(pgnList)) && (msg->pgn == pgnList[index].pgn); index++)
   {
-    bool matchFixedField = true;
+    matchedFixedField = true;
+    hasFixedField = false;
+
     /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
 
     pgn = &pgnList[index];
@@ -1397,11 +1401,13 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
         int64_t value, desiredValue;
         uint64_t maxValue;
 
+        hasFixedField = true;
         extractNumber(&field, data, startBit, field.size, &value, &maxValue);
         desiredValue = strtol(field.units + 1, 0, 10);
+        logDebug("field=%s value=%"PRId64" desiredValue=%"PRId64"\n", field.name, value, desiredValue);
         if (value != desiredValue)
         {
-          matchFixedField = false;
+          matchedFixedField = false;
           break;
         }
       }
@@ -1409,10 +1415,15 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       data += startBit / 8;
       startBit %= 8;
     }
-    if (matchFixedField)
+    if (matchedFixedField)
     {
       break;
     }
+  }
+
+  if ((index >= ARRAY_SIZE(pgnList)) || (msg->pgn != pgnList[index].pgn))
+  {
+    index = 0;
   }
 
   pgn = &pgnList[index];
