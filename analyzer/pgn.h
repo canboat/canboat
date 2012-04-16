@@ -2099,7 +2099,7 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Actual Pressue", 130314, false, 8, 0,
+{ "Actual Pressure", 130314, false, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Pressure Instance", 4, 1, false, 0, "" }
   , { "Pressure Source", 4, 1, false, 0, "" }
@@ -2313,6 +2313,41 @@ Pgn pgnList[] =
   , { "Reserved", BYTES(1), 1, false, 0, "" }
   , { "Status", BYTES(1), 1, false, 0, "" }
   , { "Reserved", BYTES(3), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+/* M/V Dirona */
+,
+{ "Furuno: Unknown", 130820, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "C", BYTES(1), 1, false, 0, "" }
+  , { "D", BYTES(1), 1, false, 0, "" }
+  , { "E", BYTES(1), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+/* M/V Dirona */
+,
+{ "Furuno: Unknown", 130821, false, 0x0c, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "SID", BYTES(1), 1, false, 0, "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "C", BYTES(1), 1, false, 0, "" }
+  , { "D", BYTES(1), 1, false, 0, "" }
+  , { "E", BYTES(1), 1, false, 0, "" }
+  , { "F", BYTES(1), 1, false, 0, "" }
+  , { "G", BYTES(1), 1, false, 0, "" }
+  , { "H", BYTES(1), 1, false, 0, "" }
+  , { "I", BYTES(1), 1, false, 0, "" }
   , { 0 }
   }
 }
