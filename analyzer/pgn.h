@@ -774,8 +774,8 @@ Pgn pgnList[] =
   { { "Engine Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Transmission Gear", 2, RES_LOOKUP, false, LOOKUP_GEAR_STATUS, "" }
   , { "Reserved", 6, 1, false, 0, "" }
-  , { "Oil pressure", BYTES(2), 1, false, 0, "" }
-  , { "Oil temperature", BYTES(2), RES_TEMPERATURE, false, 0, "" }
+  , { "Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
+  , { "Oil temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Discrete Status 1", BYTES(1), RES_INTEGER, false, 0, "" }
   , { 0 }
   }

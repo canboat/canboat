@@ -19,15 +19,18 @@ observation and assembling data from public sources.
 Due to NDA restrictions this project does not yet contain the necessary
 code to talk directly with the most common CAN interface used in the marine
 electronics world, the Actisense NGT-1. Binary versions of the necessary
-programs can be obtained from
+'actisense-serial' program can be obtained from
 
   http://www.keversoft.com/packetlogger
 
-Please go to the following URL for more information until we set up a public
-Wiki.
+For more information go to the CANBoat Wiki at
 
-  http://yachtelectronics.blogspot.com/packetlogger
+  http://github.com/canboat/canboat/wiki
 
+where you can find instructions on how to build the programs on your own
+computer and how to start extending the PGN database.
+
+---
 
 This file is part of CANboat.
 
