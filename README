@@ -16,12 +16,11 @@ to it.
 For this reason we have reverse engineered the NMEA 2000 database by network
 observation and assembling data from public sources.
 
-Due to NDA restrictions this project does not yet contain the necessary
-code to talk directly with the most common CAN interface used in the marine
-electronics world, the Actisense NGT-1. Binary versions of the necessary
-'actisense-serial' program can be obtained from
+To use the programs included in this project you will need the excellent
+Actisense NGT-1 PC gateway.
 
-  http://www.keversoft.com/packetlogger
+This code uses reverse engineered knowledge to access the NGT-1 directly. It
+does not use the Actisense DLL or SDK.
 
 For more information go to the CANBoat Wiki at
 
