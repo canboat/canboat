@@ -32,7 +32,7 @@ $(TARGETDIR):
 	mkdir -p $(TARGETDIR)
 
 clean:
-	-rm -f $(TARGETLIST)
+	-rm -f $(TARGETLIST) *.elf *.gdb
 
 $(TARGET1):	nmeareader.c ../common/common.c ../common/common.h
 	$(CC) -o $(TARGET1) $(CFLAGS) -I../common nmeareader.c ../common/common.c
