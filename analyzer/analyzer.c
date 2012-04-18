@@ -1116,6 +1116,8 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
 
   if (value <= maxValue - notUsed)
   {
+    value += field->offset;
+
     if (field->units && field->units[0] == '=')
     {
       char lookfor[20];
@@ -1929,7 +1931,10 @@ static void explainPGN(Pgn pgn)
       printf("                  Resolution: %g\n", f.resolution);
     }
     printf("                  Signed: %s\n", (f.hasSign) ? "true" : "false");
-
+    if (f.offset != 0)
+    {
+      printf("                  Offset: %d\n", f.offset);
+    }
 
     if (f.resolution == RES_LOOKUP && f.units && f.units[0] == ',')
     {
@@ -2057,6 +2062,10 @@ static void explainPGNXML(Pgn pgn)
         printf("           <Resolution>%g</Resolution>\n", f.resolution);
       }
       printf("           <Signed>%s</Signed>\n", f.hasSign ? "true" : "false");
+      if (f.offset != 0)
+      {
+        printf("           <Offset>%d</Offset>\n", f.offset);
+      }
 
       if (f.resolution == RES_LOOKUP && f.units && f.units[0] == ',')
       {

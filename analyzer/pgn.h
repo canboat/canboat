@@ -102,6 +102,7 @@ typedef struct
   bool hasSign;
   char * units;
   char * description;
+  int32_t offset;
 } Field;
 
 typedef struct
@@ -228,6 +229,8 @@ const Resolution types[] =
             ",7=Engaged in Fishing" \
             ",8=Under way sailing" )
 
+#define LOOKUP_POWER_FACTOR ( ",0=Leading,1=Lagging,2=Error" )
+
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
 
 
@@ -298,6 +301,276 @@ Pgn pgnList[] =
 ,
 { "ISO: Manu. Proprietary single-frame addressed", 61184, false, 8, 0,
   { { 0 }
+  }
+}
+
+/* Maretron ACM 100 manual documents PGN 65001-65030 */
+
+,
+{ "Bus #1 Phase C Basic AC Quantities", 65001, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Bus #1 Phase B Basic AC Quantities", 65002, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Bus #1 Phase A Basic AC Quantities", 65003, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Bus #1 Average Basic AC Quantities", 65004, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Total AC Energy", 65005, false, 8, 0,
+  { { "Total Energy Export", BYTES(4), 1, false, "kWh", "" }
+  , { "Total Energy Import", BYTES(4), 1, false, "kWh", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Phase C AC Reactive Power", 65006, false, 8, 0,
+  { { "Reactive Power", BYTES(2), 1, false, "VAr", "" }
+  , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
+  , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Phase C AC Power", 65007, false, 8, 0,
+  { { "Real Power", BYTES(4), 1, true, "W", "", -2000000000 }
+  , { "Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000 }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Phase C Basic AC Quantities", 65008, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Phase B AC Reactive Power", 65009, false, 8, 0,
+  { { "Reactive Power", BYTES(2), 1, false, "VAr", "" }
+  , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
+  , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Phase B AC Power", 65010, false, 8, 0,
+  { { "Real Power", BYTES(4), 1, true, "W", "", -2000000000 }
+  , { "Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000 }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Phase B Basic AC Quantities", 65011, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Phase A AC Reactive Power", 65012, false, 8, 0,
+  { { "Reactive Power", BYTES(4), 1, true, "VAr", "", -2000000000 }
+  , { "Power Factor", BYTES(2), 1/16384, true, 0, "" }
+  , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Phase A AC Power", 65013, false, 8, 0,
+  { { "Real Power", BYTES(4), 1, true, "W", "", -2000000000 }
+  , { "Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000 }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Phase A Basic AC Quantities", 65014, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Total AC Reactive Power", 65015, false, 8, 0,
+  { { "Reactive Power", BYTES(4), 1, true, "VAr", "", -2000000000 }
+  , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
+  , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Total AC Power", 65016, false, 8, 0,
+  { { "Real Power", BYTES(4), 1, true, "W", "", -2000000000 }
+  , { "Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000 }
+  , { 0 }
+  }
+}
+
+,
+{ "Utility Average Basic AC Quantities", 65017, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Total AC Energy", 65018, false, 8, 0,
+  { { "Total Energy Export", BYTES(4), 1, false, "kWh", "" }
+  , { "Total Energy Import", BYTES(4), 1, false, "kWh", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Phase C AC Reactive Power", 65019, false, 8, 0,
+  { { "Reactive Power", BYTES(2), 1, false, "VAr", "", -2000000000 }
+  , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
+  , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Phase C AC Power", 65020, false, 8, 0,
+  { { "Real Power", BYTES(2), 1, false, "W", "", -2000000000 }
+  , { "Apparent Power", BYTES(2), 1, false, "VA", "", -2000000000 }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Phase C Basic AC Quantities", 65021, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Phase B AC Reactive Power", 65022, false, 8, 0,
+  { { "Reactive Power", BYTES(2), 1, false, "VAr", "", -2000000000 }
+  , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
+  , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Phase B AC Power", 65023, false, 8, 0,
+  { { "Real Power", BYTES(2), 1, false, "W", "", -2000000000 }
+  , { "Apparent Power", BYTES(2), 1, false, "VA", "", -2000000000 }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Phase B Basic AC Quantities", 65024, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Phase A AC Reactive Power", 65025, false, 8, 0,
+  { { "Reactive Power", BYTES(2), 1, false, "VAr", "", -2000000000 }
+  , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
+  , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Phase A AC Power", 65026, false, 8, 0,
+  { { "Real Power", BYTES(2), 1, false, "W", "", -2000000000 }
+  , { "Apparent Power", BYTES(2), 1, false, "VA", "", -2000000000 }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Phase A Basic AC Quantities", 65027, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Total AC Reactive Power", 65028, false, 8, 0,
+  { { "Reactive Power", BYTES(2), 1, false, "VAr", "", -2000000000 }
+  , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
+  , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Total AC Power", 65029, false, 8, 0,
+  { { "Real Power", BYTES(2), 1, false, "W", "", -2000000000 }
+  , { "Apparent Power", BYTES(2), 1, false, "VA", "", -2000000000 }
+  , { 0 }
+  }
+}
+
+,
+{ "Generator Average Basic AC Quantities", 65030, false, 8, 0,
+  { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
+  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
+  , { 0 }
   }
 }
 
@@ -771,9 +1044,9 @@ Pgn pgnList[] =
 
 ,
 { "Transmission Parameters, Dynamic", 127493, true, 7, 0,
-  { { "Engine Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
+  { { "Engine Instance", 2, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Transmission Gear", 2, RES_LOOKUP, false, LOOKUP_GEAR_STATUS, "" }
-  , { "Reserved", 6, 1, false, 0, "" }
+  , { "Reserved", 4, 1, false, 0, "" }
   , { "Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Oil temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Discrete Status 1", BYTES(1), RES_INTEGER, false, 0, "" }
