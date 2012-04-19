@@ -1069,18 +1069,25 @@ static void extractNumber(Field * field, uint8_t * data, size_t startBit, size_t
 
   if (hasSign)
   {
-    bool negative;
     *maxValue >>= 1;
-    negative = (*value & (((uint64_t) 1) << (bits - 1))) > 0;
-    if (negative)
+
+    if (field->offset) /* J1939 Excess-K notation */
     {
-      /* Sign extend value for cases where bits < 64 */
-      /* Assume we have bits = 16 and value = -2 then we do: */
-      /* 0000.0000.0000.0000.0111.1111.1111.1101 value    */
-      /* 0000.0000.0000.0000.0111.1111.1111.1111 maxvalue */
-      /* 1111.1111.1111.1111.1000.0000.0000.0000 ~maxvalue */
-      *value |= ~*maxValue;
-      *maxValue = -1;
+      *value += field->offset;
+    }
+    else
+    {
+      bool negative = (*value & (((uint64_t) 1) << (bits - 1))) > 0;
+
+      if (negative)
+      {
+        /* Sign extend value for cases where bits < 64 */
+        /* Assume we have bits = 16 and value = -2 then we do: */
+        /* 0000.0000.0000.0000.0111.1111.1111.1101 value    */
+        /* 0000.0000.0000.0000.0111.1111.1111.1111 maxvalue */
+        /* 1111.1111.1111.1111.1000.0000.0000.0000 ~maxvalue */
+        *value |= ~*maxValue;
+      }
     }
   }
 
@@ -1116,8 +1123,6 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
 
   if (value <= maxValue - notUsed)
   {
-    value += field->offset;
-
     if (field->units && field->units[0] == '=')
     {
       char lookfor[20];

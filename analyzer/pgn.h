@@ -55,7 +55,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 /*
  * Some packets include a "SID", explained by Maretron as follows:
- * SID – The sequence identifier field is used to tie related PGNs together. For example,
+ * SID: The sequence identifier field is used to tie related PGNs together. For example,
  * the DST100 will transmit identical SIDs for Speed (PGN 128259) and Water depth
  * (128267) to indicate that the readings are linked together (i.e., the data from each
  * PGN was taken at the same time although reported at slightly different times).
@@ -81,8 +81,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 typedef struct
 {
   char * name;
-  uint32_t size;
-  double resolution;
+  uint32_t size;     /* Size in bits. All fields are contiguous in message; use 'reserved' fields to fill in empty bits. */
+  double resolution; /* Either a positive real value or one of the following RES_ special values */
 # define RES_NOTUSED (0)
 # define RES_DEGREES (0.0001 * RadianToDegree)
 # define RES_ASCII (-1.0)
@@ -99,10 +99,15 @@ typedef struct
 # define RES_STRING (-12.0)
 # define RES_FLOAT (-13.0)
 # define RES_PRESSURE (-14.0)
-  bool hasSign;
-  char * units;
+  bool hasSign; /* Is the value signed, e.g. has both positive and negative values? */
+  char * units; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
+                 * case it contains a set of lookup values.
+                 */
   char * description;
-  int32_t offset;
+  int32_t offset; /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
+                   * of two's complement as used by NMEA 2000.
+                   * See http://en.wikipedia.org/wiki/Offset_binary
+                   */
 } Field;
 
 typedef struct
@@ -125,6 +130,7 @@ const Resolution types[] =
 , { "Manufacturer code", 0 }
 , { "String with start/stop byte", 0 }
 , { "IEEE Float", 0 }
+, { "Pressure", 0 }
 };
 
 
@@ -238,11 +244,11 @@ typedef struct
 {
   char     * description;
   uint32_t   pgn;
-  bool       known;
-  uint32_t   size;
-  uint32_t   repeatingFields;
-  Field      fieldList[28];
-  uint32_t   fieldCount;
+  bool       known;             /* Are we pretty sure we've got all fields with correct definitions? */
+  uint32_t   size;              /* (Minimal) size of this PGN. Helps to determine fast/single frame and initial malloc */
+  uint32_t   repeatingFields;   /* How many fields at the end repeat until the PGN is exhausted? */
+  Field      fieldList[28];     /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
+  uint32_t   fieldCount;        /* Filled by C, no need to set in initializers. */
 } Pgn;
 
 
