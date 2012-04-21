@@ -1121,7 +1121,7 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
     notUsed = 0;
   }
 
-  if (value <= maxValue - notUsed)
+  if (value < 0 || value <= maxValue - notUsed)
   {
     if (field->units && field->units[0] == '=')
     {
