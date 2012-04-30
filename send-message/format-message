@@ -1,0 +1,157 @@
+#!/usr/bin/php5
+<?
+#
+# Format a particular N2K command
+#
+# Example: this will request all product information
+#
+# 1970-01-01-00:00:00.000,6,59904,0,255,3,14,f0,01
+#
+#
+# (C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+#
+# This file is part of CANboat.
+#
+# CANboat is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# CANboat is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+  $sw_loc = '.';
+  $debug = 0;
+  $commands = array();
+
+  function usage()
+  {
+    global $commands;
+    echo "Usage: $argv[0] <dst> <command> where <command> is one of:\n";
+    foreach ($commands as $key => $value)
+    {
+      echo "  $key\n";
+    }
+    echo "Use 255 as the broadcast destination.\n";
+    exit(1);
+  }
+
+  function getConfig()
+  {
+    global $debug, $sw_loc;
+
+    $s = @file_get_contents('n2k-message-db.json', true);
+    if (!$s)
+    {
+      echo "unable to read config file n2k-message-db.json\n";
+      exit(1);
+    }
+    $data = json_decode($s, true);
+    return $data;
+  }
+
+
+  class PhpSafeEval
+  {
+    protected $variables;
+
+    public function __construct($variables = array())
+    {
+        $this->variables = $variables;
+    }
+
+    public function eval_expr($expr)
+    {
+        if( is_array($this->variables) && count($this->variables) )
+        {
+            foreach($this->variables as $var_name => $var_value)
+            {
+                $$var_name = $var_value;
+            }
+        }
+        $return_value = '';
+        eval('$return_value = ' . $expr . ';');
+        return $return_value;
+    }
+  }
+
+  $commands = getConfig();
+  if (isset($argc))
+  {
+    if ($argc < 3)
+    {
+      usage();
+    }
+    $dst = $argv[1];
+    $command = $argv[2];
+  }
+  else
+  {
+    if (!array_key_exists('command', $_REQUEST) || !array_key_exists('dst', $_REQUEST))
+    {
+      usage();
+    }
+    $dst = $_REQUEST['dst'];
+    $command = $_REQUEST['command'];
+  }
+
+  if (!array_key_exists($command, $commands))
+  {
+    usage();
+  }
+  $n = $commands[$command];
+  $args = preg_split('/,/', $n['args']);
+  $pgn  = $n['pgn'];
+  $expr = $n['data'];
+
+  if (isset($argc))
+  {
+    $n = 3;
+    foreach ($args as $arg)
+    {
+      if (!isset($argv[$n]))
+      {
+        echo "Missing argument $arg on commandline\n";
+        echo "Usage: $argv[0] $command ".join($args, ' ')."\n";
+        exit(1);
+      }
+      $arglist[$arg] = $argv[$n];
+      $n++;
+    }
+  }
+  else
+  {
+    foreach ($args as $arg)
+    {
+      if (!isset($_REQUEST[$arg]))
+      {
+        echo "Missing argument $arg in request\n";
+        exit(1);
+      }
+      $arglist[$arg] = $_REQUEST[$arg];
+    }
+  }
+
+  #
+  # Now evaluate '$expr'
+  #
+  $p = new PhpSafeEval($arglist);
+  $data = $p->eval_expr($expr);
+
+  # 1970-01-01-00:00:00.000,6,59904,0,255,3,14,f0,01
+  $timestamp = strftime('%F-%T.000');
+  $prio = 6;
+  $src = 0; /* Unimportant, NGT will use its own address */
+  $len = strlen($data);
+  $data = unpack('H*', $data);
+  $data = $data[1];
+  $data = preg_replace('/(..)/', ',$1', $data);
+  echo $timestamp.",$prio,$pgn,$src,$dst,$len".$data."\n";
+
+?>
