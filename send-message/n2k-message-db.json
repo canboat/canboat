@@ -1,9 +1,4 @@
-{ "request_product_information":
-  { "args": "pgn"
-  , "pgn" :  59904
-  , "data": "pack('VX',$pgn)"
-  }
-, "rpi":
+{ "request_pgn":
   { "args": "pgn"
   , "pgn" :  59904
   , "data": "pack('VX',$pgn)"
