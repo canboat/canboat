@@ -602,6 +602,7 @@ void mreset(void)
 void mwrite(FILE * stream)
 {
   fwrite(mbuf, sizeof(char), mp - mbuf, stream);
+  fflush(stream);
   mreset();
 }
 

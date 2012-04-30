@@ -201,6 +201,7 @@ retry:
           parseAndWriteIn(handle, msg);
         }
         fprintf(stdout, "%s", msg);
+        fflush(stdout);
       }
     }
     else if (writeonly)

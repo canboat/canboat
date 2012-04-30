@@ -1,10 +1,19 @@
 #!/usr/bin/perl
 #
-#
 #  - Check for /dev/actisense*
 #  - While /dev/actisense* exists, keep n2kd running. If it quits, restart it.
+#  - Also keep n2k.php -monitor running. If it quits, restart it.
 #  - Stop n2kd if /dev/actisense disappears.
 #
+# This assumes there is a configuration file /etc/default/n2kd
+# containing one or more of the following configuration settings:
+#
+#       ACTISENSE_PRIMARY=/dev/actisense-1
+#       ACTISENSE_SECONDARY=/dev/actisense-2
+#       MONITOR=false
+#
+# Leave out ACTISENSE_SECONDARY if you have only one Actisense gateway.
+# Leave MONITOR set to false for now; its contents have not been open sourced yet.
 #
 # (C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
 #
@@ -33,6 +42,7 @@ die "Could not read config! $ConfigReader::Simple::ERROR\n" unless ref $config;
 
 my $ACTISENSE_PRIMARY = $config->get('ACTISENSE_PRIMARY');
 my $ACTISENSE_SECONDARY = $config->get('ACTISENSE_SECONDARY');
+my $MONITOR = $config->get('MONITOR');
 die "Configuration file $configFile incomplete: No ACTISENSE_PRIMARY" unless $ACTISENSE_PRIMARY;
 
 my $LOGFILE = '/var/log/n2kd_monitor.log';
@@ -45,6 +55,12 @@ my $monitor;
 my $child;
 my $stop = 0;
 my $last_monitor = 0;
+
+if ($MONITOR ne "true" && $MONITOR ne "yes")
+{
+  # Disable the monitoring part. This is not open source yet, so disable it by default.
+  $last_monitor = LONG_MAX;
+}
 
 use POSIX();
 
@@ -86,6 +102,11 @@ if (!stat($ACTISENSE_PRIMARY))
   logText("Waiting for $ACTISENSE_PRIMARY to appear.");
 }
 
+if (!pipe(PIPEREAD, PIPEWRITE))
+{
+  die "Cannot create pipes\n";
+}
+
 for (;;)
 {
   while (($child = POSIX::waitpid(-1, POSIX::WNOHANG)) > 0)
@@ -112,17 +133,17 @@ for (;;)
     {
       if (($n2kd = fork()) == 0)
       {
-        open STDIN, '/dev/null' or die "Can't read /dev/null: $!";
-        open STDOUT, '>>', $N2KD_LOGFILE or die "Can't write to $N2KD_LOGFILE $!";
-        open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
+        open STDIN, '<&PIPEREAD' or die "Can't read PIPEREAD: $!";
+        open STDOUT, '>&PIPEWRITE' or die "Can't reassign PIPEWRITE: $!";
+        open STDERR, '>>', $N2KD_LOGFILE or die "Can't write to $N2KD_LOGFILE $!";
         $ENV{'PATH'} = '/usr/local/bin:/bin:/usr/bin';
         if ($ACTISENSE_SECONDARY)
         {
-          exec '/bin/bash', '-c', "actisense-serial -r $ACTISENSE_PRIMARY | actisense-serial $ACTISENSE_SECONDARY | analyzer -clocksrc 35 -json | n2kd";
+          exec '/bin/bash', '-c', "actisense-serial $ACTISENSE_PRIMARY | actisense-serial $ACTISENSE_SECONDARY | analyzer -clocksrc 35 -json | n2kd";
         }
         else
         {
-          exec '/bin/bash', '-c', "actisense-serial -r $ACTISENSE_PRIMARY | analyzer -clocksrc 35 -json | n2kd";
+          exec '/bin/bash', '-c', "actisense-serial $ACTISENSE_PRIMARY | analyzer -clocksrc 35 -json | n2kd";
         }
       }
       elsif ($n2kd)

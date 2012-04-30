@@ -30,6 +30,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include "common.h"
+#include <signal.h>
 
 #define PORT 2597
 
@@ -66,6 +67,8 @@ const int stdinfd = 0; /* The fd for the stdin port, this receives the analyzed 
 #else
 const int stdinfd = -1; /* Indicate that we can't select() on stdinfd, in which case we use peek() */
 #endif
+
+int stdoutfd = 1; /* -1 if we are in readonly mode */
 
 FILE * debugf;
 FILE * outf;
@@ -338,6 +341,9 @@ void addTCPClient(void)
   }
 }
 
+/*
+ * Send 'message' to all TCP clients
+ */
 void processMessageClients(char * message)
 {
   size_t i;
@@ -627,7 +633,7 @@ void handleMessage()
   char readBuffer[16384];
   char * r;
   size_t i, len;
- 
+
   r = fgets(readBuffer, sizeof(readBuffer), stdin);
 
   if (r)
@@ -657,13 +663,19 @@ void handleClientRequest(int i)
   if (r > 0)
   {
     readBuffer[r] = 0;
-    if (strchr((char *) readBuffer, '-'))
+    if (strstr((char *) readBuffer, "-\n"))
     {
       clientType[i] = CLIENT_STREAM;
     }
     else
     {
-      logDebug("Ignore incoming message '%s'\n", readBuffer);
+      logDebug("Write client request to %d msg='%s'\n", stdoutfd, readBuffer);
+      /* Send output to stdout */
+      if (stdoutfd >= 0)
+      {
+        write(1, readBuffer, r);
+      }
+      /* Else just drop the data on the floor */
     }
   }
 }
@@ -728,6 +740,8 @@ void doServerWork(void)
 
 int main (int argc, char **argv)
 {
+  struct sigaction sa;
+
   setProgName(argv[0]);
 
   FD_ZERO(&clientSet);
@@ -774,9 +788,13 @@ int main (int argc, char **argv)
         argc--, argv++;
       }
     }
+    else if (strcasecmp(argv[1], "-r") == 0)
+    {
+      stdoutfd = -1;
+    }
     else
     {
-      fprintf(stderr, "usage: n2kd [-d] [-o] [-t <timeout>] [-p <port>]\n\n"COPYRIGHT);
+      fprintf(stderr, "usage: n2kd [-d] [-o] [-t <timeout>] [-p <port>] [-r]\n\n"COPYRIGHT);
       exit(1);
     }
     argc--, argv++;
@@ -786,6 +804,12 @@ int main (int argc, char **argv)
 
   clientIdxMin = 0;
   clientIdxMax = 0;
+
+  /*  Ignore SIGPIPE, this will let a write to a socket that's closed   */
+  /*  at the other end just fail instead of raising SIGPIPE             */
+  memset( &sa, 0, sizeof( sa ) );
+  sa.sa_handler = SIG_IGN;
+  sigaction( SIGPIPE, &sa, 0 );
 
   doServerWork();
 
