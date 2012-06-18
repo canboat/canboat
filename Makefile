@@ -8,7 +8,7 @@
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 OS=$(shell uname -o 2>&1)
-SUBDIRS= actisense-serial analyzer n2kd nmea0183
+SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip
 # The closed source code includes more directories
 
 
