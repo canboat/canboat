@@ -60,6 +60,7 @@ static void fillFieldCounts(void);
 static uint8_t scanNibble(char c);
 static int scanHex(char ** p, uint8_t * m);
 static void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int * pgn, unsigned int * src, unsigned int * dst);
+static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t startBit, size_t bits);
 
 void initialize(void);
 void printCanRaw(RawMessage * msg);
@@ -1098,14 +1099,63 @@ static void extractNumber(Field * field, uint8_t * data, size_t startBit, size_t
   }
 }
 
-static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t bits)
+static Field * getField(uint32_t pgn, uint32_t field)
+{
+  int index;
+
+  for (index = 0; index < ARRAY_SIZE(pgnList); index++)
+  {
+    if (pgn == pgnList[index].pgn)
+    {
+      if (field > pgnList[index].fieldCount)
+      {
+        return 0;
+      }
+      return &(pgnList[index].fieldList[field]);
+    }
+  }
+  return 0;
+}
+
+static bool printVarNumber(char * fieldName, Pgn * pgn, uint32_t refPgn, Field * field, uint8_t * data, size_t startBit, size_t * bits)
+{
+  Field * refField;
+  size_t size, bytes;
+
+  /* PGN 126208 contains variable field length.
+   * The field length can be derived from the PGN mentioned earlier in the message,
+   * plus the field number.
+   */
+
+  /*
+   * This is rather hacky. We know that the 'data' pointer points to the n-th variable field
+   * length and thus that the field number is exactly one byte earlier.
+   */
+
+  refField = getField(refPgn, data[-1] - 1);
+  if (refField)
+  {
+    *bits = (refField->size + 7) & ~7;
+    if (showBytes)
+    {
+      mprintf("(refField %s size = %u in %zu bytes)", refField->name, refField->size, *bits / 8);
+    }
+    return printNumber(fieldName, field, data, startBit, refField->size);
+  }
+
+  logError("Pgn %d Field %s: cannot derive variable length from PGN %d field # %d\n"
+          , pgn->pgn, field->name, refPgn, data[-1]);
+  *bits = 8; /* Gotta assume something */
+  return false;
+}
+
+static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t startBit, size_t bits)
 {
   bool ret = false;
   int64_t value;
   uint64_t maxValue;
   int64_t notUsed;
   double a;
-  const char * name = field->name;
 
   extractNumber(field, data, startBit, bits, &value, &maxValue);
 
@@ -1122,7 +1172,7 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
     notUsed = 0;
   }
 
-  if (value < 0 || value <= maxValue - notUsed)
+  if (value <= maxValue - notUsed)
   {
     if (field->units && field->units[0] == '=')
     {
@@ -1132,7 +1182,7 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
       sprintf(lookfor, "=%"PRId64, value);
       if (strcmp(lookfor, field->units) != 0)
       {
-        if (showBytes) logError("Field %s value %"PRId64" does not match %s\n", name, value, field->units + 1);
+        if (showBytes) logError("Field %s value %"PRId64" does not match %s\n", fieldName, value, field->units + 1);
         return false;
       }
       s = field->description;
@@ -1142,11 +1192,11 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
       }
       if (showJson)
       {
-        mprintf("%s\"%s\":\"%s\"", getSep(), name, s);
+        mprintf("%s\"%s\":\"%s\"", getSep(), fieldName, s);
       }
       else
       {
-        mprintf("%s %s = %s", getSep(), name, s);
+        mprintf("%s %s = %s", getSep(), fieldName, s);
       }
     }
     else
@@ -1164,22 +1214,22 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
         e = e ? e : s + strlen(s);
         if (showJson)
         {
-          mprintf("%s\"%s\":\"%.*s\"", getSep(), name, (int) (e - s), s);
+          mprintf("%s\"%s\":\"%.*s\"", getSep(), fieldName, (int) (e - s), s);
         }
         else
         {
-          mprintf("%s %s = %.*s", getSep(), name, (int) (e - s), s);
+          mprintf("%s %s = %.*s", getSep(), fieldName, (int) (e - s), s);
         }
       }
       else
       {
         if (showJson)
         {
-          mprintf("%s\"%s\":\"%"PRId64"\"", getSep(), field->name, value);
+          mprintf("%s\"%s\":\"%"PRId64"\"", getSep(), fieldName, value);
         }
         else
         {
-          mprintf("%s %s = %"PRId64"", getSep(), field->name, value);
+          mprintf("%s %s = %"PRId64"", getSep(), fieldName, value);
         }
       }
     }
@@ -1188,11 +1238,11 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
     {
       if (showJson)
       {
-        mprintf("%s\"%s\":\"%"PRId64"\"", getSep(), name, value);
+        mprintf("%s\"%s\":\"%"PRId64"\"", getSep(), fieldName, value);
       }
       else
       {
-        mprintf("%s %s = 0x%"PRIx64, getSep(), name, value);
+        mprintf("%s %s = 0x%"PRIx64, getSep(), fieldName, value);
       }
     }
     else if (field->resolution == RES_MANUFACTURER)
@@ -1212,11 +1262,11 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
 
       if (showJson)
       {
-        mprintf("%s \"%s\": \"%s\"", getSep(), name, m);
+        mprintf("%s \"%s\": \"%s\"", getSep(), fieldName, m);
       }
       else
       {
-        mprintf("%s %s = %s", getSep(), name, m);
+        mprintf("%s %s = %s", getSep(), fieldName, m);
       }
     }
     else
@@ -1226,11 +1276,11 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
       {
         if (showJson)
         {
-          mprintf("%s\"%s\":\"%"PRId64"\"", getSep(), field->name, value);
+          mprintf("%s\"%s\":\"%"PRId64"\"", getSep(), fieldName, value);
         }
         else
         {
-          mprintf("%s %s = %"PRId64, getSep(), field->name, value);
+          mprintf("%s %s = %"PRId64, getSep(), fieldName, value);
         }
       }
       else
@@ -1258,15 +1308,15 @@ static bool printNumber(Field * field, uint8_t * data, size_t startBit, size_t b
 
         if (showJson)
         {
-          mprintf("%s\"%s\":\"%.*f\"", getSep(), field->name, precision, a);
+          mprintf("%s\"%s\":\"%.*f\"", getSep(), fieldName, precision, a);
         }
         else if (field->units && strcmp(field->units, "m") == 0 && a >= 1000.0)
         {
-          mprintf("%s %s = %.*f km", getSep(), field->name, precision + 3, a / 1000);
+          mprintf("%s %s = %.*f km", getSep(), fieldName, precision + 3, a / 1000);
         }
         else
         {
-          mprintf("%s %s = %.*f", getSep(), field->name, precision, a);
+          mprintf("%s %s = %.*f", getSep(), fieldName, precision, a);
           if (field->units)
           {
             mprintf(" %s", field->units);
@@ -1394,6 +1444,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
   bool r;
   bool matchedFixedField;
   bool hasFixedField;
+  uint32_t refPgn = 0;
 
   if (!device[msg->src])
   {
@@ -1530,6 +1581,11 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       mprintf("\ndecode %s startBit=%u bits=%u bytes=%u:", field.name, startBit, bits, bytes);
     }
 
+    if (strcmp(fieldName, "PGN") == 0)
+    {
+      refPgn = data[0] + (data[1] << 8) + (data[2] << 16);
+    }
+
     if (field.resolution < 0.0)
     {
       /* These fields have only been found to start on byte boundaries,
@@ -1642,11 +1698,20 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       }
       else if (field.resolution == RES_6BITASCII)
       {
-        print6BitASCIIText(field.name, data, startBit, bits);
+        print6BitASCIIText(fieldName, data, startBit, bits);
+      }
+      else if (bits == LEN_VARIABLE)
+      {
+        if (showBytes)
+        {
+          printf("refPgn=%d\n", refPgn);
+          fflush(stdout);
+        }
+        printVarNumber(fieldName, pgn, refPgn, &field, data, startBit, &bits);
       }
       else if (bits > BYTES(8))
       {
-        printHex(field.name, data, startBit, bits);
+        printHex(fieldName, data, startBit, bits);
       }
       else if (field.resolution == RES_INTEGER
             || field.resolution == RES_LOOKUP
@@ -1654,16 +1719,16 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
             || field.resolution == RES_MANUFACTURER
               )
       {
-        printNumber(&field, data, startBit, bits);
+        printNumber(fieldName, &field, data, startBit, bits);
       }
       else
       {
-        logError("Unknown resolution %f for %s\n", field.resolution, field.name);
+        logError("Unknown resolution %f for %s\n", field.resolution, fieldName);
       }
     }
     else if (field.resolution > 0.0)
     {
-      printNumber(&field, data, startBit, bits);
+      printNumber(fieldName, &field, data, startBit, bits);
     }
     if (!r)
     {
@@ -1811,7 +1876,7 @@ void printPacket(size_t index, RawMessage * msg)
   subIndex = index;
   for (subIndex = index; subIndex < ARRAY_SIZE(pgnList) && (msg->pgn == pgnList[subIndex].pgn || !index); subIndex++)
   {
-    if (printPgn(index, subIndex, msg)) /* Only the really matching ones will actually print anything */
+    if (printPgn(index, subIndex, msg)) /* Only the really matching ones will actually return true */
     {
       if (index != subIndex)
       {
@@ -1883,7 +1948,14 @@ static void explainPGN(Pgn pgn)
     printf("  Field #%d: %s%s%s\n", i + 1, f.name
       , f.name[0] && (f.description && f.description[0] && f.description[0] != ',') ? " - " : ""
       , (!f.description || f.description[0] == ',') ? "" :  f.description);
-    printf("                  Bits: %u\n", f.size);
+    if (!f.size)
+    {
+      printf("                  Bits: variable\n");
+    }
+    else
+    {
+      printf("                  Bits: %u\n", f.size);
+    }
 
     if (f.units && f.units[0] == '=')
     {
