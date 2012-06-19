@@ -82,6 +82,7 @@ typedef struct
 {
   char * name;
   uint32_t size;     /* Size in bits. All fields are contiguous in message; use 'reserved' fields to fill in empty bits. */
+# define LEN_VARIABLE (0)
   double resolution; /* Either a positive real value or one of the following RES_ special values */
 # define RES_NOTUSED (0)
 # define RES_DEGREES (0.0001 * RadianToDegree)
@@ -747,33 +748,33 @@ Pgn pgnList[] =
 }
 
   /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
-, 
+,
 { "NMEA - Request group function", 126208, true, 6 + 20 * 3, 2,
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=0", "Request" }
   , { "PGN", 24, RES_INTEGER, false, 0, "Requested PGN" }
-  , { "Transmission interval", 4, 1, false, 0, "" }
-  , { "Transmission interval offset", 4, 1, false, 0, "" }
+  , { "Transmission interval", BYTES(4), 1, false, 0, "" }
+  , { "Transmission interval offset", BYTES(2), 1, false, 0, "" }
   , { "# of Requested Parameters", 8, 1, false, 0, "How many parameter pairs will follow" }
-  , { "Parameter Index", 8, RES_INTEGER, false, 0, "First parameter index" }
-  , { "Parameter Value", 16, RES_INTEGER, false, 0, "First parameter new value" }
+  , { "Parameter Index", 8, RES_INTEGER, false, 0, "Parameter index" }
+  , { "Parameter Value", LEN_VARIABLE, RES_INTEGER, false, 0, "Parameter value, variable length" }
   , { 0 }
   }
 }
 
-, 
+,
 { "NMEA - Command group function", 126208, true, 6 + 20 * 3, 2,
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=1", "Command" }
   , { "PGN", 24, RES_INTEGER, false, 0, "Commanded or requested PGN" }
   , { "Priority", 4, 1, false, 0, "8 = leave priority unchanged" }
   , { "Reserved", 4, 1, false, 0, "" }
   , { "# of Commanded Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow" }
-  , { "Parameter Index", BYTES(1), RES_INTEGER, false, 0, "First parameter index" }
-  , { "Parameter Value", BYTES(2), RES_INTEGER, false, 0, "First parameter new value" }
+  , { "Parameter Index", BYTES(1), RES_INTEGER, false, 0, "Parameter index" }
+  , { "Parameter Value", LEN_VARIABLE, RES_INTEGER, false, 0, "Parameter value, variable length" }
   , { 0 }
   }
 }
 
-, 
+,
 { "NMEA - Acknowledge group function", 126208, true, 6 + 20 * 1, 1,
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=2", "Acknowledge" }
   , { "PGN", 24, RES_INTEGER, false, 0, "Commanded or requested PGN" }

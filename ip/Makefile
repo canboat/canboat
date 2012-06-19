@@ -1,5 +1,5 @@
 #
-# nmea0183/Makefile
+# ip/Makefile
 #
 # (C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
 #
@@ -21,8 +21,9 @@
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
-TARGET1=../rel/$(PLATFORM)/nmea0183-serial
-TARGETLIST=$(TARGET1)
+TARGET1=../rel/$(PLATFORM)/ipin
+TARGET2=../rel/$(PLATFORM)/iptee
+TARGETLIST=$(TARGET1) $(TARGET2)
 CFLAGS=-O3
 
 all:	$(TARGETDIR) $(TARGETLIST)
@@ -33,5 +34,8 @@ $(TARGETDIR):
 clean:
 	-rm -f $(TARGETLIST) *.elf *.gdb
 
-$(TARGET1):	nmeareader.c ../common/common.c ../common/common.h
-	$(CC) -o $(TARGET1) $(CFLAGS) -I../common nmeareader.c ../common/common.c
+$(TARGET1):	ipin.c ../common/common.c ../common/common.h
+	$(CC) -o $(TARGET1) $(CFLAGS) -I../common ipin.c ../common/common.c
+
+$(TARGET2):	iptee.c ../common/common.c ../common/common.h
+	$(CC) -o $(TARGET2) $(CFLAGS) -I../common iptee.c ../common/common.c
