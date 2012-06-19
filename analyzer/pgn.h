@@ -887,6 +887,90 @@ Pgn pgnList[] =
   }
 }
 
+  /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+,
+{ "Airmar: Simulate Mode", 126720, true, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=35", "Simulate Mode" }
+  , { "Simulate Mode", 2, RES_LOOKUP, false, ",0=Off,1=On", "" }
+  , { "Reserved", 22, RES_BINARY, false, 0, "Reserved" }
+  , { 0 }
+  }
+}
+
+  /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+,
+{ "Airmar: Calibrate Depth", 126720, true, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=40", "Calibrate Depth" }
+  , { "Speed of Sound Mode", BYTES(2), 0.1, false, "m/s", "actual allowed range is 1350.0 to 1650.0 m/s" }
+  , { "Reserved", 8, RES_BINARY, false, 0, "Reserved" }
+  , { 0 }
+  }
+}
+
+  /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+,
+{ "Airmar: Calibrate Speed", 126720, true, 8, 2,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=41", "Calibrate Speed" }
+  , { "Number of pairs of data points", BYTES(1), RES_INTEGER, false, 0, "actual range is 0 to 25. 254=restore default speed curve"
+  }
+  , { "Input frequency", BYTES(2), 0.1, false, "Hz", "" }
+  , { "Output speed", BYTES(2), 0.01, false, "m/s", "" }
+  , { 0 }
+  }
+}
+
+  /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+,
+{ "Airmar: Calibrate Temperature", 126720, true, 8, 2,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=42", "Calibrate Temperature" }
+  , { "Temperature instance", 2, RES_LOOKUP, false, ",0=Device Sensor,1=Onboard Water Sensor,2=Optional Water Sensor", "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "Reserved" }
+  , { "Temperature offset", BYTES(2), 0.1, false, "Hz", "" }
+  , { "Temperature offset", BYTES(2), 0.001, true, "K", "actual range is -9.999 to +9.999 K" }
+  , { 0 }
+  }
+}
+
+  /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+,
+{ "Airmar: Speed Filter", 126720, true, 8, 2,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=43", "Speed Filter" }
+  , { "Filter type", 4, RES_LOOKUP, false, ",0=no filter,1=basic IIR filter", "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "Reserved" }
+  , { "Sample interval", BYTES(2), 0.01, false, "s", "" }
+  , { "Filter duration", BYTES(2), 0.01, false, "s", "" }
+  , { 0 }
+  }
+}
+
+  /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+,
+{ "Airmar: NMEA 2000 options", 126720, true, 8, 2,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=46", "NMEA 2000 options" }
+  , { "Transmission Interval", 2, RES_LOOKUP, false, ",0=Measure Interval,1=Requested by user", "" }
+  , { "Reserved", 22, RES_BINARY, false, 0, "Reserved" }
+  , { 0 }
+  }
+}
+
   /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
 ,
 { "System Time", 126992, true, 8, 0,
