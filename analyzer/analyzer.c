@@ -851,14 +851,20 @@ static bool printPressure(char * name, uint16_t hp)
 
 static void print6BitASCIIChar(uint8_t b)
 {
+  int c;
   if (b < 0x28)
   {
-    putchar(b + 0x30);
+    c = b + 0x30;
   }
   else
   {
-    putchar(b + 0x38);
+    c = b + 0x38;
   }
+  if (showJson && (c == '\\'))
+  {
+    putchar(c);
+  }
+  putchar(c);
 }
 
 static bool print6BitASCIIText(char * name, uint8_t * data, size_t startBit, size_t bits)
@@ -1020,7 +1026,7 @@ static bool printHex(char * name, uint8_t * data, size_t startBit, size_t bits)
  *
  */
 
-static void extractNumber(Field * field, uint8_t * data, size_t startBit, size_t bits, int64_t * value, uint64_t * maxValue)
+static void extractNumber(Field * field, uint8_t * data, size_t startBit, size_t bits, int64_t * value, int64_t * maxValue)
 {
   bool hasSign = field->hasSign;
 
@@ -1052,7 +1058,7 @@ static void extractNumber(Field * field, uint8_t * data, size_t startBit, size_t
     valueInThisByte = (*data & bitMask) >> firstBit;
 
     *value |= valueInThisByte << magnitude;
-    *maxValue |= (uint64_t) allOnes << magnitude;
+    *maxValue |= (int64_t) allOnes << magnitude;
 
     if (showBytes)
     {
@@ -1153,7 +1159,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
 {
   bool ret = false;
   int64_t value;
-  uint64_t maxValue;
+  int64_t maxValue;
   int64_t notUsed;
   double a;
 
@@ -1622,7 +1628,13 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
         {
           if (data[k] >= ' ' && data[k] <= '~')
           {
-            mprintf("%c", data[k]);
+            int c = data[k];
+
+            if (showJson && (c == '\\'))
+            {
+              mprintf("%c", c);
+            }
+            mprintf("%c", c);
           }
         }
 
