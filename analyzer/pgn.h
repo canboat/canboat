@@ -85,7 +85,8 @@ typedef struct
 # define LEN_VARIABLE (0)
   double resolution; /* Either a positive real value or one of the following RES_ special values */
 # define RES_NOTUSED (0)
-# define RES_DEGREES (0.0001 * RadianToDegree)
+# define RES_DEGREES (1e-4 * RadianToDegree)
+# define RES_ROTATION (1e-3/32.0 * RadianToDegree)
 # define RES_ASCII (-1.0)
 # define RES_LATITUDE (-2.0)
 # define RES_LONGITUDE (-3.0)
@@ -1032,7 +1033,7 @@ Pgn pgnList[] =
   , { "Rudder Limit", BYTES(2), RES_DEGREES, false, "deg", "" }
   , { "Off-Heading Limit", BYTES(2), RES_DEGREES, false, "deg", "" }
   , { "Radius of Turn Order", BYTES(2), RES_DEGREES, true, "deg", "" }
-  , { "Rate of Turn Order", BYTES(2), RES_DEGREES, true, "deg/s", "" }
+  , { "Rate of Turn Order", BYTES(2), RES_ROTATION, true, "deg/s", "" }
   , { "Off-Track Limit", BYTES(2), 1, true, "m", "" }
   , { "Vessel Heading", BYTES(2), RES_DEGREES, false, "deg", "" }
   , { 0 }
@@ -1072,7 +1073,7 @@ Pgn pgnList[] =
 ,
 { "Rate of Turn", 127251, true, 5, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Rate", BYTES(4), RES_DEGREES * 0.0001, true, "deg/s", "" }
+  , { "Rate", BYTES(4), RES_ROTATION * 0.0001, true, "deg/s", "" }
   , { 0 }
   }
 }
@@ -1080,9 +1081,9 @@ Pgn pgnList[] =
 ,
 { "Attitude", 127257, true, 7, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Yaw", BYTES(2), RES_DEGREES, true, "deg/s", "" }
-  , { "Pitch", BYTES(2), RES_DEGREES, true, "deg/s", "" }
-  , { "Roll", BYTES(2), RES_DEGREES, true, "deg/s", "" }
+  , { "Yaw", BYTES(2), RES_ROTATION, true, "deg/s", "" }
+  , { "Pitch", BYTES(2), RES_ROTATION, true, "deg/s", "" }
+  , { "Roll", BYTES(2), RES_ROTATION, true, "deg/s", "" }
   , { 0 }
   }
 }
@@ -1508,7 +1509,7 @@ Pgn pgnList[] =
   , { "Communication State", 19, RES_BINARY, false, 0, "Information used by the TDMA slot allocation algorithm and synchronization information" }
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
   , { "Heading", BYTES(2), RES_DEGREES, false, "deg", "True heading" }
-  , { "Rate of Turn", BYTES(2), RES_DEGREES, false, "deg/s", "" }
+  , { "Rate of Turn", BYTES(2), RES_ROTATION, false, "deg/s", "" }
   , { "Nav Status", BYTES(1), RES_LOOKUP, false, LOOKUP_NAV_STATUS, "" }
   , { "Reserved for Regional Applications", BYTES(1), 1, false, 0, "" }
   , { "Spare", BYTES(1), 1, false, 0, "" }
