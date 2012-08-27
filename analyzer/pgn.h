@@ -1274,7 +1274,7 @@ Pgn pgnList[] =
 ,
 { "Battery Status", 127508, true, 8, 0,
   { { "Battery Instance", BYTES(1), 1, false, 0, "" }
-  , { "Voltage", BYTES(2), 0.01, false, "V", "" }
+  , { "Voltage", BYTES(2), 0.01, true, "V", "" }
   , { "Current", BYTES(2), 0.1, true, "A", "" }
   , { "Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "SID", BYTES(1), 1, false, 0, "" }
