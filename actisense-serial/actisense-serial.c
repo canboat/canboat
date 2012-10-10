@@ -60,6 +60,7 @@ static int verbose = 0;
 static int readonly = 0;
 static int writeonly = 0;
 static int passthru = 0;
+static long timeout = 0;
 static bool isFile;
 
 enum MSG_State
@@ -114,6 +115,12 @@ int main(int argc, char ** argv)
     else if (strcasecmp(argv[1], "-v") == 0)
     {
       verbose = 1;
+    }
+    else if (strcasecmp(argv[1], "-t") == 0 && argc > 2)
+    {
+      argc--;
+      argv++;
+      timeout = strtol(argv[1], 0, 10);
     }
     else if (strcasecmp(argv[1], "-d") == 0)
     {
@@ -217,7 +224,7 @@ retry:
 static enum ReadyDescriptor isready(int fd1, int fd2)
 {
   fd_set fds;
-  struct timeval timeout;
+  struct timeval waitfor;
   int setsize;
   enum ReadyDescriptor r;
 
@@ -230,8 +237,8 @@ static enum ReadyDescriptor isready(int fd1, int fd2)
   {
     FD_SET(fd2, &fds);
   }
-  timeout.tv_sec = 10;
-  timeout.tv_usec = 0;
+  waitfor.tv_sec = timeout ? timeout : 10;
+  waitfor.tv_usec = 0;
   if (fd1 > fd2)
   {
     setsize = fd1 + 1;
@@ -240,19 +247,28 @@ static enum ReadyDescriptor isready(int fd1, int fd2)
   {
     setsize = fd2 + 1;
   }
-  r = select(setsize, &fds, 0, 0, &timeout);
-  if (!r)
+  r = select(setsize, &fds, 0, 0, &waitfor);
+  if (r < 0)
   {
-    return 0;
+    logError("I/O error; restart by quit\n");
+    exit(0);
   }
-  r = 0;
-  if (fd1 >= 0 && FD_ISSET(fd1, &fds))
+  if (r > 0)
   {
-    r |= FD1_Ready;
+    r = 0;
+    if (fd1 >= 0 && FD_ISSET(fd1, &fds))
+    {
+      r |= FD1_Ready;
+    }
+    if (fd2 >= 0 && FD_ISSET(fd2, &fds))
+    {
+      r |= FD2_Ready;
+    }
   }
-  if (fd2 >= 0 && FD_ISSET(fd2, &fds))
+  if (!r && timeout)
   {
-    r |= FD2_Ready;
+    logError("Timeout %ld seconds; restart by quit\n", timeout);
+    exit(0);
   }
   return r;
 }
