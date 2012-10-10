@@ -25,7 +25,7 @@ TARGETS=$(ANALYZER)
 all: $(TARGETS)
 
 $(ANALYZER): analyzer.c analyzer.h pgn.h ../common/common.c ../common/common.h
-	$(CC) -o $(ANALYZER) -I../common analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CFLAGS) -o $(ANALYZER) -I../common analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
