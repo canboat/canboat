@@ -750,9 +750,9 @@ Pgn pgnList[] =
 
   /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
 ,
-{ "NMEA - Request group function", 126208, true, 6 + 20 * 3, 2,
+{ "NMEA - Request group function", 126208, true, 8, 2,
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=0", "Request" }
-  , { "PGN", 24, RES_INTEGER, false, 0, "Requested PGN" }
+  , { "PGN", BYTES(3), RES_INTEGER, false, 0, "Requested PGN" }
   , { "Transmission interval", BYTES(4), 1, false, 0, "" }
   , { "Transmission interval offset", BYTES(2), 1, false, 0, "" }
   , { "# of Requested Parameters", 8, 1, false, 0, "How many parameter pairs will follow" }
@@ -763,10 +763,10 @@ Pgn pgnList[] =
 }
 
 ,
-{ "NMEA - Command group function", 126208, true, 6 + 20 * 3, 2,
+{ "NMEA - Command group function", 126208, true, 8, 2,
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=1", "Command" }
-  , { "PGN", 24, RES_INTEGER, false, 0, "Commanded or requested PGN" }
-  , { "Priority", 4, 1, false, 0, "8 = leave priority unchanged" }
+  , { "PGN", BYTES(3), RES_INTEGER, false, 0, "Commanded or requested PGN" }
+  , { "Priority", 4, 1, false, 0, ",8=Leave priority unchanged" }
   , { "Reserved", 4, 1, false, 0, "" }
   , { "# of Commanded Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow" }
   , { "Parameter Index", BYTES(1), RES_INTEGER, false, 0, "Parameter index" }
@@ -776,7 +776,7 @@ Pgn pgnList[] =
 }
 
 ,
-{ "NMEA - Acknowledge group function", 126208, true, 6 + 20 * 1, 1,
+{ "NMEA - Acknowledge group function", 126208, true, 8, 1,
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=2", "Acknowledge" }
   , { "PGN", 24, RES_INTEGER, false, 0, "Commanded or requested PGN" }
   , { "PGN error code", 4, 1, false, 0, "" }
