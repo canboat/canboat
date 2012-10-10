@@ -1472,10 +1472,11 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
     /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
 
     pgn = &pgnList[index];
+
     for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
     {
       field = pgn->fieldList[i];
-      if (!field.name)
+      if (!field.name || !field.size)
       {
         break;
       }
@@ -1490,7 +1491,6 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
         hasFixedField = true;
         extractNumber(&field, data, startBit, field.size, &value, &maxValue);
         desiredValue = strtol(field.units + 1, 0, 10);
-        logDebug("field=%s value=%"PRId64" desiredValue=%"PRId64"\n", field.name, value, desiredValue);
         if (value != desiredValue)
         {
           matchedFixedField = false;
@@ -1590,6 +1590,10 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
     if (strcmp(fieldName, "PGN") == 0)
     {
       refPgn = data[0] + (data[1] << 8) + (data[2] << 16);
+      if (showBytes)
+      {
+        mprintf("refPgn=%u ", refPgn);
+      }
     }
 
     if (field.resolution < 0.0)
@@ -1714,11 +1718,6 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       }
       else if (bits == LEN_VARIABLE)
       {
-        if (showBytes)
-        {
-          printf("refPgn=%d\n", refPgn);
-          fflush(stdout);
-        }
         printVarNumber(fieldName, pgn, refPgn, &field, data, startBit, &bits);
       }
       else if (bits > BYTES(8))
