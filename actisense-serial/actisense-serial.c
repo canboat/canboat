@@ -121,6 +121,7 @@ int main(int argc, char ** argv)
       argc--;
       argv++;
       timeout = strtol(argv[1], 0, 10);
+      logDebug("timeout set to %ld seconds\n", timeout);
     }
     else if (strcasecmp(argv[1], "-d") == 0)
     {

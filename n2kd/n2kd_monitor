@@ -139,11 +139,11 @@ for (;;)
         $ENV{'PATH'} = '/usr/local/bin:/bin:/usr/bin';
         if ($ACTISENSE_SECONDARY)
         {
-          exec '/bin/bash', '-c', "actisense-serial $ACTISENSE_PRIMARY | actisense-serial $ACTISENSE_SECONDARY | analyzer -clocksrc 35 -json | n2kd";
+          exec '/bin/bash', '-c', "actisense-serial -t 10 $ACTISENSE_PRIMARY | actisense-serial $ACTISENSE_SECONDARY -t 3 | analyzer -clocksrc 35 -json | n2kd";
         }
         else
         {
-          exec '/bin/bash', '-c', "actisense-serial $ACTISENSE_PRIMARY | analyzer -clocksrc 35 -json | n2kd";
+          exec '/bin/bash', '-c', "actisense-serial -t 10 $ACTISENSE_PRIMARY | analyzer -clocksrc 35 -json | n2kd";
         }
       }
       elsif ($n2kd)
