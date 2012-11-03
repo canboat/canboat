@@ -82,7 +82,7 @@ static void parseAndWriteIn(int handle, const unsigned char * cmd);
 static void writeRaw(int handle, const unsigned char * cmd, const size_t len);
 static void writeMessage(int handle, unsigned char command, const unsigned char * cmd, const size_t len);
 static void readNGT1Byte(unsigned char c);
-static void readNGT1(int handle);
+static int readNGT1(int handle);
 static void messageReceived(const unsigned char * msg, size_t msgLen);
 static void n2kMessageReceived(const unsigned char * msg, size_t msgLen);
 static void ngtMessageReceived(const unsigned char * msg, size_t msgLen);
@@ -198,19 +198,23 @@ retry:
 
     if ((r & FD1_Ready) > 0)
     {
-      readNGT1(handle);
+      if (!readNGT1(handle))
+      {
+        break;
+      }
     }
     if ((r & FD2_Ready) > 0)
     {
-      if (readIn(msg, sizeof(msg)))
+      if (!readIn(msg, sizeof(msg)))
       {
-        if (!passthru)
-        {
-          parseAndWriteIn(handle, msg);
-        }
-        fprintf(stdout, "%s", msg);
-        fflush(stdout);
+        break;
       }
+      if (!passthru)
+      {
+        parseAndWriteIn(handle, msg);
+      }
+      fprintf(stdout, "%s", msg);
+      fflush(stdout);
     }
     else if (writeonly)
     {
@@ -480,7 +484,7 @@ static void readNGT1Byte(unsigned char c)
   }
 }
 
-static void readNGT1(int handle)
+static int readNGT1(int handle)
 {
   size_t i;
   ssize_t r;
@@ -490,15 +494,10 @@ static void readNGT1(int handle)
 
   r = read(handle, buf, sizeof(buf));
 
-  if (r == 0) /* No char read, abort message read */
-  {
-    return;
-  }
-
-  if (r < 0) /* Error, abort the program */
+  if (r <= 0) /* No char read, abort message read */
   {
     logError("Unable to read from NGT1 device\n");
-    exit(1);
+    return 0;
   }
 
   logDebug("Read %d bytes from device\n", (int) r);
