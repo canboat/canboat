@@ -101,6 +101,8 @@ typedef struct
 # define RES_STRING (-12.0)
 # define RES_FLOAT (-13.0)
 # define RES_PRESSURE (-14.0)
+# define RES_STRINGLZ (-1.0)             /* ASCII string starting with length byte and terminated by zero byte */
+
   bool hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   char * units; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
                  * case it contains a set of lookup values.
@@ -2617,6 +2619,78 @@ Pgn pgnList[] =
 }
 
 ,
+{ "SonicHub: Current Track", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Type", BYTES(1), RES_LOOKUP, false, "=14", "Current Track" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
+  , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Current Artist", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Type", BYTES(1), RES_LOOKUP, false, "=15", "Current Artist" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
+  , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Current Album", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Type", BYTES(1), RES_LOOKUP, false, "=16", "Current Album" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
+  , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Menu Item", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Type", BYTES(1), RES_LOOKUP, false, "=19", "Menu Item" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
+  , { "C", BYTES(1), 1, false, 0, "" }
+  , { "D", BYTES(1), 1, false, 0, "" }
+  , { "E", BYTES(1), 1, false, 0, "" }
+  , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Position", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Type", BYTES(1), RES_LOOKUP, false, "=48", "Position" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Position", BYTES(4), 0.001, false, "s", "" }
+  , { 0 }
+  }
+}
+
+,
 { "Simrad: Text Message", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
   , { "Reserved", 2, 1, false, 0, "" }
@@ -2625,7 +2699,6 @@ Pgn pgnList[] =
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
-  , { "D", BYTES(1), 1, false, 0, "" }
   , { "SID", BYTES(1), 1, false, 0, "" }
   , { "Prio", BYTES(1), 1, false, 0, "" }
   , { "Text", BYTES(32), RES_ASCII, false, 0, "" }

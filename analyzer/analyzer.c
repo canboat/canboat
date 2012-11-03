@@ -1598,19 +1598,29 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
 
     if (field.resolution < 0.0)
     {
+      int len;
+      int k;
+
       /* These fields have only been found to start on byte boundaries,
        * making their location easier
        */
+      if (field.resolution == RES_STRINGLZ)
+      {
+        len = *data++;
+        bytes--;
+        goto ascii_string;
+      }
+
       if (field.resolution == RES_ASCII)
       {
-        int len = (int) bytes;
-        int k;
+        len = (int) bytes;
 
         while (len > 0 && ((data[len - 1] == 0xff) || (data[len - 1] == ' ') || (data[len - 1] == 0)))
         {
           len--;
         }
 
+ascii_string:
         if (showBytes)
         {
           for (k = 0; k < len; k++)
