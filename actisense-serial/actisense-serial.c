@@ -231,7 +231,8 @@ static enum ReadyDescriptor isready(int fd1, int fd2)
   fd_set fds;
   struct timeval waitfor;
   int setsize;
-  enum ReadyDescriptor r;
+  int r;
+  enum ReadyDescriptor ret;
 
   FD_ZERO(&fds);
   if (fd1 >= 0)
@@ -260,22 +261,22 @@ static enum ReadyDescriptor isready(int fd1, int fd2)
   }
   if (r > 0)
   {
-    r = 0;
+    ret = 0;
     if (fd1 >= 0 && FD_ISSET(fd1, &fds))
     {
-      r |= FD1_Ready;
+      ret |= FD1_Ready;
     }
     if (fd2 >= 0 && FD_ISSET(fd2, &fds))
     {
-      r |= FD2_Ready;
+      ret |= FD2_Ready;
     }
   }
-  if (!r && timeout)
+  if (!ret && timeout)
   {
     logError("Timeout %ld seconds; restart by quit\n", timeout);
     exit(0);
   }
-  return r;
+  return ret;
 }
 
 static void parseAndWriteIn(int handle, const unsigned char * cmd)
@@ -517,6 +518,8 @@ static int readNGT1(int handle)
     c = buf[i];
     readNGT1Byte(c);
   }
+
+  return r;
 }
 
 static char * now(void)

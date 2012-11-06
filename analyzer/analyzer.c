@@ -1486,7 +1486,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       if (field.units && field.units[0] == '=')
       {
         int64_t value, desiredValue;
-        uint64_t maxValue;
+        int64_t maxValue;
 
         hasFixedField = true;
         extractNumber(&field, data, startBit, field.size, &value, &maxValue);
