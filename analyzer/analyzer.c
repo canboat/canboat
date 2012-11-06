@@ -819,11 +819,11 @@ static bool printTemperature(char * name, uint16_t t)
 
   if (showJson)
   {
-    mprintf("%s\"%s\":\"%5.2f\"", getSep(), name, c, f);
+    mprintf("%s\"%s\":\"%.2f\"", getSep(), name, c, f);
   }
   else
   {
-    mprintf("%s %s = %5.2f C (%5.1f F)", getSep(), name, c, f);
+    mprintf("%s %s = %.2f C (%.1f F)", getSep(), name, c, f);
   }
   return true;
 }
@@ -844,7 +844,7 @@ static bool printPressure(char * name, uint16_t hp)
   }
   else
   {
-    mprintf("%s %s = %5.3f bar (%5.1f PSI)", getSep(), name, bar, psi);
+    mprintf("%s %s = %.3f bar (%.1f PSI)", getSep(), name, bar, psi);
   }
   return true;
 }
