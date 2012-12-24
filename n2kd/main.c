@@ -34,13 +34,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #define PORT 2597
 
-#define UPDATE_INTERVAL 2       /* Every x seconds send the normal 'once' clients all state */
+#define UPDATE_INTERVAL (500)       /* Every x milliseconds send the normal 'once' clients all state */
 
 uint16_t port = PORT;
 
 uint32_t protocol = 1;
 unsigned int timeout = 120; /* Timeout when PGN messages expire (no longer retransmitted) */
-#define AIS_TIMEOUT (3 * timeout)  /* Note that AIS messsages expiration is 3 * timeout */
+#define AIS_TIMEOUT (30 * timeout)  /* Note that AIS messsages expiration is 30 * timeout */
 
 
 /*
@@ -53,7 +53,7 @@ int clientIdxMax = 0;
 SOCKET clientFdMax = 0;
 fd_set clientSet;
 SOCKET clientFd[FD_SETSIZE];
-time_t clientTimeout[FD_SETSIZE];
+int64_t clientTimeout[FD_SETSIZE];
 int clientType[FD_SETSIZE];
 #define CLIENT_STREAM 1
 
@@ -141,6 +141,17 @@ static char * secondaryKeyList[] =
 
 /*****************************************************************************************/
 
+int64_t epoch(void)
+{
+  struct timeval t;
+
+  if (gettimeofday(&t, 0))
+  {
+    logAbort("Error on obtaining wall clock\n");
+  }
+  return (int64_t) t.tv_sec * 1000 + t.tv_usec / 1000;
+}
+
 int setFdUsed(SOCKET fd)
 {
   int i;
@@ -159,7 +170,7 @@ int setFdUsed(SOCKET fd)
     return -1;
   }
 
-  clientTimeout[i] = time(0) + UPDATE_INTERVAL;
+  clientTimeout[i] = epoch() + UPDATE_INTERVAL;
   clientType[i] = 0;
   clientFd[i] = fd;
   clientIdxMax = CB_MAX(clientIdxMax, i);
@@ -370,7 +381,7 @@ void checkClients(void)
   int r;
   int i;
   SOCKET fd;
-  time_t now = 0;
+  int64_t now = 0;
   char * state = 0;
 
   if (clientIdxMax >= 0)
@@ -401,7 +412,7 @@ void checkClients(void)
           }
           else
           {
-            if (!now) now = time(0);
+            if (!now) now = epoch();
             if (clientTimeout[i] && clientTimeout[i] < now)
             {
               if (!state)
@@ -411,7 +422,7 @@ void checkClients(void)
               sendClientState(fd, state);
               if (clientType[i] == CLIENT_STREAM)
               {
-                clientTimeout[i] = time(0) + UPDATE_INTERVAL;
+                clientTimeout[i] = epoch() + UPDATE_INTERVAL;
               }
               else
               {
@@ -626,7 +637,16 @@ void handleMessageByte(char c)
     logAbort("Out of memory allocating %u bytes", r + 1);
   }
   strcpy(m->m_text, readLine);
-  m->m_time = now + (key2 > 256 ? AIS_TIMEOUT : timeout);
+  if (  key2 > 256    /* AIS MMSI */
+     || prn == 130816 /* SonicHub */
+     )
+  {
+    m->m_time = now + AIS_TIMEOUT;
+  }
+  else
+  {
+    m->m_time = now + timeout;
+  }
 }
 
 void handleMessage()
