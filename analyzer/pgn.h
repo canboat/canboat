@@ -101,7 +101,7 @@ typedef struct
 # define RES_STRING (-12.0)
 # define RES_FLOAT (-13.0)
 # define RES_PRESSURE (-14.0)
-# define RES_STRINGLZ (-1.0)             /* ASCII string starting with length byte and terminated by zero byte */
+# define RES_STRINGLZ (-15.0)            /* ASCII string starting with length byte and terminated by zero byte */
 
   bool hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   char * units; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
@@ -2619,14 +2619,62 @@ Pgn pgnList[] =
 }
 
 ,
-{ "SonicHub: Current Track", 130816, false, 0x40, 0,
+{ "SonicHub: AM Radio", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Reserved", BYTES(1), 1, false, 0, "" }
-  , { "Type", BYTES(1), RES_LOOKUP, false, "=14", "Current Track" }
-  , { "A", BYTES(1), 1, false, 0, "" }
-  , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=4", "AM Radio" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Seeking up,2=Tuned,3=Seeking down", "" }
+  , { "Frequency", BYTES(4), 0.001, false, "kHz", "" }
+  , { "Noise level", 2, 1, false, 0, "" }  // Not sure about this
+  , { "Signal level", 4, 1, false, 0, "" } // ... and this, doesn't make complete sense compared to display
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Source", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=6", "Source" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Source", BYTES(1), RES_LOOKUP, false, ",0=AM,1=FM,2=iPod,3=USB,4=AUX,5=AUX 2,6=Mic", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Mute", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Control" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Mute on,2=Mute off", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: FM Radio", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=12", "FM Radio" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Seeking up,2=Tuned,3=Seeking down", "" }
+  , { "Frequency", BYTES(4), 0.001, false, "kHz", "" }
+  , { "Noise level", 2, 1, false, 0, "" }  // Not sure about this
+  , { "Signal level", 4, 1, false, 0, "" } // ... and this, doesn't make complete sense compared to display
+  , { "Reserved", 2, 1, false, 0, "" }
   , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
   , { 0 }
   }
@@ -2638,8 +2686,8 @@ Pgn pgnList[] =
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Reserved", BYTES(1), 1, false, 0, "" }
-  , { "Type", BYTES(1), RES_LOOKUP, false, "=15", "Current Artist" }
-  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=15", "Current Artist" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
   , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
   , { 0 }
@@ -2652,8 +2700,8 @@ Pgn pgnList[] =
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Reserved", BYTES(1), 1, false, 0, "" }
-  , { "Type", BYTES(1), RES_LOOKUP, false, "=16", "Current Album" }
-  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=16", "Current Album" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
   , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
   , { 0 }
@@ -2666,8 +2714,8 @@ Pgn pgnList[] =
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Reserved", BYTES(1), 1, false, 0, "" }
-  , { "Type", BYTES(1), RES_LOOKUP, false, "=19", "Menu Item" }
-  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=19", "Menu Item" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
   , { "D", BYTES(1), 1, false, 0, "" }
@@ -2678,12 +2726,26 @@ Pgn pgnList[] =
 }
 
 ,
+{ "SonicHub: Volume", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=24", "Volume" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Zone", BYTES(1), RES_LOOKUP, false, ",0=Zone 1,1=Zone 2,2=Zone 3", "" }
+  , { "Level", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
 { "SonicHub: Position", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Reserved", BYTES(1), 1, false, 0, "" }
-  , { "Type", BYTES(1), RES_LOOKUP, false, "=48", "Position" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=48", "Position" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "Position", BYTES(4), 0.001, false, "s", "" }
   , { 0 }
@@ -3007,7 +3069,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "AP command", BYTES(1), RES_LOOKUP, false, "=2", "AP command" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command" }
   , { "B", BYTES(2), 1, false, 0, "" }
   , { "Controlling Device", BYTES(1), 1, false, 0, "" }
   , { "Event", BYTES(2), RES_LOOKUP, false, LOOKUP_SIMNET_AP_EVENTS, "" }
@@ -3024,7 +3086,7 @@ Pgn pgnList[] =
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "A", BYTES(2), 1, false, 0, "" }
-  , { "Alarm command", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command" }
   , { "C", BYTES(1), 1, false, 0, "" }
   , { "Alarm", BYTES(2), RES_LOOKUP, false, ",57=Raise,56=Clear", "" }
   , { "Message ID", BYTES(2), RES_INTEGER, false, 0, "" }
@@ -3040,7 +3102,8 @@ Pgn pgnList[] =
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "A", BYTES(2), 1, false, 0, "" }
-  , { "B", BYTES(2), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command" }
+  , { "B", BYTES(1), 1, false, 0, "" }
   , { "C", BYTES(2), 1, false, 0, "" }
   , { "D", BYTES(2), 1, false, 0, "" }
   , { "E", BYTES(2), 1, false, 0, "" }
@@ -3053,7 +3116,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "AP command", BYTES(1), RES_LOOKUP, false, "=2", "AP command" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command" }
   , { "B", BYTES(2), 1, false, 0, "" }
   , { "Controlling Device", BYTES(1), 1, false, 0, "" }
   , { "Event", BYTES(2), RES_LOOKUP, false, LOOKUP_SIMNET_AP_EVENTS, "" }

@@ -1584,7 +1584,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
 
     if (showBytes)
     {
-      mprintf("\ndecode %s startBit=%u bits=%u bytes=%u:", field.name, startBit, bits, bytes);
+      mprintf("\ndecode %s offset=%u startBit=%u bits=%u bytes=%u:", field.name, data - dataStart, startBit, bits, bytes);
     }
 
     if (strcmp(fieldName, "PGN") == 0)
@@ -1614,10 +1614,14 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       if (field.resolution == RES_ASCII)
       {
         len = (int) bytes;
+        char lastbyte = data[len - 1];
 
-        while (len > 0 && ((data[len - 1] == 0xff) || (data[len - 1] == ' ') || (data[len - 1] == 0)))
+        if (lastbyte == 0xff || lastbyte == ' ' || lastbyte == 0 || lastbyte == '@')
         {
-          len--;
+          while (len > 0 && (data[len - 1] == lastbyte))
+          {
+            len--;
+          }
         }
 
 ascii_string:

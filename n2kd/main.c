@@ -132,6 +132,7 @@ static char * secondaryKeyList[] =
   , "\"Message ID\":\"" /* Key index 2 */
 # define SECONDARY_KEY_MESSAGE_ID (2)
   , "\"User ID\":\""
+  , "\"Proprietary ID\":\""
   };
 
 #ifndef ARRAYSIZE
