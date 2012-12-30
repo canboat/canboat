@@ -22,7 +22,8 @@ clean:
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
 	
 install:
-	cp rel/$(PLATFORM)/* */*_monitor /usr/local/bin
+	for i in rel/$(PLATFORM)/* */*_monitor; do f=`basename $$i`; rm /usr/local/bin/$$f; cp $$i /usr/local/bin; done
+	killall -9 actisense-serial n2kd
 
 zip:
 	(cd rel; zip -r ../packetlogger_`date +%Y%m%d`.zip *)
