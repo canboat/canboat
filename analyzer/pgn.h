@@ -2619,6 +2619,20 @@ Pgn pgnList[] =
 }
 
 ,
+{ "SonicHub: Init #2", 130816, false, 9, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Init #2" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "A", BYTES(2), RES_INTEGER, false, 0, "" }
+  , { "B", BYTES(2), RES_INTEGER, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
 { "SonicHub: AM Radio", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
   , { "Reserved", 2, 1, false, 0, "" }
@@ -2637,6 +2651,19 @@ Pgn pgnList[] =
 }
 
 ,
+{ "SonicHub: Zone info", 130816, false, 6, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=5", "Zone info" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Zone", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
 { "SonicHub: Source", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
   , { "Reserved", 2, 1, false, 0, "" }
@@ -2650,7 +2677,22 @@ Pgn pgnList[] =
 }
 
 ,
-{ "SonicHub: Mute", 130816, false, 0x40, 0,
+{ "SonicHub: Source List", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=8", "Source list" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Source ID", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "A", 8, RES_INTEGER, false, 0, "" }
+  , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Control", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
@@ -2658,6 +2700,20 @@ Pgn pgnList[] =
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Control" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Mute on,2=Mute off", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Unknown", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Unknown" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "A", 8, RES_INTEGER, false, 0, "" }
+  , { "B", 8, RES_INTEGER, false, 0, "" }
   , { 0 }
   }
 }
@@ -2681,12 +2737,30 @@ Pgn pgnList[] =
 }
 
 ,
-{ "SonicHub: Current Artist", 130816, false, 0x40, 0,
+{ "SonicHub: Playlist", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Reserved", BYTES(1), 1, false, 0, "" }
-  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=15", "Current Artist" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=13", "Playlist" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Report,4=Next Song,6=Previous Song", "" }
+  , { "A", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Current Track", BYTES(4), RES_INTEGER, false, 0, "" }
+  , { "Tracks", BYTES(4), RES_INTEGER, false, 0, "" }
+  , { "Length", BYTES(4), 0.001, false, "s", "" }
+  , { "Position in track", BYTES(4), 0.001, false, "s", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Track", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=14", "Track" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
   , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
@@ -2695,12 +2769,26 @@ Pgn pgnList[] =
 }
 
 ,
-{ "SonicHub: Current Album", 130816, false, 0x40, 0,
+{ "SonicHub: Artist", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Reserved", BYTES(1), 1, false, 0, "" }
-  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=16", "Current Album" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=15", "Artist" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
+  , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Album", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=16", "Album" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
   , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
@@ -2726,6 +2814,33 @@ Pgn pgnList[] =
 }
 
 ,
+{ "SonicHub: Zones", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=20", "Zones" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Zones", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Max Volume", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=23", "Max Volume" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "Zone", BYTES(1), RES_LOOKUP, false, ",0=Zone 1,1=Zone 2,2=Zone 3", "" }
+  , { "Level", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
 { "SonicHub: Volume", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
   , { "Reserved", 2, 1, false, 0, "" }
@@ -2740,14 +2855,40 @@ Pgn pgnList[] =
 }
 
 ,
-{ "SonicHub: Position", 130816, false, 0x40, 0,
+{ "SonicHub: Init #1", 130816, false, 0x40, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=25", "Init #1" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Position", 130816, true, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Reserved", BYTES(1), 1, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=48", "Position" }
-  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Position", BYTES(4), 0.001, false, "s", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SonicHub: Init #3", 130816, false, 9, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3" }
+  , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
+  , { "A", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "B", BYTES(1), RES_INTEGER, false, 0, "" }
   , { 0 }
   }
 }
@@ -2757,7 +2898,8 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Product Code", BYTES(2), RES_INTEGER, false, 0, "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
@@ -3255,68 +3397,102 @@ typedef struct
   size_t id;
 } Company;
 
+/* http://www.nmea.org/Assets/20121212%20nmea%202000%20registration%20list.pdf */
 Company companyList[] =
 { { "Volvo Penta", 174 }
 , { "Actia Corporation", 199 }
 , { "Actisense", 273 }
 , { "Aetna Engineering/Fireboy-Xintex", 215 }
 , { "Airmar", 135 }
+, { "Alltek", 459 }
 , { "B&G", 381 }
 , { "Beede Electrical", 185 }
 , { "BEP", 295 }
+, { "Beyond Measure", 396 }
 , { "Blue Water Data", 148 }
-, { "Bombardier" , 163 }
-, { "C*Pac", 165 }
+, { "Evinrude/Bombardier" , 163 }
+, { "Camano Light", 384 }
+, { "Capi 2", 394 }
+, { "Carling", 176 }
+, { "CPac", 165 }
 , { "Coelmo", 286 }
+, { "ComNav", 404 }
+, { "Cummins", 440 }
 , { "Dief", 329 }
+, { "Digital Yacht", 437 }
 , { "Disenos Y Technologia", 201 }
 , { "DNA Group", 211 }
+, { "Egersund Marine", 426 }
 , { "Electronic Design", 373 }
+, { "Em-Trak", 427 }
 , { "EMMI Network", 224 }
+, { "Empirbus", 304 }
 , { "eRide", 243 }
-, { "Envinrude/BRP", 163 }
 , { "Faria Instruments", 1863 }
+, { "Fischer Panda", 356 }
 , { "Floscan", 192 }
 , { "Furuno", 1855 }
+, { "Fusion", 419 }
 , { "FW Murphy", 78 }
 , { "Garmin", 229 }
+, { "Geonav", 385 }
+, { "Glendinning", 378 }
+, { "GME / Standard", 475 }
 , { "Groco", 272 }
 , { "Hamilton Jet", 283 }
-, { "Hemisphere GPS/Satloc Precision", 88 }
+, { "Hemisphere GPS", 88 }
 , { "Honda", 257 }
+, { "Hummingbird", 467 }
 , { "ICOM", 315 }
 , { "JRC", 1853 }
 , { "Kvasar", 1859 }
 , { "Kohler", 85 }
 , { "Korea Maritime University", 345 }
+, { "LCJ Capteurs", 499 }
 , { "Litton", 1858 }
+, { "Livorsi", 400 }
 , { "Lowrance", 140 }
 , { "Maretron", 137 }
+, { "MBW", 307 }
 , { "Mastervolt", 355 }
 , { "Mercury", 144 }
 , { "MMP", 1860 }
-, { "Moritz", 176 }
 , { "Mystic Valley Comms", 198 }
 , { "Nautibus", 147 }
 , { "Navico", 275 }
 , { "Navionics", 1852 }
+, { "Naviop", 503 }
 , { "Nobeltec", 193 }
+, { "Noland", 517 }
 , { "Northern Lights", 374 }
 , { "Northstar", 1854 }
+, { "Novatel", 305 }
 , { "Offshore Systems", 161 }
 , { "Qwerty", 328 }
+, { "Parker Hannifin", 451 }
 , { "Raymarine", 1851 }
 , { "Rolls Royce", 370 }
-, { "Sea Recovery", 285 }
 , { "SailorMade/Tetra", 235 }
+, { "San Giorgio", 460 }
+, { "Sea Cross", 471 }
+, { "Sea Recovery", 285 }
 , { "Yamaha", 1862 }
 , { "Simrad", 1857 }
+, { "Sitex", 470 }
 , { "Sleipner", 306 }
 , { "Teleflex", 1850 }
 , { "Thrane and Thrane", 351 }
+, { "Tohatsu", 431 }
+, { "Transas", 518 }
 , { "Trimble", 1856 }
+, { "True Heading", 422 }
+, { "Twin Disc", 80 }
 , { "Vector Cantech", 1861 }
+, { "Veethree", 466 }
+, { "Vertex", 421 }
+, { "Vesper", 504 }
 , { "Victron", 358 }
+, { "Watcheye", 493 }
 , { "Westerbeke", 154 }
 , { "Xantrex", 168 }
 , { "Yacht Monitoring Solutions", 233 }
