@@ -153,27 +153,25 @@ const Resolution types[] =
           ",90=Other,91=Other carrying dangerous goods,92=Other hazard cat B,93=Other hazard cat C,94=Other hazard cat D,99=Other (no additional information)" \
           )
 
+/* http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf */
 #define LOOKUP_DEVICE_CLASS ( \
           ",0=Reserved for 2000 Use" \
           ",10=System tools" \
           ",20=Safety systems" \
           ",25=Internetwork device" \
-          ",30=Power management and lighting systems" \
-          ",40=Steering systems" \
-          ",50=Propulsion systems" \
-          ",60=Navigation systems" \
-          ",70=Communication systems" \
+          ",30=Electrical Distribution" \
+          ",35=Electrical Generation" \
+          ",40=Steering and Control surfaces" \
+          ",50=Propulsion" \
+          ",60=Navigation" \
+          ",70=Communication" \
+          ",75=Sensor Communication Interface" \
           ",80=Instrumentation/general systems" \
-          ",90=Environmental (HVAC) systems" \
+          ",85=External Environment" \
+          ",90=Internal Environment" \
           ",100=Deck, cargo and fishing equipment systems" \
-          )
-
-#define LOOKUP_FUNCTION_CODE_25 ( \
-          ",110=Alarm enunciator" \
-          ",130=Gateway" \
-          ",140=Router" \
-          ",150=Bridge" \
-          ",160=Repeater" \
+          ",120=Display" \
+          ",125=Entertainment" \
           )
 
 #define LOOKUP_REPEAT_INDICATOR ( \
