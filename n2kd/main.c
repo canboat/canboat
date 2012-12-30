@@ -39,8 +39,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 uint16_t port = PORT;
 
 uint32_t protocol = 1;
-unsigned int timeout = 120; /* Timeout when PGN messages expire (no longer retransmitted) */
-#define AIS_TIMEOUT (30 * timeout)  /* Note that AIS messsages expiration is 30 * timeout */
+
+#define SENSOR_TIMEOUT   (120)            /* Timeout when PGN messages expire (no longer retransmitted) */
+#define AIS_TIMEOUT      (3600)           /* AIS messages expiration is much longer */
+#define SONICHUB_TIMEOUT (3600 * 24 * 31) /* SonicHub messages expiration is basically indefinite */
 
 
 /*
@@ -86,15 +88,13 @@ FILE * outf;
  *
  * the 'primary key' is the combination of the following 2 fields:
  * - src
- * - key2 (either 0, instance, mmsi or strlen('Reference' field))
+ * - key2 (value of some field in the message, or null)
  *
  */
 typedef struct
 {
   uint8_t m_src;
-  uint32_t m_key2;
-# define m_instance m_key2
-# define m_mmsi m_key2
+  char * m_key2;
   time_t m_time;
   char * m_text;
 } Message;
@@ -127,13 +127,24 @@ Pgn ** pgnList[512];
 size_t maxPgnList;
 
 static char * secondaryKeyList[] =
-  { "Instance\":\""
-  , "\"Reference\":\""
-  , "\"Message ID\":\"" /* Key index 2 */
-# define SECONDARY_KEY_MESSAGE_ID (2)
-  , "\"User ID\":\""
-  , "\"Proprietary ID\":\""
+  { "Instance\""
+  , "\"Reference\""
+  , "\"Message ID\""
+  , "\"User ID\""
+  , "\"Proprietary ID\""
   };
+
+static int secondaryKeyTimeout[] =
+  { SENSOR_TIMEOUT
+  , SENSOR_TIMEOUT
+  , AIS_TIMEOUT
+  , AIS_TIMEOUT
+  , SENSOR_TIMEOUT
+  , SENSOR_TIMEOUT
+  };
+
+/* Characters that occur between key name and value */
+#define SKIP_CHARACTERS "\": "
 
 #ifndef ARRAYSIZE
 # define ARRAYSIZE(x) (sizeof(x)/sizeof(x[0]))
@@ -247,10 +258,11 @@ static char * copyClientState(void)
 
       if (m->m_time >= now)
       {
-        MAKE_SPACE(m->m_text + 32);
-        snprintf(state + l, remain, "  ,\"%u_%u\":%s\n"
+        MAKE_SPACE(strlen(m->m_text) + 32);
+        snprintf(state + l, remain, "  ,\"%u%s%s\":%s\n"
                 , m->m_src
-                , m->m_key2
+                , m->m_key2 ? "_" : ""
+                , m->m_key2 ? m->m_key2 : ""
                 , m->m_text
                 );
         INC_L_REMAIN;
@@ -443,13 +455,15 @@ void checkClients(void)
 
 void handleMessageByte(char c)
 {
-  static char readLine[4096], *readBegin = readLine, *s, *e = 0;
+  static char readLine[4096], *readBegin = readLine, *s, *e = 0, *e2;
   size_t r;
   Message * m;
   int i, idx, k;
-  int src, key2, dst, prn;
+  int src, dst, prn;
   Pgn * pgn;
   time_t now;
+  char * key2 = 0;
+  int valid;
 
   if ((c != '\n') && (readBegin < readLine + sizeof(readLine)))
   {
@@ -457,7 +471,6 @@ void handleMessageByte(char c)
     return;
   }
   *readBegin = 0;
-  key2 = 0;
   now = time(0);
 
   r = readBegin - readLine;
@@ -501,32 +514,35 @@ void handleMessageByte(char c)
     return;
   }
 
+  /* Look for a secondary key */
   for (k = 0; k < ARRAYSIZE(secondaryKeyList); k++)
   {
     s = strstr(readLine, secondaryKeyList[k]);
     if (s)
     {
       s += strlen(secondaryKeyList[k]);
-      if (sscanf(s, "%u", &key2))
+      while (strchr(SKIP_CHARACTERS, *s))
       {
-#ifdef DEBUG
-        logDebug("%s=%u\n", secondaryKeyList[k], key2);
-#endif
-        break;
+        s++;
       }
-      else
+
+      e = strchr(s, ' ');
+      e2 = strchr(s, '"');
+      if (!e || e2 < e)
       {
-        if (k == SECONDARY_KEY_MESSAGE_ID)
-        {
-          s = strchr(s, '"') - 1;
-          src = *s - 'A';
-        }
-        else
-        {
-          key2 = strchr(s, '"') - s;
-          break;
-        }
+        e = e2;
       }
+      if (!e)
+      {
+        e = s + strlen(s);
+      }
+      key2 = malloc(e - s + 1);
+      if (!key2)
+      {
+        logAbort("Out of memory allocating %u bytes", e - s);
+      }
+      memcpy(key2, s, e - s);
+      key2[e - s] = 0;
     }
   }
 
@@ -562,7 +578,12 @@ void handleMessageByte(char c)
     if (s)
     {
       s = s + sizeof("\"description\":");
-      e = strchr(s, '"');
+      e = strchr(s, ':');
+      e2 = strchr(s, '"');
+      if (!e || e2 < e)
+      {
+        e = e2;
+      }
       if (!e)
       {
         logDebug("Cannot find end of description in %s\n", s);
@@ -582,9 +603,19 @@ void handleMessageByte(char c)
   /* Find existing key */
   for (i = 0; i < pgn->p_maxSrc; i++)
   {
-    if (pgn->p_message[i].m_src == src && pgn->p_message[i].m_key2 == key2)
+    if (pgn->p_message[i].m_src == src)
     {
-      break;
+      if (pgn->p_message[i].m_key2)
+      {
+        if (key2 && strcmp(pgn->p_message[i].m_key2, key2) == 0)
+        {
+          break;
+        }
+      }
+      else
+      {
+        break;
+      }
     }
   }
 
@@ -596,7 +627,12 @@ void handleMessageByte(char c)
       if (pgn->p_message[i].m_time < now)
       {
         pgn->p_message[i].m_src = (uint8_t) src;
+        if (pgn->p_message[i].m_key2)
+        {
+          free(pgn->p_message[i].m_key2);
+        }
         pgn->p_message[i].m_key2 = key2;
+        key2 = 0;
         break;
       }
     }
@@ -617,6 +653,7 @@ void handleMessageByte(char c)
     pgnIdx[idx] = pgn;
     pgn->p_message[i].m_src = (uint8_t) src;
     pgn->p_message[i].m_key2 = key2;
+    key2 = 0;
     pgn->p_message[i].m_text = 0;
   }
 
@@ -637,16 +674,20 @@ void handleMessageByte(char c)
     logAbort("Out of memory allocating %u bytes", r + 1);
   }
   strcpy(m->m_text, readLine);
-  if (  key2 > 256    /* AIS MMSI */
-     || prn == 130816 /* SonicHub */
-     )
+
+  if (prn == 126996)
   {
-    m->m_time = now + AIS_TIMEOUT;
+    valid = AIS_TIMEOUT;
+  }
+  else if (prn == 130816)
+  {
+    valid = SONICHUB_TIMEOUT;
   }
   else
   {
-    m->m_time = now + timeout;
+    valid = secondaryKeyTimeout[k];
   }
+  m->m_time = now + valid;
 }
 
 void handleMessage()
@@ -788,14 +829,6 @@ int main (int argc, char **argv)
     {
       outf = stdout;
     }
-    else if (strcasecmp(argv[1], "-t") == 0)
-    {
-      if (argc > 2)
-      {
-        sscanf(argv[2], "%u", &timeout);
-        argc--, argv++;
-      }
-    }
     else if (strcasecmp(argv[1], "-p") == 0)
     {
       if (argc > 2)
@@ -815,7 +848,7 @@ int main (int argc, char **argv)
     }
     else
     {
-      fprintf(stderr, "usage: n2kd [-d] [-o] [-t <timeout>] [-p <port>] [-r]\n\n"COPYRIGHT);
+      fprintf(stderr, "usage: n2kd [-d] [-o] [-p <port>] [-r]\n\n"COPYRIGHT);
       exit(1);
     }
     argc--, argv++;
