@@ -232,7 +232,7 @@ static enum ReadyDescriptor isready(int fd1, int fd2)
   struct timeval waitfor;
   int setsize;
   int r;
-  enum ReadyDescriptor ret;
+  enum ReadyDescriptor ret = 0;
 
   FD_ZERO(&fds);
   if (fd1 >= 0)
@@ -256,12 +256,10 @@ static enum ReadyDescriptor isready(int fd1, int fd2)
   r = select(setsize, &fds, 0, 0, &waitfor);
   if (r < 0)
   {
-    logError("I/O error; restart by quit\n");
-    exit(0);
+    logAbort("I/O error; restart by quit\n");
   }
   if (r > 0)
   {
-    ret = 0;
     if (fd1 >= 0 && FD_ISSET(fd1, &fds))
     {
       ret |= FD1_Ready;
@@ -273,8 +271,7 @@ static enum ReadyDescriptor isready(int fd1, int fd2)
   }
   if (!ret && timeout)
   {
-    logError("Timeout %ld seconds; restart by quit\n", timeout);
-    exit(0);
+    logAbort("Timeout %ld seconds; restart by quit\n", timeout);
   }
   return ret;
 }
@@ -497,8 +494,7 @@ static int readNGT1(int handle)
 
   if (r <= 0) /* No char read, abort message read */
   {
-    logError("Unable to read from NGT1 device\n");
-    return 0;
+    logAbort("Unable to read from NGT1 device\n");
   }
 
   logDebug("Read %d bytes from device\n", (int) r);
