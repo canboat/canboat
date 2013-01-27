@@ -1474,8 +1474,8 @@ Pgn pgnList[] =
   , { "Integrity", 2, RES_LOOKUP, false, LOOKUP_GNS_INTEGRITY, "" }
   , { "Reserved", 6, RES_BINARY, false, 0, "Reserved" }
   , { "Number of SVs", BYTES(1), 1, false, 0, "Number of satellites used in solution" }
-  , { "HDOP", BYTES(2), 0.01, false, 0, "Horizontal dilution of precision" }
-  , { "PDOP", BYTES(2), 0.01, false, 0, "Probable dilution of precision" }
+  , { "HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision" }
+  , { "PDOP", BYTES(2), 0.01, true, 0, "Probable dilution of precision" }
   , { "Geoidal Separation", BYTES(2), 0.01, false, "m", "Geoidal Separation" }
   , { "Reference Stations", BYTES(1), 1, false, 0, "Number of reference stations" }
   , { "Reference Station Type", 4, RES_LOOKUP, false, LOOKUP_GNS, "" }
@@ -1724,8 +1724,8 @@ Pgn pgnList[] =
   , { "Desired Mode", 3, RES_LOOKUP, false, ",0=1D,1=2D,2=3D,3=Auto,4=Reserved,5=Reserved,6=Error", "" }
   , { "Actual Mode", 3, RES_LOOKUP, false, ",0=1D,1=2D,2=3D,3=Auto,4=Reserved,5=Reserved,6=Error", "" }
   , { "Reserved", 2, RES_BINARY, false, 0, "Reserved" }
-  , { "HDOP", BYTES(2), 0.01, false, 0, "Horizontal dilution of precision" }
-  , { "VDOP", BYTES(2), 0.01, false, 0, "Vertical dilution of precision" }
+  , { "HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision" }
+  , { "VDOP", BYTES(2), 0.01, true, 0, "Vertical dilution of precision" }
   , { "TDOP", BYTES(2), 0.01, true, 0, "Time dilution of precision" }
   , { 0 }
   }
