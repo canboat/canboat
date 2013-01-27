@@ -1,15 +1,16 @@
 /*
 
-Runs a TCP server, single threaded. It opens a COM port representing an UMTS
-modems monitor port. Monitoring data is translated and supplied to HTTP sockets
-in JSON format suited to putting up on a HTTP page.
-It is also possible to send AT requests requested by HTTP sockets.
+Runs a TCP server, single threaded. It reads JSON styled NMEA 2000 records (lines)
+from stdin, collects this data and sends this out on three types of TCP clients:
 
- The main loop is in serverWork(). It works by checking whether:
- - a TCP client arrives
- - a timeout has expired
+- Non stream JSON type get all accumulated data.
+- Stream JSON type just receive exactly the same messages as this program
+  receives.
+- NMEA0183 stream type get those messages which this program knows how to translate
+  into NMEA0183. The two letter talkers is the hexadecimal code for the NMEA2000
+  sender.
 
-(C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2013, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -44,36 +45,75 @@ uint32_t protocol = 1;
 #define AIS_TIMEOUT      (3600)           /* AIS messages expiration is much longer */
 #define SONICHUB_TIMEOUT (3600 * 24 * 31) /* SonicHub messages expiration is basically indefinite */
 
+static void closeStream(int i);
+
+typedef void (*ReadHandler)(int i);
+/* ... is the prototype for the following types of read-read file descriptors: */
+static void handleClientRequest(int i);
+static void acceptJSONClient(int i);
+static void acceptNMEA0183Client(int i);
 
 /*
- * TCP clients. We keep a simple array of TCP clients, indexed by a small integer.
- * We use the FD_SET bits to keep track of which clients are interesting (open).
+ * TCP clients or servers. We keep an array of TCP sockets, indexed by a small integer.
+ * We use the FD_SET bits to keep track of which sockets are active (open).
  */
 
-int clientIdxMin = 0;
-int clientIdxMax = 0;
-SOCKET clientFdMax = 0;
-fd_set clientSet;
-SOCKET clientFd[FD_SETSIZE];
-int64_t clientTimeout[FD_SETSIZE];
-int clientType[FD_SETSIZE];
-#define CLIENT_STREAM 1
+typedef enum StreamType
+{ SOCKET_TYPE_ANY
+, CLIENT_JSON
+, CLIENT_JSON_STREAM
+, CLIENT_NMEA0183_STREAM
+, SERVER_JSON
+, SERVER_NMEA0183
+, DATA_INPUT_STREAM
+, DATA_OUTPUT_SINK
+, DATA_OUTPUT_COPY
+, DATA_OUTPUT_STREAM
+, SOCKET_TYPE_MAX
+} StreamType;
 
-/*
- * The socket for the TCP server.
- */
-SOCKET sockfd = -1;
+ReadHandler readHandlers[SOCKET_TYPE_MAX] =
+{ 0
+, handleClientRequest
+, handleClientRequest
+, 0
+, acceptJSONClient
+, acceptNMEA0183Client
+, handleClientRequest
+, 0
+, 0
+, 0
+};
 
-#ifndef PEEK
-const int stdinfd = 0; /* The fd for the stdin port, this receives the analyzed stream of N2K data. */
-#else
-const int stdinfd = -1; /* Indicate that we can't select() on stdinfd, in which case we use peek() */
-#endif
+int socketIdxMin = 0;
+int socketIdxMax = 0;
+SOCKET socketFdMax = 0;
+fd_set activeSet;
+fd_set readSet;
+fd_set writeSet;
 
-int stdoutfd = 1; /* -1 if we are in readonly mode */
+typedef struct StreamInfo
+{
+  SOCKET         fd;
+  StreamType     type;
+  int64_t        timeout;
+  ReadHandler    readHandler;
+  char           buffer[4096]; /* Lines longer than this might get into trouble */
+  size_t         len;
+} StreamInfo;
+
+StreamInfo stream[FD_SETSIZE];
+
+const int stdinfd  = 0; /* The fd for the stdin port, this receives the analyzed stream of N2K data. */
+const int stdoutfd = 1; /* Possible fd for the stdout port */
 
 FILE * debugf;
-FILE * outf;
+
+StreamType outputType = DATA_OUTPUT_STREAM;
+
+size_t currentAlloc = 0;
+char * currentMessage = 0;
+size_t currentLen = 0;
 
 #define MIN_PGN (59391)
 #define MAX_PGN (131000)
@@ -163,13 +203,14 @@ int64_t epoch(void)
   return (int64_t) t.tv_sec * 1000 + t.tv_usec / 1000;
 }
 
-int setFdUsed(SOCKET fd)
+int setFdUsed(SOCKET fd, StreamType ct)
 {
   int i;
 
-  for (i = 0; i <= clientIdxMax; i++)
+  /* Find a free entry in socketFd(i) */
+  for (i = 0; i <= socketIdxMax; i++)
   {
-    if (!clientFd[i])
+    if (stream[i].fd == -1 || stream[i].fd == fd)
     {
       break;
     }
@@ -177,43 +218,65 @@ int setFdUsed(SOCKET fd)
 
   if (i == FD_SETSIZE)
   {
+    logError("Already %d active streams, ignoring new one\n", FD_SETSIZE);
     close(fd);
     return -1;
   }
 
-  clientTimeout[i] = epoch() + UPDATE_INTERVAL;
-  clientType[i] = 0;
-  clientFd[i] = fd;
-  clientIdxMax = CB_MAX(clientIdxMax, i);
-  clientFdMax = CB_MAX(clientFdMax, fd);
-  logDebug("New client %u %u..%u fd=%d fdMax=%d\n", i, clientIdxMin, clientIdxMax, fd, clientFdMax);
-  FD_SET(fd, &clientSet);
-  return 0;
+  stream[i].fd = fd;
+  stream[i].timeout = epoch() + UPDATE_INTERVAL;
+  stream[i].type = ct;
+  stream[i].readHandler = readHandlers[ct];
+
+  FD_SET(fd, &activeSet);
+  if (stream[i].readHandler)
+  {
+    FD_SET(fd, &readSet);
+  }
+  else
+  {
+    FD_CLR(fd, &readSet);
+  }
+
+  switch (stream[i].type)
+  {
+  case CLIENT_JSON:
+  case CLIENT_JSON_STREAM:
+  case DATA_OUTPUT_STREAM:
+  case DATA_OUTPUT_COPY:
+    FD_SET(fd, &writeSet);
+    break;
+  default:
+    FD_CLR(fd, &writeSet);
+  }
+
+  socketIdxMax = CB_MAX(socketIdxMax, i);
+  socketFdMax = CB_MAX(socketFdMax, fd);
+  logDebug("New client %u %u..%u fd=%d fdMax=%d\n", i, socketIdxMin, socketIdxMax, fd, socketFdMax);
+
+  return i;
 }
 
-void closeClient(SOCKET fd)
+static void closeStream(int i)
 {
-  int i;
+  logDebug("closeStream(%d)\n", i);
 
-  logDebug("closeClient(%d)\n", fd);
+  close(stream[i].fd);
+  FD_CLR(stream[i].fd, &activeSet);
+  FD_CLR(stream[i].fd, &readSet);
+  FD_CLR(stream[i].fd, &writeSet);
 
-  close(fd);
-  FD_CLR(fd, &clientSet);
-
-  clientFdMax = 0;
-  for (i = clientIdxMin; i <= clientIdxMax; i++)
+  stream[i].fd = -1; /* Free for re-use */
+  if (i == socketIdxMax)
   {
-    if (clientFd[i] == fd)
+    socketIdxMax--;
+    socketFdMax = -1;
+    for (; i >= 0; i--)
     {
-      clientFd[i] = 0;
-      if (i == clientIdxMax)
-      {
-        clientIdxMax--;
-      }
+      socketFdMax = CB_MAX(socketFdMax, stream[i].fd);
     }
-    clientFdMax = CB_MAX(clientFdMax, clientFd[i]);
   }
-  logDebug("closeClient(%d) IdMax=%u FdMax=%d\n", fd, clientIdxMax, clientFdMax);
+  logDebug("closeStream(%d) IdMax=%u FdMax=%d\n", i, socketIdxMax, socketFdMax);
 }
 
 # define INITIAL_ALLOC    8192
@@ -229,7 +292,7 @@ void closeClient(SOCKET fd)
 # define INC_L_REMAIN \
     {l = l + strlen(state + l); remain = alloc - l; }
 
-static char * copyClientState(void)
+static char * getFullStateJSON(void)
 {
   char separator = '{';
   size_t alloc = INITIAL_ALLOC;
@@ -244,7 +307,7 @@ static char * copyClientState(void)
   for (l = 0, i = 0; i < maxPgnList; i++)
   {
     pgn = *pgnList[i];
-    MAKE_SPACE(100);
+    MAKE_SPACE(100 + strlen(pgn->p_description));
     snprintf(state + l, remain, "%c\"%u\":\n  {\"description\":\"%s\"\n"
             , separator
             , pgn->p_prn
@@ -285,20 +348,16 @@ static char * copyClientState(void)
   return state;
 }
 
-static void sendClientState(SOCKET fd, char * state)
-{
-  send(fd, state, strlen(state), 0);
-}
-
-static void tcpServer()
+static void tcpServer(uint16_t port, StreamType st)
 {
   struct sockaddr_in serverAddr;
   int sockAddrSize = sizeof(serverAddr);
   int r;
   int on = 1;
+  SOCKET s;
 
-  sockfd = socket(PF_INET, SOCK_STREAM, 0);
-  if (sockfd == INVALID_SOCKET)
+  s = socket(PF_INET, SOCK_STREAM, 0);
+  if (s == INVALID_SOCKET)
   {
     die("Unable to open server socket");
   }
@@ -307,15 +366,15 @@ static void tcpServer()
   serverAddr.sin_port = htons(port);
   serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-  setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, (socklen_t) sizeof(on));
+  setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char *) &on, (socklen_t) sizeof(on));
 
-  r = bind(sockfd, (struct sockaddr *) &serverAddr, sockAddrSize);
+  r = bind(s, (struct sockaddr *) &serverAddr, sockAddrSize);
   if (r == INVALID_SOCKET)
   {
     die("Unable to bind server socket");
   }
 
-  r = listen(sockfd, 10);
+  r = listen(s, 10);
   if (r == INVALID_SOCKET)
   {
     die("Unable to listen to server socket");
@@ -323,33 +382,39 @@ static void tcpServer()
 
 # ifdef O_NONBLOCK
   {
-    int flags = fcntl(sockfd, F_GETFL, 0);
-    fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+    int flags = fcntl(s, F_GETFL, 0);
+    fcntl(s, F_SETFL, flags | O_NONBLOCK);
   }
 # else
   {
     int ioctlOptionValue = 1;
 
-    ioctl(sockfd, FIONBIO, &ioctlOptionValue);
+    ioctl(s, FIONBIO, &ioctlOptionValue);
   }
 # endif
 
-  logDebug("TCP server fd=%d\n", sockfd);
-  logInfo("TCP server listening on port %d\n", port);
-  setFdUsed(sockfd);
+  logDebug("TCP server fd=%d\n", s);
+  setFdUsed(s, st);
 }
 
-void addTCPClient(void)
+static void startTcpServers(void)
+{
+  tcpServer(port, SERVER_JSON);
+  logInfo("TCP JSON server listening on port %d\n", port);
+  tcpServer(port + 1, SERVER_NMEA0183);
+  logInfo("TCP NMEA0183 server listening on port %d\n", port);
+}
+
+void acceptClient(SOCKET s, StreamType ct)
 {
   SOCKET r;
   struct sockaddr_in clientAddr;
   socklen_t clientAddrLen;
 
-
   for (;;)
   {
     clientAddrLen = sizeof(clientAddr);
-    r = accept(sockfd, (struct sockaddr *) &clientAddr, &clientAddrLen);
+    r = accept(s, (struct sockaddr *) &clientAddr, &clientAddrLen);
     if (r == INVALID_SOCKET)
     {
       /* No socket ready, just ignore */
@@ -357,7 +422,7 @@ void addTCPClient(void)
     }
 
     /* New client found, mark it as such */
-    if (setFdUsed(r) < 0)
+    if (setFdUsed(r, ct) < 0)
     {
       /* Too many open clients, ignore */
       return;
@@ -365,30 +430,58 @@ void addTCPClient(void)
   }
 }
 
+void acceptJSONClient(int i)
+{
+  acceptClient(stream[i].fd, CLIENT_JSON);
+}
+
+void acceptNMEA0183Client(int i)
+{
+  acceptClient(stream[i].fd, CLIENT_NMEA0183_STREAM);
+}
+
+void appendJSONMessage(char * message)
+{
+  size_t len = strlen(message);
+
+  if (currentAlloc < currentLen + len)
+  {
+    currentMessage = realloc(currentMessage, currentAlloc + len);
+    if (!currentMessage)
+    {
+      die("Out of memory");
+    }
+    currentAlloc += len;
+  }
+  strcpy(currentMessage + currentLen, message);
+  currentLen += len;
+}
+
 /*
- * Send 'message' to all TCP clients
+ * Perform immediate action upon receiving a NMEA2000 message
  */
-void processMessageClients(char * message)
+void sendJSONStream(char * message)
 {
   size_t i;
   SOCKET fd;
+  size_t len = strlen(message);
 
-  for (i = clientIdxMin; i <= clientIdxMax; i++)
+  for (i = socketIdxMin; i <= socketIdxMax; i++)
   {
-    fd = clientFd[i];
-    if (fd && clientType[i] == CLIENT_STREAM)
+    fd = stream[i].fd;
+    if (fd && stream[i].type == CLIENT_JSON_STREAM)
     {
-      if (send(fd, message, strlen(message), 0) < (int) strlen(message))
+      if (send(fd, message, len, 0) < (int) len)
       {
-        closeClient(fd);
+        closeStream(i); /* On short write we just close, could try better but this might block! */
       }
     }
   }
 }
 
-void checkClients(void)
+void writeAllClients(void)
 {
-  fd_set writeSet;
+  fd_set ws;
   struct timeval timeout = {0, 0};
   int r;
   int i;
@@ -396,51 +489,65 @@ void checkClients(void)
   int64_t now = 0;
   char * state = 0;
 
-  if (clientIdxMax >= 0)
+  if (socketIdxMax >= 0)
   {
-    writeSet = clientSet;
-    FD_CLR(sockfd, &writeSet);
-    r = select(clientFdMax + 1, 0, &writeSet, 0, &timeout);
+    ws = writeSet;
+    r = select(socketFdMax + 1, 0, &ws, 0, &timeout);
 
-    if (r > 0)
+    for (i = socketIdxMin; r > 0 && i <= socketIdxMax; i++)
     {
-      for (i = clientIdxMin; i <= clientIdxMax; i++)
+      fd = stream[i].fd;
+      logDebug("writeAllClients i=%u fd=%d\n", i, fd);
+      if (fd < 0)
       {
-        fd = clientFd[i];
-        if (fd == sockfd)
+        continue;
+      }
+      if (fd > socketFdMax)
+      {
+        logAbort("Inconsistent: fd[%u]=%d, max=%d\n", i, fd, socketFdMax);
+      }
+      if (FD_ISSET(fd, &writeSet))
+      {
+        if (!FD_ISSET(fd, &ws))
         {
-          continue;
+          /* We close all listening clients that can't be written to */
+          closeStream(i);
         }
-        logDebug("checkClients i=%u fd=%d\n", i, fd);
-        if (fd && fd > clientFdMax)
+        else
         {
-          logAbort("Inconsistent: fd[%u]=%d, max=%d\n", i, fd, clientFdMax);
-        }
-        if (fd && FD_ISSET(fd, &clientSet))
-        {
-          if (!FD_ISSET(fd, &writeSet))
+          r--;
+          if (!now) now = epoch();
+
+          switch (stream[i].type)
           {
-            closeClient(fd);
-          }
-          else
-          {
-            if (!now) now = epoch();
-            if (clientTimeout[i] && clientTimeout[i] < now)
+          case CLIENT_JSON:
+            if (stream[i].timeout && stream[i].timeout < now)
             {
               if (!state)
               {
-                state = copyClientState();
+                state = getFullStateJSON();
               }
-              sendClientState(fd, state);
-              if (clientType[i] == CLIENT_STREAM)
+              send(fd, state, strlen(state), 0);
+              if (stream[i].type == CLIENT_JSON_STREAM)
               {
-                clientTimeout[i] = epoch() + UPDATE_INTERVAL;
+                stream[i].timeout = epoch() + UPDATE_INTERVAL;
               }
               else
               {
-                closeClient(fd);
+                closeStream(i);
               }
             }
+            break;
+          case CLIENT_JSON_STREAM:
+          case DATA_OUTPUT_STREAM:
+          case DATA_OUTPUT_COPY:
+            if (currentLen)
+            {
+              send(fd, currentMessage, currentLen, 0);
+            }
+            break;
+          default:
+            break;
           }
         }
       }
@@ -451,6 +558,7 @@ void checkClients(void)
   {
     free(state);
   }
+  currentLen = 0;
 }
 
 void handleMessageByte(char c)
@@ -546,7 +654,7 @@ void handleMessageByte(char c)
     }
   }
 
-  processMessageClients(readLine);
+  appendJSONMessage(readLine);
 
   idx = PrnToIdx(prn);
   if (idx < 0)
@@ -690,94 +798,92 @@ void handleMessageByte(char c)
   m->m_time = now + valid;
 }
 
-void handleMessage()
-{
-  char readBuffer[16384];
-  char * r;
-  size_t i, len;
-
-  r = fgets(readBuffer, sizeof(readBuffer), stdin);
-
-  if (r)
-  {
-    len = strlen(r);
-    if (outf)
-    {
-      fwrite(readBuffer, sizeof(char), len, outf);
-    }
-    for (i = 0; i < len; i++)
-    {
-      handleMessageByte(readBuffer[i]);
-    }
-  }
-  else
-  {
-    logAbort("Error on reading stdin\n");
-  }
-}
-
 void handleClientRequest(int i)
 {
-  unsigned char readBuffer[4096];
   ssize_t r;
+  char * p;
 
-  r = recv(clientFd[i], readBuffer, sizeof(readBuffer) - 1, 0);
-  if (r > 0)
+  r = read(stream[i].fd, stream[i].buffer + stream[i].len, sizeof(stream[i].buffer) - 1 - stream[i].len);
+
+  if (r <= 0)
   {
-    readBuffer[r] = 0;
-    if (strstr((char *) readBuffer, "-\n"))
+    if (stream[i].fd == stdinfd)
     {
-      clientType[i] = CLIENT_STREAM;
+      logAbort("Error on reading stdin\n");
     }
-    else
+    if (stream[i].fd == stdoutfd)
     {
-      logDebug("Write client request to %d msg='%s'\n", stdoutfd, readBuffer);
-      /* Send output to stdout */
-      if (stdoutfd >= 0)
+      logAbort("Error on writing stdout\n");
+    }
+    closeStream(i);
+  }
+  while (r > 0)
+  {
+    stream[i].buffer[r] = 0;
+    stream[i].len += r;
+    p = strchr(stream[i].buffer, '\n');
+    if (p)
+    {
+      p++;
+      if (strstr(stream[i].buffer, "-\n"))
       {
-        write(1, readBuffer, r);
+        stream[i].type = CLIENT_JSON_STREAM;
+        stream[i].len = 0;
+        return;
+      }
+      logDebug("Write client request to %d msg='%1.*s'\n", stdoutfd, p - stream[i].buffer);
+      /* Send output to stdout */
+      if (stream[stdoutfd].type == DATA_OUTPUT_STREAM)
+      {
+        write(stdoutfd, stream[i].buffer, p - stream[i].buffer);
+      }
+      else if (stream[stdoutfd].type == DATA_OUTPUT_COPY)
+      {
+        /* Feed it into the NMEA2000 message handler */
+        size_t j;
+
+        for (j = 0; j < p - stream[i].buffer; j++)
+        {
+          handleMessageByte(stream[i].buffer[j]);
+        }
+        if (strlen(p))
+        {
+          memcpy(stream[i].buffer, p, strlen(p + 1));
+        }
+        stream[i].len -= p - stream[i].buffer;
+        r -= p - stream[i].buffer;
       }
       /* Else just drop the data on the floor */
     }
+    else
+    {
+      r = 0;
+    }
   }
 }
 
-void handleEvents(void)
+void checkReadEvents(void)
 {
-  fd_set readSet;
+  fd_set rs;
   struct timeval timeout = {1, 0};
   int r;
   size_t i;
   SOCKET fd;
 
-  logDebug("handleEvents maxfd = %d\n", clientFdMax);
+  logDebug("checkReadEvents maxfd = %d\n", socketFdMax);
 
-  readSet = clientSet;
+  rs = readSet;
 
-  r = select(clientFdMax + 1, &readSet, 0, 0, &timeout);
+  r = select(socketFdMax + 1, &rs, 0, 0, &timeout);
 
-  if (r > 0)
+  for (i = socketIdxMin; r > 0 && i <= socketIdxMax; i++)
   {
-    if (sockfd >= 0 && FD_ISSET(sockfd, &readSet))
-    {
-      addTCPClient();
-    }
+    fd = stream[i].fd;
 
-#ifndef PEEK
-    if (stdinfd >= 0 && FD_ISSET(stdinfd, &readSet))
+    if (fd && FD_ISSET(fd, &rs))
     {
-      handleMessage();
-    }
-#endif
-
-    for (i = clientIdxMin; i <= clientIdxMax; i++)
-    {
-      fd = clientFd[i];
-
-      if (fd && FD_ISSET(fd, &readSet))
-      {
-        handleClientRequest(i);
-      }
+      (stream[i].readHandler)(i);
+      r--;
     }
   }
 }
@@ -786,17 +892,9 @@ void doServerWork(void)
 {
   for (;;)
   {
-
-#ifdef PEEK
-    if (PEEK)
-    {
-      handleMessage();
-    }
-#endif
-
     /* Do a range of non-blocking operations */
-    handleEvents();          /* Process incoming requests on all clients */
-    checkClients();
+    checkReadEvents();       /* Process incoming requests on all clients */
+    writeAllClients();        /* Check any timeouts on clients */
   }
 }
 
@@ -806,14 +904,12 @@ int main (int argc, char **argv)
 
   setProgName(argv[0]);
 
-  FD_ZERO(&clientSet);
+  FD_ZERO(&activeSet);
+  FD_ZERO(&readSet);
+  FD_ZERO(&writeSet);
 
-# ifdef WIN32
-  initWin32();
-# endif
-# ifndef PEEK
-  setFdUsed(stdinfd);
-# endif
+  setFdUsed(stdinfd, DATA_INPUT_STREAM);
+  setFdUsed(stdoutfd, DATA_OUTPUT_STREAM);
 
   while (argc > 1)
   {
@@ -827,7 +923,11 @@ int main (int argc, char **argv)
     }
     else if (strcasecmp(argv[1], "-o") == 0)
     {
-      outf = stdout;
+      setFdUsed(stdoutfd, DATA_OUTPUT_COPY);
+    }
+    else if (strcasecmp(argv[1], "-r") == 0)
+    {
+      setFdUsed(stdoutfd, DATA_OUTPUT_SINK);
     }
     else if (strcasecmp(argv[1], "-p") == 0)
     {
@@ -842,10 +942,6 @@ int main (int argc, char **argv)
         argc--, argv++;
       }
     }
-    else if (strcasecmp(argv[1], "-r") == 0)
-    {
-      stdoutfd = -1;
-    }
     else
     {
       fprintf(stderr, "usage: n2kd [-d] [-o] [-p <port>] [-r]\n\n"COPYRIGHT);
@@ -854,10 +950,10 @@ int main (int argc, char **argv)
     argc--, argv++;
   }
 
-  tcpServer();
+  socketIdxMin = 0;
+  socketIdxMax = 0;
 
-  clientIdxMin = 0;
-  clientIdxMax = 0;
+  startTcpServers();
 
   /*  Ignore SIGPIPE, this will let a write to a socket that's closed   */
   /*  at the other end just fail instead of raising SIGPIPE             */
