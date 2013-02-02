@@ -540,7 +540,7 @@ void writeAllClients(void)
   }
 }
 
-void handleMessage(char * line, size_t len)
+void storeMessage(char * line, size_t len)
 {
   char *s, *e = 0, *e2;
   Message * m;
@@ -810,15 +810,11 @@ void handleClientRequest(int i)
       logDebug("Got msg='%1.*s'\n", len, stream[i].buffer);
       *p = 0;
 
-      if (stream[i].type != DATA_INPUT_STREAM
-       || stream[outputIdx].type == DATA_OUTPUT_COPY)
-      {
-        /* Send all TCP client input and the main stdin stream if the mode is -o */
-        /* directly to stdout */
-        sbAppendData(&jsonMessage, stream[i].buffer, len);
-      }
-      handleMessage(stream[i].buffer, len);
+      /* Send all TCP client input and the main stdin stream if the mode is -o */
+      /* directly to stdout */
+      sbAppendData(&jsonMessage, stream[i].buffer, len);
       convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
+      storeMessage(stream[i].buffer, len);
       *p = stash;
 
       /* Now remove [buffer..p> */
