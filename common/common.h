@@ -19,6 +19,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+#ifndef CANBOAT_COMMON
 
 #include "license.h"
 
@@ -36,6 +37,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include <errno.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <ctype.h>
 
 #ifndef WIN32
 # include <arpa/inet.h>
@@ -83,3 +85,20 @@ void logAbort(const char * format, ...);
 void die (char * t);
 void setLogLevel(LogLevel level);
 void setProgName(char * name);
+
+typedef struct StringBuf
+{
+  char * data;
+  size_t len;
+  size_t alloc;
+} StringBuffer;
+
+StringBuffer sbNew;
+#define sbGet(sb) (sb->data)
+void sbAppendData(StringBuffer * sb, const void * data, size_t len);
+void sbAppendString(StringBuffer * sb, const char * string);
+
+int getJSONValue( const char * message, const char * fieldName, char * value, size_t len );
+
+# define CANBOAT_COMMON
+#endif

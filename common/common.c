@@ -164,3 +164,141 @@ void setProgName(char * name)
   }
 }
 
+void sbAppendData(StringBuffer * sb, const void * data, size_t len)
+{
+  while (len + sb->len + 1 >= sb->alloc)
+  {
+    if (!sb->alloc)
+    {
+      sb->alloc = 64;
+    }
+    else
+    {
+      sb->alloc *= 2;
+    }
+  }
+  if (!sb->data)
+  {
+    sb->data = malloc(sb->alloc);
+  }
+  else
+  {
+    sb->data = realloc(sb->data, sb->alloc);
+  }
+  if (!sb->data)
+  {
+    die("Out of memory");
+  }
+  memcpy(sb->data + sb->len, data, len);
+  sb->len += len;
+  sb->data[sb->len] = 0;
+  logDebug("Appended %u bytes to %p len %u\n", len, sb->data, sb->len);
+  logDebug("+ [%1.*s]\n", len, data);
+  logDebug("= [%1.*s]\n", sb->len, sb->data);
+}
+
+void sbAppendString(StringBuffer * sb, const char * string)
+{
+  size_t len = strlen(string);
+  sbAppendData(sb, string, len);
+}
+
+/*
+ * Retrieve a value out of a JSON styled message.
+ */
+int getJSONValue( const char * message, const char * fieldName, char * value, size_t len )
+{
+  const char * loc = message + 1;
+  size_t fieldLen = strlen(fieldName);
+
+  for (;;)
+  {
+    loc = strstr(loc, fieldName);
+    if (!loc)
+    {
+      return 0;
+    }
+    if (loc[-1] == '"' && loc[fieldLen] == '"' && loc[fieldLen + 1] == ':')
+    {
+      break;
+    }
+    loc += fieldLen;
+  }
+
+  /* field has been found */
+  loc += fieldLen + 2;
+
+  while (isspace(*loc))
+  {
+    loc++;
+  }
+
+  if (*loc != '"')
+  {
+    while ((isdigit(*loc) || *loc == '.' || *loc == '-' || *loc == 'E' || *loc == 'e' || *loc == '+') && len > 1)
+    {
+      *value++ = *loc++;
+    }
+    *value = 0;
+    return 1;
+  }
+
+  /* field is string */
+
+  loc++;
+
+  while (len > 1)
+  {
+    if (*loc == '\\')
+    {
+      loc++;
+      switch (*loc)
+      {
+      case 'b':
+        *value++ = '\b';
+        loc++;
+        break;
+      case 'f':
+        *value++ = '\f';
+        loc++;
+        break;
+      case 'n':
+        *value++ = '\n';
+        loc++;
+        break;
+      case 'r':
+        *value++ = '\r';
+        loc++;
+        break;
+      case 't':
+        *value++ = '\t';
+        loc++;
+        break;
+      case 'u':
+        {
+          unsigned int n;
+          sscanf(loc, "%4x", &n);
+          loc += 4;
+          *value++ = n & 255; // We're single byte, forget about the high byte...
+        }
+        break;
+
+      default:
+        *value++ = *loc++;
+      }
+    }
+    else if (*loc == '"')
+    {
+      break;
+    }
+    else
+    {
+      *value++ = *loc++;
+    }
+  }
+  *value = 0;
+  return 1;
+}
+
+
+
