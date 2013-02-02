@@ -40,6 +40,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #define UPDATE_INTERVAL (500)       /* Every x milliseconds send the normal 'once' clients all state */
 
 uint16_t port = PORT;
+char * srcFilter = 0;
 
 uint32_t protocol = 1;
 
@@ -761,7 +762,7 @@ void handleClientRequest(int i)
   r = read(stream[i].fd, stream[i].buffer + stream[i].len, sizeof(stream[i].buffer) - 1 - stream[i].len);
   logDebug("read i=%d fd=%d r=%d\n", i, stream[i].fd, r);
 
-  if (r <= 0)
+  if (r < 0)
   {
     if (stream[i].fd == stdinfd)
     {
@@ -770,6 +771,20 @@ void handleClientRequest(int i)
     closeStream(i);
     return;
   }
+
+  if (r == 0)
+  {
+    if (stream[i].fd == stdinfd)
+    {
+      // logError("Read %d on reading stdin\n", r);
+    }
+    else
+    {
+      closeStream(i);
+    }
+    return;
+  }
+
   while (r > 0)
   {
     stream[i].buffer[r] = 0;
@@ -886,22 +901,24 @@ int main (int argc, char **argv)
     {
       outputIdx = setFdUsed(stdoutfd, DATA_OUTPUT_SINK);
     }
-    else if (strcasecmp(argv[1], "-p") == 0)
+    else if (strcasecmp(argv[1], "--src-filter") == 0 && argc > 2)
     {
-      if (argc > 2)
-      {
-        unsigned int uPort;
+      srcFilter = argv[2];
+      argc--, argv++;
+    }
+    else if (strcasecmp(argv[1], "-p") == 0 && argc > 2)
+    {
+      unsigned int uPort;
 
-        if (sscanf(argv[2], "%u", &uPort))
-        {
-          port = (uint16_t) uPort;
-        }
-        argc--, argv++;
+      if (sscanf(argv[2], "%u", &uPort))
+      {
+        port = (uint16_t) uPort;
       }
+      argc--, argv++;
     }
     else
     {
-      fprintf(stderr, "usage: n2kd [-d] [-o] [-p <port>] [-r]\n\n"COPYRIGHT);
+      fprintf(stderr, "usage: n2kd [-d] [-q] [--src-filter <srclist>] [-o] [-p <port>] [-r]\n\n"COPYRIGHT);
       exit(1);
     }
     argc--, argv++;

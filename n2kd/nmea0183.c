@@ -27,6 +27,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "common.h"
 
+extern char * srcFilter;
+
 /*
  * Which PGNs do we care and know about for now?
  *
@@ -56,21 +58,55 @@ static void nmea0183CreateMessage( StringBuffer * msg183, const char * src, cons
   size_t len;
   size_t i;
   va_list ap;
+  bool exclude;
+
+  if (src && srcFilter)
+  {
+    while (srcFilter[0])
+    {
+      exclude = false;
+      if (srcFilter[0] == '!')
+      {
+        srcFilter++;
+        exclude = true;
+      }
+      if (src[0] == srcFilter[0])
+      {
+        if (src[1] == srcFilter[1] || (!src[1] && srcFilter[1] == ','))
+        {
+          /* match */
+          if (exclude)
+          {
+            return;
+          }
+          break;
+        }
+      }
+      while (srcFilter[0] && srcFilter[0] != ',')
+      {
+        srcFilter++;
+      }
+      if (srcFilter[0] == ',')
+      {
+        srcFilter++;
+      }
+    }
+  }
 
   va_start(ap, format);
 
-  snprintf(line, sizeof(line), "$%02x", n);
+  snprintf(line, sizeof(line), "$II");
   vsnprintf(line + 3, sizeof(line) - 3, format, ap);
   va_end(ap);
 
   len = strlen(line);
   chk = 0;
-  for (i = 3; i < len; i++)
+  for (i = 1; i < len; i++)
   {
     chk ^= line[i];
   }
   sbAppendString(msg183, line);
-  snprintf(line, sizeof(line), "*%02x\r\n", chk);
+  snprintf(line, sizeof(line), "*%02X\r\n", chk);
   sbAppendString(msg183, line);
   logDebug("%s", sbGet(&msg183));
 }
