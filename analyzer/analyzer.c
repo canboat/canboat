@@ -104,12 +104,10 @@ int main(int argc, char ** argv)
     else if (strcasecmp(av[1], "-raw") == 0)
     {
       showRaw = true;
-      printf("Showing all raw PGN data\n");
     }
     else if (strcasecmp(av[1], "-debug") == 0)
     {
       showBytes = true;
-      printf("Showing byte-by-byte interpretation of PGN data\n");
     }
     else if (strcasecmp(av[1], "-d") == 0)
     {
@@ -143,12 +141,10 @@ int main(int argc, char ** argv)
     else if (strcasecmp(av[1], "-json") == 0)
     {
       showJson = true;
-      printf("Showing PGN in JSON format\n");
     }
     else if (strcasecmp(av[1], "-data") == 0)
     {
       showData = true;
-      printf("Showing PGN data bytes\n");
     }
     else if (ac > 2 && strcasecmp(av[1], "-src") == 0)
     {
