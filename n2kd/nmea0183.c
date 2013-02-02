@@ -53,42 +53,44 @@ extern char * srcFilter;
 static void nmea0183CreateMessage( StringBuffer * msg183, const char * src, const char * format, ...)
 {
   char line[80];
-  int n = atoi(src);
+  long n = strtol(src, 0, 10);
   int chk;
   size_t len;
   size_t i;
   va_list ap;
-  bool exclude;
 
   if (src && srcFilter)
   {
-    while (srcFilter[0])
+    char * filter = srcFilter;
+    while (filter[0])
     {
-      exclude = false;
-      if (srcFilter[0] == '!')
+      bool matched = false;
+      int  f;
+
+      if (filter[0] == '!')
       {
-        srcFilter++;
-        exclude = true;
+        filter++;
+        matched = true;
       }
-      if (src[0] == srcFilter[0])
+      f = strtol(filter, &filter, 10);
+      logDebug("Src [%ld] == [%ld]?\n", n, f);
+
+      if ((n == f) == matched)
       {
-        if (src[1] == srcFilter[1] || (!src[1] && srcFilter[1] == ','))
+        logDebug("Src [%ld] matches [%ld]\n", n, f);
+        if (matched)
         {
-          /* match */
-          if (exclude)
-          {
-            return;
-          }
-          break;
+          return;
         }
+        break;
       }
-      while (srcFilter[0] && srcFilter[0] != ',')
+      while (filter[0] && filter[0] != ',')
       {
-        srcFilter++;
+        filter++;
       }
-      if (srcFilter[0] == ',')
+      if (filter[0] == ',')
       {
-        srcFilter++;
+        filter++;
       }
     }
   }

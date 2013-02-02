@@ -795,10 +795,10 @@ void handleClientRequest(int i)
     return;
   }
 
+  stream[i].len += r;
+  stream[i].buffer[stream[i].len] = 0;
   while (r > 0)
   {
-    stream[i].buffer[r] = 0;
-    stream[i].len += r;
     p = strchr(stream[i].buffer, '\n');
     if (p)
     {
