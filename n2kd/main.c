@@ -54,7 +54,8 @@ typedef void (*ReadHandler)(int i);
 /* ... is the prototype for the following types of read-read file descriptors: */
 static void handleClientRequest(int i);
 static void acceptJSONClient(int i);
-static void acceptNMEA0183Client(int i);
+static void acceptJSONStreamClient(int i);
+static void acceptNMEA0183StreamClient(int i);
 
 /*
  * TCP clients or servers. We keep an array of TCP sockets, indexed by a small integer.
@@ -67,7 +68,8 @@ typedef enum StreamType
 , CLIENT_JSON_STREAM
 , CLIENT_NMEA0183_STREAM
 , SERVER_JSON
-, SERVER_NMEA0183
+, SERVER_JSON_STREAM
+, SERVER_NMEA0183_STREAM
 , DATA_INPUT_STREAM
 , DATA_OUTPUT_SINK
 , DATA_OUTPUT_COPY
@@ -81,7 +83,8 @@ ReadHandler readHandlers[SOCKET_TYPE_MAX] =
 , handleClientRequest
 , 0
 , acceptJSONClient
-, acceptNMEA0183Client
+, acceptJSONStreamClient
+, acceptNMEA0183StreamClient
 , handleClientRequest
 , 0
 , 0
@@ -407,7 +410,9 @@ static void startTcpServers(void)
 {
   tcpServer(port, SERVER_JSON);
   logInfo("TCP JSON server listening on port %d\n", port);
-  tcpServer(port + 1, SERVER_NMEA0183);
+  tcpServer(port + 1, SERVER_JSON_STREAM);
+  logInfo("TCP JSON stream server listening on port %d\n", port + 1);
+  tcpServer(port + 2, SERVER_NMEA0183_STREAM);
   logInfo("TCP NMEA0183 server listening on port %d\n", port + 1);
 }
 
@@ -441,7 +446,12 @@ void acceptJSONClient(int i)
   acceptClient(stream[i].fd, CLIENT_JSON);
 }
 
-void acceptNMEA0183Client(int i)
+void acceptJSONStreamClient(int i)
+{
+  acceptClient(stream[i].fd, CLIENT_JSON_STREAM);
+}
+
+void acceptNMEA0183StreamClient(int i)
 {
   acceptClient(stream[i].fd, CLIENT_NMEA0183_STREAM);
 }
@@ -794,32 +804,22 @@ void handleClientRequest(int i)
     {
       size_t len = ++p - stream[i].buffer;
 
-      if (strstr(stream[i].buffer, "-\n"))
-      {
-        logDebug("Switching client %d to stream mode\n", i);
-        stream[i].type = CLIENT_JSON_STREAM;
-        stream[i].timeout = 0;
-      }
-      else
-      {
-        /* Feed it into the NMEA2000 message handler */
-        char stash = *p;
+      /* Feed it into the NMEA2000 message handler */
+      char stash = *p;
 
-        logDebug("Got msg='%1.*s'\n", len, stream[i].buffer);
-        *p = 0;
+      logDebug("Got msg='%1.*s'\n", len, stream[i].buffer);
+      *p = 0;
 
-        if (stream[i].type != DATA_INPUT_STREAM
-         || stream[outputIdx].type == DATA_OUTPUT_COPY)
-        {
-          /* Send all TCP client input and the main stdin stream if the mode is -o */
-          /* directly to stdout */
-          sbAppendData(&jsonMessage, stream[i].buffer, len);
-        }
-        handleMessage(stream[i].buffer, len);
-        convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
-        *p = stash;
+      if (stream[i].type != DATA_INPUT_STREAM
+       || stream[outputIdx].type == DATA_OUTPUT_COPY)
+      {
+        /* Send all TCP client input and the main stdin stream if the mode is -o */
+        /* directly to stdout */
+        sbAppendData(&jsonMessage, stream[i].buffer, len);
       }
-      /* else just drop the data on the floor */
+      handleMessage(stream[i].buffer, len);
+      convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
+      *p = stash;
 
       /* Now remove [buffer..p> */
       memcpy(stream[i].buffer, p, strlen(p + 1));
