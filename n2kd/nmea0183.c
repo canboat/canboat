@@ -35,7 +35,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
  *
  * PGN 127250 "Vessel Heading" -> $xxHDG
  * PGN 130306 "Wind Data"      -> $xxMWV
- * PGN 128267 "Water Depth"    -> $xxDBK/DBS
+ * PGN 128267 "Water Depth"    -> $xxDBK/DBS/DBT
  *
  * Typical output of these from analyzer:
  * {"timestamp":"2010-09-12-10:57:41.217","prio":"2","src":"36","dst":"255","pgn":"127250","description":"Vessel Heading","fields":{"SID":"116","Heading":"10.1","Deviation":"0.0","Variation":"0.0","Reference":"Magnetic"}}

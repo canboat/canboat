@@ -24,8 +24,8 @@ TARGETS=$(N2KD)
 
 all: $(TARGETS)
 
-$(N2KD): main.c ../common/common.c ../common/common.h
-	$(CC) -o $(N2KD) -I../common main.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+$(N2KD): main.c nmea0183.c nmea0183.h ../common/common.c ../common/common.h
+	$(CC) -o $(N2KD) -I../common main.c nmea0183.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
 	-rm -f $(N2KD) *.elf *.gdb

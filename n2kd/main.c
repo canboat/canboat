@@ -33,6 +33,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "common.h"
 #include <signal.h>
+#include "nmea0183.h"
 
 #define PORT 2597
 
@@ -114,9 +115,8 @@ FILE * debugf;
 
 StreamType outputType = DATA_OUTPUT_STREAM;
 
-size_t currentAlloc = 0;
-char * currentMessage = 0;
-size_t currentLen = 0;
+StringBuffer jsonMessage;
+StringBuffer nmeaMessage;
 
 #define MIN_PGN (59391)
 #define MAX_PGN (131000)
@@ -245,6 +245,7 @@ int setFdUsed(SOCKET fd, StreamType ct)
   {
   case CLIENT_JSON:
   case CLIENT_JSON_STREAM:
+  case CLIENT_NMEA0183_STREAM:
   case DATA_OUTPUT_STREAM:
   case DATA_OUTPUT_COPY:
     FD_SET(fd, &writeSet);
@@ -444,21 +445,6 @@ void acceptNMEA0183Client(int i)
   acceptClient(stream[i].fd, CLIENT_NMEA0183_STREAM);
 }
 
-static void appendJSONMessage(char * message, size_t len)
-{
-  if (currentAlloc < currentLen + len)
-  {
-    currentMessage = realloc(currentMessage, currentAlloc + len);
-    if (!currentMessage)
-    {
-      die("Out of memory");
-    }
-    currentAlloc += len;
-  }
-  strcpy(currentMessage + currentLen, message);
-  currentLen += len;
-}
-
 void writeAllClients(void)
 {
   fd_set ws;
@@ -468,9 +454,9 @@ void writeAllClients(void)
   SOCKET fd;
   int64_t now = 0;
   char * state = 0;
-  size_t newCurrentLen = currentLen;
+  size_t newCurrentLen = jsonMessage.len;
 
-  logDebug("writeAllClients currentLen=%d\n", currentLen);
+  logDebug("writeAllClients json.len=%d\n", jsonMessage.len);
 
   if (socketIdxMax >= 0)
   {
@@ -508,12 +494,20 @@ void writeAllClients(void)
             closeStream(i);
           }
           break;
+        case CLIENT_NMEA0183_STREAM:
+          logDebug("NMEA-> %d\n", nmeaMessage.len);
+          if (nmeaMessage.len)
+          {
+            write(fd, nmeaMessage.data, nmeaMessage.len);
+            newCurrentLen = 0;
+          }
+          break;
         case CLIENT_JSON_STREAM:
         case DATA_OUTPUT_STREAM:
         case DATA_OUTPUT_COPY:
-          if (currentLen)
+          if (jsonMessage.len)
           {
-            write(fd, currentMessage, currentLen);
+            write(fd, jsonMessage.data, jsonMessage.len);
             newCurrentLen = 0;
           }
           break;
@@ -528,7 +522,11 @@ void writeAllClients(void)
   {
     free(state);
   }
-  currentLen = newCurrentLen;
+  if (!newCurrentLen)
+  {
+    jsonMessage.len = 0;
+    nmeaMessage.len = 0;
+  }
 }
 
 void handleMessage(char * line, size_t len)
@@ -800,9 +798,10 @@ void handleClientRequest(int i)
         {
           /* Send all TCP client input and the main stdin stream if the mode is -o */
           /* directly to stdout */
-          appendJSONMessage(stream[i].buffer, len);
+          sbAppendData(&jsonMessage, stream[i].buffer, len);
         }
         handleMessage(stream[i].buffer, len);
+        convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
         *p = stash;
       }
       /* else just drop the data on the floor */
