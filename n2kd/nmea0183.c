@@ -315,15 +315,15 @@ static void nmea0183WaterDepth( StringBuffer * msg183, const char * msg )
 
   if (off > 0.0)
   {
-    nmea0183CreateMessage(msg183, src, "DBS,%4.1f,f,%s,M,%4.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+    nmea0183CreateMessage(msg183, src, "DBS,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
   }
   if (off < 0.0)
   {
-    nmea0183CreateMessage(msg183, src, "DBK,%4.1f,f,%s,M,%4.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+    nmea0183CreateMessage(msg183, src, "DBK,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
   }
   if (off == 0.0)
   {
-    nmea0183CreateMessage(msg183, src, "DBT,%4.1f,f,%s,M,%4.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+    nmea0183CreateMessage(msg183, src, "DBT,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
   }
 }
 
