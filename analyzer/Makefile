@@ -21,10 +21,11 @@ PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TARGETS=$(ANALYZER)
+CFLAGS=-O3
 
 all: $(TARGETS)
 
-$(ANALYZER): analyzer.c analyzer.h pgn.h ../common/common.c ../common/common.h
+$(ANALYZER): analyzer.c analyzer.h pgn.h ../common/common.c ../common/common.h Makefile
 	$(CC) $(CFLAGS) -o $(ANALYZER) -I../common analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
