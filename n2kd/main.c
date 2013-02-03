@@ -33,6 +33,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "common.h"
 #include <signal.h>
+#include <sys/select.h>
 #include "nmea0183.h"
 
 #define PORT 2597
@@ -119,8 +120,9 @@ FILE * debugf;
 
 StreamType outputType = DATA_OUTPUT_STREAM;
 
-StringBuffer jsonMessage;
-StringBuffer nmeaMessage;
+StringBuffer tcpMessage; /* Buffer for sending to TCP clients */
+StringBuffer outMessage; /* Buffer for sending to stdout */
+StringBuffer nmeaMessage;/* Buffer for sending to NMEA0183 TCP clients */
 
 #define MIN_PGN (59391)
 #define MAX_PGN (131000)
@@ -277,11 +279,15 @@ static void closeStream(int i)
   stream[i].fd = -1; /* Free for re-use */
   if (i == socketIdxMax)
   {
-    socketIdxMax--;
+    socketIdxMax = -1;
     socketFdMax = -1;
-    for (; i >= 0; i--)
+    for (i--; i >= 0; i--)
     {
-      socketFdMax = CB_MAX(socketFdMax, stream[i].fd);
+      if (stream[i].fd != -1)
+      {
+        socketIdxMax = CB_MAX(socketIdxMax, i);
+        socketFdMax = CB_MAX(socketFdMax, stream[i].fd);
+      }
     }
   }
   logDebug("closeStream(%d) IdMax=%u FdMax=%d\n", i, socketIdxMax, socketFdMax);
@@ -413,7 +419,7 @@ static void startTcpServers(void)
   tcpServer(port + 1, SERVER_JSON_STREAM);
   logInfo("TCP JSON stream server listening on port %d\n", port + 1);
   tcpServer(port + 2, SERVER_NMEA0183_STREAM);
-  logInfo("TCP NMEA0183 server listening on port %d\n", port + 1);
+  logInfo("TCP NMEA0183 server listening on port %d\n", port + 2);
 }
 
 void acceptClient(SOCKET s, StreamType ct)
@@ -465,24 +471,31 @@ void writeAllClients(void)
   SOCKET fd;
   int64_t now = 0;
   char * state = 0;
-  size_t newCurrentLen = jsonMessage.len;
 
-  logDebug("writeAllClients json.len=%d\n", jsonMessage.len);
+  logDebug("writeAllClients tcp.len=%d\n", tcpMessage.len);
+  FD_ZERO(&ws);
 
   if (socketIdxMax >= 0)
   {
     ws = writeSet;
     r = select(socketFdMax + 1, 0, &ws, 0, &timeout);
-    logDebug("write to %d streams\n", r);
+    logDebug("write to %d streams max=%d\n", r, socketFdMax + 1);
 
     for (i = socketIdxMin; r > 0 && i <= socketIdxMax; i++)
     {
       fd = stream[i].fd;
-      logDebug("write stream? i=%u fd=%d writable=%d type=%d\n", i, fd, FD_ISSET(fd, &ws), stream[i].type);
       if (fd < 0)
       {
         continue;
       }
+      if (fd > 8192)
+      {
+        logAbort("Stream %d contains invalid fd %d\n", i, fd);
+      }
+      logDebug("write stream? i=%u fd=%d\n", i, fd);
+      logDebug("write stream? writable=%d\n", FD_ISSET(fd, &ws));
+      logDebug("write stream? type=%d\n", stream[i].type);
+      logDebug("write stream? i=%u fd=%d writable=%d type=%d\n", i, fd, FD_ISSET(fd, &ws), stream[i].type);
       if (fd > socketFdMax)
       {
         logAbort("Inconsistent: fd[%u]=%d, max=%d\n", i, fd, socketFdMax);
@@ -510,16 +523,19 @@ void writeAllClients(void)
           if (nmeaMessage.len)
           {
             write(fd, nmeaMessage.data, nmeaMessage.len);
-            newCurrentLen = 0;
           }
           break;
         case CLIENT_JSON_STREAM:
+          if (tcpMessage.len)
+          {
+            write(fd, tcpMessage.data, tcpMessage.len);
+          }
+          break;
         case DATA_OUTPUT_STREAM:
         case DATA_OUTPUT_COPY:
-          if (jsonMessage.len)
+          if (outMessage.len)
           {
-            write(fd, jsonMessage.data, jsonMessage.len);
-            newCurrentLen = 0;
+            write(fd, outMessage.data, outMessage.len);
           }
           break;
         default:
@@ -533,11 +549,20 @@ void writeAllClients(void)
   {
     free(state);
   }
-  if (!newCurrentLen)
+
+  outMessage.len = 0;
+  tcpMessage.len = 0;
+  nmeaMessage.len = 0;
+
+# ifdef NEVER
   {
-    jsonMessage.len = 0;
-    nmeaMessage.len = 0;
+    static int count = 0;
+    if (count++ > 100)
+    {
+      exit(1);
+    }
   }
+# endif
 }
 
 void storeMessage(char * line, size_t len)
@@ -810,15 +835,19 @@ void handleClientRequest(int i)
       logDebug("Got msg='%1.*s'\n", len, stream[i].buffer);
       *p = 0;
 
-      /* Send all TCP client input and the main stdin stream if the mode is -o */
-      /* directly to stdout */
-      sbAppendData(&jsonMessage, stream[i].buffer, len);
+      sbAppendData(&tcpMessage, stream[i].buffer, len);
+      if (stream[i].type != DATA_INPUT_STREAM || stream[outputIdx].type == DATA_OUTPUT_COPY)
+      {
+        /* Send all TCP client input and the main stdin stream if the mode is -o */
+        /* directly to stdout */
+        sbAppendData(&outMessage, stream[i].buffer, len);
+      }
       convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
       storeMessage(stream[i].buffer, len);
       *p = stash;
 
       /* Now remove [buffer..p> */
-      memcpy(stream[i].buffer, p, strlen(p + 1));
+      memcpy(stream[i].buffer, p, strlen(p));
       stream[i].len -= len;
       r -= len;
     }
