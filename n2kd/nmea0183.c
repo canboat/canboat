@@ -26,6 +26,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include "common.h"
+#include <math.h>
 
 extern char * srcFilter;
 
@@ -97,7 +98,7 @@ static void nmea0183CreateMessage( StringBuffer * msg183, const char * src, cons
 
   va_start(ap, format);
 
-  snprintf(line, sizeof(line), "$II");
+  snprintf(line, sizeof(line), "$%02X", n);
   vsnprintf(line + 3, sizeof(line) - 3, format, ap);
   va_end(ap);
 
@@ -171,6 +172,8 @@ static void nmea0183VesselHeading( StringBuffer * msg183, const char * msg )
 {
   char src[10];
   char heading[10];
+  char deviation[10];
+  char variation[10];
   char reference[10];
 
   if (!getJSONValue(msg, "src", src, sizeof(src))
@@ -179,15 +182,30 @@ static void nmea0183VesselHeading( StringBuffer * msg183, const char * msg )
   {
     return;
   }
-  if (strcmp(reference, "True") == 0)
+  if (getJSONValue(msg, "Deviation", deviation, sizeof(deviation))
+   && getJSONValue(msg, "Variation", variation, sizeof(variation))
+   && strcmp(reference, "Magnetic") == 0)
+  {
+    /* Enough info for HDG message */
+    double dev = strtod(deviation, 0);
+    double var = strtod(variation, 0);
+
+    nmea0183CreateMessage(msg183, src, "HDG,%s,%04.1f,%c,%04.1f,%c"
+                         , heading
+                         , fabs(dev)
+                         , ((dev < 0.0) ? 'W' : 'E')
+                         , fabs(var)
+                         , ((var < 0.0) ? 'W' : 'E')
+                         );
+  }
+  else if (strcmp(reference, "True") == 0)
   {
     nmea0183CreateMessage(msg183, src, "HDT,%s,T", heading);
   }
   else if (strcmp(reference, "Magnetic") == 0)
   {
-    nmea0183CreateMessage(msg183, src, "HDM,%s,T", heading);
+    nmea0183CreateMessage(msg183, src, "HDM,%s,M", heading);
   }
-  /* TODO: Add support for HDG */
 }
 
 /*
