@@ -102,6 +102,7 @@ typedef struct
 # define RES_FLOAT (-13.0)
 # define RES_PRESSURE (-14.0)
 # define RES_STRINGLZ (-15.0)            /* ASCII string starting with length byte and terminated by zero byte */
+# define MAX_RESOLUTION_LOOKUP 15
 
   bool hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   char * units; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
@@ -120,7 +121,7 @@ typedef struct
   const char * resolution;
 } Resolution;
 
-const Resolution types[] =
+const Resolution types[MAX_RESOLUTION_LOOKUP] =
 { { "ASCII text", 0 }
 , { "Latitude", 0 }
 , { "Longitude", 0 }
@@ -135,6 +136,7 @@ const Resolution types[] =
 , { "String with start/stop byte", 0 }
 , { "IEEE Float", 0 }
 , { "Pressure", 0 }
+, { "ASCII string starting with length byte", 0 }
 };
 
 
