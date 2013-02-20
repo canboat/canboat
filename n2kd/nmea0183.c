@@ -54,7 +54,7 @@ extern char * srcFilter;
 static void nmea0183CreateMessage( StringBuffer * msg183, const char * src, const char * format, ...)
 {
   char line[80];
-  long n = strtol(src, 0, 10);
+  int n = (int) strtol(src, 0, 10);
   int chk;
   size_t len;
   size_t i;
@@ -73,7 +73,7 @@ static void nmea0183CreateMessage( StringBuffer * msg183, const char * src, cons
         filter++;
         matched = true;
       }
-      f = strtol(filter, &filter, 10);
+      f = (int) strtol(filter, &filter, 10);
       logDebug("Src [%ld] == [%ld]?\n", n, f);
 
       if ((n == f) == matched)
