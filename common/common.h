@@ -99,6 +99,7 @@ void sbAppendData(StringBuffer * sb, const void * data, size_t len);
 void sbAppendString(StringBuffer * sb, const char * string);
 
 int getJSONValue( const char * message, const char * fieldName, char * value, size_t len );
+void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int * pgn, unsigned int * src, unsigned int * dst);
 
 # define CANBOAT_COMMON
 #endif
