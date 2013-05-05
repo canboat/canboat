@@ -89,14 +89,14 @@ sub sigHandler()
   $stop = 1;
 }
 
-$SIG{'INT'} = 'sigHandler';
-$SIG{'HUP'} = 'sigHandler';
-
 daemonize();
 
 logText("Delayed start of N2KD monitor.");
 sleep 10;
 logText("Starting N2KD monitor.");
+
+$SIG{'INT'} = 'sigHandler';
+$SIG{'HUP'} = 'sigHandler';
 
 if (!stat($ACTISENSE_PRIMARY))
 {
