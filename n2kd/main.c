@@ -809,9 +809,9 @@ void handleClientRequest(int i)
 
   if (r == 0)
   {
-    if (stream[i].fd == stdinfd)
+    if (stream[i].type == DATA_INPUT_STREAM)
     {
-      // logError("Read %d on reading stdin\n", r);
+      logAbort("EOF on reading stdin\n", r);
     }
     else
     {
