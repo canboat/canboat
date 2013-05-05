@@ -570,7 +570,7 @@ void storeMessage(char * line, size_t len)
   char *s, *e = 0, *e2;
   Message * m;
   int i, idx, k;
-  int src, dst, prn;
+  int src, dst, prn = 0;
   Pgn * pgn;
   time_t now;
   char * key2 = 0;
@@ -605,11 +605,7 @@ void storeMessage(char * line, size_t len)
 #endif
     }
   }
-  if (!prn || !src)
-  {
-    return;
-  }
-  if (prn > MAX_PGN)
+  if (prn == 0 || prn > MAX_PGN)
   {
     return;
   }

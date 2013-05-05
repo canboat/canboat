@@ -222,7 +222,7 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
 
 #define LOOKUP_RESIDUAL_MODE ( ",0=Autonomous,1=Differential enhanced,2=Estimated,3=Simulator,4=Manual" )
 
-#define LOOKUP_WIND_REFERENCE ( ",0=True (referenced to North),1=Magnetic,2=Apparent,3=True (boat referenced)" )
+#define LOOKUP_WIND_REFERENCE ( ",0=True (ground referenced to North),1=Magnetic (ground referenced to Magnetic North),2=Apparent,3=True (boat referenced),4=True (water referenced)" )
 
 #define LOOKUP_YES_NO ( ",0=No,1=Yes" )
 
