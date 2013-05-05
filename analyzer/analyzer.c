@@ -2133,9 +2133,9 @@ void explainXML(void)
     "<!--\n"COPYRIGHT"\n-->\n"
     "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" Version=\"0.1\">\n"
     "  <Date>"PROGRAM_DATE"</Date>\n"
-    "  <Comment>Test Run</Comment>\n"
+    "  <Comment>See http://canboat.com for the full source code</Comment>\n"
     "  <CreatorCode>Keversoft NMEA2000 Analyzer</CreatorCode>\n"
-    "  <License>CC BY-NC-SA</License>\n"
+    "  <License>GPL v3</License>\n"
     "  <PGNs>\n"
     );
 
