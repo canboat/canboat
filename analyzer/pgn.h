@@ -2447,8 +2447,8 @@ Pgn pgnList[] =
 ,
 { "Temperature", 130312, false, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Temperature Instance", 4, 1, false, 0, "" }
-  , { "Temperature Source", 4, 1, false, 0, "" }
+  , { "Temperature Instance", BYTES(1), 1, false, 0, "" }
+  , { "Temperature Source", BYTES(1), 1, false, 0, "" }
   , { "Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Set Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { 0 }
