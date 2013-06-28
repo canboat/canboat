@@ -1058,25 +1058,34 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
   bool ret = false;
   int64_t value;
   int64_t maxValue;
-  int64_t notUsed;
+  int64_t reserved;
   double a;
 
   extractNumber(field, data, startBit, bits, &value, &maxValue);
 
+  /* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
+   * but I don't yet know which datafields reserve the reserved values.
+   */
+#define DATAFIELD_UNKNOWN   (0)
+#define DATAFIELD_ERROR     (-1)
+#define DATAFIELD_RESERVED1 (-2)
+#define DATAFIELD_RESERVED2 (-3)
+#define DATAFIELD_RESERVED3 (-4)
+
   if (maxValue >= 15)
   {
-    notUsed = 2;
+    reserved = 2; /* DATAFIELD_ERROR and DATAFIELD_UNKNOWN */
   }
   else if (maxValue > 1)
   {
-    notUsed = 1;
+    reserved = 1; /* DATAFIELD_UNKNOWN */
   }
   else
   {
-    notUsed = 0;
+    reserved = 0;
   }
 
-  if (value <= maxValue - notUsed)
+  if (value <= maxValue - reserved)
   {
     if (field->units && field->units[0] == '=')
     {
@@ -1226,6 +1235,35 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
             mprintf(" %s", field->units);
           }
         }
+      }
+    }
+  }
+  else
+  {
+    /* For json, which is supposed to be effective for machine operations
+     * we just ignore the special values.
+     */
+    if (!showJson)
+    {
+      switch (value - maxValue)
+      {
+      case DATAFIELD_UNKNOWN:
+        mprintf("%s %s = Unknown", getSep(), fieldName);
+        break;
+      case DATAFIELD_ERROR:
+        mprintf("%s %s = ERROR", getSep(), fieldName);
+        break;
+      case DATAFIELD_RESERVED1:
+        mprintf("%s %s = RESERVED1", getSep(), fieldName);
+        break;
+      case DATAFIELD_RESERVED2:
+        mprintf("%s %s = RESERVED2", getSep(), fieldName);
+        break;
+      case DATAFIELD_RESERVED3:
+        mprintf("%s %s = RESERVED3", getSep(), fieldName);
+        break;
+      default:
+        mprintf("%s %s = Unhandled value %ld (%ld)", getSep(), fieldName, value, value - maxValue);
       }
     }
   }
