@@ -1703,7 +1703,8 @@ ascii_string:
 
   if (showJson)
   {
-    if (*sep == ',')
+    /* If the separator is now 1 character long then we printed at least one field */
+    if (sep[0] && !sep[1])
     {
       mprintf("}");
     }
