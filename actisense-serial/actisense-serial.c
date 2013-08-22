@@ -149,7 +149,7 @@ int main(int argc, char ** argv)
 
 retry:
   if (debug) fprintf(stderr, "Opening %s\n", device);
-  handle = open(device, O_RDWR | O_NOCTTY);
+  handle = open(device, O_RDWR | O_NOCTTY | O_NONBLOCK);
   if (debug) fprintf(stderr, "fd = %d\n", handle);
   if (handle < 0)
   {
