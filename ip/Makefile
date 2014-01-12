@@ -34,8 +34,5 @@ $(TARGETDIR):
 clean:
 	-rm -f $(TARGETLIST) *.elf *.gdb
 
-$(TARGET1):	ipin.c ../common/common.c ../common/common.h
-	$(CC) -o $(TARGET1) $(CFLAGS) -I../common ipin.c ../common/common.c
-
 $(TARGET2):	iptee.c ../common/common.c ../common/common.h
 	$(CC) -o $(TARGET2) $(CFLAGS) -I../common iptee.c ../common/common.c

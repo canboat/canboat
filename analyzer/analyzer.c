@@ -31,7 +31,8 @@ enum RawFormats
 {
   RAWFORMAT_PLAIN,
   RAWFORMAT_FAST,
-  RAWFORMAT_AIRMAR
+  RAWFORMAT_AIRMAR,
+  RAWFORMAT_CHETCO
 };
 
 enum RawFormats format = RAWFORMAT_PLAIN;
@@ -204,32 +205,44 @@ int main(int argc, char ** argv)
       continue;
     }
 
-    if (format != RAWFORMAT_AIRMAR)
+    if (format != RAWFORMAT_CHETCO && msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
     {
-      p = strchr(msg, ',');
-    }
-    else
-    {
-      p = strchr(msg, ' ');
+      if (showBytes)
+      {
+        logInfo("Detected Chetco protocol with all data on one line\n");
+      }
+      format = RAWFORMAT_CHETCO;
     }
 
-    if (!p)
+    if (format != RAWFORMAT_CHETCO)
     {
-      p = strchr(msg, ' ');
-      if (p && (p[1] == '-' || p[2] == '-'))
+      if (format != RAWFORMAT_AIRMAR)
       {
-        if (format != RAWFORMAT_AIRMAR && showBytes)
-        {
-          logInfo("Detected Airmar protocol with all data on one line\n");
-        }
-        format = RAWFORMAT_AIRMAR;
+        p = strchr(msg, ',');
       }
-    }
-    if (!p || p >= msg + sizeof(m.timestamp) - 1)
-    {
-      logError("Error reading message, scanning timestamp from %s", msg);
-      if (!showJson) fprintf(stdout, "%s", msg);
-      continue;
+      else
+      {
+        p = strchr(msg, ' ');
+      }
+
+      if (!p)
+      {
+        p = strchr(msg, ' ');
+        if (p && (p[1] == '-' || p[2] == '-'))
+        {
+          if (format != RAWFORMAT_AIRMAR && showBytes)
+          {
+            logInfo("Detected Airmar protocol with all data on one line\n");
+          }
+          format = RAWFORMAT_AIRMAR;
+        }
+      }
+      if (!p || p >= msg + sizeof(m.timestamp) - 1)
+      {
+        logError("Error reading message, scanning timestamp from %s", msg);
+        if (!showJson) fprintf(stdout, "%s", msg);
+        continue;
+      }
     }
 
     if (format == RAWFORMAT_PLAIN)
@@ -378,6 +391,41 @@ int main(int argc, char ** argv)
           p++;
         }
       }
+    }
+    else if (format == RAWFORMAT_CHETCO)
+    {
+      unsigned int tstamp;
+      time_t t;
+      struct tm tm;
+ 
+      if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
+      {
+        logError("Error reading Chetco message: %s", msg);
+        if (!showJson) fprintf(stdout, "%s", msg);
+        continue;
+      }
+
+      t = (time_t) tstamp / 1000;
+      localtime_r(&t, &tm);
+      strftime(m.timestamp, sizeof(m.timestamp), "%Y-%m-%d-%H:%M:%S", &tm);
+      sprintf(m.timestamp + strlen(m.timestamp), ",%u", tstamp % 1000);
+       
+
+      p = msg + STRSIZE("$PCDIN,01FD07,089C77D!,03,"); // Fixed length where data bytes start;
+
+      for (i = 0; *p != '*'; i++)
+      {
+        if (scanHex(&p, &m.data[i]))
+        {
+          logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+          if (!showJson) fprintf(stdout, "%s", msg);
+          continue;
+        }
+      }
+
+      prio = 0;
+      dst = 255;
+      len = i + 1;
     }
 
     m.prio = prio;
