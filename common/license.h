@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -36,7 +36,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 "You should have received a copy of the GNU General Public License\n" \
 "along with CANboat.  If not, see <http://www.gnu.org/licenses/>.\n" \
 
-# define COPYRIGHT "(C) 2009-2012 Keversoft B.V., Harlingen, The Netherlands\n" \
+# define COPYRIGHT "(C) 2009-2014 Keversoft B.V., Harlingen, The Netherlands\n" \
                    "For more information see http://yachtelectronics.blogspot.com\n" \
                    "\n"LICENSE"\n"
 
