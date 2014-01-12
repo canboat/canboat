@@ -11,6 +11,8 @@
 #       ACTISENSE_PRIMARY=/dev/actisense-1
 #       ACTISENSE_SECONDARY=/dev/actisense-2
 #       MONITOR=false
+#       ANALYZER_OPTIONS=
+#       N2KD_OPTIONS=
 #
 # Leave out ACTISENSE_SECONDARY if you have only one Actisense gateway.
 # Leave MONITOR set to false for now; its contents have not been open sourced yet.
