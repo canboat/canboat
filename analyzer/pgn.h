@@ -50,7 +50,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
  * that increases.
  * This means that for 'fast packets' the first bucket (sub-packet) contains 6 payload
  * bytes and 7 for remaining. Since the max index is 31, the maximal payload is
- * 6 + 30 * 7 = 216 bytes
+ * 6 + 31 * 7 = 223 bytes
  */
 
 /*
