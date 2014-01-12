@@ -178,7 +178,7 @@ retry:
   }
   else
   {
-    handle = open(device, O_RDWR | O_NOCTTY);
+    handle = open(device, O_RDWR | O_NOCTTY | O_NONBLOCK);
     if (debug) fprintf(stderr, "fd = %d\n", handle);
     if (handle < 0)
     {
