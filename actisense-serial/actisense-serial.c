@@ -149,19 +149,32 @@ int main(int argc, char ** argv)
 
 retry:
   if (debug) fprintf(stderr, "Opening %s\n", device);
-  handle = open(device, O_RDWR | O_NOCTTY);
-  if (debug) fprintf(stderr, "fd = %d\n", handle);
-  if (handle < 0)
+  if (strncmp(device, "tcp:", 4) == 0)
   {
-    fprintf(stderr, "Cannot open NGT-1-A device %s\n", device);
-    exit(1);
+    handle = open_socket_stream(device);
+    isFile = true;
+    if (handle < 0)
+    {
+      fprintf(stderr, "Cannot open NGT-1-A device %s\n", device);
+      exit(1);
+    }
   }
-  if (fstat(handle, &statbuf) < 0)
+  else
   {
-    fprintf(stderr, "Cannot determine device %s\n", device);
-    exit(1);
+    handle = open(device, O_RDWR | O_NOCTTY);
+    if (debug) fprintf(stderr, "fd = %d\n", handle);
+    if (handle < 0)
+    {
+      fprintf(stderr, "Cannot open NGT-1-A device %s\n", device);
+      exit(1);
+    }
+    if (fstat(handle, &statbuf) < 0)
+    {
+      fprintf(stderr, "Cannot determine device %s\n", device);
+      exit(1);
+    }
+    isFile = S_ISREG(statbuf.st_mode);
   }
-  isFile = S_ISREG(statbuf.st_mode);
 
   if (isFile)
   {
