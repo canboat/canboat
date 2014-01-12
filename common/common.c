@@ -443,7 +443,7 @@ static void resolve_address(const char * url, char ** host, const char ** servic
 
 SOCKET open_socket_stream(const char * url)
 {
-  int sockfd;
+  int sockfd = INVALID_SOCKET;
   int n;
   struct addrinfo hints, *res, *addr;
   char * host;
