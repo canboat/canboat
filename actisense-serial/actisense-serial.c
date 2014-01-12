@@ -97,9 +97,11 @@ int main(int argc, char ** argv)
   struct stat statbuf;
   int pid = 0;
 
+  fprintf(stderr, "argc = %d argv[0]=%s\n", argc, argv[0]);
   setProgName(argv[0]);
   while (argc > 1)
   {
+    fprintf(stderr, "argc = %d argv[1]=%s\n", argc, argv[1]);
     if (strcasecmp(argv[1], "-w") == 0)
     {
       writeonly = 1;
@@ -143,19 +145,36 @@ int main(int argc, char ** argv)
 
   if (!device)
   {
-    fprintf(stderr, "Usage: %s [-p] [-r] [-d] device\n\n  For example: %s /dev/ttyUSB0\n\n"COPYRIGHT, name, name);
+    fprintf(stderr, 
+    "Usage: %s [-w] -[-p] [-r] [-v] [-d] device\n"
+    "\n"
+    "Options:\n"
+    "  -w      writeonly mode, no data is read from device\n"
+    "  -r      readonly mode, no data is sent to device\n"
+    "  -p      passthru mode, data on stdin is sent to stdout but not to device\n"
+    "  -v      verbose\n"
+    "  -d      debug\n"
+    "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
+    "  <device> can be a serial device, a normal file containing a raw log,\n"
+    "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
+    "\n" 
+    "  Examples: %s /dev/ttyUSB0\n"
+    "            %s tcp://192.168.1.1:10001\n"
+    "\n" 
+    COPYRIGHT, name, name, name);
     exit(1);
   }
 
 retry:
   if (debug) fprintf(stderr, "Opening %s\n", device);
-  if (strncmp(device, "tcp:", 4) == 0)
+  if (strncmp(device, "tcp:", STRSIZE("tcp:")) == 0)
   {
     handle = open_socket_stream(device);
+    if (debug) fprintf(stderr, "socket = %d\n", handle);
     isFile = true;
     if (handle < 0)
     {
-      fprintf(stderr, "Cannot open NGT-1-A device %s\n", device);
+      fprintf(stderr, "Cannot open NGT-1-A TCP stream %s\n", device);
       exit(1);
     }
   }
