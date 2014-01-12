@@ -97,11 +97,9 @@ int main(int argc, char ** argv)
   struct stat statbuf;
   int pid = 0;
 
-  fprintf(stderr, "argc = %d argv[0]=%s\n", argc, argv[0]);
   setProgName(argv[0]);
   while (argc > 1)
   {
-    fprintf(stderr, "argc = %d argv[1]=%s\n", argc, argv[1]);
     if (strcasecmp(argv[1], "-w") == 0)
     {
       writeonly = 1;
