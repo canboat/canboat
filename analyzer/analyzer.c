@@ -1550,7 +1550,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       if (field.resolution == RES_ASCII)
       {
         len = (int) bytes;
-        char lastbyte = data[len - 1];
+        unsigned char lastbyte = data[len - 1];
 
         if (lastbyte == 0xff || lastbyte == ' ' || lastbyte == 0 || lastbyte == '@')
         {
