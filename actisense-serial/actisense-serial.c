@@ -144,7 +144,7 @@ int main(int argc, char ** argv)
   if (!device)
   {
     fprintf(stderr, 
-    "Usage: %s [-w] -[-p] [-r] [-v] [-d] device\n"
+    "Usage: %s [-w] -[-p] [-r] [-v] [-d] [-t <n>] device\n"
     "\n"
     "Options:\n"
     "  -w      writeonly mode, no data is read from device\n"
