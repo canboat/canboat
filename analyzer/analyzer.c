@@ -1087,7 +1087,7 @@ static bool printVarNumber(char * fieldName, Pgn * pgn, uint32_t refPgn, Field *
   refField = getField(refPgn, data[-1] - 1);
   if (refField)
   {
-    *bits = (refField->size + 7) & ~7;
+    *bits = (refField->size + 7) & ~7; // Round # of bits in field refField up to complete bytes: 1->8, 7->8, 8->8 etc.
     if (showBytes)
     {
       mprintf("(refField %s size = %u in %zu bytes)", refField->name, refField->size, *bits / 8);
