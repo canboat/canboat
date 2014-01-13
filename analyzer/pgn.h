@@ -604,7 +604,7 @@ Pgn pgnList[] =
   }
 }
 
-  /* ISO 11783: 65,280 to 65,535 (0xFF00 to 0xFFFF): Propietary PDU-2 messages */
+  /* ISO 11783: 65,280 to 65,535 (0xFF00 to 0xFFFF): Proprietary PDU-2 messages */
 
 ,
 { "ISO: Manu. Proprietary single-frame non-addressed", 65280, false, 8, 0,
@@ -813,7 +813,7 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Manufacturer Propietary: Addressable Multi-Frame", 126720, true, 8, 0,
+{ "Manufacturer Proprietary: Addressable Multi-Frame", 126720, true, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
