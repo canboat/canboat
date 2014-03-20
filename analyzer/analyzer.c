@@ -2251,7 +2251,7 @@ char * camelize(const char *str)
 }
 
 void camelCaseForJson(void) {
-  for (int i = 1; i < ARRAY_SIZE(pgnList); i++)
+  for (int i = 0; i < ARRAY_SIZE(pgnList); i++)
   {
     pgnList[i].description = camelize(pgnList[i].description);
     for (int j = 0; j < ARRAY_SIZE(pgnList[i].fieldList) && pgnList[i].fieldList[j].name; j++)
