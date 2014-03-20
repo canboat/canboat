@@ -67,6 +67,7 @@ void printCanRaw(RawMessage * msg);
 bool printCanFormat(RawMessage * msg);
 void explain(void);
 void explainXML(void);
+void camelCaseForJson(void);
 
 void usage(char ** argv, char ** av)
 {
@@ -140,6 +141,7 @@ int main(int argc, char ** argv)
     }
     else if (strcasecmp(av[1], "-json") == 0)
     {
+      camelCaseForJson();
       showJson = true;
     }
     else if (strcasecmp(av[1], "-data") == 0)
@@ -2210,6 +2212,41 @@ void explain(void)
     }
   }
 
+}
+
+char * camelize(const char *str)
+{
+    char delim = ' ';
+    size_t len = strlen(str);
+    char *ptr = malloc(len + 1);
+    char *s = ptr;
+    memset(s, '\0', len + 1);
+
+    if (!s)
+        return NULL;
+    
+    while (*str) {
+        if (*str == delim && *(str + 1) != '\0') {    
+            *s = toupper(*(str + 1));
+            str++;
+        } else {
+            *s = *str;
+        }
+        s++; str++;
+    }
+
+    return ptr;    
+}
+
+void camelCaseForJson(void) {
+  for (int i = 1; i < ARRAY_SIZE(pgnList); i++)
+  {
+    pgnList[i].description = camelize(pgnList[i].description);
+    for (int j = 0; j < ARRAY_SIZE(pgnList[i].fieldList) && pgnList[i].fieldList[j].name; j++)
+    {
+      pgnList[i].fieldList[j].name = camelize(pgnList[i].fieldList[j].name);
+    }
+  }  
 }
 
 void explainXML(void)
