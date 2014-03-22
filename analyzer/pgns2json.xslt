@@ -311,7 +311,7 @@
   </xsl:template>
 
   <!-- array -->
-  <xsl:template match="*[count(../*[name(../*)=name(.)])=count(../*) and count(../*)&gt;1]">
+  <xsl:template match="PGNInfo//*[count(../*[name(../*)=name(.)])=count(../*) and count(../*)&gt;1]">
     <xsl:if test="not(preceding-sibling::*)">[</xsl:if>
     <xsl:call-template name="indent"/>
     <xsl:choose>
@@ -352,5 +352,16 @@
   <xsl:template match="EnumValues/EnumPair">
     <xsl:call-template name="indent"/>{"<xsl:value-of select="@Value"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
+
+    <xsl:template match="PGNInfo">
+    <xsl:call-template name="indent"/>"<xsl:value-of select="./PGN"/>":<xsl:apply-templates/><xsl:if test="not(position() = last())">,</xsl:if>
+    </xsl:template>
+
+    <xsl:template match="PGNs">
+    "PGNs":{
+    <xsl:apply-templates/>
+    }
+    }
+    </xsl:template>
     
 </xsl:stylesheet>

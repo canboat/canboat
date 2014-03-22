@@ -22,12 +22,19 @@ TARGETDIR=../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TARGETS=$(ANALYZER)
 CFLAGS=-O3
+XMLFILE=pgns.xml
+JSONFILE=pgns.json
 
 all: $(TARGETS)
 
 $(ANALYZER): analyzer.c analyzer.h pgn.h ../common/common.c ../common/common.h Makefile
 	$(CC) $(CFLAGS) -o $(ANALYZER) -I../common analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
+json: $(ANALYZER)
+	$(ANALYZER) -json -explain-xml >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
+
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
+	-rm -f $(XMLFILE)
+	-rm -f $(JSONFILE)
 
