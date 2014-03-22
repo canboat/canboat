@@ -72,7 +72,7 @@ void camelCase(bool upperCamelCase);
 void usage(char ** argv, char ** av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
-  printf("Usage: %s [[-raw] [-json] [-data] [-debug] [-d] [-q] [-geo {dd|dm|dms}] [-src <src> | <pgn>]] ["
+  printf("Usage: %s [[-raw] [-json [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-geo {dd|dm|dms}] [-src <src> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
@@ -406,7 +406,7 @@ int main(int argc, char ** argv)
       unsigned int tstamp;
       time_t t;
       struct tm tm;
- 
+
       if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
       {
         logError("Error reading Chetco message: %s", msg);
@@ -418,7 +418,6 @@ int main(int argc, char ** argv)
       localtime_r(&t, &tm);
       strftime(m.timestamp, sizeof(m.timestamp), "%Y-%m-%d-%H:%M:%S", &tm);
       sprintf(m.timestamp + strlen(m.timestamp), ",%u", tstamp % 1000);
-       
 
       p = msg + STRSIZE("$PCDIN,01FD07,089C77D!,03,"); // Fixed length where data bytes start;
 
