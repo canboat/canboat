@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -31,7 +31,8 @@ enum RawFormats
 {
   RAWFORMAT_PLAIN,
   RAWFORMAT_FAST,
-  RAWFORMAT_AIRMAR
+  RAWFORMAT_AIRMAR,
+  RAWFORMAT_CHETCO
 };
 
 enum RawFormats format = RAWFORMAT_PLAIN;
@@ -204,32 +205,44 @@ int main(int argc, char ** argv)
       continue;
     }
 
-    if (format != RAWFORMAT_AIRMAR)
+    if (format != RAWFORMAT_CHETCO && msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
     {
-      p = strchr(msg, ',');
-    }
-    else
-    {
-      p = strchr(msg, ' ');
+      if (showBytes)
+      {
+        logInfo("Detected Chetco protocol with all data on one line\n");
+      }
+      format = RAWFORMAT_CHETCO;
     }
 
-    if (!p)
+    if (format != RAWFORMAT_CHETCO)
     {
-      p = strchr(msg, ' ');
-      if (p && (p[1] == '-' || p[2] == '-'))
+      if (format != RAWFORMAT_AIRMAR)
       {
-        if (format != RAWFORMAT_AIRMAR && showBytes)
-        {
-          logInfo("Detected Airmar protocol with all data on one line\n");
-        }
-        format = RAWFORMAT_AIRMAR;
+        p = strchr(msg, ',');
       }
-    }
-    if (!p || p >= msg + sizeof(m.timestamp) - 1)
-    {
-      logError("Error reading message, scanning timestamp from %s", msg);
-      if (!showJson) fprintf(stdout, "%s", msg);
-      continue;
+      else
+      {
+        p = strchr(msg, ' ');
+      }
+
+      if (!p)
+      {
+        p = strchr(msg, ' ');
+        if (p && (p[1] == '-' || p[2] == '-'))
+        {
+          if (format != RAWFORMAT_AIRMAR && showBytes)
+          {
+            logInfo("Detected Airmar protocol with all data on one line\n");
+          }
+          format = RAWFORMAT_AIRMAR;
+        }
+      }
+      if (!p || p >= msg + sizeof(m.timestamp) - 1)
+      {
+        logError("Error reading message, scanning timestamp from %s", msg);
+        if (!showJson) fprintf(stdout, "%s", msg);
+        continue;
+      }
     }
 
     if (format == RAWFORMAT_PLAIN)
@@ -378,6 +391,41 @@ int main(int argc, char ** argv)
           p++;
         }
       }
+    }
+    else if (format == RAWFORMAT_CHETCO)
+    {
+      unsigned int tstamp;
+      time_t t;
+      struct tm tm;
+ 
+      if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
+      {
+        logError("Error reading Chetco message: %s", msg);
+        if (!showJson) fprintf(stdout, "%s", msg);
+        continue;
+      }
+
+      t = (time_t) tstamp / 1000;
+      localtime_r(&t, &tm);
+      strftime(m.timestamp, sizeof(m.timestamp), "%Y-%m-%d-%H:%M:%S", &tm);
+      sprintf(m.timestamp + strlen(m.timestamp), ",%u", tstamp % 1000);
+       
+
+      p = msg + STRSIZE("$PCDIN,01FD07,089C77D!,03,"); // Fixed length where data bytes start;
+
+      for (i = 0; *p != '*'; i++)
+      {
+        if (scanHex(&p, &m.data[i]))
+        {
+          logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+          if (!showJson) fprintf(stdout, "%s", msg);
+          continue;
+        }
+      }
+
+      prio = 0;
+      dst = 255;
+      len = i + 1;
     }
 
     m.prio = prio;
@@ -1039,7 +1087,7 @@ static bool printVarNumber(char * fieldName, Pgn * pgn, uint32_t refPgn, Field *
   refField = getField(refPgn, data[-1] - 1);
   if (refField)
   {
-    *bits = (refField->size + 7) & ~7;
+    *bits = (refField->size + 7) & ~7; // Round # of bits in field refField up to complete bytes: 1->8, 7->8, 8->8 etc.
     if (showBytes)
     {
       mprintf("(refField %s size = %u in %zu bytes)", refField->name, refField->size, *bits / 8);
@@ -1058,25 +1106,34 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
   bool ret = false;
   int64_t value;
   int64_t maxValue;
-  int64_t notUsed;
+  int64_t reserved;
   double a;
 
   extractNumber(field, data, startBit, bits, &value, &maxValue);
 
+  /* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
+   * but I don't yet know which datafields reserve the reserved values.
+   */
+#define DATAFIELD_UNKNOWN   (0)
+#define DATAFIELD_ERROR     (-1)
+#define DATAFIELD_RESERVED1 (-2)
+#define DATAFIELD_RESERVED2 (-3)
+#define DATAFIELD_RESERVED3 (-4)
+
   if (maxValue >= 15)
   {
-    notUsed = 2;
+    reserved = 2; /* DATAFIELD_ERROR and DATAFIELD_UNKNOWN */
   }
   else if (maxValue > 1)
   {
-    notUsed = 1;
+    reserved = 1; /* DATAFIELD_UNKNOWN */
   }
   else
   {
-    notUsed = 0;
+    reserved = 0;
   }
 
-  if (value <= maxValue - notUsed)
+  if (value <= maxValue - reserved)
   {
     if (field->units && field->units[0] == '=')
     {
@@ -1226,6 +1283,35 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
             mprintf(" %s", field->units);
           }
         }
+      }
+    }
+  }
+  else
+  {
+    /* For json, which is supposed to be effective for machine operations
+     * we just ignore the special values.
+     */
+    if (!showJson)
+    {
+      switch (value - maxValue)
+      {
+      case DATAFIELD_UNKNOWN:
+        mprintf("%s %s = Unknown", getSep(), fieldName);
+        break;
+      case DATAFIELD_ERROR:
+        mprintf("%s %s = ERROR", getSep(), fieldName);
+        break;
+      case DATAFIELD_RESERVED1:
+        mprintf("%s %s = RESERVED1", getSep(), fieldName);
+        break;
+      case DATAFIELD_RESERVED2:
+        mprintf("%s %s = RESERVED2", getSep(), fieldName);
+        break;
+      case DATAFIELD_RESERVED3:
+        mprintf("%s %s = RESERVED3", getSep(), fieldName);
+        break;
+      default:
+        mprintf("%s %s = Unhandled value %ld (%ld)", getSep(), fieldName, value, value - maxValue);
       }
     }
   }
@@ -1512,7 +1598,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       if (field.resolution == RES_ASCII)
       {
         len = (int) bytes;
-        char lastbyte = data[len - 1];
+        unsigned char lastbyte = data[len - 1];
 
         if (lastbyte == 0xff || lastbyte == ' ' || lastbyte == 0 || lastbyte == '@')
         {
@@ -1665,7 +1751,8 @@ ascii_string:
 
   if (showJson)
   {
-    if (*sep == ',')
+    /* If the separator is now 1 character long then we printed at least one field */
+    if (sep[0] && !sep[1])
     {
       mprintf("}");
     }

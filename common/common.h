@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -67,6 +67,8 @@ typedef int SOCKET;
 # define CB_MIN(x,y) (((x)<(y))?(x):(y))
 #endif
 
+#define STRSIZE(x) (sizeof(x) - 1)
+
 #ifndef INVALID_SOCKET
 # define INVALID_SOCKET (-1)
 #endif
@@ -82,7 +84,7 @@ int logDebug(const char * format, ...);
 int logInfo(const char * format, ...);
 int logError(const char * format, ...);
 void logAbort(const char * format, ...);
-void die (char * t);
+void die(const char * t);
 void setLogLevel(LogLevel level);
 void setProgName(char * name);
 
@@ -100,6 +102,8 @@ void sbAppendString(StringBuffer * sb, const char * string);
 
 int getJSONValue( const char * message, const char * fieldName, char * value, size_t len );
 void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int * pgn, unsigned int * src, unsigned int * dst);
+
+SOCKET open_socket_stream(const char * url);
 
 # define CANBOAT_COMMON
 #endif

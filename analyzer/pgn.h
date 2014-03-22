@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -50,7 +50,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
  * that increases.
  * This means that for 'fast packets' the first bucket (sub-packet) contains 6 payload
  * bytes and 7 for remaining. Since the max index is 31, the maximal payload is
- * 6 + 30 * 7 = 216 bytes
+ * 6 + 31 * 7 = 223 bytes
  */
 
 /*
@@ -289,7 +289,7 @@ Pgn pgnList[] =
 { "ISO Acknowledgement", 59392, true, 8, 0,
   { { "Control", BYTES(1), RES_LOOKUP, false, ",0=ACK,1=NAK,2=Access Denied,3=Address Busy", "" }
   , { "Group Function", BYTES(1), 1, false, 0, "" }
-  , { "Reserved", 24, 1, RES_BINARY, 0, "Reserved" }
+  , { "Reserved", 24, RES_BINARY, false, 0, "Reserved" }
   , { "PGN", 24, RES_INTEGER, false, 0, "Parameter Group Number of requested information" }
   , { 0 }
   }
@@ -615,7 +615,7 @@ Pgn pgnList[] =
   }
 }
 
-  /* ISO 11783: 65,280 to 65,535 (0xFF00 to 0xFFFF): Propietary PDU-2 messages */
+  /* ISO 11783: 65,280 to 65,535 (0xFF00 to 0xFFFF): Proprietary PDU-2 messages */
 
 ,
 { "ISO: Manu. Proprietary single-frame non-addressed", 65280, false, 8, 0,
@@ -824,7 +824,7 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Manufacturer Propietary: Addressable Multi-Frame", 126720, true, 8, 0,
+{ "Manufacturer Proprietary: Addressable Multi-Frame", 126720, true, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
@@ -1399,8 +1399,8 @@ Pgn pgnList[] =
   /* http://www.nmea.org/Assets/nmea-2000-digital-interface-white-paper.pdf */
 ,
 { "Distance Log", 128275, true, 14, 0,
-  { { "Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970" }
-  , { "Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
+  { { "Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970" }
+  , { "Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight" }
   , { "Log", BYTES(4), 1, false, "m", "Total cumulative distance" }
   , { "Trip Log", BYTES(4), 1, false, "m", "Distance since last reset" }
   , { 0 }
@@ -1489,7 +1489,7 @@ Pgn pgnList[] =
   , { "Number of SVs", BYTES(1), 1, false, 0, "Number of satellites used in solution" }
   , { "HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision" }
   , { "PDOP", BYTES(2), 0.01, true, 0, "Probable dilution of precision" }
-  , { "Geoidal Separation", BYTES(2), 0.01, false, "m", "Geoidal Separation" }
+  , { "Geoidal Separation", BYTES(2), 0.01, true, "m", "Geoidal Separation" }
   , { "Reference Stations", BYTES(1), 1, false, 0, "Number of reference stations" }
   , { "Reference Station Type", 4, RES_LOOKUP, false, LOOKUP_GNS, "" }
   , { "Reference Station ID", 12, 1, false, "" }
@@ -1522,7 +1522,7 @@ Pgn pgnList[] =
   , { "Communication State", 19, RES_BINARY, false, 0, "Information used by the TDMA slot allocation algorithm and synchronization information" }
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
   , { "Heading", BYTES(2), RES_DEGREES, false, "deg", "True heading" }
-  , { "Rate of Turn", BYTES(2), RES_ROTATION, false, "deg/s", "" }
+  , { "Rate of Turn", BYTES(2), RES_ROTATION, true, "deg/s", "" }
   , { "Nav Status", BYTES(1), RES_LOOKUP, false, LOOKUP_NAV_STATUS, "" }
   , { "Reserved for Regional Applications", BYTES(1), 1, false, 0, "" }
   , { "Spare", BYTES(1), 1, false, 0, "" }
@@ -1739,7 +1739,7 @@ Pgn pgnList[] =
   , { "Reserved", 2, RES_BINARY, false, 0, "Reserved" }
   , { "HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision" }
   , { "VDOP", BYTES(2), 0.01, true, 0, "Vertical dilution of precision" }
-  , { "TDOP", BYTES(2), 0.01, true, 0, "Time dilution of precision" }
+  , { "TDOP", BYTES(2), 0.01, false, 0, "Time dilution of precision" }
   , { 0 }
   }
 }
@@ -1750,10 +1750,9 @@ Pgn pgnList[] =
   , { "Mode", 2, RES_LOOKUP, false, ",3=Range residuals used to calculate position", "" }
   , { "Reserved", 6, RES_BINARY, false, 0, "Reserved" }
   , { "Sats in View", BYTES(1), 1, false, 0, "" }
-
   , { "PRN", BYTES(1), 1, false, 0, "" }
-  , { "Elevation", BYTES(2), RES_DEGREES, true, "deg", "" }
-  , { "Azimuth", BYTES(2), RES_DEGREES, true, "deg", "" }
+  , { "Elevation", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Azimuth", BYTES(2), RES_DEGREES, false, "deg", "" }
   , { "SNR", BYTES(2), 0.01, false, "dB", "" }
   , { "Range residuals", BYTES(4), 1, true, 0, "" }
   , { "Status", 4, RES_LOOKUP, false, ",0=Not tracked,1=Tracked,2=Used,3=Not tracked+Diff,4=Tracked+Diff,5=Used+Diff", "" }

@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -52,7 +52,7 @@ int ipConnect(const char * host, const char * service, ConnectionType ct)
 
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = (ct == ServerTCP) ? AF_INET6 : AF_UNSPEC;
-  hints.ai_socktype = (ct == ClientTCP) ? SOCK_DGRAM : SOCK_STREAM;
+  hints.ai_socktype = (ct == ClientTCP) ? SOCK_STREAM : SOCK_DGRAM;
 
   n = getaddrinfo(host, service, &hints, &res);
   if (n != 0)
@@ -165,7 +165,7 @@ int main(int argc, char ** argv)
 {
   char * host = 0;
   char * port = 0;
-  ConnectionType ct = ClientTCP;
+  ConnectionType ct = ClientUDP; // Default client type is UDP
   char msg[LINESIZE];
   int r;
   int i;

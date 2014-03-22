@@ -1,7 +1,7 @@
 #
 # ip/Makefile
 #
-# (C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+# (C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 #
 # This file is part of CANboat.
 #
@@ -21,9 +21,8 @@
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
-TARGET1=../rel/$(PLATFORM)/ipin
-TARGET2=../rel/$(PLATFORM)/iptee
-TARGETLIST=$(TARGET1) $(TARGET2)
+TARGET1=../rel/$(PLATFORM)/iptee
+TARGETLIST=$(TARGET1)
 CFLAGS=-O3
 
 all:	$(TARGETDIR) $(TARGETLIST)
@@ -34,8 +33,5 @@ $(TARGETDIR):
 clean:
 	-rm -f $(TARGETLIST) *.elf *.gdb
 
-$(TARGET1):	ipin.c ../common/common.c ../common/common.h
-	$(CC) -o $(TARGET1) $(CFLAGS) -I../common ipin.c ../common/common.c
-
-$(TARGET2):	iptee.c ../common/common.c ../common/common.h
-	$(CC) -o $(TARGET2) $(CFLAGS) -I../common iptee.c ../common/common.c
+$(TARGET1):	iptee.c ../common/common.c ../common/common.h
+	$(CC) -o $(TARGET1) $(CFLAGS) -I../common iptee.c ../common/common.c
