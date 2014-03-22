@@ -113,6 +113,7 @@ typedef struct
                    * of two's complement as used by NMEA 2000.
                    * See http://en.wikipedia.org/wiki/Offset_binary
                    */
+  char * camelName; /* Filled by C, no need to set in initializers. */
 } Field;
 
 typedef struct
@@ -253,6 +254,7 @@ typedef struct
   uint32_t   repeatingFields;   /* How many fields at the end repeat until the PGN is exhausted? */
   Field      fieldList[28];     /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t   fieldCount;        /* Filled by C, no need to set in initializers. */
+  char     * camelDescription;  /* Filled by C, no need to set in initializers. */
 } Pgn;
 
 

@@ -67,7 +67,7 @@ void printCanRaw(RawMessage * msg);
 bool printCanFormat(RawMessage * msg);
 void explain(void);
 void explainXML(void);
-void camelCaseForJson(void);
+void camelCase(bool upperCamelCase);
 
 void usage(char ** argv, char ** av)
 {
@@ -139,9 +139,16 @@ int main(int argc, char ** argv)
       ac--;
       av++;
     }
+    else if (strcasecmp(av[1], "-camel") == 0)
+    {
+      camelCase(false);
+    }
+    else if (strcasecmp(av[1], "-upper-camel") == 0)
+    {
+      camelCase(true);
+    }
     else if (strcasecmp(av[1], "-json") == 0)
     {
-      camelCaseForJson();
       showJson = true;
     }
     else if (strcasecmp(av[1], "-data") == 0)
@@ -1528,6 +1535,10 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
   if (showJson)
   {
     mprintf("{\"timestamp\":\"%s\",\"prio\":\"%u\",\"src\":\"%u\",\"dst\":\"%u\",\"pgn\":\"%u\",\"description\":\"%s\"", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    if (pgn->camelDescription)
+    {
+      mprintf(",\"id\":\"%s\"", pgn->camelDescription);
+    }
     sep = ",\"fields\":{";
   }
   else
@@ -1554,13 +1565,11 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       }
     }
 
+    strcpy(fieldName, field.camelName ? field.camelName : field.name);
     if (repetition > 1)
     {
-      sprintf(fieldName, "%s #%u", field.name, repetition);
-    }
-    else
-    {
-      strcpy(fieldName, field.name);
+      strcat(fieldName, field.camelName ? "_" : " ");
+      sprintf(fieldName + strlen(fieldName), "%u", repetition);
     }
 
     bits  = field.size;
@@ -2214,52 +2223,55 @@ void explain(void)
 
 }
 
-char * camelize(const char *str)
+char * camelize(const char *str, bool upperCamelCase)
 {
-    size_t len = strlen(str);
-    char *ptr = malloc(len + 1);
-    char *s = ptr;
-    memset(s, '\0', len + 1);
+  size_t len = strlen(str);
+  char *ptr = malloc(len + 1);
+  char *s = ptr;
+  bool lastIsAlpha = !upperCamelCase;
 
-    if (!s)
-        return NULL;
-    
-    int lastIsAlpha = 1;
-    while (*str) 
+  if (!s)
+  {
+    return 0;
+  }
+
+  for (s = ptr; *str; str++)
+  {
+    if (isalpha(*str) || isdigit(*str))
     {
-      if (isalpha(*str) || isdigit(*str)) 
+      if (lastIsAlpha)
       {
-        if (lastIsAlpha)
-        {
-          *s = *str;
-        }
-        else
-        {
-          *s = toupper(*str);
-          lastIsAlpha = 1;                
-        }
-        s++; str++;
-      } 
-      else 
-      {
-        lastIsAlpha = 0;
-        str++;
+        *s = tolower(*str);
       }
+      else
+      {
+        *s = toupper(*str);
+        lastIsAlpha = true;
+      }
+      s++;
     }
+    else
+    {
+      lastIsAlpha = false;
+    }
+  }
 
-    return ptr;    
+  *s = 0;
+  return ptr;
 }
 
-void camelCaseForJson(void) {
-  for (int i = 0; i < ARRAY_SIZE(pgnList); i++)
+void camelCase(bool upperCamelCase)
+{
+  int i, j;
+
+  for (i = 0; i < ARRAY_SIZE(pgnList); i++)
   {
-    pgnList[i].description = camelize(pgnList[i].description);
-    for (int j = 0; j < ARRAY_SIZE(pgnList[i].fieldList) && pgnList[i].fieldList[j].name; j++)
+    pgnList[i].camelDescription = camelize(pgnList[i].description, upperCamelCase);
+    for (j = 0; j < ARRAY_SIZE(pgnList[i].fieldList) && pgnList[i].fieldList[j].name; j++)
     {
-//      printf("%s - %s\n", pgnList[i].fieldList[j].name, camelize(pgnList[i].fieldList[j].name));
-      pgnList[i].fieldList[j].name = camelize(pgnList[i].fieldList[j].name);
+      pgnList[i].fieldList[j].camelName = camelize(pgnList[i].fieldList[j].name, upperCamelCase);
     }
-  }  
+  }
 }
 
 void explainXML(void)
