@@ -2986,6 +2986,238 @@ Pgn pgnList[] =
   }
 }
 
+/* Fusion */
+,
+{ "Fusion: Source Name", 130820, false, 13, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=2", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "C", BYTES(1), 1, false, 0, "" }
+  , { "D", BYTES(1), 1, false, 0, "" }
+  , { "E", BYTES(1), 1, false, 0, "" }
+  , { "Source", BYTES(5), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Track", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=5", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(5), 1, false, 0, "" }
+  , { "Track", BYTES(10), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Artist", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=6", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(5), 1, false, 0, "" }
+  , { "Artist", BYTES(10), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Album", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=7", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(5), 1, false, 0, "" }
+  , { "Album", BYTES(10), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Play Progress", 130820, false, 9, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=9", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Progress", BYTES(3), 0.001, false, "s", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: AM/FM Station", 130820, false, 0x0A, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=11", "" }
+  , { "A", BYTES(3), 1, false, 0, "" }
+  , { "Frequency", BYTES(4), 1, false, "Hz", "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Track", BYTES(10), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: VHF", 130820, false, 9, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=12", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Channel", BYTES(1), 1, false, 0, "" }
+  , { "D", BYTES(3), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Squelch", 130820, false, 6, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=13", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Squelch", BYTES(1), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Scan", 130820, false, 6, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=14", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Scan", BYTES(1), RES_LOOKUP, false, ",0=Off,1=Scan", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Menu Item", 130820, false, 23, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=17", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Line", BYTES(1), 1, false, 0, "" }
+  , { "E", BYTES(1), 1, false, 0, "" }
+  , { "F", BYTES(1), 1, false, 0, "" }
+  , { "G", BYTES(1), 1, false, 0, "" }
+  , { "H", BYTES(1), 1, false, 0, "" }
+  , { "I", BYTES(1), 1, false, 0, "" }
+  , { "Text", BYTES(5), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Replay", 130820, false, 23, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=20", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Mode", BYTES(1), RES_LOOKUP, false, ",9=USB Repeat,10=USB Shuffle,12=iPod Repeat,13=iPod Shuffle", "" }
+  , { "C", BYTES(3), 1, false, 0, "" }
+  , { "D", BYTES(1), 1, false, 0, "" }
+  , { "E", BYTES(1), 1, false, 0, "" }
+  , { "Status", BYTES(1), RES_LOOKUP, false, ",0=Off,1=One/Track,2=All/Album", "" }
+  , { "H", BYTES(1), 1, false, 0, "" }
+  , { "I", BYTES(1), 1, false, 0, "" }
+  , { "J", BYTES(1), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Mute", 130820, false, 5, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=23", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Mute", BYTES(1), RES_LOOKUP, false, ",1=Muted,2=Not Muted", "" }
+  , { 0 }
+  }
+}
+
+,
+// Range: 0 to +24
+{ "Fusion: Sub Volume", 130820, false, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=26", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Zone 1", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 2", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 3", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 4", BYTES(1), 1, false, "vol", "" }
+  , { 0 }
+  }
+}
+
+,
+// Range: -15 to +15
+{ "Fusion: Tone", 130820, false, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=27", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Bass", BYTES(1), 1, true, "vol", "" }
+  , { "Mid", BYTES(1), 1, true, "vol", "" }
+  , { "Treble", BYTES(1), 1, true, "vol", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Volume", 130820, false, 0x0A, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=29", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Zone 1", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 2", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 3", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 4", BYTES(1), 1, false, "vol", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Transport", 130820, false, 5, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=32", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Transport", BYTES(1), RES_LOOKUP, false, ",1=Paused", "" }
+  , { 0 }
+  }
+}
+
 /* M/V Dirona */
 ,
 { "Furuno: Unknown", 130821, false, 0x0c, 0,
