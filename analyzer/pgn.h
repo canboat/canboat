@@ -241,8 +241,19 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
 
 #define LOOKUP_POWER_FACTOR ( ",0=Leading,1=Lagging,2=Error" )
 
-#define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
+#define LOOKUP_TEMPERATURE_SOURCE ( \
+    ",0=Sea Temperature" \
+    ",1=Outside Temperature" \
+    ",2=Inside Temperature" \
+    ",3=Engine Room Temperature" \
+    ",4=Main Cabin Temperature" \
+    ",5=Live Well Temperature" \
+    ",6=Bait Well Temperature" \
+    ",7=Refridgeration Temperature" \
+    ",8=Heating System Temperature" \
+    ",9=Freezer Temperature" )
 
+#define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
 
 typedef struct
 {
@@ -2444,10 +2455,10 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Temperature", 130312, false, 8, 0,
+{ "Temperature", 130312, true, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Temperature Instance", BYTES(1), 1, false, 0, "" }
-  , { "Temperature Source", BYTES(1), 1, false, 0, "" }
+  , { "Temperature Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, "" }
   , { "Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Set Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { 0 }
