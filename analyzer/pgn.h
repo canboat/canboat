@@ -2466,12 +2466,12 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Humidity", 130313, false, 8, 0,
+{ "Humidity", 130313, true, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Humidity Instance", 4, 1, false, 0, "" }
-  , { "Humidity Source", 4, 1, false, 0, "" }
-  , { "Actual Humidity", BYTES(2), 1, false, "", "" }
-  , { "Set Humidity", BYTES(2), 1, false, "", "" }
+  , { "Humidity Instance", BYTES(1), 1, false, 0, "" }
+  , { "Humidity Source", BYTES(1), 1, false, 0, "" }
+  , { "Actual Humidity", BYTES(2), 100.0/25000, true, "%", "" }
+  , { "Set Humidity", BYTES(2), 100.0/25000, true, "%", "" }
   , { 0 }
   }
 }
@@ -2487,10 +2487,11 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Set Pressure", 130315, false, 8, 0,
-  { { "Pressure Instance", 4, 1, false, 0, "" }
-  , { "Pressure Source", 4, 1, false, 0, "" }
-  , { "Pressure", BYTES(2), 1, false, "", "" }
+{ "Set Pressure", 130315, true, 8, 0,
+  { { "SID", BYTES(1), 1, false, 0, "" }
+  , { "Pressure Instance", BYTES(1), 1, false, 0, "" }
+  , { "Pressure Source", BYTES(1), RES_LOOKUP, false, 0, ",0=Atmospheric,1=Water,2=Steam,3=Compressed Air,4=Hydraulic" }
+  , { "Pressure", BYTES(4), 2.1*100000, false, "kPa", "" }
   , { 0 }
   }
 }
