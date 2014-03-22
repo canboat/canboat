@@ -1534,11 +1534,11 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
 
   if (showJson)
   {
-    mprintf("{\"timestamp\":\"%s\",\"prio\":\"%u\",\"src\":\"%u\",\"dst\":\"%u\",\"pgn\":\"%u\",\"description\":\"%s\"", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     if (pgn->camelDescription)
     {
-      mprintf(",\"id\":\"%s\"", pgn->camelDescription);
+      mprintf("\"%s\":", pgn->camelDescription);
     }
+    mprintf("{\"timestamp\":\"%s\",\"prio\":\"%u\",\"src\":\"%u\",\"dst\":\"%u\",\"pgn\":\"%u\",\"description\":\"%s\"", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     sep = ",\"fields\":{";
   }
   else
