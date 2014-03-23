@@ -180,8 +180,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='80' Name='Instrumentation/general systems' />
              <EnumPair Value='85' Name='External Environment' />
              <EnumPair Value='90' Name='Internal Environment' />
-             <EnumPair Value='100' Name='Deck' />
-             <EnumPair Value=' cargo and fishing equipment systems,120' Name='Display,125=Entertainment' />
+             <EnumPair Value='100' Name='Deck + cargo + fishing equipment systems' />
              <EnumPair Value='120' Name='Display' />
              <EnumPair Value='125' Name='Entertainment' />
            </EnumValues>
@@ -1420,8 +1419,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='80' Name='Instrumentation/general systems' />
              <EnumPair Value='85' Name='External Environment' />
              <EnumPair Value='90' Name='Internal Environment' />
-             <EnumPair Value='100' Name='Deck' />
-             <EnumPair Value=' cargo and fishing equipment systems,120' Name='Display,125=Entertainment' />
+             <EnumPair Value='100' Name='Deck + cargo + fishing equipment systems' />
              <EnumPair Value='120' Name='Display' />
              <EnumPair Value='125' Name='Entertainment' />
            </EnumValues>

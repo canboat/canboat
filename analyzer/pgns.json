@@ -163,8 +163,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
               {"80": "Instrumentation/general systems"},
               {"85": "External Environment"},
               {"90": "Internal Environment"},
-              {"100": "Deck"},
-              {" cargo and fishing equipment systems,120": "Display,125=Entertainment"},
+              {"100": "Deck + cargo + fishing equipment systems"},
               {"120": "Display"},
               {"125": "Entertainment"}]},
           {
@@ -1231,8 +1230,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
               {"80": "Instrumentation/general systems"},
               {"85": "External Environment"},
               {"90": "Internal Environment"},
-              {"100": "Deck"},
-              {" cargo and fishing equipment systems,120": "Display,125=Entertainment"},
+              {"100": "Deck + cargo + fishing equipment systems"},
               {"120": "Display"},
               {"125": "Entertainment"}]},
           {
