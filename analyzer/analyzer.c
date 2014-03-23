@@ -76,7 +76,7 @@ void usage(char ** argv, char ** av)
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
-         "-explain | -explain-xml]\n", argv[0]);
+         "-explain | -explain-xml [-upper-camel]]\n", argv[0]);
   exit(1);
 }
 
@@ -87,6 +87,8 @@ int main(int argc, char ** argv)
   FILE * file = stdin;
   int ac = argc;
   char ** av = argv;
+  bool doExplainXML = false;
+  bool doExplain = false;
 
   setProgName(argv[0]);
 
@@ -94,13 +96,11 @@ int main(int argc, char ** argv)
   {
     if (strcasecmp(av[1], "-explain-xml") == 0)
     {
-      explainXML();
-      exit(0);
+      doExplainXML = true;
     }
     else if (strcasecmp(av[1], "-explain") == 0)
     {
-      explain();
-      exit(0);
+      doExplain = true;
     }
     else if (strcasecmp(av[1], "-raw") == 0)
     {
@@ -192,6 +192,21 @@ int main(int argc, char ** argv)
         usage(argv, av);
       }
     }
+  }
+
+  if (doExplain)
+  {
+    explain();
+    exit(0);
+  }
+  if (doExplainXML)
+  {
+    if (!pgnList[0].camelDescription)
+    {
+      camelCase(false);
+    }
+    explainXML();
+    exit(0);
   }
 
   if (!showJson)
@@ -2062,8 +2077,10 @@ static void explainPGNXML(Pgn pgn)
 
   printf("    <PGNInfo>\n"
          "       <PGN>%u</PGN>\n"
+         "       <Id>%s</Id>\n"
          "       <Description>"
          , pgn.pgn
+         , pgn.camelDescription
          );
 
   for (p = pgn.description; p && *p; p++)
@@ -2098,7 +2115,8 @@ static void explainPGNXML(Pgn pgn)
 
       printf("         <Field>\n"
              "           <Order>%d</Order>\n"
-             "           <Name>%s</Name>\n", i + 1, f.name);
+             "           <Id>%s</Id>\n"
+             "           <Name>%s</Name>\n", i + 1, f.camelName, f.name);
 
       if (f.description && f.description[0] && f.description[0] != ',')
       {
