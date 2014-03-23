@@ -31,7 +31,7 @@ $(ANALYZER): analyzer.c analyzer.h pgn.h ../common/common.c ../common/common.h M
 	$(CC) $(CFLAGS) -o $(ANALYZER) -I../common analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 json: $(ANALYZER)
-	$(ANALYZER) -json -explain-xml >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
+	$(ANALYZER) -explain-xml >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
