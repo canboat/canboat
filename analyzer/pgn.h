@@ -172,7 +172,7 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
           ",80=Instrumentation/general systems" \
           ",85=External Environment" \
           ",90=Internal Environment" \
-          ",100=Deck, cargo and fishing equipment systems" \
+          ",100=Deck + cargo + fishing equipment systems" \
           ",120=Display" \
           ",125=Entertainment" \
           )
