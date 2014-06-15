@@ -49,6 +49,7 @@ bool showData = false;
 bool showBytes = false;
 bool showJson = false;
 char * sep = " ";
+int  braceCount = 0; // Open json output { characters that need to be closed
 enum GeoFormats showGeo = GEO_DD;
 int onlyPgn = 0;
 int onlySrc = -1;
@@ -442,6 +443,10 @@ char * getSep()
   if (showJson)
   {
     sep = ",";
+    if (strchr(s, '{'))
+    {
+      braceCount++;
+    }
   }
   else
   {
@@ -1440,6 +1445,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
   if (showJson)
   {
     mprintf("{\"timestamp\":\"%s\",\"prio\":\"%u\",\"src\":\"%u\",\"dst\":\"%u\",\"pgn\":\"%u\",\"description\":\"%s\"", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    braceCount = 1;
     sep = ",\"fields\":{";
   }
   else
@@ -1665,11 +1671,10 @@ ascii_string:
 
   if (showJson)
   {
-    if (*sep == ',')
+    for (;braceCount > 0; braceCount--)
     {
       mprintf("}");
     }
-    mprintf("}");
   }
   mprintf("\n");
 
