@@ -1,7 +1,7 @@
 #
 # nmea0183/Makefile
 #
-# (C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+# (C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 #
 # This file is part of CANboat.
 #

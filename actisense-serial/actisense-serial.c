@@ -3,7 +3,7 @@ Read and write to an Actisense NGT-1 over its serial device.
 This can be a serial version connected to an actual serial port
 or an USB version connected to the virtual serial port.
 
-(C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -143,25 +143,55 @@ int main(int argc, char ** argv)
 
   if (!device)
   {
-    fprintf(stderr, "Usage: %s [-p] [-r] [-d] device\n\n  For example: %s /dev/ttyUSB0\n\n"COPYRIGHT, name, name);
+    fprintf(stderr, 
+    "Usage: %s [-w] -[-p] [-r] [-v] [-d] [-t <n>] device\n"
+    "\n"
+    "Options:\n"
+    "  -w      writeonly mode, no data is read from device\n"
+    "  -r      readonly mode, no data is sent to device\n"
+    "  -p      passthru mode, data on stdin is sent to stdout but not to device\n"
+    "  -v      verbose\n"
+    "  -d      debug\n"
+    "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
+    "  <device> can be a serial device, a normal file containing a raw log,\n"
+    "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
+    "\n" 
+    "  Examples: %s /dev/ttyUSB0\n"
+    "            %s tcp://192.168.1.1:10001\n"
+    "\n" 
+    COPYRIGHT, name, name, name);
     exit(1);
   }
 
 retry:
   if (debug) fprintf(stderr, "Opening %s\n", device);
-  handle = open(device, O_RDWR | O_NOCTTY);
-  if (debug) fprintf(stderr, "fd = %d\n", handle);
-  if (handle < 0)
+  if (strncmp(device, "tcp:", STRSIZE("tcp:")) == 0)
   {
-    fprintf(stderr, "Cannot open NGT-1-A device %s\n", device);
-    exit(1);
+    handle = open_socket_stream(device);
+    if (debug) fprintf(stderr, "socket = %d\n", handle);
+    isFile = true;
+    if (handle < 0)
+    {
+      fprintf(stderr, "Cannot open NGT-1-A TCP stream %s\n", device);
+      exit(1);
+    }
   }
-  if (fstat(handle, &statbuf) < 0)
+  else
   {
-    fprintf(stderr, "Cannot determine device %s\n", device);
-    exit(1);
+    handle = open(device, O_RDWR | O_NOCTTY | O_NONBLOCK);
+    if (debug) fprintf(stderr, "fd = %d\n", handle);
+    if (handle < 0)
+    {
+      fprintf(stderr, "Cannot open NGT-1-A device %s\n", device);
+      exit(1);
+    }
+    if (fstat(handle, &statbuf) < 0)
+    {
+      fprintf(stderr, "Cannot determine device %s\n", device);
+      exit(1);
+    }
+    isFile = S_ISREG(statbuf.st_mode);
   }
-  isFile = S_ISREG(statbuf.st_mode);
 
   if (isFile)
   {

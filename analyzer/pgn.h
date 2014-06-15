@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -50,7 +50,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
  * that increases.
  * This means that for 'fast packets' the first bucket (sub-packet) contains 6 payload
  * bytes and 7 for remaining. Since the max index is 31, the maximal payload is
- * 6 + 30 * 7 = 216 bytes
+ * 6 + 31 * 7 = 223 bytes
  */
 
 /*
@@ -113,6 +113,7 @@ typedef struct
                    * of two's complement as used by NMEA 2000.
                    * See http://en.wikipedia.org/wiki/Offset_binary
                    */
+  char * camelName; /* Filled by C, no need to set in initializers. */
 } Field;
 
 typedef struct
@@ -171,7 +172,7 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
           ",80=Instrumentation/general systems" \
           ",85=External Environment" \
           ",90=Internal Environment" \
-          ",100=Deck, cargo and fishing equipment systems" \
+          ",100=Deck + cargo + fishing equipment systems" \
           ",120=Display" \
           ",125=Entertainment" \
           )
@@ -241,8 +242,19 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
 
 #define LOOKUP_POWER_FACTOR ( ",0=Leading,1=Lagging,2=Error" )
 
-#define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
+#define LOOKUP_TEMPERATURE_SOURCE ( \
+    ",0=Sea Temperature" \
+    ",1=Outside Temperature" \
+    ",2=Inside Temperature" \
+    ",3=Engine Room Temperature" \
+    ",4=Main Cabin Temperature" \
+    ",5=Live Well Temperature" \
+    ",6=Bait Well Temperature" \
+    ",7=Refridgeration Temperature" \
+    ",8=Heating System Temperature" \
+    ",9=Freezer Temperature" )
 
+#define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
 
 typedef struct
 {
@@ -253,6 +265,7 @@ typedef struct
   uint32_t   repeatingFields;   /* How many fields at the end repeat until the PGN is exhausted? */
   Field      fieldList[28];     /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t   fieldCount;        /* Filled by C, no need to set in initializers. */
+  char     * camelDescription;  /* Filled by C, no need to set in initializers. */
 } Pgn;
 
 
@@ -278,7 +291,7 @@ Pgn pgnList[] =
 { "ISO Acknowledgement", 59392, true, 8, 0,
   { { "Control", BYTES(1), RES_LOOKUP, false, ",0=ACK,1=NAK,2=Access Denied,3=Address Busy", "" }
   , { "Group Function", BYTES(1), 1, false, 0, "" }
-  , { "Reserved", 24, 1, RES_BINARY, 0, "Reserved" }
+  , { "Reserved", 24, RES_BINARY, false, 0, "Reserved" }
   , { "PGN", 24, RES_INTEGER, false, 0, "Parameter Group Number of requested information" }
   , { 0 }
   }
@@ -604,7 +617,7 @@ Pgn pgnList[] =
   }
 }
 
-  /* ISO 11783: 65,280 to 65,535 (0xFF00 to 0xFFFF): Propietary PDU-2 messages */
+  /* ISO 11783: 65,280 to 65,535 (0xFF00 to 0xFFFF): Proprietary PDU-2 messages */
 
 ,
 { "ISO: Manu. Proprietary single-frame non-addressed", 65280, false, 8, 0,
@@ -813,7 +826,7 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Manufacturer Propietary: Addressable Multi-Frame", 126720, true, 8, 0,
+{ "Manufacturer Proprietary: Addressable Multi-Frame", 126720, true, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
@@ -1388,8 +1401,8 @@ Pgn pgnList[] =
   /* http://www.nmea.org/Assets/nmea-2000-digital-interface-white-paper.pdf */
 ,
 { "Distance Log", 128275, true, 14, 0,
-  { { "Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970" }
-  , { "Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
+  { { "Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970" }
+  , { "Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight" }
   , { "Log", BYTES(4), 1, false, "m", "Total cumulative distance" }
   , { "Trip Log", BYTES(4), 1, false, "m", "Distance since last reset" }
   , { 0 }
@@ -1478,7 +1491,7 @@ Pgn pgnList[] =
   , { "Number of SVs", BYTES(1), 1, false, 0, "Number of satellites used in solution" }
   , { "HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision" }
   , { "PDOP", BYTES(2), 0.01, true, 0, "Probable dilution of precision" }
-  , { "Geoidal Separation", BYTES(2), 0.01, false, "m", "Geoidal Separation" }
+  , { "Geoidal Separation", BYTES(2), 0.01, true, "m", "Geoidal Separation" }
   , { "Reference Stations", BYTES(1), 1, false, 0, "Number of reference stations" }
   , { "Reference Station Type", 4, RES_LOOKUP, false, LOOKUP_GNS, "" }
   , { "Reference Station ID", 12, 1, false, "" }
@@ -1511,7 +1524,7 @@ Pgn pgnList[] =
   , { "Communication State", 19, RES_BINARY, false, 0, "Information used by the TDMA slot allocation algorithm and synchronization information" }
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
   , { "Heading", BYTES(2), RES_DEGREES, false, "deg", "True heading" }
-  , { "Rate of Turn", BYTES(2), RES_ROTATION, false, "deg/s", "" }
+  , { "Rate of Turn", BYTES(2), RES_ROTATION, true, "deg/s", "" }
   , { "Nav Status", BYTES(1), RES_LOOKUP, false, LOOKUP_NAV_STATUS, "" }
   , { "Reserved for Regional Applications", BYTES(1), 1, false, 0, "" }
   , { "Spare", BYTES(1), 1, false, 0, "" }
@@ -1728,7 +1741,7 @@ Pgn pgnList[] =
   , { "Reserved", 2, RES_BINARY, false, 0, "Reserved" }
   , { "HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision" }
   , { "VDOP", BYTES(2), 0.01, true, 0, "Vertical dilution of precision" }
-  , { "TDOP", BYTES(2), 0.01, true, 0, "Time dilution of precision" }
+  , { "TDOP", BYTES(2), 0.01, false, 0, "Time dilution of precision" }
   , { 0 }
   }
 }
@@ -1739,10 +1752,9 @@ Pgn pgnList[] =
   , { "Mode", 2, RES_LOOKUP, false, ",3=Range residuals used to calculate position", "" }
   , { "Reserved", 6, RES_BINARY, false, 0, "Reserved" }
   , { "Sats in View", BYTES(1), 1, false, 0, "" }
-
   , { "PRN", BYTES(1), 1, false, 0, "" }
-  , { "Elevation", BYTES(2), RES_DEGREES, true, "deg", "" }
-  , { "Azimuth", BYTES(2), RES_DEGREES, true, "deg", "" }
+  , { "Elevation", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Azimuth", BYTES(2), RES_DEGREES, false, "deg", "" }
   , { "SNR", BYTES(2), 0.01, false, "dB", "" }
   , { "Range residuals", BYTES(4), 1, true, 0, "" }
   , { "Status", 4, RES_LOOKUP, false, ",0=Not tracked,1=Tracked,2=Used,3=Not tracked+Diff,4=Tracked+Diff,5=Used+Diff", "" }
@@ -2445,10 +2457,10 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Temperature", 130312, false, 8, 0,
+{ "Temperature", 130312, true, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Temperature Instance", 4, 1, false, 0, "" }
-  , { "Temperature Source", 4, 1, false, 0, "" }
+  , { "Temperature Instance", BYTES(1), 1, false, 0, "" }
+  , { "Temperature Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, "" }
   , { "Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Set Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { 0 }
@@ -2456,12 +2468,12 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Humidity", 130313, false, 8, 0,
+{ "Humidity", 130313, true, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Humidity Instance", 4, 1, false, 0, "" }
-  , { "Humidity Source", 4, 1, false, 0, "" }
-  , { "Actual Humidity", BYTES(2), 1, false, "", "" }
-  , { "Set Humidity", BYTES(2), 1, false, "", "" }
+  , { "Humidity Instance", BYTES(1), 1, false, 0, "" }
+  , { "Humidity Source", BYTES(1), 1, false, 0, "" }
+  , { "Actual Humidity", BYTES(2), 100.0/25000, true, "%", "" }
+  , { "Set Humidity", BYTES(2), 100.0/25000, true, "%", "" }
   , { 0 }
   }
 }
@@ -2477,10 +2489,11 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Set Pressure", 130315, false, 8, 0,
-  { { "Pressure Instance", 4, 1, false, 0, "" }
-  , { "Pressure Source", 4, 1, false, 0, "" }
-  , { "Pressure", BYTES(2), 1, false, "", "" }
+{ "Set Pressure", 130315, true, 8, 0,
+  { { "SID", BYTES(1), 1, false, 0, "" }
+  , { "Pressure Instance", BYTES(1), 1, false, 0, "" }
+  , { "Pressure Source", BYTES(1), RES_LOOKUP, false, 0, ",0=Atmospheric,1=Water,2=Steam,3=Compressed Air,4=Hydraulic" }
+  , { "Pressure", BYTES(4), 2.1*100000, false, "kPa", "" }
   , { 0 }
   }
 }
@@ -2971,6 +2984,238 @@ Pgn pgnList[] =
   , { "C", BYTES(1), 1, false, 0, "" }
   , { "D", BYTES(1), 1, false, 0, "" }
   , { "E", BYTES(1), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+/* Fusion */
+,
+{ "Fusion: Source Name", 130820, false, 13, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=2", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "C", BYTES(1), 1, false, 0, "" }
+  , { "D", BYTES(1), 1, false, 0, "" }
+  , { "E", BYTES(1), 1, false, 0, "" }
+  , { "Source", BYTES(5), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Track", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=5", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(5), 1, false, 0, "" }
+  , { "Track", BYTES(10), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Artist", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=6", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(5), 1, false, 0, "" }
+  , { "Artist", BYTES(10), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Album", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=7", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(5), 1, false, 0, "" }
+  , { "Album", BYTES(10), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Play Progress", 130820, false, 9, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=9", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Progress", BYTES(3), 0.001, false, "s", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: AM/FM Station", 130820, false, 0x0A, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=11", "" }
+  , { "A", BYTES(3), 1, false, 0, "" }
+  , { "Frequency", BYTES(4), 1, false, "Hz", "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Track", BYTES(10), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: VHF", 130820, false, 9, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=12", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Channel", BYTES(1), 1, false, 0, "" }
+  , { "D", BYTES(3), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Squelch", 130820, false, 6, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=13", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Squelch", BYTES(1), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Scan", 130820, false, 6, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=14", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Scan", BYTES(1), RES_LOOKUP, false, ",0=Off,1=Scan", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Menu Item", 130820, false, 23, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=17", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Line", BYTES(1), 1, false, 0, "" }
+  , { "E", BYTES(1), 1, false, 0, "" }
+  , { "F", BYTES(1), 1, false, 0, "" }
+  , { "G", BYTES(1), 1, false, 0, "" }
+  , { "H", BYTES(1), 1, false, 0, "" }
+  , { "I", BYTES(1), 1, false, 0, "" }
+  , { "Text", BYTES(5), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Replay", 130820, false, 23, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=20", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Mode", BYTES(1), RES_LOOKUP, false, ",9=USB Repeat,10=USB Shuffle,12=iPod Repeat,13=iPod Shuffle", "" }
+  , { "C", BYTES(3), 1, false, 0, "" }
+  , { "D", BYTES(1), 1, false, 0, "" }
+  , { "E", BYTES(1), 1, false, 0, "" }
+  , { "Status", BYTES(1), RES_LOOKUP, false, ",0=Off,1=One/Track,2=All/Album", "" }
+  , { "H", BYTES(1), 1, false, 0, "" }
+  , { "I", BYTES(1), 1, false, 0, "" }
+  , { "J", BYTES(1), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Mute", 130820, false, 5, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=23", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Mute", BYTES(1), RES_LOOKUP, false, ",1=Muted,2=Not Muted", "" }
+  , { 0 }
+  }
+}
+
+,
+// Range: 0 to +24
+{ "Fusion: Sub Volume", 130820, false, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=26", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Zone 1", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 2", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 3", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 4", BYTES(1), 1, false, "vol", "" }
+  , { 0 }
+  }
+}
+
+,
+// Range: -15 to +15
+{ "Fusion: Tone", 130820, false, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=27", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Bass", BYTES(1), 1, true, "vol", "" }
+  , { "Mid", BYTES(1), 1, true, "vol", "" }
+  , { "Treble", BYTES(1), 1, true, "vol", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Volume", 130820, false, 0x0A, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=29", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Zone 1", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 2", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 3", BYTES(1), 1, false, "vol", "" }
+  , { "Zone 4", BYTES(1), 1, false, "vol", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Transport", 130820, false, 5, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Message ID", BYTES(1), 1, false, "=32", "" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Transport", BYTES(1), RES_LOOKUP, false, ",1=Paused", "" }
   , { 0 }
   }
 }

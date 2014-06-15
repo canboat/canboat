@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -121,7 +121,7 @@ void logAbort(const char * format, ...)
   exit(2);
 }
 
-void die (char * t)
+void die(const char * t)
 {
   int e = errno;
   char * s = 0;
@@ -396,5 +396,96 @@ void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int
     }
   }
 
+}
+
+static void resolve_address(const char * url, char ** host, const char ** service)
+{
+  const char *s;
+  size_t hostlen;
+
+  if (strncmp(url, "tcp:", STRSIZE("tcp:")) == 0)
+  {
+    url += STRSIZE("tcp:");
+  }
+  while (*url == '/')
+  {
+    url++;
+  }
+
+  s = strchr(url, ':');
+  if (s)
+  {
+    hostlen = s - url;
+    s++;
+  }
+  else
+  {
+    hostlen = strlen(url);
+  }
+
+  *host = malloc(hostlen + 1);
+  if (!*host)
+  {
+    die("Out of memory");
+  }
+  memcpy(*host, url, hostlen);
+  (*host)[hostlen] = 0;
+
+  if (s)
+  {
+    *service = s;
+  }
+  else
+  {
+    *service = "80";
+  }
+}
+
+SOCKET open_socket_stream(const char * url)
+{
+  int sockfd = INVALID_SOCKET;
+  int n;
+  struct addrinfo hints, *res, *addr;
+  char * host;
+  const char * service;
+
+  resolve_address(url, &host, &service);
+
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+
+  n = getaddrinfo(host, service, &hints, &res);
+  if (n != 0)
+  {
+    logError("Unable to open connection to %s:%s: %s\n", host, service, gai_strerror(n));
+  }
+  else
+  {
+    for (addr = res; addr; addr = addr->ai_next)
+    {
+      sockfd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
+      if (sockfd == INVALID_SOCKET)
+      {
+        continue;
+      }
+
+      if (!connect(sockfd, res->ai_addr, res->ai_addrlen))
+      {
+        break;
+      }
+      close(sockfd);
+      sockfd = INVALID_SOCKET;
+    }
+    if (!addr)
+    {
+      logError("Unable to open connection to %s:%s: %s\n", host, service, strerror(errno));
+    }
+  }
+
+  freeaddrinfo(res);
+  free(host);
+
+  return sockfd;
 }
 

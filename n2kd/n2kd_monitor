@@ -11,11 +11,13 @@
 #       ACTISENSE_PRIMARY=/dev/actisense-1
 #       ACTISENSE_SECONDARY=/dev/actisense-2
 #       MONITOR=false
+#       ANALYZER_OPTIONS=
+#       N2KD_OPTIONS=
 #
 # Leave out ACTISENSE_SECONDARY if you have only one Actisense gateway.
 # Leave MONITOR set to false for now; its contents have not been open sourced yet.
 #
-# (C) 2009-2012, Kees Verruijt, Harlingen, The Netherlands.
+# (C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
 #
 # This file is part of CANboat.
 #
@@ -44,6 +46,7 @@ my $ACTISENSE_PRIMARY = $config->get('ACTISENSE_PRIMARY');
 my $ACTISENSE_SECONDARY = $config->get('ACTISENSE_SECONDARY');
 my $MONITOR = $config->get('MONITOR');
 my $N2KD_OPTIONS = $config->get('N2KD_OPTIONS');
+my $ANALYZER_OPTIONS = $config->get('ANALYZER_OPTIONS');
 die "Configuration file $configFile incomplete: No ACTISENSE_PRIMARY" unless $ACTISENSE_PRIMARY;
 
 my $LOGFILE = '/var/log/n2kd_monitor.log';
@@ -140,11 +143,11 @@ for (;;)
         $ENV{'PATH'} = '/usr/local/bin:/bin:/usr/bin';
         if ($ACTISENSE_SECONDARY)
         {
-          exec '/bin/bash', '-c', "actisense-serial -t 10 $ACTISENSE_PRIMARY | actisense-serial $ACTISENSE_SECONDARY -t 3 | analyzer -clocksrc 35 -json | n2kd $N2KD_OPTIONS";
+          exec '/bin/bash', '-c', "actisense-serial -t 10 $ACTISENSE_PRIMARY | actisense-serial $ACTISENSE_SECONDARY -t 10 | analyzer $ANALYZER_OPTIONS -json | n2kd $N2KD_OPTIONS";
         }
         else
         {
-          exec '/bin/bash', '-c', "actisense-serial -t 10 $ACTISENSE_PRIMARY | analyzer -clocksrc 35 -json | n2kd $N2KD_OPTIONS";
+          exec '/bin/bash', '-c', "actisense-serial -t 10 $ACTISENSE_PRIMARY | analyzer $ANALYZER_OPTIONS -json | n2kd $N2KD_OPTIONS";
         }
       }
       elsif ($n2kd)
