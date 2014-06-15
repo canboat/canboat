@@ -44,10 +44,12 @@ uint16_t port = PORT;
 char * srcFilter = 0;
 
 uint32_t protocol = 1;
+int      debug = 0;
 
 #define SENSOR_TIMEOUT   (120)            /* Timeout when PGN messages expire (no longer retransmitted) */
 #define AIS_TIMEOUT      (3600)           /* AIS messages expiration is much longer */
-#define SONICHUB_TIMEOUT (3600 * 24 * 31) /* SonicHub messages expiration is basically indefinite */
+#define SONICHUB_TIMEOUT (8640000)        /* SonicHub messages expiration is basically indefinite */
+#define CLAIM_TIMEOUT    (8640000)        /* .. as are address claims and device names */
 
 static void closeStream(int i);
 
@@ -175,12 +177,19 @@ Pgn * pgnIdx[PGN_SPACE];
 Pgn ** pgnList[512];
 size_t maxPgnList;
 
+/*
+ * If one of the fiels is named like one of these then we index
+ * the array by its value as well.
+ *
+ * The easiest insight is that an AIS transmission from a particular User ID
+ * is completely separate from that of any other.
+ */
 static char * secondaryKeyList[] =
-  { "Instance\""
-  , "\"Reference\""
-  , "\"Message ID\""
-  , "\"User ID\""
-  , "\"Proprietary ID\""
+  { "Instance\""           // A different tank or sensor
+  , "\"Reference\""        // A different type of data value, for instance "True" and "Apparent"
+  , "\"Message ID\""       // Different AIS transmission source (station)
+  , "\"User ID\""          // Different AIS transmission source (station)
+  , "\"Proprietary ID\""   // Different SonicHub item
   };
 
 static int secondaryKeyTimeout[] =
@@ -188,7 +197,7 @@ static int secondaryKeyTimeout[] =
   , SENSOR_TIMEOUT
   , AIS_TIMEOUT
   , AIS_TIMEOUT
-  , SENSOR_TIMEOUT
+  , SONICHUB_TIMEOUT
   , SENSOR_TIMEOUT
   };
 
@@ -240,10 +249,12 @@ int setFdUsed(SOCKET fd, StreamType ct)
   FD_SET(fd, &activeSet);
   if (stream[i].readHandler)
   {
+    logDebug("Enabling fd=%d in the readSet\n", fd);
     FD_SET(fd, &readSet);
   }
   else
   {
+    logDebug("Disabling fd=%d in the readSet\n", fd);
     FD_CLR(fd, &readSet);
   }
 
@@ -254,9 +265,11 @@ int setFdUsed(SOCKET fd, StreamType ct)
   case CLIENT_NMEA0183_STREAM:
   case DATA_OUTPUT_STREAM:
   case DATA_OUTPUT_COPY:
+    logDebug("Enabling fd=%d in the writeSet\n", fd);
     FD_SET(fd, &writeSet);
     break;
   default:
+    logDebug("Clear fd=%d in the writeSet\n", fd);
     FD_CLR(fd, &writeSet);
   }
 
@@ -475,6 +488,12 @@ void writeAllClients(void)
   logDebug("writeAllClients tcp.len=%d\n", tcpMessage.len);
   FD_ZERO(&ws);
 
+  if (debug)
+  {
+    state = getFullStateJSON();
+    logDebug("json=%s\n", state);
+  }
+
   if (socketIdxMax >= 0)
   {
     ws = writeSet;
@@ -578,11 +597,11 @@ void storeMessage(char * line, size_t len)
 
   now = time(0);
 
+  logDebug("storeMessage(\"%s\",%u)\n", line, len);
+
   if (!strstr(line, "\"fields\":"))
   {
-#ifdef DEBUG
     logDebug("Ignore pgn %u without fields\n", prn);
-#endif
     return;
   }
   if (memcmp(line, "{\"timestamp", 11) != 0)
@@ -590,7 +609,7 @@ void storeMessage(char * line, size_t len)
     logDebug("Ignore '%s'\n", line);
     return;
   }
-  if (memcmp(line + len - 3, "}}\n", 3) != 0)
+  if (memcmp(line + len - 2, "}}", 2) != 0)
   {
     logDebug("Ignore '%s' (end)\n", line);
     return;
@@ -616,6 +635,7 @@ void storeMessage(char * line, size_t len)
     s = strstr(line, secondaryKeyList[k]);
     if (s)
     {
+      logDebug("Found 2nd key %d = %s\n", k, secondaryKeyList[k]);
       s += strlen(secondaryKeyList[k]);
       while (strchr(SKIP_CHARACTERS, *s))
       {
@@ -639,6 +659,7 @@ void storeMessage(char * line, size_t len)
       }
       memcpy(key2, s, e - s);
       key2[e - s] = 0;
+      break;
     }
   }
 
@@ -755,24 +776,23 @@ void storeMessage(char * line, size_t len)
   m = &pgn->p_message[i];
   if (m->m_text)
   {
-    if (strlen(m->m_text) < len)
-    {
-      m->m_text = realloc(m->m_text, len + 1);
-    }
+    m->m_text = realloc(m->m_text, len + 2);
   }
   else
   {
-    m->m_text = malloc(len + 1);
+    m->m_text = malloc(len + 2);
   }
   if (!m->m_text)
   {
     logAbort("Out of memory allocating %u bytes", len + 1);
   }
-  strcpy(m->m_text, line);
+  memcpy(m->m_text, line, len);
+  m->m_text[len] = '\n';
+  m->m_text[len + 1] = 0;
 
-  if (prn == 126996)
+  if (prn == 60928 || prn == 126996)
   {
-    valid = AIS_TIMEOUT;
+    valid = CLAIM_TIMEOUT;
   }
   else if (prn == 130816)
   {
@@ -782,6 +802,7 @@ void storeMessage(char * line, size_t len)
   {
     valid = secondaryKeyTimeout[k];
   }
+  logDebug("stored prn %d timeout=%d 2ndKey=%d\n", prn, valid, k);
   m->m_time = now + valid;
 }
 
@@ -823,24 +844,18 @@ void handleClientRequest(int i)
     p = strchr(stream[i].buffer, '\n');
     if (p)
     {
-      size_t len = ++p - stream[i].buffer;
-
-      /* Feed it into the NMEA2000 message handler */
-      char stash = *p;
-
-      logDebug("Got msg='%1.*s'\n", len, stream[i].buffer);
-      *p = 0;
-
-      sbAppendData(&tcpMessage, stream[i].buffer, len);
+      size_t len = p - stream[i].buffer;
+      sbAppendData(&tcpMessage, stream[i].buffer, len + 1);
       if (stream[i].type != DATA_INPUT_STREAM || stream[outputIdx].type == DATA_OUTPUT_COPY)
       {
         /* Send all TCP client input and the main stdin stream if the mode is -o */
         /* directly to stdout */
-        sbAppendData(&outMessage, stream[i].buffer, len);
+        sbAppendData(&outMessage, stream[i].buffer, len + 1);
       }
+      *p = 0;
       convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
       storeMessage(stream[i].buffer, len);
-      *p = stash;
+      p++, len++;
 
       /* Now remove [buffer..p> */
       memcpy(stream[i].buffer, p, strlen(p));
@@ -909,6 +924,7 @@ int main (int argc, char **argv)
     if (strcasecmp(argv[1], "-d") == 0)
     {
       setLogLevel(LOGLEVEL_DEBUG);
+      debug = 1;
     }
     else if (strcasecmp(argv[1], "-q") == 0)
     {

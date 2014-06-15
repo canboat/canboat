@@ -111,7 +111,7 @@ static void nmea0183CreateMessage( StringBuffer * msg183, const char * src, cons
   sbAppendString(msg183, line);
   snprintf(line, sizeof(line), "*%02X\r\n", chk);
   sbAppendString(msg183, line);
-  logDebug("%s", sbGet(&msg183));
+  logDebug("nmea0183 = %s", sbGet(msg183));
 }
 
 /*
