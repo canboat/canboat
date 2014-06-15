@@ -22,7 +22,7 @@ clean:
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
 	
 install:
-	for i in rel/$(PLATFORM)/* */*_monitor; do f=`basename $$i`; rm /usr/local/bin/$$f; cp $$i /usr/local/bin; done
+	for i in rel/$(PLATFORM)/* util/* */*_monitor; do f=`basename $$i`; rm /usr/local/bin/$$f; cp $$i /usr/local/bin; done
 	killall -9 actisense-serial n2kd
 
 zip:
