@@ -37,6 +37,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include "nmea0183.h"
 
 #define PORT 2597
+#define READ_BUFFER_SIZE 32768
 
 #define UPDATE_INTERVAL (500)       /* Every x milliseconds send the normal 'once' clients all state */
 
@@ -107,7 +108,7 @@ typedef struct StreamInfo
   StreamType     type;
   int64_t        timeout;
   ReadHandler    readHandler;
-  char           buffer[32768]; /* Lines longer than this might get into trouble */
+  char           buffer[READ_BUFFER_SIZE + 1];
   size_t         len;
 } StreamInfo;
 
@@ -811,7 +812,7 @@ void handleClientRequest(int i)
   ssize_t r;
   char * p;
 
-  r = read(stream[i].fd, stream[i].buffer + stream[i].len, sizeof(stream[i].buffer) - 1 - stream[i].len);
+  r = read(stream[i].fd, stream[i].buffer + stream[i].len, READ_BUFFER_SIZE - stream[i].len);
   logDebug("read i=%d fd=%d r=%d\n", i, stream[i].fd, r);
 
   if (r < 0)
@@ -858,7 +859,7 @@ void handleClientRequest(int i)
       p++, len++;
 
       /* Now remove [buffer..p> */
-      memcpy(stream[i].buffer, p, strlen(p));
+      memmove(stream[i].buffer, p, strlen(p)+1);
       stream[i].len -= len;
       r -= len;
     }
