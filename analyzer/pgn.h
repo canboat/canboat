@@ -1005,8 +1005,8 @@ Pgn pgnList[] =
   { { "NMEA 2000 Version", BYTES(2), 1, false, 0, "" }
   , { "Product Code", BYTES(2), 1, false, 0, "" }
   , { "Model ID", BYTES(32), RES_ASCII, false, 0, "" }
-  , { "Software Version Code", BYTES(40), RES_ASCII, false, 0, "" }
-  , { "Model Version", BYTES(24), RES_ASCII, false, 0, "" }
+  , { "Software Version Code", BYTES(32), RES_ASCII, false, 0, "" }
+  , { "Model Version", BYTES(32), RES_ASCII, false, 0, "" }
   , { "Model Serial Code", BYTES(32), RES_ASCII, false, 0, "" }
   , { "Certification Level", BYTES(1), 1, false, 0, "" }
   , { "Load Equivalency", BYTES(1), 1, false, 0, "" }
