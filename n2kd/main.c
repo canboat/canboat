@@ -858,7 +858,7 @@ void handleClientRequest(int i)
       p++, len++;
 
       /* Now remove [buffer..p> */
-      memcpy(stream[i].buffer, p, strlen(p));
+      memmove(stream[i].buffer, p, strlen(p));
       stream[i].len -= len;
       r -= len;
     }
