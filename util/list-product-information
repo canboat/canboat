@@ -66,13 +66,14 @@ foreach ($devices as $src => $device)
   $id      = $device['fields']['Model ID'];
   $version = $device['fields']['Software Version Code'];
   $model   = $device['fields']['Model Version'];
+  $n2kver  = $device['fields']['NMEA 2000 Version'];
 
   if (preg_match('/(\d{1,3})_\d+/', $src, $matches))
   {
     $src = $matches[1];
   }
 
-  printf("%3d: %-32.32s %-1.40s%-1.32s\n", $src, $id, $version, $model);
+  printf("%3d | %-32.32s | %-1.32s | %-1.32s | %s\n", $src, $id, $version, $model, $n2kver);
 }
 
 ?>
