@@ -3622,7 +3622,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          <Field>
            <Order>4</Order>
            <Name>Software Version Code</Name>
-           <BitLength>320</BitLength>
+           <BitLength>256</BitLength>
            <BitOffset>288</BitOffset>
            <BitStart>0</BitStart>
                   <Type>ASCII text</Type>
@@ -3631,8 +3631,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          <Field>
            <Order>5</Order>
            <Name>Model Version</Name>
-           <BitLength>192</BitLength>
-           <BitOffset>608</BitOffset>
+           <BitLength>256</BitLength>
+           <BitOffset>544</BitOffset>
            <BitStart>0</BitStart>
                   <Type>ASCII text</Type>
            <Signed>false</Signed>
