@@ -1421,6 +1421,41 @@ void setSystemClock(uint16_t currentDate, uint32_t currentTime)
 #endif
 }
 
+void print_json_escaped(uint8_t *data, int len) 
+{
+
+  int c;
+  for (int k = 0; k < len; k++)
+    {
+      c = data[k];
+      switch(c)
+      {
+        case '\b':
+        case '\n':
+        case '\r':
+        case '\t':
+        case '\f':
+        case '"':
+        case '\\':
+        case '/':
+
+          if(c == '\b') mprintf("%s", "\\b");
+          else if(c == '\n') mprintf("%s", "\\n");
+          else if(c == '\r') mprintf("%s", "\\r");
+          else if(c == '\t') mprintf("%s", "\\t");
+          else if(c == '\f') mprintf("%s", "\\f");
+          else if(c == '"') mprintf("%s", "\\\"");
+          else if(c == '\\') mprintf("%s", "\\\\");
+          else if(c == '/') mprintf("%s", "\\/");
+          break;
+        default:
+          if (c >= ' ' && c <= '~')
+            mprintf("%c", c);
+      }
+    }
+}
+
+
 bool printPgn(int index, int subIndex, RawMessage * msg)
 {
   uint8_t * dataStart;
@@ -1636,17 +1671,23 @@ ascii_string:
           mprintf("%s %s = ", getSep(), fieldName);
         }
 
-        for (k = 0; k < len; k++)
+        if (showJson)
         {
-          if (data[k] >= ' ' && data[k] <= '~')
+          print_json_escaped(data, len);
+        } else
+        {
+          for (k = 0; k < len; k++)
           {
-            int c = data[k];
-
-            if (showJson && (c == '\\'))
+            if (data[k] >= ' ' && data[k] <= '~')
             {
+              int c = data[k];
+
+              if (showJson && (c == '\\'))
+              {
+                mprintf("%c", c);
+              }
               mprintf("%c", c);
             }
-            mprintf("%c", c);
           }
         }
 
