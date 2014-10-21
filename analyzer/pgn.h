@@ -286,7 +286,7 @@ Pgn pgnList[] =
   /* http://www.nmea.org/Assets/pgn059392.pdf */
   /* http://www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
   /* http://www.furunousa.com/Furuno/Doc/0/8JT2BMDDIB249FCNUK64DKLV67/GP330B%20NMEA%20PGNs.pdf */
-
+  /* http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf */
 ,
 { "ISO Acknowledgement", 59392, true, 8, 0,
   { { "Control", BYTES(1), RES_LOOKUP, false, ",0=ACK,1=NAK,2=Access Denied,3=Address Busy", "" }
