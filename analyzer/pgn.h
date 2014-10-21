@@ -308,15 +308,14 @@ Pgn pgnList[] =
 { "ISO Address Claim", 60928, true, 8, 0,
   { { "Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number" }
   , { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Device Instance Lower", 4, 1, false, 0, "ISO ECU Instance" }
-  , { "Device Instance Upper", 4, 1, false, 0, "ISO Function Instance" }
-  , { "Device Function", BYTES(1), 1, false, 0, "ISO Function" }
+  , { "Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance" }
+  , { "Device Instance Upper", 5, 1, false, 0, "ISO Function Instance" }
+  , { "Device Function", 8, 1, false, 0, "ISO Function" }
   , { "Reserved", 1, RES_BINARY, false, 0, "" }
   , { "Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, "" }
   , { "System Instance", 4, 1, false, 0, "ISO Device Class Instance" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", 3, 1, false, 0, "ISO Self Configurable" }
+  , { "Industry Group", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 1, 1, false, 0, "ISO Self Configurable" }
   , { 0 }
   }
 }
