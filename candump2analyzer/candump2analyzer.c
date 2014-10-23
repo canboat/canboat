@@ -44,6 +44,15 @@ int main(int argc, char ** argv)
 	FILE * infile = stdin;
 	FILE * outfile = stdout;
 
+	if (argc > 1) {
+	    infile = fopen(argv[1], "r");
+	    if (! infile) {
+		fprintf(stderr, "Could not open input file '%s' (%s)\n",
+			argv[1], strerror(errno));
+		return 1;
+	    }
+	}
+
 	// For every line in the candump file...
 	//
 	while(fgets(msg, sizeof(msg) - 1, infile))
