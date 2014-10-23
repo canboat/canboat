@@ -100,10 +100,14 @@ int main(int argc, char ** argv)
 		int i;
 		char *p;
 		unsigned int data[MAX_DATA_BYTES];
-		for (i = 0, p = &msg[CANDUMP_DATA_START]; i < size; i++, p += CANDUMP_DATA_INC)
-		{
-			sscanf(p, "%2x", &data[i]);
-			fprintf(outfile, ",%02x", data[i]);
+		for (p = msg; *p && *p != ']'; ++p);
+		if (*p == ']') {
+			while (*(++p) == ' ');
+			for (i = 0; i < size; i++, p += CANDUMP_DATA_INC)
+			{
+				sscanf(p, "%2x", &data[i]);
+				fprintf(outfile, ",%02x", data[i]);
+			}
 		}
 		fprintf(outfile, "\n");
 	}
