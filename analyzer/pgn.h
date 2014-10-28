@@ -286,7 +286,7 @@ Pgn pgnList[] =
   /* http://www.nmea.org/Assets/pgn059392.pdf */
   /* http://www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
   /* http://www.furunousa.com/Furuno/Doc/0/8JT2BMDDIB249FCNUK64DKLV67/GP330B%20NMEA%20PGNs.pdf */
-
+  /* http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf */
 ,
 { "ISO Acknowledgement", 59392, true, 8, 0,
   { { "Control", BYTES(1), RES_LOOKUP, false, ",0=ACK,1=NAK,2=Access Denied,3=Address Busy", "" }
@@ -308,15 +308,14 @@ Pgn pgnList[] =
 { "ISO Address Claim", 60928, true, 8, 0,
   { { "Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number" }
   , { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Device Instance Lower", 4, 1, false, 0, "ISO ECU Instance" }
-  , { "Device Instance Upper", 4, 1, false, 0, "ISO Function Instance" }
-  , { "Device Function", BYTES(1), 1, false, 0, "ISO Function" }
+  , { "Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance" }
+  , { "Device Instance Upper", 5, 1, false, 0, "ISO Function Instance" }
+  , { "Device Function", 8, 1, false, 0, "ISO Function" }
   , { "Reserved", 1, RES_BINARY, false, 0, "" }
   , { "Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, "" }
   , { "System Instance", 4, 1, false, 0, "ISO Device Class Instance" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", 3, 1, false, 0, "ISO Self Configurable" }
+  , { "Industry Group", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 1, 1, false, 0, "ISO Self Configurable" }
   , { 0 }
   }
 }
