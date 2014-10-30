@@ -36,13 +36,22 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #define CANDUMP_LINE_START 	'<'
 #define CANDUMP_DATA_START 	17
 #define CANDUMP_DATA_INC	3
-#define MAX_DATA_BYTES		8
+#define MAX_DATA_BYTES		223
 
 int main(int argc, char ** argv)
 {
 	char msg[MSG_BUF_SIZE];
 	FILE * infile = stdin;
 	FILE * outfile = stdout;
+
+	if (argc > 1) {
+	    infile = fopen(argv[1], "r");
+	    if (! infile) {
+		fprintf(stderr, "Could not open input file '%s' (%s)\n",
+			argv[1], strerror(errno));
+		return 1;
+	    }
+	}
 
 	// For every line in the candump file...
 	//
@@ -91,10 +100,14 @@ int main(int argc, char ** argv)
 		int i;
 		char *p;
 		unsigned int data[MAX_DATA_BYTES];
-		for (i = 0, p = &msg[CANDUMP_DATA_START]; i < size; i++, p += CANDUMP_DATA_INC)
-		{
-			sscanf(p, "%2x", &data[i]);
-			fprintf(outfile, ",%02x", data[i]);
+		for (p = msg; p < msg + sizeof(msg) && *p != 0 && *p != ']'; ++p);
+		if (*p == ']') {
+			while (*(++p) == ' ');
+			for (i = 0; i < size; i++, p += CANDUMP_DATA_INC)
+			{
+				sscanf(p, "%2x", &data[i]);
+				fprintf(outfile, ",%02x", data[i]);
+			}
 		}
 		fprintf(outfile, "\n");
 	}
