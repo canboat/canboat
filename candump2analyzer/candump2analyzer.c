@@ -36,7 +36,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #define CANDUMP_LINE_START 	'<'
 #define CANDUMP_DATA_START 	17
 #define CANDUMP_DATA_INC	3
-#define MAX_DATA_BYTES		8
+#define MAX_DATA_BYTES		223
 
 int main(int argc, char ** argv)
 {
@@ -100,7 +100,7 @@ int main(int argc, char ** argv)
 		int i;
 		char *p;
 		unsigned int data[MAX_DATA_BYTES];
-		for (p = msg; *p && *p != ']'; ++p);
+		for (p = msg; p < msg + sizeof(msg) && *p != 0 && *p != ']'; ++p);
 		if (*p == ']') {
 			while (*(++p) == ' ');
 			for (i = 0; i < size; i++, p += CANDUMP_DATA_INC)
