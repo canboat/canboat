@@ -1533,7 +1533,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       data += startBit / 8;
       startBit %= 8;
     }
-    if (matchedFixedField)
+    if (! hasFixedField || (hasFixedField && matchedFixedField))
     {
       break;
     }
