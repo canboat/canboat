@@ -1152,13 +1152,14 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Transmission Parameters, Dynamic", 127493, true, 7, 0,
-  { { "Engine Instance", 2, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
+{ "Transmission Parameters, Dynamic", 127493, true, 8, 0,
+  { { "Engine Instance", 8, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Transmission Gear", 2, RES_LOOKUP, false, LOOKUP_GEAR_STATUS, "" }
-  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Reserved", 6, RES_NOTUSED, false, 0, "" }
   , { "Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Oil temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Discrete Status 1", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { 0 }
   }
 }
