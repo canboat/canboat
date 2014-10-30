@@ -322,7 +322,10 @@ Pgn pgnList[] =
 
 ,
 { "ISO: Manu. Proprietary single-frame addressed", 61184, false, 8, 0,
-  { { 0 }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { 0 }
   }
 }
 
