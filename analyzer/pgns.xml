@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 (C) 2009-2014 Keversoft B.V., Harlingen, The Netherlands
-For more information see http://yachtelectronics.blogspot.com
+For more information see https://github.com/canboat/canboat
 
 This file is part of CANboat.
 
@@ -22,8 +22,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1">
   <Date>$Date: 2012-03-14 16:30:42 +0100 (wo, 14 mrt 2012) $</Date>
-  <Comment>See http://canboat.com for the full source code</Comment>
-  <CreatorCode>Keversoft NMEA2000 Analyzer</CreatorCode>
+  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
+  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>GPL v3</License>
   <PGNs>
     <PGNInfo>
@@ -31,6 +31,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>isoAcknowledgement</Id>
        <Description>ISO Acknowledgement</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -88,6 +89,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>isoRequest</Id>
        <Description>ISO Request</Description>
        <Complete>true</Complete>
+       <Length>3</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -108,6 +110,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>isoAddressClaim</Id>
        <Description>ISO Address Claim</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -249,6 +252,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>isoManuProprietarySingleFrameAddressed</Id>
        <Description>ISO: Manu. Proprietary single-frame addressed</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
     </PGNInfo>
     <PGNInfo>
@@ -256,6 +260,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>bus1PhaseCBasicAcQuantities</Id>
        <Description>Bus #1 Phase C Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -296,6 +301,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>bus1PhaseBBasicAcQuantities</Id>
        <Description>Bus #1 Phase B Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -336,6 +342,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>bus1PhaseABasicAcQuantities</Id>
        <Description>Bus #1 Phase A Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -376,6 +383,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>bus1AverageBasicAcQuantities</Id>
        <Description>Bus #1 Average Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -416,6 +424,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityTotalAcEnergy</Id>
        <Description>Utility Total AC Energy</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -445,6 +454,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityPhaseCAcReactivePower</Id>
        <Description>Utility Phase C AC Reactive Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -489,6 +499,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityPhaseCAcPower</Id>
        <Description>Utility Phase C AC Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -520,6 +531,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityPhaseCBasicAcQuantities</Id>
        <Description>Utility Phase C Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -570,6 +582,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityPhaseBAcReactivePower</Id>
        <Description>Utility Phase B AC Reactive Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -614,6 +627,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityPhaseBAcPower</Id>
        <Description>Utility Phase B AC Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -645,6 +659,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityPhaseBBasicAcQuantities</Id>
        <Description>Utility Phase B Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -695,6 +710,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityPhaseAAcReactivePower</Id>
        <Description>Utility Phase A AC Reactive Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -740,6 +756,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityPhaseAAcPower</Id>
        <Description>Utility Phase A AC Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -771,6 +788,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityPhaseABasicAcQuantities</Id>
        <Description>Utility Phase A Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -821,6 +839,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityTotalAcReactivePower</Id>
        <Description>Utility Total AC Reactive Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -866,6 +885,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityTotalAcPower</Id>
        <Description>Utility Total AC Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -897,6 +917,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>utilityAverageBasicAcQuantities</Id>
        <Description>Utility Average Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -947,6 +968,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorTotalAcEnergy</Id>
        <Description>Generator Total AC Energy</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -976,6 +998,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorPhaseCAcReactivePower</Id>
        <Description>Generator Phase C AC Reactive Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1021,6 +1044,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorPhaseCAcPower</Id>
        <Description>Generator Phase C AC Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1052,6 +1076,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorPhaseCBasicAcQuantities</Id>
        <Description>Generator Phase C Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1102,6 +1127,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorPhaseBAcReactivePower</Id>
        <Description>Generator Phase B AC Reactive Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1147,6 +1173,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorPhaseBAcPower</Id>
        <Description>Generator Phase B AC Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1178,6 +1205,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorPhaseBBasicAcQuantities</Id>
        <Description>Generator Phase B Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1228,6 +1256,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorPhaseAAcReactivePower</Id>
        <Description>Generator Phase A AC Reactive Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1273,6 +1302,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorPhaseAAcPower</Id>
        <Description>Generator Phase A AC Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1304,6 +1334,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorPhaseABasicAcQuantities</Id>
        <Description>Generator Phase A Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1354,6 +1385,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorTotalAcReactivePower</Id>
        <Description>Generator Total AC Reactive Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1399,6 +1431,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorTotalAcPower</Id>
        <Description>Generator Total AC Power</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1430,6 +1463,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>generatorAverageBasicAcQuantities</Id>
        <Description>Generator Average Basic AC Quantities</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1480,6 +1514,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>isoCommandedAddress</Id>
        <Description>ISO Commanded Address</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1628,6 +1663,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>isoManuProprietarySingleFrameNonAddressed</Id>
        <Description>ISO: Manu. Proprietary single-frame non-addressed</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
     </PGNInfo>
     <PGNInfo>
@@ -1635,6 +1671,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarBootStateAcknowledgment</Id>
        <Description>Airmar: Boot State Acknowledgment</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1692,6 +1729,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>lowranceTemperature</Id>
        <Description>Lowrance: Temperature</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1764,6 +1802,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarBootStateRequest</Id>
        <Description>Airmar: Boot State Request</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1807,6 +1846,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarAccessLevel</Id>
        <Description>Airmar: Access Level</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1898,6 +1938,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetConfigureTemperatureSensor</Id>
        <Description>Simnet: Configure Temperature Sensor</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1941,6 +1982,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetTrimTabSensorCalibration</Id>
        <Description>Simnet: Trim Tab Sensor Calibration</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1984,6 +2026,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetPaddleWheelSpeedConfiguration</Id>
        <Description>Simnet: Paddle Wheel Speed Configuration</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2027,6 +2070,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetClearFluidLevelWarnings</Id>
        <Description>Simnet: Clear Fluid Level Warnings</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2070,6 +2114,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetLgc2000Configuration</Id>
        <Description>Simnet: LGC-2000 Configuration</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2113,6 +2158,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetReprogramStatus</Id>
        <Description>Simnet: Reprogram Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2156,6 +2202,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetAutopilotMode</Id>
        <Description>Simnet: Autopilot Mode</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2199,6 +2246,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarDepthQualityFactor</Id>
        <Description>Airmar: Depth Quality Factor</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2263,6 +2311,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarDeviceInformation</Id>
        <Description>Airmar: Device Information</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2345,6 +2394,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetAutopilotMode</Id>
        <Description>Simnet: Autopilot Mode</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2388,6 +2438,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>nmeaRequestGroupFunction</Id>
        <Description>NMEA - Request group function</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -2474,6 +2525,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>nmeaCommandGroupFunction</Id>
        <Description>NMEA - Command group function</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -2560,6 +2612,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>nmeaAcknowledgeGroupFunction</Id>
        <Description>NMEA - Acknowledge group function</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>1</RepeatingFields>
        <Fields>
          <Field>
@@ -2632,6 +2685,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>maretronSlaveResponse</Id>
        <Description>Maretron: Slave Response</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2711,6 +2765,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>pgnListTransmitAndReceive</Id>
        <Description>PGN List (Transmit and Receive)</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>1</RepeatingFields>
        <Fields>
          <Field>
@@ -2746,6 +2801,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>manufacturerProprietaryAddressableMultiFrame</Id>
        <Description>Manufacturer Proprietary: Addressable Multi-Frame</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2787,6 +2843,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarAddressableMultiFrame</Id>
        <Description>Airmar: Addressable Multi-Frame</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2840,6 +2897,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarAttitudeOffset</Id>
        <Description>Airmar: Attitude Offset</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2934,6 +2992,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarCalibrateCompass</Id>
        <Description>Airmar: Calibrate Compass</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -3142,6 +3201,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarTrueWindOptions</Id>
        <Description>Airmar: True Wind Options</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -3347,6 +3407,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarSimulateMode</Id>
        <Description>Airmar: Simulate Mode</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -3427,6 +3488,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarCalibrateDepth</Id>
        <Description>Airmar: Calibrate Depth</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -3505,6 +3567,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarCalibrateSpeed</Id>
        <Description>Airmar: Calibrate Speed</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -3594,6 +3657,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarCalibrateTemperature</Id>
        <Description>Airmar: Calibrate Temperature</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -3698,6 +3762,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarSpeedFilter</Id>
        <Description>Airmar: Speed Filter</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -3800,6 +3865,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarNmea2000Options</Id>
        <Description>Airmar: NMEA 2000 options</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -3880,6 +3946,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>systemTime</Id>
        <Description>System Time</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -3953,6 +4020,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>productInformation</Id>
        <Description>Product Information</Description>
        <Complete>false</Complete>
+       <Length>134</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4038,6 +4106,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>configurationInformation</Id>
        <Description>Configuration Information</Description>
        <Complete>false</Complete>
+       <Length>42</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4102,6 +4171,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>headingTrackControl</Id>
        <Description>Heading/Track control</Description>
        <Complete>false</Complete>
+       <Length>21</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4297,6 +4367,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>rudder</Id>
        <Description>Rudder</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4359,6 +4430,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>vesselHeading</Id>
        <Description>Vessel Heading</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4427,6 +4499,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>rateOfTurn</Id>
        <Description>Rate of Turn</Description>
        <Complete>true</Complete>
+       <Length>5</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4456,6 +4529,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>attitude</Id>
        <Description>Attitude</Description>
        <Complete>true</Complete>
+       <Length>7</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4507,6 +4581,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>magneticVariation</Id>
        <Description>Magnetic Variation</Description>
        <Complete>true</Complete>
+       <Length>6</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4582,6 +4657,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>engineParametersRapidUpdate</Id>
        <Description>Engine Parameters, Rapid Update</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4638,6 +4714,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>engineParametersDynamic</Id>
        <Description>Engine Parameters, Dynamic</Description>
        <Complete>true</Complete>
+       <Length>26</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4803,6 +4880,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>transmissionParametersDynamic</Id>
        <Description>Transmission Parameters, Dynamic</Description>
        <Complete>true</Complete>
+       <Length>7</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4885,6 +4963,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>tripParametersVessel</Id>
        <Description>Trip Parameters, Vessel</Description>
        <Complete>true</Complete>
+       <Length>10</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4937,6 +5016,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>tripParametersEngine</Id>
        <Description>Trip Parameters, Engine</Description>
        <Complete>true</Complete>
+       <Length>9</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -5003,6 +5083,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>engineParametersStatic</Id>
        <Description>Engine Parameters, Static</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -5053,6 +5134,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>binarySwitchBankStatus</Id>
        <Description>Binary Switch Bank Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>1</RepeatingFields>
        <Fields>
          <Field>
@@ -5085,6 +5167,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>switchBankControl</Id>
        <Description>Switch Bank Control</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>1</RepeatingFields>
        <Fields>
          <Field>
@@ -5117,6 +5200,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>acInputStatus</Id>
        <Description>AC Input Status</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>10</RepeatingFields>
        <Fields>
          <Field>
@@ -5264,6 +5348,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>acOutputStatus</Id>
        <Description>AC Output Status</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>10</RepeatingFields>
        <Fields>
          <Field>
@@ -5410,6 +5495,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fluidLevel</Id>
        <Description>Fluid Level</Description>
        <Complete>true</Complete>
+       <Length>7</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -5468,6 +5554,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>dcDetailedStatus</Id>
        <Description>DC Detailed Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -5542,6 +5629,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>chargerStatus</Id>
        <Description>Charger Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -5623,6 +5711,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>batteryStatus</Id>
        <Description>Battery Status</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -5684,6 +5773,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>inverterStatus</Id>
        <Description>Inverter Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -5748,6 +5838,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>chargerConfigurationStatus</Id>
        <Description>Charger Configuration Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -5861,6 +5952,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>inverterConfigurationStatus</Id>
        <Description>Inverter Configuration Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -5942,6 +6034,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>agsConfigurationStatus</Id>
        <Description>AGS Configuration Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -5978,6 +6071,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>batteryConfigurationStatus</Id>
        <Description>Battery Configuration Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -6079,6 +6173,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>agsStatus</Id>
        <Description>AGS Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -6142,6 +6237,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>speed</Id>
        <Description>Speed</Description>
        <Complete>true</Complete>
+       <Length>6</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -6192,6 +6288,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>waterDepth</Id>
        <Description>Water Depth</Description>
        <Complete>true</Complete>
+       <Length>5</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -6234,6 +6331,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>distanceLog</Id>
        <Description>Distance Log</Description>
        <Complete>true</Complete>
+       <Length>14</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -6291,6 +6389,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>trackedTargetData</Id>
        <Description>Tracked Target Data</Description>
        <Complete>true</Complete>
+       <Length>27</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -6478,6 +6577,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>positionRapidUpdate</Id>
        <Description>Position, Rapid Update</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -6511,6 +6611,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>cogSogRapidUpdate</Id>
        <Description>COG &amp; SOG, Rapid Update</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -6588,6 +6689,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>positionDeltaRapidUpdate</Id>
        <Description>Position Delta, Rapid Update</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -6633,6 +6735,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>altitudeDeltaRapidUpdate</Id>
        <Description>Altitude Delta, Rapid Update</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -6710,6 +6813,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gnssPositionData</Id>
        <Description>GNSS Position Data</Description>
        <Complete>true</Complete>
+       <Length>51</Length>
        <RepeatingFields>3</RepeatingFields>
        <Fields>
          <Field>
@@ -6953,6 +7057,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>timeDate</Id>
        <Description>Time &amp; Date</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -7001,6 +7106,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisClassAPositionReport</Id>
        <Description>AIS Class A Position Report</Description>
        <Complete>true</Complete>
+       <Length>27</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -7231,6 +7337,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisClassBPositionReport</Id>
        <Description>AIS Class B Position Report</Description>
        <Complete>true</Complete>
+       <Length>26</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -7529,6 +7636,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisClassBExtendedPositionReport</Id>
        <Description>AIS Class B Extended Position Report</Description>
        <Complete>true</Complete>
+       <Length>33</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -7904,6 +8012,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>datum</Id>
        <Description>Datum</Description>
        <Complete>true</Complete>
+       <Length>24</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -7970,6 +8079,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>userDatum</Id>
        <Description>User Datum</Description>
        <Complete>true</Complete>
+       <Length>37</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -8094,6 +8204,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>crossTrackError</Id>
        <Description>Cross Track Error</Description>
        <Complete>false</Complete>
+       <Length>6</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -8165,6 +8276,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>navigationData</Id>
        <Description>Navigation Data</Description>
        <Complete>true</Complete>
+       <Length>34</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -8353,6 +8465,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>navigationRouteWpInformation</Id>
        <Description>Navigation - Route/WP Information</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>4</RepeatingFields>
        <Fields>
          <Field>
@@ -8491,6 +8604,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>setDriftRapidUpdate</Id>
        <Description>Set &amp; Drift, Rapid Update</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -8557,6 +8671,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>navigationRouteTimeToFromMark</Id>
        <Description>Navigation - Route / Time to+from Mark</Description>
        <Complete>true</Complete>
+       <Length>10</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -8624,6 +8739,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>bearingAndDistanceBetweenTwoMarks</Id>
        <Description>Bearing and Distance between two Marks</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -8734,6 +8850,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gnssControlStatus</Id>
        <Description>GNSS Control Status</Description>
        <Complete>false</Complete>
+       <Length>0</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -8863,6 +8980,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gnssDops</Id>
        <Description>GNSS DOPs</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -8963,6 +9081,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gnssSatsInView</Id>
        <Description>GNSS Sats in View</Description>
        <Complete>true</Complete>
+       <Length>255</Length>
        <RepeatingFields>7</RepeatingFields>
        <Fields>
          <Field>
@@ -9096,6 +9215,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gpsAlmanacData</Id>
        <Description>GPS Almanac Data</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -9222,6 +9342,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gnssPseudorangeNoiseStatistics</Id>
        <Description>GNSS Pseudorange Noise Statistics</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -9303,6 +9424,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gnssRaimOutput</Id>
        <Description>GNSS RAIM Output</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -9404,6 +9526,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gnssRaimSettings</Id>
        <Description>GNSS RAIM Settings</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -9449,6 +9572,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gnssPseudorangeErrorStatistics</Id>
        <Description>GNSS Pseudorange Error Statistics</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -9530,6 +9654,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>dgnssCorrections</Id>
        <Description>DGNSS Corrections</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -9638,6 +9763,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gnssDifferentialCorrectionReceiverInterface</Id>
        <Description>GNSS Differential Correction Receiver Interface</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -9701,6 +9827,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>gnssDifferentialCorrectionReceiverSignal</Id>
        <Description>GNSS Differential Correction Receiver Signal</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -9837,6 +9964,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>glonassAlmanacData</Id>
        <Description>GLONASS Almanac Data</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -9963,6 +10091,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisDgnssBroadcastBinaryMessage</Id>
        <Description>AIS DGNSS Broadcast Binary Message</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -10081,6 +10210,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisUtcAndDateReport</Id>
        <Description>AIS UTC and Date Report</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -10287,6 +10417,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisClassAStaticAndVoyageRelatedData</Id>
        <Description>AIS Class A Static and Voyage Related Data</Description>
        <Complete>true</Complete>
+       <Length>24</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -10596,6 +10727,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisAddressedBinaryMessage</Id>
        <Description>AIS Addressed Binary Message</Description>
        <Complete>true</Complete>
+       <Length>13</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -10744,6 +10876,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisAcknowledge</Id>
        <Description>AIS Acknowledge</Description>
        <Complete>true</Complete>
+       <Length>12</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -10870,6 +11003,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisBinaryBroadcastMessage</Id>
        <Description>AIS Binary Broadcast Message</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -10972,6 +11106,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisSarAircraftPositionReport</Id>
        <Description>AIS SAR Aircraft Position Report</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -11184,6 +11319,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>radioFrequencyModePower</Id>
        <Description>Radio Frequency/Mode/Power</Description>
        <Complete>false</Complete>
+       <Length>9</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -11251,6 +11387,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisUtcDateInquiry</Id>
        <Description>AIS UTC/Date Inquiry</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -11354,6 +11491,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisAddressedSafetyRelatedMessage</Id>
        <Description>AIS Addressed Safety Related Message</Description>
        <Complete>true</Complete>
+       <Length>12</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -11487,6 +11625,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisSafetyRelatedBroadcastMessage</Id>
        <Description>AIS Safety Related Broadcast Message</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -11582,6 +11721,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisInterrogation</Id>
        <Description>AIS Interrogation</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>8</RepeatingFields>
        <Fields>
          <Field>
@@ -11755,6 +11895,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisAssignmentModeCommand</Id>
        <Description>AIS Assignment Mode Command</Description>
        <Complete>true</Complete>
+       <Length>23</Length>
        <RepeatingFields>3</RepeatingFields>
        <Fields>
          <Field>
@@ -11875,6 +12016,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisDataLinkManagementMessage</Id>
        <Description>AIS Data Link Management Message</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>4</RepeatingFields>
        <Fields>
          <Field>
@@ -12004,6 +12146,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisChannelManagement</Id>
        <Description>AIS Channel Management</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -12249,6 +12392,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisClassBGroupAssignment</Id>
        <Description>AIS Class B Group Assignment</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -12433,6 +12577,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>dscCallInformation</Id>
        <Description>DSC Call Information</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -12652,6 +12797,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisClassBStaticDataMsg24PartA</Id>
        <Description>AIS Class B static data (msg 24 Part A)</Description>
        <Complete>false</Complete>
+       <Length>25</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -12708,6 +12854,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisClassBStaticDataMsg24PartB</Id>
        <Description>AIS Class B static data (msg 24 Part B)</Description>
        <Complete>false</Complete>
+       <Length>33</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -12914,6 +13061,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceDatabaseList</Id>
        <Description>Route and WP Service - Database List</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>9</RepeatingFields>
        <Fields>
          <Field>
@@ -13042,6 +13190,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceRouteList</Id>
        <Description>Route and WP Service - Route List</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>6</RepeatingFields>
        <Fields>
          <Field>
@@ -13135,6 +13284,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceRouteWpListAttributes</Id>
        <Description>Route and WP Service - Route/WP-List Attributes</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -13261,6 +13411,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceRouteWpNamePosition</Id>
        <Description>Route and WP Service - Route - WP Name &amp; Position</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>4</RepeatingFields>
        <Fields>
          <Field>
@@ -13358,6 +13509,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceRouteWpName</Id>
        <Description>Route and WP Service - Route - WP Name</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -13431,6 +13583,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceXteLimitNavigationMethod</Id>
        <Description>Route and WP Service - XTE Limit &amp; Navigation Method</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>6</RepeatingFields>
        <Fields>
          <Field>
@@ -13522,6 +13675,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceWpComment</Id>
        <Description>Route and WP Service - WP Comment</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -13595,6 +13749,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceRouteComment</Id>
        <Description>Route and WP Service - Route Comment</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -13659,6 +13814,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceDatabaseComment</Id>
        <Description>Route and WP Service - Database Comment</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -13714,6 +13870,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceRadiusOfTurn</Id>
        <Description>Route and WP Service - Radius of Turn</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -13786,6 +13943,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>routeAndWpServiceWpListWpNamePosition</Id>
        <Description>Route and WP Service - WP List - WP Name &amp; Position</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>4</RepeatingFields>
        <Fields>
          <Field>
@@ -13884,6 +14042,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>windData</Id>
        <Description>Wind Data</Description>
        <Complete>true</Complete>
+       <Length>6</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -13942,6 +14101,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>environmentalParameters</Id>
        <Description>Environmental Parameters</Description>
        <Complete>true</Complete>
+       <Length>7</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -13995,6 +14155,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>environmentalParameters</Id>
        <Description>Environmental Parameters</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -14078,6 +14239,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>temperature</Id>
        <Description>Temperature</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -14151,6 +14313,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>humidity</Id>
        <Description>Humidity</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -14209,6 +14372,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>actualPressure</Id>
        <Description>Actual Pressure</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -14255,6 +14419,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>setPressure</Id>
        <Description>Set Pressure</Description>
        <Complete>true</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -14303,6 +14468,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>tideStationData</Id>
        <Description>Tide Station Data</Description>
        <Complete>true</Complete>
+       <Length>20</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -14446,6 +14612,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>salinityStationData</Id>
        <Description>Salinity Station Data</Description>
        <Complete>true</Complete>
+       <Length>22</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -14576,6 +14743,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>currentStationData</Id>
        <Description>Current Station Data</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -14721,6 +14889,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>meteorologicalStationData</Id>
        <Description>Meteorological Station Data</Description>
        <Complete>false</Complete>
+       <Length>30</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -14905,6 +15074,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>mooredBuoyStationData</Id>
        <Description>Moored Buoy Station Data</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -15119,6 +15289,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>smallCraftStatus</Id>
        <Description>Small Craft Status</Description>
        <Complete>true</Complete>
+       <Length>2</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -15146,6 +15317,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>directionData</Id>
        <Description>Direction Data</Description>
        <Complete>true</Complete>
+       <Length>14</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -15275,6 +15447,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>vesselSpeedComponents</Id>
        <Description>Vessel Speed Components</Description>
        <Complete>true</Complete>
+       <Length>12</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -15350,6 +15523,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubInit2</Id>
        <Description>SonicHub: Init #2</Description>
        <Complete>false</Complete>
+       <Length>9</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -15450,6 +15624,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubAmRadio</Id>
        <Description>SonicHub: AM Radio</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -15591,6 +15766,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubZoneInfo</Id>
        <Description>SonicHub: Zone info</Description>
        <Complete>false</Complete>
+       <Length>6</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -15680,6 +15856,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubSource</Id>
        <Description>SonicHub: Source</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -15777,6 +15954,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubSourceList</Id>
        <Description>SonicHub: Source List</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -15887,6 +16065,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubControl</Id>
        <Description>SonicHub: Control</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -15979,6 +16158,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubUnknown</Id>
        <Description>SonicHub: Unknown</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -16079,6 +16259,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubFmRadio</Id>
        <Description>SonicHub: FM Radio</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -16220,6 +16401,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubPlaylist</Id>
        <Description>SonicHub: Playlist</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -16368,6 +16550,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubTrack</Id>
        <Description>SonicHub: Track</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -16467,6 +16650,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubArtist</Id>
        <Description>SonicHub: Artist</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -16566,6 +16750,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubAlbum</Id>
        <Description>SonicHub: Album</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -16665,6 +16850,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubMenuItem</Id>
        <Description>SonicHub: Menu Item</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -16791,6 +16977,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubZones</Id>
        <Description>SonicHub: Zones</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -16880,6 +17067,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubMaxVolume</Id>
        <Description>SonicHub: Max Volume</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -16984,6 +17172,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubVolume</Id>
        <Description>SonicHub: Volume</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17088,6 +17277,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubInit1</Id>
        <Description>SonicHub: Init #1</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17166,6 +17356,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubPosition</Id>
        <Description>SonicHub: Position</Description>
        <Complete>true</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17255,6 +17446,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>sonichubInit3</Id>
        <Description>SonicHub: Init #3</Description>
        <Complete>false</Complete>
+       <Length>9</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17355,6 +17547,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simradTextMessage</Id>
        <Description>Simrad: Text Message</Description>
        <Complete>false</Complete>
+       <Length>64</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17472,6 +17665,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>navicoProductInformation</Id>
        <Description>Navico: Product Information</Description>
        <Complete>false</Complete>
+       <Length>14</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17591,6 +17785,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetReprogramData</Id>
        <Description>Simnet: Reprogram Data</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17666,6 +17861,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetRequestReprogram</Id>
        <Description>Simnet: Request Reprogram</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17709,6 +17905,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetReprogramStatus</Id>
        <Description>Simnet: Reprogram Status</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17779,6 +17976,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>furunoUnknown</Id>
        <Description>Furuno: Unknown</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17867,6 +18065,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionSourceName</Id>
        <Description>Fusion: Source Name</Description>
        <Complete>false</Complete>
+       <Length>13</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -17975,6 +18174,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionTrack</Id>
        <Description>Fusion: Track</Description>
        <Complete>false</Complete>
+       <Length>32</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18056,6 +18256,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionArtist</Id>
        <Description>Fusion: Artist</Description>
        <Complete>false</Complete>
+       <Length>32</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18137,6 +18338,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionAlbum</Id>
        <Description>Fusion: Album</Description>
        <Complete>false</Complete>
+       <Length>32</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18218,6 +18420,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionPlayProgress</Id>
        <Description>Fusion: Play Progress</Description>
        <Complete>false</Complete>
+       <Length>9</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18300,6 +18503,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionAmFmStation</Id>
        <Description>Fusion: AM/FM Station</Description>
        <Complete>false</Complete>
+       <Length>10</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18391,6 +18595,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionVhf</Id>
        <Description>Fusion: VHF</Description>
        <Complete>false</Complete>
+       <Length>9</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18480,6 +18685,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionSquelch</Id>
        <Description>Fusion: Squelch</Description>
        <Complete>false</Complete>
+       <Length>6</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18560,6 +18766,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionScan</Id>
        <Description>Fusion: Scan</Description>
        <Complete>false</Complete>
+       <Length>6</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18645,6 +18852,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionMenuItem</Id>
        <Description>Fusion: Menu Item</Description>
        <Complete>false</Complete>
+       <Length>23</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18780,6 +18988,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionReplay</Id>
        <Description>Fusion: Replay</Description>
        <Complete>false</Complete>
+       <Length>23</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18927,6 +19136,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionMute</Id>
        <Description>Fusion: Mute</Description>
        <Complete>false</Complete>
+       <Length>5</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19003,6 +19213,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionSubVolume</Id>
        <Description>Fusion: Sub Volume</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19105,6 +19316,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionTone</Id>
        <Description>Fusion: Tone</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19206,6 +19418,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionVolume</Id>
        <Description>Fusion: Volume</Description>
        <Complete>false</Complete>
+       <Length>10</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19308,6 +19521,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>fusionTransport</Id>
        <Description>Fusion: Transport</Description>
        <Complete>false</Complete>
+       <Length>5</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19383,6 +19597,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>furunoUnknown</Id>
        <Description>Furuno: Unknown</Description>
        <Complete>false</Complete>
+       <Length>12</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19516,6 +19731,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>lowranceUnknown</Id>
        <Description>Lowrance: unknown</Description>
        <Complete>false</Complete>
+       <Length>10</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19613,6 +19829,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetSetSerialNumber</Id>
        <Description>Simnet: Set Serial Number</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19656,6 +19873,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>suzukiEngineAndStorageDeviceConfig</Id>
        <Description>Suzuki: Engine and Storage Device Config</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19697,6 +19915,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetFuelUsedHighResolution</Id>
        <Description>Simnet: Fuel Used - High Resolution</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19740,6 +19959,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetEngineAndTankConfiguration</Id>
        <Description>Simnet: Engine and Tank Configuration</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19783,6 +20003,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetSetEngineAndTankConfiguration</Id>
        <Description>Simnet: Set Engine and Tank Configuration</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19826,6 +20047,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetFluidLevelSensorConfiguration</Id>
        <Description>Simnet: Fluid Level Sensor Configuration</Description>
        <Complete>false</Complete>
+       <Length>14</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19960,6 +20182,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetFuelFlowTurbineConfiguration</Id>
        <Description>Simnet: Fuel Flow Turbine Configuration</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -20003,6 +20226,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetFluidLevelWarning</Id>
        <Description>Simnet: Fluid Level Warning</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -20046,6 +20270,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetPressureSensorConfiguration</Id>
        <Description>Simnet: Pressure Sensor Configuration</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -20089,6 +20314,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetDataUserGroupConfiguration</Id>
        <Description>Simnet: Data User Group Configuration</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -20132,6 +20358,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetAisClassBStaticDataMsg24PartA</Id>
        <Description>Simnet: AIS Class B static data (msg 24 Part A)</Description>
        <Complete>false</Complete>
+       <Length>29</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -20242,6 +20469,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetAisClassBStaticDataMsg24PartB</Id>
        <Description>Simnet: AIS Class B static data (msg 24 Part B)</Description>
        <Complete>false</Complete>
+       <Length>37</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -20500,6 +20728,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetSonarStatusFrequencyAndDspVoltage</Id>
        <Description>Simnet: Sonar Status, Frequency and DSP Voltage</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -20543,6 +20772,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetParameterHandle</Id>
        <Description>Simnet: Parameter Handle</Description>
        <Complete>false</Complete>
+       <Length>14</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -20706,6 +20936,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetEventCommandApCommand</Id>
        <Description>Simnet: Event Command: AP command</Description>
        <Complete>false</Complete>
+       <Length>12</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -20834,6 +21065,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetEventCommandAlarm</Id>
        <Description>Simnet: Event Command: Alarm?</Description>
        <Complete>false</Complete>
+       <Length>12</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -20950,6 +21182,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetEventCommandUnknown</Id>
        <Description>Simnet: Event Command: Unknown</Description>
        <Complete>false</Complete>
+       <Length>12</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -21050,6 +21283,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetEventReplyApCommand</Id>
        <Description>Simnet: Event Reply: AP command</Description>
        <Complete>false</Complete>
+       <Length>12</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -21178,6 +21412,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetAlarmMessage</Id>
        <Description>Simnet: Alarm Message</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -21258,6 +21493,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarAdditionalWeatherData</Id>
        <Description>Airmar: Additional Weather Data</Description>
        <Complete>false</Complete>
+       <Length>30</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -21344,6 +21580,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarHeaterControl</Id>
        <Description>Airmar: Heater Control</Description>
        <Complete>false</Complete>
+       <Length>9</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -21430,6 +21667,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarPost</Id>
        <Description>Airmar: POST</Description>
        <Complete>false</Complete>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>

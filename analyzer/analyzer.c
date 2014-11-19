@@ -1972,7 +1972,8 @@ static void explainPGN(Pgn pgn)
 {
   int i;
 
-  printf("PGN: %6u - %s\n\n", pgn.pgn, pgn.description);
+  printf("PGN: %d / %08o / %05X - %u - %s\n\n", pgn.pgn, pgn.pgn, pgn.pgn, pgn.size, pgn.description);
+
   if (pgn.repeatingFields)
   {
     printf("     The last %u fields repeat until the data is exhausted.\n\n", pgn.repeatingFields);
@@ -2097,8 +2098,10 @@ static void explainPGNXML(Pgn pgn)
 
   printf("</Description>\n"
          "       <Complete>%s</Complete>\n"
+         "       <Length>%u</Length>\n"
          "       <RepeatingFields>%u</RepeatingFields>\n"
          , (pgn.known ? "true" : "false")
+         , pgn.size
          , pgn.repeatingFields
          );
 
@@ -2299,8 +2302,8 @@ void explainXML(void)
     "<!--\n"COPYRIGHT"\n-->\n"
     "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" Version=\"0.1\">\n"
     "  <Date>"PROGRAM_DATE"</Date>\n"
-    "  <Comment>See http://canboat.com for the full source code</Comment>\n"
-    "  <CreatorCode>Keversoft NMEA2000 Analyzer</CreatorCode>\n"
+    "  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
+    "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
     "  <License>GPL v3</License>\n"
     "  <PGNs>\n"
     );
