@@ -27,7 +27,7 @@ $send_config_info='2012-06-17-15:02:11.000,6,59904,0,255,3,16,f0,01';  # ./send-
 
 $errno = 0;
 $errstr = '';
-$n2k = @fsockopen('localhost', 2597, &$errno, &$errstr, 15);
+$n2k = @fsockopen('localhost', 2597, $errno, $errstr, 15);
 if (!$n2k)
 {
   echo "Cannot connect to N2KD: $errstr\n";
@@ -39,13 +39,14 @@ if (!$n2k)
 #
 
 fwrite($n2k, $send_product_info."\n");
+$s = '';
 while (!feof($n2k))
 {
   $s .= fgets($n2k, 1024);
 }
 fclose($n2k);
 $data = json_decode($s, true);
-if (!is_array || !is_array($data[126996]))
+if (!is_array($data) || !is_array($data[126996]))
 {
   echo "No product information received.\n";
   if ($debug)

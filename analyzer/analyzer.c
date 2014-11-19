@@ -50,6 +50,7 @@ bool showData = false;
 bool showBytes = false;
 bool showJson = false;
 char * sep = " ";
+int  braceCount = 0; // Open json output { characters that need to be closed
 enum GeoFormats showGeo = GEO_DD;
 int onlyPgn = 0;
 int onlySrc = -1;
@@ -513,6 +514,10 @@ char * getSep()
   if (showJson)
   {
     sep = ",";
+    if (strchr(s, '{'))
+    {
+      braceCount++;
+    }
   }
   else
   {
@@ -1436,6 +1441,41 @@ void setSystemClock(uint16_t currentDate, uint32_t currentTime)
 #endif
 }
 
+void print_json_escaped(uint8_t *data, int len) 
+{
+
+  int c;
+  for (int k = 0; k < len; k++)
+    {
+      c = data[k];
+      switch(c)
+      {
+        case '\b':
+        case '\n':
+        case '\r':
+        case '\t':
+        case '\f':
+        case '"':
+        case '\\':
+        case '/':
+
+          if(c == '\b') mprintf("%s", "\\b");
+          else if(c == '\n') mprintf("%s", "\\n");
+          else if(c == '\r') mprintf("%s", "\\r");
+          else if(c == '\t') mprintf("%s", "\\t");
+          else if(c == '\f') mprintf("%s", "\\f");
+          else if(c == '"') mprintf("%s", "\\\"");
+          else if(c == '\\') mprintf("%s", "\\\\");
+          else if(c == '/') mprintf("%s", "\\/");
+          break;
+        default:
+          if (c >= ' ' && c <= '~')
+            mprintf("%c", c);
+      }
+    }
+}
+
+
 bool printPgn(int index, int subIndex, RawMessage * msg)
 {
   uint8_t * dataStart;
@@ -1508,7 +1548,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       data += startBit / 8;
       startBit %= 8;
     }
-    if (matchedFixedField)
+    if (! hasFixedField || (hasFixedField && matchedFixedField))
     {
       break;
     }
@@ -1553,6 +1593,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       mprintf("\"%s\":", pgn->camelDescription);
     }
     mprintf("{\"timestamp\":\"%s\",\"prio\":\"%u\",\"src\":\"%u\",\"dst\":\"%u\",\"pgn\":\"%u\",\"description\":\"%s\"", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    braceCount = 1;
     sep = ",\"fields\":{";
   }
   else
@@ -1651,17 +1692,23 @@ ascii_string:
           mprintf("%s %s = ", getSep(), fieldName);
         }
 
-        for (k = 0; k < len; k++)
+        if (showJson)
         {
-          if (data[k] >= ' ' && data[k] <= '~')
+          print_json_escaped(data, len);
+        } else
+        {
+          for (k = 0; k < len; k++)
           {
-            int c = data[k];
-
-            if (showJson && (c == '\\'))
+            if (data[k] >= ' ' && data[k] <= '~')
             {
+              int c = data[k];
+
+              if (showJson && (c == '\\'))
+              {
+                mprintf("%c", c);
+              }
               mprintf("%c", c);
             }
-            mprintf("%c", c);
           }
         }
 
@@ -1776,12 +1823,10 @@ ascii_string:
 
   if (showJson)
   {
-    /* If the separator is now 1 character long then we printed at least one field */
-    if (sep[0] && !sep[1])
+    for (;braceCount > 0; braceCount--)
     {
       mprintf("}");
     }
-    mprintf("}");
   }
   mprintf("\n");
 

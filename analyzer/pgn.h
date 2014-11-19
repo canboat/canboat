@@ -286,7 +286,7 @@ Pgn pgnList[] =
   /* http://www.nmea.org/Assets/pgn059392.pdf */
   /* http://www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
   /* http://www.furunousa.com/Furuno/Doc/0/8JT2BMDDIB249FCNUK64DKLV67/GP330B%20NMEA%20PGNs.pdf */
-
+  /* http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf */
 ,
 { "ISO Acknowledgement", 59392, true, 8, 0,
   { { "Control", BYTES(1), RES_LOOKUP, false, ",0=ACK,1=NAK,2=Access Denied,3=Address Busy", "" }
@@ -308,22 +308,24 @@ Pgn pgnList[] =
 { "ISO Address Claim", 60928, true, 8, 0,
   { { "Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number" }
   , { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Device Instance Lower", 4, 1, false, 0, "ISO ECU Instance" }
-  , { "Device Instance Upper", 4, 1, false, 0, "ISO Function Instance" }
-  , { "Device Function", BYTES(1), 1, false, 0, "ISO Function" }
+  , { "Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance" }
+  , { "Device Instance Upper", 5, 1, false, 0, "ISO Function Instance" }
+  , { "Device Function", 8, 1, false, 0, "ISO Function" }
   , { "Reserved", 1, RES_BINARY, false, 0, "" }
   , { "Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, "" }
   , { "System Instance", 4, 1, false, 0, "ISO Device Class Instance" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", 3, 1, false, 0, "ISO Self Configurable" }
+  , { "Industry Group", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 1, 1, false, 0, "ISO Self Configurable" }
   , { 0 }
   }
 }
 
 ,
 { "ISO: Manu. Proprietary single-frame addressed", 61184, false, 8, 0,
-  { { 0 }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { 0 }
   }
 }
 
@@ -825,30 +827,11 @@ Pgn pgnList[] =
   }
 }
 
-,
-{ "Manufacturer Proprietary: Addressable Multi-Frame", 126720, true, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { 0 }
-  }
-}
-
-,
-{ "Airmar: Addressable Multi-Frame", 126720, true, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, 0, "" }
-  , { 0 }
-  }
-}
-
   /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
 ,
-{ "Airmar: Attitude Offset", 126720, true, 8, 0,
+{ "Airmar: Attitude Offset", 126720, true, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=32", "Attitude Offsets" }
   , { "Azimuth offset", BYTES(2), RES_DEGREES, true, "deg", "Positive: sensor rotated to port, negative: sensor rotated to starboard" }
@@ -860,9 +843,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
 ,
-{ "Airmar: Calibrate Compass", 126720, true, 8, 0,
+{ "Airmar: Calibrate Compass", 126720, true, 24, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=33", "Calibrate Compass" }
   , { "Calibrate Function", BYTES(1), RES_LOOKUP, false, ",0=Normal/cancel calibration,1=Enter calibration mode,2=Reset calibration to 0,3=Verify,4=Reset compass to defaults,5=Reset damping to defaults", "" }
@@ -883,9 +866,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
 ,
-{ "Airmar: True Wind Options", 126720, true, 8, 0,
+{ "Airmar: True Wind Options", 126720, true, 6, 0,//FIXME Single Frame: No
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=34", "True Wind Options" }
   , { "COG substition for HDG", 2, RES_LOOKUP, false, ",0=Use HDG only,1=Allow COG to replace HDG", "Allow use of COG when HDG not available?" }
@@ -906,9 +889,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: Simulate Mode", 126720, true, 8, 0,
+{ "Airmar: Simulate Mode", 126720, true, 6, 0,//FIXME Single Frame: No
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=35", "Simulate Mode" }
   , { "Simulate Mode", 2, RES_LOOKUP, false, ",0=Off,1=On", "" }
@@ -919,9 +902,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: Calibrate Depth", 126720, true, 8, 0,
+{ "Airmar: Calibrate Depth", 126720, true, 6, 0,//FIXME Single Frame: No
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=40", "Calibrate Depth" }
   , { "Speed of Sound Mode", BYTES(2), 0.1, false, "m/s", "actual allowed range is 1350.0 to 1650.0 m/s" }
@@ -932,9 +915,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: Calibrate Speed", 126720, true, 8, 2,
+{ "Airmar: Calibrate Speed", 126720, true, 12, 2,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=41", "Calibrate Speed" }
   , { "Number of pairs of data points", BYTES(1), RES_INTEGER, false, 0, "actual range is 0 to 25. 254=restore default speed curve"
@@ -947,9 +930,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: Calibrate Temperature", 126720, true, 8, 2,
+{ "Airmar: Calibrate Temperature", 126720, true, 6, 2,//FIXME Single Frame: No
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=42", "Calibrate Temperature" }
   , { "Temperature instance", 2, RES_LOOKUP, false, ",0=Device Sensor,1=Onboard Water Sensor,2=Optional Water Sensor", "" }
@@ -962,9 +945,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: Speed Filter", 126720, true, 8, 2,
+{ "Airmar: Speed Filter", 126720, true, 8, 2,//FIXME Single Frame: No (type 0: NDB=6; type 1:NDB=8)
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=43", "Speed Filter" }
   , { "Filter type", 4, RES_LOOKUP, false, ",0=no filter,1=basic IIR filter", "" }
@@ -977,13 +960,47 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: NMEA 2000 options", 126720, true, 8, 2,
+{ "Airmar: Temperature Filter", 126720, true, 8, 2,//FIXME Single Frame: No (type 0: NDB=6; type 1:NDB=8)
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=44", "Temperature Filter" }
+  , { "Filter type", 4, RES_LOOKUP, false, ",0=no filter,1=basic IIR filter,15=data not available", "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "Reserved" }
+  , { "Sample interval", BYTES(2), 0.01, false, "s", "" }
+  , { "Filter duration", BYTES(2), 0.01, false, "s", "" }
+  , { 0 }
+  }
+}
+
+  /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+,
+{ "Airmar: NMEA 2000 options", 126720, true, 6, 2,//FIXME Single Frame: No
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=46", "NMEA 2000 options" }
-  , { "Transmission Interval", 2, RES_LOOKUP, false, ",0=Measure Interval,1=Requested by user", "" }
+  , { "Transmission Interval", 2, RES_LOOKUP, false, ",0=Measure Interval,1=Requested by user,2=reserved,3=data not available", "" }
   , { "Reserved", 22, RES_BINARY, false, 0, "Reserved" }
+  , { 0 }
+  }
+}
+
+,
+{ "Airmar: Addressable Multi-Frame", 126720, true, 4, 0,//FIXME Single Frame: No
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Manufacturer Proprietary: Addressable Multi-Frame", 126720, true, 3, 0,//FIXME Single Frame: No
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
 }
@@ -1005,8 +1022,8 @@ Pgn pgnList[] =
   { { "NMEA 2000 Version", BYTES(2), 1, false, 0, "" }
   , { "Product Code", BYTES(2), 1, false, 0, "" }
   , { "Model ID", BYTES(32), RES_ASCII, false, 0, "" }
-  , { "Software Version Code", BYTES(40), RES_ASCII, false, 0, "" }
-  , { "Model Version", BYTES(24), RES_ASCII, false, 0, "" }
+  , { "Software Version Code", BYTES(32), RES_ASCII, false, 0, "" }
+  , { "Model Version", BYTES(32), RES_ASCII, false, 0, "" }
   , { "Model Serial Code", BYTES(32), RES_ASCII, false, 0, "" }
   , { "Certification Level", BYTES(1), 1, false, 0, "" }
   , { "Load Equivalency", BYTES(1), 1, false, 0, "" }
@@ -1150,13 +1167,14 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Transmission Parameters, Dynamic", 127493, true, 7, 0,
-  { { "Engine Instance", 2, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
+{ "Transmission Parameters, Dynamic", 127493, true, 8, 0,
+  { { "Engine Instance", 8, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Transmission Gear", 2, RES_LOOKUP, false, LOOKUP_GEAR_STATUS, "" }
-  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Reserved", 6, RES_NOTUSED, false, 0, "" }
   , { "Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Oil temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Discrete Status 1", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { 0 }
   }
 }
