@@ -1445,7 +1445,8 @@ void print_json_escaped(uint8_t *data, int len)
 {
 
   int c;
-  for (int k = 0; k < len; k++)
+  int k;
+  for (k = 0; k < len; k++)
     {
       c = data[k];
       switch(c)
