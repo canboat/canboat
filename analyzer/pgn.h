@@ -600,7 +600,7 @@ Pgn pgnList[] =
 }
 
 ,
-{ "ISO Commanded Address", 65240, false, 8, 0,
+{ "ISO Commanded Address", 65240, false, 9, 0,
   /* ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in the
   data portion of the message must match the name information of the node whose network address is to be set. */
   { { "Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number" }
