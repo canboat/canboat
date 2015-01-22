@@ -37,6 +37,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 "along with CANboat.  If not, see <http://www.gnu.org/licenses/>.\n" \
 
 # define COPYRIGHT "(C) 2009-2014 Keversoft B.V., Harlingen, The Netherlands\n" \
-                   "For more information see http://yachtelectronics.blogspot.com\n" \
+                   "For more information see https://github.com/canboat/canboat\n" \
                    "\n"LICENSE"\n"
 

@@ -77,7 +77,7 @@ void usage(char ** argv, char ** av)
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
-         "-explain | -explain-xml]\n", argv[0]);
+         "-explain | -explain-xml [-upper-camel]]\n", argv[0]);
   exit(1);
 }
 
@@ -88,6 +88,8 @@ int main(int argc, char ** argv)
   FILE * file = stdin;
   int ac = argc;
   char ** av = argv;
+  bool doExplainXML = false;
+  bool doExplain = false;
 
   setProgName(argv[0]);
 
@@ -95,13 +97,11 @@ int main(int argc, char ** argv)
   {
     if (strcasecmp(av[1], "-explain-xml") == 0)
     {
-      explainXML();
-      exit(0);
+      doExplainXML = true;
     }
     else if (strcasecmp(av[1], "-explain") == 0)
     {
-      explain();
-      exit(0);
+      doExplain = true;
     }
     else if (strcasecmp(av[1], "-raw") == 0)
     {
@@ -193,6 +193,21 @@ int main(int argc, char ** argv)
         usage(argv, av);
       }
     }
+  }
+
+  if (doExplain)
+  {
+    explain();
+    exit(0);
+  }
+  if (doExplainXML)
+  {
+    if (!pgnList[0].camelDescription)
+    {
+      camelCase(false);
+    }
+    explainXML();
+    exit(0);
   }
 
   if (!showJson)
@@ -1430,7 +1445,8 @@ void print_json_escaped(uint8_t *data, int len)
 {
 
   int c;
-  for (int k = 0; k < len; k++)
+  int k;
+  for (k = 0; k < len; k++)
     {
       c = data[k];
       switch(c)
@@ -2002,7 +2018,8 @@ static void explainPGN(Pgn pgn)
 {
   int i;
 
-  printf("PGN: %6u - %s\n\n", pgn.pgn, pgn.description);
+  printf("PGN: %d / %08o / %05X - %u - %s\n\n", pgn.pgn, pgn.pgn, pgn.pgn, pgn.size, pgn.description);
+
   if (pgn.repeatingFields)
   {
     printf("     The last %u fields repeat until the data is exhausted.\n\n", pgn.repeatingFields);
@@ -2107,8 +2124,10 @@ static void explainPGNXML(Pgn pgn)
 
   printf("    <PGNInfo>\n"
          "       <PGN>%u</PGN>\n"
+         "       <Id>%s</Id>\n"
          "       <Description>"
          , pgn.pgn
+         , pgn.camelDescription
          );
 
   for (p = pgn.description; p && *p; p++)
@@ -2125,8 +2144,10 @@ static void explainPGNXML(Pgn pgn)
 
   printf("</Description>\n"
          "       <Complete>%s</Complete>\n"
+         "       <Length>%u</Length>\n"
          "       <RepeatingFields>%u</RepeatingFields>\n"
          , (pgn.known ? "true" : "false")
+         , pgn.size
          , pgn.repeatingFields
          );
 
@@ -2143,7 +2164,8 @@ static void explainPGNXML(Pgn pgn)
 
       printf("         <Field>\n"
              "           <Order>%d</Order>\n"
-             "           <Name>%s</Name>\n", i + 1, f.name);
+             "           <Id>%s</Id>\n"
+             "           <Name>%s</Name>\n", i + 1, f.camelName, f.name);
 
       if (f.description && f.description[0] && f.description[0] != ',')
       {
@@ -2326,8 +2348,8 @@ void explainXML(void)
     "<!--\n"COPYRIGHT"\n-->\n"
     "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" Version=\"0.1\">\n"
     "  <Date>"PROGRAM_DATE"</Date>\n"
-    "  <Comment>See http://canboat.com for the full source code</Comment>\n"
-    "  <CreatorCode>Keversoft NMEA2000 Analyzer</CreatorCode>\n"
+    "  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
+    "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
     "  <License>GPL v3</License>\n"
     "  <PGNs>\n"
     );
