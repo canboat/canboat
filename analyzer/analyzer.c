@@ -635,7 +635,7 @@ static bool printLatLon(char * name, double resolution, uint8_t * data, size_t b
 
     if (showJson)
     {
-      mprintf("%s\"%s\":\"%010.7f\"", getSep(), name, dd);
+      mprintf("%s\"%s\":%010.7f", getSep(), name, dd);
     }
     else
     {
@@ -675,7 +675,7 @@ static bool printLatLon(char * name, double resolution, uint8_t * data, size_t b
     if (showJson)
     {
       double dd = (double) value / (double) RES_LAT_LONG_PRECISION;
-      mprintf("%s\"%s_dd\":\"%010.7f\"", getSep(), name, dd);
+      mprintf("%s\"%s_dd\":%010.7f", getSep(), name, dd);
     }
   }
   return true;
@@ -778,7 +778,7 @@ static bool printTemperature(char * name, uint16_t t)
 
   if (showJson)
   {
-    mprintf("%s\"%s\":\"%.2f\"", getSep(), name, c, f);
+    mprintf("%s\"%s\":%.2f", getSep(), name, c, f);
   }
   else
   {
@@ -799,7 +799,7 @@ static bool printPressure(char * name, uint16_t hp)
 
   if (showJson)
   {
-    mprintf("%s\"%s\":\"%"PRIu16"\"", getSep(), name, hp);
+    mprintf("%s\"%s\":%"PRIu16"", getSep(), name, hp);
   }
   else
   {
@@ -1250,7 +1250,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
       {
         if (showJson)
         {
-          mprintf("%s\"%s\":\"%"PRId64"\"", getSep(), fieldName, value);
+          mprintf("%s\"%s\":%"PRId64"", getSep(), fieldName, value);
         }
         else
         {
@@ -1282,7 +1282,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
 
         if (showJson)
         {
-          mprintf("%s\"%s\":\"%.*f\"", getSep(), fieldName, precision, a);
+          mprintf("%s\"%s\":%.*f", getSep(), fieldName, precision, a);
         }
         else if (field->units && strcmp(field->units, "m") == 0 && a >= 1000.0)
         {
