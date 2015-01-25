@@ -4354,6 +4354,218 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>127233</PGN>
+       <Id>manOverboardNotification</Id>
+       <Description>Man Overboard Notification</Description>
+       <Complete>true</Complete>
+       <Length>35</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>sid</Id>
+           <Name>SID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>mobEmitterId</Id>
+           <Name>MOB Emitter ID</Name>
+           <Description>Identifier for each MOB emitter, unique to the vessel</Description>
+           <BitLength>32</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>manOverboardStatus</Id>
+           <Name>Man Overboard Status</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>0=MOB Emitter Activated,1=Manual on-board MOB Button Activation,2=Test Mode,3=MOB Not Active</Units>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>5</BitLength>
+           <BitOffset>43</BitOffset>
+           <BitStart>3</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>activationTime</Id>
+           <Name>Activation Time</Name>
+           <Description>Time of day (UTC) when MOB was activated</Description>
+           <BitLength>32</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>s</Units>
+                  <Type>Time</Type>
+                  <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>positionSource</Id>
+           <Name>Position Source</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>0=Position estimated by the Vessel,1=Position reported by MOB emitter</Units>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>5</BitLength>
+           <BitOffset>83</BitOffset>
+           <BitStart>3</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>positionDate</Id>
+           <Name>Position Date</Name>
+           <Description>Date of MOB position</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>88</BitOffset>
+           <BitStart>0</BitStart>
+           <Units></Units>
+                  <Type>Date</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>positionTime</Id>
+           <Name>Position Time</Name>
+           <Description>Time of day of MOB position (UTC)</Description>
+           <BitLength>32</BitLength>
+           <BitOffset>104</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>s</Units>
+                  <Type>Time</Type>
+                  <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>latitude</Id>
+           <Name>Latitude</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>136</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>deg</Units>
+                  <Type>Latitude</Type>
+                  <Resolution>0.0000001</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>longitude</Id>
+           <Name>Longitude</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>168</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>deg</Units>
+                  <Type>Longitude</Type>
+                  <Resolution>0.0000001</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>cogReference</Id>
+           <Name>COG Reference</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>200</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='True' />
+             <EnumPair Value='1' Name='Magnetic' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>6</BitLength>
+           <BitOffset>202</BitOffset>
+           <BitStart>2</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>14</Order>
+           <Id>cog</Id>
+           <Name>COG</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>208</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>rad</Units>
+           <Type>Angle</Type>
+           <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>15</Order>
+           <Id>sog</Id>
+           <Name>SOG</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>224</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m/s</Units>
+           <Resolution>0.01</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>16</Order>
+           <Id>mmsiOfVesselOfOrigin</Id>
+           <Name>MMSI of vessel of origin</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>240</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>MMSI</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>17</Order>
+           <Id>mobEmitterBatteryStatus</Id>
+           <Name>MOB Emitter Battery Status</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>272</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>0=Good,1=Low</Units>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>18</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>5</BitLength>
+           <BitOffset>275</BitOffset>
+           <BitStart>3</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>127237</PGN>
        <Id>headingTrackControl</Id>
        <Description>Heading/Track control</Description>

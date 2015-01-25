@@ -1059,6 +1059,31 @@ Pgn pgnList[] =
   /* http://www.maretron.com/support/manuals/USB100UM_1.2.pdf */
   /* http://www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
 
+  /* http://www.nmea.org/Assets/20130906%20nmea%202000%20%20man%20overboard%20notification%20%28mob%29%20pgn%20127233%20amendment.pdf */
+,
+{ "Man Overboard Notification", 127233, true, 35, 0,
+  { { "SID", BYTES(1), 1, false, 0, "" }
+  , { "MOB Emitter ID", BYTES(4), RES_INTEGER, false, 0, "Identifier for each MOB emitter, unique to the vessel" }
+  , { "Man Overboard Status", 3, RES_LOOKUP, false, "0=MOB Emitter Activated,1=Manual on-board MOB Button Activation,2=Test Mode,3=MOB Not Active", "" }
+  , { "Reserved", 5, 1, false, 0, "" }
+  , { "Activation Time", BYTES(4), RES_TIME, false, "s", "Time of day (UTC) when MOB was activated" }
+  , { "Position Source", 3, RES_LOOKUP, false, "0=Position estimated by the Vessel,1=Position reported by MOB emitter", "" }
+  , { "Reserved", 5, 1, false, 0, "" }
+  , { "Position Date", BYTES(2), RES_DATE, false, "", "Date of MOB position" }
+  , { "Position Time", BYTES(4), RES_TIME, false, "s", "Time of day of MOB position (UTC)" }
+  , { "Latitude", BYTES(4), RES_LATITUDE, true, "deg", "" }
+  , { "Longitude", BYTES(4), RES_LONGITUDE, true, "deg", "" }
+  , { "COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, "" }
+  , { "Reserved", 6, 1, false, 0, "" }
+  , { "COG", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "SOG", BYTES(2), 0.01, false, "m/s", "" }
+  , { "MMSI of vessel of origin", BYTES(4), RES_INTEGER, false, "MMSI", "" }
+  , { "MOB Emitter Battery Status", 3, RES_LOOKUP, false, "0=Good,1=Low", "" }
+  , { "Reserved", 5, 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
 ,
 { "Heading/Track control", 127237, false, 0x15, 0,
   { { "Rudder Limit Exceeded", 2, 1, false, 0, "" }
