@@ -321,6 +321,30 @@ Pgn pgnList[] =
   }
 }
 
+  /* The following probably have the wrong Proprietary ID */
+,
+{ "Seatalk: Wireless Keypad Light Control", 61184, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=1", "Wireless Keypad Light Control" }
+  , { "Variant", BYTES(1), 1, false, 0, "" }
+  , { "Wireless Setting", BYTES(1), 1, false, 0, "" }
+  , { "Wired Setting", BYTES(1), 1, false, 0, "" }
+  }
+}
+
+,
+{ "Seatalk: Wireless Keypad Light Control", 61184, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "PID", BYTES(1), 1, false, 0, "" }
+  , { "Variant", BYTES(1), 1, false, 0, "" }
+  , { "Beep Control", BYTES(1), 1, false, 0, "" }
+  }
+}
+
 ,
 { "ISO: Manu. Proprietary single-frame addressed", 61184, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
@@ -728,6 +752,32 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  }
+}
+
+,
+{ "Seatalk: Keypad Message", 65371, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), 1, false, 0, "" }
+  , { "First key", BYTES(1), 1, false, 0, "" }
+  , { "Second key", BYTES(1), 1, false, 0, "" }
+  , { "First key state", 2, 1, false, 0, "" }
+  , { "Second key state", 2, 1, false, 0, "" }
+  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Encoder Position", BYTES(1), 1, false, 0, "" }
+  }
+}
+
+,
+{ "SeaTalk: Keypad Heartbeat", 65374, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), 1, false, 0, "" }
+  , { "Variant", BYTES(1), 1, false, 0, "" }
+  , { "Status", BYTES(1), 1, false, 0, "" }
   }
 }
 
@@ -3582,6 +3632,20 @@ Pgn pgnList[] =
   , { "J", BYTES(1), 1, false, 0, "" }
   , { "Backlight", BYTES(1), RES_LOOKUP, false, ",1=Day Mode,4=Night Mode,11=Level 1,22=Level 2,33=Level 3,44=Level 4,55=Level 5,66=Level 6,77=Level 7,88=Level 8,99=Level 9", "" }
   , { "L", BYTES(2), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SeaTalk: Node Statistics", 130847, false, 0, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Software Release", BYTES(2), 1, false, 0, "" }
+  , { "Development Version", BYTES(1), 1, false, 0, "" }
+  , { "Product Code", BYTES(2), 1, false, 0, "" }
+  , { "Year", BYTES(1), 1, false, 0, "" }
+  , { "Month", BYTES(1), 1, false, 0, "" }
+  , { "Device Number", BYTES(2), 1, false, 0, "" }
+  , { "Node Voltage", BYTES(2), 0.01, false, "V", "" }
   , { 0 }
   }
 }
