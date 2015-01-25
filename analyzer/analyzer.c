@@ -802,19 +802,48 @@ static bool printTemperature(char * name, uint16_t t)
   return true;
 }
 
-static bool printPressure(char * name, uint16_t hp)
+static bool printPressure(char * name, uint16_t v, Field * field)
 {
-  double bar = hp / 1000.0; /* 1000 hectopascal = 1 Bar */
-  double psi = hp / 14.50377; /* Silly but still used in some parts of the world */
+  int32_t pressure;
+  double bar;
+  double psi;
 
-  if (hp >= 0xfffd)
+  if (v >= 0xfffd)
   {
     return false;
   }
 
+  // There are three types of known pressure: unsigned hectopascal, signed kpa, unsigned kpa.
+
+  if (field->hasSign)
+  {
+    pressure = (int16_t) v;
+  }
+  else
+  {
+    pressure = v;
+  }
+  // Now scale pascal properly, it is in hPa or kPa.
+  if (field->units)
+  {
+    switch (field->units[0])
+    {
+    case 'h':
+    case 'H':
+      pressure *= 100;
+      break;
+    case 'k':
+    case 'K':
+      pressure *= 1000;
+    }
+  }
+
+  bar = pressure / 100000.0; /* 1000 hectopascal = 1 Bar */
+  psi = pressure / 1450.377; /* Silly but still used in some parts of the world */
+
   if (showJson)
   {
-    mprintf("%s\"%s\":\"%"PRIu16"\"", getSep(), name, hp);
+    mprintf("%s\"%s\":\"%"PRId32"\"", getSep(), name, pressure);
   }
   else
   {
@@ -1781,7 +1810,7 @@ ascii_string:
       else if (field.resolution == RES_PRESSURE)
       {
         memcpy((void *) &valueu16, data, 2);
-        printPressure(fieldName, valueu16);
+        printPressure(fieldName, valueu16, &field);
       }
       else if (field.resolution == RES_6BITASCII)
       {

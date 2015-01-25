@@ -15483,6 +15483,308 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>130567</PGN>
+       <Id>watermakerInputSettingAndStatus</Id>
+       <Description>Watermaker Input Setting and Status</Description>
+       <Complete>true</Complete>
+       <Length>24</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>watermakerOperatingState</Id>
+           <Name>Watermaker Operating State</Name>
+           <BitLength>6</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>0=Stopped,1=Starting,2=Running,3=Stopping,4=Flushing,5=Rinsing,6=Initiating,7=Manual Mode,62=Error,63=Unavailable</Units>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>productionStartStop</Id>
+           <Name>Production Start/Stop</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>6</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>rinseStartStop</Id>
+           <Name>Rinse Start/Stop</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>lowPressurePumpStatus</Id>
+           <Name>Low Pressure Pump Status</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>10</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>highPressurePumpStatus</Id>
+           <Name>High Pressure Pump Status</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>12</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>emergencyStop</Id>
+           <Name>Emergency Stop</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>14</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>productSolenoidValveStatus</Id>
+           <Name>Product Solenoid Valve Status</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='OK' />
+             <EnumPair Value='1' Name='Warning' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>flushModeStatus</Id>
+           <Name>Flush Mode Status</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>18</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>salinityStatus</Id>
+           <Name>Salinity Status</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>20</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='OK' />
+             <EnumPair Value='1' Name='Warning' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>sensorStatus</Id>
+           <Name>Sensor Status</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>22</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='OK' />
+             <EnumPair Value='1' Name='Warning' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>oilChangeIndicatorStatus</Id>
+           <Name>Oil Change Indicator Status</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='OK' />
+             <EnumPair Value='1' Name='Warning' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>filterStatus</Id>
+           <Name>Filter Status</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>26</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='OK' />
+             <EnumPair Value='1' Name='Warning' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>systemStatus</Id>
+           <Name>System Status</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>28</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='OK' />
+             <EnumPair Value='1' Name='Warning' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>14</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>Reserved</Description>
+           <BitLength>2</BitLength>
+           <BitOffset>30</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>15</Order>
+           <Id>salinity</Id>
+           <Name>Salinity</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>ppm</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>16</Order>
+           <Id>productWaterTemperature</Id>
+           <Name>Product Water Temperature</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>K</Units>
+                  <Type>Temperature</Type>
+                  <Resolution>0.01</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>17</Order>
+           <Id>preFilterPressure</Id>
+           <Name>Pre-filter Pressure</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>hPa</Units>
+                  <Type>Pressure</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>18</Order>
+           <Id>postFilterPressure</Id>
+           <Name>Post-filter Pressure</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>hPa</Units>
+                  <Type>Pressure</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>19</Order>
+           <Id>feedPressure</Id>
+           <Name>Feed Pressure</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>96</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>kPa</Units>
+                  <Type>Pressure</Type>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>20</Order>
+           <Id>systemHighPressure</Id>
+           <Name>System High Pressure</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>112</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>kPa</Units>
+                  <Type>Pressure</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>21</Order>
+           <Id>productWaterFlow</Id>
+           <Name>Product Water Flow</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>128</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>L/h</Units>
+           <Resolution>0.1</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>22</Order>
+           <Id>brineWaterFlow</Id>
+           <Name>Brine Water Flow</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>144</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>L/h</Units>
+           <Resolution>0.1</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>23</Order>
+           <Id>runTime</Id>
+           <Name>Run Time</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>160</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>s</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>130576</PGN>
        <Id>smallCraftStatus</Id>
        <Description>Small Craft Status</Description>

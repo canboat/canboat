@@ -226,6 +226,7 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
 #define LOOKUP_WIND_REFERENCE ( ",0=True (ground referenced to North),1=Magnetic (ground referenced to Magnetic North),2=Apparent,3=True (boat referenced),4=True (water referenced)" )
 
 #define LOOKUP_YES_NO ( ",0=No,1=Yes" )
+#define LOOKUP_OK_WARNING ( ",0=OK,1=Warning" )
 
 #define LOOKUP_DIRECTION_REFERENCE ( ",0=True,1=Magnetic" )
 
@@ -2618,6 +2619,43 @@ Pgn pgnList[] =
   , { "Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Station ID", BYTES(8), RES_ASCII, false, 0, "" }
+  , { 0 }
+  }
+}
+
+  /* http://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
+
+  This PGN may be requested or used to command and configure a number of Watermaker controls. The Command Group Function PGN 126208
+  is used perform the following: start/stop a production, start/stop rinse or flush operation , start/stop low and high pressure
+  pump and perform an emergency stop. The Request Group Function PGN 126208 or ISO Request PGN 059904 may be used to request this
+  PGN. This PGN also provides Watermaker status and measurement information. The PGN is broadcast periodically.
+
+  */
+,
+{ "Watermaker Input Setting and Status", 130567, true, 24, 0,
+  { { "Watermaker Operating State", 6, RES_LOOKUP, false, "0=Stopped,1=Starting,2=Running,3=Stopping,4=Flushing,5=Rinsing,6=Initiating,7=Manual Mode,62=Error,63=Unavailable", "" }
+  , { "Production Start/Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Rinse Start/Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Low Pressure Pump Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "High Pressure Pump Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Emergency Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Product Solenoid Valve Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "Flush Mode Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Salinity Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "Sensor Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "Oil Change Indicator Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "Filter Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "System Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "Reserved" }
+  , { "Salinity", BYTES(2), RES_INTEGER, false, "ppm", "" }
+  , { "Product Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
+  , { "Pre-filter Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
+  , { "Post-filter Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
+  , { "Feed Pressure", BYTES(2), RES_PRESSURE, true, "kPa", "" }
+  , { "System High Pressure", BYTES(2), RES_PRESSURE, false, "kPa", "" }
+  , { "Product Water Flow", BYTES(2), 0.1, true, "L/h", "" }
+  , { "Brine Water Flow", BYTES(2), 0.1, true, "L/h", "" }
+  , { "Run Time", BYTES(4), RES_INTEGER, false, "s", "" }
   , { 0 }
   }
 }
