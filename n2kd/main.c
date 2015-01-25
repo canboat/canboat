@@ -143,11 +143,14 @@ StringBuffer nmeaMessage;/* Buffer for sending to NMEA0183 TCP clients */
 
 #define MIN_PGN (59391)
 #define MAX_PGN (131000)
-#define ACTISENSE_BEM (0x400000)
+#define ACTISENSE_BEM (0x40000)
 #define ACTISENSE_RNG (0x100)
+#define NMEA_RNG (MAX_PGN - MIN_PGN + 1)
 
-#define PGN_SPACE (ACTISENSE_RNG + MAX_PGN - MIN_PGN)
-#define PrnToIdx(prn) ((prn <= MAX_PGN) ? (prn - MIN_PGN) : ((prn <= ACTISENSE_BEM + ACTISENSE_RNG) ? (prn - ACTISENSE_BEM) : -1))
+#define PGN_SPACE (ACTISENSE_RNG + NMEA_RNG)
+#define PrnToIdx(prn) ((prn <= MAX_PGN) ? (prn - MIN_PGN) : \
+                       ((prn <= ACTISENSE_BEM + ACTISENSE_RNG && prn >= ACTISENSE_BEM) ? (prn + NMEA_RNG - ACTISENSE_BEM) : \
+                       -1))
 
 /*
  * We store messages and where they come from.
@@ -593,7 +596,7 @@ void writeAllClients(void)
 # endif
 }
 
-void storeMessage(char * line, size_t len)
+static bool storeMessage(char * line, size_t len)
 {
   char *s, *e = 0, *e2;
   Message * m;
@@ -603,6 +606,7 @@ void storeMessage(char * line, size_t len)
   time_t now;
   char * key2 = 0;
   int valid;
+  char value[16];
 
   now = time(0);
 
@@ -610,32 +614,41 @@ void storeMessage(char * line, size_t len)
 
   if (!strstr(line, "\"fields\":"))
   {
-    logDebug("Ignore pgn %u without fields\n", prn);
-    return;
+    logDebug("Ignore: pgn %u without fields\n", prn);
+    return false;
   }
   if (memcmp(line, "{\"timestamp", 11) != 0)
   {
-    logDebug("Ignore '%s'\n", line);
-    return;
+    logDebug("Ignore: no timestamp: '%s'\n", line);
+    return false;
   }
   if (memcmp(line + len - 2, "}}", 2) != 0)
   {
-    logDebug("Ignore '%s' (end)\n", line);
-    return;
+    logDebug("Ignore: no line end: '%s'\n", line);
+    return false;
   }
-  s = strstr(line, "\"src\":");
-  if (s)
+
+  if (getJSONValue(line, "src", value, sizeof(value)))
   {
-    if (sscanf(s + sizeof("\"src\":"), "%u\",\"dst\":\"%u\",\"pgn\":\"%u\"", &src, &dst, &prn))
-    {
-#ifdef DEBUG
-      logDebug("prn=%u src=%u\n", prn, src);
-#endif
-    }
+    sscanf(value, "%d", &src);
   }
-  if (prn == 0 || prn > MAX_PGN)
+
+  if (getJSONValue(line, "dst", value, sizeof(value)))
   {
-    return;
+    sscanf(value, "%d", &dst);
+  }
+
+  if (getJSONValue(line, "pgn", value, sizeof(value)))
+  {
+    sscanf(value, "%d", &prn);
+  }
+
+  idx = PrnToIdx(prn);
+  logDebug("src=%d dst=%d prn=%d idx=%d\n", src, dst, prn, idx);
+  if (idx < 0)
+  {
+    logError("Ignore: prn %d: '%s'\n", prn, line);
+    return false;
   }
 
   /* Look for a secondary key */
@@ -672,12 +685,6 @@ void storeMessage(char * line, size_t len)
     }
   }
 
-  idx = PrnToIdx(prn);
-  if (idx < 0)
-  {
-    logAbort("PRN %d is out of range\n", prn);
-  }
-
   pgn = pgnIdx[idx];
   if (!pgn)
   {
@@ -712,7 +719,7 @@ void storeMessage(char * line, size_t len)
       if (!e)
       {
         logDebug("Cannot find end of description in %s\n", s);
-        return;
+        return false;
       }
       logDebug("New PGN '%.*s'\n", e - s, s);
       pgn->p_description = malloc(e - s + 1);
@@ -813,18 +820,28 @@ void storeMessage(char * line, size_t len)
   }
   logDebug("stored prn %d timeout=%d 2ndKey=%d\n", prn, valid, k);
   m->m_time = now + valid;
+  return true;
 }
 
 void handleClientRequest(int i)
 {
   ssize_t r;
   char * p;
+  size_t remain;
 
-  r = read(stream[i].fd, stream[i].buffer + stream[i].len, sizeof(stream[i].buffer) - 1 - stream[i].len);
-  logDebug("read %s i=%d fd=%d r=%d\n", streamTypeName[stream[i].type], i, stream[i].fd, r);
+  if (stream[i].len >= sizeof(stream[i].buffer) - 2)
+  {
+    logAbort("Input line on stream %d too long: %s\n", i, stream[i].buffer);
+  }
+  remain = sizeof(stream[i].buffer) - stream[i].len - 2;
+
+  logDebug("handleClientRequest: read i=%d\n", i);
+  logDebug("read %s i=%d fd=%d len=%u remain=%u\n", streamTypeName[stream[i].type], i, stream[i].fd, stream[i].len, remain);
+  r = read(stream[i].fd, stream[i].buffer + stream[i].len, remain);
 
   if (r <= 0)
   {
+    logDebug("read %s i=%d fd=%d r=%d\n", streamTypeName[stream[i].type], i, stream[i].fd, r);
     if (stream[i].type == DATA_INPUT_STREAM)
     {
       logAbort("EOF on reading stdin\n");
@@ -835,33 +852,33 @@ void handleClientRequest(int i)
 
   stream[i].len += r;
   stream[i].buffer[stream[i].len] = 0;
-  while (r > 0)
+  while (stream[i].len > 0)
   {
-    p = strchr(stream[i].buffer, '\n');
-    if (p)
-    {
-      size_t len = p - stream[i].buffer;
-      sbAppendData(&tcpMessage, stream[i].buffer, len + 1);
-      if (stream[i].type != DATA_INPUT_STREAM || stream[outputIdx].type == DATA_OUTPUT_COPY)
-      {
-        /* Send all TCP client input and the main stdin stream if the mode is -o */
-        /* directly to stdout */
-        sbAppendData(&outMessage, stream[i].buffer, len + 1);
-      }
-      *p = 0;
-      convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
-      storeMessage(stream[i].buffer, len);
-      p++, len++;
+    size_t len;
 
-      /* Now remove [buffer..p> */
-      memmove(stream[i].buffer, p, strlen(p));
-      stream[i].len -= len;
-      r -= len;
-    }
-    else
+    p = strchr(stream[i].buffer, '\n');
+    if (!p)
     {
-      r = 0;
+      break;
     }
+    len = p - stream[i].buffer;
+    sbAppendData(&tcpMessage, stream[i].buffer, len + 1);
+    if (stream[i].type != DATA_INPUT_STREAM || stream[outputIdx].type == DATA_OUTPUT_COPY)
+    {
+      /* Send all TCP client input and the main stdin stream if the mode is -o */
+      /* directly to stdout */
+      sbAppendData(&outMessage, stream[i].buffer, len + 1);
+    }
+    *p = 0;
+    if (storeMessage(stream[i].buffer, len))
+    {
+      convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
+    }
+    p++, len++;
+    stream[i].len -= len;
+
+    /* Now remove [buffer..p> == the entire line */
+    memmove(stream[i].buffer, p, stream[i].len + 1);
   }
 }
 

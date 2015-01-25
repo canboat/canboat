@@ -193,8 +193,8 @@ void sbAppendData(StringBuffer * sb, const void * data, size_t len)
   sb->len += len;
   sb->data[sb->len] = 0;
   logDebug("Appended %u bytes to %p len %u\n", len, sb->data, sb->len);
-  logDebug("+ [%1.*s]\n", len, data);
-  logDebug("= [%1.*s]\n", sb->len, sb->data);
+  //logDebug("+ [%1.*s]\n", len, data);
+  //logDebug("= [%1.*s]\n", sb->len, sb->data);
 }
 
 void sbAppendString(StringBuffer * sb, const char * string)
@@ -238,6 +238,7 @@ int getJSONValue( const char * message, const char * fieldName, char * value, si
     while ((isdigit(*loc) || *loc == '.' || *loc == '-' || *loc == 'E' || *loc == 'e' || *loc == '+') && len > 1)
     {
       *value++ = *loc++;
+      len--;
     }
     *value = 0;
     return 1;
@@ -295,6 +296,7 @@ int getJSONValue( const char * message, const char * fieldName, char * value, si
     {
       *value++ = *loc++;
     }
+    len--;
   }
   *value = 0;
   return 1;
