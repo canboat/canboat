@@ -1622,7 +1622,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
     {
       mprintf("\"%s\":", pgn->camelDescription);
     }
-    mprintf("{\"timestamp\":\"%s\",\"prio\":\"%u\",\"src\":\"%u\",\"dst\":\"%u\",\"pgn\":\"%u\",\"description\":\"%s\"", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    mprintf("{\"timestamp\":\"%s\",\"prio\":%u,\"src\":%u,\"dst\":%u,\"pgn\":%u,\"description\":\"%s\"", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     braceCount = 1;
     sep = ",\"fields\":{";
   }
