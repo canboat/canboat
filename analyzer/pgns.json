@@ -3611,6 +3611,48 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "Signed":false,
             "EnumValues":[
               {"4": "Marine"}]}]},
+      "126983":{
+        "PGN":126983,
+        "Id":"alert",
+        "Description":"Alert",
+        "Complete":false,
+        "Length":8,
+        "RepeatingFields":0},
+      "126984":{
+        "PGN":126984,
+        "Id":"alertResponse",
+        "Description":"Alert Response",
+        "Complete":false,
+        "Length":8,
+        "RepeatingFields":0},
+      "126985":{
+        "PGN":126985,
+        "Id":"alertText",
+        "Description":"Alert Text",
+        "Complete":false,
+        "Length":8,
+        "RepeatingFields":0},
+      "126986":{
+        "PGN":126986,
+        "Id":"alertConfiguration",
+        "Description":"Alert Configuration",
+        "Complete":false,
+        "Length":8,
+        "RepeatingFields":0},
+      "126987":{
+        "PGN":126987,
+        "Id":"alertThreshold",
+        "Description":"Alert Threshold",
+        "Complete":false,
+        "Length":8,
+        "RepeatingFields":0},
+      "126988":{
+        "PGN":126988,
+        "Id":"alertValue",
+        "Description":"Alert Value",
+        "Complete":false,
+        "Length":8,
+        "RepeatingFields":0},
       "126992":{
         "PGN":126992,
         "Id":"systemTime",
@@ -11958,6 +12000,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
+      "130060":{
+        "PGN":130060,
+        "Id":"label",
+        "Description":"Label",
+        "Complete":false,
+        "Length":0,
+        "RepeatingFields":0},
+      "130061":{
+        "PGN":130061,
+        "Id":"channelSourceConfiguration",
+        "Description":"Channel Source Configuration",
+        "Complete":false,
+        "Length":0,
+        "RepeatingFields":0},
       "130064":{
         "PGN":130064,
         "Id":"routeAndWpServiceDatabaseList",
@@ -13201,6 +13257,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "Units":"kPa",
             "Resolution":210000,
             "Signed":false}]},
+      "130316":{
+        "PGN":130316,
+        "Id":"temperatureExtendedRange",
+        "Description":"Temperature Extended Range",
+        "Complete":false,
+        "Length":8,
+        "RepeatingFields":0},
       "130320":{
         "PGN":130320,
         "Id":"tideStationData",
@@ -13941,6 +14004,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
+      "130560":{
+        "PGN":130560,
+        "Id":"payloadMass",
+        "Description":"Payload Mass",
+        "Complete":false,
+        "Length":0,
+        "RepeatingFields":0},
       "130567":{
         "PGN":130567,
         "Id":"watermakerInputSettingAndStatus",

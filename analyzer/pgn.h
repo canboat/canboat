@@ -1006,6 +1006,42 @@ Pgn pgnList[] =
   }
 }
 
+,
+{ "Alert", 126983, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Alert Response", 126984, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Alert Text", 126985, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Alert Configuration", 126986, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Alert Threshold", 126987, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Alert Value", 126988, false, 8, 0,
+  { { 0 }
+  }
+}
+
   /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
 ,
 { "System Time", 126992, true, 8, 0,
@@ -2310,6 +2346,18 @@ Pgn pgnList[] =
 }
 
 ,
+{ "Label", 130060, false, 0, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Channel Source Configuration", 130061, false, 0, 0,
+  { { 0 }
+  }
+}
+
+,
 { "Route and WP Service - Database List", 130064, false, 8, 9,
   { { "Start Database ID", BYTES(1), 1, false, 0, "" }
   , { "nItems", BYTES(1), 1, false, 0, "" }
@@ -2553,6 +2601,12 @@ Pgn pgnList[] =
 }
 
 ,
+{ "Temperature Extended Range", 130316, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
 { "Tide Station Data", 130320, true, 20, 0,
   { { "Mode", 4, RES_LOOKUP, false, LOOKUP_RESIDUAL_MODE, "" }
   , { "Tide Tendency", 2, RES_LOOKUP, false, ",0=Falling,1=Rising", "" }
@@ -2645,6 +2699,12 @@ Pgn pgnList[] =
   , { "Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Station ID", BYTES(8), RES_ASCII, false, 0, "" }
   , { 0 }
+  }
+}
+
+,
+{ "Payload Mass", 130560, false, 0, 0,
+  { { 0 }
   }
 }
 

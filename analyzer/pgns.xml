@@ -4085,6 +4085,54 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>126983</PGN>
+       <Id>alert</Id>
+       <Description>Alert</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126984</PGN>
+       <Id>alertResponse</Id>
+       <Description>Alert Response</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126985</PGN>
+       <Id>alertText</Id>
+       <Description>Alert Text</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126986</PGN>
+       <Id>alertConfiguration</Id>
+       <Description>Alert Configuration</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126987</PGN>
+       <Id>alertThreshold</Id>
+       <Description>Alert Threshold</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126988</PGN>
+       <Id>alertValue</Id>
+       <Description>Alert Value</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>126992</PGN>
        <Id>systemTime</Id>
        <Description>System Time</Description>
@@ -13467,6 +13515,22 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>130060</PGN>
+       <Id>label</Id>
+       <Description>Label</Description>
+       <Complete>false</Complete>
+       <Length>0</Length>
+       <RepeatingFields>0</RepeatingFields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130061</PGN>
+       <Id>channelSourceConfiguration</Id>
+       <Description>Channel Source Configuration</Description>
+       <Complete>false</Complete>
+       <Length>0</Length>
+       <RepeatingFields>0</RepeatingFields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>130064</PGN>
        <Id>routeAndWpServiceDatabaseList</Id>
        <Description>Route and WP Service - Database List</Description>
@@ -14874,6 +14938,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>130316</PGN>
+       <Id>temperatureExtendedRange</Id>
+       <Description>Temperature Extended Range</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>130320</PGN>
        <Id>tideStationData</Id>
        <Description>Tide Station Data</Description>
@@ -15693,6 +15765,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Signed>false</Signed>
          </Field>
        </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130560</PGN>
+       <Id>payloadMass</Id>
+       <Description>Payload Mass</Description>
+       <Complete>false</Complete>
+       <Length>0</Length>
+       <RepeatingFields>0</RepeatingFields>
     </PGNInfo>
     <PGNInfo>
        <PGN>130567</PGN>
