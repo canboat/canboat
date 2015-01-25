@@ -80,6 +80,21 @@ typedef enum StreamType
 , SOCKET_TYPE_MAX
 } StreamType;
 
+const char * streamTypeName[] =
+{ "Any"
+, "JSON client"
+, "JSON stream"
+, "NMEA0183 stream"
+, "JSON server"
+, "JSON stream server"
+, "NMEA0183 stream server"
+, "Data input stream"
+, "Data output sink"
+, "Data output copy"
+, "Data output stream"
+, "<Max>"
+};
+
 ReadHandler readHandlers[SOCKET_TYPE_MAX] =
 { 0
 , handleClientRequest
@@ -210,6 +225,11 @@ static int secondaryKeyTimeout[] =
 
 /*****************************************************************************************/
 
+static void breakHere(void)
+{
+  abort();
+}
+
 int64_t epoch(void)
 {
   struct timeval t;
@@ -228,7 +248,7 @@ int setFdUsed(SOCKET fd, StreamType ct)
   /* Find a free entry in socketFd(i) */
   for (i = 0; i <= socketIdxMax; i++)
   {
-    if (stream[i].fd == -1 || stream[i].fd == fd)
+    if (stream[i].fd == INVALID_SOCKET || stream[i].fd == fd)
     {
       break;
     }
@@ -249,12 +269,10 @@ int setFdUsed(SOCKET fd, StreamType ct)
   FD_SET(fd, &activeSet);
   if (stream[i].readHandler)
   {
-    logDebug("Enabling fd=%d in the readSet\n", fd);
     FD_SET(fd, &readSet);
   }
   else
   {
-    logDebug("Disabling fd=%d in the readSet\n", fd);
     FD_CLR(fd, &readSet);
   }
 
@@ -265,45 +283,43 @@ int setFdUsed(SOCKET fd, StreamType ct)
   case CLIENT_NMEA0183_STREAM:
   case DATA_OUTPUT_STREAM:
   case DATA_OUTPUT_COPY:
-    logDebug("Enabling fd=%d in the writeSet\n", fd);
     FD_SET(fd, &writeSet);
     break;
   default:
-    logDebug("Clear fd=%d in the writeSet\n", fd);
     FD_CLR(fd, &writeSet);
   }
 
   socketIdxMax = CB_MAX(socketIdxMax, i);
   socketFdMax = CB_MAX(socketFdMax, fd);
-  logDebug("New client %u type %d %u..%u fd=%d fdMax=%d\n", i, stream[i].type, socketIdxMin, socketIdxMax, fd, socketFdMax);
+  logDebug("New %s %u (%u..%u fd=%d fdMax=%d)\n", streamTypeName[stream[i].type], i, socketIdxMin, socketIdxMax, fd, socketFdMax);
 
   return i;
 }
 
 static void closeStream(int i)
 {
-  logDebug("closeStream(%d)\n", i);
+  int j;
 
   close(stream[i].fd);
   FD_CLR(stream[i].fd, &activeSet);
   FD_CLR(stream[i].fd, &readSet);
   FD_CLR(stream[i].fd, &writeSet);
 
-  stream[i].fd = -1; /* Free for re-use */
+  stream[i].fd = INVALID_SOCKET; /* Free for re-use */
   if (i == socketIdxMax)
   {
-    socketIdxMax = -1;
-    socketFdMax = -1;
-    for (i--; i >= 0; i--)
+    socketIdxMax = 0;
+    socketFdMax = 0;
+    for (j = i - 1; j >= 0; j--)
     {
-      if (stream[i].fd != -1)
+      if (stream[j].fd != INVALID_SOCKET)
       {
-        socketIdxMax = CB_MAX(socketIdxMax, i);
-        socketFdMax = CB_MAX(socketFdMax, stream[i].fd);
+        socketIdxMax = CB_MAX(socketIdxMax, j);
+        socketFdMax = CB_MAX(socketFdMax, stream[j].fd);
       }
     }
   }
-  logDebug("closeStream(%d) IdMax=%u FdMax=%d\n", i, socketIdxMax, socketFdMax);
+  logDebug("closeStream(%d) (%u..%u fdMax=%d)\n", i, socketIdxMin, socketIdxMax, socketFdMax);
 }
 
 # define INITIAL_ALLOC    32768
@@ -488,17 +504,11 @@ void writeAllClients(void)
   logDebug("writeAllClients tcp.len=%d\n", tcpMessage.len);
   FD_ZERO(&ws);
 
-  if (debug)
-  {
-    state = getFullStateJSON();
-    logDebug("json=%s\n", state);
-  }
-
   if (socketIdxMax >= 0)
   {
     ws = writeSet;
     r = select(socketFdMax + 1, 0, &ws, 0, &timeout);
-    logDebug("write to %d streams max=%d\n", r, socketFdMax + 1);
+    logDebug("write to %d streams (%u..%u fdMax=%d)\n", r, socketIdxMin, socketIdxMax, socketFdMax);
 
     for (i = socketIdxMin; r > 0 && i <= socketIdxMax; i++)
     {
@@ -511,16 +521,13 @@ void writeAllClients(void)
       {
         logAbort("Stream %d contains invalid fd %d\n", i, fd);
       }
-      logDebug("write stream? i=%u fd=%d\n", i, fd);
-      logDebug("write stream? writable=%d\n", FD_ISSET(fd, &ws));
-      logDebug("write stream? type=%d\n", stream[i].type);
-      logDebug("write stream? i=%u fd=%d writable=%d type=%d\n", i, fd, FD_ISSET(fd, &ws), stream[i].type);
       if (fd > socketFdMax)
       {
-        logAbort("Inconsistent: fd[%u]=%d, max=%d\n", i, fd, socketFdMax);
+        logAbort("Inconsistent: fd[%u]=%d, fdMax=%d\n", i, fd, socketFdMax);
       }
       if (FD_ISSET(fd, &ws))
       {
+        logDebug("%s i=%u fd=%d writable=%d\n", streamTypeName[stream[i].type], i, fd, FD_ISSET(fd, &ws));
         r--;
         if (!now) now = epoch();
 
@@ -532,8 +539,10 @@ void writeAllClients(void)
             if (!state)
             {
               state = getFullStateJSON();
+              logDebug("json=%s", state);
             }
             write(fd, state, strlen(state));
+            logDebug("JSON: wrote %u to %d, closing\n", strlen(state), fd);
             closeStream(i);
           }
           break;
@@ -812,28 +821,15 @@ void handleClientRequest(int i)
   char * p;
 
   r = read(stream[i].fd, stream[i].buffer + stream[i].len, sizeof(stream[i].buffer) - 1 - stream[i].len);
-  logDebug("read i=%d fd=%d r=%d\n", i, stream[i].fd, r);
+  logDebug("read %s i=%d fd=%d r=%d\n", streamTypeName[stream[i].type], i, stream[i].fd, r);
 
-  if (r < 0)
-  {
-    if (stream[i].fd == stdinfd)
-    {
-      logAbort("Read %d on reading stdin\n", r);
-    }
-    closeStream(i);
-    return;
-  }
-
-  if (r == 0)
+  if (r <= 0)
   {
     if (stream[i].type == DATA_INPUT_STREAM)
     {
-      logAbort("EOF on reading stdin\n", r);
+      logAbort("EOF on reading stdin\n");
     }
-    else
-    {
-      closeStream(i);
-    }
+    closeStream(i);
     return;
   }
 
@@ -877,7 +873,7 @@ void checkReadEvents(void)
   size_t i;
   SOCKET fd;
 
-  logDebug("checkReadEvents maxfd = %d\n", socketFdMax);
+  logDebug("checkReadEvents fdMax=%d\n", socketFdMax);
 
   rs = readSet;
 
@@ -889,7 +885,6 @@ void checkReadEvents(void)
 
     if (fd >= 0 && FD_ISSET(fd, &rs))
     {
-      logDebug("Calling readHandler %p on %i\n", stream[i].readHandler, i);
       (stream[i].readHandler)(i);
       r--;
     }
