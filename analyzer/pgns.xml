@@ -139,7 +139,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>deviceInstanceLower</Id>
            <Name>Device Instance Lower</Name>
            <Description>ISO ECU Instance</Description>
-           <BitLength>4</BitLength>
+           <BitLength>3</BitLength>
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
@@ -149,9 +149,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>deviceInstanceUpper</Id>
            <Name>Device Instance Upper</Name>
            <Description>ISO Function Instance</Description>
-           <BitLength>4</BitLength>
-           <BitOffset>36</BitOffset>
-           <BitStart>4</BitStart>
+           <BitLength>5</BitLength>
+           <BitOffset>35</BitOffset>
+           <BitStart>3</BitStart>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -215,20 +215,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>9</Order>
-           <Id>reserved</Id>
-           <Name>Reserved</Name>
-           <BitLength>2</BitLength>
+           <Id>industryGroup</Id>
+           <Name>Industry Group</Name>
+           <BitLength>3</BitLength>
            <BitOffset>60</BitOffset>
            <BitStart>4</BitStart>
-           <Signed>false</Signed>
-         </Field>
-         <Field>
-           <Order>10</Order>
-           <Id>industryCode</Id>
-           <Name>Industry Code</Name>
-           <BitLength>3</BitLength>
-           <BitOffset>62</BitOffset>
-           <BitStart>6</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
@@ -236,13 +227,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            </EnumValues>
          </Field>
          <Field>
-           <Order>11</Order>
+           <Order>10</Order>
            <Id>reserved</Id>
            <Name>Reserved</Name>
            <Description>ISO Self Configurable</Description>
-           <BitLength>3</BitLength>
-           <BitOffset>65</BitOffset>
-           <BitStart>1</BitStart>
+           <BitLength>1</BitLength>
+           <BitOffset>63</BitOffset>
+           <BitStart>7</BitStart>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -254,6 +245,40 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Complete>false</Complete>
        <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='4' Name='Marine' />
+           </EnumValues>
+         </Field>
+       </Fields>
     </PGNInfo>
     <PGNInfo>
        <PGN>65001</PGN>
@@ -2798,106 +2823,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
        <PGN>126720</PGN>
-       <Id>manufacturerProprietaryAddressableMultiFrame</Id>
-       <Description>Manufacturer Proprietary: Addressable Multi-Frame</Description>
-       <Complete>true</Complete>
-       <Length>8</Length>
-       <RepeatingFields>0</RepeatingFields>
-       <Fields>
-         <Field>
-           <Order>1</Order>
-           <Id>manufacturerCode</Id>
-           <Name>Manufacturer Code</Name>
-           <BitLength>11</BitLength>
-           <BitOffset>0</BitOffset>
-           <BitStart>0</BitStart>
-                  <Type>Manufacturer code</Type>
-           <Signed>false</Signed>
-         </Field>
-         <Field>
-           <Order>2</Order>
-           <Id>reserved</Id>
-           <Name>Reserved</Name>
-           <BitLength>2</BitLength>
-           <BitOffset>11</BitOffset>
-           <BitStart>3</BitStart>
-           <Signed>false</Signed>
-         </Field>
-         <Field>
-           <Order>3</Order>
-           <Id>industryCode</Id>
-           <Name>Industry Code</Name>
-           <BitLength>3</BitLength>
-           <BitOffset>13</BitOffset>
-           <BitStart>5</BitStart>
-                  <Type>Lookup table</Type>
-           <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
-         </Field>
-       </Fields>
-    </PGNInfo>
-    <PGNInfo>
-       <PGN>126720</PGN>
-       <Id>airmarAddressableMultiFrame</Id>
-       <Description>Airmar: Addressable Multi-Frame</Description>
-       <Complete>true</Complete>
-       <Length>8</Length>
-       <RepeatingFields>0</RepeatingFields>
-       <Fields>
-         <Field>
-           <Order>1</Order>
-           <Id>manufacturerCode</Id>
-           <Name>Manufacturer Code</Name>
-           <Description>Airmar</Description>
-           <BitLength>11</BitLength>
-           <BitOffset>0</BitOffset>
-           <BitStart>0</BitStart>
-           <Match>135</Match>
-                  <Type>Manufacturer code</Type>
-           <Signed>false</Signed>
-         </Field>
-         <Field>
-           <Order>2</Order>
-           <Id>reserved</Id>
-           <Name>Reserved</Name>
-           <BitLength>2</BitLength>
-           <BitOffset>11</BitOffset>
-           <BitStart>3</BitStart>
-           <Signed>false</Signed>
-         </Field>
-         <Field>
-           <Order>3</Order>
-           <Id>industryCode</Id>
-           <Name>Industry Code</Name>
-           <Description>Marine Industry</Description>
-           <BitLength>3</BitLength>
-           <BitOffset>13</BitOffset>
-           <BitStart>5</BitStart>
-           <Match>4</Match>
-                  <Type>Lookup table</Type>
-           <Signed>false</Signed>
-         </Field>
-         <Field>
-           <Order>4</Order>
-           <Id>proprietaryId</Id>
-           <Name>Proprietary ID</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>16</BitOffset>
-           <BitStart>0</BitStart>
-                  <Type>Integer</Type>
-                  <Resolution>1</Resolution>
-           <Signed>false</Signed>
-         </Field>
-       </Fields>
-    </PGNInfo>
-    <PGNInfo>
-       <PGN>126720</PGN>
        <Id>airmarAttitudeOffset</Id>
        <Description>Airmar: Attitude Offset</Description>
        <Complete>true</Complete>
-       <Length>8</Length>
+       <Length>9</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -2919,6 +2848,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2992,7 +2922,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarCalibrateCompass</Id>
        <Description>Airmar: Calibrate Compass</Description>
        <Complete>true</Complete>
-       <Length>8</Length>
+       <Length>24</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -3014,6 +2944,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -3201,7 +3132,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarTrueWindOptions</Id>
        <Description>Airmar: True Wind Options</Description>
        <Complete>true</Complete>
-       <Length>8</Length>
+       <Length>6</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -3223,6 +3154,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -3407,7 +3339,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarSimulateMode</Id>
        <Description>Airmar: Simulate Mode</Description>
        <Complete>true</Complete>
-       <Length>8</Length>
+       <Length>6</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -3429,6 +3361,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -3488,7 +3421,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarCalibrateDepth</Id>
        <Description>Airmar: Calibrate Depth</Description>
        <Complete>true</Complete>
-       <Length>8</Length>
+       <Length>6</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -3510,6 +3443,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -3567,7 +3501,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarCalibrateSpeed</Id>
        <Description>Airmar: Calibrate Speed</Description>
        <Complete>true</Complete>
-       <Length>8</Length>
+       <Length>12</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -3589,6 +3523,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -3657,7 +3592,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>airmarCalibrateTemperature</Id>
        <Description>Airmar: Calibrate Temperature</Description>
        <Complete>true</Complete>
-       <Length>8</Length>
+       <Length>6</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -3679,6 +3614,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -3784,6 +3720,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -3862,8 +3799,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
        <PGN>126720</PGN>
-       <Id>airmarNmea2000Options</Id>
-       <Description>Airmar: NMEA 2000 options</Description>
+       <Id>airmarTemperatureFilter</Id>
+       <Description>Airmar: Temperature Filter</Description>
        <Complete>true</Complete>
        <Length>8</Length>
        <RepeatingFields>2</RepeatingFields>
@@ -3887,6 +3824,112 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>proprietaryId</Id>
+           <Name>Proprietary ID</Name>
+           <Description>Temperature Filter</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>44</Match>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>filterType</Id>
+           <Name>Filter type</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='no filter' />
+             <EnumPair Value='1' Name='basic IIR filter' />
+             <EnumPair Value='15' Name='data not available' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>Reserved</Description>
+           <BitLength>4</BitLength>
+           <BitOffset>28</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>sampleInterval</Id>
+           <Name>Sample interval</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>s</Units>
+           <Resolution>0.01</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>filterDuration</Id>
+           <Name>Filter duration</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>s</Units>
+           <Resolution>0.01</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126720</PGN>
+       <Id>airmarNmea2000Options</Id>
+       <Description>Airmar: NMEA 2000 options</Description>
+       <Complete>true</Complete>
+       <Length>6</Length>
+       <RepeatingFields>2</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Airmar</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>135</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -3926,6 +3969,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <EnumValues>
              <EnumPair Value='0' Name='Measure Interval' />
              <EnumPair Value='1' Name='Requested by user' />
+             <EnumPair Value='2' Name='reserved' />
+             <EnumPair Value='3' Name='data not available' />
            </EnumValues>
          </Field>
          <Field>
@@ -3938,6 +3983,104 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitStart>2</BitStart>
                   <Type>Binary data</Type>
            <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126720</PGN>
+       <Id>airmarAddressableMultiFrame</Id>
+       <Description>Airmar: Addressable Multi-Frame</Description>
+       <Complete>true</Complete>
+       <Length>4</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Airmar</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>135</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>proprietaryId</Id>
+           <Name>Proprietary ID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126720</PGN>
+       <Id>manufacturerProprietaryAddressableMultiFrame</Id>
+       <Description>Manufacturer Proprietary: Addressable Multi-Frame</Description>
+       <Complete>true</Complete>
+       <Length>3</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='4' Name='Marine' />
+           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -4011,6 +4154,50 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Units>s</Units>
                   <Type>Time</Type>
                   <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126993</PGN>
+       <Id>heartbeat</Id>
+       <Description>Heartbeat</Description>
+       <Complete>true</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>dataTransmitOffset</Id>
+           <Name>Data transmit offset</Name>
+           <Description>Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset.</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>s</Units>
+           <Resolution>0.01</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>sequenceCounter</Id>
+           <Name>Sequence Counter</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>Reserved</Description>
+           <BitLength>24</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -4880,14 +5067,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>transmissionParametersDynamic</Id>
        <Description>Transmission Parameters, Dynamic</Description>
        <Complete>true</Complete>
-       <Length>7</Length>
+       <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
            <Order>1</Order>
            <Id>engineInstance</Id>
            <Name>Engine Instance</Name>
-           <BitLength>2</BitLength>
+           <BitLength>8</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
@@ -4902,8 +5089,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>transmissionGear</Id>
            <Name>Transmission Gear</Name>
            <BitLength>2</BitLength>
-           <BitOffset>2</BitOffset>
-           <BitStart>2</BitStart>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
@@ -4917,9 +5104,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>3</Order>
            <Id>reserved</Id>
            <Name>Reserved</Name>
-           <BitLength>4</BitLength>
-           <BitOffset>4</BitOffset>
-           <BitStart>4</BitStart>
+           <BitLength>6</BitLength>
+           <BitOffset>10</BitOffset>
+           <BitStart>2</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -4927,7 +5115,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>oilPressure</Id>
            <Name>Oil pressure</Name>
            <BitLength>16</BitLength>
-           <BitOffset>8</BitOffset>
+           <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>hPa</Units>
                   <Type>Pressure</Type>
@@ -4938,7 +5126,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>oilTemperature</Id>
            <Name>Oil temperature</Name>
            <BitLength>16</BitLength>
-           <BitOffset>24</BitOffset>
+           <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>K</Units>
                   <Type>Temperature</Type>
@@ -4950,10 +5138,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>discreteStatus1</Id>
            <Name>Discrete Status 1</Name>
            <BitLength>8</BitLength>
-           <BitOffset>40</BitOffset>
+           <BitOffset>48</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Integer</Type>
                   <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
        </Fields>

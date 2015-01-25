@@ -1017,6 +1017,16 @@ Pgn pgnList[] =
   }
 }
 
+  /* http://www.nmea.org/Assets/20130905%20nmea%202000%20heartbeat%20amendment%20final.pdf */
+,
+{ "Heartbeat", 126993, true, 8, 0,
+  { { "Data transmit offset", BYTES(2), 0.01, false, "s", "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset." }
+  , { "Sequence Counter", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Reserved", BYTES(3), RES_BINARY, false, 0, "Reserved" }
+  , { 0 }
+  }
+}
+
 ,
 { "Product Information", 126996, false, 0x86, 0,
   { { "NMEA 2000 Version", BYTES(2), 1, false, 0, "" }
