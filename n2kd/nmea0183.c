@@ -212,9 +212,9 @@ static void nmea0183VesselHeading( StringBuffer * msg183, const char * msg )
 === MWV - Wind Speed and Angle ===
 
 ------------------------------------------------------------------------------
-        1   2 3   4 5
-        |   | |   | |
- $--MWV,x.x,a,x.x,a*hh<CR><LF>
+        1   2 3   4 5 6
+        |   | |   | | |
+ $--MWV,x.x,a,x.x,a,a*hh<CR><LF>
 ------------------------------------------------------------------------------
 
 Field Number:
@@ -223,7 +223,8 @@ Field Number:
 2. Reference, R = Relative, T = True
 3. Wind Speed
 4. Wind Speed Units, K/M/N
-5. Checksum
+5. Active (A) or invalid (V)
+6. Checksum
 */
 
 static void nmea0183WindData( StringBuffer * msg183, const char * msg )
@@ -242,11 +243,11 @@ static void nmea0183WindData( StringBuffer * msg183, const char * msg )
   }
   if (strcmp(reference, "True") == 0)
   {
-    nmea0183CreateMessage(msg183, src, "MWV,%s,T,%s,N", angle, speed);
+    nmea0183CreateMessage(msg183, src, "MWV,%s,T,%s,N,A", angle, speed);
   }
   else if (strcmp(reference, "Apparent") == 0)
   {
-    nmea0183CreateMessage(msg183, src, "MWV,%s,R,%s,N", angle, speed);
+    nmea0183CreateMessage(msg183, src, "MWV,%s,R,%s,N,A", angle, speed);
   }
 }
 
