@@ -35,6 +35,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include <signal.h>
 #include <sys/select.h>
 #include "nmea0183.h"
+#include "n2kd.h"
 
 #define PORT 2597
 
@@ -42,6 +43,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 uint16_t port = PORT;
 char * srcFilter = 0;
+bool   rateLimit;
 
 uint32_t protocol = 1;
 int      debug = 0;
@@ -955,6 +957,10 @@ int main (int argc, char **argv)
       srcFilter = argv[2];
       argc--, argv++;
     }
+    else if (strcasecmp(argv[1], "--rate-limit") == 0)
+    {
+      rateLimit = true;
+    }
     else if (strcasecmp(argv[1], "-p") == 0 && argc > 2)
     {
       unsigned int uPort;
@@ -967,7 +973,15 @@ int main (int argc, char **argv)
     }
     else
     {
-      fprintf(stderr, "usage: n2kd [-d] [-q] [--src-filter <srclist>] [-o] [-p <port>] [-r]\n\n"COPYRIGHT);
+      fprintf(stderr, "usage: n2kd [-d] [-q] [-o] [-r] [--src-filter <srclist>] [--rate-limit] [-p <port>]\n\n"
+                      "  -d                      debug mode\n"
+                      "  -q                      quiet mode\n"
+                      "  -o                      output mode, send all TCP client data to stdout (as well as stdin)\n"
+                      "  -r                      restrict mode, send no data to stdout\n"
+                      "  --src-filter <srclist>  restrict NMEA0183 stream to particular N2K sources\n"
+                      "  --rate-limit            restrict NMEA0183 stream to one message per source per second\n"
+                      "  -p <port>               Start servers at <port> instead of 2597\n\n"
+                      COPYRIGHT);
       exit(1);
     }
     argc--, argv++;

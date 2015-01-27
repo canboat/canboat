@@ -28,7 +28,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include "common.h"
 #include <math.h>
 
+#include "nmea0183.h"
+#include "n2kd.h"
+
 extern char * srcFilter;
+extern bool rateLimit;
 
 /*
  * Which PGNs do we care and know about for now?
@@ -47,9 +51,16 @@ extern char * srcFilter;
  *
  */
 
-#define PGN_VESSEL_HEADING 127250
-#define PGN_WIND_DATA      130306
-#define PGN_WATER_DEPTH    128267
+#define PGN_VESSEL_HEADING (127250)
+#define PGN_WIND_DATA      (130306)
+#define PGN_WATER_DEPTH    (128267)
+
+#define VESSEL_HEADING (0)
+#define WIND_DATA      (1)
+#define WATER_DEPTH    (2)
+#define SENTENCE_COUNT (3)
+
+static int64_t rateLimitPassed[256][SENTENCE_COUNT];
 
 static void nmea0183CreateMessage( StringBuffer * msg183, int src, const char * format, ...)
 {
@@ -361,12 +372,28 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
   int            prn;
   int            src;
   struct timeval tv;
+  int            j;
 
   if (!getJSONValue(msg, "pgn", str, sizeof(str)))
   {
     return;
   }
   prn = atoi(str);
+
+  switch (prn)
+  {
+  case PGN_VESSEL_HEADING:
+    j = VESSEL_HEADING;
+    break;
+  case PGN_WIND_DATA:
+    j = WIND_DATA;
+    break;
+  case PGN_WATER_DEPTH:
+    j = WATER_DEPTH;
+    break;
+  default:
+    return;
+  }
 
   if (!getJSONValue(msg, "src", str, sizeof(str)))
   {
@@ -378,16 +405,35 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
     return;
   }
 
+  logDebug("NMEA passed filter for prn %d src %d\n", src, prn);
+
+  if (rateLimit)
+  {
+    int64_t now = epoch();
+
+    if (rateLimitPassed[src][j] > (now - 1000L))
+    {
+      logDebug("Ratelimit for prn %d src %d not reached\n", src, prn);
+      return;
+    }
+    rateLimitPassed[src][j] = now;
+    logDebug("Ratelimit passed for prn %d src %d\n", src, prn);
+  }
+
   switch (prn)
   {
   case PGN_VESSEL_HEADING:
     nmea0183VesselHeading(msg183, src, msg);
+    break;
   case PGN_WIND_DATA:
     nmea0183WindData(msg183, src, msg);
+    break;
   case PGN_WATER_DEPTH:
     nmea0183WaterDepth(msg183, src, msg);
+    break;
   default:
     return;
   }
+
 }
 
