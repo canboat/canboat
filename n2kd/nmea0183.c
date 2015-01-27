@@ -98,7 +98,17 @@ static void nmea0183CreateMessage( StringBuffer * msg183, const char * src, cons
 
   va_start(ap, format);
 
-  snprintf(line, sizeof(line), "$%02X", n);
+  // Convert the 8 bit value 'n' into a valid NMEA0183 style sender.
+  // The first implementation sent out a 2 digit hexadecimal number,
+  // but that throws some implementations of receivers off as they
+  // cannot handle numeric senders. So now we produce a 2 character
+  // code with the src value 0-255 translated into
+  // A..N A..N with A representing 0, B representing 1, etc.
+
+  snprintf(line, sizeof(line), "$%c%c"
+          , ('A' + ((n >> 4) & 0xf))
+          , ('A' + ((n     ) & 0xf))
+          );
   vsnprintf(line + 3, sizeof(line) - 3, format, ap);
   va_end(ap);
 
