@@ -1470,39 +1470,58 @@ void setSystemClock(uint16_t currentDate, uint32_t currentTime)
 #endif
 }
 
-void print_json_escaped(uint8_t *data, int len) 
+static void print_ascii_json_escaped(uint8_t *data, int len)
 {
-
   int c;
   int k;
-  for (k = 0; k < len; k++)
-    {
-      c = data[k];
-      switch(c)
-      {
-        case '\b':
-        case '\n':
-        case '\r':
-        case '\t':
-        case '\f':
-        case '"':
-        case '\\':
-        case '/':
 
-          if(c == '\b') mprintf("%s", "\\b");
-          else if(c == '\n') mprintf("%s", "\\n");
-          else if(c == '\r') mprintf("%s", "\\r");
-          else if(c == '\t') mprintf("%s", "\\t");
-          else if(c == '\f') mprintf("%s", "\\f");
-          else if(c == '"') mprintf("%s", "\\\"");
-          else if(c == '\\') mprintf("%s", "\\\\");
-          else if(c == '/') mprintf("%s", "\\/");
-          break;
-        default:
-          if (c >= ' ' && c <= '~')
-            mprintf("%c", c);
-      }
+  for (k = 0; k < len; k++)
+  {
+    c = data[k];
+    switch(c)
+    {
+      case '\b':
+        mprintf("%s", "\\b");
+        break;
+
+      case '\n':
+        mprintf("%s", "\\n");
+        break;
+
+      case '\r':
+        mprintf("%s", "\\r");
+        break;
+
+      case '\t':
+        mprintf("%s", "\\t");
+        break;
+
+      case '\f':
+        mprintf("%s", "\\f");
+        break;
+
+      case '"':
+        mprintf("%s", "\\\"");
+        break;
+
+      case '\\':
+        mprintf("%s", "\\\\");
+        break;
+
+      case '/':
+        mprintf("%s", "\\/");
+        break;
+
+      case '\377':
+        // 0xff has been seen on recent Simrad VHF systems, and it seems to indicate
+        // end-of-field, with noise following. Assume this does not break other systems.
+        return;
+
+      default:
+        if (c >= ' ' && c <= '~')
+          mprintf("%c", c);
     }
+  }
 }
 
 
@@ -1541,50 +1560,53 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
   size = device[msg->src]->packetList[index].size;
   dataEnd = dataStart + size;
 
-  for (;(index < ARRAY_SIZE(pgnList)) && (msg->pgn == pgnList[index].pgn); index++)
+  if (!pgnList[index].unknownPgn)
   {
-    matchedFixedField = true;
-    hasFixedField = false;
-
-    /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
-
-    pgn = &pgnList[index];
-
-    for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
+    for (;(index < ARRAY_SIZE(pgnList)) && (msg->pgn == pgnList[index].pgn); index++)
     {
-      field = pgn->fieldList[i];
-      if (!field.name || !field.size)
+      matchedFixedField = true;
+      hasFixedField = false;
+
+      /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
+
+      pgn = &pgnList[index];
+
+      for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
+      {
+        field = pgn->fieldList[i];
+        if (!field.name || !field.size)
+        {
+          break;
+        }
+
+        bits = field.size;
+
+        if (field.units && field.units[0] == '=')
+        {
+          int64_t value, desiredValue;
+          int64_t maxValue;
+
+          hasFixedField = true;
+          extractNumber(&field, data, startBit, field.size, &value, &maxValue);
+          desiredValue = strtol(field.units + 1, 0, 10);
+          if (value != desiredValue)
+          {
+            matchedFixedField = false;
+            break;
+          }
+        }
+        startBit += bits;
+        data += startBit / 8;
+        startBit %= 8;
+      }
+      if (! hasFixedField || (hasFixedField && matchedFixedField))
       {
         break;
       }
-
-      bits = field.size;
-
-      if (field.units && field.units[0] == '=')
-      {
-        int64_t value, desiredValue;
-        int64_t maxValue;
-
-        hasFixedField = true;
-        extractNumber(&field, data, startBit, field.size, &value, &maxValue);
-        desiredValue = strtol(field.units + 1, 0, 10);
-        if (value != desiredValue)
-        {
-          matchedFixedField = false;
-          break;
-        }
-      }
-      startBit += bits;
-      data += startBit / 8;
-      startBit %= 8;
-    }
-    if (! hasFixedField || (hasFixedField && matchedFixedField))
-    {
-      break;
     }
   }
 
-  if ((index >= ARRAY_SIZE(pgnList)) || (msg->pgn != pgnList[index].pgn))
+  if ((index >= ARRAY_SIZE(pgnList)) || (msg->pgn != pgnList[index].pgn && !pgnList[index].unknownPgn))
   {
     index = 0;
   }
@@ -1724,20 +1746,19 @@ ascii_string:
 
         if (showJson)
         {
-          print_json_escaped(data, len);
-        } else
+          print_ascii_json_escaped(data, len);
+        }
+        else
         {
           for (k = 0; k < len; k++)
           {
+            if (data[k] == 0xff)
+            {
+              break;
+            }
             if (data[k] >= ' ' && data[k] <= '~')
             {
-              int c = data[k];
-
-              if (showJson && (c == '\\'))
-              {
-                mprintf("%c", c);
-              }
-              mprintf("%c", c);
+              mprintf("%c", data[k]);
             }
           }
         }
@@ -1867,7 +1888,7 @@ ascii_string:
   return r;
 }
 
-void printPacket(size_t index, RawMessage * msg)
+void printPacket(size_t index, size_t unknownIndex, RawMessage * msg)
 {
   size_t fastPacketIndex;
   size_t bucket;
@@ -1983,8 +2004,8 @@ void printPacket(size_t index, RawMessage * msg)
    * If there are multiple PGN descriptions we have to find the matching
    * one.
    */
-  subIndex = index;
-  for (subIndex = index; subIndex < ARRAY_SIZE(pgnList) && (msg->pgn == pgnList[subIndex].pgn || !index); subIndex++)
+
+  for (subIndex = index; subIndex < ARRAY_SIZE(pgnList) && (msg->pgn == pgnList[subIndex].pgn); subIndex++)
   {
     if (printPgn(index, subIndex, msg)) /* Only the really matching ones will actually return true */
     {
@@ -1993,18 +2014,30 @@ void printPacket(size_t index, RawMessage * msg)
         logDebug("PGN %d matches version %zu\n", msg->pgn, subIndex - index);
       }
       mwrite(stdout);
-      break;
+      return;
     }
     else
     {
       mreset();
     }
   }
+
+  logDebug("PGN %d handled via index %zu\n", msg->pgn, unknownIndex);
+  if (printPgn(unknownIndex, unknownIndex, msg))
+  {
+    mwrite(stdout);
+  }
+  else
+  {
+    mreset();
+  }
+
 }
 
 bool printCanFormat(RawMessage * msg)
 {
   size_t i;
+  size_t unknownIndex = 0;
 
   if (onlySrc >=0 && onlySrc != msg->src)
   {
@@ -2019,25 +2052,33 @@ bool printCanFormat(RawMessage * msg)
       {
         if (msg->pgn == onlyPgn)
         {
-          printPacket(i, msg);
+          printPacket(i, unknownIndex, msg);
           return true;
         }
         continue;
       }
       if (!pgnList[i].size)
       {
-        return true; /* Determine size by raw packet first */
+        return true; /* We have field names, but no field sizes. */
       }
       /*
        * Found the pgn that matches this particular packet
        */
-      printPacket(i, msg);
+      printPacket(i, unknownIndex, msg);
       return true;
     }
+    else if (msg->pgn < pgnList[i].pgn)
+    {
+      break;
+    }
+    if (pgnList[i].unknownPgn)
+    {
+      unknownIndex = i;
+    }
   }
-  if (!onlyPgn && (i == ARRAY_SIZE(pgnList)))
+  if (!onlyPgn)
   {
-    printPacket(0, msg);
+    printPacket(unknownIndex, unknownIndex, msg);
   }
   return onlyPgn > 0;
 }

@@ -267,18 +267,20 @@ typedef struct
   Field      fieldList[28];     /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t   fieldCount;        /* Filled by C, no need to set in initializers. */
   char     * camelDescription;  /* Filled by C, no need to set in initializers. */
+  bool       unknownPgn;        /* Is this a catch-all for unknown PGNs? */
 } Pgn;
 
 
 Pgn pgnList[] =
 {
 
-{ "Unknown PGN", 0, false, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+/* PDU1 (addressed) single-frame range 0E800 to 0xEEFF (59392 - 61183) */
+
+{ "Unknown single-frame addressed", 0, false, 8, 0,
+  { { "Data", BYTES(8), RES_BINARY, false, 0, "" }
   , { 0 }
   }
+  , 0, 0, true
 }
 
   /************ Protocol PGNs ************/
@@ -321,6 +323,8 @@ Pgn pgnList[] =
   }
 }
 
+/* PDU1 (addressed) single-frame range 0EF00 to 0xEFFF (61184 - 61439) */
+
   /* The following probably have the wrong Proprietary ID */
 ,
 { "Seatalk: Wireless Keypad Light Control", 61184, false, 0x08, 0,
@@ -346,12 +350,27 @@ Pgn pgnList[] =
 }
 
 ,
-{ "ISO: Manu. Proprietary single-frame addressed", 61184, false, 8, 0,
+{ "Manufacturer Proprietary single-frame addressed", 61184, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Data", BYTES(6), RES_BINARY, false, 0, "" }
   , { 0 }
   }
+  , 0, 0, true
+}
+
+/* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
+
+,
+{ "Unknown single-frame non-addressed", 61440, false, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Data", BYTES(6), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+  , 0, 0, true
 }
 
 /* Maretron ACM 100 manual documents PGN 65001-65030 */
@@ -644,12 +663,17 @@ Pgn pgnList[] =
   }
 }
 
-  /* ISO 11783: 65,280 to 65,535 (0xFF00 to 0xFFFF): Proprietary PDU-2 messages */
+/* proprietary PDU2 (non addressed) single-frame range 0xFF00 to 0xFFFF (65280 - 65535) */
 
 ,
-{ "ISO: Manu. Proprietary single-frame non-addressed", 65280, false, 8, 0,
-  { { 0 }
+{ "Manufacturer Proprietary single-frame non-addressed", 65280, false, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Data", BYTES(6), RES_BINARY, false, 0, "" }
+  , { 0 }
   }
+  , 0, 0, true
 }
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
@@ -816,6 +840,15 @@ Pgn pgnList[] =
   }
 }
 
+/* PDU1 (addressed) fast-packet range 0x10000 to 0x1EEFF (65536 - 126719) */
+,
+{ "Unknown fast-packet addressed", 65536, false, 255, 0,
+  { { "Data", BYTES(255), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+  , 0, 0, true
+}
+
   /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
 ,
 { "NMEA - Request group function", 126208, true, 8, 2,
@@ -877,6 +910,8 @@ Pgn pgnList[] =
   , { 0 }
   }
 }
+
+/* proprietary PDU1 (addressed) fast-packet range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
   /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
 ,
@@ -1048,12 +1083,23 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Manufacturer Proprietary: Addressable Multi-Frame", 126720, true, 3, 0,//FIXME Single Frame: No
+{ "Manufacturer Proprietary fast-packet addressed", 126720, true, 223, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Data", BYTES(221), RES_BINARY, false, 0, "" }
   , { 0 }
   }
+  , 0, 0, true
+}
+
+/* PDU2 (non addressed) fast packet range 0x1F000 to 0x1FEFF (126976 - 130815) */
+,
+{ "Unknown fast-packet non-addressed", 126976, false, 255, 0,
+  { { "Data", BYTES(255), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+  , 0, 0, true
 }
 
 ,
@@ -2832,6 +2878,7 @@ Pgn pgnList[] =
   }
 }
 
+/* proprietary PDU2 (non addressed) fast packet range 0x1FF00 to 0x1FFFF (130816 - 131071) */
 ,
 { "SonicHub: Init #2", 130816, false, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
@@ -3125,6 +3172,17 @@ Pgn pgnList[] =
 }
 
 ,
+{ "Manufacturer Proprietary fast-packet non-addressed", 130816, true, 223, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Data", BYTES(221), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+  , 0, 0, true
+}
+
+,
 { "Navico: Product Information", 130817, false, 0x0e, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
   , { "Reserved", 2, 1, false, 0, "" }
@@ -3142,13 +3200,13 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Simnet: Reprogram Data", 130818, false, 0x08, 0,
+{ "Simnet: Reprogram Data", 130818, false, 223, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
   , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Version", BYTES(2), RES_INTEGER, false, 0, "" }
   , { "Sequence", BYTES(2), RES_INTEGER, false, 0, "" }
-  , { "Data", BYTES(255), RES_BINARY, false, 0, "" }
+  , { "Data", BYTES(249), RES_BINARY, false, 0, "" }
   , { 0 }
   }
 }
