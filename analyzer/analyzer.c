@@ -2272,6 +2272,7 @@ static void explainPGNXML(Pgn pgn)
   int i;
   unsigned bitOffset = 0;
   char * p;
+  bool showBitOffset = true;
 
   printf("    <PGNInfo>\n"
          "       <PGN>%u</PGN>\n"
@@ -2323,7 +2324,10 @@ static void explainPGNXML(Pgn pgn)
         printf("           <Description>%s</Description>\n", f.description);
       }
       printf("           <BitLength>%u</BitLength>\n", f.size);
-      printf("           <BitOffset>%u</BitOffset>\n", bitOffset);
+      if (showBitOffset)
+      {
+        printf("           <BitOffset>%u</BitOffset>\n", bitOffset);
+      }
       printf("           <BitStart>%u</BitStart>\n", bitOffset % 8);
       bitOffset = bitOffset + f.size;
 
@@ -2405,6 +2409,10 @@ static void explainPGNXML(Pgn pgn)
         }
 
         printf("           </EnumValues>\n");
+      }
+      if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU)
+      {
+        showBitOffset = false; // From here on there is no good bitoffset to be printed
       }
       printf("         </Field>\n");
     }

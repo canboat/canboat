@@ -13652,7 +13652,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Latitude of Vessel Reported</Name>
            <Description>offset depends on previous field, as do all following fields</Description>
            <BitLength>32</BitLength>
-           <BitOffset>184</BitOffset>
            <BitStart>0</BitStart>
            <Units>deg</Units>
                   <Type>Latitude</Type>
@@ -13664,7 +13663,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>longitudeOfVesselReported</Id>
            <Name>Longitude of Vessel Reported</Name>
            <BitLength>32</BitLength>
-           <BitOffset>216</BitOffset>
            <BitStart>0</BitStart>
            <Units>deg</Units>
                   <Type>Longitude</Type>
@@ -13677,7 +13675,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Time of Position</Name>
            <Description>Seconds since midnight</Description>
            <BitLength>32</BitLength>
-           <BitOffset>248</BitOffset>
            <BitStart>0</BitStart>
            <Units>s</Units>
                   <Type>Time</Type>
@@ -13689,7 +13686,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>mmsiOfShipInDistress</Id>
            <Name>MMSI of Ship In Distress</Name>
            <BitLength>40</BitLength>
-           <BitOffset>280</BitOffset>
            <BitStart>0</BitStart>
            <Units>MMSI</Units>
                   <Type>Decimal encoded number</Type>
@@ -13700,7 +13696,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>dscEosSymbol</Id>
            <Name>DSC EOS Symbol</Name>
            <BitLength>8</BitLength>
-           <BitOffset>320</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
@@ -13709,7 +13704,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>expansionEnabled</Id>
            <Name>Expansion Enabled</Name>
            <BitLength>2</BitLength>
-           <BitOffset>328</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
@@ -13724,7 +13718,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Reserved</Name>
            <Description>reserved</Description>
            <BitLength>6</BitLength>
-           <BitOffset>330</BitOffset>
            <BitStart>2</BitStart>
                   <Type>Binary data</Type>
            <Signed>false</Signed>
@@ -13734,7 +13727,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>callingRxFrequencyChannel</Id>
            <Name>Calling Rx Frequency/Channel</Name>
            <BitLength>48</BitLength>
-           <BitOffset>336</BitOffset>
            <BitStart>0</BitStart>
                   <Type>ASCII text</Type>
            <Signed>false</Signed>
@@ -13744,7 +13736,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>callingTxFrequencyChannel</Id>
            <Name>Calling Tx Frequency/Channel</Name>
            <BitLength>48</BitLength>
-           <BitOffset>384</BitOffset>
            <BitStart>0</BitStart>
                   <Type>ASCII text</Type>
            <Signed>false</Signed>
@@ -13755,7 +13746,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Time of Receipt</Name>
            <Description>Seconds since midnight</Description>
            <BitLength>32</BitLength>
-           <BitOffset>432</BitOffset>
            <BitStart>0</BitStart>
            <Units>s</Units>
                   <Type>Time</Type>
@@ -13768,7 +13758,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Date of Receipt</Name>
            <Description>Days since January 1, 1970</Description>
            <BitLength>16</BitLength>
-           <BitOffset>464</BitOffset>
            <BitStart>0</BitStart>
            <Units>days</Units>
                   <Type>Date</Type>
@@ -13780,7 +13769,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>dscEquipmentAssignedMessageId</Id>
            <Name>DSC Equipment Assigned Message ID</Name>
            <BitLength>16</BitLength>
-           <BitOffset>480</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
@@ -13789,7 +13777,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>dscExpansionFieldSymbol</Id>
            <Name>DSC Expansion Field Symbol</Name>
            <BitLength>8</BitLength>
-           <BitOffset>496</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
@@ -13808,7 +13795,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>dscExpansionFieldData</Id>
            <Name>DSC Expansion Field Data</Name>
            <BitLength>16</BitLength>
-           <BitOffset>504</BitOffset>
            <BitStart>0</BitStart>
                   <Type>ASCII or UNICODE string starting with length and control byte</Type>
            <Signed>false</Signed>
@@ -13958,7 +13944,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Latitude of Vessel Reported</Name>
            <Description>offset depends on previous field, as do all following fields</Description>
            <BitLength>32</BitLength>
-           <BitOffset>184</BitOffset>
            <BitStart>0</BitStart>
            <Units>deg</Units>
                   <Type>Latitude</Type>
@@ -13970,7 +13955,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>longitudeOfVesselReported</Id>
            <Name>Longitude of Vessel Reported</Name>
            <BitLength>32</BitLength>
-           <BitOffset>216</BitOffset>
            <BitStart>0</BitStart>
            <Units>deg</Units>
                   <Type>Longitude</Type>
@@ -13983,7 +13967,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Time of Position</Name>
            <Description>Seconds since midnight</Description>
            <BitLength>32</BitLength>
-           <BitOffset>248</BitOffset>
            <BitStart>0</BitStart>
            <Units>s</Units>
                   <Type>Time</Type>
@@ -13995,7 +13978,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>mmsiOfShipInDistress</Id>
            <Name>MMSI of Ship In Distress</Name>
            <BitLength>40</BitLength>
-           <BitOffset>280</BitOffset>
            <BitStart>0</BitStart>
            <Units>MMSI</Units>
                   <Type>Decimal encoded number</Type>
@@ -14006,7 +13988,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>dscEosSymbol</Id>
            <Name>DSC EOS Symbol</Name>
            <BitLength>8</BitLength>
-           <BitOffset>320</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
@@ -14015,7 +13996,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>expansionEnabled</Id>
            <Name>Expansion Enabled</Name>
            <BitLength>2</BitLength>
-           <BitOffset>328</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
@@ -14030,7 +14010,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Reserved</Name>
            <Description>reserved</Description>
            <BitLength>6</BitLength>
-           <BitOffset>330</BitOffset>
            <BitStart>2</BitStart>
                   <Type>Binary data</Type>
            <Signed>false</Signed>
@@ -14040,7 +14019,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>callingRxFrequencyChannel</Id>
            <Name>Calling Rx Frequency/Channel</Name>
            <BitLength>48</BitLength>
-           <BitOffset>336</BitOffset>
            <BitStart>0</BitStart>
                   <Type>ASCII text</Type>
            <Signed>false</Signed>
@@ -14050,7 +14028,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>callingTxFrequencyChannel</Id>
            <Name>Calling Tx Frequency/Channel</Name>
            <BitLength>48</BitLength>
-           <BitOffset>384</BitOffset>
            <BitStart>0</BitStart>
                   <Type>ASCII text</Type>
            <Signed>false</Signed>
@@ -14061,7 +14038,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Time of Receipt</Name>
            <Description>Seconds since midnight</Description>
            <BitLength>32</BitLength>
-           <BitOffset>432</BitOffset>
            <BitStart>0</BitStart>
            <Units>s</Units>
                   <Type>Time</Type>
@@ -14074,7 +14050,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Date of Receipt</Name>
            <Description>Days since January 1, 1970</Description>
            <BitLength>16</BitLength>
-           <BitOffset>464</BitOffset>
            <BitStart>0</BitStart>
            <Units>days</Units>
                   <Type>Date</Type>
@@ -14086,7 +14061,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>dscEquipmentAssignedMessageId</Id>
            <Name>DSC Equipment Assigned Message ID</Name>
            <BitLength>16</BitLength>
-           <BitOffset>480</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
@@ -14095,7 +14069,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>dscExpansionFieldSymbol</Id>
            <Name>DSC Expansion Field Symbol</Name>
            <BitLength>8</BitLength>
-           <BitOffset>496</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
@@ -14114,7 +14087,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>dscExpansionFieldData</Id>
            <Name>DSC Expansion Field Data</Name>
            <BitLength>16</BitLength>
-           <BitOffset>504</BitOffset>
            <BitStart>0</BitStart>
                   <Type>ASCII or UNICODE string starting with length and control byte</Type>
            <Signed>false</Signed>
