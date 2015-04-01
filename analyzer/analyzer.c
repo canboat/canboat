@@ -983,6 +983,68 @@ static bool printHex(char * name, uint8_t * data, size_t startBit, size_t bits)
   return true;
 }
 
+static bool printDecimal(char * name, uint8_t * data, size_t startBit, size_t bits)
+{
+  uint8_t value = 0;
+  uint8_t maxValue = 0;
+  uint8_t bitMask = 1 << startBit;
+  uint64_t bitMagnitude = 1;
+  size_t bit;
+  char buf[128];
+
+  if (showBytes)
+  {
+    mprintf("(%s,%p,%zu,%zu) ", name, data, startBit, bits);
+  }
+
+  if (showJson)
+  {
+    mprintf("%s\"%s\":\"", getSep(), name);
+  }
+  else
+  {
+    mprintf("%s %s = ", getSep(), name);
+  }
+
+  for (bit = 0; bit < bits && bit < sizeof(buf) * 8; bit++)
+  {
+    /* Act on the current bit */
+    bool bitIsSet = (*data & bitMask) > 0;
+    maxValue |= bitMagnitude;
+    if (bitIsSet)
+    {
+      value |= bitMagnitude;
+    }
+
+    /* Find the next bit */
+    if (bitMask == 128)
+    {
+      bitMask = 1;
+      data++;
+    }
+    else
+    {
+      bitMask = bitMask << 1;
+    }
+    bitMagnitude = bitMagnitude << 1;
+
+    if (bit % 8 == 7)
+    {
+      if (value < 100)
+      {
+        mprintf("%02u", value);
+      }
+      value = 0;
+      bitMagnitude = 1;
+    }
+  }
+  if (showJson)
+  {
+    mprintf("\"");
+  }
+  return true;
+}
+
 
 /*
  *
@@ -1713,6 +1775,21 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
         goto ascii_string;
       }
 
+      if (field.resolution == RES_STRINGLAU)
+      {
+        int control;
+
+        len = *data++;
+        bytes--;
+        control = *data++;
+        bytes--;
+        if (control == 0)
+        {
+          logError("Unhandled UNICODE string in PGN\n");
+        }
+        goto ascii_string;
+      }
+
       if (field.resolution == RES_ASCII)
       {
         len = (int) bytes;
@@ -1836,6 +1913,10 @@ ascii_string:
       else if (field.resolution == RES_6BITASCII)
       {
         print6BitASCIIText(fieldName, data, startBit, bits);
+      }
+      else if (field.resolution == RES_DECIMAL)
+      {
+        printDecimal(fieldName, data, startBit, bits);
       }
       else if (bits == LEN_VARIABLE)
       {

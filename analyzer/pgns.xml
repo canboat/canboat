@@ -393,8 +393,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
        <PGN>61184</PGN>
-       <Id>isoManuProprietarySingleFrameAddressed</Id>
-       <Description>ISO: Manu. Proprietary single-frame addressed</Description>
+       <Id>manufacturerProprietarySingleFrameAddressed</Id>
+       <Description>Manufacturer Proprietary single-frame addressed</Description>
        <Complete>false</Complete>
        <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
@@ -430,6 +430,68 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <EnumValues>
              <EnumPair Value='4' Name='Marine' />
            </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>data</Id>
+           <Name>Data</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>61440</PGN>
+       <Id>unknownSingleFrameNonAddressed</Id>
+       <Description>Unknown single-frame non-addressed</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='4' Name='Marine' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>data</Id>
+           <Name>Data</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
          </Field>
        </Fields>
     </PGNInfo>
@@ -1838,11 +1900,55 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
        <PGN>65280</PGN>
-       <Id>isoManuProprietarySingleFrameNonAddressed</Id>
-       <Description>ISO: Manu. Proprietary single-frame non-addressed</Description>
+       <Id>manufacturerProprietarySingleFrameNonAddressed</Id>
+       <Description>Manufacturer Proprietary single-frame non-addressed</Description>
        <Complete>false</Complete>
        <Length>8</Length>
        <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='4' Name='Marine' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>data</Id>
+           <Name>Data</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
     </PGNInfo>
     <PGNInfo>
        <PGN>65285</PGN>
@@ -2784,6 +2890,26 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <EnumValues>
              <EnumPair Value='4' Name='Marine' />
            </EnumValues>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>65536</PGN>
+       <Id>unknownFastPacketAddressed</Id>
+       <Description>Unknown fast-packet addressed</Description>
+       <Complete>false</Complete>
+       <Length>255</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>data</Id>
+           <Name>Data</Name>
+           <BitLength>2040</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
          </Field>
        </Fields>
     </PGNInfo>
@@ -4372,10 +4498,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
        <PGN>126720</PGN>
-       <Id>manufacturerProprietaryAddressableMultiFrame</Id>
-       <Description>Manufacturer Proprietary: Addressable Multi-Frame</Description>
+       <Id>manufacturerProprietaryFastPacketAddressed</Id>
+       <Description>Manufacturer Proprietary fast-packet addressed</Description>
        <Complete>true</Complete>
-       <Length>3</Length>
+       <Length>223</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -4410,6 +4536,36 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <EnumValues>
              <EnumPair Value='4' Name='Marine' />
            </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>data</Id>
+           <Name>Data</Name>
+           <BitLength>1768</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126976</PGN>
+       <Id>unknownFastPacketNonAddressed</Id>
+       <Description>Unknown fast-packet non-addressed</Description>
+       <Complete>false</Complete>
+       <Length>255</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>data</Id>
+           <Name>Data</Name>
+           <BitLength>2040</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
          </Field>
        </Fields>
     </PGNInfo>
@@ -13361,6 +13517,306 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
        <PGN>129808</PGN>
+       <Id>dscDistressCallInformation</Id>
+       <Description>DSC Distress Call Information</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>2</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>dscFormat</Id>
+           <Name>DSC Format</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='102' Name='Geographical area' />
+             <EnumPair Value='112' Name='Distress' />
+             <EnumPair Value='114' Name='Common interest' />
+             <EnumPair Value='116' Name='All ships' />
+             <EnumPair Value='120' Name='Individual stations' />
+             <EnumPair Value='121' Name='Non-calling purpose' />
+             <EnumPair Value='123' Name='Individual station automatic' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>dscCategory</Id>
+           <Name>DSC Category</Name>
+           <Description>Distress</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>112</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>dscMessageAddress</Id>
+           <Name>DSC Message Address</Name>
+           <Description>MMSI, Geographic Area or blank</Description>
+           <BitLength>40</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Decimal encoded number</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>natureOfDistress</Id>
+           <Name>Nature of Distress</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='100' Name='Fire' />
+             <EnumPair Value='101' Name='Flooding' />
+             <EnumPair Value='102' Name='Collision' />
+             <EnumPair Value='103' Name='Grounding' />
+             <EnumPair Value='104' Name='Listing' />
+             <EnumPair Value='105' Name='Sinking' />
+             <EnumPair Value='106' Name='Disabled and adrift' />
+             <EnumPair Value='107' Name='Undesignated' />
+             <EnumPair Value='108' Name='Abandoning ship' />
+             <EnumPair Value='109' Name='Piracy' />
+             <EnumPair Value='110' Name='Man overboard' />
+             <EnumPair Value='112' Name='EPIRB emission' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>subsequentCommunicationModeOr2ndTelecommand</Id>
+           <Name>Subsequent Communication Mode or 2nd Telecommand</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='100' Name='No reason given' />
+             <EnumPair Value='101' Name='Congestion at MSC' />
+             <EnumPair Value='102' Name='Busy' />
+             <EnumPair Value='103' Name='Queue indication' />
+             <EnumPair Value='104' Name='Station barred' />
+             <EnumPair Value='105' Name='No operator available' />
+             <EnumPair Value='106' Name='Operator temporarily unavailable' />
+             <EnumPair Value='107' Name='Equipment disabled' />
+             <EnumPair Value='108' Name='Unable to use proposed channel' />
+             <EnumPair Value='109' Name='Unable to use proposed mode' />
+             <EnumPair Value='110' Name='Ships and aircraft of States not parties to an armed conflict' />
+             <EnumPair Value='111' Name='Medical transports' />
+             <EnumPair Value='112' Name='Pay phone/public call office' />
+             <EnumPair Value='113' Name='Fax/data' />
+             <EnumPair Value='126' Name='No information' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>proposedRxFrequencyChannel</Id>
+           <Name>Proposed Rx Frequency/Channel</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII text</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>proposedTxFrequencyChannel</Id>
+           <Name>Proposed Tx Frequency/Channel</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>120</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII text</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>telephoneNumber</Id>
+           <Name>Telephone Number</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>168</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>latitudeOfVesselReported</Id>
+           <Name>Latitude of Vessel Reported</Name>
+           <Description>offset depends on previous field, as do all following fields</Description>
+           <BitLength>32</BitLength>
+           <BitOffset>184</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>deg</Units>
+                  <Type>Latitude</Type>
+                  <Resolution>0.0000001</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>longitudeOfVesselReported</Id>
+           <Name>Longitude of Vessel Reported</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>216</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>deg</Units>
+                  <Type>Longitude</Type>
+                  <Resolution>0.0000001</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>timeOfPosition</Id>
+           <Name>Time of Position</Name>
+           <Description>Seconds since midnight</Description>
+           <BitLength>32</BitLength>
+           <BitOffset>248</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>s</Units>
+                  <Type>Time</Type>
+                  <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>mmsiOfShipInDistress</Id>
+           <Name>MMSI of Ship In Distress</Name>
+           <BitLength>40</BitLength>
+           <BitOffset>280</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>MMSI</Units>
+                  <Type>Decimal encoded number</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>dscEosSymbol</Id>
+           <Name>DSC EOS Symbol</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>320</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>14</Order>
+           <Id>expansionEnabled</Id>
+           <Name>Expansion Enabled</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>328</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>15</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>reserved</Description>
+           <BitLength>6</BitLength>
+           <BitOffset>330</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>16</Order>
+           <Id>callingRxFrequencyChannel</Id>
+           <Name>Calling Rx Frequency/Channel</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>336</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII text</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>17</Order>
+           <Id>callingTxFrequencyChannel</Id>
+           <Name>Calling Tx Frequency/Channel</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>384</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII text</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>18</Order>
+           <Id>timeOfReceipt</Id>
+           <Name>Time of Receipt</Name>
+           <Description>Seconds since midnight</Description>
+           <BitLength>32</BitLength>
+           <BitOffset>432</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>s</Units>
+                  <Type>Time</Type>
+                  <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>19</Order>
+           <Id>dateOfReceipt</Id>
+           <Name>Date of Receipt</Name>
+           <Description>Days since January 1, 1970</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>464</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>days</Units>
+                  <Type>Date</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>20</Order>
+           <Id>dscEquipmentAssignedMessageId</Id>
+           <Name>DSC Equipment Assigned Message ID</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>480</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>21</Order>
+           <Id>dscExpansionFieldSymbol</Id>
+           <Name>DSC Expansion Field Symbol</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>496</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='100' Name='Enhanced position' />
+             <EnumPair Value='101' Name='Source and datum of position' />
+             <EnumPair Value='102' Name='SOG' />
+             <EnumPair Value='103' Name='COG' />
+             <EnumPair Value='104' Name='Additional station identification' />
+             <EnumPair Value='105' Name='Enhanced geographic area' />
+             <EnumPair Value='106' Name='Number of persons on board' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>22</Order>
+           <Id>dscExpansionFieldData</Id>
+           <Name>DSC Expansion Field Data</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>504</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>129808</PGN>
        <Id>dscCallInformation</Id>
        <Description>DSC Call Information</Description>
        <Complete>false</Complete>
@@ -13374,7 +13830,17 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='102' Name='Geographical area' />
+             <EnumPair Value='112' Name='Distress' />
+             <EnumPair Value='114' Name='Common interest' />
+             <EnumPair Value='116' Name='All ships' />
+             <EnumPair Value='120' Name='Individual stations' />
+             <EnumPair Value='121' Name='Non-calling purpose' />
+             <EnumPair Value='123' Name='Individual station automatic' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>2</Order>
@@ -13383,68 +13849,116 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='100' Name='Routine' />
+             <EnumPair Value='108' Name='Safety' />
+             <EnumPair Value='110' Name='Urgency' />
+             <EnumPair Value='112' Name='Distress' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>dscMessageAddress</Id>
            <Name>DSC Message Address</Name>
-           <BitLength>8</BitLength>
+           <Description>MMSI, Geographic Area or blank</Description>
+           <BitLength>40</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Decimal encoded number</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>4</Order>
-           <Id>natureOfDistressOr1stTelecommand</Id>
-           <Name>Nature of Distress or 1st Telecommand</Name>
+           <Id>1stTelecommand</Id>
+           <Name>1st Telecommand</Name>
            <BitLength>8</BitLength>
-           <BitOffset>24</BitOffset>
+           <BitOffset>56</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='100' Name='F3E/G3E All modes TP' />
+             <EnumPair Value='101' Name='F3E/G3E duplex TP' />
+             <EnumPair Value='103' Name='Polling' />
+             <EnumPair Value='104' Name='Unable to comply' />
+             <EnumPair Value='105' Name='End of call' />
+             <EnumPair Value='106' Name='Data' />
+             <EnumPair Value='109' Name='J3E TP' />
+             <EnumPair Value='110' Name='Distress acknowledgement' />
+             <EnumPair Value='112' Name='Distress relay' />
+             <EnumPair Value='113' Name='F1B/J2B TTY-FEC' />
+             <EnumPair Value='115' Name='F1B/J2B TTY-ARQ' />
+             <EnumPair Value='118' Name='Test' />
+             <EnumPair Value='121' Name='Ship position or location registration updating' />
+             <EnumPair Value='126' Name='No information' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>5</Order>
            <Id>subsequentCommunicationModeOr2ndTelecommand</Id>
            <Name>Subsequent Communication Mode or 2nd Telecommand</Name>
            <BitLength>8</BitLength>
-           <BitOffset>32</BitOffset>
+           <BitOffset>64</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='100' Name='No reason given' />
+             <EnumPair Value='101' Name='Congestion at MSC' />
+             <EnumPair Value='102' Name='Busy' />
+             <EnumPair Value='103' Name='Queue indication' />
+             <EnumPair Value='104' Name='Station barred' />
+             <EnumPair Value='105' Name='No operator available' />
+             <EnumPair Value='106' Name='Operator temporarily unavailable' />
+             <EnumPair Value='107' Name='Equipment disabled' />
+             <EnumPair Value='108' Name='Unable to use proposed channel' />
+             <EnumPair Value='109' Name='Unable to use proposed mode' />
+             <EnumPair Value='110' Name='Ships and aircraft of States not parties to an armed conflict' />
+             <EnumPair Value='111' Name='Medical transports' />
+             <EnumPair Value='112' Name='Pay phone/public call office' />
+             <EnumPair Value='113' Name='Fax/data' />
+             <EnumPair Value='126' Name='No information' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>6</Order>
            <Id>proposedRxFrequencyChannel</Id>
            <Name>Proposed Rx Frequency/Channel</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>40</BitOffset>
+           <BitLength>48</BitLength>
+           <BitOffset>72</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>ASCII text</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>7</Order>
            <Id>proposedTxFrequencyChannel</Id>
            <Name>Proposed Tx Frequency/Channel</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>48</BitOffset>
+           <BitLength>48</BitLength>
+           <BitOffset>120</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>ASCII text</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>8</Order>
            <Id>telephoneNumber</Id>
            <Name>Telephone Number</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>56</BitOffset>
+           <BitLength>16</BitLength>
+           <BitOffset>168</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>9</Order>
            <Id>latitudeOfVesselReported</Id>
            <Name>Latitude of Vessel Reported</Name>
+           <Description>offset depends on previous field, as do all following fields</Description>
            <BitLength>32</BitLength>
-           <BitOffset>64</BitOffset>
+           <BitOffset>184</BitOffset>
            <BitStart>0</BitStart>
            <Units>deg</Units>
                   <Type>Latitude</Type>
@@ -13456,7 +13970,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>longitudeOfVesselReported</Id>
            <Name>Longitude of Vessel Reported</Name>
            <BitLength>32</BitLength>
-           <BitOffset>96</BitOffset>
+           <BitOffset>216</BitOffset>
            <BitStart>0</BitStart>
            <Units>deg</Units>
                   <Type>Longitude</Type>
@@ -13469,7 +13983,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Time of Position</Name>
            <Description>Seconds since midnight</Description>
            <BitLength>32</BitLength>
-           <BitOffset>128</BitOffset>
+           <BitOffset>248</BitOffset>
            <BitStart>0</BitStart>
            <Units>s</Units>
                   <Type>Time</Type>
@@ -13478,14 +13992,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>12</Order>
-           <Id>userIdOfShipInDistress</Id>
-           <Name>User ID of Ship In Distress</Name>
-           <BitLength>32</BitLength>
-           <BitOffset>160</BitOffset>
+           <Id>mmsiOfShipInDistress</Id>
+           <Name>MMSI of Ship In Distress</Name>
+           <BitLength>40</BitLength>
+           <BitOffset>280</BitOffset>
            <BitStart>0</BitStart>
            <Units>MMSI</Units>
-                  <Type>Integer</Type>
-                  <Resolution>1</Resolution>
+                  <Type>Decimal encoded number</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -13493,7 +14006,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>dscEosSymbol</Id>
            <Name>DSC EOS Symbol</Name>
            <BitLength>8</BitLength>
-           <BitOffset>192</BitOffset>
+           <BitOffset>320</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
@@ -13501,36 +14014,54 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>14</Order>
            <Id>expansionEnabled</Id>
            <Name>Expansion Enabled</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>200</BitOffset>
+           <BitLength>2</BitLength>
+           <BitOffset>328</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>15</Order>
-           <Id>callingRxFrequencyChannel</Id>
-           <Name>Calling Rx Frequency/Channel</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>208</BitOffset>
-           <BitStart>0</BitStart>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>reserved</Description>
+           <BitLength>6</BitLength>
+           <BitOffset>330</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>16</Order>
-           <Id>callingTxFrequencyChannel</Id>
-           <Name>Calling Tx Frequency/Channel</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>216</BitOffset>
+           <Id>callingRxFrequencyChannel</Id>
+           <Name>Calling Rx Frequency/Channel</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>336</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>ASCII text</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>17</Order>
+           <Id>callingTxFrequencyChannel</Id>
+           <Name>Calling Tx Frequency/Channel</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>384</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII text</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>18</Order>
            <Id>timeOfReceipt</Id>
            <Name>Time of Receipt</Name>
            <Description>Seconds since midnight</Description>
            <BitLength>32</BitLength>
-           <BitOffset>224</BitOffset>
+           <BitOffset>432</BitOffset>
            <BitStart>0</BitStart>
            <Units>s</Units>
                   <Type>Time</Type>
@@ -13538,12 +14069,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Signed>false</Signed>
          </Field>
          <Field>
-           <Order>18</Order>
+           <Order>19</Order>
            <Id>dateOfReceipt</Id>
            <Name>Date of Receipt</Name>
            <Description>Days since January 1, 1970</Description>
            <BitLength>16</BitLength>
-           <BitOffset>256</BitOffset>
+           <BitOffset>464</BitOffset>
            <BitStart>0</BitStart>
            <Units>days</Units>
                   <Type>Date</Type>
@@ -13551,30 +14082,41 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Signed>false</Signed>
          </Field>
          <Field>
-           <Order>19</Order>
+           <Order>20</Order>
            <Id>dscEquipmentAssignedMessageId</Id>
            <Name>DSC Equipment Assigned Message ID</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>272</BitOffset>
-           <BitStart>0</BitStart>
-           <Signed>false</Signed>
-         </Field>
-         <Field>
-           <Order>20</Order>
-           <Id>dscExpansionFieldSymbol</Id>
-           <Name>DSC Expansion Field Symbol</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>280</BitOffset>
+           <BitLength>16</BitLength>
+           <BitOffset>480</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>21</Order>
+           <Id>dscExpansionFieldSymbol</Id>
+           <Name>DSC Expansion Field Symbol</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>496</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='100' Name='Enhanced position' />
+             <EnumPair Value='101' Name='Source and datum of position' />
+             <EnumPair Value='102' Name='SOG' />
+             <EnumPair Value='103' Name='COG' />
+             <EnumPair Value='104' Name='Additional station identification' />
+             <EnumPair Value='105' Name='Enhanced geographic area' />
+             <EnumPair Value='106' Name='Number of persons on board' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>22</Order>
            <Id>dscExpansionFieldData</Id>
            <Name>DSC Expansion Field Data</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>288</BitOffset>
+           <BitLength>16</BitLength>
+           <BitOffset>504</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -18782,6 +19324,59 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>130816</PGN>
+       <Id>manufacturerProprietaryFastPacketNonAddressed</Id>
+       <Description>Manufacturer Proprietary fast-packet non-addressed</Description>
+       <Complete>true</Complete>
+       <Length>223</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='4' Name='Marine' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>data</Id>
+           <Name>Data</Name>
+           <BitLength>1768</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>130817</PGN>
        <Id>navicoProductInformation</Id>
        <Description>Navico: Product Information</Description>
@@ -18906,7 +19501,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>simnetReprogramData</Id>
        <Description>Simnet: Reprogram Data</Description>
        <Complete>false</Complete>
-       <Length>8</Length>
+       <Length>223</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -18969,7 +19564,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>6</Order>
            <Id>data</Id>
            <Name>Data</Name>
-           <BitLength>2040</BitLength>
+           <BitLength>1992</BitLength>
            <BitOffset>48</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Binary data</Type>

@@ -102,7 +102,9 @@ typedef struct
 # define RES_FLOAT (-13.0)
 # define RES_PRESSURE (-14.0)
 # define RES_STRINGLZ (-15.0)            /* ASCII string starting with length byte and terminated by zero byte */
-# define MAX_RESOLUTION_LOOKUP 15
+# define RES_STRINGLAU (-16.0)           /* ASCII or UNICODE string starting with length byte and ASCII/Unicode byte */
+# define RES_DECIMAL (-17.0)
+# define MAX_RESOLUTION_LOOKUP 17
 
   bool hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   char * units; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
@@ -138,6 +140,8 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
 , { "IEEE Float", 0 }
 , { "Pressure", 0 }
 , { "ASCII string starting with length byte", 0 }
+, { "ASCII or UNICODE string starting with length and control byte", 0 }
+, { "Decimal encoded number", 0 }
 };
 
 
@@ -254,6 +258,77 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
     ",7=Refridgeration Temperature" \
     ",8=Heating System Temperature" \
     ",9=Freezer Temperature" )
+
+#define LOOKUP_DSC_FORMAT ( \
+    ",102=Geographical area" \
+    ",112=Distress" \
+    ",114=Common interest" \
+    ",116=All ships" \
+    ",120=Individual stations" \
+    ",121=Non-calling purpose" \
+    ",123=Individual station automatic" )
+
+#define LOOKUP_DSC_CATEGORY ( \
+    ",100=Routine" \
+    ",108=Safety" \
+    ",110=Urgency" \
+    ",112=Distress" )
+
+#define LOOKUP_DSC_NATURE ( \
+    ",100=Fire" \
+    ",101=Flooding" \
+    ",102=Collision" \
+    ",103=Grounding" \
+    ",104=Listing" \
+    ",105=Sinking" \
+    ",106=Disabled and adrift" \
+    ",107=Undesignated" \
+    ",108=Abandoning ship" \
+    ",109=Piracy" \
+    ",110=Man overboard" \
+    ",112=EPIRB emission" )
+
+#define LOOKUP_DSC_FIRST_TELECOMMAND ( \
+    ",100=F3E/G3E All modes TP" \
+    ",101=F3E/G3E duplex TP" \
+    ",103=Polling" \
+    ",104=Unable to comply" \
+    ",105=End of call" \
+    ",106=Data" \
+    ",109=J3E TP" \
+    ",110=Distress acknowledgement" \
+    ",112=Distress relay" \
+    ",113=F1B/J2B TTY-FEC" \
+    ",115=F1B/J2B TTY-ARQ" \
+    ",118=Test" \
+    ",121=Ship position or location registration updating" \
+    ",126=No information" )
+
+#define LOOKUP_DSC_SECOND_TELECOMMAND ( \
+    ",100=No reason given" \
+    ",101=Congestion at MSC" \
+    ",102=Busy" \
+    ",103=Queue indication" \
+    ",104=Station barred" \
+    ",105=No operator available" \
+    ",106=Operator temporarily unavailable" \
+    ",107=Equipment disabled" \
+    ",108=Unable to use proposed channel" \
+    ",109=Unable to use proposed mode" \
+    ",110=Ships and aircraft of States not parties to an armed conflict" \
+    ",111=Medical transports" \
+    ",112=Pay phone/public call office" \
+    ",113=Fax/data" \
+    ",126=No information" )
+
+#define LOOKUP_DSC_EXPANSION_DATA ( \
+    ",100=Enhanced position" \
+    ",101=Source and datum of position" \
+    ",102=SOG" \
+    ",103=COG" \
+    ",104=Additional station identification" \
+    ",105=Enhanced geographic area" \
+    ",106=Number of persons on board" )
 
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
 
@@ -2385,29 +2460,70 @@ Pgn pgnList[] =
   }
 }
 
+/* http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf */
+/* This is like the worst PGN ever.
+ * 1. The "Nature of Distress or 1st Telecommand' field meaning depends on the 'DSC Category'.
+ * 2. The "Message address" (the 'to' field) meaning depends on the 'DSC format'.
+ * 3. Field 12 'MMSI of ship in destress' may have multiple interpretations.
+ * 4. Field 22 'DSC expansion field data' depends on field 21 for its meaning.
+ * 5. It contains a variable length field 'Telephone number', which means that bit offsets for subsequent fields
+ *    depend on this field's length.
+ *
+ * We solve #1 here by having two definitions.
+ */
+
 ,
-{ "DSC Call Information", 129808, false, 8, 2,
-  { { "DSC Format Symbol", BYTES(1), 1, false, 0, "" }
-  , { "DSC Category Symbol", BYTES(1), 1, false, 0, "" }
-  , { "DSC Message Address", BYTES(1), 1, false, 0, "" }
-  , { "Nature of Distress or 1st Telecommand", BYTES(1), 1, false, 0, "" }
-  , { "Subsequent Communication Mode or 2nd Telecommand", BYTES(1), 1, false, 0, "" }
-  , { "Proposed Rx Frequency/Channel", BYTES(1), 1, false, 0, "" }
-  , { "Proposed Tx Frequency/Channel", BYTES(1), 1, false, 0, "" }
-  , { "Telephone Number", BYTES(1), 1, false, 0, "" }
-  , { "Latitude of Vessel Reported", BYTES(4), RES_LATITUDE, true, "deg", "" }
+{ "DSC Distress Call Information", 129808, false, 8, 2,
+  { { "DSC Format", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FORMAT, "" }
+  , { "DSC Category", BYTES(1), RES_LOOKUP, false, "=112", "Distress" }
+  , { "DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank" }
+  , { "Nature of Distress", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_NATURE, "" }
+  , { "Subsequent Communication Mode or 2nd Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_SECOND_TELECOMMAND, "" }
+  , { "Proposed Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Proposed Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, "" }
+  , { "Latitude of Vessel Reported", BYTES(4), RES_LATITUDE, true, "deg", "offset depends on previous field, as do all following fields" }
   , { "Longitude of Vessel Reported", BYTES(4), RES_LONGITUDE, true, "deg", "" }
   , { "Time of Position", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
-  , { "User ID of Ship In Distress", BYTES(4), RES_INTEGER, false, "MMSI", "" }
+  , { "MMSI of Ship In Distress", BYTES(5), RES_DECIMAL, false, "MMSI", "" }
   , { "DSC EOS Symbol", BYTES(1), 1, false, 0, "" }
-  , { "Expansion Enabled", BYTES(1), 1, false, 0, "" }
-  , { "Calling Rx Frequency/Channel", BYTES(1), 1, false, 0, "" }
-  , { "Calling Tx Frequency/Channel", BYTES(1), 1, false, 0, "" }
+  , { "Expansion Enabled", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "reserved" }
+  , { "Calling Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Calling Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
   , { "Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
   , { "Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970" }
-  , { "DSC Equipment Assigned Message ID", BYTES(1), 1, false, 0, "" }
-  , { "DSC Expansion Field Symbol", BYTES(1), 1, false, 0, "" }
-  , { "DSC Expansion Field Data", BYTES(1), 1, false, 0, "" }
+  , { "DSC Equipment Assigned Message ID", BYTES(2), 1, false, 0, "" }
+  , { "DSC Expansion Field Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_EXPANSION_DATA, "" }
+  , { "DSC Expansion Field Data", BYTES(2), RES_STRINGLAU, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "DSC Call Information", 129808, false, 8, 2,
+  { { "DSC Format Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FORMAT, "" }
+  , { "DSC Category Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_CATEGORY, "" }
+  , { "DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank" }
+  , { "1st Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FIRST_TELECOMMAND, "" }
+  , { "Subsequent Communication Mode or 2nd Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_SECOND_TELECOMMAND, "" }
+  , { "Proposed Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Proposed Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, "" }
+  , { "Latitude of Vessel Reported", BYTES(4), RES_LATITUDE, true, "deg", "offset depends on previous field, as do all following fields" }
+  , { "Longitude of Vessel Reported", BYTES(4), RES_LONGITUDE, true, "deg", "" }
+  , { "Time of Position", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
+  , { "MMSI of Ship In Distress", BYTES(5), RES_DECIMAL, false, "MMSI", "" }
+  , { "DSC EOS Symbol", BYTES(1), 1, false, 0, "" }
+  , { "Expansion Enabled", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "reserved" }
+  , { "Calling Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Calling Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
+  , { "Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970" }
+  , { "DSC Equipment Assigned Message ID", BYTES(2), 1, false, 0, "" }
+  , { "DSC Expansion Field Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_EXPANSION_DATA, "" }
+  , { "DSC Expansion Field Data", BYTES(2), RES_STRINGLAU, false, 0, "" }
   , { 0 }
   }
 }
