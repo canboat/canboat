@@ -243,7 +243,10 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
             ",5=Moored" \
             ",6=Aground" \
             ",7=Engaged in Fishing" \
-            ",8=Under way sailing" )
+            ",8=Under way sailing" \
+            ",9=Hazardous material, High Speed" \
+            ",10=Hazardous material, Wing in Ground" \
+            ",14=AIS-SART" )
 
 #define LOOKUP_POWER_FACTOR ( ",0=Leading,1=Lagging,2=Error" )
 
@@ -1786,9 +1789,10 @@ Pgn pgnList[] =
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
   , { "Heading", BYTES(2), RES_DEGREES, false, "deg", "True heading" }
   , { "Rate of Turn", BYTES(2), RES_ROTATION, true, "deg/s", "" }
-  , { "Nav Status", BYTES(1), RES_LOOKUP, false, LOOKUP_NAV_STATUS, "" }
-  , { "Reserved for Regional Applications", BYTES(1), 1, false, 0, "" }
-  , { "Spare", BYTES(1), 1, false, 0, "" }
+  , { "Nav Status", 4, RES_LOOKUP, false, LOOKUP_NAV_STATUS, "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "reserved" }
+  , { "Regional Application", 1, 1, false, 0, "" }
+  , { "Reserved", 7, RES_BINARY, false, 0, "reserved" }
   , { 0 }
   }
 }

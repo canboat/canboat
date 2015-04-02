@@ -1760,7 +1760,13 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       }
     }
 
-    if (field.resolution < 0.0)
+    if (strcmp(fieldName, "Reserved") == 0)
+    {
+      // Skipping reserved fields. Unfortunately we have some cases now
+      // where they are zero. Some AIS devices (SRT) produce an 8 bit long
+      // nav status, others just a four bit one.
+    }
+    else if (field.resolution < 0.0)
     {
       int len;
       int k;
