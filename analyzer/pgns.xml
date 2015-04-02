@@ -8238,7 +8238,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>15</Order>
            <Id>navStatus</Id>
            <Name>Nav Status</Name>
-           <BitLength>8</BitLength>
+           <BitLength>4</BitLength>
            <BitOffset>200</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
@@ -8253,24 +8253,42 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='6' Name='Aground' />
              <EnumPair Value='7' Name='Engaged in Fishing' />
              <EnumPair Value='8' Name='Under way sailing' />
+             <EnumPair Value='9' Name='Hazardous material' />
+             <EnumPair Value=' High Speed,10' Name='Hazardous material, Wing in Ground,14=AIS-SART' />
+             <EnumPair Value='10' Name='Hazardous material' />
+             <EnumPair Value=' Wing in Ground,14' Name='AIS-SART' />
+             <EnumPair Value='14' Name='AIS-SART' />
            </EnumValues>
          </Field>
          <Field>
            <Order>16</Order>
-           <Id>reservedForRegionalApplications</Id>
-           <Name>Reserved for Regional Applications</Name>
-           <BitLength>8</BitLength>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>reserved</Description>
+           <BitLength>4</BitLength>
+           <BitOffset>204</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>17</Order>
+           <Id>regionalApplication</Id>
+           <Name>Regional Application</Name>
+           <BitLength>1</BitLength>
            <BitOffset>208</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
          <Field>
-           <Order>17</Order>
-           <Id>spare</Id>
-           <Name>Spare</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>216</BitOffset>
-           <BitStart>0</BitStart>
+           <Order>18</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>reserved</Description>
+           <BitLength>7</BitLength>
+           <BitOffset>209</BitOffset>
+           <BitStart>1</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
        </Fields>
