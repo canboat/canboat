@@ -4037,42 +4037,42 @@ typedef struct
 
 /* http://www.nmea.org/Assets/20121212%20nmea%202000%20registration%20list.pdf */
 Company companyList[] =
-{ { "Volvo Penta", 174 }
+{ { "AB Volvo/Volvo Penta", 174 }
 , { "Actia Corporation", 199 }
 , { "Actisense", 273 }
 , { "Aetna Engineering/Fireboy-Xintex", 215 }
 , { "Airmar", 135 }
 , { "Alltek", 459 }
-, { "Amphenol", 274 }
-, { "Attwood", 502 }
+, { "Amphenol LTW Technology", 274 }
+, { "Attwood Marine", 502 }
 , { "B&G", 381 }
-, { "Bavaria", 637 }
+, { "Bavaria Yachtbau GmbH", 637 }
 , { "Beede Electrical", 185 }
 , { "BEP", 295 }
 , { "Beyond Measure", 396 }
 , { "Blue Water Data", 148 }
-, { "Evinrude/Bombardier" , 163 }
+, { "Evinrude/BRP Bombardier", 163 }
 , { "Camano Light", 384 }
 , { "Capi 2", 394 }
-, { "Carling", 176 }
-, { "CPac", 165 }
-, { "Coelmo", 286 }
-, { "ComNav", 404 }
+, { "Carling Technologies", 176 }
+, { "CPac Systems AB", 165 }
+, { "Coelmo SRL Italy", 286 }
+, { "Com Nav", 404 }
 , { "Cummins", 440 }
 , { "Dief", 329 }
-, { "Digital Yacht", 437 }
+, { "Digital Yacht Ltd.", 437 }
 , { "Disenos Y Technologia", 201 }
-, { "DNA Group", 211 }
-, { "Egersund Marine", 426 }
+, { "DNA Group, Inc.", 211 }
+, { "Egersund Marine Electronics AS", 426 }
 , { "Electronic Design", 373 }
-, { "Em-Trak", 427 }
+, { "Em-Trak Marine Electronics Ltd.", 427 }
 , { "EMMI Network", 224 }
-, { "Empirbus", 304 }
+, { "Empir Bus", 304 }
 , { "eRide", 243 }
 , { "Faria Instruments", 1863 }
 , { "Fischer Panda", 356 }
-, { "Floscan", 192 }
-, { "Furuno", 1855 }
+, { "Floscan Instrument Co., Inc.", 192 }
+, { "Furuno USA", 1855 }
 , { "Fusion", 419 }
 , { "FW Murphy", 78 }
 , { "Garmin", 229 }
@@ -4082,62 +4082,62 @@ Company companyList[] =
 , { "Groco", 272 }
 , { "Hamilton Jet", 283 }
 , { "Hemisphere GPS", 88 }
-, { "Honda", 257 }
-, { "Hummingbird", 467 }
+, { "Honda Motor", 257 }
+, { "Hummingbird Marine Electronics", 467 }
 , { "ICOM", 315 }
-, { "JRC", 1853 }
-, { "Kvasar", 1859 }
-, { "Kohler", 85 }
+, { "Japan Radico Co", 1853 }
+, { "Kvasar AB", 1859 }
+, { "Kohler Power Systems", 85 }
 , { "Korea Maritime University", 345 }
 , { "LCJ Capteurs", 499 }
 , { "Litton", 1858 }
-, { "Livorsi", 400 }
-, { "Lowrance", 140 }
+, { "Livorsi Marine", 400 }
+, { "Lowrance Electronics", 140 }
 , { "Maretron", 137 }
-, { "MBW", 307 }
+, { "MBW Technologies", 307 }
 , { "Mastervolt", 355 }
-, { "Mercury", 144 }
+, { "Mercury Marine", 144 }
 , { "MMP", 1860 }
-, { "Mystic Valley Comms", 198 }
-, { "Nautibus", 147 }
+, { "Mystic Valley Communications", 198 }
+, { "Nautibus Electronic GmbH", 147 }
 , { "Navico", 275 }
 , { "Navionics", 1852 }
 , { "Naviop", 503 }
 , { "Nobeltec", 193 }
-, { "Noland", 517 }
+, { "Noland", 517 }//NEW?
 , { "Northern Lights", 374 }
-, { "Northstar", 1854 }
+, { "Northstar Technologies", 1854 }
 , { "Novatel", 305 }
-, { "Offshore Systems", 161 }
+, { "Offshore Systems UK", 161 }
 , { "Qwerty", 328 }
 , { "Parker Hannifin", 451 }
-, { "Raymarine", 1851 }
-, { "Rolls Royce", 370 }
-, { "SailorMade/Tetra", 235 }
-, { "San Giorgio", 460 }
-, { "Yamaha", 1862 }
-, { "Sea Cross", 471 }
+, { "Raymarine, Inc.", 1851 }
+, { "Rolls Royce Marine", 370 }
+, { "SailorMade Marine Telemetry/Tetra Technology Ltd.", 235 }
+, { "San Giorgio S.E.I.N. srl", 460 }
+, { "Sanshin Industries / Yamaha Marine", 1862 }
+, { "Sea Cross Marine AB", 471 }
 , { "Sea Recovery", 285 }
 , { "Simrad", 1857 }
 , { "Sitex", 470 }
-, { "Sleipner", 306 }
+, { "Sleipner Motor AS", 306 }
 , { "Teleflex", 1850 }
 , { "Thrane and Thrane", 351 }
-, { "Tohatsu", 431 }
-, { "Transas", 518 }
+, { "Tohatsu Co JP", 431 }
+, { "Transas", 518 }//NEW?
 , { "Trimble", 1856 }
 , { "True Heading", 422 }
 , { "Twin Disc", 80 }
 , { "Vector Cantech", 1861 }
 , { "Veethree", 466 }
-, { "Vertex", 421 }
-, { "Vesper", 504 }
+, { "Vertex Standard Co Ltd.", 421 }
+, { "Vesper Marine", 504 }
 , { "Victron", 358 }
 , { "Watcheye", 493 }
-, { "Westerbeke", 154 }
-, { "Xantrex", 168 }
+, { "Westerbeke Corp.", 154 }
+, { "Xantrex Technology", 168 }
 , { "Yacht Monitoring Solutions", 233 }
-, { "Yanmar", 172 }
-, { "ZF", 228 }
+, { "Yanmar/ Yanmar Diesel", 172 }
+, { "ZF Marine Electronics", 228 }
 };
 
