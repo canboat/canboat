@@ -396,7 +396,7 @@ Pgn pgnList[] =
   , { "Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, "" }
   , { "System Instance", 4, 1, false, 0, "ISO Device Class Instance" }
   , { "Industry Group", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", 1, 1, false, 0, "ISO Self Configurable" }
+  , { "Reserved", 1, RES_BINARY, false, 0, "ISO Self Configurable" }
   , { 0 }
   }
 }
@@ -407,7 +407,7 @@ Pgn pgnList[] =
 ,
 { "Seatalk: Wireless Keypad Light Control", 61184, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=1", "Wireless Keypad Light Control" }
   , { "Variant", BYTES(1), 1, false, 0, "" }
@@ -419,7 +419,7 @@ Pgn pgnList[] =
 ,
 { "Seatalk: Wireless Keypad Light Control", 61184, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "PID", BYTES(1), 1, false, 0, "" }
   , { "Variant", BYTES(1), 1, false, 0, "" }
@@ -430,7 +430,7 @@ Pgn pgnList[] =
 ,
 { "Manufacturer Proprietary single-frame addressed", 61184, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Data", BYTES(6), RES_BINARY, false, 0, "" }
   , { 0 }
@@ -443,7 +443,7 @@ Pgn pgnList[] =
 ,
 { "Unknown single-frame non-addressed", 61440, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Data", BYTES(6), RES_BINARY, false, 0, "" }
   , { 0 }
@@ -730,12 +730,12 @@ Pgn pgnList[] =
   , { "Device Instance Lower", 4, 1, false, 0, "ISO ECU Instance" }
   , { "Device Instance Upper", 4, 1, false, 0, "ISO Function Instance" }
   , { "Device Function", BYTES(1), 1, false, 0, "ISO Function" }
-  , { "Reserved", 1 , 1, false, 0, "" }
+  , { "Reserved", 1 , RES_BINARY, false, 0, "" }
   , { "Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, "" }
   , { "System Instance", 4, 1, false, 0, "ISO Device Class Instance" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", 3, 1, false, 0, "ISO Self Configurable" }
+  , { "Reserved", 3, RES_BINARY, false, 0, "ISO Self Configurable" }
   , { "New Source Address", BYTES(1), 1, false, 0, "" }
   , { 0 }
   }
@@ -746,7 +746,7 @@ Pgn pgnList[] =
 ,
 { "Manufacturer Proprietary single-frame non-addressed", 65280, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Data", BYTES(6), RES_BINARY, false, 0, "" }
   , { 0 }
@@ -758,7 +758,7 @@ Pgn pgnList[] =
 ,
 { "Airmar: Boot State Acknowledgment", 65285, true, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Boot State", 4, RES_LOOKUP, false, ",0=in Startup Monitor,1=running Bootloader,2=running Application", "" }
   , { 0 }
@@ -768,7 +768,7 @@ Pgn pgnList[] =
 ,
 { "Lowrance: Temperature", 65285, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Temperature Instance", 4, 1, false, 0, "" }
   , { "Temperature Source", 4, 1, false, 0, "" }
@@ -781,7 +781,7 @@ Pgn pgnList[] =
 ,
 { "Airmar: Boot State Request", 65286, true, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -791,11 +791,11 @@ Pgn pgnList[] =
 ,
 { "Airmar: Access Level", 65287, true, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Format Code", 3, RES_LOOKUP, false, ",1=Format code 1", "" }
   , { "Access Level", 3, RES_LOOKUP, false, ",0=Locked,1=unlocked level 1,2=unlocked level 2", "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "" }
   , { "Access Seed/Key", BYTES(4), RES_INTEGER, false, 0, "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208." }
   , { 0 }
   }
@@ -804,7 +804,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Configure Temperature Sensor", 65287, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   }
 }
@@ -812,7 +812,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Trim Tab Sensor Calibration", 65289, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   }
 }
@@ -820,7 +820,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Paddle Wheel Speed Configuration", 65290, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   }
 }
@@ -828,7 +828,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Clear Fluid Level Warnings", 65292, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   }
 }
@@ -836,7 +836,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: LGC-2000 Configuration", 65293, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   }
 }
@@ -844,7 +844,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Reprogram Status", 65325, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   }
 }
@@ -852,7 +852,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Autopilot Mode", 65341, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   }
 }
@@ -860,14 +860,14 @@ Pgn pgnList[] =
 ,
 { "Seatalk: Keypad Message", 65371, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), 1, false, 0, "" }
   , { "First key", BYTES(1), 1, false, 0, "" }
   , { "Second key", BYTES(1), 1, false, 0, "" }
   , { "First key state", 2, 1, false, 0, "" }
   , { "Second key state", 2, 1, false, 0, "" }
-  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "" }
   , { "Encoder Position", BYTES(1), 1, false, 0, "" }
   }
 }
@@ -875,7 +875,7 @@ Pgn pgnList[] =
 ,
 { "SeaTalk: Keypad Heartbeat", 65374, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), 1, false, 0, "" }
   , { "Variant", BYTES(1), 1, false, 0, "" }
@@ -887,7 +887,7 @@ Pgn pgnList[] =
 ,
 { "Airmar: Depth Quality Factor", 65408, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "SID", BYTES(1), 1, false, 0, "" }
   , { "Depth Quality Factor", 4, RES_LOOKUP, false, ",0=No Depth Lock", "" }
@@ -899,12 +899,12 @@ Pgn pgnList[] =
 ,
 { "Airmar: Device Information", 65410, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "SID", BYTES(1), 1, false, 0, "" }
   , { "Internal Device Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Supply Voltage", BYTES(2), 0.01, false, "V", "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { 0 }
   }
 }
@@ -912,7 +912,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Autopilot Mode", 65480, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -946,7 +946,7 @@ Pgn pgnList[] =
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=1", "Command" }
   , { "PGN", BYTES(3), RES_INTEGER, false, 0, "Commanded or requested PGN" }
   , { "Priority", 4, 1, false, 0, ",8=Leave priority unchanged" }
-  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "" }
   , { "# of Commanded Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow" }
   , { "Parameter Index", BYTES(1), RES_INTEGER, false, 0, "Parameter index" }
   , { "Parameter Value", LEN_VARIABLE, RES_INTEGER, false, 0, "Parameter value, variable length" }
@@ -971,7 +971,7 @@ Pgn pgnList[] =
 ,
 { "Maretron: Slave Response", 126270, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Product code", BYTES(2), 1, false, 0, "0x1b2=SSC200" }
   , { "Software code", BYTES(2), 1, false, 0, "" }
@@ -1275,21 +1275,21 @@ Pgn pgnList[] =
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "MOB Emitter ID", BYTES(4), RES_INTEGER, false, 0, "Identifier for each MOB emitter, unique to the vessel" }
   , { "Man Overboard Status", 3, RES_LOOKUP, false, "0=MOB Emitter Activated,1=Manual on-board MOB Button Activation,2=Test Mode,3=MOB Not Active", "" }
-  , { "Reserved", 5, 1, false, 0, "" }
+  , { "Reserved", 5, RES_BINARY, false, 0, "" }
   , { "Activation Time", BYTES(4), RES_TIME, false, "s", "Time of day (UTC) when MOB was activated" }
   , { "Position Source", 3, RES_LOOKUP, false, "0=Position estimated by the Vessel,1=Position reported by MOB emitter", "" }
-  , { "Reserved", 5, 1, false, 0, "" }
+  , { "Reserved", 5, RES_BINARY, false, 0, "" }
   , { "Position Date", BYTES(2), RES_DATE, false, "", "Date of MOB position" }
   , { "Position Time", BYTES(4), RES_TIME, false, "s", "Time of day of MOB position (UTC)" }
   , { "Latitude", BYTES(4), RES_LATITUDE, true, "deg", "" }
   , { "Longitude", BYTES(4), RES_LONGITUDE, true, "deg", "" }
   , { "COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, "" }
-  , { "Reserved", 6, 1, false, 0, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "" }
   , { "COG", BYTES(2), RES_DEGREES, false, "deg", "" }
   , { "SOG", BYTES(2), 0.01, false, "m/s", "" }
   , { "MMSI of vessel of origin", BYTES(4), RES_INTEGER, false, "MMSI", "" }
   , { "MOB Emitter Battery Status", 3, RES_LOOKUP, false, "0=Good,1=Low", "" }
-  , { "Reserved", 5, 1, false, 0, "" }
+  , { "Reserved", 5, RES_BINARY, false, 0, "" }
   , { 0 }
   }
 }
@@ -1303,7 +1303,7 @@ Pgn pgnList[] =
   , { "Steering Mode", 4, 1, false, 0, "" }
   , { "Turn Mode", 4, 1, false, 0, "" }
   , { "Heading Reference", 3, 1, false, 0, "" }
-  , { "Reserved", 3, 1, false, 0, "" }
+  , { "Reserved", 3, RES_BINARY, false, 0, "" }
   , { "Commanded Rudder Direction", 2, 1, false, 0, "" }
   , { "Commanded Rudder Angle", BYTES(2), RES_DEGREES, true, "deg", "" }
   , { "Heading-To-Steer (Course)", BYTES(2), RES_DEGREES, false, "deg", "" }
@@ -1403,7 +1403,7 @@ Pgn pgnList[] =
   , { "Total Engine hours", BYTES(4), 1.0, false, "s", "" }
   , { "Coolant Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Fuel Pressure", BYTES(2), 1, false, 0, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { "Discrete Status 1", BYTES(2), RES_INTEGER, false, 0, "" }
   , { "Discrete Status 2", BYTES(2), RES_INTEGER, false, 0, "" }
   , { "Percent Engine Load", BYTES(1), RES_INTEGER, true, "%", "" }
@@ -1416,11 +1416,11 @@ Pgn pgnList[] =
 { "Transmission Parameters, Dynamic", 127493, true, 8, 0,
   { { "Engine Instance", 8, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Transmission Gear", 2, RES_LOOKUP, false, LOOKUP_GEAR_STATUS, "" }
-  , { "Reserved", 6, RES_NOTUSED, false, 0, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "" }
   , { "Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Oil temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Discrete Status 1", BYTES(1), RES_INTEGER, false, 0, "" }
-  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { 0 }
   }
 }
@@ -1480,7 +1480,7 @@ Pgn pgnList[] =
 
   , { "Line", 2, RES_LOOKUP, false, ",0=Line 1,1=Line 2,2=Line 3,3=Reserved", "" }
   , { "Acceptability", 2, RES_LOOKUP, false, ",0=Bad Level,1=Bad Frequency,2=Being Qualified,3=Good", "" }
-  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "" }
   , { "Voltage", BYTES(2), 0.01, false, "V", "" }
   , { "Current", BYTES(2), 0.1, false, "A", "" }
   , { "Frequency", BYTES(2), 0.01, false, "Hz", "" }
@@ -1500,7 +1500,7 @@ Pgn pgnList[] =
 
   , { "Line", 2, RES_LOOKUP, false, ",0=Line 1,1=Line 2,2=Line 3", "" }
   , { "Waveform", 3, RES_LOOKUP, false, ",0=Sine Wave,1=Modified Sine Wave,6=Error,7=Data Not Available", "" }
-  , { "Reserved", 3, 1, false, 0, "" }
+  , { "Reserved", 3, RES_BINARY, false, 0, "" }
   , { "Voltage", BYTES(2), 0.01, false, "V", "" }
   , { "Current", BYTES(2), 0.1, false, "A", "" }
   , { "Frequency", BYTES(2), 0.01, false, "Hz", "" }
@@ -1545,7 +1545,7 @@ Pgn pgnList[] =
   , { "Charge Mode", BYTES(1), 1, false, 0, "" }
   , { "Charger Enable/Disable", 2, 1, false, 0, "" }
   , { "Equalization Pending", 2, 1, false, 0, "" }
-  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "" }
   , { "Equalization Time Remaining", BYTES(2), 1, false, 0, "" }
   , { 0 }
   }
@@ -1578,7 +1578,7 @@ Pgn pgnList[] =
   { { "Charger Instance", BYTES(1), 1, false, 0, "" }
   , { "Battery Instance", BYTES(1), 1, false, 0, "" }
   , { "Charger Enable/Disable", 2, 1, false, 0, "" }
-  , { "Reserved", 6, 1, false, 0, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "" }
   , { "Charge Current Limit", BYTES(2), 0.1, false, "A", "" }
   , { "Charging Algorithm", BYTES(1), 1, false, 0, "" }
   , { "Charger Mode", BYTES(1), 1, false, 0, "" }
@@ -1618,7 +1618,7 @@ Pgn pgnList[] =
   { { "Battery Instance", BYTES(1), 1, false, 0, "" }
   , { "Battery Type", BYTES(1), 1, false, 0, "" }
   , { "Supports Equalization", 2, 1, false, 0, "" }
-  , { "Reserved", 6, 1, false, 0, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "" }
   , { "Nominal Voltage", BYTES(2), 0.01, false, "V", "" }
   , { "Chemistry", BYTES(1), 1, false, 0, "" }
   , { "Capacity", BYTES(2), 1, false, 0, "" }
@@ -1681,7 +1681,7 @@ Pgn pgnList[] =
   , { "Reported Target", 1, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
   , { "Target Acquisition", 1, RES_LOOKUP, false, ",0=Manual,1=Automatic", "" }
   , { "Bearing Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "" }
   , { "Bearing", BYTES(2), RES_DEGREES, false, "deg", "" }
   , { "Distance", BYTES(4), 0.001, false, "m", "" }
   , { "Course", BYTES(2), RES_DEGREES, false, "deg", "" }
@@ -2108,7 +2108,7 @@ Pgn pgnList[] =
   , { "Reference Station Type", BYTES(2), 1, false, 0, "" }
   , { "Time of corrections", BYTES(1), 1, false, 0, "" }
   , { "Station Health", BYTES(1), 1, false, 0, "" }
-  , { "Reserved Bits", BYTES(1), 1, false, 0, "" }
+  , { "Reserved Bits", BYTES(1), RES_BINARY, false, 0, "" }
   , { "Satellite ID", BYTES(1), 1, false, 0, "" }
   , { "PRC", BYTES(1), 1, false, 0, "" }
   , { "RRC", BYTES(1), 1, false, 0, "" }
@@ -2142,7 +2142,7 @@ Pgn pgnList[] =
   , { "Differential Signal Bit Rate", BYTES(1), 1, false, 0, "" }
   , { "Differential Signal Detection Mode", BYTES(1), 1, false, 0, "" }
   , { "Used as Correction Source", BYTES(1), 1, false, 0, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "Reserved" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "Reserved" }
   , { "Differential Source", BYTES(1), 1, false, 0, "" }
   , { "Time since Last Sat Differential Sync", BYTES(1), 1, false, 0, "" }
   , { "Satellite Service ID No.", BYTES(1), 1, false, 0, "" }
@@ -2174,12 +2174,12 @@ Pgn pgnList[] =
   { { "Message ID", BYTES(1), 1, false, 0, "" }
   , { "Repeat Indicator", BYTES(1), 1, false, 0, "" }
   , { "Source ID", BYTES(1), 1, false, 0, "" }
-  , { "NMEA 2000 Reserved", BYTES(1), 1, false, 0, "" }
+  , { "NMEA 2000 Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { "AIS Tranceiver Information", BYTES(1), 1, false, 0, "" }
   , { "Spare", BYTES(1), 1, false, 0, "" }
   , { "Longitude", BYTES(1), 1, false, 0, "" }
   , { "Latitude", BYTES(1), 1, false, 0, "" }
-  , { "NMEA 2000 Reserved", BYTES(1), 1, false, 0, "" }
+  , { "NMEA 2000 Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { "Spare", BYTES(1), 1, false, 0, "" }
   , { "Number of Bits in Binary Data Field", BYTES(1), 1, false, 0, "" }
   , { "Binary Data", BYTES(8), RES_BINARY, false, 0, "" }
@@ -2298,7 +2298,7 @@ Pgn pgnList[] =
   , { "Communication State", 19, RES_BINARY, false, 0, "Information used by the TDMA slot allocation algorithm and synchronization information" }
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
   , { "Altitude", BYTES(8), 1e-6, true, "m", "" }
-  , { "Reserved for Regional Applications", BYTES(1), 1, false, 0, "" }
+  , { "Reserved for Regional Applications", BYTES(1), RES_BINARY, false, 0, "" }
   , { "DTE", 1, RES_LOOKUP, false, ",0=Available,1=Not available", "" }
   , { "Reserved", 7, RES_BINARY, false, 0, "reserved" }
   , { 0 }
@@ -2730,7 +2730,7 @@ Pgn pgnList[] =
   , { "nItems", BYTES(1), 1, false, 0, "" }
   , { "Number of valid WPs in the WP-List", BYTES(2), 1, false, 0, "" }
   , { "Database ID", BYTES(1), 1, false, 0, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "reserved" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "reserved" }
 
   , { "WP ID", BYTES(1), 1, false, 0, "" }
   , { "WP Name", BYTES(8), RES_ASCII, false, 0, "" }
@@ -3002,9 +3002,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Init #2", 130816, false, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Init #2" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "A", BYTES(2), RES_INTEGER, false, 0, "" }
@@ -3016,16 +3016,16 @@ Pgn pgnList[] =
 ,
 { "SonicHub: AM Radio", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=4", "AM Radio" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Seeking up,2=Tuned,3=Seeking down", "" }
   , { "Frequency", BYTES(4), 0.001, false, "kHz", "" }
   , { "Noise level", 2, 1, false, 0, "" }  // Not sure about this
   , { "Signal level", 4, 1, false, 0, "" } // ... and this, doesn't make complete sense compared to display
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "" }
   , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
   , { 0 }
   }
@@ -3034,9 +3034,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Zone info", 130816, false, 6, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=5", "Zone info" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Zone", BYTES(1), RES_INTEGER, false, 0, "" }
@@ -3047,9 +3047,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Source", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=6", "Source" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Source", BYTES(1), RES_LOOKUP, false, ",0=AM,1=FM,2=iPod,3=USB,4=AUX,5=AUX 2,6=Mic", "" }
@@ -3060,9 +3060,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Source List", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=8", "Source list" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Source ID", BYTES(1), RES_INTEGER, false, 0, "" }
@@ -3075,9 +3075,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Control", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Control" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Mute on,2=Mute off", "" }
@@ -3088,9 +3088,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Unknown", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Unknown" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "A", 8, RES_INTEGER, false, 0, "" }
@@ -3102,16 +3102,16 @@ Pgn pgnList[] =
 ,
 { "SonicHub: FM Radio", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=12", "FM Radio" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Seeking up,2=Tuned,3=Seeking down", "" }
   , { "Frequency", BYTES(4), 0.001, false, "kHz", "" }
   , { "Noise level", 2, 1, false, 0, "" }  // Not sure about this
   , { "Signal level", 4, 1, false, 0, "" } // ... and this, doesn't make complete sense compared to display
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "" }
   , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
   , { 0 }
   }
@@ -3120,9 +3120,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Playlist", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=13", "Playlist" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Report,4=Next Song,6=Previous Song", "" }
@@ -3138,9 +3138,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Track", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=14", "Track" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
@@ -3152,9 +3152,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Artist", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=15", "Artist" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
@@ -3166,9 +3166,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Album", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=16", "Album" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
@@ -3180,9 +3180,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Menu Item", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=19", "Menu Item" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
@@ -3197,9 +3197,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Zones", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=20", "Zones" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Zones", BYTES(1), RES_INTEGER, false, 0, "" }
@@ -3210,9 +3210,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Max Volume", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=23", "Max Volume" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Zone", BYTES(1), RES_LOOKUP, false, ",0=Zone 1,1=Zone 2,2=Zone 3", "" }
@@ -3224,9 +3224,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Volume", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=24", "Volume" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Zone", BYTES(1), RES_LOOKUP, false, ",0=Zone 1,1=Zone 2,2=Zone 3", "" }
@@ -3238,9 +3238,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Init #1", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=25", "Init #1" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { 0 }
@@ -3250,9 +3250,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Position", 130816, true, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=48", "Position" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Position", BYTES(4), 0.001, false, "s", "" }
@@ -3263,9 +3263,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Init #3", 130816, false, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "A", BYTES(1), RES_INTEGER, false, 0, "" }
@@ -3277,10 +3277,10 @@ Pgn pgnList[] =
 ,
 { "Simrad: Text Message", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
-  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3" }//FIXME
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
@@ -3305,7 +3305,7 @@ Pgn pgnList[] =
 ,
 { "Navico: Product Information", 130817, false, 0x0e, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Product Code", BYTES(2), RES_INTEGER, false, 0, "" }
   , { "Model", BYTES(32), RES_ASCII, false, 0, "" }
@@ -3322,7 +3322,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Reprogram Data", 130818, false, 223, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Version", BYTES(2), RES_INTEGER, false, 0, "" }
   , { "Sequence", BYTES(2), RES_INTEGER, false, 0, "" }
@@ -3334,7 +3334,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Request Reprogram", 130819, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3343,11 +3343,11 @@ Pgn pgnList[] =
 ,
 { "Simnet: Reprogram Status", 130820, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { "Status", BYTES(1), 1, false, 0, "" }
-  , { "Reserved", BYTES(3), 1, false, 0, "" }
+  , { "Reserved", BYTES(3), RES_BINARY, false, 0, "" }
   , { 0 }
   }
 }
@@ -3356,7 +3356,7 @@ Pgn pgnList[] =
 ,
 { "Furuno: Unknown", 130820, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3371,7 +3371,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Source Name", 130820, false, 13, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=2", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3387,7 +3387,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Track", 130820, false, 0x20, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=5", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3400,7 +3400,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Artist", 130820, false, 0x20, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=6", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3413,7 +3413,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Album", 130820, false, 0x20, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=7", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3426,7 +3426,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Play Progress", 130820, false, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=9", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3439,7 +3439,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: AM/FM Station", 130820, false, 0x0A, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=11", "" }
   , { "A", BYTES(3), 1, false, 0, "" }
@@ -3453,7 +3453,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: VHF", 130820, false, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=12", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3467,7 +3467,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Squelch", 130820, false, 6, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=13", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3480,7 +3480,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Scan", 130820, false, 6, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=14", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3493,7 +3493,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Menu Item", 130820, false, 23, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=17", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3512,7 +3512,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Replay", 130820, false, 23, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=20", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3531,7 +3531,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Mute", 130820, false, 5, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=23", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3544,7 +3544,7 @@ Pgn pgnList[] =
 // Range: 0 to +24
 { "Fusion: Sub Volume", 130820, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=26", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3560,7 +3560,7 @@ Pgn pgnList[] =
 // Range: -15 to +15
 { "Fusion: Tone", 130820, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=27", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3575,7 +3575,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Volume", 130820, false, 0x0A, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=29", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3590,7 +3590,7 @@ Pgn pgnList[] =
 ,
 { "Fusion: Transport", 130820, false, 5, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(1), 1, false, "=32", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3603,7 +3603,7 @@ Pgn pgnList[] =
 ,
 { "Furuno: Unknown", 130821, false, 0x0c, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "SID", BYTES(1), 1, false, 0, "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -3623,7 +3623,7 @@ Pgn pgnList[] =
 ,
 { "Lowrance: unknown", 130827, false, 10, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "Lowrance" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3638,7 +3638,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Set Serial Number", 130828, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3647,7 +3647,7 @@ Pgn pgnList[] =
 ,
 { "Suzuki: Engine and Storage Device Config", 130831, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3656,7 +3656,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Fuel Used - High Resolution", 130832, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3665,7 +3665,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Engine and Tank Configuration", 130834, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3674,7 +3674,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Set Engine and Tank Configuration", 130835, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3684,7 +3684,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Fluid Level Sensor Configuration", 130836, false, 0x0e, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
   , { "Device", BYTES(1), RES_INTEGER, false, 0, "" }
@@ -3702,7 +3702,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Fuel Flow Turbine Configuration", 130837, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3711,7 +3711,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Fluid Level Warning", 130838, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3720,7 +3720,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Pressure Sensor Configuration", 130839, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3729,7 +3729,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Data User Group Configuration", 130840, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3739,7 +3739,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: DSC Message", 130842, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3749,7 +3749,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: AIS Class B static data (msg 24 Part A)", 130842, false, 0x1d, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", 6, 1, false, "=0", "Msg 24 Part A" }
   , { "Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
@@ -3764,7 +3764,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: AIS Class B static data (msg 24 Part B)", 130842, false, 0x25, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", 6, 1, false, "=1", "Msg 24 Part B" }
   , { "Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
@@ -3788,7 +3788,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Sonar Status, Frequency and DSP Voltage", 130843, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
   }
@@ -3797,7 +3797,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Parameter Handle", 130845, false, 0x0e, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", 6, 1, false, 0, "" }
   , { "Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
@@ -3847,7 +3847,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Event Command: AP command", 130850, false, 12, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command" }
   , { "B", BYTES(2), 1, false, 0, "" }
@@ -3863,7 +3863,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Event Command: Alarm?", 130850, false, 12, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "A", BYTES(2), 1, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command" }
@@ -3879,7 +3879,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Event Command: Unknown", 130850, false, 12, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "A", BYTES(2), 1, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command" }
@@ -3894,7 +3894,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Event Reply: AP command", 130851, false, 12, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command" }
   , { "B", BYTES(2), 1, false, 0, "" }
@@ -3910,7 +3910,7 @@ Pgn pgnList[] =
 ,
 { "Simnet: Alarm Message", 130856, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Message ID", BYTES(2), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3923,7 +3923,7 @@ Pgn pgnList[] =
 ,
 { "Airmar: Additional Weather Data", 130880, false, 0x1e, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
   , { "Apparent Windchill Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
@@ -3936,7 +3936,7 @@ Pgn pgnList[] =
 ,
 { "Airmar: Heater Control", 130881, false, 0x9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
   , { "Plate Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
@@ -3949,10 +3949,10 @@ Pgn pgnList[] =
 ,
 { "Airmar: POST", 130944, false, 0x8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Control", 4, RES_LOOKUP, false, ",0=Report previous values,1=Generate new values", "" }
-  , { "Reserved", 7, 1, false, 0, "" }
+  , { "Reserved", 7, RES_BINARY, false, 0, "" }
   , { "Number of ID/test result pairs to follow", BYTES(1), RES_INTEGER, false, 0, "" }
 
   , { "Test ID", BYTES(1), RES_LOOKUP, false, ",1=Format Code,2=Factory EEPROM,3=User EEPROM,4=Water Temp Sensor,5=Sonar Transceiver,6=Speed sensor,7=Internal temperature sensor,8=Battery voltage sensor", "See Airmar docs for table of IDs and failure codes; these lookup values are for DST200" }
