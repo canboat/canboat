@@ -605,15 +605,14 @@ Pgn pgnList[] =
   data portion of the message must match the name information of the node whose network address is to be set. */
   { { "Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number" }
   , { "Manufacturer Code", 11, 1, false, 0, "" }
-  , { "Device Instance Lower", 4, 1, false, 0, "ISO ECU Instance" }
-  , { "Device Instance Upper", 4, 1, false, 0, "ISO Function Instance" }
+  , { "Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance" }
+  , { "Device Instance Upper", 5, 1, false, 0, "ISO Function Instance" }
   , { "Device Function", BYTES(1), 1, false, 0, "ISO Function" }
-  , { "Reserved", 1 , 1, false, 0, "" }
+  , { "Reserved", 1, RES_BINARY , false, 0, "" }
   , { "Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, "" }
   , { "System Instance", 4, 1, false, 0, "ISO Device Class Instance" }
-  , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", 3, 1, false, 0, "ISO Self Configurable" }
+  , { "Reserved", 1, RES_BINARY, false, 0, "ISO Self Configurable" }
   , { "New Source Address", BYTES(1), 1, false, 0, "" }
   , { 0 }
   }
