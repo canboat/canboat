@@ -4043,7 +4043,10 @@ Company companyList[] =
 , { "Aetna Engineering/Fireboy-Xintex", 215 }
 , { "Airmar", 135 }
 , { "Alltek", 459 }
+, { "Amphenol", 274 }
+, { "Attwood", 502 }
 , { "B&G", 381 }
+, { "Bavaria", 637 }
 , { "Beede Electrical", 185 }
 , { "BEP", 295 }
 , { "Beyond Measure", 396 }
@@ -4112,9 +4115,9 @@ Company companyList[] =
 , { "Rolls Royce", 370 }
 , { "SailorMade/Tetra", 235 }
 , { "San Giorgio", 460 }
+, { "Yamaha", 1862 }
 , { "Sea Cross", 471 }
 , { "Sea Recovery", 285 }
-, { "Yamaha", 1862 }
 , { "Simrad", 1857 }
 , { "Sitex", 470 }
 , { "Sleipner", 306 }
