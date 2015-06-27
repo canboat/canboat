@@ -766,7 +766,7 @@ Pgn pgnList[] =
 
 ,
 { "Lowrance: Temperature", 65285, false, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "Lowrance" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Temperature Instance", 4, 1, false, 0, "" }
@@ -897,7 +897,7 @@ Pgn pgnList[] =
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
 { "Airmar: Device Information", 65410, false, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "SID", BYTES(1), 1, false, 0, "" }
@@ -969,7 +969,7 @@ Pgn pgnList[] =
 
 ,
 { "Maretron: Slave Response", 126270, false, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Product code", BYTES(2), 1, false, 0, "0x1b2=SSC200" }
@@ -3275,7 +3275,7 @@ Pgn pgnList[] =
 
 ,
 { "Simrad: Text Message", 130816, false, 0x40, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
@@ -3303,7 +3303,7 @@ Pgn pgnList[] =
 
 ,
 { "Navico: Product Information", 130817, false, 0x0e, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Product Code", BYTES(2), RES_INTEGER, false, 0, "" }
@@ -3645,7 +3645,7 @@ Pgn pgnList[] =
 
 ,
 { "Suzuki: Engine and Storage Device Config", 130831, false, 0x08, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" } //FIXME
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { 0 }
@@ -3682,7 +3682,7 @@ Pgn pgnList[] =
   /* Seen when HDS8 configures EP65R */
 ,
 { "Simnet: Fluid Level Sensor Configuration", 130836, false, 0x0e, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
@@ -3921,7 +3921,7 @@ Pgn pgnList[] =
 
 ,
 { "Airmar: Additional Weather Data", 130880, false, 0x1e, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
@@ -3934,7 +3934,7 @@ Pgn pgnList[] =
 
 ,
 { "Airmar: Heater Control", 130881, false, 0x9, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
@@ -3947,7 +3947,7 @@ Pgn pgnList[] =
 
 ,
 { "Airmar: POST", 130944, false, 0x8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
   , { "Control", 4, RES_LOOKUP, false, ",0=Report previous values,1=Generate new values", "" }
