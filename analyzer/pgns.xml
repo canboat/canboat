@@ -234,6 +234,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>1</BitLength>
            <BitOffset>63</BitOffset>
            <BitStart>7</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -265,6 +266,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -348,6 +350,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -416,6 +419,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -468,6 +472,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1754,7 +1759,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>isoCommandedAddress</Id>
        <Description>ISO Commanded Address</Description>
        <Complete>false</Complete>
-       <Length>8</Length>
+       <Length>9</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -1782,7 +1787,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>deviceInstanceLower</Id>
            <Name>Device Instance Lower</Name>
            <Description>ISO ECU Instance</Description>
-           <BitLength>4</BitLength>
+           <BitLength>3</BitLength>
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
@@ -1792,9 +1797,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>deviceInstanceUpper</Id>
            <Name>Device Instance Upper</Name>
            <Description>ISO Function Instance</Description>
-           <BitLength>4</BitLength>
-           <BitOffset>36</BitOffset>
-           <BitStart>4</BitStart>
+           <BitLength>5</BitLength>
+           <BitOffset>35</BitOffset>
+           <BitStart>3</BitStart>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1814,6 +1819,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>1</BitLength>
            <BitOffset>48</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1857,20 +1863,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>9</Order>
-           <Id>reserved</Id>
-           <Name>Reserved</Name>
-           <BitLength>2</BitLength>
-           <BitOffset>60</BitOffset>
-           <BitStart>4</BitStart>
-           <Signed>false</Signed>
-         </Field>
-         <Field>
-           <Order>10</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
            <BitLength>3</BitLength>
-           <BitOffset>62</BitOffset>
-           <BitStart>6</BitStart>
+           <BitOffset>60</BitOffset>
+           <BitStart>4</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
@@ -1878,22 +1875,23 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            </EnumValues>
          </Field>
          <Field>
-           <Order>11</Order>
+           <Order>10</Order>
            <Id>reserved</Id>
            <Name>Reserved</Name>
            <Description>ISO Self Configurable</Description>
-           <BitLength>3</BitLength>
-           <BitOffset>65</BitOffset>
-           <BitStart>1</BitStart>
+           <BitLength>1</BitLength>
+           <BitOffset>63</BitOffset>
+           <BitStart>7</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
-           <Order>12</Order>
+           <Order>11</Order>
            <Id>newSourceAddress</Id>
            <Name>New Source Address</Name>
            <BitLength>8</BitLength>
-           <BitOffset>68</BitOffset>
-           <BitStart>4</BitStart>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -1923,6 +1921,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1977,6 +1976,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2020,6 +2020,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>1</Order>
            <Id>manufacturerCode</Id>
            <Name>Manufacturer Code</Name>
+           <Description>Lowrance</Description>
            <BitLength>11</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
@@ -2034,20 +2035,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -2108,20 +2109,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -2152,6 +2153,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2201,6 +2203,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>22</BitOffset>
            <BitStart>6</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2244,20 +2247,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -2288,20 +2291,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -2332,20 +2335,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -2376,20 +2379,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -2420,20 +2423,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -2464,20 +2467,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -2508,20 +2511,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -2552,6 +2555,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2618,6 +2622,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>4</BitLength>
            <BitOffset>44</BitOffset>
            <BitStart>4</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2658,6 +2663,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2728,6 +2734,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2778,9 +2785,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>1</Order>
            <Id>manufacturerCode</Id>
            <Name>Manufacturer Code</Name>
+           <Description>Airmar</Description>
            <BitLength>11</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
+           <Match>135</Match>
                   <Type>Manufacturer code</Type>
            <Signed>false</Signed>
          </Field>
@@ -2791,20 +2800,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -2845,6 +2854,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>56</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -2876,20 +2886,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -3049,6 +3059,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>4</BitLength>
            <BitOffset>36</BitOffset>
            <BitStart>4</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -3172,9 +3183,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>1</Order>
            <Id>manufacturerCode</Id>
            <Name>Manufacturer Code</Name>
+           <Description>Maretron</Description>
            <BitLength>11</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
+           <Match>137</Match>
                   <Type>Manufacturer code</Type>
            <Signed>false</Signed>
          </Field>
@@ -3185,20 +3198,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -4933,6 +4946,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>5</BitLength>
            <BitOffset>43</BitOffset>
            <BitStart>3</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -4966,6 +4980,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>5</BitLength>
            <BitOffset>83</BitOffset>
            <BitStart>3</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -5039,6 +5054,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>6</BitLength>
            <BitOffset>202</BitOffset>
            <BitStart>2</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -5094,6 +5110,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>5</BitLength>
            <BitOffset>275</BitOffset>
            <BitStart>3</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -5176,6 +5193,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>3</BitLength>
            <BitOffset>19</BitOffset>
            <BitStart>3</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -5757,6 +5775,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>152</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -5852,7 +5871,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>6</BitLength>
            <BitOffset>10</BitOffset>
            <BitStart>2</BitStart>
-           <Resolution>0</Resolution>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -5896,7 +5915,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>56</BitOffset>
            <BitStart>0</BitStart>
-           <Resolution>0</Resolution>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -6203,6 +6222,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>4</BitLength>
            <BitOffset>20</BitOffset>
            <BitStart>4</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -6350,6 +6370,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>3</BitLength>
            <BitOffset>21</BitOffset>
            <BitStart>5</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -6636,6 +6657,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>4</BitLength>
            <BitOffset>36</BitOffset>
            <BitStart>4</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -6818,6 +6840,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>6</BitLength>
            <BitOffset>18</BitOffset>
            <BitStart>2</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -7051,6 +7074,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>6</BitLength>
            <BitOffset>18</BitOffset>
            <BitStart>2</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -7419,6 +7443,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>22</BitOffset>
            <BitStart>6</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -10670,6 +10695,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>56</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -10889,6 +10915,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>80</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -11089,6 +11116,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -11134,6 +11162,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>64</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -12246,6 +12275,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>232</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -15325,6 +15355,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -17198,20 +17229,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -17220,6 +17251,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -17299,20 +17331,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -17321,6 +17353,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -17400,6 +17433,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>86</BitOffset>
            <BitStart>6</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -17441,20 +17475,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -17463,6 +17497,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -17531,20 +17566,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -17553,6 +17588,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -17629,20 +17665,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -17651,6 +17687,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -17740,20 +17777,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -17762,6 +17799,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -17833,20 +17871,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -17855,6 +17893,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -17934,20 +17973,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -17956,6 +17995,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -18035,6 +18075,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>86</BitOffset>
            <BitStart>6</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -18076,20 +18117,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -18098,6 +18139,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -18225,20 +18267,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -18247,6 +18289,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -18325,20 +18368,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -18347,6 +18390,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -18425,20 +18469,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -18447,6 +18491,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -18525,20 +18570,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -18547,6 +18592,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -18652,20 +18698,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -18674,6 +18720,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -18742,20 +18789,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -18764,6 +18811,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -18847,20 +18895,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -18869,6 +18917,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -18952,20 +19001,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -18974,6 +19023,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -19031,20 +19081,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -19053,6 +19103,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -19121,20 +19172,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -19143,6 +19194,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -19207,9 +19259,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>1</Order>
            <Id>manufacturerCode</Id>
            <Name>Manufacturer Code</Name>
+           <Description>Simrad</Description>
            <BitLength>11</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
+           <Match>1857</Match>
                   <Type>Manufacturer code</Type>
            <Signed>false</Signed>
          </Field>
@@ -19220,20 +19274,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -19242,6 +19296,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -19378,9 +19433,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>1</Order>
            <Id>manufacturerCode</Id>
            <Name>Manufacturer Code</Name>
+           <Description>Navico</Description>
            <BitLength>11</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
+           <Match>275</Match>
                   <Type>Manufacturer code</Type>
            <Signed>false</Signed>
          </Field>
@@ -19391,20 +19448,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -19513,20 +19570,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -19589,20 +19646,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -19633,20 +19690,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -19655,6 +19712,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -19673,6 +19731,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>24</BitLength>
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -19704,20 +19763,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -19793,20 +19852,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -19902,20 +19961,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -19984,20 +20043,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -20066,20 +20125,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -20148,20 +20207,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -20231,20 +20290,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -20323,20 +20382,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -20413,20 +20472,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -20494,20 +20553,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -20580,20 +20639,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -20716,20 +20775,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -20864,20 +20923,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -20941,20 +21000,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -21044,20 +21103,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -21146,20 +21205,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -21249,20 +21308,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -21325,20 +21384,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -21459,20 +21518,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -21557,20 +21616,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -21599,20 +21658,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -21643,20 +21702,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -21687,20 +21746,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -21731,20 +21790,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -21760,9 +21819,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>1</Order>
            <Id>manufacturerCode</Id>
            <Name>Manufacturer Code</Name>
+           <Description>Simrad</Description>
            <BitLength>11</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
+           <Match>1857</Match>
                   <Type>Manufacturer code</Type>
            <Signed>false</Signed>
          </Field>
@@ -21773,20 +21834,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -21910,20 +21971,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -21954,20 +22015,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -21998,20 +22059,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -22042,20 +22103,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -22086,20 +22147,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -22197,20 +22258,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -22456,20 +22517,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -22500,20 +22561,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -22751,20 +22812,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -22880,20 +22941,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -22997,20 +23058,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -23098,20 +23159,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -23227,20 +23288,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -23293,9 +23354,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>1</Order>
            <Id>manufacturerCode</Id>
            <Name>Manufacturer Code</Name>
+           <Description>Airmar</Description>
            <BitLength>11</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
+           <Match>135</Match>
                   <Type>Manufacturer code</Type>
            <Signed>false</Signed>
          </Field>
@@ -23306,20 +23369,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -23380,9 +23443,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>1</Order>
            <Id>manufacturerCode</Id>
            <Name>Manufacturer Code</Name>
+           <Description>Airmar</Description>
            <BitLength>11</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
+           <Match>135</Match>
                   <Type>Manufacturer code</Type>
            <Signed>false</Signed>
          </Field>
@@ -23393,20 +23458,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -23467,9 +23532,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>1</Order>
            <Id>manufacturerCode</Id>
            <Name>Manufacturer Code</Name>
+           <Description>Airmar</Description>
            <BitLength>11</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
+           <Match>135</Match>
                   <Type>Manufacturer code</Type>
            <Signed>false</Signed>
          </Field>
@@ -23480,20 +23547,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>2</BitLength>
            <BitOffset>11</BitOffset>
            <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>3</Order>
            <Id>industryCode</Id>
            <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
            <BitLength>3</BitLength>
            <BitOffset>13</BitOffset>
            <BitStart>5</BitStart>
+           <Match>4</Match>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
-           <EnumValues>
-             <EnumPair Value='4' Name='Marine' />
-           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -23516,6 +23583,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>7</BitLength>
            <BitOffset>20</BitOffset>
            <BitStart>4</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
          <Field>
