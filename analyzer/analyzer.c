@@ -77,7 +77,7 @@ void usage(char ** argv, char ** av)
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
-         "-explain | -explain-xml]\n", argv[0]);
+         "-explain | -explain-xml [-upper-camel]]\n", argv[0]);
   exit(1);
 }
 
@@ -88,6 +88,8 @@ int main(int argc, char ** argv)
   FILE * file = stdin;
   int ac = argc;
   char ** av = argv;
+  bool doExplainXML = false;
+  bool doExplain = false;
 
   setProgName(argv[0]);
 
@@ -95,13 +97,11 @@ int main(int argc, char ** argv)
   {
     if (strcasecmp(av[1], "-explain-xml") == 0)
     {
-      explainXML();
-      exit(0);
+      doExplainXML = true;
     }
     else if (strcasecmp(av[1], "-explain") == 0)
     {
-      explain();
-      exit(0);
+      doExplain = true;
     }
     else if (strcasecmp(av[1], "-raw") == 0)
     {
@@ -193,6 +193,21 @@ int main(int argc, char ** argv)
         usage(argv, av);
       }
     }
+  }
+
+  if (doExplain)
+  {
+    explain();
+    exit(0);
+  }
+  if (doExplainXML)
+  {
+    if (!pgnList[0].camelDescription)
+    {
+      camelCase(false);
+    }
+    explainXML();
+    exit(0);
   }
 
   if (!showJson)
@@ -635,7 +650,7 @@ static bool printLatLon(char * name, double resolution, uint8_t * data, size_t b
 
     if (showJson)
     {
-      mprintf("%s\"%s\":\"%010.7f\"", getSep(), name, dd);
+      mprintf("%s\"%s\":%010.7f", getSep(), name, dd);
     }
     else
     {
@@ -675,7 +690,7 @@ static bool printLatLon(char * name, double resolution, uint8_t * data, size_t b
     if (showJson)
     {
       double dd = (double) value / (double) RES_LAT_LONG_PRECISION;
-      mprintf("%s\"%s_dd\":\"%010.7f\"", getSep(), name, dd);
+      mprintf("%s\"%s_dd\":%010.7f", getSep(), name, dd);
     }
   }
   return true;
@@ -778,7 +793,7 @@ static bool printTemperature(char * name, uint16_t t)
 
   if (showJson)
   {
-    mprintf("%s\"%s\":\"%.2f\"", getSep(), name, c, f);
+    mprintf("%s\"%s\":%.2f", getSep(), name, c, f);
   }
   else
   {
@@ -787,19 +802,48 @@ static bool printTemperature(char * name, uint16_t t)
   return true;
 }
 
-static bool printPressure(char * name, uint16_t hp)
+static bool printPressure(char * name, uint16_t v, Field * field)
 {
-  double bar = hp / 1000.0; /* 1000 hectopascal = 1 Bar */
-  double psi = hp / 14.50377; /* Silly but still used in some parts of the world */
+  int32_t pressure;
+  double bar;
+  double psi;
 
-  if (hp >= 0xfffd)
+  if (v >= 0xfffd)
   {
     return false;
   }
 
+  // There are three types of known pressure: unsigned hectopascal, signed kpa, unsigned kpa.
+
+  if (field->hasSign)
+  {
+    pressure = (int16_t) v;
+  }
+  else
+  {
+    pressure = v;
+  }
+  // Now scale pascal properly, it is in hPa or kPa.
+  if (field->units)
+  {
+    switch (field->units[0])
+    {
+    case 'h':
+    case 'H':
+      pressure *= 100;
+      break;
+    case 'k':
+    case 'K':
+      pressure *= 1000;
+    }
+  }
+
+  bar = pressure / 100000.0; /* 1000 hectopascal = 1 Bar */
+  psi = pressure / 1450.377; /* Silly but still used in some parts of the world */
+
   if (showJson)
   {
-    mprintf("%s\"%s\":\"%"PRIu16"\"", getSep(), name, hp);
+    mprintf("%s\"%s\":%"PRId32"", getSep(), name, pressure);
   }
   else
   {
@@ -928,6 +972,68 @@ static bool printHex(char * name, uint8_t * data, size_t startBit, size_t bits)
     if (bit % 8 == 7)
     {
       mprintf("%02x ", value);
+      value = 0;
+      bitMagnitude = 1;
+    }
+  }
+  if (showJson)
+  {
+    mprintf("\"");
+  }
+  return true;
+}
+
+static bool printDecimal(char * name, uint8_t * data, size_t startBit, size_t bits)
+{
+  uint8_t value = 0;
+  uint8_t maxValue = 0;
+  uint8_t bitMask = 1 << startBit;
+  uint64_t bitMagnitude = 1;
+  size_t bit;
+  char buf[128];
+
+  if (showBytes)
+  {
+    mprintf("(%s,%p,%zu,%zu) ", name, data, startBit, bits);
+  }
+
+  if (showJson)
+  {
+    mprintf("%s\"%s\":\"", getSep(), name);
+  }
+  else
+  {
+    mprintf("%s %s = ", getSep(), name);
+  }
+
+  for (bit = 0; bit < bits && bit < sizeof(buf) * 8; bit++)
+  {
+    /* Act on the current bit */
+    bool bitIsSet = (*data & bitMask) > 0;
+    maxValue |= bitMagnitude;
+    if (bitIsSet)
+    {
+      value |= bitMagnitude;
+    }
+
+    /* Find the next bit */
+    if (bitMask == 128)
+    {
+      bitMask = 1;
+      data++;
+    }
+    else
+    {
+      bitMask = bitMask << 1;
+    }
+    bitMagnitude = bitMagnitude << 1;
+
+    if (bit % 8 == 7)
+    {
+      if (value < 100)
+      {
+        mprintf("%02u", value);
+      }
       value = 0;
       bitMagnitude = 1;
     }
@@ -1250,7 +1356,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
       {
         if (showJson)
         {
-          mprintf("%s\"%s\":\"%"PRId64"\"", getSep(), fieldName, value);
+          mprintf("%s\"%s\":%"PRId64"", getSep(), fieldName, value);
         }
         else
         {
@@ -1282,7 +1388,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
 
         if (showJson)
         {
-          mprintf("%s\"%s\":\"%.*f\"", getSep(), fieldName, precision, a);
+          mprintf("%s\"%s\":%.*f", getSep(), fieldName, precision, a);
         }
         else if (field->units && strcmp(field->units, "m") == 0 && a >= 1000.0)
         {
@@ -1426,6 +1532,61 @@ void setSystemClock(uint16_t currentDate, uint32_t currentTime)
 #endif
 }
 
+static void print_ascii_json_escaped(uint8_t *data, int len)
+{
+  int c;
+  int k;
+
+  for (k = 0; k < len; k++)
+  {
+    c = data[k];
+    switch(c)
+    {
+      case '\b':
+        mprintf("%s", "\\b");
+        break;
+
+      case '\n':
+        mprintf("%s", "\\n");
+        break;
+
+      case '\r':
+        mprintf("%s", "\\r");
+        break;
+
+      case '\t':
+        mprintf("%s", "\\t");
+        break;
+
+      case '\f':
+        mprintf("%s", "\\f");
+        break;
+
+      case '"':
+        mprintf("%s", "\\\"");
+        break;
+
+      case '\\':
+        mprintf("%s", "\\\\");
+        break;
+
+      case '/':
+        mprintf("%s", "\\/");
+        break;
+
+      case '\377':
+        // 0xff has been seen on recent Simrad VHF systems, and it seems to indicate
+        // end-of-field, with noise following. Assume this does not break other systems.
+        return;
+
+      default:
+        if (c >= ' ' && c <= '~')
+          mprintf("%c", c);
+    }
+  }
+}
+
+
 bool printPgn(int index, int subIndex, RawMessage * msg)
 {
   uint8_t * dataStart;
@@ -1461,50 +1622,53 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
   size = device[msg->src]->packetList[index].size;
   dataEnd = dataStart + size;
 
-  for (;(index < ARRAY_SIZE(pgnList)) && (msg->pgn == pgnList[index].pgn); index++)
+  if (!pgnList[index].unknownPgn)
   {
-    matchedFixedField = true;
-    hasFixedField = false;
-
-    /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
-
-    pgn = &pgnList[index];
-
-    for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
+    for (;(index < ARRAY_SIZE(pgnList)) && (msg->pgn == pgnList[index].pgn); index++)
     {
-      field = pgn->fieldList[i];
-      if (!field.name || !field.size)
+      matchedFixedField = true;
+      hasFixedField = false;
+
+      /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
+
+      pgn = &pgnList[index];
+
+      for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
+      {
+        field = pgn->fieldList[i];
+        if (!field.name || !field.size)
+        {
+          break;
+        }
+
+        bits = field.size;
+
+        if (field.units && field.units[0] == '=')
+        {
+          int64_t value, desiredValue;
+          int64_t maxValue;
+
+          hasFixedField = true;
+          extractNumber(&field, data, startBit, field.size, &value, &maxValue);
+          desiredValue = strtol(field.units + 1, 0, 10);
+          if (value != desiredValue)
+          {
+            matchedFixedField = false;
+            break;
+          }
+        }
+        startBit += bits;
+        data += startBit / 8;
+        startBit %= 8;
+      }
+      if (! hasFixedField || (hasFixedField && matchedFixedField))
       {
         break;
       }
-
-      bits = field.size;
-
-      if (field.units && field.units[0] == '=')
-      {
-        int64_t value, desiredValue;
-        int64_t maxValue;
-
-        hasFixedField = true;
-        extractNumber(&field, data, startBit, field.size, &value, &maxValue);
-        desiredValue = strtol(field.units + 1, 0, 10);
-        if (value != desiredValue)
-        {
-          matchedFixedField = false;
-          break;
-        }
-      }
-      startBit += bits;
-      data += startBit / 8;
-      startBit %= 8;
-    }
-    if (matchedFixedField)
-    {
-      break;
     }
   }
 
-  if ((index >= ARRAY_SIZE(pgnList)) || (msg->pgn != pgnList[index].pgn))
+  if ((index >= ARRAY_SIZE(pgnList)) || (msg->pgn != pgnList[index].pgn && !pgnList[index].unknownPgn))
   {
     index = 0;
   }
@@ -1542,7 +1706,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
     {
       mprintf("\"%s\":", pgn->camelDescription);
     }
-    mprintf("{\"timestamp\":\"%s\",\"prio\":\"%u\",\"src\":\"%u\",\"dst\":\"%u\",\"pgn\":\"%u\",\"description\":\"%s\"", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    mprintf("{\"timestamp\":\"%s\",\"prio\":%u,\"src\":%u,\"dst\":%u,\"pgn\":%u,\"description\":\"%s\"", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     braceCount = 1;
     sep = ",\"fields\":{";
   }
@@ -1596,7 +1760,13 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       }
     }
 
-    if (field.resolution < 0.0)
+    if (strcmp(fieldName, "Reserved") == 0)
+    {
+      // Skipping reserved fields. Unfortunately we have some cases now
+      // where they are zero. Some AIS devices (SRT) produce an 8 bit long
+      // nav status, others just a four bit one.
+    }
+    else if (field.resolution < 0.0)
     {
       int len;
       int k;
@@ -1608,6 +1778,21 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       {
         len = *data++;
         bytes--;
+        goto ascii_string;
+      }
+
+      if (field.resolution == RES_STRINGLAU)
+      {
+        int control;
+
+        len = *data++;
+        bytes--;
+        control = *data++;
+        bytes--;
+        if (control == 0)
+        {
+          logError("Unhandled UNICODE string in PGN\n");
+        }
         goto ascii_string;
       }
 
@@ -1642,17 +1827,22 @@ ascii_string:
           mprintf("%s %s = ", getSep(), fieldName);
         }
 
-        for (k = 0; k < len; k++)
+        if (showJson)
         {
-          if (data[k] >= ' ' && data[k] <= '~')
+          print_ascii_json_escaped(data, len);
+        }
+        else
+        {
+          for (k = 0; k < len; k++)
           {
-            int c = data[k];
-
-            if (showJson && (c == '\\'))
+            if (data[k] == 0xff)
             {
-              mprintf("%c", c);
+              break;
             }
-            mprintf("%c", c);
+            if (data[k] >= ' ' && data[k] <= '~')
+            {
+              mprintf("%c", data[k]);
+            }
           }
         }
 
@@ -1724,11 +1914,15 @@ ascii_string:
       else if (field.resolution == RES_PRESSURE)
       {
         memcpy((void *) &valueu16, data, 2);
-        printPressure(fieldName, valueu16);
+        printPressure(fieldName, valueu16, &field);
       }
       else if (field.resolution == RES_6BITASCII)
       {
         print6BitASCIIText(fieldName, data, startBit, bits);
+      }
+      else if (field.resolution == RES_DECIMAL)
+      {
+        printDecimal(fieldName, data, startBit, bits);
       }
       else if (bits == LEN_VARIABLE)
       {
@@ -1781,7 +1975,7 @@ ascii_string:
   return r;
 }
 
-void printPacket(size_t index, RawMessage * msg)
+void printPacket(size_t index, size_t unknownIndex, RawMessage * msg)
 {
   size_t fastPacketIndex;
   size_t bucket;
@@ -1821,7 +2015,6 @@ void printPacket(size_t index, RawMessage * msg)
     if (packet->allocSize < msg->len)
     {
       heapSize += msg->len - packet->allocSize;
-      packet->data = realloc(packet->data, msg->len);
       logDebug("Resizing buffer for PGN %u device %u to accomodate %u bytes (heap %zu bytes)\n", pgn->pgn, msg->src, msg->len, heapSize);
       packet->data = realloc(packet->data, msg->len);
       if (!packet->data)
@@ -1897,8 +2090,8 @@ void printPacket(size_t index, RawMessage * msg)
    * If there are multiple PGN descriptions we have to find the matching
    * one.
    */
-  subIndex = index;
-  for (subIndex = index; subIndex < ARRAY_SIZE(pgnList) && (msg->pgn == pgnList[subIndex].pgn || !index); subIndex++)
+
+  for (subIndex = index; subIndex < ARRAY_SIZE(pgnList) && (msg->pgn == pgnList[subIndex].pgn); subIndex++)
   {
     if (printPgn(index, subIndex, msg)) /* Only the really matching ones will actually return true */
     {
@@ -1907,18 +2100,30 @@ void printPacket(size_t index, RawMessage * msg)
         logDebug("PGN %d matches version %zu\n", msg->pgn, subIndex - index);
       }
       mwrite(stdout);
-      break;
+      return;
     }
     else
     {
       mreset();
     }
   }
+
+  logDebug("PGN %d handled via index %zu\n", msg->pgn, unknownIndex);
+  if (printPgn(unknownIndex, unknownIndex, msg))
+  {
+    mwrite(stdout);
+  }
+  else
+  {
+    mreset();
+  }
+
 }
 
 bool printCanFormat(RawMessage * msg)
 {
   size_t i;
+  size_t unknownIndex = 0;
 
   if (onlySrc >=0 && onlySrc != msg->src)
   {
@@ -1933,25 +2138,33 @@ bool printCanFormat(RawMessage * msg)
       {
         if (msg->pgn == onlyPgn)
         {
-          printPacket(i, msg);
+          printPacket(i, unknownIndex, msg);
           return true;
         }
         continue;
       }
       if (!pgnList[i].size)
       {
-        return true; /* Determine size by raw packet first */
+        return true; /* We have field names, but no field sizes. */
       }
       /*
        * Found the pgn that matches this particular packet
        */
-      printPacket(i, msg);
+      printPacket(i, unknownIndex, msg);
       return true;
     }
+    else if (msg->pgn < pgnList[i].pgn)
+    {
+      break;
+    }
+    if (pgnList[i].unknownPgn)
+    {
+      unknownIndex = i;
+    }
   }
-  if (!onlyPgn && (i == ARRAY_SIZE(pgnList)))
+  if (!onlyPgn)
   {
-    printPacket(0, msg);
+    printPacket(unknownIndex, unknownIndex, msg);
   }
   return onlyPgn > 0;
 }
@@ -1961,7 +2174,8 @@ static void explainPGN(Pgn pgn)
 {
   int i;
 
-  printf("PGN: %6u - %s\n\n", pgn.pgn, pgn.description);
+  printf("PGN: %d / %08o / %05X - %u - %s\n\n", pgn.pgn, pgn.pgn, pgn.pgn, pgn.size, pgn.description);
+
   if (pgn.repeatingFields)
   {
     printf("     The last %u fields repeat until the data is exhausted.\n\n", pgn.repeatingFields);
@@ -2063,11 +2277,14 @@ static void explainPGNXML(Pgn pgn)
   int i;
   unsigned bitOffset = 0;
   char * p;
+  bool showBitOffset = true;
 
   printf("    <PGNInfo>\n"
          "       <PGN>%u</PGN>\n"
+         "       <Id>%s</Id>\n"
          "       <Description>"
          , pgn.pgn
+         , pgn.camelDescription
          );
 
   for (p = pgn.description; p && *p; p++)
@@ -2084,8 +2301,10 @@ static void explainPGNXML(Pgn pgn)
 
   printf("</Description>\n"
          "       <Complete>%s</Complete>\n"
+         "       <Length>%u</Length>\n"
          "       <RepeatingFields>%u</RepeatingFields>\n"
          , (pgn.known ? "true" : "false")
+         , pgn.size
          , pgn.repeatingFields
          );
 
@@ -2102,14 +2321,18 @@ static void explainPGNXML(Pgn pgn)
 
       printf("         <Field>\n"
              "           <Order>%d</Order>\n"
-             "           <Name>%s</Name>\n", i + 1, f.name);
+             "           <Id>%s</Id>\n"
+             "           <Name>%s</Name>\n", i + 1, f.camelName, f.name);
 
       if (f.description && f.description[0] && f.description[0] != ',')
       {
         printf("           <Description>%s</Description>\n", f.description);
       }
       printf("           <BitLength>%u</BitLength>\n", f.size);
-      printf("           <BitOffset>%u</BitOffset>\n", bitOffset);
+      if (showBitOffset)
+      {
+        printf("           <BitOffset>%u</BitOffset>\n", bitOffset);
+      }
       printf("           <BitStart>%u</BitStart>\n", bitOffset % 8);
       bitOffset = bitOffset + f.size;
 
@@ -2191,6 +2414,10 @@ static void explainPGNXML(Pgn pgn)
         }
 
         printf("           </EnumValues>\n");
+      }
+      if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU)
+      {
+        showBitOffset = false; // From here on there is no good bitoffset to be printed
       }
       printf("         </Field>\n");
     }
@@ -2285,8 +2512,8 @@ void explainXML(void)
     "<!--\n"COPYRIGHT"\n-->\n"
     "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" Version=\"0.1\">\n"
     "  <Date>"PROGRAM_DATE"</Date>\n"
-    "  <Comment>See http://canboat.com for the full source code</Comment>\n"
-    "  <CreatorCode>Keversoft NMEA2000 Analyzer</CreatorCode>\n"
+    "  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
+    "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
     "  <License>GPL v3</License>\n"
     "  <PGNs>\n"
     );

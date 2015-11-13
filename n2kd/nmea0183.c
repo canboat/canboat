@@ -28,7 +28,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include "common.h"
 #include <math.h>
 
+#include "nmea0183.h"
+#include "n2kd.h"
+
 extern char * srcFilter;
+extern bool rateLimit;
 
 /*
  * Which PGNs do we care and know about for now?
@@ -47,58 +51,38 @@ extern char * srcFilter;
  *
  */
 
-#define PGN_VESSEL_HEADING 127250
-#define PGN_WIND_DATA      130306
-#define PGN_WATER_DEPTH    128267
+#define PGN_VESSEL_HEADING (127250)
+#define PGN_WIND_DATA      (130306)
+#define PGN_WATER_DEPTH    (128267)
 
-static void nmea0183CreateMessage( StringBuffer * msg183, const char * src, const char * format, ...)
+#define VESSEL_HEADING (0)
+#define WIND_DATA      (1)
+#define WATER_DEPTH    (2)
+#define SENTENCE_COUNT (3)
+
+static int64_t rateLimitPassed[256][SENTENCE_COUNT];
+
+static void nmea0183CreateMessage( StringBuffer * msg183, int src, const char * format, ...)
 {
   char line[80];
-  int n = (int) strtol(src, 0, 10);
   int chk;
   size_t len;
   size_t i;
   va_list ap;
 
-  if (src && srcFilter)
-  {
-    char * filter = srcFilter;
-    while (filter[0])
-    {
-      bool matched = false;
-      int  f;
-
-      if (filter[0] == '!')
-      {
-        filter++;
-        matched = true;
-      }
-      f = (int) strtol(filter, &filter, 10);
-      logDebug("Src [%ld] == [%ld]?\n", n, f);
-
-      if ((n == f) == matched)
-      {
-        logDebug("Src [%ld] matches [%ld]\n", n, f);
-        if (matched)
-        {
-          return;
-        }
-        break;
-      }
-      while (filter[0] && filter[0] != ',')
-      {
-        filter++;
-      }
-      if (filter[0] == ',')
-      {
-        filter++;
-      }
-    }
-  }
-
   va_start(ap, format);
 
-  snprintf(line, sizeof(line), "$%02X", n);
+  // Convert the 8 bit value 'n' into a valid NMEA0183 style sender.
+  // The first implementation sent out a 2 digit hexadecimal number,
+  // but that throws some implementations of receivers off as they
+  // cannot handle numeric senders. So now we produce a 2 character
+  // code with the src value 0-255 translated into
+  // A..N A..N with A representing 0, B representing 1, etc.
+
+  snprintf(line, sizeof(line), "$%c%c"
+          , ('A' + ((src >> 4) & 0xf))
+          , ('A' + ((src     ) & 0xf))
+          );
   vsnprintf(line + 3, sizeof(line) - 3, format, ap);
   va_end(ap);
 
@@ -168,16 +152,14 @@ Field Number:
 2. T = True
 3. Checksum
 */
-static void nmea0183VesselHeading( StringBuffer * msg183, const char * msg )
+static void nmea0183VesselHeading( StringBuffer * msg183, int src, const char * msg )
 {
-  char src[10];
   char heading[10];
   char deviation[10];
   char variation[10];
   char reference[10];
 
-  if (!getJSONValue(msg, "src", src, sizeof(src))
-   || !getJSONValue(msg, "Heading", heading, sizeof(heading))
+  if (!getJSONValue(msg, "Heading", heading, sizeof(heading))
    || !getJSONValue(msg, "Reference", reference, sizeof(reference)))
   {
     return;
@@ -212,9 +194,9 @@ static void nmea0183VesselHeading( StringBuffer * msg183, const char * msg )
 === MWV - Wind Speed and Angle ===
 
 ------------------------------------------------------------------------------
-        1   2 3   4 5
-        |   | |   | |
- $--MWV,x.x,a,x.x,a*hh<CR><LF>
+        1   2 3   4 5 6
+        |   | |   | | |
+ $--MWV,x.x,a,x.x,a,a*hh<CR><LF>
 ------------------------------------------------------------------------------
 
 Field Number:
@@ -223,30 +205,35 @@ Field Number:
 2. Reference, R = Relative, T = True
 3. Wind Speed
 4. Wind Speed Units, K/M/N
-5. Checksum
+5. Active (A) or invalid (V)
+6. Checksum
 */
 
-static void nmea0183WindData( StringBuffer * msg183, const char * msg )
+static void nmea0183WindData( StringBuffer * msg183, int src, const char * msg )
 {
-  char src[10];
   char speed[10];
   char angle[10];
   char reference[10];
+  double speedInMetersPerSecond;
+  double speedInKMPerHour;
 
-  if (!getJSONValue(msg, "src", src, sizeof(src))
-   || !getJSONValue(msg, "Wind Speed", speed, sizeof(speed))
+  if (!getJSONValue(msg, "Wind Speed", speed, sizeof(speed))
    || !getJSONValue(msg, "Wind Angle", angle, sizeof(angle))
    || !getJSONValue(msg, "Reference", reference, sizeof(reference)))
   {
     return;
   }
+
+  speedInMetersPerSecond = strtod(speed, 0);
+  speedInKMPerHour = speedInMetersPerSecond * 3.6;
+
   if (strcmp(reference, "True") == 0)
   {
-    nmea0183CreateMessage(msg183, src, "MWV,%s,T,%s,N", angle, speed);
+    nmea0183CreateMessage(msg183, src, "MWV,%s,T,%.1f,K,A", angle, speedInKMPerHour);
   }
   else if (strcmp(reference, "Apparent") == 0)
   {
-    nmea0183CreateMessage(msg183, src, "MWV,%s,R,%s,N", angle, speed);
+    nmea0183CreateMessage(msg183, src, "MWV,%s,R,%.1f,K,A", angle, speedInKMPerHour);
   }
 }
 
@@ -307,16 +294,14 @@ Field Number:
 
  * {"timestamp":"2012-12-01-12:53:19.929","prio":"3","src":"35","dst":"255","pgn":"128267","description":"Water Depth","fields":{"SID":"70","Depth":"0.63","Offset":"0.500"}}
  */
-static void nmea0183WaterDepth( StringBuffer * msg183, const char * msg )
+static void nmea0183WaterDepth( StringBuffer * msg183, int src, const char * msg )
 {
-  char src[10];
   char depth[10];
   char offset[10];
   double dep = 0;
   double off = 0;
 
-  if (!getJSONValue(msg, "src", src, sizeof(src))
-   || !getJSONValue(msg, "Depth", depth, sizeof(depth)))
+  if (!getJSONValue(msg, "Depth", depth, sizeof(depth)))
   {
     return;
   }
@@ -345,27 +330,110 @@ static void nmea0183WaterDepth( StringBuffer * msg183, const char * msg )
   }
 }
 
+static bool matchFilter( int n, char * filter )
+{
+  bool negativeMatch = false;
+  int  f;
+
+  while (filter[0])
+  {
+    if (filter[0] == '!')
+    {
+      filter++;
+      negativeMatch = true;
+    }
+    f = (int) strtol(filter, &filter, 10);
+    logDebug("Src [%ld] == [%ld]?\n", n, f);
+
+    if (n == f)
+    {
+      logDebug("Src [%ld] matches [%ld]\n", n, f);
+      if (negativeMatch)
+      {
+        return false;
+      }
+      return true;
+    }
+    while (filter[0] && filter[0] != ',')
+    {
+      filter++;
+    }
+    if (filter[0] == ',')
+    {
+      filter++;
+    }
+  }
+  return negativeMatch;
+}
+
 void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
 {
-  char pgn[20];
-  int  prn;
+  char           str[20];
+  int            prn;
+  int            src;
+  struct timeval tv;
+  int            j;
 
-  if (!getJSONValue(msg, "pgn", pgn, sizeof(pgn)))
+  if (!getJSONValue(msg, "pgn", str, sizeof(str)))
   {
     return;
   }
-  prn = atoi(pgn);
+  prn = atoi(str);
 
   switch (prn)
   {
   case PGN_VESSEL_HEADING:
-    nmea0183VesselHeading(msg183, msg);
+    j = VESSEL_HEADING;
+    break;
   case PGN_WIND_DATA:
-    nmea0183WindData(msg183, msg);
+    j = WIND_DATA;
+    break;
   case PGN_WATER_DEPTH:
-    nmea0183WaterDepth(msg183, msg);
+    j = WATER_DEPTH;
+    break;
   default:
     return;
   }
+
+  if (!getJSONValue(msg, "src", str, sizeof(str)))
+  {
+    return;
+  }
+  src = atoi(str);
+  if (srcFilter && !matchFilter(src, srcFilter))
+  {
+    return;
+  }
+
+  logDebug("NMEA passed filter for prn %d src %d\n", src, prn);
+
+  if (rateLimit)
+  {
+    int64_t now = epoch();
+
+    if (rateLimitPassed[src][j] > (now - 1000L))
+    {
+      logDebug("Ratelimit for prn %d src %d not reached\n", src, prn);
+      return;
+    }
+    rateLimitPassed[src][j] = now;
+    logDebug("Ratelimit passed for prn %d src %d\n", src, prn);
+  }
+
+  switch (prn)
+  {
+  case PGN_VESSEL_HEADING:
+    nmea0183VesselHeading(msg183, src, msg);
+    break;
+  case PGN_WIND_DATA:
+    nmea0183WindData(msg183, src, msg);
+    break;
+  case PGN_WATER_DEPTH:
+    nmea0183WaterDepth(msg183, src, msg);
+    break;
+  default:
+    return;
+  }
+
 }
 

@@ -35,6 +35,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include <signal.h>
 #include <sys/select.h>
 #include "nmea0183.h"
+#include "n2kd.h"
 
 #define PORT 2597
 
@@ -42,6 +43,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 uint16_t port = PORT;
 char * srcFilter = 0;
+bool   rateLimit;
 
 uint32_t protocol = 1;
 int      debug = 0;
@@ -79,6 +81,21 @@ typedef enum StreamType
 , DATA_OUTPUT_STREAM
 , SOCKET_TYPE_MAX
 } StreamType;
+
+const char * streamTypeName[] =
+{ "Any"
+, "JSON client"
+, "JSON stream"
+, "NMEA0183 stream"
+, "JSON server"
+, "JSON stream server"
+, "NMEA0183 stream server"
+, "Data input stream"
+, "Data output sink"
+, "Data output copy"
+, "Data output stream"
+, "<Max>"
+};
 
 ReadHandler readHandlers[SOCKET_TYPE_MAX] =
 { 0
@@ -128,11 +145,14 @@ StringBuffer nmeaMessage;/* Buffer for sending to NMEA0183 TCP clients */
 
 #define MIN_PGN (59391)
 #define MAX_PGN (131000)
-#define ACTISENSE_BEM (0x400000)
+#define ACTISENSE_BEM (0x40000)
 #define ACTISENSE_RNG (0x100)
+#define NMEA_RNG (MAX_PGN - MIN_PGN + 1)
 
-#define PGN_SPACE (ACTISENSE_RNG + MAX_PGN - MIN_PGN)
-#define PrnToIdx(prn) ((prn <= MAX_PGN) ? (prn - MIN_PGN) : ((prn <= ACTISENSE_BEM + ACTISENSE_RNG) ? (prn - ACTISENSE_BEM) : -1))
+#define PGN_SPACE (ACTISENSE_RNG + NMEA_RNG)
+#define PrnToIdx(prn) ((prn <= MAX_PGN) ? (prn - MIN_PGN) : \
+                       ((prn <= ACTISENSE_BEM + ACTISENSE_RNG && prn >= ACTISENSE_BEM) ? (prn + NMEA_RNG - ACTISENSE_BEM) : \
+                       -1))
 
 /*
  * We store messages and where they come from.
@@ -210,6 +230,11 @@ static int secondaryKeyTimeout[] =
 
 /*****************************************************************************************/
 
+static void breakHere(void)
+{
+  abort();
+}
+
 int64_t epoch(void)
 {
   struct timeval t;
@@ -228,7 +253,7 @@ int setFdUsed(SOCKET fd, StreamType ct)
   /* Find a free entry in socketFd(i) */
   for (i = 0; i <= socketIdxMax; i++)
   {
-    if (stream[i].fd == -1 || stream[i].fd == fd)
+    if (stream[i].fd == INVALID_SOCKET || stream[i].fd == fd)
     {
       break;
     }
@@ -249,12 +274,10 @@ int setFdUsed(SOCKET fd, StreamType ct)
   FD_SET(fd, &activeSet);
   if (stream[i].readHandler)
   {
-    logDebug("Enabling fd=%d in the readSet\n", fd);
     FD_SET(fd, &readSet);
   }
   else
   {
-    logDebug("Disabling fd=%d in the readSet\n", fd);
     FD_CLR(fd, &readSet);
   }
 
@@ -265,45 +288,43 @@ int setFdUsed(SOCKET fd, StreamType ct)
   case CLIENT_NMEA0183_STREAM:
   case DATA_OUTPUT_STREAM:
   case DATA_OUTPUT_COPY:
-    logDebug("Enabling fd=%d in the writeSet\n", fd);
     FD_SET(fd, &writeSet);
     break;
   default:
-    logDebug("Clear fd=%d in the writeSet\n", fd);
     FD_CLR(fd, &writeSet);
   }
 
   socketIdxMax = CB_MAX(socketIdxMax, i);
   socketFdMax = CB_MAX(socketFdMax, fd);
-  logDebug("New client %u type %d %u..%u fd=%d fdMax=%d\n", i, stream[i].type, socketIdxMin, socketIdxMax, fd, socketFdMax);
+  logDebug("New %s %u (%u..%u fd=%d fdMax=%d)\n", streamTypeName[stream[i].type], i, socketIdxMin, socketIdxMax, fd, socketFdMax);
 
   return i;
 }
 
 static void closeStream(int i)
 {
-  logDebug("closeStream(%d)\n", i);
+  int j;
 
   close(stream[i].fd);
   FD_CLR(stream[i].fd, &activeSet);
   FD_CLR(stream[i].fd, &readSet);
   FD_CLR(stream[i].fd, &writeSet);
 
-  stream[i].fd = -1; /* Free for re-use */
+  stream[i].fd = INVALID_SOCKET; /* Free for re-use */
   if (i == socketIdxMax)
   {
-    socketIdxMax = -1;
-    socketFdMax = -1;
-    for (i--; i >= 0; i--)
+    socketIdxMax = 0;
+    socketFdMax = 0;
+    for (j = i - 1; j >= 0; j--)
     {
-      if (stream[i].fd != -1)
+      if (stream[j].fd != INVALID_SOCKET)
       {
-        socketIdxMax = CB_MAX(socketIdxMax, i);
-        socketFdMax = CB_MAX(socketFdMax, stream[i].fd);
+        socketIdxMax = CB_MAX(socketIdxMax, j);
+        socketFdMax = CB_MAX(socketFdMax, stream[j].fd);
       }
     }
   }
-  logDebug("closeStream(%d) IdMax=%u FdMax=%d\n", i, socketIdxMax, socketFdMax);
+  logDebug("closeStream(%d) (%u..%u fdMax=%d)\n", i, socketIdxMin, socketIdxMax, socketFdMax);
 }
 
 # define INITIAL_ALLOC    32768
@@ -488,17 +509,11 @@ void writeAllClients(void)
   logDebug("writeAllClients tcp.len=%d\n", tcpMessage.len);
   FD_ZERO(&ws);
 
-  if (debug)
-  {
-    state = getFullStateJSON();
-    logDebug("json=%s\n", state);
-  }
-
   if (socketIdxMax >= 0)
   {
     ws = writeSet;
     r = select(socketFdMax + 1, 0, &ws, 0, &timeout);
-    logDebug("write to %d streams max=%d\n", r, socketFdMax + 1);
+    logDebug("write to %d streams (%u..%u fdMax=%d)\n", r, socketIdxMin, socketIdxMax, socketFdMax);
 
     for (i = socketIdxMin; r > 0 && i <= socketIdxMax; i++)
     {
@@ -511,16 +526,13 @@ void writeAllClients(void)
       {
         logAbort("Stream %d contains invalid fd %d\n", i, fd);
       }
-      logDebug("write stream? i=%u fd=%d\n", i, fd);
-      logDebug("write stream? writable=%d\n", FD_ISSET(fd, &ws));
-      logDebug("write stream? type=%d\n", stream[i].type);
-      logDebug("write stream? i=%u fd=%d writable=%d type=%d\n", i, fd, FD_ISSET(fd, &ws), stream[i].type);
       if (fd > socketFdMax)
       {
-        logAbort("Inconsistent: fd[%u]=%d, max=%d\n", i, fd, socketFdMax);
+        logAbort("Inconsistent: fd[%u]=%d, fdMax=%d\n", i, fd, socketFdMax);
       }
       if (FD_ISSET(fd, &ws))
       {
+        logDebug("%s i=%u fd=%d writable=%d\n", streamTypeName[stream[i].type], i, fd, FD_ISSET(fd, &ws));
         r--;
         if (!now) now = epoch();
 
@@ -532,8 +544,10 @@ void writeAllClients(void)
             if (!state)
             {
               state = getFullStateJSON();
+              logDebug("json=%s", state);
             }
             write(fd, state, strlen(state));
+            logDebug("JSON: wrote %u to %d, closing\n", strlen(state), fd);
             closeStream(i);
           }
           break;
@@ -584,7 +598,7 @@ void writeAllClients(void)
 # endif
 }
 
-void storeMessage(char * line, size_t len)
+static bool storeMessage(char * line, size_t len)
 {
   char *s, *e = 0, *e2;
   Message * m;
@@ -594,6 +608,7 @@ void storeMessage(char * line, size_t len)
   time_t now;
   char * key2 = 0;
   int valid;
+  char value[16];
 
   now = time(0);
 
@@ -601,32 +616,41 @@ void storeMessage(char * line, size_t len)
 
   if (!strstr(line, "\"fields\":"))
   {
-    logDebug("Ignore pgn %u without fields\n", prn);
-    return;
+    logDebug("Ignore: pgn %u without fields\n", prn);
+    return false;
   }
   if (memcmp(line, "{\"timestamp", 11) != 0)
   {
-    logDebug("Ignore '%s'\n", line);
-    return;
+    logDebug("Ignore: no timestamp: '%s'\n", line);
+    return false;
   }
   if (memcmp(line + len - 2, "}}", 2) != 0)
   {
-    logDebug("Ignore '%s' (end)\n", line);
-    return;
+    logDebug("Ignore: no line end: '%s'\n", line);
+    return false;
   }
-  s = strstr(line, "\"src\":");
-  if (s)
+
+  if (getJSONValue(line, "src", value, sizeof(value)))
   {
-    if (sscanf(s + sizeof("\"src\":"), "%u\",\"dst\":\"%u\",\"pgn\":\"%u\"", &src, &dst, &prn))
-    {
-#ifdef DEBUG
-      logDebug("prn=%u src=%u\n", prn, src);
-#endif
-    }
+    sscanf(value, "%d", &src);
   }
-  if (prn == 0 || prn > MAX_PGN)
+
+  if (getJSONValue(line, "dst", value, sizeof(value)))
   {
-    return;
+    sscanf(value, "%d", &dst);
+  }
+
+  if (getJSONValue(line, "pgn", value, sizeof(value)))
+  {
+    sscanf(value, "%d", &prn);
+  }
+
+  idx = PrnToIdx(prn);
+  logDebug("src=%d dst=%d prn=%d idx=%d\n", src, dst, prn, idx);
+  if (idx < 0)
+  {
+    logError("Ignore: prn %d: '%s'\n", prn, line);
+    return false;
   }
 
   /* Look for a secondary key */
@@ -663,12 +687,6 @@ void storeMessage(char * line, size_t len)
     }
   }
 
-  idx = PrnToIdx(prn);
-  if (idx < 0)
-  {
-    logAbort("PRN %d is out of range\n", prn);
-  }
-
   pgn = pgnIdx[idx];
   if (!pgn)
   {
@@ -703,7 +721,7 @@ void storeMessage(char * line, size_t len)
       if (!e)
       {
         logDebug("Cannot find end of description in %s\n", s);
-        return;
+        return false;
       }
       logDebug("New PGN '%.*s'\n", e - s, s);
       pgn->p_description = malloc(e - s + 1);
@@ -804,68 +822,65 @@ void storeMessage(char * line, size_t len)
   }
   logDebug("stored prn %d timeout=%d 2ndKey=%d\n", prn, valid, k);
   m->m_time = now + valid;
+  return true;
 }
 
 void handleClientRequest(int i)
 {
   ssize_t r;
   char * p;
+  size_t remain;
 
-  r = read(stream[i].fd, stream[i].buffer + stream[i].len, sizeof(stream[i].buffer) - 1 - stream[i].len);
-  logDebug("read i=%d fd=%d r=%d\n", i, stream[i].fd, r);
-
-  if (r < 0)
+  if (stream[i].len >= sizeof(stream[i].buffer) - 2)
   {
-    if (stream[i].fd == stdinfd)
+    logAbort("Input line on stream %d too long: %s\n", i, stream[i].buffer);
+  }
+  remain = sizeof(stream[i].buffer) - stream[i].len - 2;
+
+  logDebug("handleClientRequest: read i=%d\n", i);
+  logDebug("read %s i=%d fd=%d len=%u remain=%u\n", streamTypeName[stream[i].type], i, stream[i].fd, stream[i].len, remain);
+  r = read(stream[i].fd, stream[i].buffer + stream[i].len, remain);
+
+  if (r <= 0)
+  {
+    logDebug("read %s i=%d fd=%d r=%d\n", streamTypeName[stream[i].type], i, stream[i].fd, r);
+    if (stream[i].type == DATA_INPUT_STREAM)
     {
-      logAbort("Read %d on reading stdin\n", r);
+      logAbort("EOF on reading stdin\n");
     }
     closeStream(i);
     return;
   }
 
-  if (r == 0)
-  {
-    if (stream[i].type == DATA_INPUT_STREAM)
-    {
-      logAbort("EOF on reading stdin\n", r);
-    }
-    else
-    {
-      closeStream(i);
-    }
-    return;
-  }
-
   stream[i].len += r;
   stream[i].buffer[stream[i].len] = 0;
-  while (r > 0)
+  while (stream[i].len > 0)
   {
-    p = strchr(stream[i].buffer, '\n');
-    if (p)
-    {
-      size_t len = p - stream[i].buffer;
-      sbAppendData(&tcpMessage, stream[i].buffer, len + 1);
-      if (stream[i].type != DATA_INPUT_STREAM || stream[outputIdx].type == DATA_OUTPUT_COPY)
-      {
-        /* Send all TCP client input and the main stdin stream if the mode is -o */
-        /* directly to stdout */
-        sbAppendData(&outMessage, stream[i].buffer, len + 1);
-      }
-      *p = 0;
-      convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
-      storeMessage(stream[i].buffer, len);
-      p++, len++;
+    size_t len;
 
-      /* Now remove [buffer..p> */
-      memmove(stream[i].buffer, p, strlen(p));
-      stream[i].len -= len;
-      r -= len;
-    }
-    else
+    p = strchr(stream[i].buffer, '\n');
+    if (!p)
     {
-      r = 0;
+      break;
     }
+    len = p - stream[i].buffer;
+    sbAppendData(&tcpMessage, stream[i].buffer, len + 1);
+    if (stream[i].type != DATA_INPUT_STREAM || stream[outputIdx].type == DATA_OUTPUT_COPY)
+    {
+      /* Send all TCP client input and the main stdin stream if the mode is -o */
+      /* directly to stdout */
+      sbAppendData(&outMessage, stream[i].buffer, len + 1);
+    }
+    *p = 0;
+    if (storeMessage(stream[i].buffer, len))
+    {
+      convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
+    }
+    p++, len++;
+    stream[i].len -= len;
+
+    /* Now remove [buffer..p> == the entire line */
+    memmove(stream[i].buffer, p, stream[i].len + 1);
   }
 }
 
@@ -877,7 +892,7 @@ void checkReadEvents(void)
   size_t i;
   SOCKET fd;
 
-  logDebug("checkReadEvents maxfd = %d\n", socketFdMax);
+  logDebug("checkReadEvents fdMax=%d\n", socketFdMax);
 
   rs = readSet;
 
@@ -889,7 +904,6 @@ void checkReadEvents(void)
 
     if (fd >= 0 && FD_ISSET(fd, &rs))
     {
-      logDebug("Calling readHandler %p on %i\n", stream[i].readHandler, i);
       (stream[i].readHandler)(i);
       r--;
     }
@@ -943,6 +957,10 @@ int main (int argc, char **argv)
       srcFilter = argv[2];
       argc--, argv++;
     }
+    else if (strcasecmp(argv[1], "--rate-limit") == 0)
+    {
+      rateLimit = true;
+    }
     else if (strcasecmp(argv[1], "-p") == 0 && argc > 2)
     {
       unsigned int uPort;
@@ -955,7 +973,15 @@ int main (int argc, char **argv)
     }
     else
     {
-      fprintf(stderr, "usage: n2kd [-d] [-q] [--src-filter <srclist>] [-o] [-p <port>] [-r]\n\n"COPYRIGHT);
+      fprintf(stderr, "usage: n2kd [-d] [-q] [-o] [-r] [--src-filter <srclist>] [--rate-limit] [-p <port>]\n\n"
+                      "  -d                      debug mode\n"
+                      "  -q                      quiet mode\n"
+                      "  -o                      output mode, send all TCP client data to stdout (as well as stdin)\n"
+                      "  -r                      restrict mode, send no data to stdout\n"
+                      "  --src-filter <srclist>  restrict NMEA0183 stream to particular N2K sources\n"
+                      "  --rate-limit            restrict NMEA0183 stream to one message per source per second\n"
+                      "  -p <port>               Start servers at <port> instead of 2597\n\n"
+                      COPYRIGHT);
       exit(1);
     }
     argc--, argv++;

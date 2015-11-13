@@ -102,7 +102,9 @@ typedef struct
 # define RES_FLOAT (-13.0)
 # define RES_PRESSURE (-14.0)
 # define RES_STRINGLZ (-15.0)            /* ASCII string starting with length byte and terminated by zero byte */
-# define MAX_RESOLUTION_LOOKUP 15
+# define RES_STRINGLAU (-16.0)           /* ASCII or UNICODE string starting with length byte and ASCII/Unicode byte */
+# define RES_DECIMAL (-17.0)
+# define MAX_RESOLUTION_LOOKUP 17
 
   bool hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   char * units; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
@@ -138,6 +140,8 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
 , { "IEEE Float", 0 }
 , { "Pressure", 0 }
 , { "ASCII string starting with length byte", 0 }
+, { "ASCII or UNICODE string starting with length and control byte", 0 }
+, { "Decimal encoded number", 0 }
 };
 
 
@@ -226,6 +230,7 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
 #define LOOKUP_WIND_REFERENCE ( ",0=True (ground referenced to North),1=Magnetic (ground referenced to Magnetic North),2=Apparent,3=True (boat referenced),4=True (water referenced)" )
 
 #define LOOKUP_YES_NO ( ",0=No,1=Yes" )
+#define LOOKUP_OK_WARNING ( ",0=OK,1=Warning" )
 
 #define LOOKUP_DIRECTION_REFERENCE ( ",0=True,1=Magnetic" )
 
@@ -238,7 +243,10 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
             ",5=Moored" \
             ",6=Aground" \
             ",7=Engaged in Fishing" \
-            ",8=Under way sailing" )
+            ",8=Under way sailing" \
+            ",9=Hazardous material, High Speed" \
+            ",10=Hazardous material, Wing in Ground" \
+            ",14=AIS-SART" )
 
 #define LOOKUP_POWER_FACTOR ( ",0=Leading,1=Lagging,2=Error" )
 
@@ -254,6 +262,77 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
     ",8=Heating System Temperature" \
     ",9=Freezer Temperature" )
 
+#define LOOKUP_DSC_FORMAT ( \
+    ",102=Geographical area" \
+    ",112=Distress" \
+    ",114=Common interest" \
+    ",116=All ships" \
+    ",120=Individual stations" \
+    ",121=Non-calling purpose" \
+    ",123=Individual station automatic" )
+
+#define LOOKUP_DSC_CATEGORY ( \
+    ",100=Routine" \
+    ",108=Safety" \
+    ",110=Urgency" \
+    ",112=Distress" )
+
+#define LOOKUP_DSC_NATURE ( \
+    ",100=Fire" \
+    ",101=Flooding" \
+    ",102=Collision" \
+    ",103=Grounding" \
+    ",104=Listing" \
+    ",105=Sinking" \
+    ",106=Disabled and adrift" \
+    ",107=Undesignated" \
+    ",108=Abandoning ship" \
+    ",109=Piracy" \
+    ",110=Man overboard" \
+    ",112=EPIRB emission" )
+
+#define LOOKUP_DSC_FIRST_TELECOMMAND ( \
+    ",100=F3E/G3E All modes TP" \
+    ",101=F3E/G3E duplex TP" \
+    ",103=Polling" \
+    ",104=Unable to comply" \
+    ",105=End of call" \
+    ",106=Data" \
+    ",109=J3E TP" \
+    ",110=Distress acknowledgement" \
+    ",112=Distress relay" \
+    ",113=F1B/J2B TTY-FEC" \
+    ",115=F1B/J2B TTY-ARQ" \
+    ",118=Test" \
+    ",121=Ship position or location registration updating" \
+    ",126=No information" )
+
+#define LOOKUP_DSC_SECOND_TELECOMMAND ( \
+    ",100=No reason given" \
+    ",101=Congestion at MSC" \
+    ",102=Busy" \
+    ",103=Queue indication" \
+    ",104=Station barred" \
+    ",105=No operator available" \
+    ",106=Operator temporarily unavailable" \
+    ",107=Equipment disabled" \
+    ",108=Unable to use proposed channel" \
+    ",109=Unable to use proposed mode" \
+    ",110=Ships and aircraft of States not parties to an armed conflict" \
+    ",111=Medical transports" \
+    ",112=Pay phone/public call office" \
+    ",113=Fax/data" \
+    ",126=No information" )
+
+#define LOOKUP_DSC_EXPANSION_DATA ( \
+    ",100=Enhanced position" \
+    ",101=Source and datum of position" \
+    ",102=SOG" \
+    ",103=COG" \
+    ",104=Additional station identification" \
+    ",105=Enhanced geographic area" \
+    ",106=Number of persons on board" )
+
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
 
 typedef struct
@@ -266,18 +345,20 @@ typedef struct
   Field      fieldList[28];     /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t   fieldCount;        /* Filled by C, no need to set in initializers. */
   char     * camelDescription;  /* Filled by C, no need to set in initializers. */
+  bool       unknownPgn;        /* Is this a catch-all for unknown PGNs? */
 } Pgn;
 
 
 Pgn pgnList[] =
 {
 
-{ "Unknown PGN", 0, false, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+/* PDU1 (addressed) single-frame range 0E800 to 0xEEFF (59392 - 61183) */
+
+{ "Unknown single-frame addressed", 0, false, 8, 0,
+  { { "Data", BYTES(8), RES_BINARY, false, 0, "" }
   , { 0 }
   }
+  , 0, 0, true
 }
 
   /************ Protocol PGNs ************/
@@ -286,7 +367,7 @@ Pgn pgnList[] =
   /* http://www.nmea.org/Assets/pgn059392.pdf */
   /* http://www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
   /* http://www.furunousa.com/Furuno/Doc/0/8JT2BMDDIB249FCNUK64DKLV67/GP330B%20NMEA%20PGNs.pdf */
-
+  /* http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf */
 ,
 { "ISO Acknowledgement", 59392, true, 8, 0,
   { { "Control", BYTES(1), RES_LOOKUP, false, ",0=ACK,1=NAK,2=Access Denied,3=Address Busy", "" }
@@ -308,23 +389,66 @@ Pgn pgnList[] =
 { "ISO Address Claim", 60928, true, 8, 0,
   { { "Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number" }
   , { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Device Instance Lower", 4, 1, false, 0, "ISO ECU Instance" }
-  , { "Device Instance Upper", 4, 1, false, 0, "ISO Function Instance" }
-  , { "Device Function", BYTES(1), 1, false, 0, "ISO Function" }
+  , { "Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance" }
+  , { "Device Instance Upper", 5, 1, false, 0, "ISO Function Instance" }
+  , { "Device Function", 8, 1, false, 0, "ISO Function" }
   , { "Reserved", 1, RES_BINARY, false, 0, "" }
   , { "Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, "" }
   , { "System Instance", 4, 1, false, 0, "ISO Device Class Instance" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", 3, 1, false, 0, "ISO Self Configurable" }
+  , { "Industry Group", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 1, RES_BINARY, false, 0, "ISO Self Configurable" }
   , { 0 }
   }
 }
 
+/* PDU1 (addressed) single-frame range 0EF00 to 0xEFFF (61184 - 61439) */
+
+  /* The following probably have the wrong Proprietary ID */
 ,
-{ "ISO: Manu. Proprietary single-frame addressed", 61184, false, 8, 0,
-  { { 0 }
+{ "Seatalk: Wireless Keypad Light Control", 61184, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=1", "Wireless Keypad Light Control" }
+  , { "Variant", BYTES(1), 1, false, 0, "" }
+  , { "Wireless Setting", BYTES(1), 1, false, 0, "" }
+  , { "Wired Setting", BYTES(1), 1, false, 0, "" }
   }
+}
+
+,
+{ "Seatalk: Wireless Keypad Light Control", 61184, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "PID", BYTES(1), 1, false, 0, "" }
+  , { "Variant", BYTES(1), 1, false, 0, "" }
+  , { "Beep Control", BYTES(1), 1, false, 0, "" }
+  }
+}
+
+,
+{ "Manufacturer Proprietary single-frame addressed", 61184, false, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Data", BYTES(6), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+  , 0, 0, true
+}
+
+/* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
+
+,
+{ "Unknown single-frame non-addressed", 61440, false, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Data", BYTES(6), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+  , 0, 0, true
 }
 
 /* Maretron ACM 100 manual documents PGN 65001-65030 */
@@ -598,38 +722,42 @@ Pgn pgnList[] =
 }
 
 ,
-{ "ISO Commanded Address", 65240, false, 8, 0,
+{ "ISO Commanded Address", 65240, false, 9, 0,
   /* ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in the
   data portion of the message must match the name information of the node whose network address is to be set. */
   { { "Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number" }
   , { "Manufacturer Code", 11, 1, false, 0, "" }
-  , { "Device Instance Lower", 4, 1, false, 0, "ISO ECU Instance" }
-  , { "Device Instance Upper", 4, 1, false, 0, "ISO Function Instance" }
+  , { "Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance" }
+  , { "Device Instance Upper", 5, 1, false, 0, "ISO Function Instance" }
   , { "Device Function", BYTES(1), 1, false, 0, "ISO Function" }
-  , { "Reserved", 1 , 1, false, 0, "" }
+  , { "Reserved", 1, RES_BINARY , false, 0, "" }
   , { "Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, "" }
   , { "System Instance", 4, 1, false, 0, "ISO Device Class Instance" }
-  , { "Reserved", 2, 1, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", 3, 1, false, 0, "ISO Self Configurable" }
+  , { "Reserved", 1, RES_BINARY, false, 0, "ISO Self Configurable" }
   , { "New Source Address", BYTES(1), 1, false, 0, "" }
   , { 0 }
   }
 }
 
-  /* ISO 11783: 65,280 to 65,535 (0xFF00 to 0xFFFF): Proprietary PDU-2 messages */
+/* proprietary PDU2 (non addressed) single-frame range 0xFF00 to 0xFFFF (65280 - 65535) */
 
 ,
-{ "ISO: Manu. Proprietary single-frame non-addressed", 65280, false, 8, 0,
-  { { 0 }
+{ "Manufacturer Proprietary single-frame non-addressed", 65280, false, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Data", BYTES(6), RES_BINARY, false, 0, "" }
+  , { 0 }
   }
+  , 0, 0, true
 }
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
 { "Airmar: Boot State Acknowledgment", 65285, true, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Boot State", 4, RES_LOOKUP, false, ",0=in Startup Monitor,1=running Bootloader,2=running Application", "" }
   , { 0 }
@@ -638,9 +766,9 @@ Pgn pgnList[] =
 
 ,
 { "Lowrance: Temperature", 65285, false, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "Lowrance" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Temperature Instance", 4, 1, false, 0, "" }
   , { "Temperature Source", 4, 1, false, 0, "" }
   , { "Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
@@ -652,8 +780,8 @@ Pgn pgnList[] =
 ,
 { "Airmar: Boot State Request", 65286, true, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -662,11 +790,11 @@ Pgn pgnList[] =
 ,
 { "Airmar: Access Level", 65287, true, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Format Code", 3, RES_LOOKUP, false, ",1=Format code 1", "" }
   , { "Access Level", 3, RES_LOOKUP, false, ",0=Locked,1=unlocked level 1,2=unlocked level 2", "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "" }
   , { "Access Seed/Key", BYTES(4), RES_INTEGER, false, 0, "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208." }
   , { 0 }
   }
@@ -675,56 +803,82 @@ Pgn pgnList[] =
 ,
 { "Simnet: Configure Temperature Sensor", 65287, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   }
 }
 
 ,
 { "Simnet: Trim Tab Sensor Calibration", 65289, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   }
 }
 
 ,
 { "Simnet: Paddle Wheel Speed Configuration", 65290, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   }
 }
 
 ,
 { "Simnet: Clear Fluid Level Warnings", 65292, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   }
 }
 
 ,
 { "Simnet: LGC-2000 Configuration", 65293, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   }
 }
 
 ,
 { "Simnet: Reprogram Status", 65325, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   }
 }
 
 ,
 { "Simnet: Autopilot Mode", 65341, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  }
+}
+
+,
+{ "Seatalk: Keypad Message", 65371, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), 1, false, 0, "" }
+  , { "First key", BYTES(1), 1, false, 0, "" }
+  , { "Second key", BYTES(1), 1, false, 0, "" }
+  , { "First key state", 2, 1, false, 0, "" }
+  , { "Second key state", 2, 1, false, 0, "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "" }
+  , { "Encoder Position", BYTES(1), 1, false, 0, "" }
+  }
+}
+
+,
+{ "SeaTalk: Keypad Heartbeat", 65374, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), 1, false, 0, "" }
+  , { "Variant", BYTES(1), 1, false, 0, "" }
+  , { "Status", BYTES(1), 1, false, 0, "" }
   }
 }
 
@@ -732,7 +886,7 @@ Pgn pgnList[] =
 ,
 { "Airmar: Depth Quality Factor", 65408, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "SID", BYTES(1), 1, false, 0, "" }
   , { "Depth Quality Factor", 4, RES_LOOKUP, false, ",0=No Depth Lock", "" }
@@ -743,13 +897,13 @@ Pgn pgnList[] =
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
 { "Airmar: Device Information", 65410, false, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "SID", BYTES(1), 1, false, 0, "" }
   , { "Internal Device Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Supply Voltage", BYTES(2), 0.01, false, "V", "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { 0 }
   }
 }
@@ -757,10 +911,19 @@ Pgn pgnList[] =
 ,
 { "Simnet: Autopilot Mode", 65480, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
+}
+
+/* PDU1 (addressed) fast-packet range 0x10000 to 0x1EEFF (65536 - 126719) */
+,
+{ "Unknown fast-packet addressed", 65536, false, 255, 0,
+  { { "Data", BYTES(255), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+  , 0, 0, true
 }
 
   /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
@@ -782,7 +945,7 @@ Pgn pgnList[] =
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=1", "Command" }
   , { "PGN", BYTES(3), RES_INTEGER, false, 0, "Commanded or requested PGN" }
   , { "Priority", 4, 1, false, 0, ",8=Leave priority unchanged" }
-  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "" }
   , { "# of Commanded Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow" }
   , { "Parameter Index", BYTES(1), RES_INTEGER, false, 0, "Parameter index" }
   , { "Parameter Value", LEN_VARIABLE, RES_INTEGER, false, 0, "Parameter value, variable length" }
@@ -806,9 +969,9 @@ Pgn pgnList[] =
 
 ,
 { "Maretron: Slave Response", 126270, false, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Product code", BYTES(2), 1, false, 0, "0x1b2=SSC200" }
   , { "Software code", BYTES(2), 1, false, 0, "" }
   , { "Command", BYTES(1), 1, false, 0, "0x50=Deviation calibration result" }
@@ -825,30 +988,13 @@ Pgn pgnList[] =
   }
 }
 
-,
-{ "Manufacturer Proprietary: Addressable Multi-Frame", 126720, true, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { 0 }
-  }
-}
-
-,
-{ "Airmar: Addressable Multi-Frame", 126720, true, 8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, 0, "" }
-  , { 0 }
-  }
-}
+/* proprietary PDU1 (addressed) fast-packet range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
   /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
 ,
-{ "Airmar: Attitude Offset", 126720, true, 8, 0,
+{ "Airmar: Attitude Offset", 126720, true, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=32", "Attitude Offsets" }
   , { "Azimuth offset", BYTES(2), RES_DEGREES, true, "deg", "Positive: sensor rotated to port, negative: sensor rotated to starboard" }
@@ -860,9 +1006,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
 ,
-{ "Airmar: Calibrate Compass", 126720, true, 8, 0,
+{ "Airmar: Calibrate Compass", 126720, true, 24, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=33", "Calibrate Compass" }
   , { "Calibrate Function", BYTES(1), RES_LOOKUP, false, ",0=Normal/cancel calibration,1=Enter calibration mode,2=Reset calibration to 0,3=Verify,4=Reset compass to defaults,5=Reset damping to defaults", "" }
@@ -883,9 +1029,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
 ,
-{ "Airmar: True Wind Options", 126720, true, 8, 0,
+{ "Airmar: True Wind Options", 126720, true, 6, 0,//FIXME Single Frame: No
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=34", "True Wind Options" }
   , { "COG substition for HDG", 2, RES_LOOKUP, false, ",0=Use HDG only,1=Allow COG to replace HDG", "Allow use of COG when HDG not available?" }
@@ -906,9 +1052,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: Simulate Mode", 126720, true, 8, 0,
+{ "Airmar: Simulate Mode", 126720, true, 6, 0,//FIXME Single Frame: No
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=35", "Simulate Mode" }
   , { "Simulate Mode", 2, RES_LOOKUP, false, ",0=Off,1=On", "" }
@@ -919,9 +1065,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: Calibrate Depth", 126720, true, 8, 0,
+{ "Airmar: Calibrate Depth", 126720, true, 6, 0,//FIXME Single Frame: No
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=40", "Calibrate Depth" }
   , { "Speed of Sound Mode", BYTES(2), 0.1, false, "m/s", "actual allowed range is 1350.0 to 1650.0 m/s" }
@@ -932,9 +1078,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: Calibrate Speed", 126720, true, 8, 2,
+{ "Airmar: Calibrate Speed", 126720, true, 12, 2,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=41", "Calibrate Speed" }
   , { "Number of pairs of data points", BYTES(1), RES_INTEGER, false, 0, "actual range is 0 to 25. 254=restore default speed curve"
@@ -947,9 +1093,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: Calibrate Temperature", 126720, true, 8, 2,
+{ "Airmar: Calibrate Temperature", 126720, true, 6, 2,//FIXME Single Frame: No
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=42", "Calibrate Temperature" }
   , { "Temperature instance", 2, RES_LOOKUP, false, ",0=Device Sensor,1=Onboard Water Sensor,2=Optional Water Sensor", "" }
@@ -962,9 +1108,9 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: Speed Filter", 126720, true, 8, 2,
+{ "Airmar: Speed Filter", 126720, true, 8, 2,//FIXME Single Frame: No (type 0: NDB=6; type 1:NDB=8)
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=43", "Speed Filter" }
   , { "Filter type", 4, RES_LOOKUP, false, ",0=no filter,1=basic IIR filter", "" }
@@ -977,14 +1123,95 @@ Pgn pgnList[] =
 
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
-{ "Airmar: NMEA 2000 options", 126720, true, 8, 2,
+{ "Airmar: Temperature Filter", 126720, true, 8, 2,//FIXME Single Frame: No (type 0: NDB=6; type 1:NDB=8)
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=44", "Temperature Filter" }
+  , { "Filter type", 4, RES_LOOKUP, false, ",0=no filter,1=basic IIR filter,15=data not available", "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "Reserved" }
+  , { "Sample interval", BYTES(2), 0.01, false, "s", "" }
+  , { "Filter duration", BYTES(2), 0.01, false, "s", "" }
+  , { 0 }
+  }
+}
+
+  /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+,
+{ "Airmar: NMEA 2000 options", 126720, true, 6, 2,//FIXME Single Frame: No
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=46", "NMEA 2000 options" }
-  , { "Transmission Interval", 2, RES_LOOKUP, false, ",0=Measure Interval,1=Requested by user", "" }
+  , { "Transmission Interval", 2, RES_LOOKUP, false, ",0=Measure Interval,1=Requested by user,2=reserved,3=data not available", "" }
   , { "Reserved", 22, RES_BINARY, false, 0, "Reserved" }
   , { 0 }
+  }
+}
+
+,
+{ "Airmar: Addressable Multi-Frame", 126720, true, 4, 0,//FIXME Single Frame: No
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Manufacturer Proprietary fast-packet addressed", 126720, true, 223, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Data", BYTES(221), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+  , 0, 0, true
+}
+
+/* PDU2 (non addressed) fast packet range 0x1F000 to 0x1FEFF (126976 - 130815) */
+,
+{ "Unknown fast-packet non-addressed", 126976, false, 255, 0,
+  { { "Data", BYTES(255), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+  , 0, 0, true
+}
+
+,
+{ "Alert", 126983, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Alert Response", 126984, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Alert Text", 126985, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Alert Configuration", 126986, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Alert Threshold", 126987, false, 8, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Alert Value", 126988, false, 8, 0,
+  { { 0 }
   }
 }
 
@@ -996,6 +1223,16 @@ Pgn pgnList[] =
   , { "Reserved", 4, RES_BINARY, false, 0, "Reserved" }
   , { "Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970" }
   , { "Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
+  , { 0 }
+  }
+}
+
+  /* http://www.nmea.org/Assets/20130905%20nmea%202000%20heartbeat%20amendment%20final.pdf */
+,
+{ "Heartbeat", 126993, true, 8, 0,
+  { { "Data transmit offset", BYTES(2), 0.01, false, "s", "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset." }
+  , { "Sequence Counter", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Reserved", BYTES(3), RES_BINARY, false, 0, "Reserved" }
   , { 0 }
   }
 }
@@ -1031,6 +1268,31 @@ Pgn pgnList[] =
   /* http://www.maretron.com/support/manuals/USB100UM_1.2.pdf */
   /* http://www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
 
+  /* http://www.nmea.org/Assets/20130906%20nmea%202000%20%20man%20overboard%20notification%20%28mob%29%20pgn%20127233%20amendment.pdf */
+,
+{ "Man Overboard Notification", 127233, true, 35, 0,
+  { { "SID", BYTES(1), 1, false, 0, "" }
+  , { "MOB Emitter ID", BYTES(4), RES_INTEGER, false, 0, "Identifier for each MOB emitter, unique to the vessel" }
+  , { "Man Overboard Status", 3, RES_LOOKUP, false, "0=MOB Emitter Activated,1=Manual on-board MOB Button Activation,2=Test Mode,3=MOB Not Active", "" }
+  , { "Reserved", 5, RES_BINARY, false, 0, "" }
+  , { "Activation Time", BYTES(4), RES_TIME, false, "s", "Time of day (UTC) when MOB was activated" }
+  , { "Position Source", 3, RES_LOOKUP, false, "0=Position estimated by the Vessel,1=Position reported by MOB emitter", "" }
+  , { "Reserved", 5, RES_BINARY, false, 0, "" }
+  , { "Position Date", BYTES(2), RES_DATE, false, "", "Date of MOB position" }
+  , { "Position Time", BYTES(4), RES_TIME, false, "s", "Time of day of MOB position (UTC)" }
+  , { "Latitude", BYTES(4), RES_LATITUDE, true, "deg", "" }
+  , { "Longitude", BYTES(4), RES_LONGITUDE, true, "deg", "" }
+  , { "COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "" }
+  , { "COG", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "SOG", BYTES(2), 0.01, false, "m/s", "" }
+  , { "MMSI of vessel of origin", BYTES(4), RES_INTEGER, false, "MMSI", "" }
+  , { "MOB Emitter Battery Status", 3, RES_LOOKUP, false, "0=Good,1=Low", "" }
+  , { "Reserved", 5, RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+}
+
 ,
 { "Heading/Track control", 127237, false, 0x15, 0,
   { { "Rudder Limit Exceeded", 2, 1, false, 0, "" }
@@ -1040,7 +1302,7 @@ Pgn pgnList[] =
   , { "Steering Mode", 4, 1, false, 0, "" }
   , { "Turn Mode", 4, 1, false, 0, "" }
   , { "Heading Reference", 3, 1, false, 0, "" }
-  , { "Reserved", 3, 1, false, 0, "" }
+  , { "Reserved", 3, RES_BINARY, false, 0, "" }
   , { "Commanded Rudder Direction", 2, 1, false, 0, "" }
   , { "Commanded Rudder Angle", BYTES(2), RES_DEGREES, true, "deg", "" }
   , { "Heading-To-Steer (Course)", BYTES(2), RES_DEGREES, false, "deg", "" }
@@ -1140,7 +1402,7 @@ Pgn pgnList[] =
   , { "Total Engine hours", BYTES(4), 1.0, false, "s", "" }
   , { "Coolant Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Fuel Pressure", BYTES(2), 1, false, 0, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { "Discrete Status 1", BYTES(2), RES_INTEGER, false, 0, "" }
   , { "Discrete Status 2", BYTES(2), RES_INTEGER, false, 0, "" }
   , { "Percent Engine Load", BYTES(1), RES_INTEGER, true, "%", "" }
@@ -1150,13 +1412,14 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Transmission Parameters, Dynamic", 127493, true, 7, 0,
-  { { "Engine Instance", 2, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
+{ "Transmission Parameters, Dynamic", 127493, true, 8, 0,
+  { { "Engine Instance", 8, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Transmission Gear", 2, RES_LOOKUP, false, LOOKUP_GEAR_STATUS, "" }
-  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "" }
   , { "Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Oil temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Discrete Status 1", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { 0 }
   }
 }
@@ -1216,7 +1479,7 @@ Pgn pgnList[] =
 
   , { "Line", 2, RES_LOOKUP, false, ",0=Line 1,1=Line 2,2=Line 3,3=Reserved", "" }
   , { "Acceptability", 2, RES_LOOKUP, false, ",0=Bad Level,1=Bad Frequency,2=Being Qualified,3=Good", "" }
-  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "" }
   , { "Voltage", BYTES(2), 0.01, false, "V", "" }
   , { "Current", BYTES(2), 0.1, false, "A", "" }
   , { "Frequency", BYTES(2), 0.01, false, "Hz", "" }
@@ -1236,7 +1499,7 @@ Pgn pgnList[] =
 
   , { "Line", 2, RES_LOOKUP, false, ",0=Line 1,1=Line 2,2=Line 3", "" }
   , { "Waveform", 3, RES_LOOKUP, false, ",0=Sine Wave,1=Modified Sine Wave,6=Error,7=Data Not Available", "" }
-  , { "Reserved", 3, 1, false, 0, "" }
+  , { "Reserved", 3, RES_BINARY, false, 0, "" }
   , { "Voltage", BYTES(2), 0.01, false, "V", "" }
   , { "Current", BYTES(2), 0.1, false, "A", "" }
   , { "Frequency", BYTES(2), 0.01, false, "Hz", "" }
@@ -1281,7 +1544,7 @@ Pgn pgnList[] =
   , { "Charge Mode", BYTES(1), 1, false, 0, "" }
   , { "Charger Enable/Disable", 2, 1, false, 0, "" }
   , { "Equalization Pending", 2, 1, false, 0, "" }
-  , { "Reserved", 4, 1, false, 0, "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "" }
   , { "Equalization Time Remaining", BYTES(2), 1, false, 0, "" }
   , { 0 }
   }
@@ -1314,7 +1577,7 @@ Pgn pgnList[] =
   { { "Charger Instance", BYTES(1), 1, false, 0, "" }
   , { "Battery Instance", BYTES(1), 1, false, 0, "" }
   , { "Charger Enable/Disable", 2, 1, false, 0, "" }
-  , { "Reserved", 6, 1, false, 0, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "" }
   , { "Charge Current Limit", BYTES(2), 0.1, false, "A", "" }
   , { "Charging Algorithm", BYTES(1), 1, false, 0, "" }
   , { "Charger Mode", BYTES(1), 1, false, 0, "" }
@@ -1354,7 +1617,7 @@ Pgn pgnList[] =
   { { "Battery Instance", BYTES(1), 1, false, 0, "" }
   , { "Battery Type", BYTES(1), 1, false, 0, "" }
   , { "Supports Equalization", 2, 1, false, 0, "" }
-  , { "Reserved", 6, 1, false, 0, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "" }
   , { "Nominal Voltage", BYTES(2), 0.01, false, "V", "" }
   , { "Chemistry", BYTES(1), 1, false, 0, "" }
   , { "Capacity", BYTES(2), 1, false, 0, "" }
@@ -1417,7 +1680,7 @@ Pgn pgnList[] =
   , { "Reported Target", 1, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
   , { "Target Acquisition", 1, RES_LOOKUP, false, ",0=Manual,1=Automatic", "" }
   , { "Bearing Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "" }
   , { "Bearing", BYTES(2), RES_DEGREES, false, "deg", "" }
   , { "Distance", BYTES(4), 0.001, false, "m", "" }
   , { "Course", BYTES(2), RES_DEGREES, false, "deg", "" }
@@ -1525,9 +1788,10 @@ Pgn pgnList[] =
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
   , { "Heading", BYTES(2), RES_DEGREES, false, "deg", "True heading" }
   , { "Rate of Turn", BYTES(2), RES_ROTATION, true, "deg/s", "" }
-  , { "Nav Status", BYTES(1), RES_LOOKUP, false, LOOKUP_NAV_STATUS, "" }
-  , { "Reserved for Regional Applications", BYTES(1), 1, false, 0, "" }
-  , { "Spare", BYTES(1), 1, false, 0, "" }
+  , { "Nav Status", 4, RES_LOOKUP, false, LOOKUP_NAV_STATUS, "" }
+  , { "Reserved", 4, RES_BINARY, false, 0, "reserved" }
+  , { "Regional Application", 1, 1, false, 0, "" }
+  , { "Reserved", 7, RES_BINARY, false, 0, "reserved" }
   , { 0 }
   }
 }
@@ -1843,7 +2107,7 @@ Pgn pgnList[] =
   , { "Reference Station Type", BYTES(2), 1, false, 0, "" }
   , { "Time of corrections", BYTES(1), 1, false, 0, "" }
   , { "Station Health", BYTES(1), 1, false, 0, "" }
-  , { "Reserved Bits", BYTES(1), 1, false, 0, "" }
+  , { "Reserved Bits", BYTES(1), RES_BINARY, false, 0, "" }
   , { "Satellite ID", BYTES(1), 1, false, 0, "" }
   , { "PRC", BYTES(1), 1, false, 0, "" }
   , { "RRC", BYTES(1), 1, false, 0, "" }
@@ -1877,7 +2141,7 @@ Pgn pgnList[] =
   , { "Differential Signal Bit Rate", BYTES(1), 1, false, 0, "" }
   , { "Differential Signal Detection Mode", BYTES(1), 1, false, 0, "" }
   , { "Used as Correction Source", BYTES(1), 1, false, 0, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "Reserved" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "Reserved" }
   , { "Differential Source", BYTES(1), 1, false, 0, "" }
   , { "Time since Last Sat Differential Sync", BYTES(1), 1, false, 0, "" }
   , { "Satellite Service ID No.", BYTES(1), 1, false, 0, "" }
@@ -1909,12 +2173,12 @@ Pgn pgnList[] =
   { { "Message ID", BYTES(1), 1, false, 0, "" }
   , { "Repeat Indicator", BYTES(1), 1, false, 0, "" }
   , { "Source ID", BYTES(1), 1, false, 0, "" }
-  , { "NMEA 2000 Reserved", BYTES(1), 1, false, 0, "" }
+  , { "NMEA 2000 Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { "AIS Tranceiver Information", BYTES(1), 1, false, 0, "" }
   , { "Spare", BYTES(1), 1, false, 0, "" }
   , { "Longitude", BYTES(1), 1, false, 0, "" }
   , { "Latitude", BYTES(1), 1, false, 0, "" }
-  , { "NMEA 2000 Reserved", BYTES(1), 1, false, 0, "" }
+  , { "NMEA 2000 Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { "Spare", BYTES(1), 1, false, 0, "" }
   , { "Number of Bits in Binary Data Field", BYTES(1), 1, false, 0, "" }
   , { "Binary Data", BYTES(8), RES_BINARY, false, 0, "" }
@@ -2033,7 +2297,7 @@ Pgn pgnList[] =
   , { "Communication State", 19, RES_BINARY, false, 0, "Information used by the TDMA slot allocation algorithm and synchronization information" }
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
   , { "Altitude", BYTES(8), 1e-6, true, "m", "" }
-  , { "Reserved for Regional Applications", BYTES(1), 1, false, 0, "" }
+  , { "Reserved for Regional Applications", BYTES(1), RES_BINARY, false, 0, "" }
   , { "DTE", 1, RES_LOOKUP, false, ",0=Available,1=Not available", "" }
   , { "Reserved", 7, RES_BINARY, false, 0, "reserved" }
   , { 0 }
@@ -2199,29 +2463,70 @@ Pgn pgnList[] =
   }
 }
 
+/* http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf */
+/* This is like the worst PGN ever.
+ * 1. The "Nature of Distress or 1st Telecommand' field meaning depends on the 'DSC Category'.
+ * 2. The "Message address" (the 'to' field) meaning depends on the 'DSC format'.
+ * 3. Field 12 'MMSI of ship in destress' may have multiple interpretations.
+ * 4. Field 22 'DSC expansion field data' depends on field 21 for its meaning.
+ * 5. It contains a variable length field 'Telephone number', which means that bit offsets for subsequent fields
+ *    depend on this field's length.
+ *
+ * We solve #1 here by having two definitions.
+ */
+
 ,
-{ "DSC Call Information", 129808, false, 8, 2,
-  { { "DSC Format Symbol", BYTES(1), 1, false, 0, "" }
-  , { "DSC Category Symbol", BYTES(1), 1, false, 0, "" }
-  , { "DSC Message Address", BYTES(1), 1, false, 0, "" }
-  , { "Nature of Distress or 1st Telecommand", BYTES(1), 1, false, 0, "" }
-  , { "Subsequent Communication Mode or 2nd Telecommand", BYTES(1), 1, false, 0, "" }
-  , { "Proposed Rx Frequency/Channel", BYTES(1), 1, false, 0, "" }
-  , { "Proposed Tx Frequency/Channel", BYTES(1), 1, false, 0, "" }
-  , { "Telephone Number", BYTES(1), 1, false, 0, "" }
-  , { "Latitude of Vessel Reported", BYTES(4), RES_LATITUDE, true, "deg", "" }
+{ "DSC Distress Call Information", 129808, false, 8, 2,
+  { { "DSC Format", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FORMAT, "" }
+  , { "DSC Category", BYTES(1), RES_LOOKUP, false, "=112", "Distress" }
+  , { "DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank" }
+  , { "Nature of Distress", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_NATURE, "" }
+  , { "Subsequent Communication Mode or 2nd Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_SECOND_TELECOMMAND, "" }
+  , { "Proposed Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Proposed Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, "" }
+  , { "Latitude of Vessel Reported", BYTES(4), RES_LATITUDE, true, "deg", "offset depends on previous field, as do all following fields" }
   , { "Longitude of Vessel Reported", BYTES(4), RES_LONGITUDE, true, "deg", "" }
   , { "Time of Position", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
-  , { "User ID of Ship In Distress", BYTES(4), RES_INTEGER, false, "MMSI", "" }
+  , { "MMSI of Ship In Distress", BYTES(5), RES_DECIMAL, false, "MMSI", "" }
   , { "DSC EOS Symbol", BYTES(1), 1, false, 0, "" }
-  , { "Expansion Enabled", BYTES(1), 1, false, 0, "" }
-  , { "Calling Rx Frequency/Channel", BYTES(1), 1, false, 0, "" }
-  , { "Calling Tx Frequency/Channel", BYTES(1), 1, false, 0, "" }
+  , { "Expansion Enabled", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "reserved" }
+  , { "Calling Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Calling Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
   , { "Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
   , { "Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970" }
-  , { "DSC Equipment Assigned Message ID", BYTES(1), 1, false, 0, "" }
-  , { "DSC Expansion Field Symbol", BYTES(1), 1, false, 0, "" }
-  , { "DSC Expansion Field Data", BYTES(1), 1, false, 0, "" }
+  , { "DSC Equipment Assigned Message ID", BYTES(2), 1, false, 0, "" }
+  , { "DSC Expansion Field Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_EXPANSION_DATA, "" }
+  , { "DSC Expansion Field Data", BYTES(2), RES_STRINGLAU, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "DSC Call Information", 129808, false, 8, 2,
+  { { "DSC Format Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FORMAT, "" }
+  , { "DSC Category Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_CATEGORY, "" }
+  , { "DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank" }
+  , { "1st Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FIRST_TELECOMMAND, "" }
+  , { "Subsequent Communication Mode or 2nd Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_SECOND_TELECOMMAND, "" }
+  , { "Proposed Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Proposed Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, "" }
+  , { "Latitude of Vessel Reported", BYTES(4), RES_LATITUDE, true, "deg", "offset depends on previous field, as do all following fields" }
+  , { "Longitude of Vessel Reported", BYTES(4), RES_LONGITUDE, true, "deg", "" }
+  , { "Time of Position", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
+  , { "MMSI of Ship In Distress", BYTES(5), RES_DECIMAL, false, "MMSI", "" }
+  , { "DSC EOS Symbol", BYTES(1), 1, false, 0, "" }
+  , { "Expansion Enabled", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Reserved", 6, RES_BINARY, false, 0, "reserved" }
+  , { "Calling Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Calling Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, "" }
+  , { "Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
+  , { "Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970" }
+  , { "DSC Equipment Assigned Message ID", BYTES(2), 1, false, 0, "" }
+  , { "DSC Expansion Field Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_EXPANSION_DATA, "" }
+  , { "DSC Expansion Field Data", BYTES(2), RES_STRINGLAU, false, 0, "" }
   , { 0 }
   }
 }
@@ -2252,6 +2557,18 @@ Pgn pgnList[] =
   , { "Reserved", 2, RES_BINARY, false, 0, "reserved" }
   , { "Spare", 6, RES_INTEGER, false, 0, "0=unavailable" }
   , { 0 }
+  }
+}
+
+,
+{ "Label", 130060, false, 0, 0,
+  { { 0 }
+  }
+}
+
+,
+{ "Channel Source Configuration", 130061, false, 0, 0,
+  { { 0 }
   }
 }
 
@@ -2412,7 +2729,7 @@ Pgn pgnList[] =
   , { "nItems", BYTES(1), 1, false, 0, "" }
   , { "Number of valid WPs in the WP-List", BYTES(2), 1, false, 0, "" }
   , { "Database ID", BYTES(1), 1, false, 0, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "reserved" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "reserved" }
 
   , { "WP ID", BYTES(1), 1, false, 0, "" }
   , { "WP Name", BYTES(8), RES_ASCII, false, 0, "" }
@@ -2495,6 +2812,12 @@ Pgn pgnList[] =
   , { "Pressure Source", BYTES(1), RES_LOOKUP, false, 0, ",0=Atmospheric,1=Water,2=Steam,3=Compressed Air,4=Hydraulic" }
   , { "Pressure", BYTES(4), 2.1*100000, false, "kPa", "" }
   , { 0 }
+  }
+}
+
+,
+{ "Temperature Extended Range", 130316, false, 8, 0,
+  { { 0 }
   }
 }
 
@@ -2595,6 +2918,49 @@ Pgn pgnList[] =
 }
 
 ,
+{ "Payload Mass", 130560, false, 0, 0,
+  { { 0 }
+  }
+}
+
+  /* http://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
+
+  This PGN may be requested or used to command and configure a number of Watermaker controls. The Command Group Function PGN 126208
+  is used perform the following: start/stop a production, start/stop rinse or flush operation , start/stop low and high pressure
+  pump and perform an emergency stop. The Request Group Function PGN 126208 or ISO Request PGN 059904 may be used to request this
+  PGN. This PGN also provides Watermaker status and measurement information. The PGN is broadcast periodically.
+
+  */
+,
+{ "Watermaker Input Setting and Status", 130567, true, 24, 0,
+  { { "Watermaker Operating State", 6, RES_LOOKUP, false, "0=Stopped,1=Starting,2=Running,3=Stopping,4=Flushing,5=Rinsing,6=Initiating,7=Manual Mode,62=Error,63=Unavailable", "" }
+  , { "Production Start/Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Rinse Start/Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Low Pressure Pump Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "High Pressure Pump Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Emergency Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Product Solenoid Valve Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "Flush Mode Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Salinity Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "Sensor Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "Oil Change Indicator Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "Filter Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "System Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "Reserved" }
+  , { "Salinity", BYTES(2), RES_INTEGER, false, "ppm", "" }
+  , { "Product Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
+  , { "Pre-filter Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
+  , { "Post-filter Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
+  , { "Feed Pressure", BYTES(2), RES_PRESSURE, true, "kPa", "" }
+  , { "System High Pressure", BYTES(2), RES_PRESSURE, false, "kPa", "" }
+  , { "Product Water Flow", BYTES(2), 0.1, true, "L/h", "" }
+  , { "Brine Water Flow", BYTES(2), 0.1, true, "L/h", "" }
+  , { "Run Time", BYTES(4), RES_INTEGER, false, "s", "" }
+  , { 0 }
+  }
+}
+
+,
 { "Small Craft Status", 130576, true, 2, 0,
   { { "Port trim tab", BYTES(1), 1, true, 0, "" }
   , { "Starboard trim tab", BYTES(1), 1, true, 0, "" }
@@ -2631,12 +2997,13 @@ Pgn pgnList[] =
   }
 }
 
+/* proprietary PDU2 (non addressed) fast packet range 0x1FF00 to 0x1FFFF (130816 - 131071) */
 ,
 { "SonicHub: Init #2", 130816, false, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Init #2" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "A", BYTES(2), RES_INTEGER, false, 0, "" }
@@ -2648,16 +3015,16 @@ Pgn pgnList[] =
 ,
 { "SonicHub: AM Radio", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=4", "AM Radio" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Seeking up,2=Tuned,3=Seeking down", "" }
   , { "Frequency", BYTES(4), 0.001, false, "kHz", "" }
   , { "Noise level", 2, 1, false, 0, "" }  // Not sure about this
   , { "Signal level", 4, 1, false, 0, "" } // ... and this, doesn't make complete sense compared to display
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "" }
   , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
   , { 0 }
   }
@@ -2666,9 +3033,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Zone info", 130816, false, 6, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=5", "Zone info" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Zone", BYTES(1), RES_INTEGER, false, 0, "" }
@@ -2679,9 +3046,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Source", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=6", "Source" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Source", BYTES(1), RES_LOOKUP, false, ",0=AM,1=FM,2=iPod,3=USB,4=AUX,5=AUX 2,6=Mic", "" }
@@ -2692,9 +3059,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Source List", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=8", "Source list" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Source ID", BYTES(1), RES_INTEGER, false, 0, "" }
@@ -2707,9 +3074,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Control", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Control" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Mute on,2=Mute off", "" }
@@ -2720,9 +3087,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Unknown", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Unknown" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "A", 8, RES_INTEGER, false, 0, "" }
@@ -2734,16 +3101,16 @@ Pgn pgnList[] =
 ,
 { "SonicHub: FM Radio", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=12", "FM Radio" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Seeking up,2=Tuned,3=Seeking down", "" }
   , { "Frequency", BYTES(4), 0.001, false, "kHz", "" }
   , { "Noise level", 2, 1, false, 0, "" }  // Not sure about this
   , { "Signal level", 4, 1, false, 0, "" } // ... and this, doesn't make complete sense compared to display
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_BINARY, false, 0, "" }
   , { "Text", BYTES(32), RES_STRINGLZ, false, 0, "" }
   , { 0 }
   }
@@ -2752,9 +3119,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Playlist", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=13", "Playlist" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(1), RES_LOOKUP, false, ",1=Report,4=Next Song,6=Previous Song", "" }
@@ -2770,9 +3137,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Track", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=14", "Track" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
@@ -2784,9 +3151,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Artist", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=15", "Artist" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
@@ -2798,9 +3165,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Album", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=16", "Album" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
@@ -2812,9 +3179,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Menu Item", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=19", "Menu Item" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Item", BYTES(4), RES_INTEGER, false, 0, "" }
@@ -2829,9 +3196,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Zones", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=20", "Zones" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Zones", BYTES(1), RES_INTEGER, false, 0, "" }
@@ -2842,9 +3209,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Max Volume", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=23", "Max Volume" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Zone", BYTES(1), RES_LOOKUP, false, ",0=Zone 1,1=Zone 2,2=Zone 3", "" }
@@ -2856,9 +3223,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Volume", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=24", "Volume" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Zone", BYTES(1), RES_LOOKUP, false, ",0=Zone 1,1=Zone 2,2=Zone 3", "" }
@@ -2870,9 +3237,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Init #1", 130816, false, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=25", "Init #1" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { 0 }
@@ -2882,9 +3249,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Position", 130816, true, 0x40, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=48", "Position" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "Position", BYTES(4), 0.001, false, "s", "" }
@@ -2895,9 +3262,9 @@ Pgn pgnList[] =
 ,
 { "SonicHub: Init #3", 130816, false, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3" }
   , { "Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", "" }
   , { "A", BYTES(1), RES_INTEGER, false, 0, "" }
@@ -2908,11 +3275,11 @@ Pgn pgnList[] =
 
 ,
 { "Simrad: Text Message", 130816, false, 0x40, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
-  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" }
+  , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3" }//FIXME
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
@@ -2924,10 +3291,21 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Navico: Product Information", 130817, false, 0x0e, 0,
+{ "Manufacturer Proprietary fast-packet non-addressed", 130816, true, 223, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Data", BYTES(221), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+  , 0, 0, true
+}
+
+,
+{ "Navico: Product Information", 130817, false, 0x0e, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Product Code", BYTES(2), RES_INTEGER, false, 0, "" }
   , { "Model", BYTES(32), RES_ASCII, false, 0, "" }
   , { "A", BYTES(1), 1, false, 0, "" }
@@ -2941,13 +3319,13 @@ Pgn pgnList[] =
 }
 
 ,
-{ "Simnet: Reprogram Data", 130818, false, 0x08, 0,
+{ "Simnet: Reprogram Data", 130818, false, 223, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Version", BYTES(2), RES_INTEGER, false, 0, "" }
   , { "Sequence", BYTES(2), RES_INTEGER, false, 0, "" }
-  , { "Data", BYTES(255), RES_BINARY, false, 0, "" }
+  , { "Data", BYTES(249), RES_BINARY, false, 0, "" }
   , { 0 }
   }
 }
@@ -2955,8 +3333,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Request Reprogram", 130819, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -2964,11 +3342,11 @@ Pgn pgnList[] =
 ,
 { "Simnet: Reprogram Status", 130820, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
-  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "" }
   , { "Status", BYTES(1), 1, false, 0, "" }
-  , { "Reserved", BYTES(3), 1, false, 0, "" }
+  , { "Reserved", BYTES(3), RES_BINARY, false, 0, "" }
   , { 0 }
   }
 }
@@ -2977,8 +3355,8 @@ Pgn pgnList[] =
 ,
 { "Furuno: Unknown", 130820, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
@@ -2992,8 +3370,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Source Name", 130820, false, 13, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=2", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3008,8 +3386,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Track", 130820, false, 0x20, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=5", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(5), 1, false, 0, "" }
@@ -3021,8 +3399,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Artist", 130820, false, 0x20, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=6", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(5), 1, false, 0, "" }
@@ -3034,8 +3412,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Album", 130820, false, 0x20, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=7", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(5), 1, false, 0, "" }
@@ -3047,8 +3425,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Play Progress", 130820, false, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=9", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3060,8 +3438,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: AM/FM Station", 130820, false, 0x0A, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=11", "" }
   , { "A", BYTES(3), 1, false, 0, "" }
   , { "Frequency", BYTES(4), 1, false, "Hz", "" }
@@ -3074,8 +3452,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: VHF", 130820, false, 9, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=12", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3088,8 +3466,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Squelch", 130820, false, 6, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=13", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3101,8 +3479,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Scan", 130820, false, 6, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=14", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3114,8 +3492,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Menu Item", 130820, false, 23, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=17", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3133,8 +3511,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Replay", 130820, false, 23, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=20", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "Mode", BYTES(1), RES_LOOKUP, false, ",9=USB Repeat,10=USB Shuffle,12=iPod Repeat,13=iPod Shuffle", "" }
@@ -3152,8 +3530,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Mute", 130820, false, 5, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=23", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "Mute", BYTES(1), RES_LOOKUP, false, ",1=Muted,2=Not Muted", "" }
@@ -3165,8 +3543,8 @@ Pgn pgnList[] =
 // Range: 0 to +24
 { "Fusion: Sub Volume", 130820, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=26", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "Zone 1", BYTES(1), 1, false, "vol", "" }
@@ -3181,8 +3559,8 @@ Pgn pgnList[] =
 // Range: -15 to +15
 { "Fusion: Tone", 130820, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=27", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3196,8 +3574,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Volume", 130820, false, 0x0A, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=29", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "Zone 1", BYTES(1), 1, false, "vol", "" }
@@ -3211,8 +3589,8 @@ Pgn pgnList[] =
 ,
 { "Fusion: Transport", 130820, false, 5, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=32", "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "Transport", BYTES(1), RES_LOOKUP, false, ",1=Paused", "" }
@@ -3224,8 +3602,8 @@ Pgn pgnList[] =
 ,
 { "Furuno: Unknown", 130821, false, 0x0c, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "SID", BYTES(1), 1, false, 0, "" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3244,8 +3622,8 @@ Pgn pgnList[] =
 ,
 { "Lowrance: unknown", 130827, false, 10, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "Lowrance" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
@@ -3259,17 +3637,17 @@ Pgn pgnList[] =
 ,
 { "Simnet: Set Serial Number", 130828, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
 
 ,
 { "Suzuki: Engine and Storage Device Config", 130831, false, 0x08, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" } //FIXME
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -3277,8 +3655,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Fuel Used - High Resolution", 130832, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -3286,8 +3664,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Engine and Tank Configuration", 130834, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -3295,8 +3673,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Set Engine and Tank Configuration", 130835, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -3304,9 +3682,9 @@ Pgn pgnList[] =
   /* Seen when HDS8 configures EP65R */
 ,
 { "Simnet: Fluid Level Sensor Configuration", 130836, false, 0x0e, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "C", BYTES(1), 1, false, 0, "" }
   , { "Device", BYTES(1), RES_INTEGER, false, 0, "" }
   , { "Instance", BYTES(1), 1, false, 0, "" }
@@ -3323,8 +3701,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Fuel Flow Turbine Configuration", 130837, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -3332,8 +3710,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Fluid Level Warning", 130838, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -3341,8 +3719,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Pressure Sensor Configuration", 130839, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -3350,8 +3728,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Data User Group Configuration", 130840, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -3360,8 +3738,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: DSC Message", 130842, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -3370,8 +3748,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: AIS Class B static data (msg 24 Part A)", 130842, false, 0x1d, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", 6, 1, false, "=0", "Msg 24 Part A" }
   , { "Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
   , { "D", BYTES(1), 1, false, 0, "" }
@@ -3385,8 +3763,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: AIS Class B static data (msg 24 Part B)", 130842, false, 0x25, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", 6, 1, false, "=1", "Msg 24 Part B" }
   , { "Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
   , { "D", BYTES(1), 1, false, 0, "" }
@@ -3409,8 +3787,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Sonar Status, Frequency and DSP Voltage", 130843, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { 0 }
   }
 }
@@ -3418,8 +3796,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Parameter Handle", 130845, false, 0x0e, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", 6, 1, false, 0, "" }
   , { "Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
   , { "D", BYTES(1), 1, false, 0, "" }
@@ -3431,6 +3809,20 @@ Pgn pgnList[] =
   , { "J", BYTES(1), 1, false, 0, "" }
   , { "Backlight", BYTES(1), RES_LOOKUP, false, ",1=Day Mode,4=Night Mode,11=Level 1,22=Level 2,33=Level 3,44=Level 4,55=Level 5,66=Level 6,77=Level 7,88=Level 8,99=Level 9", "" }
   , { "L", BYTES(2), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "SeaTalk: Node Statistics", 130847, false, 0, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Software Release", BYTES(2), 1, false, 0, "" }
+  , { "Development Version", BYTES(1), 1, false, 0, "" }
+  , { "Product Code", BYTES(2), 1, false, 0, "" }
+  , { "Year", BYTES(1), 1, false, 0, "" }
+  , { "Month", BYTES(1), 1, false, 0, "" }
+  , { "Device Number", BYTES(2), 1, false, 0, "" }
+  , { "Node Voltage", BYTES(2), 0.01, false, "V", "" }
   , { 0 }
   }
 }
@@ -3454,8 +3846,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Event Command: AP command", 130850, false, 12, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command" }
   , { "B", BYTES(2), 1, false, 0, "" }
   , { "Controlling Device", BYTES(1), 1, false, 0, "" }
@@ -3470,8 +3862,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Event Command: Alarm?", 130850, false, 12, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "A", BYTES(2), 1, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command" }
   , { "C", BYTES(1), 1, false, 0, "" }
@@ -3486,8 +3878,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Event Command: Unknown", 130850, false, 12, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "A", BYTES(2), 1, false, 0, "" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command" }
   , { "B", BYTES(1), 1, false, 0, "" }
@@ -3501,8 +3893,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Event Reply: AP command", 130851, false, 12, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command" }
   , { "B", BYTES(2), 1, false, 0, "" }
   , { "Controlling Device", BYTES(1), 1, false, 0, "" }
@@ -3517,8 +3909,8 @@ Pgn pgnList[] =
 ,
 { "Simnet: Alarm Message", 130856, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(2), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "C", BYTES(1), 1, false, 0, "" }
@@ -3529,9 +3921,9 @@ Pgn pgnList[] =
 
 ,
 { "Airmar: Additional Weather Data", 130880, false, 0x1e, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "C", BYTES(1), 1, false, 0, "" }
   , { "Apparent Windchill Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "True Windchill Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
@@ -3542,9 +3934,9 @@ Pgn pgnList[] =
 
 ,
 { "Airmar: Heater Control", 130881, false, 0x9, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "C", BYTES(1), 1, false, 0, "" }
   , { "Plate Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
@@ -3555,11 +3947,11 @@ Pgn pgnList[] =
 
 ,
 { "Airmar: POST", 130944, false, 0x8, 0,
-  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
-  , { "Reserved", 2, 1, false, 0, "" }
-  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" }
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Control", 4, RES_LOOKUP, false, ",0=Report previous values,1=Generate new values", "" }
-  , { "Reserved", 7, 1, false, 0, "" }
+  , { "Reserved", 7, RES_BINARY, false, 0, "" }
   , { "Number of ID/test result pairs to follow", BYTES(1), RES_INTEGER, false, 0, "" }
 
   , { "Test ID", BYTES(1), RES_LOOKUP, false, ",1=Format Code,2=Factory EEPROM,3=User EEPROM,4=Water Temp Sensor,5=Sonar Transceiver,6=Speed sensor,7=Internal temperature sensor,8=Battery voltage sensor", "See Airmar docs for table of IDs and failure codes; these lookup values are for DST200" }
@@ -3650,7 +4042,10 @@ Company companyList[] =
 , { "Aetna Engineering/Fireboy-Xintex", 215 }
 , { "Airmar", 135 }
 , { "Alltek", 459 }
+, { "Amphenol", 274 }
+, { "Attwood", 502 }
 , { "B&G", 381 }
+, { "Bavaria", 637 }
 , { "Beede Electrical", 185 }
 , { "BEP", 295 }
 , { "Beyond Measure", 396 }
@@ -3719,9 +4114,9 @@ Company companyList[] =
 , { "Rolls Royce", 370 }
 , { "SailorMade/Tetra", 235 }
 , { "San Giorgio", 460 }
+, { "Yamaha", 1862 }
 , { "Sea Cross", 471 }
 , { "Sea Recovery", 285 }
-, { "Yamaha", 1862 }
 , { "Simrad", 1857 }
 , { "Sitex", 470 }
 , { "Sleipner", 306 }

@@ -9,8 +9,6 @@ Further info re: SocketCAN and the can-utils can be viewed here...
 
 http://en.wikipedia.org/wiki/SocketCAN
 
-Version 4.0.6 of candump was used to develop this converter.
-
 This file is part of CANboat.
 
 CANboat is free software: you can redistribute it and/or modify
@@ -33,10 +31,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include "common.h"
 
 #define MSG_BUF_SIZE 		2000
-#define CANDUMP_LINE_START 	'<'
-#define CANDUMP_DATA_START 	17
 #define CANDUMP_DATA_INC	3
-#define MAX_DATA_BYTES		8
+#define MAX_DATA_BYTES		223
+
+// There are at least two variations in candump output
+// format which are currently handled...
+//
+#define FMT_TBD			0
+#define FMT_1			1	// Angstrom ex:	"<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0"
+#define FMT_2			2	// Debian ex:	"   can0  09F8027F   [8]  00 FC FF FF 00 00 FF FF"
 
 int main(int argc, char ** argv)
 {
@@ -44,13 +47,23 @@ int main(int argc, char ** argv)
 	FILE * infile = stdin;
 	FILE * outfile = stdout;
 
+	if (argc > 1) {
+	    infile = fopen(argv[1], "r");
+	    if (! infile) {
+		fprintf(stderr, "Could not open input file '%s' (%s)\n",
+			argv[1], strerror(errno));
+		return 1;
+	    }
+	}
+
 	// For every line in the candump file...
 	//
+	int format = FMT_TBD;
 	while(fgets(msg, sizeof(msg) - 1, infile))
 	{
-		// Ignore all lines except those containing candump data logs.
+		// Ignore empty and comment lines within the candump input.
 		//
-		if (*msg == 0 || *msg == '\n' || *msg != CANDUMP_LINE_START)
+		if (*msg == 0 || *msg == '\n' || *msg == '#')
     		{
 		      continue;
 		}
@@ -58,8 +71,27 @@ int main(int argc, char ** argv)
 		// Process the CAN ID
 		//
 		unsigned int canid;
-		int size;		
-		sscanf(msg, "<%x> [%d] ", &canid, &size);
+		int size;
+
+		// Determine which candump format is being used.
+		//
+		if (format == FMT_TBD)
+		{
+			// Format not yet detected.
+			// See if we can match one.
+			//
+			if (sscanf(msg, "<%x> [%d] ", &canid, &size) == 2) format = FMT_1;
+			else if (sscanf(msg, " %*s %x [%d] ", &canid, &size) == 2) format = FMT_2;
+			else continue;
+		}
+		else if (format == FMT_1)
+		{
+			if (sscanf(msg, "<%x> [%d] ", &canid, &size) != 2) continue;
+		}
+		else if (format == FMT_2)
+		{
+			if (sscanf(msg, " %*s %x [%d] ", &canid, &size) != 2) continue;
+		}
 
 		unsigned int pri;
 		unsigned int src;
@@ -91,10 +123,14 @@ int main(int argc, char ** argv)
 		int i;
 		char *p;
 		unsigned int data[MAX_DATA_BYTES];
-		for (i = 0, p = &msg[CANDUMP_DATA_START]; i < size; i++, p += CANDUMP_DATA_INC)
-		{
-			sscanf(p, "%2x", &data[i]);
-			fprintf(outfile, ",%02x", data[i]);
+		for (p = msg; p < msg + sizeof(msg) && *p != 0 && *p != ']'; ++p);
+		if (*p == ']') {
+			while (*(++p) == ' ');
+			for (i = 0; i < size; i++, p += CANDUMP_DATA_INC)
+			{
+				sscanf(p, "%2x", &data[i]);
+				fprintf(outfile, ",%02x", data[i]);
+			}
 		}
 		fprintf(outfile, "\n");
 	}
