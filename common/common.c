@@ -35,58 +35,63 @@ static char * progName;
 
 #ifndef WIN32
 
-static int logBase(LogLevel level, const char * format, va_list ap)
+const char * now(char str[DATE_LENGTH])
 {
   struct timeval tv;
   time_t t;
   struct tm tm;
   int msec;
-  char strTmp[60];
-
-  if (level > logLevel)
-  {
-    return 0;
-  }
-
+  size_t len;
 
   if (gettimeofday(&tv, (void *) 0) == 0)
   {
     t = tv.tv_sec;
     msec = tv.tv_usec / 1000L;
-    localtime_r(&t, &tm);
-    strftime(strTmp, 60, "%Y-%m-%d %H:%M:%S", &tm);
-    fprintf(stderr, "%s %s.%3.3d [%s] ", logLevels[level], strTmp, msec, progName);
+    gmtime_r(&t, &tm);
+    strftime(str, DATE_LENGTH - 5, "%Y-%m-%dT%H:%M:%S", &tm);
+    len = strlen(str);
+    snprintf(str + len, DATE_LENGTH - len, ".%3.3dZ", msec);
   }
   else
   {
-    fprintf(stderr, "%s [%s] ", logLevels[level], progName);
+    strcpy(str, "?");
   }
 
-  return vfprintf(stderr, format, ap);
+  return (const char *) str;
 }
 
 #else
 
-static int logBase(LogLevel level, const char * format, va_list ap)
+const char * now(char str[DATE_LENGTH])
 {
   struct _timeb timebuffer;
   struct tm tm;
-  char strTmp[60];
+  size_t len;
+
+  _ftime_s(&timebuffer);
+  gmtime_s(&tm, &timebuffer.time);
+  strftime(str, DATE_LENGTH - 5, "%Y-%m-%dT%H:%M:%S", &tm);
+  len = strlen(str);
+  snprintf(str + len, DATE_LENGTH - len, ".%3.3dZ", timebuffer.millitm);
+
+  return (const char *) str;
+}
+
+#endif
+
+static int logBase(LogLevel level, const char * format, va_list ap)
+{
+  char strTmp[DATE_LENGTH];
 
   if (level > logLevel)
   {
     return 0;
   }
 
-  _ftime_s(&timebuffer);
-  localtime_s(&tm, &timebuffer.time);
-  strftime(strTmp, 60, "%Y-%m-%d %H:%M:%S", &tm);
-  fprintf(stderr, "%s %s.%3.3d [%s] ", logLevels[level], strTmp, timebuffer.millitm, progName);
+  fprintf(stderr, "%s %s [%s] ", logLevels[level], now(strTmp), progName);
 
   return vfprintf(stderr, format, ap);
 }
-
-#endif
 
 int logInfo(const char * format, ...)
 {

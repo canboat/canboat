@@ -548,29 +548,6 @@ static int readNGT1(int handle)
   return r;
 }
 
-static char * now(void)
-{
-  static char str[64];
-  struct timeval tv;
-  struct tm tm;
-
-  str[0] = 0;
-
-  if (gettimeofday(&tv, 0) != 0)
-  {
-    return "?";
-  }
-
-  gmtime_r(&tv.tv_sec, &tm);
-
-  snprintf(str, sizeof(str), "%u", (unsigned int) tv.tv_sec);
-
-  strftime(str, sizeof(str) - 5, "%F-%T", &tm);
-  snprintf(str + strlen(str), 5, ".%03d", (int) (tv.tv_usec / 1000L));
-
-  return str;
-}
-
 static void messageReceived(const unsigned char * msg, size_t msgLen)
 {
   unsigned char command;
@@ -615,6 +592,7 @@ static void ngtMessageReceived(const unsigned char * msg, size_t msgLen)
   size_t i;
   char line[1000];
   char * p;
+  char dateStr[DATE_LENGTH];
 
   if (msgLen < 12)
   {
@@ -622,7 +600,7 @@ static void ngtMessageReceived(const unsigned char * msg, size_t msgLen)
     return;
   }
 
-  sprintf(line, "%s,%u,%u,%u,%u,%u", now(), 0, 0x40000 + msg[0], 0, 0, (unsigned int) msgLen - 1);
+  sprintf(line, "%s,%u,%u,%u,%u,%u", now(dateStr), 0, 0x40000 + msg[0], 0, 0, (unsigned int) msgLen - 1);
   p = line + strlen(line);
   for (i = 1; i < msgLen && p < line + sizeof(line) - 5; i++)
   {
@@ -645,6 +623,7 @@ static void n2kMessageReceived(const unsigned char * msg, size_t msgLen)
   unsigned int data[8];
   char line[800];
   char * p;
+  char dateStr[DATE_LENGTH];
 
   if (msgLen < 11)
   {
@@ -666,7 +645,7 @@ static void n2kMessageReceived(const unsigned char * msg, size_t msgLen)
 
   p = line;
 
-  snprintf(p, sizeof(line), "%s,%u,%u,%u,%u,%u", now(), prio, pgn, src, dst, len);
+  snprintf(p, sizeof(line), "%s,%u,%u,%u,%u,%u", now(dateStr), prio, pgn, src, dst, len);
   p += strlen(line);
 
   len += 11;

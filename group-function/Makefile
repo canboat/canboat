@@ -20,12 +20,16 @@
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
 COMMAND=$(TARGETDIR)/command-group-function
-TARGETS=$(COMMAND)
+REQUEST=$(TARGETDIR)/request-group-function
+TARGETS=$(COMMAND) $(REQUEST)
 
 all: $(TARGETS)
 
 $(COMMAND): command.c ../common/common.c ../common/common.h
 	$(CC) -o $(COMMAND) -I../common command.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+
+$(REQUEST): request.c ../common/common.c ../common/common.h
+	$(CC) -o $(REQUEST) -I../common request.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

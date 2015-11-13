@@ -105,5 +105,8 @@ void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int
 
 SOCKET open_socket_stream(const char * url);
 
+#define DATE_LENGTH 60
+const char * now(char str[DATE_LENGTH]);
+
 # define CANBOAT_COMMON
 #endif
