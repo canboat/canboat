@@ -650,11 +650,11 @@ static bool printLatLon(char * name, double resolution, uint8_t * data, size_t b
 
     if (showJson)
     {
-      mprintf("%s\"%s\":%010.7f", getSep(), name, dd);
+      mprintf("%s\"%s\":%10.7f", getSep(), name, dd);
     }
     else
     {
-      mprintf("%s %s = %010.7f", getSep(), name, dd);
+      mprintf("%s %s = %10.7f", getSep(), name, dd);
     }
   }
   else if (showGeo == GEO_DM)
@@ -665,7 +665,7 @@ static bool printLatLon(char * name, double resolution, uint8_t * data, size_t b
     uint64_t remainder = (absVal % RES_LAT_LONG_PRECISION);
     double minutes = (remainder * 60) / (double) RES_LAT_LONG_PRECISION;
 
-    mprintf((showJson ? "%s\"%s\":\"%02u&deg; %06.3f %c\"" : "%s %s = %02ud %06.3f %c")
+    mprintf((showJson ? "%s\"%s\":\"%02u&deg; %6.3f %c\"" : "%s %s = %02ud %6.3f %c")
            , getSep(), name, (uint32_t) degrees, minutes
            , ((resolution == RES_LONGITUDE)
               ? ((value >= 0) ? 'E' : 'W')
@@ -690,7 +690,7 @@ static bool printLatLon(char * name, double resolution, uint8_t * data, size_t b
     if (showJson)
     {
       double dd = (double) value / (double) RES_LAT_LONG_PRECISION;
-      mprintf("%s\"%s_dd\":%010.7f", getSep(), name, dd);
+      mprintf("%s\"%s_dd\":%10.7f", getSep(), name, dd);
     }
   }
   return true;
