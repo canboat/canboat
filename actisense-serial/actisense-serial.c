@@ -3,7 +3,7 @@ Read and write to an Actisense NGT-1 over its serial device.
 This can be a serial version connected to an actual serial port
 or an USB version connected to the virtual serial port.
 
-(C) 2009-2014, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2015, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
