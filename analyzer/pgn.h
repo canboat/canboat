@@ -24,9 +24,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #define UINT16_OUT_OF_RANGE (MAX_UINT16 - 1)
 #define UINT16_UNKNOWN (MAX_UINT16)
 
-#define PROGRAM_DATE "$Date: 2012-03-14 16:30:42 +0100 (wo, 14 mrt 2012) $"
-#define PROGRAM_REV  "$Rev: 249 $"
-
 /*
  * Notes on the NMEA 2000 packet structure
  * ---------------------------------------
