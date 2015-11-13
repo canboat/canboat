@@ -21,6 +21,14 @@ else if ($cmd == "request-access-level")
 {
   request_access_level();
 }
+else if ($cmd == "set-access-level" && $argc == 4)
+{
+  set_access_level($argv[3]);
+}
+else if ($cmd == "request-speed-calibration")
+{
+  request_speed_calibration();
+}
 else
 {
   usage();
@@ -32,6 +40,8 @@ function usage()
   echo "where command is one of:\n";
   echo "    set-depth-offset <offset> in millimeters\n";
   echo "    request-access-level\n";
+  echo "    set-access-level <level> (level 0 and 1 supported)\n";
+  echo "    reuqest-speed-calibration\n";
   echo "and <dest> is the decimal device number of the Airmar sensor on the CAN bus, or 255 for broadcast\n";
   exit(1);
 }
@@ -60,23 +70,51 @@ function request_access_level()
 {
   global $dest;
 
-  $command = shell_exec("command-group-function $dest 5 65287 1=0087 3=04");
-  echo "Sending request to device $dest to report PGN 65287: $command\n";
+  $command = shell_exec("request-group-function $dest 5 65287 1=0087 3=04");
   $analyzed = shell_exec("echo '$command' | analyzer 2>/dev/null");
   echo "Sending request to device $dest to report PGN 65287: $analyzed\n";
 
   $response = n2k_request_response($command, 'Request Access Level');
 
-  echo "Response: ".print_r($response);
+  show_command_response($response);
+  Sleep(0.2);
+  $response = n2k_request_response(null, 'request-access-level');
+  show_airmar_data($response);
+}
+
+function set_access_level($level)
+{
+  global $dest;
+
+  $command = shell_exec("command-group-function $dest 5 65287 1=0087 3=04 4=01 5=".sprintf("%02x", $level)." 7=12345678");
+  $analyzed = shell_exec("echo '$command' | analyzer 2>/dev/null");
+  echo "Sending request to device $dest to report PGN 65287: $analyzed\n";
+
+  $response = n2k_request_response($command, 'Set Access Level');
+
+  $command = shell_exec("request-group-function $dest 5 65287 1=0087 3=04");
 
   show_command_response($response);
+  Sleep(2);
+  $response = n2k_request_response(null, 'request-access-level');
+  show_airmar_data($response);
+}
 
-  if (array_key_exists(65287, $response) && is_array($response[65287]))
-  {
-    echo "Airmar data received\n";
-    $response = $response['65287'];
-    print_r($response);
-  }
+function request_speed_calibration()
+{
+  global $dest;
+
+  $command = shell_exec("request-group-function $dest 5 126208 1=0087 3=04 4=29");
+  echo "Sending request to device $dest to report PGN 126208 PID 41: $command\n";
+  $analyzed = shell_exec("echo '$command' | analyzer 2>/dev/null");
+  echo "Sending request to device $dest to report PGN 126208 PID 41: $analyzed\n";
+
+  $response = n2k_request_response($command, 'Request Speed Calibration');
+
+  show_command_response($response);
+  Sleep(2);
+  $response = n2k_request_response(null, 'request-access-level');
+  show_airmar_data($response);
 }
 
 function n2k_request_response($request, $description = 'N2K')
@@ -130,6 +168,23 @@ function show_command_response($response)
       else
       {
         echo " - OK\n";
+      }
+    }
+  }
+}
+
+function show_airmar_data($response)
+{
+  global $dest;
+
+  foreach ($response as $key => $data)
+  {
+    foreach ($data as $device => $answer)
+    {
+      if ($device == $dest && array_key_exists('Manufacturer Code', $answer['fields']) && $answer['fields']['Manufacturer Code'] == 'Airmar')
+      {
+        print_r($data);
+        break;
       }
     }
   }
