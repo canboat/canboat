@@ -3258,7 +3258,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":true},
           {
@@ -3270,7 +3269,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":40,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":true},
           {
@@ -3282,7 +3280,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":56,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":true}]},
       "126720":{
@@ -4790,7 +4787,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":208,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -4922,7 +4918,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":true},
           {
@@ -4933,7 +4928,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":40,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -4944,7 +4938,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":56,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -4955,7 +4948,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":72,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -4966,7 +4958,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":88,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -4977,7 +4968,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":104,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":true},
           {
@@ -4988,7 +4978,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":120,
             "BitStart":0,
             "Units":"rad/s",
-            "Resolution":"0.00179049",
+            "Resolution":3.125e-05,
             "Signed":true},
           {
             "Order":17,
@@ -5007,7 +4997,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":152,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false}]},
       "127245":{
@@ -5052,7 +5041,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":true},
           {
@@ -5063,7 +5051,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":true}]},
       "127250":{
@@ -5090,7 +5077,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":8,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -5101,7 +5087,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":true},
           {
@@ -5112,7 +5097,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":40,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":true},
           {
@@ -5151,7 +5135,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":8,
             "BitStart":0,
             "Units":"rad/s",
-            "Resolution":1.79049e-07,
+            "Resolution":3.125e-09,
             "Signed":true}]},
       "127257":{
         "PGN":127257,
@@ -5177,7 +5161,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":8,
             "BitStart":0,
             "Units":"rad/s",
-            "Resolution":"0.00179049",
+            "Resolution":3.125e-05,
             "Signed":true},
           {
             "Order":3,
@@ -5187,7 +5171,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad/s",
-            "Resolution":"0.00179049",
+            "Resolution":3.125e-05,
             "Signed":true},
           {
             "Order":4,
@@ -5197,7 +5181,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":40,
             "BitStart":0,
             "Units":"rad/s",
-            "Resolution":"0.00179049",
+            "Resolution":3.125e-05,
             "Signed":true}]},
       "127258":{
         "PGN":127258,
@@ -5264,7 +5248,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":true}]},
       "127488":{
@@ -6908,7 +6891,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -6929,7 +6911,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":72,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -7060,7 +7041,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -7181,7 +7161,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -7566,7 +7545,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":112,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -7614,7 +7592,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":168,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -7625,7 +7602,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":184,
             "BitStart":0,
             "Units":"rad/s",
-            "Resolution":"0.00179049",
+            "Resolution":3.125e-05,
             "Signed":true},
           {
             "Order":15,
@@ -7789,7 +7766,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":112,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -7837,7 +7813,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":168,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -8052,7 +8027,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":112,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -8156,7 +8130,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":168,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -8624,7 +8597,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":96,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -8635,7 +8607,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":112,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -8856,7 +8827,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -8981,7 +8951,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -9294,7 +9263,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -9305,7 +9273,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":48,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -11146,7 +11113,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":112,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -14024,7 +13990,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -14739,7 +14704,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":168,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -14860,7 +14824,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":136,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -15027,7 +14990,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":136,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -15489,7 +15451,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -15510,7 +15471,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":48,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -15531,7 +15491,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":80,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -20687,7 +20646,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":72,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {
@@ -20996,7 +20954,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitOffset":72,
             "BitStart":0,
             "Units":"rad",
-            "Type":"Angle",
             "Resolution":"0.0001",
             "Signed":false},
           {

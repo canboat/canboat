@@ -82,8 +82,9 @@ typedef struct
 # define LEN_VARIABLE (0)
   double resolution; /* Either a positive real value or one of the following RES_ special values */
 # define RES_NOTUSED (0)
-# define RES_DEGREES (1e-4 * RadianToDegree)
-# define RES_ROTATION (1e-3/32.0 * RadianToDegree)
+# define RES_RADIANS (1e-4)
+# define RES_ROTATION (1e-3/32.0)
+# define RES_HIRES_ROTATION ((1e-3/32.0) * 0.0001)
 # define RES_ASCII (-1.0)
 # define RES_LATITUDE (-2.0)
 # define RES_LONGITUDE (-3.0)
@@ -1079,9 +1080,9 @@ Pgn pgnList[] =
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Proprietary ID", BYTES(1), RES_INTEGER, false, "=32", "Attitude Offsets" }
-  , { "Azimuth offset", BYTES(2), RES_DEGREES, true, "deg", "Positive: sensor rotated to port, negative: sensor rotated to starboard" }
-  , { "Pitch offset", BYTES(2), RES_DEGREES, true, "deg", "Positive: sensor tilted to bow, negative: sensor tilted to stern" }
-  , { "Roll offset", BYTES(2), RES_DEGREES, true, "deg", "Positive: sensor tilted to port, negative: sensor tilted to starboard" }
+  , { "Azimuth offset", BYTES(2), RES_RADIANS, true, "rad", "Positive: sensor rotated to port, negative: sensor rotated to starboard" }
+  , { "Pitch offset", BYTES(2), RES_RADIANS, true, "rad", "Positive: sensor tilted to bow, negative: sensor tilted to stern" }
+  , { "Roll offset", BYTES(2), RES_RADIANS, true, "rad", "Positive: sensor tilted to port, negative: sensor tilted to starboard" }
   , { 0 }
   }
 }
@@ -1366,7 +1367,7 @@ Pgn pgnList[] =
   , { "Longitude", BYTES(4), RES_LONGITUDE, true, "deg", "" }
   , { "COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, "" }
   , { "Reserved", 6, RES_BINARY, false, 0, "" }
-  , { "COG", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "COG", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "SOG", BYTES(2), 0.01, false, "m/s", "" }
   , { "MMSI of vessel of origin", BYTES(4), RES_INTEGER, false, "MMSI", "" }
   , { "MOB Emitter Battery Status", 3, RES_LOOKUP, false, "0=Good,1=Low", "" }
@@ -1386,15 +1387,15 @@ Pgn pgnList[] =
   , { "Heading Reference", 3, 1, false, 0, "" }
   , { "Reserved", 3, RES_BINARY, false, 0, "" }
   , { "Commanded Rudder Direction", 2, 1, false, 0, "" }
-  , { "Commanded Rudder Angle", BYTES(2), RES_DEGREES, true, "deg", "" }
-  , { "Heading-To-Steer (Course)", BYTES(2), RES_DEGREES, false, "deg", "" }
-  , { "Track", BYTES(2), RES_DEGREES, false, "deg", "" }
-  , { "Rudder Limit", BYTES(2), RES_DEGREES, false, "deg", "" }
-  , { "Off-Heading Limit", BYTES(2), RES_DEGREES, false, "deg", "" }
-  , { "Radius of Turn Order", BYTES(2), RES_DEGREES, true, "deg", "" }
-  , { "Rate of Turn Order", BYTES(2), RES_ROTATION, true, "deg/s", "" }
+  , { "Commanded Rudder Angle", BYTES(2), RES_RADIANS, true, "rad", "" }
+  , { "Heading-To-Steer (Course)", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Track", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Rudder Limit", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Off-Heading Limit", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Radius of Turn Order", BYTES(2), RES_RADIANS, true, "rad", "" }
+  , { "Rate of Turn Order", BYTES(2), RES_ROTATION, true, "rad/s", "" }
   , { "Off-Track Limit", BYTES(2), 1, true, "m", "" }
-  , { "Vessel Heading", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Vessel Heading", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { 0 }
   }
 }
@@ -1407,8 +1408,8 @@ Pgn pgnList[] =
   { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "Direction Order", 2, 1, false, 0, "" }
   , { "Reserved", 6, RES_BINARY, false, 0, "Reserved" }
-  , { "Angle Order", BYTES(2), RES_DEGREES, true, "deg", "" }
-  , { "Position", BYTES(2), RES_DEGREES, true, "deg", "" }
+  , { "Angle Order", BYTES(2), RES_RADIANS, true, "rad", "" }
+  , { "Position", BYTES(2), RES_RADIANS, true, "rad", "" }
   , { 0 }
   }
 }
@@ -1419,9 +1420,9 @@ Pgn pgnList[] =
 ,
 { "Vessel Heading", 127250, true, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Heading", BYTES(2), RES_DEGREES, false, "deg", "" }
-  , { "Deviation", BYTES(2), RES_DEGREES, true, "deg", "" }
-  , { "Variation", BYTES(2), RES_DEGREES, true, "deg", "" }
+  , { "Heading", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Deviation", BYTES(2), RES_RADIANS, true, "rad", "" }
+  , { "Variation", BYTES(2), RES_RADIANS, true, "rad", "" }
   , { "Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, "" }
   , { 0 }
   }
@@ -1432,7 +1433,7 @@ Pgn pgnList[] =
 ,
 { "Rate of Turn", 127251, true, 5, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Rate", BYTES(4), RES_ROTATION * 0.0001, true, "deg/s", "" }
+  , { "Rate", BYTES(4), RES_HIRES_ROTATION, true, "rad/s", "" }
   , { 0 }
   }
 }
@@ -1440,9 +1441,9 @@ Pgn pgnList[] =
 ,
 { "Attitude", 127257, true, 7, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Yaw", BYTES(2), RES_ROTATION, true, "deg/s", "" }
-  , { "Pitch", BYTES(2), RES_ROTATION, true, "deg/s", "" }
-  , { "Roll", BYTES(2), RES_ROTATION, true, "deg/s", "" }
+  , { "Yaw", BYTES(2), RES_ROTATION, true, "rad/s", "" }
+  , { "Pitch", BYTES(2), RES_ROTATION, true, "rad/s", "" }
+  , { "Roll", BYTES(2), RES_ROTATION, true, "rad/s", "" }
   , { 0 }
   }
 }
@@ -1455,7 +1456,7 @@ Pgn pgnList[] =
   , { "Source", 4, RES_LOOKUP, false, LOOKUP_MAGNETIC_VARIATION, "" }
   , { "Reserved", 4, RES_BINARY, false, 0, "Reserved" }
   , { "Age of service", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970" }
-  , { "Variation", BYTES(2), RES_DEGREES, true, "deg", "" }
+  , { "Variation", BYTES(2), RES_RADIANS, true, "rad", "" }
   , { 0 }
   }
 }
@@ -1763,9 +1764,9 @@ Pgn pgnList[] =
   , { "Target Acquisition", 1, RES_LOOKUP, false, ",0=Manual,1=Automatic", "" }
   , { "Bearing Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, "" }
   , { "Reserved", 2, RES_BINARY, false, 0, "" }
-  , { "Bearing", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Bearing", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Distance", BYTES(4), 0.001, false, "m", "" }
-  , { "Course", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Course", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Speed", BYTES(2), 0.01, false, "m/s", "" }
   , { "CPA", BYTES(4), 0.01, false, "m", "" }
   , { "TCPA", BYTES(4), 0.001, false, "s", "negative = time elapsed since event, positive = time to go" }
@@ -1789,7 +1790,7 @@ Pgn pgnList[] =
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, "" }
   , { "Reserved", 6, RES_BINARY, false, 0, "Reserved" }
-  , { "COG", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "COG", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "SOG", BYTES(2), 0.01, false, "m/s", "" }
   , { "Reserved", BYTES(2), RES_BINARY, false, 0, "Reserved" }
   , { 0 }
@@ -1813,7 +1814,7 @@ Pgn pgnList[] =
   , { "GNSS Quality", 2, 1, false, 0, "" }
   , { "Direction", 2, 1, false, 0, "" }
   , { "Reserved", 4, RES_BINARY, false, 0, "Reserved" }
-  , { "Course Over Ground", BYTES(4), RES_DEGREES, false, "deg", "" }
+  , { "Course Over Ground", BYTES(4), RES_RADIANS, false, "rad", "" }
   , { "Altitude Delta", BYTES(2), 1, true, 0, "" }
   , { 0 }
   }
@@ -1864,12 +1865,12 @@ Pgn pgnList[] =
   , { "Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, "" }
   , { "RAIM", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, "" }
   , { "Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated" }
-  , { "COG", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "COG", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "SOG", BYTES(2), 0.01, false, "m/s", "" }
   , { "Communication State", 19, RES_BINARY, false, 0, "Information used by the TDMA slot allocation algorithm and synchronization information" }
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
-  , { "Heading", BYTES(2), RES_DEGREES, false, "deg", "True heading" }
-  , { "Rate of Turn", BYTES(2), RES_ROTATION, true, "deg/s", "" }
+  , { "Heading", BYTES(2), RES_RADIANS, false, "rad", "True heading" }
+  , { "Rate of Turn", BYTES(2), RES_ROTATION, true, "rad/s", "" }
   , { "Nav Status", 4, RES_LOOKUP, false, LOOKUP_NAV_STATUS, "" }
   , { "Reserved", 4, RES_BINARY, false, 0, "reserved" }
   , { "Regional Application", 1, 1, false, 0, "" }
@@ -1888,11 +1889,11 @@ Pgn pgnList[] =
   , { "Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, "" }
   , { "RAIM", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, "" }
   , { "Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated" }
-  , { "COG", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "COG", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "SOG", BYTES(2), 0.01, false, "m/s", "" }
   , { "Communication State", 19, RES_BINARY, false, 0, "Information used by the TDMA slot allocation algorithm and synchronization information" }
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
-  , { "Heading", BYTES(2), RES_DEGREES, false, "deg", "True heading" }
+  , { "Heading", BYTES(2), RES_RADIANS, false, "rad", "True heading" }
   , { "Regional Application", BYTES(1), 1, false, 0, "" }
   , { "Regional Application", 2, 1, false, 0, "" }
   , { "Unit type", 1, RES_LOOKUP, false, ",0=SOTDMA,1=CS", "" }
@@ -1916,13 +1917,13 @@ Pgn pgnList[] =
   , { "Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, "" }
   , { "AIS RAIM flag", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, "" }
   , { "Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated" }
-  , { "COG", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "COG", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "SOG", BYTES(2), 0.01, false, "m/s", "" }
   , { "Regional Application", BYTES(1), 1, false, 0, "" }
   , { "Regional Application", 4, 1, false, 0, "" }
   , { "Reserved", 4, RES_BINARY, false, 0, "reserved" }
   , { "Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, "" }
-  , { "True Heading", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "True Heading", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Reserved", 4, RES_BINARY, false, 0, "" }
   , { "GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS_AIS, "" }
   , { "Length", BYTES(2), 0.1, false, "m", "" }
@@ -1992,8 +1993,8 @@ Pgn pgnList[] =
   , { "Calculation Type", 2, RES_LOOKUP, false, ",0=Great Circle,1=Rhumb Line", "" }
   , { "ETA Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
   , { "ETA Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970" }
-  , { "Bearing, Origin to Destination Waypoint", BYTES(2), RES_DEGREES, false, "deg", "" }
-  , { "Bearing, Position to Destination Waypoint", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Bearing, Origin to Destination Waypoint", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Bearing, Position to Destination Waypoint", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Origin Waypoint Number", BYTES(4), 1, false, 0, "" }
   , { "Destination Waypoint Number", BYTES(4), 1, false, 0, "" }
   , { "Destination Latitude", BYTES(4), RES_LATITUDE, true, "deg", "" }
@@ -2027,7 +2028,7 @@ Pgn pgnList[] =
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Set Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, "" }
   , { "Reserved", 6, RES_BINARY, false, 0, "Reserved" }
-  , { "Set", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Set", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Drift", BYTES(2), 0.01, false, "m/s", "" }
   , { 0 }
   }
@@ -2050,7 +2051,7 @@ Pgn pgnList[] =
   , { "Bearing Reference", 4, RES_LOOKUP, false, 0, "" }
   , { "Calculation Type", 2, RES_LOOKUP, false, 0, "" }
   , { "Reserved", 2, RES_BINARY, false, 0, "Reserved" }
-  , { "Bearing, Origin to Destination", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Bearing, Origin to Destination", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Distance", BYTES(4), 0.01, false, "m", "" }
   , { "Origin Mark Type", 4, RES_LOOKUP, false, 0, "" }
   , { "Destination Mark Type", 4, RES_LOOKUP, false, 0, "" }
@@ -2099,8 +2100,8 @@ Pgn pgnList[] =
   , { "Reserved", 6, RES_BINARY, false, 0, "Reserved" }
   , { "Sats in View", BYTES(1), 1, false, 0, "" }
   , { "PRN", BYTES(1), 1, false, 0, "" }
-  , { "Elevation", BYTES(2), RES_DEGREES, false, "deg", "" }
-  , { "Azimuth", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Elevation", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Azimuth", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "SNR", BYTES(2), 0.01, false, "dB", "" }
   , { "Range residuals", BYTES(4), 1, true, 0, "" }
   , { "Status", 4, RES_LOOKUP, false, ",0=Not tracked,1=Tracked,2=Used,3=Not tracked+Diff,4=Tracked+Diff,5=Used+Diff", "" }
@@ -2374,7 +2375,7 @@ Pgn pgnList[] =
   , { "Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, "" }
   , { "RAIM", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, "" }
   , { "Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated" }
-  , { "COG", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "COG", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "SOG", BYTES(2), 0.1, false, "m/s", "" }
   , { "Communication State", 19, RES_BINARY, false, 0, "Information used by the TDMA slot allocation algorithm and synchronization information" }
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
@@ -2826,7 +2827,7 @@ Pgn pgnList[] =
 { "Wind Data", 130306, true, 6, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Wind Speed", BYTES(2), 0.01, false, "m/s", "" }
-  , { "Wind Angle", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Wind Angle", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, "" }
   , { 0 }
   }
@@ -2946,7 +2947,7 @@ Pgn pgnList[] =
   , { "Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", "" }
   , { "Measurement Depth", BYTES(4), 0.01, false, "m", "Depth below transducer" }
   , { "Current speed", BYTES(2), 0.01, false, "m/s", "" }
-  , { "Current flow direction", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Current flow direction", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Station ID", BYTES(2), RES_STRING, false, 0, "" }
   , { "Station Name", BYTES(2), RES_STRING, false, 0, "" }
@@ -2963,7 +2964,7 @@ Pgn pgnList[] =
   , { "Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", "" }
   , { "Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", "" }
   , { "Wind Speed", BYTES(2), 0.01, false, "m/s", "" }
-  , { "Wind Direction", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Wind Direction", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Wind Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, "" }
   , { "Reserved", 5, RES_BINARY, false, "", "reserved" }
   , { "Wind Gusts", BYTES(2), 0.01, false, "m/s", "" }
@@ -2984,7 +2985,7 @@ Pgn pgnList[] =
   , { "Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", "" }
   , { "Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", "" }
   , { "Wind Speed", BYTES(2), 0.01, false, "m/s", "" }
-  , { "Wind Direction", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Wind Direction", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Wind Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, "" }
   , { "Reserved", 5, RES_BINARY, false, "", "reserved" }
   , { "Wind Gusts", BYTES(2), 0.01, false, "m/s", "" }
@@ -3057,11 +3058,11 @@ Pgn pgnList[] =
   , { "Reserved", 2, RES_BINARY, false, 0, "Reserved" }
   , { "SID", BYTES(1), 1, false, 0, "" }
     /* So far, 2 bytes. Very sure of this given molly rose data */
-  , { "COG", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "COG", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "SOG", BYTES(2), 0.01, false, "m/s", "" }
-  , { "Heading", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Heading", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Speed through Water", BYTES(2), 0.01, false, "m/s", "" }
-  , { "Set", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Set", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Drift", BYTES(2), 0.01, false, "m/s", "" }
   , { 0 }
   }
@@ -3935,7 +3936,7 @@ Pgn pgnList[] =
   , { "Controlling Device", BYTES(1), 1, false, 0, "" }
   , { "Event", BYTES(2), RES_LOOKUP, false, LOOKUP_SIMNET_AP_EVENTS, "" }
   , { "Direction", BYTES(1), RES_LOOKUP, false, LOOKUP_SIMNET_DIRECTION, "" }
-  , { "Angle", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Angle", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "G", BYTES(1), 1, false, 0, "" }
   , { 0 }
   }
@@ -3982,7 +3983,7 @@ Pgn pgnList[] =
   , { "Controlling Device", BYTES(1), 1, false, 0, "" }
   , { "Event", BYTES(2), RES_LOOKUP, false, LOOKUP_SIMNET_AP_EVENTS, "" }
   , { "Direction", BYTES(1), RES_LOOKUP, false, LOOKUP_SIMNET_DIRECTION, "" }
-  , { "Angle", BYTES(2), RES_DEGREES, false, "deg", "" }
+  , { "Angle", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "G", BYTES(1), 1, false, 0, "" }
   , { 0 }
   }

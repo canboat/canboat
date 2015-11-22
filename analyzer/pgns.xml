@@ -3685,7 +3685,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -3698,7 +3697,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -3711,7 +3709,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>56</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5397,7 +5394,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>208</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5545,7 +5541,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5557,7 +5552,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5569,7 +5563,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>56</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5581,7 +5574,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>72</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5593,7 +5585,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>88</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5605,7 +5596,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>104</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5617,7 +5607,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>120</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>0.00179049</Resolution>
+           <Resolution>3.125e-05</Resolution>
            <Signed>true</Signed>
          </Field>
          <Field>
@@ -5638,7 +5628,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>152</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5689,7 +5678,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5701,7 +5689,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5732,7 +5719,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5744,7 +5730,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5756,7 +5741,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5801,7 +5785,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>1.79049e-07</Resolution>
+           <Resolution>3.125e-09</Resolution>
            <Signed>true</Signed>
          </Field>
        </Fields>
@@ -5831,7 +5815,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>0.00179049</Resolution>
+           <Resolution>3.125e-05</Resolution>
            <Signed>true</Signed>
          </Field>
          <Field>
@@ -5842,7 +5826,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>0.00179049</Resolution>
+           <Resolution>3.125e-05</Resolution>
            <Signed>true</Signed>
          </Field>
          <Field>
@@ -5853,7 +5837,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>0.00179049</Resolution>
+           <Resolution>3.125e-05</Resolution>
            <Signed>true</Signed>
          </Field>
        </Fields>
@@ -5928,7 +5912,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -7792,7 +7775,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -7815,7 +7797,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>72</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -7962,7 +7943,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8099,7 +8079,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8529,7 +8508,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>112</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8582,7 +8560,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>168</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8594,7 +8571,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>184</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>0.00179049</Resolution>
+           <Resolution>3.125e-05</Resolution>
            <Signed>true</Signed>
          </Field>
          <Field>
@@ -8778,7 +8755,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>112</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8831,7 +8807,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>168</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -9077,7 +9052,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>112</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -9188,7 +9162,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>168</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -9713,7 +9686,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>96</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -9725,7 +9697,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>112</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -9973,7 +9944,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -10114,7 +10084,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -10467,7 +10436,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -10479,7 +10447,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>48</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -12551,7 +12518,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>112</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -15777,7 +15743,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -16578,7 +16543,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>168</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -16712,7 +16676,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>136</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -16897,7 +16860,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>136</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -17421,7 +17383,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -17444,7 +17405,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>48</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -17467,7 +17427,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>80</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -23257,7 +23216,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>72</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -23604,7 +23562,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>72</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>

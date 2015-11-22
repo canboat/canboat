@@ -49,6 +49,7 @@ bool showRaw = false;
 bool showData = false;
 bool showBytes = false;
 bool showJson = false;
+bool showRad = false; // radians or degrees in output
 char * sep = " ";
 int  braceCount = 0; // Open json output { characters that need to be closed
 enum GeoFormats showGeo = GEO_DD;
@@ -73,7 +74,7 @@ void camelCase(bool upperCamelCase);
 void usage(char ** argv, char ** av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
-  printf("Usage: %s [[-raw] [-json [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-geo {dd|dm|dms}] [-src <src> | <pgn>]] ["
+  printf("Usage: %s [[-raw] [-json [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-rad | -deg] [-geo {dd|dm|dms}] [-src <src> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
@@ -139,6 +140,14 @@ int main(int argc, char ** argv)
       }
       ac--;
       av++;
+    }
+    else if (strcasecmp(av[1], "-rad") == 0)
+    {
+      showRad = true;
+    }
+    else if (strcasecmp(av[1], "-deg") == 0)
+    {
+      showRad = false;
     }
     else if (strcasecmp(av[1], "-camel") == 0)
     {
@@ -1365,24 +1374,37 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
       }
       else
       {
-        int precision = 0;
+        int precision;
         double r;
+        const char * units = field->units;
 
-        a = value * field->resolution;
+        a = (double) value * field->resolution;
+        mprintf("[%f = %"PRId64" * %f]", a, value, field->resolution);
 
-        if (field->resolution == RES_DEGREES)
+        precision = 0;
+        for (r = field->resolution; (r > 0.0) && (r < 1.0); r *= 10.0)
         {
-          precision = 1;
+          precision++;
         }
-        else if (field->resolution == RES_DEGREES * 0.0001)
+
+        if (field->resolution == RES_RADIANS)
         {
-          precision = 4;
-        }
-        else
-        {
-          for (r = field->resolution; (r > 0.0) && (r < 1.0); r *= 10.0)
+          units = "rad";
+          if (!showRad)
           {
-            precision++;
+            a *= RadianToDegree;
+            precision -= 3;
+            units = "deg";
+          }
+        }
+        else if (field->resolution == RES_ROTATION || field->resolution == RES_HIRES_ROTATION)
+        {
+          units = "rad/s";
+          if (!showRad)
+          {
+            a *= RadianToDegree;
+            precision -= 3;
+            units = "deg/s";
           }
         }
 
@@ -1390,16 +1412,16 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
         {
           mprintf("%s\"%s\":%.*f", getSep(), fieldName, precision, a);
         }
-        else if (field->units && strcmp(field->units, "m") == 0 && a >= 1000.0)
+        else if (units && strcmp(units, "m") == 0 && a >= 1000.0)
         {
           mprintf("%s %s = %.*f km", getSep(), fieldName, precision + 3, a / 1000);
         }
         else
         {
           mprintf("%s %s = %.*f", getSep(), fieldName, precision, a);
-          if (field->units)
+          if (units)
           {
-            mprintf(" %s", field->units);
+            mprintf(" %s", units);
           }
         }
       }
@@ -2199,15 +2221,6 @@ static void explainPGN(Pgn pgn)
     {
       printf("                  Match: %s\n", &f.units[1]);
     }
-    else if (f.units && strcmp(f.units, "deg/s") == 0)
-    {
-      printf("                  Units: rad/s\n");
-    }
-    else if (f.resolution == RES_DEGREES
-     || f.resolution == RES_DEGREES * 0.0001)
-    {
-      printf("                  Units: rad\n");
-    }
     else if (f.units && f.units[0] != ',')
     {
       printf("                  Units: %s\n", f.units);
@@ -2235,12 +2248,6 @@ static void explainPGN(Pgn pgn)
           printf("                  Resolution: %.7f\n", 1e-7);
         }
       }
-    }
-    else if (f.resolution == RES_DEGREES
-          || f.resolution == RES_DEGREES * 0.0001)
-    {
-      printf("                  Type: Angle\n");
-      printf("                  Resolution: %g\n", f.resolution / RadianToDegree);
     }
     else if (f.resolution != 1.0)
     {
@@ -2340,15 +2347,6 @@ static void explainPGNXML(Pgn pgn)
       {
         printf("           <Match>%s</Match>\n", &f.units[1]);
       }
-      else if (f.units && strcmp(f.units, "deg/s") == 0)
-      {
-        printf("           <Units>rad/s</Units>\n");
-      }
-      else if (f.resolution == RES_DEGREES
-       || f.resolution == RES_DEGREES * 0.0001)
-      {
-        printf("           <Units>rad</Units>\n");
-      }
       else if (f.units && f.units[0] != ',')
       {
         printf("           <Units>%s</Units>\n", f.units);
@@ -2376,11 +2374,6 @@ static void explainPGNXML(Pgn pgn)
             printf("                  <Resolution>%.7f</Resolution>\n", 1e-7);
           }
         }
-      }
-      else if (f.resolution == RES_DEGREES)
-      {
-        printf("           <Type>Angle</Type>\n");
-        printf("           <Resolution>%g</Resolution>\n", f.resolution / RadianToDegree);
       }
       else if (f.resolution != 1.0)
       {
