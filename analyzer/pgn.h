@@ -582,7 +582,7 @@ Pgn pgnList[] =
 
 ,
 { "Utility Phase C AC Reactive Power", 65006, false, 8, 0,
-  { { "Reactive Power", BYTES(2), 1, false, "VAr", "" }
+  { { "Reactive Power", BYTES(2), 1, false, "var", "" }
   , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
   , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
   , { 0 }
@@ -609,7 +609,7 @@ Pgn pgnList[] =
 
 ,
 { "Utility Phase B AC Reactive Power", 65009, false, 8, 0,
-  { { "Reactive Power", BYTES(2), 1, false, "VAr", "" }
+  { { "Reactive Power", BYTES(2), 1, false, "var", "" }
   , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
   , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
   , { 0 }
@@ -636,7 +636,7 @@ Pgn pgnList[] =
 
 ,
 { "Utility Phase A AC Reactive Power", 65012, false, 8, 0,
-  { { "Reactive Power", BYTES(4), 1, true, "VAr", "", -2000000000 }
+  { { "Reactive Power", BYTES(4), 1, true, "var", "", -2000000000 }
   , { "Power Factor", BYTES(2), 1/16384, true, 0, "" }
   , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
   , { 0 }
@@ -663,7 +663,7 @@ Pgn pgnList[] =
 
 ,
 { "Utility Total AC Reactive Power", 65015, false, 8, 0,
-  { { "Reactive Power", BYTES(4), 1, true, "VAr", "", -2000000000 }
+  { { "Reactive Power", BYTES(4), 1, true, "var", "", -2000000000 }
   , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
   , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
   , { 0 }
@@ -698,7 +698,7 @@ Pgn pgnList[] =
 
 ,
 { "Generator Phase C AC Reactive Power", 65019, false, 8, 0,
-  { { "Reactive Power", BYTES(2), 1, false, "VAr", "", -2000000000 }
+  { { "Reactive Power", BYTES(2), 1, false, "var", "", -2000000000 }
   , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
   , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
   , { 0 }
@@ -725,7 +725,7 @@ Pgn pgnList[] =
 
 ,
 { "Generator Phase B AC Reactive Power", 65022, false, 8, 0,
-  { { "Reactive Power", BYTES(2), 1, false, "VAr", "", -2000000000 }
+  { { "Reactive Power", BYTES(2), 1, false, "var", "", -2000000000 }
   , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
   , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
   , { 0 }
@@ -752,7 +752,7 @@ Pgn pgnList[] =
 
 ,
 { "Generator Phase A AC Reactive Power", 65025, false, 8, 0,
-  { { "Reactive Power", BYTES(2), 1, false, "VAr", "", -2000000000 }
+  { { "Reactive Power", BYTES(2), 1, false, "var", "", -2000000000 }
   , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
   , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
   , { 0 }
@@ -779,7 +779,7 @@ Pgn pgnList[] =
 
 ,
 { "Generator Total AC Reactive Power", 65028, false, 8, 0,
-  { { "Reactive Power", BYTES(2), 1, false, "VAr", "", -2000000000 }
+  { { "Reactive Power", BYTES(2), 1, false, "var", "", -2000000000 }
   , { "Power Factor", BYTES(2), 1/16384, false, 0, "" }
   , { "Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, "" }
   , { 0 }

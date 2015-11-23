@@ -49,7 +49,7 @@ bool showRaw = false;
 bool showData = false;
 bool showBytes = false;
 bool showJson = false;
-bool showRad = false; // radians or degrees in output
+bool showSI = false; // Output everything in strict SI units
 char * sep = " ";
 int  braceCount = 0; // Open json output { characters that need to be closed
 enum GeoFormats showGeo = GEO_DD;
@@ -74,7 +74,7 @@ void camelCase(bool upperCamelCase);
 void usage(char ** argv, char ** av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
-  printf("Usage: %s [[-raw] [-json [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-rad | -deg] [-geo {dd|dm|dms}] [-src <src> | <pgn>]] ["
+  printf("Usage: %s [[-raw] [-json [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] [-src <src> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
@@ -141,13 +141,13 @@ int main(int argc, char ** argv)
       ac--;
       av++;
     }
-    else if (strcasecmp(av[1], "-rad") == 0)
+    else if (strcasecmp(av[1], "-si") == 0)
     {
-      showRad = true;
+      showSI = true;
     }
-    else if (strcasecmp(av[1], "-deg") == 0)
+    else if (strcasecmp(av[1], "-nosi") == 0)
     {
-      showRad = false;
+      showSI = false;
     }
     else if (strcasecmp(av[1], "-camel") == 0)
     {
@@ -792,12 +792,26 @@ static bool printTime(char * name, uint32_t t)
 
 static bool printTemperature(char * name, uint16_t t)
 {
-  double c = t / 100.0 - 273.15;
+  double k = t / 100.0;
+  double c = k - 273.15;
   double f = c * 1.8 + 32;
 
   if (t >= 0xfffd)
   {
     return false;
+  }
+
+  if (showSI)
+  {
+    if (showJson)
+    {
+      mprintf("%s\"%s\":%.2f", getSep(), name, k, f);
+    }
+    else
+    {
+      mprintf("%s %s = %.2f K", getSep(), name, k);
+    }
+    return true;
   }
 
   if (showJson)
@@ -808,6 +822,7 @@ static bool printTemperature(char * name, uint16_t t)
   {
     mprintf("%s %s = %.2f C (%.1f F)", getSep(), name, c, f);
   }
+
   return true;
 }
 
@@ -1379,7 +1394,6 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
         const char * units = field->units;
 
         a = (double) value * field->resolution;
-        mprintf("[%f = %"PRId64" * %f]", a, value, field->resolution);
 
         precision = 0;
         for (r = field->resolution; (r > 0.0) && (r < 1.0); r *= 10.0)
@@ -1390,7 +1404,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
         if (field->resolution == RES_RADIANS)
         {
           units = "rad";
-          if (!showRad)
+          if (!showSI)
           {
             a *= RadianToDegree;
             precision -= 3;
@@ -1400,13 +1414,27 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
         else if (field->resolution == RES_ROTATION || field->resolution == RES_HIRES_ROTATION)
         {
           units = "rad/s";
-          if (!showRad)
+          if (!showSI)
           {
             a *= RadianToDegree;
             precision -= 3;
             units = "deg/s";
           }
         }
+        else if (units && showSI)
+        {
+          if (strcmp(units, "kWh") == 0)
+          {
+            a *= 3.6e6; // 1 kWh = 3.6 MJ.
+          }
+          else if (strcmp(units, "Ah") == 0)
+          {
+            a *= 3600.0; // 1 Ah = 3600 C.
+          }
+
+          // Many more to follow, but pgn.h is not yet complete enough...
+        }
+
 
         if (showJson)
         {

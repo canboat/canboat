@@ -1041,7 +1041,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1169,7 +1169,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1297,7 +1297,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>32</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>true</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -1426,7 +1426,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>32</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>true</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -1585,7 +1585,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -1714,7 +1714,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -1843,7 +1843,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -1972,7 +1972,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
            <Offset>-2000000000</Offset>
          </Field>
