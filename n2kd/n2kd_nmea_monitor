@@ -1,0 +1,172 @@
+#!/usr/bin/perl
+#
+#  - Check for /dev/ttyACM*
+#  - While /dev/ttyACM* exists, keep n2kd running. If it quits, restart it.
+#  - Stop n2kd if /dev/ttyACM disappears.
+#
+# This assumes there is a configuration file /etc/default/n2kd
+# containing one or more of the following configuration settings:
+#
+#       NMEA_DEVICE=/dev/ttyACM0
+#       MONITOR=false
+#       N2KD_OPTIONS=-p 6000
+#
+# Leave out NMEA_SECONDARY if you have only one NMEA gateway.
+# Leave MONITOR set to false for now; its contents have not been open sourced yet.
+#
+# (C) 2009-2015, Kees Verruijt, Harlingen, The Netherlands.
+#
+# This file is part of CANboat.
+#
+# CANboat is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# CANboat is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+use ConfigReader::Simple;
+
+my $configFile = '/etc/default/n2kd_nmea';
+my $config = ConfigReader::Simple->new($configFile);
+
+die "Could not read config! $ConfigReader::Simple::ERROR\n" unless ref $config;
+
+my $NMEA_DEVICE = $config->get('NMEA_DEVICE');
+my $MONITOR = $config->get('MONITOR');
+my $N2KD_OPTIONS = $config->get('N2KD_OPTIONS');
+die "Configuration file $configFile incomplete: No NMEA_DEVICE" unless $NMEA_DEVICE;
+
+my $LOGFILE = '/var/log/n2kd_nmea_monitor.log';
+my $N2KD_LOGFILE = '/var/log/n2kd_nmea.log';
+
+my $stat;
+my $n2kd;
+my $monitor;
+my $child;
+my $stop = 0;
+my $last_monitor = 0;
+
+if ($MONITOR ne "true" && $MONITOR ne "yes")
+{
+  # Disable the monitoring part. This is not open source yet, so disable it by default.
+  $last_monitor = LONG_MAX;
+}
+
+use POSIX();
+
+sub logText($)
+{
+  my ($t) = @_;
+
+  print POSIX::strftime('%Y-%m-%d %T: ', localtime) . $t . "\n";
+}
+
+sub daemonize()
+{
+  chdir '/';
+  open STDIN, '/dev/null' or die "Can't read /dev/null: $!";
+  open STDOUT, '>>', $LOGFILE or die "Can't write $LOGFILE: $!";
+  defined(my $pid = fork) or die "Can't fork: $!";
+  exit if $pid;
+  die "Can't start a new session: $!" if setsid == -1;
+  open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
+}
+
+sub sigHandler()
+{
+  logText("Got signal to quit.\n");
+  $stop = 1;
+}
+
+daemonize();
+
+logText("Delayed start of N2KD monitor.");
+sleep 10;
+logText("Starting N2KD monitor.");
+
+$SIG{'INT'} = 'sigHandler';
+$SIG{'HUP'} = 'sigHandler';
+
+if (!stat($NMEA_DEVICE))
+{
+  logText("Waiting for $NMEA_DEVICE to appear.");
+}
+
+if (!pipe(PIPEREAD, PIPEWRITE))
+{
+  die "Cannot create pipes\n";
+}
+
+for (;;)
+{
+  while (($child = POSIX::waitpid(-1, POSIX::WNOHANG)) > 0)
+  {
+    if ($child == $n2kd)
+    {
+      logText "N2KD monitor port daemon $child finished.";
+      $n2kd = undef;
+    }
+    elsif ($child == $monitor)
+    {
+      $monitor = undef;
+    }
+  }
+
+  if ($stop == 0 and stat($NMEA_DEVICE))
+  {
+    if (!$stat)
+    {
+      logText("Hardware device $NMEA_DEVICE found.");
+      $stat = 1;
+    }
+    if (!$n2kd)
+    {
+      if (($n2kd = fork()) == 0)
+      {
+        open STDIN, '<&PIPEREAD' or die "Can't read PIPEREAD: $!";
+        open STDOUT, '>&PIPEWRITE' or die "Can't reassign PIPEWRITE: $!";
+        open STDERR, '>>', $N2KD_LOGFILE or die "Can't write to $N2KD_LOGFILE $!";
+        $ENV{'PATH'} = '/usr/local/bin:/bin:/usr/bin';
+
+        exec '/bin/bash', '-c', "nmea0183-serial $NMEA_DEVICE | n2kd $N2KD_OPTIONS";
+
+      }
+      elsif ($n2kd)
+      {
+        logText("Starting N2K daemon $n2kd.");
+      }
+      else
+      {
+        logText("Fork failed.");
+      }
+      sleep(15);
+    }
+  }
+  else
+  {
+    if ($stop == 0 and $stat)
+    {
+      logText("Hardware device $NMEA_DEVICE disappeared.");
+      $stat = undef;
+    }
+    if ($n2kd)
+    {
+      logText("Requesting stop for N2K port daemon $n2kd.");
+      kill 2, $n2kd;
+      system 'killall -9 nmea0183-serial';
+    }
+    if ($stop)
+    {
+      exit(0);
+    }
+  }
+  sleep(5);
+}
