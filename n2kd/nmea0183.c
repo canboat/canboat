@@ -146,7 +146,7 @@ producing true heading.
  $--HDT,x.x,T*hh<CR><LF>
 ------------------------------------------------------------------------------
 
-Field Number: 
+Field Number:
 
 1. Heading Degrees, true
 2. T = True
@@ -227,7 +227,7 @@ static void nmea0183WindData( StringBuffer * msg183, int src, const char * msg )
   speedInMetersPerSecond = strtod(speed, 0);
   speedInKMPerHour = speedInMetersPerSecond * 3.6;
 
-  if (strcmp(reference, "True") == 0)
+  if (strcmp(reference, "True") >= 0)
   {
     nmea0183CreateMessage(msg183, src, "MWV,%s,T,%.1f,K,A", angle, speedInKMPerHour);
   }
@@ -316,18 +316,19 @@ static void nmea0183WaterDepth( StringBuffer * msg183, int src, const char * msg
 #define METER_TO_FEET(x) (x / FEET_IN_METER)
 #define METER_TO_FATHOM(x) (METER_TO_FEET(x) / 6.0)
 
-  if (off > 0.0)
-  {
-    nmea0183CreateMessage(msg183, src, "DBS,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
-  }
-  if (off < 0.0)
-  {
-    nmea0183CreateMessage(msg183, src, "DBK,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
-  }
-  if (off == 0.0)
-  {
-    nmea0183CreateMessage(msg183, src, "DBT,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
-  }
+  nmea0183CreateMessage(msg183, src, "DPT,%04.1f,%04.1f", depth, off);
+  // if (off > 0.0)
+  // {
+  //   nmea0183CreateMessage(msg183, src, "DBS,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+  // }
+  // if (off < 0.0)
+  // {
+  //   nmea0183CreateMessage(msg183, src, "DBK,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+  // }
+  // if (off == 0.0)
+  // {
+  //   nmea0183CreateMessage(msg183, src, "DBT,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+  // }
 }
 
 static bool matchFilter( int n, char * filter )
