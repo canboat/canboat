@@ -360,7 +360,6 @@ static void nmea0183WaterSpeed( StringBuffer * msg183, int src, const char * msg
 {
   char speed[10];
   double speedInMetersPerSecond;
-  double speedInKMPerHour;
 
   if (!getJSONValue(msg, "Speed Water Referenced", speed, sizeof(speed)))
   {
@@ -368,9 +367,11 @@ static void nmea0183WaterSpeed( StringBuffer * msg183, int src, const char * msg
   }
 
   speedInMetersPerSecond = strtod(speed, 0);
-  speedInKMPerHour = speedInMetersPerSecond * 3.6;
 
-  nmea0183CreateMessage(msg183, src, "VHW,0.0,T,0.0,M,%04.1f,N,%04.1f,K", speed, speedInKMPerHour);
+#define MS_TO_KNOTS(meters_per_second) (meters_per_second * 1.94384)
+#define MS_TO_MKH(meters_per_second) (meters_per_second * 3.6)
+
+  nmea0183CreateMessage(msg183, src, "VHW,0.0,T,0.0,M,%04.1f,N,%04.1f,K", MS_TO_KNOTS(speedInMetersPerSecond), MS_TO_MKH(speedInMetersPerSecond));
 
 }
 
