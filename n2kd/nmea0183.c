@@ -319,7 +319,7 @@ static void nmea0183WaterDepth( StringBuffer * msg183, int src, const char * msg
 #define METER_TO_FEET(x) (x / FEET_IN_METER)
 #define METER_TO_FATHOM(x) (METER_TO_FEET(x) / 6.0)
 
-  nmea0183CreateMessage(msg183, src, "DPT,%04.1f,%04.1f", depth, off);
+  nmea0183CreateMessage(msg183, src, "DPT,%04.1f,%04.1f", dep, off);
   // if (off > 0.0)
   // {
   //   nmea0183CreateMessage(msg183, src, "DBS,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
