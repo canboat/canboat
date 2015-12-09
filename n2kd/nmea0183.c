@@ -44,24 +44,29 @@ extern bool rateLimit;
  * PGN 130306 "Wind Data"      -> $xxMWV
  * PGN 128267 "Water Depth"    -> $xxDBK/DBS/DBT
  * PGN 128267 "Water Speed"    -> $xxVHW
+ * PGN 127245 "Rudder"         -> $xxRSA
  *
  * Typical output of these from analyzer:
  * {"timestamp":"2010-09-12-10:57:41.217","prio":"2","src":"36","dst":"255","pgn":"127250","description":"Vessel Heading","fields":{"SID":"116","Heading":"10.1","Deviation":"0.0","Variation":"0.0","Reference":"Magnetic"}}
  * {"timestamp":"2010-09-12-11:00:20.269","prio":"2","src":"13","dst":"255","pgn":"130306","description":"Wind Data","fields":{"Wind Speed":"5.00","Wind Angle":"308.8","Reference":"Apparent"}}
  * {"timestamp":"2012-12-01-12:53:19.929","prio":"3","src":"35","dst":"255","pgn":"128267","description":"Water Depth","fields":{"SID":"70","Depth":"0.63","Offset":"0.500"}}
  * {"timestamp":"2015-12-07-21:51:11.381","prio":"2","src":"4","dst":"255","pgn":"128259","description":"Speed","fields":{"Speed Water Referenced":0.30}}
+ * {"timestamp":"2015-12-09-21:53:47.497","prio":"2","src":"1","dst":"255","pgn":"127245","description":"Rudder","fields":{"Angle Order":-0.0,"Position":6.8}}
+ *
  */
 
 #define PGN_VESSEL_HEADING (127250)
 #define PGN_WIND_DATA      (130306)
 #define PGN_WATER_DEPTH    (128267)
 #define PGN_WATER_SPEED    (128259)
+#define PGN_RUDDER         (127245)
 
 #define VESSEL_HEADING (0)
 #define WIND_DATA      (1)
 #define WATER_DEPTH    (2)
 #define WATER_SPEED    (3)
-#define SENTENCE_COUNT (4)
+#define RUDDER         (4)
+#define SENTENCE_COUNT (5)
 
 static int64_t rateLimitPassed[256][SENTENCE_COUNT];
 
@@ -375,6 +380,41 @@ static void nmea0183WaterSpeed( StringBuffer * msg183, int src, const char * msg
 
 }
 
+/*
+=== RSA - Rudder Sensor Angle ===
+------------------------------------------------------------------------------
+        1   2 3   4 5
+        |   | |   | |
+ $--RSA,x.x,A,x.x,A*hh<CR><LF>
+------------------------------------------------------------------------------
+
+Field Number:
+
+1. Starboard (or single) rudder sensor, "-" means Turn To Port
+2. Status, A means data is valid
+3. Port rudder sensor
+4. Status, A means data is valid
+5. Checksum
+*/
+
+static void nmea0183Rudder( StringBuffer * msg183, int src, const char * msg )
+{
+  char position[10];
+  double pos = 0;
+  double opposite_pos = 0;
+
+  if (!getJSONValue(msg, "Position", position, sizeof(position)))
+  {
+    return;
+  }
+
+  pos = strtod(position, 0);
+  opposite_pos = pos * -1;
+
+  nmea0183CreateMessage(msg183, src, "RSA,%04.1f,A,0.0,F", opposite_pos);
+
+}
+
 static bool matchFilter( int n, char * filter )
 {
   bool negativeMatch = false;
@@ -439,6 +479,9 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
   case PGN_WATER_SPEED:
     j = WATER_SPEED;
     break;
+  case PGN_RUDDER:
+    j = RUDDER;
+    break;
   default:
     return;
   }
@@ -481,6 +524,9 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
     break;
   case PGN_WATER_SPEED:
     nmea0183WaterSpeed(msg183, src, msg);
+    break;
+  case PGN_RUDDER:
+    nmea0183Rudder(msg183, src, msg);
     break;
   default:
     return;
