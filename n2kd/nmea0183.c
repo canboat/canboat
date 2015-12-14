@@ -53,7 +53,6 @@ extern bool rateLimit;
  * {"timestamp":"2015-12-07-21:51:11.381","prio":"2","src":"4","dst":"255","pgn":"128259","description":"Speed","fields":{"Speed Water Referenced":0.30}}
  * {"timestamp":"2015-12-09-21:53:47.497","prio":"2","src":"1","dst":"255","pgn":"127245","description":"Rudder","fields":{"Angle Order":-0.0,"Position":6.8}}
  * {"timestamp":"2015-12-11T17:56:55.755Z","prio":6,"src":2,"dst":255,"pgn":129539,"description":"GNSS DOPs","fields":{"SID":239,"Desired Mode":"3D","Actual Mode":"3D","HDOP":1.21,"VDOP":1.83,"TDOP":327.67}}
- * {"timestamp":"2015-12-11T17:56:55.755Z","prio":6,"src":2,"dst":255,"pgn":129539,"description":"GNSS DOPs","fields":{"SID":239,"Desired Mode":"3D","Actual Mode":"3D","HDOP":1.21,"VDOP":1.83,"TDOP":327.67}}
  */
 
 #define PGN_VESSEL_HEADING (127250)
@@ -532,6 +531,13 @@ static void removeChar(char *str, char garbage) {
   *dst = '\0';
 }
 
+static double convert2kCoordinateToNMEA0183(double coordinate) {
+  double digrees;
+  double result;
+  digrees = floor(coordinate);
+  result = digrees * 100 + (coordinate - digrees) * 60;
+  return result;
+}
 /*
 === GLL - Geographic Position - Latitude/Longitude ===
 
@@ -559,6 +565,7 @@ Field Number:
 $GPGLL,3609.42711,N,00521.36949,W,200015.00,A,D*72
 */
 
+
 void nmea0183GLL( StringBuffer * msg183, int src, const char * msg )
 {
   char lat_string[10];
@@ -572,7 +579,6 @@ void nmea0183GLL( StringBuffer * msg183, int src, const char * msg )
 
   getJSONValue(msg, "Latitude", lat_string, sizeof(lat_string));
   getJSONValue(msg, "Longitude", lon_string, sizeof(lon_string));
-  getJSONValue(msg, "Time", time_string, sizeof(time_string));
 
   latitude = strtod(lat_string, 0);
   longitude = strtod(lon_string, 0);
@@ -581,15 +587,19 @@ void nmea0183GLL( StringBuffer * msg183, int src, const char * msg )
     lat_hemisphere = 'S';
     latitude = latitude * -1;
   }
+  latitude = convert2kCoordinateToNMEA0183(latitude);
 
   if(longitude < 0) {
     lon_hemisphere = 'W';
     longitude = longitude * -1;
   }
+  longitude = convert2kCoordinateToNMEA0183(longitude);
 
-  removeChar(time_string, ':');
+  if(getJSONValue(msg, "Time", time_string, sizeof(time_string))){
+    removeChar(time_string, ':');
+  }
 
-  nmea0183CreateMessage(msg183, src, "GLL,%03.4f,%c,%03.4f,%c,%s,A", latitude, lat_hemisphere, longitude, lon_hemisphere, time_string);
+  nmea0183CreateMessage(msg183, src, "GLL,%.4f,%c,%.4f,%c,%s,A,D", latitude, lat_hemisphere, longitude, lon_hemisphere, time_string);
 }
 
 static bool matchFilter( int n, char * filter )
