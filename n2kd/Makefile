@@ -26,8 +26,8 @@ CFLAGS=-O3 -lm
 
 all: $(TARGETS)
 
-$(N2KD): main.c nmea0183.c nmea0183.h ../common/common.c ../common/common.h Makefile
-	$(CC) $(CFLAGS) -o $(N2KD) -I../common main.c nmea0183.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+$(N2KD): main.c nmea0183.c gps_ais.h nmea0183.h ../common/common.c ../common/common.h Makefile
+	$(CC) $(CFLAGS) -o $(N2KD) -I../common main.c gps_ais.c nmea0183.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(N2KD_MONITOR): n2kd_monitor
 	cp n2kd_monitor $(N2KD_MONITOR)
