@@ -1,4 +1,7 @@
+#include "common.h"
+
 #include <math.h>
+#include <time.h>
 
 #include "gps_ais.h"
 #include "nmea0183.h"
@@ -179,4 +182,53 @@ void nmea0183GLL( StringBuffer * msg183, int src, const char * msg )
   }
 
   nmea0183CreateMessage(msg183, src, "GLL,%.4f,%c,%.4f,%c,%s,A,D", latitude, lat_hemisphere, longitude, lon_hemisphere, time_string);
+}
+
+/*
+{"timestamp":"2015-12-14T22:06:21.609Z","prio":4,"src":0,"dst":255,"pgn":129038,"description":"AIS Class A Position Report","fields":{"Message ID":1,"Repeat Indicator":"Initial","User ID":224593000,"Longitude":-5.4368332,"Latitude":36.1309824,"Position Accuracy":"Low","RAIM":"not in use","Time Stamp":"21","COG":165.0,"SOG":0.00,"Communication State":"33576","AIS Transceiver information":"Channel A VDL reception","Heading":51.0,"Rate of Turn":0.11,"Nav Status":"Under way using engine","Regional Application":1}}
+{"timestamp":"2015-12-14T22:06:21.662Z","prio":4,"src":0,"dst":255,"pgn":129039,"description":"AIS Class B Position Report","fields":{"Message ID":18,"Repeat Indicator":"Initial","User ID":235015519,"Longitude":-5.3561452,"Latitude":36.1571296,"Position Accuracy":"Low","RAIM":"not in use","Time Stamp":"5","COG":0.0,"SOG":0.00,"Communication State":"393222","AIS Transceiver information":"Own information not broadcast","Heading":31.0,"Unit type":"CS","Integrated Display":"No","DSC":"Yes","Band":"entire marine band","Can handle Msg 22":"Yes","AIS mode":"Autonomous","AIS communication state":"ITDMA"}}
+!AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C - from http://catb.org/gpsd/AIVDM.html
+
+AIVDM - Automatic Information System (AIS) position reports from other vessels - from http://opencpn.org/ocpn/nmea_sentences
+1. Time (UTC)
+2. MMSI Number
+3. Latitude
+4. Longitude
+5. Speed Knots
+6. Heading
+7. Course over Ground
+8. Rate of turn
+9. Navigation status
+
+*/
+void nmea0183AIVDM( StringBuffer * msg183, int src, const char * msg )
+{
+  struct tm *utc_time;
+  time_t current_time;
+
+  char mmsi_string[10];
+  char lat_string[10];
+  char lon_string[10];
+  char sog_string[10];
+  char heading_string[10];
+  char cog_string[10];
+  char rate_of_turn_string[10];
+  char navigation_status_string[10];
+  double cog = 0;
+
+  current_time = time(NULL);
+  utc_time = gmtime(&current_time);
+
+  getJSONValue(msg, "User ID", mmsi_string, sizeof(mmsi_string));
+  getJSONValue(msg, "Latitude", lat_string, sizeof(lat_string));
+  getJSONValue(msg, "Longitude", lon_string, sizeof(lon_string));
+  getJSONValue(msg, "SOG", sog_string, sizeof(sog_string));
+  getJSONValue(msg, "COG", cog_string, sizeof(cog_string));
+  getJSONValue(msg, "Heading", heading_string, sizeof(heading_string));
+  getJSONValue(msg, "Rate of Turn", rate_of_turn_string, sizeof(rate_of_turn_string));
+  getJSONValue(msg, "Nav Status", navigation_status_string, sizeof(navigation_status_string));
+
+  cog = strtod(cog_string, 0);
+
+  nmea0183CreateMessage(msg183, src, "VDM,%d%d%d,%s,%s,%s,%s,%s,%.3f,%s,%s", utc_time->tm_hour, utc_time->tm_min, utc_time->tm_sec, mmsi_string, lat_string, lon_string, sog_string, heading_string, cog, rate_of_turn_string, navigation_status_string);
 }

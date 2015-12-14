@@ -65,6 +65,8 @@ extern bool rateLimit;
 #define PGN_GPS_DOP        (129539)
 #define PGN_RAPID_POSITION (129025)
 #define PGN_POSITION       (129029)
+#define PGN_AIS_A          (129038)
+#define PGN_AIS_B          (129039)
 
 #define VESSEL_HEADING (0)
 #define WIND_DATA      (1)
@@ -74,7 +76,8 @@ extern bool rateLimit;
 #define SOG_COG        (5)
 #define GPS_DOP        (6)
 #define GPS_POSITION   (7)
-#define SENTENCE_COUNT (8)
+#define AIS_POSITION   (8)
+#define SENTENCE_COUNT (9)
 
 static int64_t rateLimitPassed[256][SENTENCE_COUNT];
 
@@ -500,6 +503,10 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
   case PGN_POSITION:
     j = GPS_POSITION;
     break;
+  case PGN_AIS_A:
+  case PGN_AIS_B:
+    j = AIS_POSITION;
+    break;
   default:
     return;
   }
@@ -555,6 +562,10 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
   case PGN_RAPID_POSITION:
   case PGN_POSITION:
     nmea0183GLL(msg183, src, msg);
+    break;
+  case PGN_AIS_A:
+  case PGN_AIS_B:
+    nmea0183AIVDM(msg183, src, msg);
     break;
   default:
     return;
