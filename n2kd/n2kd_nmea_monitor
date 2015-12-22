@@ -1,17 +1,18 @@
 #!/usr/bin/perl
+# This monitor is for devises which provide NMEA 0183 and doesn't need analyzer to convert from 2k to 0183
+# It can be ran in parallel with n2kd monitor only different port for n2kd is needed not to make a conflict
 #
 #  - Check for /dev/ttyACM*
 #  - While /dev/ttyACM* exists, keep n2kd running. If it quits, restart it.
 #  - Stop n2kd if /dev/ttyACM disappears.
 #
-# This assumes there is a configuration file /etc/default/n2kd
+# This assumes there is a configuration file /etc/default/n2kd_nmea
 # containing one or more of the following configuration settings:
 #
 #       NMEA_DEVICE=/dev/ttyACM0
 #       MONITOR=false
 #       N2KD_OPTIONS=-p 6000
 #
-# Leave out NMEA_SECONDARY if you have only one NMEA gateway.
 # Leave MONITOR set to false for now; its contents have not been open sourced yet.
 #
 # (C) 2009-2015, Kees Verruijt, Harlingen, The Netherlands.
