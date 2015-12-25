@@ -122,31 +122,30 @@ void nmea0183GSA( StringBuffer * msg183, int src, const char * msg )
 
   nmea0183CreateMessage(msg183, src, "GSA,M,%c,,,,,,,,,,,,,%.3f,%.3f,%.3f", mode_string[0], pdop, hdop, vdop);
 }
+/*
+=== GLL - Geographic Position - Latitude/Longitude ===
 
-// === GLL - Geographic Position - Latitude/Longitude ===
+This is one of the sentences commonly emitted by GPS units.
 
-// This is one of the sentences commonly emitted by GPS units.
+        1       2 3        4 5         6 7   8
+        |       | |        | |         | |   |
+ $--GLL,llll.ll,a,yyyyy.yy,a,hhmmss.ss,a,m,*hh<CR><LF>
 
-//         1       2 3        4 5         6 7   8
-//         |       | |        | |         | |   |
-//  $--GLL,llll.ll,a,yyyyy.yy,a,hhmmss.ss,a,m,*hh<CR><LF>
+Field Number:
 
-// Field Number:
+1. Latitude
+2. N or S (North or South)
+3. Longitude
+4. E or W (East or West)
+5. Universal Time Coordinated (UTC)
+6. Status A - Data Valid, V - Data Invalid
+7. FAA mode indicator (NMEA 2.3 and later)
+8. Checksum
 
-// 1. Latitude
-// 2. N or S (North or South)
-// 3. Longitude
-// 4. E or W (East or West)
-// 5. Universal Time Coordinated (UTC)
-// 6. Status A - Data Valid, V - Data Invalid
-// 7. FAA mode indicator (NMEA 2.3 and later)
-// 8. Checksum
-
-
-// {"timestamp":"2015-12-11T19:59:22.399Z","prio":2,"src":2,"dst":255,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude":36.1571104,"Longitude":-5.3561568}}
-// {"timestamp":"2015-12-11T20:01:19.010Z","prio":3,"src":2,"dst":255,"pgn":129029,"description":"GNSS Position Data","fields":{"SID":10,"Date":"2015.12.11", "Time": "20:01:19","Latitude":36.1571168,"Longitude":-5.3561616,"GNSS type":"GPS+SBAS/WAAS","Method":"GNSS fix","Integrity":"Safe","Number of SVs":12,"HDOP":0.86,"PDOP":1.68,"Geoidal Separation":-0.01,"Reference Station ID":4087}}
-
-// $GPGLL,3609.42711,N,00521.36949,W,200015.00,A,D*72
+{"timestamp":"2015-12-11T19:59:22.399Z","prio":2,"src":2,"dst":255,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude":36.1571104,"Longitude":-5.3561568}}
+{"timestamp":"2015-12-11T20:01:19.010Z","prio":3,"src":2,"dst":255,"pgn":129029,"description":"GNSS Position Data","fields":{"SID":10,"Date":"2015.12.11", "Time": "20:01:19","Latitude":36.1571168,"Longitude":-5.3561616,"GNSS type":"GPS+SBAS/WAAS","Method":"GNSS fix","Integrity":"Safe","Number of SVs":12,"HDOP":0.86,"PDOP":1.68,"Geoidal Separation":-0.01,"Reference Station ID":4087}}
+$GPGLL,3609.42711,N,00521.36949,W,200015.00,A,D*72
+/*
 
 void nmea0183GLL( StringBuffer * msg183, int src, const char * msg )
 {
@@ -199,8 +198,8 @@ AIVDM - Automatic Information System (AIS) position reports from other vessels -
 7. Course over Ground
 8. Rate of turn
 9. Navigation status
-
 */
+
 void nmea0183AIVDM( StringBuffer * msg183, int src, const char * msg )
 {
   struct tm *utc_time;
@@ -230,5 +229,6 @@ void nmea0183AIVDM( StringBuffer * msg183, int src, const char * msg )
 
   cog = strtod(cog_string, 0);
 
-  nmea0183CreateMessage(msg183, src, "VDM,%d%d%d,%s,%s,%s,%s,%s,%.3f,%s,%s", utc_time->tm_hour, utc_time->tm_min, utc_time->tm_sec, mmsi_string, lat_string, lon_string, sog_string, heading_string, cog, rate_of_turn_string, navigation_status_string);
+  // This does not work yet. It needs to be encoded to format like !AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C - from http://catb.org/gpsd/AIVDM.html
+  // nmea0183CreateMessage(msg183, src, "VDM,%d%d%d,%s,%s,%s,%s,%s,%.3f,%s,%s", utc_time->tm_hour, utc_time->tm_min, utc_time->tm_sec, mmsi_string, lat_string, lon_string, sog_string, heading_string, cog, rate_of_turn_string, navigation_status_string);
 }

@@ -46,7 +46,13 @@ extern bool rateLimit;
  * PGN 128267 "Water Depth"    -> $xxDBK/DBS/DBT
  * PGN 128267 "Water Speed"    -> $xxVHW
  * PGN 127245 "Rudder"         -> $xxRSA
- *
+
+ * Some others are in gps_ais.c file
+ * PGN 129026 "Track made good and Ground speed" -> $xxVTG
+ * PGN 129539 "GPS DOP"                          -> $xxGSA
+ * PGN 129025 or 129029 "GPS Position"           -> $xxGLL
+ * PGN 129038 and 129039 "AIS from other boats"  -> !AIVDM - NOT FINISHED! AIVDM/AIVDO protocol encoding is needed
+
  * Typical output of these from analyzer:
  * {"timestamp":"2010-09-12-10:57:41.217","prio":"2","src":"36","dst":"255","pgn":"127250","description":"Vessel Heading","fields":{"SID":"116","Heading":"10.1","Deviation":"0.0","Variation":"0.0","Reference":"Magnetic"}}
  * {"timestamp":"2010-09-12-11:00:20.269","prio":"2","src":"13","dst":"255","pgn":"130306","description":"Wind Data","fields":{"Wind Speed":"5.00","Wind Angle":"308.8","Reference":"Apparent"}}
@@ -336,6 +342,7 @@ static void nmea0183WaterDepth( StringBuffer * msg183, int src, const char * msg
 #define METER_TO_FATHOM(x) (METER_TO_FEET(x) / 6.0)
 
   nmea0183CreateMessage(msg183, src, "DPT,%04.1f,%04.1f", dep, off);
+  // This is disabled as OpenCPN seems to use DPT.
   // if (off > 0.0)
   // {
   //   nmea0183CreateMessage(msg183, src, "DBS,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
@@ -387,7 +394,7 @@ static void nmea0183WaterSpeed( StringBuffer * msg183, int src, const char * msg
 #define MS_TO_KNOTS(meters_per_second) (meters_per_second * 1.94384)
 #define MS_TO_MKH(meters_per_second) (meters_per_second * 3.6)
 
-  nmea0183CreateMessage(msg183, src, "VHW,0.0,T,0.0,M,%04.1f,N,%04.1f,K", MS_TO_KNOTS(speedInMetersPerSecond), MS_TO_MKH(speedInMetersPerSecond));
+  nmea0183CreateMessage(msg183, src, "VHW,,T,,M,%04.1f,N,%04.1f,K", MS_TO_KNOTS(speedInMetersPerSecond), MS_TO_MKH(speedInMetersPerSecond));
 
 }
 
@@ -422,7 +429,7 @@ static void nmea0183Rudder( StringBuffer * msg183, int src, const char * msg )
   pos = strtod(position, 0);
   opposite_pos = pos * -1;
 
-  nmea0183CreateMessage(msg183, src, "RSA,%04.1f,A,0.0,F", opposite_pos);
+  nmea0183CreateMessage(msg183, src, "RSA,%04.1f,A,,F", opposite_pos);
 
 }
 
