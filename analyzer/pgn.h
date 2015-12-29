@@ -21,6 +21,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #define UINT16_OUT_OF_RANGE (MAX_UINT16 - 1)
 #define UINT16_UNKNOWN (MAX_UINT16)
 
@@ -122,7 +125,7 @@ typedef struct
   const char * resolution;
 } Resolution;
 
-const Resolution types[MAX_RESOLUTION_LOOKUP] =
+static const Resolution types[MAX_RESOLUTION_LOOKUP] =
 { { "ASCII text", 0 }
 , { "Latitude", 0 }
 , { "Longitude", 0 }
@@ -357,8 +360,31 @@ typedef struct
   bool       unknownPgn;        /* Is this a catch-all for unknown PGNs? */
 } Pgn;
 
+typedef struct
+{
+  char timestamp[30 + 1];
+  uint8_t prio;
+  uint32_t pgn;
+  uint8_t dst;
+  uint8_t src;
+  uint8_t len;
+  uint8_t data[FASTPACKET_MAX_SIZE];
+} RawMessage;
 
-Pgn pgnList[] =
+// Returns the first pgn that matches the given id, or 0 if not found.
+Pgn* searchForPgn(int pgn);
+
+// Returns a pointer (potentially invalid) to the first png that does not match "first".
+Pgn* endPgn(Pgn* first);
+
+Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length);
+
+bool printPgn(RawMessage* msg, uint8_t *dataStart, int length, bool showData, bool showJson);
+
+Field * getField(uint32_t pgn, uint32_t field);
+void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t bits, int64_t * value, int64_t * maxValue);
+
+static Pgn pgnList[] =
 {
 
 /* PDU1 (addressed) single-frame range 0E800 to 0xEEFF (59392 - 61183) */
@@ -4114,11 +4140,11 @@ Pgn pgnList[] =
 typedef struct
 {
   char * name;
-  size_t id;
+  int id;
 } Company;
 
 /* http://www.nmea.org/Assets/20140409%20nmea%202000%20registration%20list.pdf */
-Company companyList[] =
+static Company companyList[] =
 { { "Volvo Penta", 174 }
 , { "Actia Corporation", 199 }
 , { "Actisense", 273 }
