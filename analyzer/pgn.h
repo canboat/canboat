@@ -102,7 +102,8 @@ typedef struct
 # define RES_STRINGLZ (-15.0)            /* ASCII string starting with length byte and terminated by zero byte */
 # define RES_STRINGLAU (-16.0)           /* ASCII or UNICODE string starting with length byte and ASCII/Unicode byte */
 # define RES_DECIMAL (-17.0)
-# define MAX_RESOLUTION_LOOKUP 17
+# define RES_BITFIELD (-18.0)
+# define MAX_RESOLUTION_LOOKUP 18
 
   bool hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   char * units; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
@@ -193,6 +194,10 @@ const Resolution types[MAX_RESOLUTION_LOOKUP] =
           )
 
 #define LOOKUP_ENGINE_INSTANCE ( ",0=Single Engine or Dual Engine Port,1=Dual Engine Starboard" )
+
+// http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
+#define LOOKUP_ENGINE_STATUS_1 ( ",0=Check Engine,1=Over Temperature,2=Low Oil Pressure,3=Low Oil Level,4=Low Fuel Pressure,5=Low System Voltage,6=Low Coolant Level,7=Water Flow,8=Water In Fuel,9=Charge Indicator,10=Preheat Indicator,11=High Boost Pressure,12=Rev Limit Exceeded,13=EGR System,14=Throttle Position Sensor,15=Emergency Stop" )
+#define LOOKUP_ENGINE_STATUS_2 ( ",0=Warning Level 1,1=Warning Level 2,2=Power Reduction,3=Maintenance Needed,4=Engine Comm Error,5=Sub or Secondary Throttle,6=Neutral Start Protect,7=Engine Shutting Down" )
 
 #define LOOKUP_GEAR_STATUS ( ",0=Forward,1=Neutral,2=Reverse" )
 
@@ -1464,16 +1469,18 @@ Pgn pgnList[] =
   /* http://www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf */
   /* http://www.floscan.com/html/blue/NMEA2000.php */
 
+// http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
 ,
 { "Engine Parameters, Rapid Update", 127488, true, 8, 0,
   { { "Engine Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
-  , { "Engine Speed", BYTES(2), RES_INTEGER, false, "rpm", "" }
+  , { "Engine Speed", BYTES(2), 0.25, false, "rpm", "" }
   , { "Engine Boost Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Engine Tilt/Trim", BYTES(1), 1, true, "", "" }
   , { 0 }
   }
 }
 
+// http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
 ,
 { "Engine Parameters, Dynamic", 127489, true, 26, 0,
   { { "Engine Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
@@ -1486,8 +1493,8 @@ Pgn pgnList[] =
   , { "Coolant Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Fuel Pressure", BYTES(2), 1, false, 0, "" }
   , { "Reserved", BYTES(1), RES_BINARY, false, 0, "" }
-  , { "Discrete Status 1", BYTES(2), RES_INTEGER, false, 0, "" }
-  , { "Discrete Status 2", BYTES(2), RES_INTEGER, false, 0, "" }
+  , { "Discrete Status 1", BYTES(2), RES_BITFIELD, false, LOOKUP_ENGINE_STATUS_1, "" }
+  , { "Discrete Status 2", BYTES(2), RES_BITFIELD, false, LOOKUP_ENGINE_STATUS_2, "" }
   , { "Percent Engine Load", BYTES(1), RES_INTEGER, true, "%", "" }
   , { "Percent Engine Torque", BYTES(1), RES_INTEGER, true, "%", "" }
   , { 0 }
@@ -1619,14 +1626,15 @@ Pgn pgnList[] =
   }
 }
 
+// http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
 ,
 { "Charger Status", 127507, false, 8, 0,
   { { "Charger Instance", BYTES(1), 1, false, 0, "" }
   , { "Battery Instance", BYTES(1), 1, false, 0, "" }
-  , { "Operating State", BYTES(1), 1, false, 0, "" }
-  , { "Charge Mode", BYTES(1), 1, false, 0, "" }
-  , { "Charger Enable/Disable", 2, 1, false, 0, "" }
-  , { "Equalization Pending", 2, 1, false, 0, "" }
+  , { "Operating State", 4, RES_LOOKUP, false, ",0=Not charging,1=Bulk,2=Absorption,3=Overcharge,4=Equalise,5=Float,6=No Float,7=Constant VI,8=Disabled,9=Fault", "" }
+  , { "Charge Mode", 4, RES_LOOKUP, false, ",0=Standalone mode,1=Primary mode,2=Secondary mode,3=Echo mode", "" }
+  , { "Operating State", 2, RES_LOOKUP, false, ",0=Off,1=On", "" }
+  , { "Equalization Pending", 2, RES_LOOKUP, false, ",0=Off,1=On", "" }
   , { "Reserved", 4, RES_BINARY, false, 0, "" }
   , { "Equalization Time Remaining", BYTES(2), 1, false, 0, "" }
   , { 0 }

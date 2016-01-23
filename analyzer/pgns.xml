@@ -5947,8 +5947,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
            <Units>rpm</Units>
-                  <Type>Integer</Type>
-                  <Resolution>1</Resolution>
+           <Resolution>0.25</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -6100,9 +6099,25 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>160</BitOffset>
            <BitStart>0</BitStart>
-                  <Type>Integer</Type>
-                  <Resolution>1</Resolution>
            <Signed>false</Signed>
+           <EnumBitValues>
+             <EnumPair Bit='0' Name='Check Engine' />
+             <EnumPair Bit='1' Name='Over Temperature' />
+             <EnumPair Bit='2' Name='Low Oil Pressure' />
+             <EnumPair Bit='3' Name='Low Oil Level' />
+             <EnumPair Bit='4' Name='Low Fuel Pressure' />
+             <EnumPair Bit='5' Name='Low System Voltage' />
+             <EnumPair Bit='6' Name='Low Coolant Level' />
+             <EnumPair Bit='7' Name='Water Flow' />
+             <EnumPair Bit='8' Name='Water In Fuel' />
+             <EnumPair Bit='9' Name='Charge Indicator' />
+             <EnumPair Bit='10' Name='Preheat Indicator' />
+             <EnumPair Bit='11' Name='High Boost Pressure' />
+             <EnumPair Bit='12' Name='Rev Limit Exceeded' />
+             <EnumPair Bit='13' Name='EGR System' />
+             <EnumPair Bit='14' Name='Throttle Position Sensor' />
+             <EnumPair Bit='15' Name='Emergency Stop' />
+           </EnumBitValues>
          </Field>
          <Field>
            <Order>12</Order>
@@ -6111,9 +6126,17 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>176</BitOffset>
            <BitStart>0</BitStart>
-                  <Type>Integer</Type>
-                  <Resolution>1</Resolution>
            <Signed>false</Signed>
+           <EnumBitValues>
+             <EnumPair Bit='0' Name='Warning Level 1' />
+             <EnumPair Bit='1' Name='Warning Level 2' />
+             <EnumPair Bit='2' Name='Power Reduction' />
+             <EnumPair Bit='3' Name='Maintenance Needed' />
+             <EnumPair Bit='4' Name='Engine Comm Error' />
+             <EnumPair Bit='5' Name='Sub or Secondary Throttle' />
+             <EnumPair Bit='6' Name='Neutral Start Protect' />
+             <EnumPair Bit='7' Name='Engine Shutting Down' />
+           </EnumBitValues>
          </Field>
          <Field>
            <Order>13</Order>
@@ -6932,44 +6955,74 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>3</Order>
            <Id>operatingState</Id>
            <Name>Operating State</Name>
-           <BitLength>8</BitLength>
+           <BitLength>4</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Not charging' />
+             <EnumPair Value='1' Name='Bulk' />
+             <EnumPair Value='2' Name='Absorption' />
+             <EnumPair Value='3' Name='Overcharge' />
+             <EnumPair Value='4' Name='Equalise' />
+             <EnumPair Value='5' Name='Float' />
+             <EnumPair Value='6' Name='No Float' />
+             <EnumPair Value='7' Name='Constant VI' />
+             <EnumPair Value='8' Name='Disabled' />
+             <EnumPair Value='9' Name='Fault' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
            <Id>chargeMode</Id>
            <Name>Charge Mode</Name>
-           <BitLength>8</BitLength>
-           <BitOffset>24</BitOffset>
-           <BitStart>0</BitStart>
+           <BitLength>4</BitLength>
+           <BitOffset>20</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Standalone mode' />
+             <EnumPair Value='1' Name='Primary mode' />
+             <EnumPair Value='2' Name='Secondary mode' />
+             <EnumPair Value='3' Name='Echo mode' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>5</Order>
-           <Id>chargerEnableDisable</Id>
-           <Name>Charger Enable/Disable</Name>
+           <Id>operatingState</Id>
+           <Name>Operating State</Name>
            <BitLength>2</BitLength>
-           <BitOffset>32</BitOffset>
+           <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>6</Order>
            <Id>equalizationPending</Id>
            <Name>Equalization Pending</Name>
            <BitLength>2</BitLength>
-           <BitOffset>34</BitOffset>
+           <BitOffset>26</BitOffset>
            <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>7</Order>
            <Id>reserved</Id>
            <Name>Reserved</Name>
            <BitLength>4</BitLength>
-           <BitOffset>36</BitOffset>
+           <BitOffset>28</BitOffset>
            <BitStart>4</BitStart>
                   <Type>Binary data</Type>
            <Signed>false</Signed>
@@ -6979,7 +7032,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>equalizationTimeRemaining</Id>
            <Name>Equalization Time Remaining</Name>
            <BitLength>16</BitLength>
-           <BitOffset>40</BitOffset>
+           <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>

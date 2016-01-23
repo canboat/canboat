@@ -1338,6 +1338,60 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
       }
     }
 
+    else if (field->resolution == RES_LOOKUP && field->units)
+    {
+      char lookfor[20];
+      char * s, * e;
+      unsigned int bit;
+      uint64_t bitValue;
+      char sep;
+
+      if (showJson)
+      {
+        mprintf("%s\"%s\": ", getSep(), fieldName);
+        sep = '{';
+      }
+      else
+      {
+        mprintf("%s %s =", getSep(), fieldName);
+        sep = ' ';
+      }
+
+      for (bitValue = 1, bit = 0; bitValue <= maxValue; (bitValue *= 2), bit++)
+      {
+        if (value & bitValue)
+        {
+          sprintf(lookfor, ",%u=", bit);
+          s = strstr(field->units, lookfor);
+          if (s)
+          {
+            s += strlen(lookfor);
+            e = strchr(s, ',');
+            e = e ? e : s + strlen(s);
+            if (showJson)
+            {
+              mprintf("%c\"%.*s\"", sep, (int) (e - s), s);
+              sep = ',';
+            }
+            else
+            {
+              mprintf("%c%.*s", sep, (int) (e - s), s);
+              sep = ',';
+            }
+          }
+          else
+          {
+            mprintf("%c\"%"PRIu64"\"", sep, bitValue);
+            sep = ',';
+          }
+        }
+      }
+      if (showJson)
+      {
+        mprintf("}");
+      }
+    }
+
     else if (field->resolution == RES_BINARY)
     {
       if (showJson)
@@ -1984,6 +2038,7 @@ ascii_string:
       }
       else if (field.resolution == RES_INTEGER
             || field.resolution == RES_LOOKUP
+            || field.resolution == RES_BITFIELD
             || field.resolution == RES_BINARY
             || field.resolution == RES_MANUFACTURER
               )
@@ -2287,7 +2342,7 @@ static void explainPGN(Pgn pgn)
       printf("                  Offset: %d\n", f.offset);
     }
 
-    if (f.resolution == RES_LOOKUP && f.units && f.units[0] == ',')
+    if ((f.resolution == RES_LOOKUP || f.resolution == RES_BITFIELD) && f.units && f.units[0] == ',')
     {
       char * s, * e;
 
@@ -2302,6 +2357,7 @@ static void explainPGN(Pgn pgn)
         }
       }
     }
+
   }
 
   printf("\n\n");
@@ -2436,6 +2492,31 @@ static void explainPGNXML(Pgn pgn)
 
         printf("           </EnumValues>\n");
       }
+
+      if (f.resolution == RES_BITFIELD && f.units && f.units[0] == ',')
+      {
+        char * s, * e, * p;
+
+        printf("           <EnumBitValues>\n");
+
+        for (s = f.units + 1;; s = e + 1)
+        {
+          e = strchr(s, ',');
+          e = e ? e : s + strlen(s);
+          p = strchr(s, '=');
+          if (p)
+          {
+            printf("             <EnumPair Bit='%.*s' Name='%.*s' />\n", (int) (p - s), s, (int) (e - (p + 1)), p + 1);
+          }
+          if (!*e)
+          {
+            break;
+          }
+        }
+
+        printf("           </EnumBitValues>\n");
+      }
+
       if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU)
       {
         showBitOffset = false; // From here on there is no good bitoffset to be printed
