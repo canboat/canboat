@@ -28,3 +28,4 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include "common.h"
 
 extern void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg );
+extern void nmea0183CreateMessage( StringBuffer * msg183, int src, const char * format, ... );
