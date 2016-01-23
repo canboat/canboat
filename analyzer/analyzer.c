@@ -2105,7 +2105,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage * msg)
 
   if (!packet->data)
   {
-    packet->allocSize = max(min(pgn->size, 8) + FASTPACKET_BUCKET_N_SIZE, msg->len);
+    packet->allocSize = max(max(pgn->size, 8) + FASTPACKET_BUCKET_N_SIZE, msg->len);
     heapSize += packet->allocSize;
     logInfo("New PGN %u for device %u (heap %zu bytes)\n", pgn->pgn, msg->src, heapSize);
     packet->data = malloc(packet->allocSize);
@@ -2141,7 +2141,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage * msg)
 
     if (bucket == 0)
     {
-      size_t newSize = msg->data[FASTPACKET_SIZE] + FASTPACKET_BUCKET_N_SIZE;
+      size_t newSize = ((size_t) msg->data[FASTPACKET_SIZE]) + FASTPACKET_BUCKET_N_SIZE;
 
       if (packet->allocSize < newSize)
       {
