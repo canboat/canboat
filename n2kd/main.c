@@ -676,6 +676,10 @@ static bool storeMessage(char * line, size_t len)
       {
         e = s + strlen(s);
       }
+      if (e > s && e[-1] == ',')
+      {
+        e--;
+      }
       key2 = malloc(e - s + 1);
       if (!key2)
       {
