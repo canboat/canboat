@@ -5814,8 +5814,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
-           <Units>rad/s</Units>
-           <Resolution>3.125e-05</Resolution>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
          <Field>
@@ -5825,8 +5825,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
-           <Units>rad/s</Units>
-           <Resolution>3.125e-05</Resolution>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
          <Field>
@@ -5836,8 +5836,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
-           <Units>rad/s</Units>
-           <Resolution>3.125e-05</Resolution>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
        </Fields>
