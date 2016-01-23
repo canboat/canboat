@@ -49,6 +49,7 @@ bool showRaw = false;
 bool showData = false;
 bool showBytes = false;
 bool showJson = false;
+bool showSI = false; // Output everything in strict SI units
 char * sep = " ";
 int  braceCount = 0; // Open json output { characters that need to be closed
 enum GeoFormats showGeo = GEO_DD;
@@ -73,7 +74,7 @@ void camelCase(bool upperCamelCase);
 void usage(char ** argv, char ** av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
-  printf("Usage: %s [[-raw] [-json [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-geo {dd|dm|dms}] [-src <src> | <pgn>]] ["
+  printf("Usage: %s [[-raw] [-json [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] [-src <src> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
@@ -139,6 +140,14 @@ int main(int argc, char ** argv)
       }
       ac--;
       av++;
+    }
+    else if (strcasecmp(av[1], "-si") == 0)
+    {
+      showSI = true;
+    }
+    else if (strcasecmp(av[1], "-nosi") == 0)
+    {
+      showSI = false;
     }
     else if (strcasecmp(av[1], "-camel") == 0)
     {
@@ -783,12 +792,26 @@ static bool printTime(char * name, uint32_t t)
 
 static bool printTemperature(char * name, uint16_t t)
 {
-  double c = t / 100.0 - 273.15;
+  double k = t / 100.0;
+  double c = k - 273.15;
   double f = c * 1.8 + 32;
 
   if (t >= 0xfffd)
   {
     return false;
+  }
+
+  if (showSI)
+  {
+    if (showJson)
+    {
+      mprintf("%s\"%s\":%.2f", getSep(), name, k, f);
+    }
+    else
+    {
+      mprintf("%s %s = %.2f K", getSep(), name, k);
+    }
+    return true;
   }
 
   if (showJson)
@@ -799,6 +822,7 @@ static bool printTemperature(char * name, uint16_t t)
   {
     mprintf("%s %s = %.2f C (%.1f F)", getSep(), name, c, f);
   }
+
   return true;
 }
 
@@ -1365,41 +1389,67 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
       }
       else
       {
-        int precision = 0;
+        int precision;
         double r;
+        const char * units = field->units;
 
-        a = value * field->resolution;
+        a = (double) value * field->resolution;
 
-        if (field->resolution == RES_DEGREES)
+        precision = 0;
+        for (r = field->resolution; (r > 0.0) && (r < 1.0); r *= 10.0)
         {
-          precision = 1;
+          precision++;
         }
-        else if (field->resolution == RES_DEGREES * 0.0001)
+
+        if (field->resolution == RES_RADIANS)
         {
-          precision = 4;
-        }
-        else
-        {
-          for (r = field->resolution; (r > 0.0) && (r < 1.0); r *= 10.0)
+          units = "rad";
+          if (!showSI)
           {
-            precision++;
+            a *= RadianToDegree;
+            precision -= 3;
+            units = "deg";
           }
         }
+        else if (field->resolution == RES_ROTATION || field->resolution == RES_HIRES_ROTATION)
+        {
+          units = "rad/s";
+          if (!showSI)
+          {
+            a *= RadianToDegree;
+            precision -= 3;
+            units = "deg/s";
+          }
+        }
+        else if (units && showSI)
+        {
+          if (strcmp(units, "kWh") == 0)
+          {
+            a *= 3.6e6; // 1 kWh = 3.6 MJ.
+          }
+          else if (strcmp(units, "Ah") == 0)
+          {
+            a *= 3600.0; // 1 Ah = 3600 C.
+          }
+
+          // Many more to follow, but pgn.h is not yet complete enough...
+        }
+
 
         if (showJson)
         {
           mprintf("%s\"%s\":%.*f", getSep(), fieldName, precision, a);
         }
-        else if (field->units && strcmp(field->units, "m") == 0 && a >= 1000.0)
+        else if (units && strcmp(units, "m") == 0 && a >= 1000.0)
         {
           mprintf("%s %s = %.*f km", getSep(), fieldName, precision + 3, a / 1000);
         }
         else
         {
           mprintf("%s %s = %.*f", getSep(), fieldName, precision, a);
-          if (field->units)
+          if (units)
           {
-            mprintf(" %s", field->units);
+            mprintf(" %s", units);
           }
         }
       }
@@ -2199,15 +2249,6 @@ static void explainPGN(Pgn pgn)
     {
       printf("                  Match: %s\n", &f.units[1]);
     }
-    else if (f.units && strcmp(f.units, "deg/s") == 0)
-    {
-      printf("                  Units: rad/s\n");
-    }
-    else if (f.resolution == RES_DEGREES
-     || f.resolution == RES_DEGREES * 0.0001)
-    {
-      printf("                  Units: rad\n");
-    }
     else if (f.units && f.units[0] != ',')
     {
       printf("                  Units: %s\n", f.units);
@@ -2235,12 +2276,6 @@ static void explainPGN(Pgn pgn)
           printf("                  Resolution: %.7f\n", 1e-7);
         }
       }
-    }
-    else if (f.resolution == RES_DEGREES
-          || f.resolution == RES_DEGREES * 0.0001)
-    {
-      printf("                  Type: Angle\n");
-      printf("                  Resolution: %g\n", f.resolution / RadianToDegree);
     }
     else if (f.resolution != 1.0)
     {
@@ -2340,15 +2375,6 @@ static void explainPGNXML(Pgn pgn)
       {
         printf("           <Match>%s</Match>\n", &f.units[1]);
       }
-      else if (f.units && strcmp(f.units, "deg/s") == 0)
-      {
-        printf("           <Units>rad/s</Units>\n");
-      }
-      else if (f.resolution == RES_DEGREES
-       || f.resolution == RES_DEGREES * 0.0001)
-      {
-        printf("           <Units>rad</Units>\n");
-      }
       else if (f.units && f.units[0] != ',')
       {
         printf("           <Units>%s</Units>\n", f.units);
@@ -2376,11 +2402,6 @@ static void explainPGNXML(Pgn pgn)
             printf("                  <Resolution>%.7f</Resolution>\n", 1e-7);
           }
         }
-      }
-      else if (f.resolution == RES_DEGREES)
-      {
-        printf("           <Type>Angle</Type>\n");
-        printf("           <Resolution>%g</Resolution>\n", f.resolution / RadianToDegree);
       }
       else if (f.resolution != 1.0)
       {

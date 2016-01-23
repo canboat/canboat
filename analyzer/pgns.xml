@@ -21,7 +21,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
 <PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1">
-  <Date>$Date: 2012-03-14 16:30:42 +0100 (wo, 14 mrt 2012) $</Date>
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>GPL v3</License>
@@ -98,6 +97,339 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>PGN</Name>
            <BitLength>24</BitLength>
            <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>60160</PGN>
+       <Id>isoTransportProtocolDataTransfer</Id>
+       <Description>ISO Transport Protocol, Data Transfer</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>1</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>sid</Id>
+           <Name>SID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>data</Id>
+           <Name>Data</Name>
+           <BitLength>56</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>60416</PGN>
+       <Id>isoTransportProtocolConnectionManagementRequestToSend</Id>
+       <Description>ISO Transport Protocol, Connection Management - Request To Send</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>1</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>groupFunctionCode</Id>
+           <Name>Group Function Code</Name>
+           <Description>RTS</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>16</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>messageSize</Id>
+           <Name>Message size</Name>
+           <Description>bytes</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>packets</Id>
+           <Name>Packets</Name>
+           <Description>packets</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>packetsReply</Id>
+           <Name>Packets reply</Name>
+           <Description>packets sent in response to CTS</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>pgn</Id>
+           <Name>PGN</Name>
+           <Description>PGN</Description>
+           <BitLength>24</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>60416</PGN>
+       <Id>isoTransportProtocolConnectionManagementClearToSend</Id>
+       <Description>ISO Transport Protocol, Connection Management - Clear To Send</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>1</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>groupFunctionCode</Id>
+           <Name>Group Function Code</Name>
+           <Description>CTS</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>17</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>maxPackets</Id>
+           <Name>Max packets</Name>
+           <Description>packets before waiting for next CTS</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>nextSid</Id>
+           <Name>Next SID</Name>
+           <Description>packet</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>pgn</Id>
+           <Name>PGN</Name>
+           <Description>PGN</Description>
+           <BitLength>24</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>60416</PGN>
+       <Id>isoTransportProtocolConnectionManagementEndOfMessage</Id>
+       <Description>ISO Transport Protocol, Connection Management - End Of Message</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>1</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>groupFunctionCode</Id>
+           <Name>Group Function Code</Name>
+           <Description>EOM</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>19</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>totalMessageSize</Id>
+           <Name>Total message size</Name>
+           <Description>bytes</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>totalNumberOfPacketsReceived</Id>
+           <Name>Total number of packets received</Name>
+           <Description>packets</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>pgn</Id>
+           <Name>PGN</Name>
+           <Description>PGN</Description>
+           <BitLength>24</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>60416</PGN>
+       <Id>isoTransportProtocolConnectionManagementBroadcastAnnounce</Id>
+       <Description>ISO Transport Protocol, Connection Management - Broadcast Announce</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>1</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>groupFunctionCode</Id>
+           <Name>Group Function Code</Name>
+           <Description>BAM</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>32</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>messageSize</Id>
+           <Name>Message size</Name>
+           <Description>bytes</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>packets</Id>
+           <Name>Packets</Name>
+           <Description>frames</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>pgn</Id>
+           <Name>PGN</Name>
+           <Description>PGN</Description>
+           <BitLength>24</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>60416</PGN>
+       <Id>isoTransportProtocolConnectionManagementAbort</Id>
+       <Description>ISO Transport Protocol, Connection Management - Abort</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>1</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>groupFunctionCode</Id>
+           <Name>Group Function Code</Name>
+           <Description>Abort</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>255</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reason</Id>
+           <Name>Reason</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>pgn</Id>
+           <Name>PGN</Name>
+           <Description>PGN</Description>
+           <BitLength>24</BitLength>
+           <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Integer</Type>
                   <Resolution>1</Resolution>
@@ -709,7 +1041,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -837,7 +1169,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -965,7 +1297,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>32</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>true</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -1094,7 +1426,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>32</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>true</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -1253,7 +1585,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -1382,7 +1714,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -1511,7 +1843,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -1640,7 +1972,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>VAr</Units>
+           <Units>var</Units>
            <Signed>false</Signed>
            <Offset>-2000000000</Offset>
          </Field>
@@ -3353,7 +3685,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -3366,7 +3697,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -3379,7 +3709,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>56</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5065,7 +5394,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>208</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5213,7 +5541,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5225,7 +5552,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5237,7 +5563,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>56</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5249,7 +5574,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>72</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5261,7 +5585,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>88</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5273,7 +5596,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>104</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5285,7 +5607,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>120</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>0.00179049</Resolution>
+           <Resolution>3.125e-05</Resolution>
            <Signed>true</Signed>
          </Field>
          <Field>
@@ -5306,7 +5628,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>152</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5357,7 +5678,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5369,7 +5689,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5400,7 +5719,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -5412,7 +5730,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5424,7 +5741,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5469,7 +5785,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>1.79049e-07</Resolution>
+           <Resolution>3.125e-09</Resolution>
            <Signed>true</Signed>
          </Field>
        </Fields>
@@ -5498,8 +5814,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
-           <Units>rad/s</Units>
-           <Resolution>0.00179049</Resolution>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
          <Field>
@@ -5509,8 +5825,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
-           <Units>rad/s</Units>
-           <Resolution>0.00179049</Resolution>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
          <Field>
@@ -5520,8 +5836,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
-           <Units>rad/s</Units>
-           <Resolution>0.00179049</Resolution>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
        </Fields>
@@ -5596,7 +5912,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>true</Signed>
          </Field>
@@ -5861,7 +6176,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='0' Name='Forward' />
              <EnumPair Value='1' Name='Neutral' />
              <EnumPair Value='2' Name='Reverse' />
-             <EnumPair Value='3' Name='Unknown' />
            </EnumValues>
          </Field>
          <Field>
@@ -7247,6 +7561,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Paddle wheel' />
+             <EnumPair Value='1' Name='Pitot tube' />
+             <EnumPair Value='2' Name='Doppler' />
+             <EnumPair Value='3' Name='Correlation (ultra sound)' />
+             <EnumPair Value='4' Name='Electro Magnetic' />
+           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>
@@ -7454,7 +7775,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -7477,7 +7797,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>72</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -7624,7 +7943,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -7761,7 +8079,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8191,7 +8508,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>112</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8244,7 +8560,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>168</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8256,7 +8571,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>184</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>0.00179049</Resolution>
+           <Resolution>3.125e-05</Resolution>
            <Signed>true</Signed>
          </Field>
          <Field>
@@ -8440,7 +8755,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>112</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8493,7 +8807,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>168</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8739,7 +9052,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>112</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -8850,7 +9162,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>168</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -9375,7 +9686,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>96</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -9387,7 +9697,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>112</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -9635,7 +9944,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -9776,7 +10084,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -10129,7 +10436,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -10141,7 +10447,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>48</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -12213,7 +12518,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>112</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -15439,7 +15743,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -15535,25 +15838,35 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>2</Order>
-           <Id>temperatureInstance</Id>
-           <Name>Temperature Instance</Name>
+           <Id>temperatureSource</Id>
+           <Name>Temperature Source</Name>
            <BitLength>6</BitLength>
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
-             <EnumPair Value='0' Name='Sea' />
-             <EnumPair Value='1' Name='Outside' />
-             <EnumPair Value='2' Name='Inside' />
-             <EnumPair Value='3' Name='Engine room' />
-             <EnumPair Value='4' Name='Main Cabin' />
+             <EnumPair Value='0' Name='Sea Temperature' />
+             <EnumPair Value='1' Name='Outside Temperature' />
+             <EnumPair Value='2' Name='Inside Temperature' />
+             <EnumPair Value='3' Name='Engine Room Temperature' />
+             <EnumPair Value='4' Name='Main Cabin Temperature' />
+             <EnumPair Value='5' Name='Live Well Temperature' />
+             <EnumPair Value='6' Name='Bait Well Temperature' />
+             <EnumPair Value='7' Name='Refridgeration Temperature' />
+             <EnumPair Value='8' Name='Heating System Temperature' />
+             <EnumPair Value='9' Name='Dew Point Temperature' />
+             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
+             <EnumPair Value='11' Name='Theoretical Wind Chill Temperature' />
+             <EnumPair Value='12' Name='Heat Index Temperature' />
+             <EnumPair Value='13' Name='Freezer Temperature' />
+             <EnumPair Value='14' Name='Exhaust Gas Temperature' />
            </EnumValues>
          </Field>
          <Field>
            <Order>3</Order>
-           <Id>humidityInstance</Id>
-           <Name>Humidity Instance</Name>
+           <Id>humiditySource</Id>
+           <Name>Humidity Source</Name>
            <BitLength>2</BitLength>
            <BitOffset>14</BitOffset>
            <BitStart>6</BitStart>
@@ -15645,7 +15958,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='6' Name='Bait Well Temperature' />
              <EnumPair Value='7' Name='Refridgeration Temperature' />
              <EnumPair Value='8' Name='Heating System Temperature' />
-             <EnumPair Value='9' Name='Freezer Temperature' />
+             <EnumPair Value='9' Name='Dew Point Temperature' />
+             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
+             <EnumPair Value='11' Name='Theoretical Wind Chill Temperature' />
+             <EnumPair Value='12' Name='Heat Index Temperature' />
+             <EnumPair Value='13' Name='Freezer Temperature' />
+             <EnumPair Value='14' Name='Exhaust Gas Temperature' />
            </EnumValues>
          </Field>
          <Field>
@@ -15707,7 +16025,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Inside' />
+             <EnumPair Value='1' Name='Outside' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -16220,7 +16543,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>168</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -16354,7 +16676,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>136</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -16539,7 +16860,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>136</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -17063,7 +17383,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -17086,7 +17405,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>48</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -17109,7 +17427,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>80</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -22899,7 +23216,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>72</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
@@ -23246,7 +23562,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>72</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad</Units>
-           <Type>Angle</Type>
            <Resolution>0.0001</Resolution>
            <Signed>false</Signed>
          </Field>
