@@ -28,6 +28,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include "common.h"
 #include <math.h>
 
+#include "gps_ais.h"
 #include "nmea0183.h"
 #include "n2kd.h"
 
@@ -43,26 +44,50 @@ extern bool rateLimit;
  * PGN 127250 "Vessel Heading" -> $xxHDG
  * PGN 130306 "Wind Data"      -> $xxMWV
  * PGN 128267 "Water Depth"    -> $xxDBK/DBS/DBT
- *
+ * PGN 128267 "Water Speed"    -> $xxVHW
+ * PGN 127245 "Rudder"         -> $xxRSA
+
+ * Some others are in gps_ais.c file
+ * PGN 129026 "Track made good and Ground speed" -> $xxVTG
+ * PGN 129539 "GPS DOP"                          -> $xxGSA
+ * PGN 129025 or 129029 "GPS Position"           -> $xxGLL
+ * PGN 129038 and 129039 "AIS from other boats"  -> !AIVDM - NOT FINISHED! AIVDM/AIVDO protocol encoding is needed
+
  * Typical output of these from analyzer:
  * {"timestamp":"2010-09-12-10:57:41.217","prio":"2","src":"36","dst":"255","pgn":"127250","description":"Vessel Heading","fields":{"SID":"116","Heading":"10.1","Deviation":"0.0","Variation":"0.0","Reference":"Magnetic"}}
  * {"timestamp":"2010-09-12-11:00:20.269","prio":"2","src":"13","dst":"255","pgn":"130306","description":"Wind Data","fields":{"Wind Speed":"5.00","Wind Angle":"308.8","Reference":"Apparent"}}
  * {"timestamp":"2012-12-01-12:53:19.929","prio":"3","src":"35","dst":"255","pgn":"128267","description":"Water Depth","fields":{"SID":"70","Depth":"0.63","Offset":"0.500"}}
- *
+ * {"timestamp":"2015-12-07-21:51:11.381","prio":"2","src":"4","dst":"255","pgn":"128259","description":"Speed","fields":{"Speed Water Referenced":0.30}}
+ * {"timestamp":"2015-12-09-21:53:47.497","prio":"2","src":"1","dst":"255","pgn":"127245","description":"Rudder","fields":{"Angle Order":-0.0,"Position":6.8}}
+ * {"timestamp":"2015-12-11T17:56:55.755Z","prio":6,"src":2,"dst":255,"pgn":129539,"description":"GNSS DOPs","fields":{"SID":239,"Desired Mode":"3D","Actual Mode":"3D","HDOP":1.21,"VDOP":1.83,"TDOP":327.67}}
  */
 
 #define PGN_VESSEL_HEADING (127250)
 #define PGN_WIND_DATA      (130306)
 #define PGN_WATER_DEPTH    (128267)
+#define PGN_WATER_SPEED    (128259)
+#define PGN_RUDDER         (127245)
+#define PGN_SOG_COG        (129026)
+#define PGN_GPS_DOP        (129539)
+#define PGN_RAPID_POSITION (129025)
+#define PGN_POSITION       (129029)
+#define PGN_AIS_A          (129038)
+#define PGN_AIS_B          (129039)
 
 #define VESSEL_HEADING (0)
 #define WIND_DATA      (1)
 #define WATER_DEPTH    (2)
-#define SENTENCE_COUNT (3)
+#define WATER_SPEED    (3)
+#define RUDDER         (4)
+#define SOG_COG        (5)
+#define GPS_DOP        (6)
+#define GPS_POSITION   (7)
+#define AIS_POSITION   (8)
+#define SENTENCE_COUNT (9)
 
 static int64_t rateLimitPassed[256][SENTENCE_COUNT];
 
-static void nmea0183CreateMessage( StringBuffer * msg183, int src, const char * format, ...)
+void nmea0183CreateMessage( StringBuffer * msg183, int src, const char * format, ...)
 {
   char line[80];
   int chk;
@@ -146,7 +171,7 @@ producing true heading.
  $--HDT,x.x,T*hh<CR><LF>
 ------------------------------------------------------------------------------
 
-Field Number: 
+Field Number:
 
 1. Heading Degrees, true
 2. T = True
@@ -227,7 +252,7 @@ static void nmea0183WindData( StringBuffer * msg183, int src, const char * msg )
   speedInMetersPerSecond = strtod(speed, 0);
   speedInKMPerHour = speedInMetersPerSecond * 3.6;
 
-  if (strcmp(reference, "True") == 0)
+  if (strcmp(reference, "True") >= 0)
   {
     nmea0183CreateMessage(msg183, src, "MWV,%s,T,%.1f,K,A", angle, speedInKMPerHour);
   }
@@ -316,18 +341,96 @@ static void nmea0183WaterDepth( StringBuffer * msg183, int src, const char * msg
 #define METER_TO_FEET(x) (x / FEET_IN_METER)
 #define METER_TO_FATHOM(x) (METER_TO_FEET(x) / 6.0)
 
-  if (off > 0.0)
+  nmea0183CreateMessage(msg183, src, "DPT,%04.1f,%04.1f", dep, off);
+  // This is disabled as OpenCPN seems to use DPT.
+  // if (off > 0.0)
+  // {
+  //   nmea0183CreateMessage(msg183, src, "DBS,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+  // }
+  // if (off < 0.0)
+  // {
+  //   nmea0183CreateMessage(msg183, src, "DBK,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+  // }
+  // if (off == 0.0)
+  // {
+  //   nmea0183CreateMessage(msg183, src, "DBT,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+  // }
+}
+
+/*
+
+=== VHW - Water speed and heading ===
+------------------------------------------------------------------------------
+        1   2 3   4 5   6 7   8 9
+        |   | |   | |   | |   | |
+ $--VHW,x.x,T,x.x,M,x.x,N,x.x,K*hh<CR><LF>
+------------------------------------------------------------------------------
+
+Field Number:
+
+1. Degress True
+2. T = True
+3. Degrees Magnetic
+4. M = Magnetic
+5. Knots (speed of vessel relative to the water)
+6. N = Knots
+7. Kilometers (speed of vessel relative to the water)
+8. K = Kilometers
+9. Checksum
+*/
+
+static void nmea0183WaterSpeed( StringBuffer * msg183, int src, const char * msg )
+{
+  char speed[10];
+  double speedInMetersPerSecond;
+
+  if (!getJSONValue(msg, "Speed Water Referenced", speed, sizeof(speed)))
   {
-    nmea0183CreateMessage(msg183, src, "DBS,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+    return;
   }
-  if (off < 0.0)
+
+  speedInMetersPerSecond = strtod(speed, 0);
+
+#define MS_TO_KNOTS(meters_per_second) (meters_per_second * 1.94384)
+#define MS_TO_MKH(meters_per_second) (meters_per_second * 3.6)
+
+  nmea0183CreateMessage(msg183, src, "VHW,,T,,M,%04.1f,N,%04.1f,K", MS_TO_KNOTS(speedInMetersPerSecond), MS_TO_MKH(speedInMetersPerSecond));
+
+}
+
+/*
+=== RSA - Rudder Sensor Angle ===
+------------------------------------------------------------------------------
+        1   2 3   4 5
+        |   | |   | |
+ $--RSA,x.x,A,x.x,A*hh<CR><LF>
+------------------------------------------------------------------------------
+
+Field Number:
+
+1. Starboard (or single) rudder sensor, "-" means Turn To Port
+2. Status, A means data is valid
+3. Port rudder sensor
+4. Status, A means data is valid
+5. Checksum
+*/
+
+static void nmea0183Rudder( StringBuffer * msg183, int src, const char * msg )
+{
+  char position[10];
+  double pos = 0;
+  double opposite_pos = 0;
+
+  if (!getJSONValue(msg, "Position", position, sizeof(position)))
   {
-    nmea0183CreateMessage(msg183, src, "DBK,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
+    return;
   }
-  if (off == 0.0)
-  {
-    nmea0183CreateMessage(msg183, src, "DBT,%04.1f,f,%s,M,%04.1f,F", METER_TO_FEET(dep), depth, METER_TO_FATHOM(dep));
-  }
+
+  pos = strtod(position, 0);
+  opposite_pos = pos * -1;
+
+  nmea0183CreateMessage(msg183, src, "RSA,%04.1f,A,,F", opposite_pos);
+
 }
 
 static bool matchFilter( int n, char * filter )
@@ -391,6 +494,26 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
   case PGN_WATER_DEPTH:
     j = WATER_DEPTH;
     break;
+  case PGN_WATER_SPEED:
+    j = WATER_SPEED;
+    break;
+  case PGN_RUDDER:
+    j = RUDDER;
+    break;
+  case PGN_SOG_COG:
+    j = SOG_COG;
+    break;
+  case PGN_GPS_DOP:
+    j = GPS_DOP;
+    break;
+  case PGN_RAPID_POSITION:
+  case PGN_POSITION:
+    j = GPS_POSITION;
+    break;
+  case PGN_AIS_A:
+  case PGN_AIS_B:
+    j = AIS_POSITION;
+    break;
   default:
     return;
   }
@@ -430,6 +553,26 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
     break;
   case PGN_WATER_DEPTH:
     nmea0183WaterDepth(msg183, src, msg);
+    break;
+  case PGN_WATER_SPEED:
+    nmea0183WaterSpeed(msg183, src, msg);
+    break;
+  case PGN_RUDDER:
+    nmea0183Rudder(msg183, src, msg);
+    break;
+  case PGN_SOG_COG:
+    nmea0183VTG(msg183, src, msg);
+    break;
+  case PGN_GPS_DOP:
+    nmea0183GSA(msg183, src, msg);
+    break;
+  case PGN_RAPID_POSITION:
+  case PGN_POSITION:
+    nmea0183GLL(msg183, src, msg);
+    break;
+  case PGN_AIS_A:
+  case PGN_AIS_B:
+    nmea0183AIVDM(msg183, src, msg);
     break;
   default:
     return;

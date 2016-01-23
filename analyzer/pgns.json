@@ -5160,8 +5160,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
-            "Units":"rad/s",
-            "Resolution":3.125e-05,
+            "Units":"rad",
+            "Resolution":"0.0001",
             "Signed":true},
           {
             "Order":3,
@@ -5170,8 +5170,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Units":"rad/s",
-            "Resolution":3.125e-05,
+            "Units":"rad",
+            "Resolution":"0.0001",
             "Signed":true},
           {
             "Order":4,
@@ -5180,8 +5180,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Units":"rad/s",
-            "Resolution":3.125e-05,
+            "Units":"rad",
+            "Resolution":"0.0001",
             "Signed":true}]},
       "127258":{
         "PGN":127258,
