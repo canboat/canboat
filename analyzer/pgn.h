@@ -1441,9 +1441,9 @@ Pgn pgnList[] =
 ,
 { "Attitude", 127257, true, 7, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Yaw", BYTES(2), RES_ROTATION, true, "rad/s", "" }
-  , { "Pitch", BYTES(2), RES_ROTATION, true, "rad/s", "" }
-  , { "Roll", BYTES(2), RES_ROTATION, true, "rad/s", "" }
+  , { "Yaw", BYTES(2), RES_RADIANS, true, "rad", "" }
+  , { "Pitch", BYTES(2), RES_RADIANS, true, "rad", "" }
+  , { "Roll", BYTES(2), RES_RADIANS, true, "rad", "" }
   , { 0 }
   }
 }
