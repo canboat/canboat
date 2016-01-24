@@ -384,6 +384,7 @@ bool printPgn(RawMessage* msg, uint8_t *dataStart, int length, bool showData, bo
 Field * getField(uint32_t pgn, uint32_t field);
 void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t bits, int64_t * value, int64_t * maxValue);
 
+
 static Pgn pgnList[] =
 {
 
@@ -4136,6 +4137,9 @@ static Pgn pgnList[] =
 
 }
 ;
+
+static Pgn* pgnListFirst() { return pgnList + 0; }
+static Pgn* pgnListEnd() { return pgnList + sizeof(pgnList) / sizeof(pgnList[0]); }
 
 typedef struct
 {
