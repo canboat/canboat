@@ -51,7 +51,7 @@ bool showBytes = false;
 bool showJson = false;
 bool showSI = false; // Output everything in strict SI units
 char * sep = " ";
-int  braceCount = 0; // Open json output { characters that need to be closed
+char closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
 enum GeoFormats showGeo = GEO_DD;
 int onlyPgn = 0;
 int onlySrc = -1;
@@ -525,7 +525,12 @@ char * getSep()
     sep = ",";
     if (strchr(s, '{'))
     {
-      braceCount++;
+      if (strlen(closingBraces) >= sizeof(closingBraces) - 2)
+      {
+        logError("Too many braces\n");
+        exit(2);
+      }
+      strcat(closingBraces, "}");
     }
   }
   else
@@ -1811,7 +1816,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
       mprintf("\"%s\":", pgn->camelDescription);
     }
     mprintf("{\"timestamp\":\"%s\",\"prio\":%u,\"src\":%u,\"dst\":%u,\"pgn\":%u,\"description\":\"%s\"", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
-    braceCount = 1;
+    strcpy(closingBraces, "}");
     sep = ",\"fields\":{";
   }
   else
@@ -1823,7 +1828,16 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
   for (i = 0, startBit = 0, data = dataStart; data < dataEnd; i++)
   {
     r = true;
+
     field = pgn->fieldList[i];
+
+    if (showJson && pgn->repeatingFields && i == pgn->fieldCount - pgn->repeatingFields)
+    {
+      mprintf("%s[{", getSep());
+      strcat(closingBraces, "]}");
+      sep = "";
+    }
+
     if (!field.name)
     {
       if (pgn->repeatingFields)
@@ -1831,6 +1845,11 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
         i = i - pgn->repeatingFields;
         field = pgn->fieldList[i];
         repetition++;
+        if (showJson)
+        {
+          mprintf("},{");
+          sep = "";
+        }
       }
       else
       {
@@ -1839,7 +1858,7 @@ bool printPgn(int index, int subIndex, RawMessage * msg)
     }
 
     strcpy(fieldName, field.camelName ? field.camelName : field.name);
-    if (repetition > 1)
+    if (repetition > 1 && !showJson)
     {
       strcat(fieldName, field.camelName ? "_" : " ");
       sprintf(fieldName + strlen(fieldName), "%u", repetition);
@@ -2064,12 +2083,9 @@ ascii_string:
     startBit %= 8;
   }
 
-  if (showJson)
+  for (i = strlen(closingBraces); i;)
   {
-    for (;braceCount > 0; braceCount--)
-    {
-      mprintf("}");
-    }
+    mprintf("%c", closingBraces[--i]);
   }
   mprintf("\n");
 
