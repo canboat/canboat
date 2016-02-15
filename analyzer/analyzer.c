@@ -2163,7 +2163,7 @@ bool printPgn(RawMessage* msg, uint8_t *dataStart, int length, bool showData, bo
 
     if (showJson && pgn->repeatingFields && i == pgn->fieldCount - pgn->repeatingFields)
     {
-      mprintf("%s[{", getSep());
+      mprintf("%s\"list\":[{", getSep());
       strcat(closingBraces, "]}");
       sep = "";
     }
