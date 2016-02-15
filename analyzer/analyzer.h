@@ -84,18 +84,3 @@ typedef unsigned __int64 uint64_t;
 
 #define DST_GLOBAL (0xff) /* The address used when a message is addressed to -all- stations */
 
-
-typedef struct
-{
-  size_t lastFastPacket;
-  size_t size;
-  size_t allocSize;
-  uint8_t * data;
-} Packet;
-
-typedef struct
-{
-  Packet packetList[ARRAY_SIZE(pgnList)];
-} DevicePackets;
-
-

@@ -21,11 +21,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+#define  GLOBALS
 #include "common.h"
 #include "analyzer.h"
-
-DevicePackets * device[256];
-char *manufacturer[1 << 12];
 
 enum RawFormats
 {
@@ -44,6 +42,21 @@ enum GeoFormats
   GEO_DMS
 };
 
+typedef struct
+{
+  size_t lastFastPacket;
+  size_t size;
+  size_t allocSize;
+  uint8_t * data;
+} Packet;
+
+typedef struct
+{
+  Packet packetList[ARRAY_SIZE(pgnList)];
+} DevicePackets;
+
+DevicePackets * device[256];
+char *manufacturer[1 << 12];
 
 bool showRaw = false;
 bool showData = false;
@@ -226,16 +239,7 @@ int main(int argc, char ** argv)
 
   fillManufacturers();
   fillFieldCounts();
-
-  {
-    int i;
-    for (i = 1; i < ARRAY_SIZE(pgnList); ++i) {
-      if (pgnList[i-1].pgn > pgnList[i].pgn) {
-        fprintf(stderr, "PGN LIST NOT SORTED!!\n");
-        return 1;
-      }
-    }
-  }
+  checkPgnList();
 
   while (fgets(msg, sizeof(msg) - 1, file))
   {
@@ -249,19 +253,9 @@ int main(int argc, char ** argv)
       continue;
     }
 
-    /* TODO(jpilet): implement readFullMessage by accessing can0 in J1939 mode.
-    if (readFullMessage(msg, &m)) {
-      printPgn(msg, msg->data, msg->len, showData, showJson);
-      continue;
-    }
-    */
-
     if (format != RAWFORMAT_CHETCO && msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
     {
-      if (showBytes)
-      {
-        logInfo("Detected Chetco protocol with all data on one line\n");
-      }
+      logDebug("Detected Chetco protocol with all data on one line\n");
       format = RAWFORMAT_CHETCO;
     }
 
@@ -281,9 +275,9 @@ int main(int argc, char ** argv)
         p = strchr(msg, ' ');
         if (p && (p[1] == '-' || p[2] == '-'))
         {
-          if (format != RAWFORMAT_AIRMAR && showBytes)
+          if (format != RAWFORMAT_AIRMAR)
           {
-            logInfo("Detected Airmar protocol with all data on one line\n");
+            logDebug("Detected Airmar protocol with all data on one line\n");
           }
           format = RAWFORMAT_AIRMAR;
         }
@@ -337,10 +331,7 @@ int main(int argc, char ** argv)
       }
       else
       {
-        if (showBytes)
-        {
-          logInfo("Detected Fast protocol with all data on one line\n");
-        }
+        logDebug("Detected Fast protocol with all data on one line\n");
         format = RAWFORMAT_FAST;
       }
     }
@@ -577,10 +568,15 @@ static void fillFieldCounts(void)
 
   for (i = 0; i < ARRAY_SIZE(pgnList); i++)
   {
-    for (j = 0; pgnList[i].fieldList[j].name && j < 80; j++);
-    if (j == 80)
+    for (j = 0; pgnList[i].fieldList[j].name && j < ARRAY_SIZE(pgnList[i].fieldList); j++);
+    if (j == ARRAY_SIZE(pgnList[i].fieldList))
     {
-      logError("Internal PGN %d does not have correct fieldlist.\n", pgnList[i].pgn);
+      logError("Internal error: PGN %d '%s' does not have correct fieldlist.\n", pgnList[i].pgn, pgnList[i].description);
+      exit(2);
+    }
+    if (j == 0 && pgnList[i].known)
+    {
+      logError("Internal error: PGN %d '%s' does not have fields.\n", pgnList[i].pgn, pgnList[i].description);
       exit(2);
     }
     pgnList[i].fieldCount = j;
@@ -1452,7 +1448,7 @@ void setSystemClock(uint16_t currentDate, uint32_t currentTime)
 
   if (prevDate == UINT16_MAX)
   {
-    logDebug("setSytemClock: first time\n");
+    logDebug("setSystemClock: first time\n");
     prevDate = currentDate;
     prevTime = currentTime;
     return;
@@ -1586,10 +1582,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage * msg)
   if (!device[msg->src])
   {
     heapSize += sizeof(DevicePackets);
-    if (showBytes)
-    {
-      logInfo("New device at address %u (heap %zu bytes)\n", msg->src, heapSize);
-    }
+    logDebug("New device at address %u (heap %zu bytes)\n", msg->src, heapSize);
     device[msg->src] = calloc(1, sizeof(DevicePackets));
     if (!device[msg->src])
     {
@@ -2120,7 +2113,7 @@ bool printPgn(RawMessage* msg, uint8_t *dataStart, int length, bool showData, bo
   }
   pgn  = getMatchingPgn(msg->pgn, dataStart, length);
   if (!pgn) {
-    return false;
+    pgn = pgnList;
   }
 
   if (showData)

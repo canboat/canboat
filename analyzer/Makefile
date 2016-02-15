@@ -20,7 +20,7 @@
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
-TARGETS=$(ANALYZER) test_pgn test
+TARGETS=$(ANALYZER)
 CFLAGS=-O3
 XMLFILE=pgns.xml
 JSONFILE=pgns.json
@@ -37,10 +37,4 @@ clean:
 	-rm -f $(TARGETS) *.elf *.gdb
 	-rm -f $(XMLFILE)
 	-rm -f $(JSONFILE)
-
-test_pgn: test_pgn.c pgn.h pgn.c ../common/common.c
-	$(CC) $(CFLAGS) -o $@ -I../common test_pgn.c pgn.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
-
-test: test_pgn
-	./test_pgn
 

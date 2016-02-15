@@ -362,7 +362,7 @@ typedef struct
   Field      fieldList[28];     /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t   fieldCount;        /* Filled by C, no need to set in initializers. */
   char     * camelDescription;  /* Filled by C, no need to set in initializers. */
-  bool       unknownPgn;        /* Is this a catch-all for unknown PGNs? */
+  bool       unknownPgn;        /* true = this is a catch-all for unknown PGNs */
 } Pgn;
 
 typedef struct
@@ -385,12 +385,13 @@ Pgn* endPgn(Pgn* first);
 Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length);
 
 bool printPgn(RawMessage* msg, uint8_t *dataStart, int length, bool showData, bool showJson);
+void checkPgnList(void);
 
 Field * getField(uint32_t pgn, uint32_t field);
 void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t bits, int64_t * value, int64_t * maxValue);
 
-
-static Pgn pgnList[] =
+#ifdef GLOBALS
+Pgn pgnList[] =
 {
 
 /* PDU1 (addressed) single-frame range 0E800 to 0xEEFF (59392 - 61183) */
@@ -4146,8 +4147,15 @@ static Pgn pgnList[] =
 }
 ;
 
+size_t pgnListSize = ARRAY_SIZE(pgnList);
+
+#else
+extern Pgn pgnList[];
+extern size_t pgnListSize;
+#endif
+
 static Pgn* pgnListFirst() { return pgnList + 0; }
-static Pgn* pgnListEnd() { return pgnList + sizeof(pgnList) / sizeof(pgnList[0]); }
+static Pgn* pgnListEnd() { return pgnList + pgnListSize; }
 
 typedef struct
 {

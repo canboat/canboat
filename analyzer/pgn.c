@@ -1,68 +1,103 @@
+
 #include <common.h>
-#include "pgn.h"
+#include "analyzer.h"
 
-# define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
+Pgn *searchForPgn(int pgn)
+{
+  size_t start = 0;
+  size_t end = pgnListSize;
+  size_t mid;
 
-#ifndef min
-# define min(x,y) ((x)<=(y)?(x):(y))
-#endif
-#ifndef max
-# define max(x,y) ((x)>=(y)?(x):(y))
-#endif
-
-Pgn* searchForPgn(int pgn) {
-  int first = 0;
-  int end = ARRAY_SIZE(pgnList);
-  int count = end - first;
-  while (count > 0) {
-    int step = count / 2;
-    int mid = first + step;
-    if (pgnList[mid].pgn < pgn) {
-      first = mid + 1;
-      count -= step + 1;
-    } else {
-      count = step;
+  while (start <= end)
+  {
+    mid = (start + end) / 2;
+    if (pgn == pgnList[mid].pgn)
+    {
+      while (mid && pgn == pgnList[mid - 1].pgn)
+      {
+        mid--;
+      }
+      return &pgnList[mid];
     }
-  }
-  if (first < ARRAY_SIZE(pgnList)) {
-    return pgnList + first;
-
+    if (pgn < pgnList[mid].pgn)
+    {
+      end = mid - 1;
+    }
+    else
+    {
+      start = mid + 1;
+    }
   }
   return 0;
 }
 
-Pgn* endPgn(Pgn* first) {
-  Pgn *p = first;
-  while (p != pgnList + ARRAY_SIZE(pgnList) && p->pgn == first->pgn) {
-    ++p;
+/**
+ * Return the last Pgn entry for which unknown == true && prn is smaller than requested.
+ * This is slower, but is not used often.
+ */
+static Pgn *searchForUnknownPgn(pgnId)
+{
+  Pgn *unknown = pgnList;
+  Pgn *pgn;
+
+  for (pgn = pgnList; pgn < pgnList + pgnListSize; pgn++)
+  {
+    if (pgn->unknownPgn)
+    {
+      unknown = pgn;
+    }
+    if (pgn->pgn > pgnId)
+    {
+      break;
+    }
   }
-  return p;
+  return unknown;
 }
 
-Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length) {
-  Pgn * firstPgn = searchForPgn(pgnId);
-  Pgn* pgn;
-  Pgn* end = endPgn(firstPgn);
+Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
+{
+  Pgn *pgn = searchForPgn(pgnId);
+  int prn;
   int i;
 
-  if (!firstPgn) {
-    return 0;
+  if (!pgn)
+  {
+    pgn = searchForUnknownPgn(pgnId);
   }
 
-  for (pgn = firstPgn; pgn != end; ++pgn) {
+  prn = pgn->pgn;
+
+  if (pgn == pgnListEnd() - 1 || pgn[1].pgn != prn)
+  {
+    // Don't bother complex search if there is only one PGN with this PRN.
+    return pgn;
+  }
+
+  for (; pgn->pgn == prn; pgn++) // we never get here for the last pgn, so no need to check for end of list
+  {
     int startBit = 0;
-    uint8_t* data = dataStart;
+    uint8_t *data = dataStart;
 
     bool matchedFixedField = true;
     bool hasFixedField = false;
-    const Field* field;
 
     /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
 
-    // Iterate over fields
-    for (i = 0, startBit = 0, data = dataStart, field = pgn->fieldList + i;
-         field->name && field->size && i < pgn->fieldCount; i++)
+    if (!pgn->fieldCount)
     {
+      logError("Internal error: %p PGN %d offset %u '%s' has no fields\n", pgn, prn, (unsigned) (pgn - pgnList), pgn->description);
+      for (i = 0; pgn->fieldList[i].name; i++)
+      {
+        logInfo("Field %d: %s\n", i, pgn->fieldList[i].name);
+      }
+      // exit(2);
+      pgn->fieldCount = i;
+    }
+
+    // Iterate over fields
+    for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
+    {
+      const Field *field = &pgn->fieldList[i];
       int bits = field->size;
 
       if (field->units && field->units[0] == '=')
@@ -83,7 +118,12 @@ Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length) {
       data += startBit / 8;
       startBit %= 8;
     }
-    if (! hasFixedField || (hasFixedField && matchedFixedField))
+    if (!hasFixedField)
+    {
+      logDebug("Cant determine prn choice, return prn=%d variation '%s'\n", prn, pgn->description);
+      return pgn;
+    }
+    if (matchedFixedField)
     {
       return pgn;
     }
@@ -91,12 +131,41 @@ Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length) {
   return 0;
 }
 
+void checkPgnList(void)
+{
+  size_t i;
+  int prn = 0;
+
+  for (i = 0; i < pgnListSize; i++)
+  {
+    Pgn * pgn;
+
+    if (pgnList[i].pgn < prn)
+    {
+      logError("Internal error: PGN %d is not sorted correctly\n", pgnList[i].pgn);
+      exit(2);
+    }
+    if (pgnList[i].pgn == prn)
+    {
+      continue;
+    }
+    prn = pgnList[i].pgn;
+    pgn = searchForPgn(prn);
+    if (pgn != &pgnList[i])
+    {
+      logError("Internal error: PGN %d is not found correctly\n", prn);
+      exit(2);
+    }
+  }
+}
+
 Field * getField(uint32_t pgnId, uint32_t field)
 {
   int index;
 
   Pgn* pgn = searchForPgn(pgnId);
-  if (pgn && field < pgn->fieldCount) {
+  if (pgn && field < pgn->fieldCount)
+  {
     return pgn->fieldList + field;
   }
   return 0;
