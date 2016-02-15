@@ -1,0 +1,12 @@
+D=../../../packetlogger/examples
+
+for i in $D/*.log
+do
+  b=`basename $i`
+  if head -1 $i | ../rel/darwin-x86_64/analyzer 2>&1 | grep 'New PGN ' > /dev/null 2>&1
+  then
+    echo $b
+    ../rel/darwin-x86_64/analyzer < $i > /tmp/$b.$1 2>/dev/null
+  fi
+done
+

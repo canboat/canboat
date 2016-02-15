@@ -25,7 +25,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include "analyzer.h"
 
 DevicePackets * device[256];
-char * manufacturer[1 << 12];
+char *manufacturer[1 << 12];
 
 enum RawFormats
 {
@@ -63,7 +63,6 @@ static void fillFieldCounts(void);
 static uint8_t scanNibble(char c);
 static int scanHex(char ** p, uint8_t * m);
 static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t startBit, size_t bits);
-static bool printPgn(int index, int subIndex, RawMessage * msg);
 
 void initialize(void);
 void printCanRaw(RawMessage * msg);
@@ -228,6 +227,16 @@ int main(int argc, char ** argv)
   fillManufacturers();
   fillFieldCounts();
 
+  {
+    int i;
+    for (i = 1; i < ARRAY_SIZE(pgnList); ++i) {
+      if (pgnList[i-1].pgn > pgnList[i].pgn) {
+        fprintf(stderr, "PGN LIST NOT SORTED!!\n");
+        return 1;
+      }
+    }
+  }
+
   while (fgets(msg, sizeof(msg) - 1, file))
   {
     RawMessage m;
@@ -239,6 +248,13 @@ int main(int argc, char ** argv)
     {
       continue;
     }
+
+    /* TODO(jpilet): implement readFullMessage by accessing can0 in J1939 mode.
+    if (readFullMessage(msg, &m)) {
+      printPgn(msg, msg->data, msg->len, showData, showJson);
+      continue;
+    }
+    */
 
     if (format != RAWFORMAT_CHETCO && msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
     {
@@ -542,11 +558,13 @@ char * getSep()
   return s;
 }
 
-
 static void fillManufacturers(void)
 {
   size_t i;
 
+  for (i = 0; i < ARRAY_SIZE(manufacturer); i++) {
+    manufacturer[i] = 0;
+  }
   for (i = 0; i < ARRAY_SIZE(companyList); i++)
   {
     manufacturer[companyList[i].id] = companyList[i].name;
@@ -579,7 +597,9 @@ void mprintf(const char * format, ...)
 
   va_start(ap, format);
   remain = sizeof(mbuf) - (mp - mbuf) - 1;
-  mp += vsnprintf(mp, remain, format, ap);
+  if (remain > 0) {
+    mp += vsnprintf(mp, remain, format, ap);
+  }
   va_end(ap);
 }
 
@@ -1076,147 +1096,6 @@ static bool printDecimal(char * name, uint8_t * data, size_t startBit, size_t bi
 }
 
 
-/*
- *
- * This is perhaps as good a place as any to explain how CAN messages are layed out by the
- * NMEA. Basically, it's a mess once the bytes are recomposed into bytes (the on-the-wire
- * format is fine).
- *
- * For fields that are aligned on bytes there isn't much of an issue, they appear in our
- * buffers in standard Intel 'least endian' format.
- * For instance the MMSI # 244050447 is, in hex: 0x0E8BEA0F. This will be found in the CAN data as:
- * byte x+0: 0x0F
- * byte x+1: 0xEA
- * byte x+2: 0x8B
- * byte x+3: 0x0e
- *
- * To gather together we loop over the bytes, and keep increasing the magnitude of what we are
- * adding:
- *    for (i = 0, magnitude = 0; i < 4; i++)
- *    {
- *      value += data[i] << magnitude;
- *      magnitude += 8;
- *    }
- *
- * However, when there are two bit fields after each other, lets say A of 2 and then B of 6 bits:
- * then that is layed out MSB first, so the bit mask is 0b11000000 for the first
- * field and 0b00111111 for the second field.
- *
- * This means that if we have a bit field that crosses a byte boundary and does not start on
- * a byte boundary, the bit masks are like this (for a 16 bit field starting at the 3rd bit):
- *
- * 0b00111111 0b11111111 0b11000000
- *     ------   --------   --
- *     000000   11110000   11
- *     543210   32109876   54
- *
- * So we are forced to mask bits 0 and 1 of the first byte. Since we need to process the previous
- * field first, we cannot repeatedly shift bits out of the byte: if we shift left we get the first
- * field first, but in MSB order. We need bit values in LSB order, as the next byte will be more
- * significant. But we can't shift right as that will give us bits in LSB order but then we get the
- * two fields in the wrong order...
- *
- * So for that reason we explicitly test, per byte, how many bits we need and how many we have already
- * used.
- *
- */
-
-static void extractNumber(Field * field, uint8_t * data, size_t startBit, size_t bits, int64_t * value, int64_t * maxValue)
-{
-  bool hasSign = field->hasSign;
-
-  size_t firstBit = startBit;
-  size_t bitsRemaining = bits;
-  size_t magnitude = 0;
-  size_t bitsInThisByte;
-  uint64_t bitMask;
-  uint64_t allOnes;
-  uint64_t valueInThisByte;
-
-  *value = 0;
-  *maxValue = 0;
-
-  if (showBytes)
-  {
-    mprintf("(en f=%s,sb=%u,b=%u) ", field->name, (unsigned int) startBit, (unsigned int) firstBit);
-  }
-
-  while (bitsRemaining)
-  {
-    bitsInThisByte = min(8 - firstBit, bitsRemaining);
-    allOnes = (uint64_t) ((((uint64_t) 1) << bitsInThisByte) - 1);
-
-    //How are bits ordered in bytes for bit fields? There are two ways, first field at LSB or first
-    //field as MSB.
-    //Experimentation, using the 129026 PGN, has shown that the most likely candidate is LSB.
-    bitMask = allOnes << firstBit;
-    valueInThisByte = (*data & bitMask) >> firstBit;
-
-    *value |= valueInThisByte << magnitude;
-    *maxValue |= (int64_t) allOnes << magnitude;
-
-    if (showBytes)
-    {
-      mprintf("(d=%x,bib=%u,fb=%u,msk=%x,v=%x,mag=%x) ", *data, bitsInThisByte, firstBit, (unsigned int)bitMask, (unsigned int)valueInThisByte, (unsigned int)magnitude);
-    }
-
-    magnitude += bitsInThisByte;
-    bitsRemaining -= bitsInThisByte;
-    firstBit += bitsInThisByte;
-    if (firstBit >= 8)
-    {
-      firstBit -= 8;
-      data++;
-    }
-  }
-
-  if (hasSign)
-  {
-    *maxValue >>= 1;
-
-    if (field->offset) /* J1939 Excess-K notation */
-    {
-      *value += field->offset;
-    }
-    else
-    {
-      bool negative = (*value & (((uint64_t) 1) << (bits - 1))) > 0;
-
-      if (negative)
-      {
-        /* Sign extend value for cases where bits < 64 */
-        /* Assume we have bits = 16 and value = -2 then we do: */
-        /* 0000.0000.0000.0000.0111.1111.1111.1101 value    */
-        /* 0000.0000.0000.0000.0111.1111.1111.1111 maxvalue */
-        /* 1111.1111.1111.1111.1000.0000.0000.0000 ~maxvalue */
-        *value |= ~*maxValue;
-      }
-    }
-  }
-
-  if (showBytes)
-  {
-    mprintf("(v=%llx,m=%llx) ", *value, *maxValue);
-  }
-}
-
-static Field * getField(uint32_t pgn, uint32_t field)
-{
-  int index;
-
-  for (index = 0; index < ARRAY_SIZE(pgnList); index++)
-  {
-    if (pgn == pgnList[index].pgn)
-    {
-      if (field > pgnList[index].fieldCount)
-      {
-        return 0;
-      }
-      return &(pgnList[index].fieldList[field]);
-    }
-  }
-  return 0;
-}
 
 static bool printVarNumber(char * fieldName, Pgn * pgn, uint32_t refPgn, Field * field, uint8_t * data, size_t startBit, size_t * bits)
 {
@@ -1696,7 +1575,6 @@ static void print_ascii_json_escaped(uint8_t *data, int len)
   }
 }
 
-
 void printPacket(size_t index, size_t unknownIndex, RawMessage * msg)
 {
   size_t fastPacketIndex;
@@ -1808,26 +1686,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage * msg)
           );
   }
 
-  /*
-   * If there are multiple PGN descriptions we have to find the matching
-   * one.
-   */
-
-  for (subIndex = index; subIndex < ARRAY_SIZE(pgnList) && (msg->pgn == pgnList[subIndex].pgn); subIndex++)
-  {
-    if (printPgn(index, subIndex, msg)) /* Only the really matching ones will actually return true */
-    {
-      if (index != subIndex)
-      {
-        logDebug("PGN %d matches version %zu\n", msg->pgn, subIndex - index);
-      }
-      return;
-    }
-  }
-
-  logDebug("PGN %d handled via index %zu\n", msg->pgn, unknownIndex);
-  printPgn(unknownIndex, unknownIndex, msg);
-
+  printPgn(msg, packet->data, packet->size, showData, showJson);
 }
 
 bool printCanFormat(RawMessage * msg)
@@ -2236,18 +2095,17 @@ void explainXML(void)
     "</PGNDefinitions>\n");
 }
 
-static bool printPgn(int index, int subIndex, RawMessage * msg)
-{
-  uint8_t * dataStart;
+bool printPgn(RawMessage* msg, uint8_t *dataStart, int length, bool showData, bool showJson) {
+  Pgn *pgn;
+
   uint8_t * data;
-  size_t length;
-  uint8_t * dataEnd;
+
+  uint8_t * dataEnd = dataStart + length;
   size_t i;
-  Field *field;
+  Field field;
   size_t bits;
   size_t bytes;
   size_t startBit;
-  Pgn * pgn;
   int      repetition = 1;
   uint16_t valueu16;
   uint32_t valueu32;
@@ -2255,74 +2113,15 @@ static bool printPgn(int index, int subIndex, RawMessage * msg)
   uint32_t currentTime = UINT32_MAX;
   char fieldName[60];
   bool r;
-  bool matchedFixedField;
-  bool hasFixedField;
   uint32_t refPgn = 0;
 
-  if (!device[msg->src])
-  {
+  if (!msg) {
     return false;
   }
-  dataStart = device[msg->src]->packetList[index].data;
-  if (!dataStart)
-  {
+  pgn  = getMatchingPgn(msg->pgn, dataStart, length);
+  if (!pgn) {
     return false;
   }
-  length = device[msg->src]->packetList[index].size;
-  dataEnd = dataStart + length;
-
-  if (!pgnList[index].unknownPgn)
-  {
-    for (;(index < ARRAY_SIZE(pgnList)) && (msg->pgn == pgnList[index].pgn); index++)
-    {
-      matchedFixedField = true;
-      hasFixedField = false;
-
-      /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
-
-      pgn = &pgnList[index];
-
-      for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
-      {
-        field = &pgn->fieldList[i];
-        if (!field->name || !field->size)
-        {
-          break;
-        }
-
-        bits = field->size;
-
-        if (field->units && field->units[0] == '=')
-        {
-          int64_t value, desiredValue;
-          int64_t maxValue;
-
-          hasFixedField = true;
-          extractNumber(field, data, startBit, field->size, &value, &maxValue);
-          desiredValue = strtol(field->units + 1, 0, 10);
-          if (value != desiredValue)
-          {
-            matchedFixedField = false;
-            break;
-          }
-        }
-        startBit += bits;
-        data += startBit / 8;
-        startBit %= 8;
-      }
-      if (! hasFixedField || (hasFixedField && matchedFixedField))
-      {
-        break;
-      }
-    }
-  }
-
-  if ((index >= ARRAY_SIZE(pgnList)) || (msg->pgn != pgnList[index].pgn && !pgnList[index].unknownPgn))
-  {
-    index = 0;
-  }
-
-  pgn = &pgnList[index];
 
   if (showData)
   {
@@ -2348,7 +2147,6 @@ static bool printPgn(int index, int subIndex, RawMessage * msg)
     }
     putc('\n', f);
   }
-
   if (showJson)
   {
     if (pgn->camelDescription)
@@ -2367,9 +2165,8 @@ static bool printPgn(int index, int subIndex, RawMessage * msg)
 
   for (i = 0, startBit = 0, data = dataStart; data < dataEnd; i++)
   {
+    Field* field = &pgn->fieldList[i];
     r = true;
-
-    field = &pgn->fieldList[i];
 
     if (showJson && pgn->repeatingFields && i == pgn->fieldCount - pgn->repeatingFields)
     {

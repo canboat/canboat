@@ -84,16 +84,6 @@ typedef unsigned __int64 uint64_t;
 
 #define DST_GLOBAL (0xff) /* The address used when a message is addressed to -all- stations */
 
-typedef struct
-{
-  char timestamp[30 + 1];
-  uint8_t prio;
-  uint32_t pgn;
-  uint8_t dst;
-  uint8_t src;
-  uint8_t len;
-  uint8_t data[FASTPACKET_MAX_SIZE];
-} RawMessage;
 
 typedef struct
 {

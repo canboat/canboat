@@ -20,15 +20,15 @@
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
-TARGETS=$(ANALYZER)
+TARGETS=$(ANALYZER) test_pgn test
 CFLAGS=-O3
 XMLFILE=pgns.xml
 JSONFILE=pgns.json
 
 all: $(TARGETS)
 
-$(ANALYZER): analyzer.c analyzer.h pgn.h ../common/common.c ../common/common.h Makefile
-	$(CC) $(CFLAGS) -o $(ANALYZER) -I../common analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+$(ANALYZER): analyzer.c pgn.c analyzer.h pgn.h ../common/common.c ../common/common.h Makefile
+	$(CC) $(CFLAGS) -o $(ANALYZER) -I../common pgn.c analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 json: $(ANALYZER)
 	$(ANALYZER) -explain-xml >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
@@ -37,4 +37,10 @@ clean:
 	-rm -f $(TARGETS) *.elf *.gdb
 	-rm -f $(XMLFILE)
 	-rm -f $(JSONFILE)
+
+test_pgn: test_pgn.c pgn.h pgn.c ../common/common.c
+	$(CC) $(CFLAGS) -o $@ -I../common test_pgn.c pgn.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+
+test: test_pgn
+	./test_pgn
 
