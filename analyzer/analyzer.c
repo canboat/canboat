@@ -480,6 +480,71 @@ int main(int argc, char ** argv)
   return 0;
 }
 
+int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
+{
+  unsigned int prio, pgn, dst, src, len, junk, r, i;
+  char * p;
+  unsigned int data[8];
+
+  if (*msg == 0 || *msg == '\n')
+  {
+    return 1;
+  }
+
+  p = strchr(msg, ',');
+
+  memcpy(m->timestamp, msg, p - msg);
+  m->timestamp[p - msg] = 0;
+
+  /* Moronic Windows does not support %hh<type> so we use intermediate variables */
+  r = sscanf( p
+    , ",%u,%u,%u,%u,%u"
+    ",%x,%x,%x,%x,%x,%x,%x,%x,%x"
+    , &prio
+    , &pgn
+    , &src
+    , &dst
+    , &len
+    , &data[0]
+    , &data[1]
+    , &data[2]
+    , &data[3]
+    , &data[4]
+    , &data[5]
+    , &data[6]
+    , &data[7]
+    , &junk
+  );
+  if (r < 5)
+  {
+    logError("Error reading message, scanned %u from %s", r, msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+
+  if (r <= 5 + 8)
+  {
+    for (i = 0; i < len; i++)
+    {
+      m->data[i] = data[i];
+    }
+  }
+  else
+  {
+    logError("Too long data for RAWFORMAT_PLAIN! Input: %s", msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+
+  m->prio = prio;
+  m->pgn  = pgn;
+  m->dst  = dst;
+  m->src  = src;
+  m->len  = len;
+
+  return 0;
+}
+
 int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, r, i;
