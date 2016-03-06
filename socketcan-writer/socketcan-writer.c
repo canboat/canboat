@@ -23,18 +23,31 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <net/if.h>
+#include <linux/can.h>
+#include <linux/can/raw.h>
+#include <string.h>
 
 #define  GLOBALS
 #include "pgn.h"
+
+static int openCanDevice(char * device, int * socket);
+
 
 int main(int argc, char ** argv)
 {
   FILE * file = stdin;
   char msg[2000];
+  int socket;
 
   if(argc != 2)
   {
     puts("Usage: socketcan-writer <can-device>");
+    exit(1);
+  }
+
+  if(openCanDevice(argv[1], &socket))
+  {
     exit(1);
   }
 
@@ -48,5 +61,41 @@ int main(int argc, char ** argv)
     printf("Read: %s, %d, %d, %d, %d, %d\n", m.timestamp, m.prio, m.pgn, m.src, m.dst, m.len);
   }
 
+  close(socket);
   exit(0);
+}
+
+/*
+  Opens SocketCAN socket to given device, see: https://www.kernel.org/doc/Documentation/networking/can.txt
+*/
+static int openCanDevice(char * device, int * canSocket)
+{
+  struct sockaddr_can addr;
+  struct ifreq ifr;
+
+  if ((*canSocket = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0)
+  {
+    perror("socket");
+    return 1;
+  }
+
+  strncpy(ifr.ifr_name, device, IFNAMSIZ - 1);
+  ifr.ifr_name[IFNAMSIZ - 1] = '\0';
+  ifr.ifr_ifindex = if_nametoindex(ifr.ifr_name);
+  if (!ifr.ifr_ifindex)
+  {
+    perror("if_nametoindex");
+    return 1;
+  }
+
+  addr.can_family = AF_CAN;
+  addr.can_ifindex = ifr.ifr_ifindex;
+
+  if (bind(*canSocket, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+  {
+    perror("bind");
+    return 1;
+  }
+
+  return 0;
 }
