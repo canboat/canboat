@@ -79,6 +79,7 @@ void initialize(void);
 int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson);
 int parseRawFormatFast(char * msg, RawMessage * m, bool showJson);
 int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson);
+int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson);
 void printCanRaw(RawMessage * msg);
 bool printCanFormat(RawMessage * msg);
 void explain(void);
@@ -333,37 +334,10 @@ int main(int argc, char ** argv)
     }
     else if (format == RAWFORMAT_CHETCO)
     {
-      unsigned int tstamp;
-      time_t t;
-      struct tm tm;
-
-      if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
+      if(parseRawFormatChetco(msg, &m, showJson))
       {
-        logError("Error reading Chetco message: %s", msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
-        continue;
+        continue;  // Some error occurred -> skip line
       }
-
-      t = (time_t) tstamp / 1000;
-      localtime_r(&t, &tm);
-      strftime(m.timestamp, sizeof(m.timestamp), "%Y-%m-%d-%H:%M:%S", &tm);
-      sprintf(m.timestamp + strlen(m.timestamp), ",%u", tstamp % 1000);
-
-      p = msg + STRSIZE("$PCDIN,01FD07,089C77D!,03,"); // Fixed length where data bytes start;
-
-      for (i = 0; *p != '*'; i++)
-      {
-        if (scanHex(&p, &m.data[i]))
-        {
-          logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-          if (!showJson) fprintf(stdout, "%s", msg);
-          continue;
-        }
-      }
-
-      prio = 0;
-      dst = 255;
-      len = i + 1;
     }
 
     printCanFormat(&m);
