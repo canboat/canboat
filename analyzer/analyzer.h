@@ -69,10 +69,6 @@ typedef unsigned __int64 uint64_t;
 # endif
 #endif
 
-#ifndef ARRAY_SIZE
-# define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
-#endif
-
 #ifndef min
 # define min(x,y) ((x)<=(y)?(x):(y))
 #endif

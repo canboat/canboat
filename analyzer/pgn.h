@@ -27,6 +27,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #define UINT16_OUT_OF_RANGE (MAX_UINT16 - 1)
 #define UINT16_UNKNOWN (MAX_UINT16)
 
+#ifndef ARRAY_SIZE
+# define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
+#endif
+
 /*
  * Notes on the NMEA 2000 packet structure
  * ---------------------------------------
