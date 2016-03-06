@@ -108,5 +108,8 @@ SOCKET open_socket_stream(const char * url);
 #define DATE_LENGTH 60
 const char * now(char str[DATE_LENGTH]);
 
+uint8_t scanNibble(char c);
+int scanHex(char ** p, uint8_t * m);
+
 # define CANBOAT_COMMON
 #endif
