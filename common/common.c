@@ -405,6 +405,25 @@ void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int
 
 }
 
+/*
+  This does the opposite from getISO11783BitsFromCanId: given n2k fields produces the extended frame CAN id
+*/
+unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst)
+{
+  unsigned int canId = src | 0x80000000U;  // src bits are the lowest ones of the CAN ID. Also set the highest bit to 1 as n2k uses only extended frames (EFF bit).
+
+  if((unsigned char)pgn == 0) {  // PDU 1 (assumed if 8 lowest bits of the PGN are 0)
+    canId += dst << 8;
+    canId += pgn << 8;
+    canId += prio << 26;
+  } else {                       // PDU 2
+    canId += pgn << 8;
+    canId += prio << 26;
+  }
+
+  return canId;
+}
+
 static void resolve_address(const char * url, char ** host, const char ** service)
 {
   const char *s;
