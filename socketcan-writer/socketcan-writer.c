@@ -43,6 +43,7 @@ int main(int argc, char ** argv)
   char msg[2000];
   int socket;
 
+  setProgName(argv[0]);
   if(argc != 2)
   {
     puts("Usage: socketcan-writer <can-device>");
@@ -107,6 +108,13 @@ static void writeRawPGNToCanSocket(RawMessage * msg, int socket)
 {
   struct can_frame frame;
   memset(&frame, 0, sizeof(frame));
+
+  if(msg->pgn >= (1 << 18))  // PGNs can't have more than 18 bits, otherwise it overwrites priority bits
+  {
+    logError("Invalid PGN, too big (0x%x). Skipping.\n", msg->pgn);
+    return;
+  }
+
   frame.can_id = getCanIdFromISO11783Bits(msg->prio, msg->pgn, msg->src, msg->dst);
 
   if(msg->len <= 8)  // 8 or less bytes of data -> PGN fits into a single CAN frame
