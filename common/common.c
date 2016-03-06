@@ -496,3 +496,44 @@ SOCKET open_socket_stream(const char * url)
   return sockfd;
 }
 
+uint8_t scanNibble(char c)
+{
+  if (isdigit(c))
+  {
+    return c - '0';
+  }
+  if (c >= 'A' && c <= 'F')
+  {
+    return c - 'A' + 10;
+  }
+  if (c >= 'a' && c <= 'f')
+  {
+    return c - 'a' + 10;
+  }
+  return 16;
+}
+
+int scanHex(char ** p, uint8_t * m)
+{
+  uint8_t hi, lo;
+
+  if (!(*p)[0] || !(*p)[1])
+  {
+    return 1;
+  }
+
+  hi = scanNibble((*p)[0]);
+  if (hi > 15)
+  {
+    return 1;
+  }
+  lo = scanNibble((*p)[1]);
+  if (lo > 15)
+  {
+    return 1;
+  }
+  (*p) += 2;
+  *m = hi << 4 | lo;
+  /* printf("(b=%02X,p=%p) ", *m, *p); */
+  return 0;
+}

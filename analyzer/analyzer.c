@@ -73,8 +73,6 @@ size_t heapSize = 0;
 
 static void fillManufacturers(void);
 static void fillFieldCounts(void);
-static uint8_t scanNibble(char c);
-static int scanHex(char ** p, uint8_t * m);
 static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t startBit, size_t bits);
 
 void initialize(void);
@@ -292,41 +290,22 @@ int main(int argc, char ** argv)
 
     if (format == RAWFORMAT_PLAIN)
     {
-      unsigned int data[8];
-
-      memcpy(m.timestamp, msg, p - msg);
-      m.timestamp[p - msg] = 0;
-
-      /* Moronic Windows does not support %hh<type> so we use intermediate variables */
       r = sscanf( p
-        , ",%u,%u,%u,%u,%u"
-        ",%x,%x,%x,%x,%x,%x,%x,%x,%x"
-        , &prio
-        , &pgn
-        , &src
-        , &dst
+        , ",%*u,%*u,%*u,%*u,%u"
+        ",%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x"
         , &len
-        , &data[0]
-        , &data[1]
-        , &data[2]
-        , &data[3]
-        , &data[4]
-        , &data[5]
-        , &data[6]
-        , &data[7]
-        , &junk
       );
-      if (r < 5)
+      if (r < 1)
       {
         logError("Error reading message, scanned %u from %s", r, msg);
         if (!showJson) fprintf(stdout, "%s", msg);
         continue;
       }
-      if (r <= 5 + 8)
+      if(len <= 8)
       {
-        for (i = 0; i < len; i++)
+        if(parseRawFormatPlain(msg, &m, showJson))
         {
-          m.data[i] = data[i];
+          continue;  // Some error occurred -> skip line
         }
       }
       else
@@ -337,190 +316,30 @@ int main(int argc, char ** argv)
     }
     if (format == RAWFORMAT_FAST)
     {
-      memcpy(m.timestamp, msg, p - msg);
-      m.timestamp[p - msg] = 0;
-
-      /* Moronic Windows does not support %hh<type> so we use intermediate variables */
-      r = sscanf( p
-        , ",%u,%u,%u,%u,%u "
-        , &prio
-        , &pgn
-        , &src
-        , &dst
-        , &len
-      );
-      if (r < 5)
+      if(parseRawFormatFast(msg, &m, showJson))
       {
-        logError("Error reading message, scanned %u from %s", r, msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
-        continue;
-      }
-      for (i = 0; *p && i < 5;)
-      {
-        if (*++p == ',')
-        {
-          i++;
-        }
-      }
-      if (!p)
-      {
-        logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
-        continue;
-      }
-      p++;
-      for (i = 0; i < len; i++)
-      {
-        if (scanHex(&p, &m.data[i]))
-        {
-          logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-          if (!showJson) fprintf(stdout, "%s", msg);
-          continue;
-        }
-        if (i < len)
-        {
-          if (*p != ',' && !isspace(*p))
-          {
-            logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-            if (!showJson) fprintf(stdout, "%s", msg);
-            continue;
-          }
-          p++;
-        }
+        continue;  // Some error occurred -> skip line
       }
     }
     else if (format == RAWFORMAT_AIRMAR)
     {
-      unsigned int id;
-
-      memcpy(m.timestamp, msg, p - msg - 1);
-      m.timestamp[p - msg - 1] = 0;
-      p += 3;
-
-      /* Moronic Windows does not support %hh<type> so we use intermediate variables */
-      pgn = strtoul(p, &p, 10);
-      if (*p == ' ')
+      if(parseRawFormatAirmar(msg, &m, showJson))
       {
-        id = strtoul(++p, &p, 16);
-      }
-      if (*p != ' ')
-      {
-        logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
-        continue;
-      }
-
-      getISO11783BitsFromCanId(id, &prio, &pgn, &src, &dst);
-
-      p++;
-      len = strlen(p) / 2;
-      for (i = 0; i < len; i++)
-      {
-        if (scanHex(&p, &m.data[i]))
-        {
-          logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-          if (!showJson) fprintf(stdout, "%s", msg);
-          continue;
-        }
-        if (i < len)
-        {
-          if (*p != ',' && *p != ' ')
-          {
-            logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-            if (!showJson) fprintf(stdout, "%s", msg);
-            continue;
-          }
-          p++;
-        }
+        continue;  // Some error occurred -> skip line
       }
     }
     else if (format == RAWFORMAT_CHETCO)
     {
-      unsigned int tstamp;
-      time_t t;
-      struct tm tm;
-
-      if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
+      if(parseRawFormatChetco(msg, &m, showJson))
       {
-        logError("Error reading Chetco message: %s", msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
-        continue;
+        continue;  // Some error occurred -> skip line
       }
-
-      t = (time_t) tstamp / 1000;
-      localtime_r(&t, &tm);
-      strftime(m.timestamp, sizeof(m.timestamp), "%Y-%m-%d-%H:%M:%S", &tm);
-      sprintf(m.timestamp + strlen(m.timestamp), ",%u", tstamp % 1000);
-
-      p = msg + STRSIZE("$PCDIN,01FD07,089C77D!,03,"); // Fixed length where data bytes start;
-
-      for (i = 0; *p != '*'; i++)
-      {
-        if (scanHex(&p, &m.data[i]))
-        {
-          logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-          if (!showJson) fprintf(stdout, "%s", msg);
-          continue;
-        }
-      }
-
-      prio = 0;
-      dst = 255;
-      len = i + 1;
     }
-
-    m.prio = prio;
-    m.pgn  = pgn;
-    m.dst  = dst;
-    m.src  = src;
-    m.len  = len;
 
     printCanFormat(&m);
     printCanRaw(&m);
   }
 
-  return 0;
-}
-
-static uint8_t scanNibble(char c)
-{
-  if (isdigit(c))
-  {
-    return c - '0';
-  }
-  if (c >= 'A' && c <= 'F')
-  {
-    return c - 'A' + 10;
-  }
-  if (c >= 'a' && c <= 'f')
-  {
-    return c - 'a' + 10;
-  }
-  return 16;
-}
-
-static int scanHex(char ** p, uint8_t * m)
-{
-  uint8_t hi, lo;
-
-  if (!(*p)[0] || !(*p)[1])
-  {
-    return 1;
-  }
-
-  hi = scanNibble((*p)[0]);
-  if (hi > 15)
-  {
-    return 1;
-  }
-  lo = scanNibble((*p)[1]);
-  if (lo > 15)
-  {
-    return 1;
-  }
-  (*p) += 2;
-  *m = hi << 4 | lo;
-  /* printf("(b=%02X,p=%p) ", *m, *p); */
   return 0;
 }
 

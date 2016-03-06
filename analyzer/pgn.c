@@ -279,3 +279,250 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
     }
   }
 }
+
+int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
+{
+  unsigned int prio, pgn, dst, src, len, junk, r, i;
+  char * p;
+  unsigned int data[8];
+
+  if (*msg == 0 || *msg == '\n')
+  {
+    return 1;
+  }
+
+  p = strchr(msg, ',');
+
+  memcpy(m->timestamp, msg, p - msg);
+  m->timestamp[p - msg] = 0;
+
+  /* Moronic Windows does not support %hh<type> so we use intermediate variables */
+  r = sscanf( p
+    , ",%u,%u,%u,%u,%u"
+    ",%x,%x,%x,%x,%x,%x,%x,%x,%x"
+    , &prio
+    , &pgn
+    , &src
+    , &dst
+    , &len
+    , &data[0]
+    , &data[1]
+    , &data[2]
+    , &data[3]
+    , &data[4]
+    , &data[5]
+    , &data[6]
+    , &data[7]
+    , &junk
+  );
+  if (r < 5)
+  {
+    logError("Error reading message, scanned %u from %s", r, msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+
+  if (r <= 5 + 8)
+  {
+    for (i = 0; i < len; i++)
+    {
+      m->data[i] = data[i];
+    }
+  }
+  else
+  {
+    logError("Too long data for RAWFORMAT_PLAIN! Input: %s", msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+
+  m->prio = prio;
+  m->pgn  = pgn;
+  m->dst  = dst;
+  m->src  = src;
+  m->len  = len;
+
+  return 0;
+}
+
+int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
+{
+  unsigned int prio, pgn, dst, src, len, r, i;
+  char * p;
+
+  if (*msg == 0 || *msg == '\n')
+  {
+    return 1;
+  }
+
+  p = strchr(msg, ',');
+
+  memcpy(m->timestamp, msg, p - msg);
+  m->timestamp[p - msg] = 0;
+
+  /* Moronic Windows does not support %hh<type> so we use intermediate variables */
+  r = sscanf( p
+    , ",%u,%u,%u,%u,%u "
+    , &prio
+    , &pgn
+    , &src
+    , &dst
+    , &len
+  );
+  if (r < 5)
+  {
+    logError("Error reading message, scanned %u from %s", r, msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+  for (i = 0; *p && i < 5;)
+  {
+    if (*++p == ',')
+    {
+      i++;
+    }
+  }
+  if (!p)
+  {
+    logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+  p++;
+  for (i = 0; i < len; i++)
+  {
+    if (scanHex(&p, &m->data[i]))
+    {
+      logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+      if (!showJson) fprintf(stdout, "%s", msg);
+      return 2;
+    }
+    if (i < len)
+    {
+      if (*p != ',' && !isspace(*p))
+      {
+        logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
+        if (!showJson) fprintf(stdout, "%s", msg);
+        return 2;
+      }
+      p++;
+    }
+  }
+
+  m->prio = prio;
+  m->pgn  = pgn;
+  m->dst  = dst;
+  m->src  = src;
+  m->len  = len;
+
+  return 0;
+}
+
+int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
+{
+  unsigned int prio, pgn, dst, src, len, i;
+  char * p;
+  unsigned int id;
+
+  if (*msg == 0 || *msg == '\n')
+  {
+    return 1;
+  }
+
+  p = strchr(msg, ' ');
+
+  memcpy(m->timestamp, msg, p - msg - 1);
+  m->timestamp[p - msg - 1] = 0;
+  p += 3;
+
+  /* Moronic Windows does not support %hh<type> so we use intermediate variables */
+  pgn = strtoul(p, &p, 10);
+  if (*p == ' ')
+  {
+    id = strtoul(++p, &p, 16);
+  }
+  if (*p != ' ')
+  {
+    logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+
+  getISO11783BitsFromCanId(id, &prio, &pgn, &src, &dst);
+
+  p++;
+  len = strlen(p) / 2;
+  for (i = 0; i < len; i++)
+  {
+    if (scanHex(&p, &m->data[i]))
+    {
+      logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+      if (!showJson) fprintf(stdout, "%s", msg);
+      return 2;
+    }
+    if (i < len)
+    {
+      if (*p != ',' && *p != ' ')
+      {
+        logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
+        if (!showJson) fprintf(stdout, "%s", msg);
+        return 2;
+      }
+      p++;
+    }
+  }
+
+  m->prio = prio;
+  m->pgn  = pgn;
+  m->dst  = dst;
+  m->src  = src;
+  m->len  = len;
+
+  return 0;
+}
+
+int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
+{
+  unsigned int pgn, src, i;
+  unsigned int tstamp;
+  time_t t;
+  struct tm tm;
+  char * p;
+
+  if (*msg == 0 || *msg == '\n')
+  {
+    return 1;
+  }
+
+  if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
+  {
+    logError("Error reading Chetco message: %s", msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+
+  t = (time_t) tstamp / 1000;
+  localtime_r(&t, &tm);
+  strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%d-%H:%M:%S", &tm);
+  sprintf(m->timestamp + strlen(m->timestamp), ",%u", tstamp % 1000);
+
+  p = msg + STRSIZE("$PCDIN,01FD07,089C77D!,03,"); // Fixed length where data bytes start;
+
+  for (i = 0; *p != '*'; i++)
+  {
+    if (scanHex(&p, &m->data[i]))
+    {
+      logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+      if (!showJson) fprintf(stdout, "%s", msg);
+      return 2;
+    }
+  }
+
+  m->prio = 0;
+  m->pgn  = pgn;
+  m->dst  = 255;
+  m->src  = src;
+  m->len  = i + 1;
+
+  return 0;
+}
