@@ -553,6 +553,52 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
   return 0;
 }
 
+int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
+{
+  unsigned int pgn, src, i;
+  unsigned int tstamp;
+  time_t t;
+  struct tm tm;
+  char * p;
+
+  if (*msg == 0 || *msg == '\n')
+  {
+    return 1;
+  }
+
+  if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
+  {
+    logError("Error reading Chetco message: %s", msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+
+  t = (time_t) tstamp / 1000;
+  localtime_r(&t, &tm);
+  strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%d-%H:%M:%S", &tm);
+  sprintf(m->timestamp + strlen(m->timestamp), ",%u", tstamp % 1000);
+
+  p = msg + STRSIZE("$PCDIN,01FD07,089C77D!,03,"); // Fixed length where data bytes start;
+
+  for (i = 0; *p != '*'; i++)
+  {
+    if (scanHex(&p, &m->data[i]))
+    {
+      logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+      if (!showJson) fprintf(stdout, "%s", msg);
+      return 2;
+    }
+  }
+
+  m->prio = 0;
+  m->pgn  = pgn;
+  m->dst  = 255;
+  m->src  = src;
+  m->len  = i + 1;
+
+  return 0;
+}
+
 char * getSep()
 {
   char * s = sep;
