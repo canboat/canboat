@@ -289,6 +289,17 @@ static char * findFirstOccurrence(char * msg, char c)
   return strchr(msg, c);
 }
 
+static int setParsedValues(RawMessage * m, unsigned int prio, unsigned int pgn, unsigned int dst, unsigned int src, unsigned int len)
+{
+  m->prio = prio;
+  m->pgn  = pgn;
+  m->dst  = dst;
+  m->src  = src;
+  m->len  = len;
+
+  return 0;
+}
+
 int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, junk, r, i;
@@ -344,13 +355,7 @@ int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
     return 2;
   }
 
-  m->prio = prio;
-  m->pgn  = pgn;
-  m->dst  = dst;
-  m->src  = src;
-  m->len  = len;
-
-  return 0;
+  return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
 int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
@@ -416,13 +421,7 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
     }
   }
 
-  m->prio = prio;
-  m->pgn  = pgn;
-  m->dst  = dst;
-  m->src  = src;
-  m->len  = len;
-
-  return 0;
+  return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
 int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
@@ -478,13 +477,7 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
     }
   }
 
-  m->prio = prio;
-  m->pgn  = pgn;
-  m->dst  = dst;
-  m->src  = src;
-  m->len  = len;
-
-  return 0;
+  return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
 int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
@@ -524,11 +517,5 @@ int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
     }
   }
 
-  m->prio = 0;
-  m->pgn  = pgn;
-  m->dst  = 255;
-  m->src  = src;
-  m->len  = i + 1;
-
-  return 0;
+  return setParsedValues(m, 0, pgn, 255, src, i + 1);
 }
