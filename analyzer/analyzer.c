@@ -77,6 +77,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
 
 void initialize(void);
 int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson);
+int parseRawFormatFast(char * msg, RawMessage * m, bool showJson);
 void printCanRaw(RawMessage * msg);
 bool printCanFormat(RawMessage * msg);
 void explain(void);
@@ -317,56 +318,9 @@ int main(int argc, char ** argv)
     }
     if (format == RAWFORMAT_FAST)
     {
-      memcpy(m.timestamp, msg, p - msg);
-      m.timestamp[p - msg] = 0;
-
-      /* Moronic Windows does not support %hh<type> so we use intermediate variables */
-      r = sscanf( p
-        , ",%u,%u,%u,%u,%u "
-        , &prio
-        , &pgn
-        , &src
-        , &dst
-        , &len
-      );
-      if (r < 5)
+      if(parseRawFormatFast(msg, &m, showJson))
       {
-        logError("Error reading message, scanned %u from %s", r, msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
-        continue;
-      }
-      for (i = 0; *p && i < 5;)
-      {
-        if (*++p == ',')
-        {
-          i++;
-        }
-      }
-      if (!p)
-      {
-        logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
-        continue;
-      }
-      p++;
-      for (i = 0; i < len; i++)
-      {
-        if (scanHex(&p, &m.data[i]))
-        {
-          logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-          if (!showJson) fprintf(stdout, "%s", msg);
-          continue;
-        }
-        if (i < len)
-        {
-          if (*p != ',' && !isspace(*p))
-          {
-            logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-            if (!showJson) fprintf(stdout, "%s", msg);
-            continue;
-          }
-          p++;
-        }
+        continue;  // Some error occurred -> skip line
       }
     }
     else if (format == RAWFORMAT_AIRMAR)
