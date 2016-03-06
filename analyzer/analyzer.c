@@ -76,6 +76,7 @@ static void fillFieldCounts(void);
 static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t startBit, size_t bits);
 
 void initialize(void);
+int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson);
 void printCanRaw(RawMessage * msg);
 bool printCanFormat(RawMessage * msg);
 void explain(void);
@@ -290,41 +291,22 @@ int main(int argc, char ** argv)
 
     if (format == RAWFORMAT_PLAIN)
     {
-      unsigned int data[8];
-
-      memcpy(m.timestamp, msg, p - msg);
-      m.timestamp[p - msg] = 0;
-
-      /* Moronic Windows does not support %hh<type> so we use intermediate variables */
       r = sscanf( p
-        , ",%u,%u,%u,%u,%u"
-        ",%x,%x,%x,%x,%x,%x,%x,%x,%x"
-        , &prio
-        , &pgn
-        , &src
-        , &dst
+        , ",%*u,%*u,%*u,%*u,%u"
+        ",%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x"
         , &len
-        , &data[0]
-        , &data[1]
-        , &data[2]
-        , &data[3]
-        , &data[4]
-        , &data[5]
-        , &data[6]
-        , &data[7]
-        , &junk
       );
-      if (r < 5)
+      if (r < 1)
       {
         logError("Error reading message, scanned %u from %s", r, msg);
         if (!showJson) fprintf(stdout, "%s", msg);
         continue;
       }
-      if (r <= 5 + 8)
+      if(len <= 8)
       {
-        for (i = 0; i < len; i++)
+        if(parseRawFormatPlain(msg, &m, showJson))
         {
-          m.data[i] = data[i];
+          continue;  // Some error occurred -> skip line
         }
       }
       else
@@ -466,12 +448,6 @@ int main(int argc, char ** argv)
       dst = 255;
       len = i + 1;
     }
-
-    m.prio = prio;
-    m.pgn  = pgn;
-    m.dst  = dst;
-    m.src  = src;
-    m.len  = len;
 
     printCanFormat(&m);
     printCanRaw(&m);
