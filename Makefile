@@ -9,8 +9,6 @@
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 OS=$(shell uname -o 2>&1)
 SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analyzer socketcan-writer
-# The closed source code includes more directories
-
 
 all:	bin
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done

@@ -20,7 +20,12 @@
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
 SOCKETCAN_WRITER=$(TARGETDIR)/socketcan-writer
+
+ifeq ($(shell uname),Linux)
 TARGETS=$(SOCKETCAN_WRITER)
+else
+TARGETS=
+endif
 
 all: $(TARGETS)
 
