@@ -480,6 +480,79 @@ int main(int argc, char ** argv)
   return 0;
 }
 
+int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
+{
+  unsigned int prio, pgn, dst, src, len, r, i;
+  char * p;
+
+  if (*msg == 0 || *msg == '\n')
+  {
+    return 1;
+  }
+
+  p = strchr(msg, ',');
+
+  memcpy(m->timestamp, msg, p - msg);
+  m->timestamp[p - msg] = 0;
+
+  /* Moronic Windows does not support %hh<type> so we use intermediate variables */
+  r = sscanf( p
+    , ",%u,%u,%u,%u,%u "
+    , &prio
+    , &pgn
+    , &src
+    , &dst
+    , &len
+  );
+  if (r < 5)
+  {
+    logError("Error reading message, scanned %u from %s", r, msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+  for (i = 0; *p && i < 5;)
+  {
+    if (*++p == ',')
+    {
+      i++;
+    }
+  }
+  if (!p)
+  {
+    logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 2;
+  }
+  p++;
+  for (i = 0; i < len; i++)
+  {
+    if (scanHex(&p, &m->data[i]))
+    {
+      logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+      if (!showJson) fprintf(stdout, "%s", msg);
+      return 2;
+    }
+    if (i < len)
+    {
+      if (*p != ',' && !isspace(*p))
+      {
+        logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
+        if (!showJson) fprintf(stdout, "%s", msg);
+        return 2;
+      }
+      p++;
+    }
+  }
+
+  m->prio = prio;
+  m->pgn  = pgn;
+  m->dst  = dst;
+  m->src  = src;
+  m->len  = len;
+
+  return 0;
+}
+
 char * getSep()
 {
   char * s = sep;
