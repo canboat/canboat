@@ -18,6 +18,7 @@
 #
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
+OS=$(shell uname)
 TARGETDIR=../rel/$(PLATFORM)
 SOCKETCAN_WRITER=$(TARGETDIR)/socketcan-writer
 
@@ -30,7 +31,11 @@ endif
 all: $(TARGETS)
 
 $(SOCKETCAN_WRITER): socketcan-writer.c ../analyzer/*.h ../analyzer/*.c ../common/*.h ../common/*.c
+ifeq ($(OS),Linux)
 	$(CC) -o $(SOCKETCAN_WRITER) -I../analyzer -I../common socketcan-writer.c ../analyzer/pgn.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+else
+	@echo socketcan-writer can be compiled only on Linux platform! Ignoring..
+endif
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
