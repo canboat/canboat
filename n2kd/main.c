@@ -30,6 +30,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+/* The code ignores the result for write, but closes the socket anyway, so there is nothing to be gained */
+#pragma GCC diagnostic ignored "-Wunused-result"
 
 #include "common.h"
 #include <signal.h>
