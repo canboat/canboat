@@ -151,6 +151,10 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] =
 , { "ASCII string starting with length byte", 0 }
 , { "ASCII or UNICODE string starting with length and control byte", 0 }
 , { "Decimal encoded number", 0 }
+, { "Bitfield", 0 }
+, { "Temperature", "0.1" }
+, { "Temperature (hires)", "0.001" }
+, { "Pressure (hires)", "0.1" }
 };
 
 
