@@ -631,13 +631,13 @@ static bool printTime(char * name, uint32_t t)
   return true;
 }
 
-static bool printTemperature(char * name, uint16_t t)
+static bool printTemperature(char * name, uint32_t t, uint32_t bits, double resolution)
 {
-  double k = t / 100.0;
+  double k = t * resolution;
   double c = k - 273.15;
   double f = c * 1.8 + 32;
 
-  if (t >= 0xfffd)
+  if ((bits == 16 && t >= 0xfffd) || (bits == 24 && t >= 0xfffffd))
   {
     return false;
   }
@@ -2178,15 +2178,25 @@ ascii_string:
         printTime(fieldName, valueu32);
         currentTime = valueu32;
       }
-      else if (field->resolution == RES_TEMPERATURE)
-      {
-        memcpy((void *) &valueu16, data, 2);
-        printTemperature(fieldName, valueu16);
-      }
       else if (field->resolution == RES_PRESSURE)
       {
-        memcpy((void *) &valueu16, data, 2);
-        printPressure(fieldName, valueu16, field);
+        valueu32 = data[0] + (data[1] << 8);
+        printPressure(fieldName, valueu32, field);
+      }
+      else if (field->resolution == RES_TEMPERATURE)
+      {
+        valueu32 = data[0] + (data[1] << 8);
+        printTemperature(fieldName, valueu32, 16, 0.01);
+      }
+      else if (field->resolution == RES_TEMPERATURE_HIGH)
+      {
+        valueu32 = data[0] + (data[1] << 8);
+        printTemperature(fieldName, valueu32, 16, 0.1);
+      }
+      else if (field->resolution == RES_TEMPERATURE_HIRES)
+      {
+        valueu32 = data[0] + (data[1] << 8) + (data[2] << 16);
+        printTemperature(fieldName, valueu32, 24, 0.001);
       }
       else if (field->resolution == RES_6BITASCII)
       {

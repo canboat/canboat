@@ -110,7 +110,9 @@ typedef struct
 # define RES_STRINGLAU (-16.0)           /* ASCII or UNICODE string starting with length byte and ASCII/Unicode byte */
 # define RES_DECIMAL (-17.0)
 # define RES_BITFIELD (-18.0)
-# define MAX_RESOLUTION_LOOKUP 18
+# define RES_TEMPERATURE_HIGH (-19.0)
+# define RES_TEMPERATURE_HIRES (-20.0)
+# define MAX_RESOLUTION_LOOKUP 20
 
   bool hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   char * units; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
@@ -2937,15 +2939,20 @@ Pgn pgnList[] =
 { "Set Pressure", 130315, true, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Pressure Instance", BYTES(1), 1, false, 0, "" }
-  , { "Pressure Source", BYTES(1), RES_LOOKUP, false, 0, ",0=Atmospheric,1=Water,2=Steam,3=Compressed Air,4=Hydraulic" }
+  , { "Pressure Source", BYTES(1), RES_LOOKUP, false, ",0=Atmospheric,1=Water,2=Steam,3=Compressed Air,4=Hydraulic", "" }
   , { "Pressure", BYTES(4), 2.1*100000, false, "kPa", "" }
   , { 0 }
   }
 }
 
 ,
-{ "Temperature Extended Range", 130316, false, 8, 0,
-  { { 0 }
+{ "Temperature Extended Range", 130316, true, 8, 0,
+  { { "SID", BYTES(1), 1, false, 0, "" }
+  , { "Instance", BYTES(1), 1, false, 0, "" }
+  , { "Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, "" }
+  , { "Temperature", BYTES(3), RES_TEMPERATURE_HIRES, false, "K", "" }
+  , { "Set Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", "" }
+  , { 0 }
   }
 }
 
