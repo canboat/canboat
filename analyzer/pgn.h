@@ -584,7 +584,7 @@ Pgn pgnList[] =
 { "Bus #1 Phase C Basic AC Quantities", 65001, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { 0 }
   }
 }
@@ -593,7 +593,7 @@ Pgn pgnList[] =
 { "Bus #1 Phase B Basic AC Quantities", 65002, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { 0 }
   }
 }
@@ -602,7 +602,7 @@ Pgn pgnList[] =
 { "Bus #1 Phase A Basic AC Quantities", 65003, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { 0 }
   }
 }
@@ -611,7 +611,7 @@ Pgn pgnList[] =
 { "Bus #1 Average Basic AC Quantities", 65004, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { 0 }
   }
 }
@@ -645,7 +645,7 @@ Pgn pgnList[] =
 { "Utility Phase C Basic AC Quantities", 65008, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
   , { 0 }
   }
@@ -672,7 +672,7 @@ Pgn pgnList[] =
 { "Utility Phase B Basic AC Quantities", 65011, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
   , { 0 }
   }
@@ -699,7 +699,7 @@ Pgn pgnList[] =
 { "Utility Phase A Basic AC Quantities", 65014, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
   , { 0 }
   }
@@ -726,7 +726,7 @@ Pgn pgnList[] =
 { "Utility Average Basic AC Quantities", 65017, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
   , { 0 }
   }
@@ -761,7 +761,7 @@ Pgn pgnList[] =
 { "Generator Phase C Basic AC Quantities", 65021, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
   , { 0 }
   }
@@ -788,7 +788,7 @@ Pgn pgnList[] =
 { "Generator Phase B Basic AC Quantities", 65024, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
   , { 0 }
   }
@@ -815,7 +815,7 @@ Pgn pgnList[] =
 { "Generator Phase A Basic AC Quantities", 65027, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
   , { 0 }
   }
@@ -842,7 +842,7 @@ Pgn pgnList[] =
 { "Generator Average Basic AC Quantities", 65030, false, 8, 0,
   { { "Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", "" }
   , { "Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", "" }
-  , { "AC Frequency", BYTES(2), 1/128, false, "Hz", "" }
+  , { "AC Frequency", BYTES(2), 1/128.0, false, "Hz", "" }
   , { "AC RMS Current", BYTES(2), 1, false, "A", "" }
   , { 0 }
   }
