@@ -112,7 +112,8 @@ typedef struct
 # define RES_BITFIELD (-18.0)
 # define RES_TEMPERATURE_HIGH (-19.0)
 # define RES_TEMPERATURE_HIRES (-20.0)
-# define MAX_RESOLUTION_LOOKUP 20
+# define RES_PRESSURE_HIRES (-21.0)
+# define MAX_RESOLUTION_LOOKUP 21
 
   bool hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   char * units; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
@@ -2928,9 +2929,9 @@ Pgn pgnList[] =
 ,
 { "Actual Pressure", 130314, false, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Pressure Instance", 4, 1, false, 0, "" }
-  , { "Pressure Source", 4, 1, false, 0, "" }
-  , { "Pressure", BYTES(2), 1, false, "", "" }
+  , { "Pressure Instance", BYTES(1), 1, false, 0, "" }
+  , { "Pressure Source", BYTES(1), 1, false, 0, "" }
+  , { "Pressure", BYTES(4), RES_PRESSURE_HIRES, false, "dPa", "" }
   , { 0 }
   }
 }

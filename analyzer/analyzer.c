@@ -667,18 +667,25 @@ static bool printTemperature(char * name, uint32_t t, uint32_t bits, double reso
   return true;
 }
 
-static bool printPressure(char * name, uint16_t v, Field * field)
+static bool printPressure(char * name, uint32_t v, Field * field)
 {
   int32_t pressure;
   double bar;
   double psi;
 
-  if (v >= 0xfffd)
+  if (field->size <= 16)
+  {
+    if (v >= 0xfffd)
+    {
+      return false;
+    }
+  }
+  if (v >= 0xfffffffd)
   {
     return false;
   }
 
-  // There are three types of known pressure: unsigned hectopascal, signed kpa, unsigned kpa.
+  // There are four types of known pressure: unsigned hectopascal, signed kpa, unsigned kpa, unsigned four bytes in pascal.
 
   if (field->hasSign)
   {
@@ -700,6 +707,10 @@ static bool printPressure(char * name, uint16_t v, Field * field)
     case 'k':
     case 'K':
       pressure *= 1000;
+      break;
+    case 'd':
+      pressure /= 10;
+      break;
     }
   }
 
@@ -2181,6 +2192,11 @@ ascii_string:
       else if (field->resolution == RES_PRESSURE)
       {
         valueu32 = data[0] + (data[1] << 8);
+        printPressure(fieldName, valueu32, field);
+      }
+      else if (field->resolution == RES_PRESSURE_HIRES)
+      {
+        valueu32 = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
         printPressure(fieldName, valueu32, field);
       }
       else if (field->resolution == RES_TEMPERATURE)
