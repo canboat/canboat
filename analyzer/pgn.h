@@ -158,7 +158,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] =
 };
 
 
-#define LOOKUP_INDUSTRY_CODE (",4=Marine")
+#define LOOKUP_INDUSTRY_CODE (",0=Global,1=Highway,2=Agriculture,3=Construction,4=Marine,5=Industrial")
 
 #define LOOKUP_SHIP_TYPE ( \
           ",0=unavailable" \
@@ -289,6 +289,13 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] =
 #define LOOKUP_HUMIDITY_SOURCE ( \
     ",0=Inside" \
     ",1=Outside" )
+
+#define LOOKUP_PRESSURE_SOURCE ( \
+    ",0=Atmospheric" \
+    ",1=Water" \
+    ",2=Steam" \
+    ",3=Compressed Air" \
+    ",4=Hydraulic" )
 
 #define LOOKUP_DSC_FORMAT ( \
     ",102=Geographical area" \
@@ -1058,16 +1065,17 @@ Pgn pgnList[] =
   , 0, 0, true
 }
 
-  /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
+/* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
+/* http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf */
 ,
-{ "NMEA - Request group function", 126208, true, 8, 2,
+{ "NMEA - Request group function", 126208, true, 12, 2,
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=0", "Request" }
   , { "PGN", BYTES(3), RES_INTEGER, false, 0, "Requested PGN" }
-  , { "Transmission interval", BYTES(4), 1, false, 0, "" }
-  , { "Transmission interval offset", BYTES(2), 1, false, 0, "" }
-  , { "# of Requested Parameters", 8, 1, false, 0, "How many parameter pairs will follow" }
-  , { "Parameter Index", 8, RES_INTEGER, false, 0, "Parameter index" }
-  , { "Parameter Value", LEN_VARIABLE, RES_INTEGER, false, 0, "Parameter value, variable length" }
+  , { "Transmission interval", BYTES(4), 0.001, false, "s", "" }
+  , { "Transmission interval offset", BYTES(2), 0.01, false, "s", "" }
+  , { "# of Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow" }
+  , { "Parameter", BYTES(1), RES_INTEGER, false, 0, "Parameter index" }
+  , { "Value", LEN_VARIABLE, RES_INTEGER, false, 0, "Parameter value, variable length" }
   , { 0 }
   }
 }
@@ -1075,12 +1083,12 @@ Pgn pgnList[] =
 ,
 { "NMEA - Command group function", 126208, true, 8, 2,
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=1", "Command" }
-  , { "PGN", BYTES(3), RES_INTEGER, false, 0, "Commanded or requested PGN" }
-  , { "Priority", 4, 1, false, 0, ",8=Leave priority unchanged" }
+  , { "PGN", BYTES(3), RES_INTEGER, false, 0, "Commanded PGN" }
+  , { "Priority", 4, 1, false, 0, ",8=Leave priority unchanged,9=Reset to default" }
   , { "Reserved", 4, RES_BINARY, false, 0, "" }
-  , { "# of Commanded Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow" }
-  , { "Parameter Index", BYTES(1), RES_INTEGER, false, 0, "Parameter index" }
-  , { "Parameter Value", LEN_VARIABLE, RES_INTEGER, false, 0, "Parameter value, variable length" }
+  , { "# of Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow" }
+  , { "Parameter", BYTES(1), RES_INTEGER, false, 0, "Parameter index" }
+  , { "Value", LEN_VARIABLE, RES_INTEGER, false, 0, "Parameter value, variable length" }
   , { 0 }
   }
 }
@@ -1088,11 +1096,85 @@ Pgn pgnList[] =
 ,
 { "NMEA - Acknowledge group function", 126208, true, 8, 1,
   { { "Function Code", BYTES(1), RES_INTEGER, false, "=2", "Acknowledge" }
-  , { "PGN", 24, RES_INTEGER, false, 0, "Commanded or requested PGN" }
-  , { "PGN error code", 4, 1, false, 0, "" }
-  , { "Transmission interval/Priority error code", 4, 1, false, 0, "" }
-  , { "# of Commanded Parameters", 8, 1, false, 0, "" }
-  , { "Parameter Error", 8, RES_INTEGER, false, 0, "" }
+  , { "PGN", 24, RES_INTEGER, false, 0, "Commanded PGN" }
+  , { "PGN error code", 4, RES_LOOKUP, false, ",0=Acknowledge,1=PGN not supported,2=PGN not available,3=Access denied,4=Not supported,5=Tag not supported,6=Read or Write not supported", "" }
+  , { "Transmission interval/Priority error code", 4, RES_LOOKUP, false, ",0=Acknowledge,1=Transmit Interval/Priority not supported,2=Transmit Interval to low,3=Access denied,4=Not supported", "" }
+  , { "# of Parameters", 8, 1, false, 0, "" }
+  , { "Parameter", 4, RES_LOOKUP, false, ",0=Acknowledge,1=Invalid parameter field,2=Temporary error,3=Parameter out of range,4=Access denied,5=Not supported,6=Read or Write not supported", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "NMEA - Read Fields group function", 126208, false, 8, 102,
+  { { "Function Code", BYTES(1), RES_INTEGER, false, "=3", "Read Fields" }
+  , { "PGN", 24, RES_INTEGER, false, 0, "Commanded PGN" }
+  , { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }         // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }                        // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "" } // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Unique ID", 8, RES_INTEGER, false, 0, "" }
+  , { "# of Selection Pairs", 8, 1, false, 0, "" }
+  , { "# of Parameters", 8, 1, false, 0, "" }
+  , { "Selection Parameter", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Selection Value", LEN_VARIABLE, RES_INTEGER, false, 0, "" }
+  , { "Parameter", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { 0 }
+  }
+}
+
+/* The following won't work when analyzing non-proprietary PGNs */
+,
+{ "NMEA - Read Fields reply group function", 126208, true, 8, 202,
+  { { "Function Code", BYTES(1), RES_INTEGER, false, "=4", "Read Fields Reply" }
+  , { "PGN", 24, RES_INTEGER, false, 0, "Commanded PGN" }
+  , { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "Only for proprietary PGNs" }         // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs" }                        // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "Only for proprietary PGNs" } // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Unique ID", 8, RES_INTEGER, false, 0, "" }
+  , { "# of Selection Pairs", 8, 1, false, 0, "" }
+  , { "# of Parameters", 8, 1, false, 0, "" }
+  , { "Selection Parameter", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Selection Value", LEN_VARIABLE, RES_INTEGER, false, 0, "" }
+  , { "Parameter", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Value", LEN_VARIABLE, RES_INTEGER, false, 0, "" }
+  , { 0 }
+  }
+}
+
+/* The following won't work when analyzing non-proprietary PGNs */
+,
+{ "NMEA - Write Fields group function", 126208, true, 8, 202,
+  { { "Function Code", BYTES(1), RES_INTEGER, false, "=5", "Write Fields" }
+  , { "PGN", 24, RES_INTEGER, false, 0, "Commanded PGN" }
+  , { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "Only for proprietary PGNs" }         // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs" }                        // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "Only for proprietary PGNs" } // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Unique ID", 8, RES_INTEGER, false, 0, "" }
+  , { "# of Selection Pairs", 8, 1, false, 0, "" }
+  , { "# of Parameters", 8, 1, false, 0, "" }
+  , { "Selection Parameter", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Selection Value", LEN_VARIABLE, RES_INTEGER, false, 0, "" }
+  , { "Parameter", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Value", LEN_VARIABLE, RES_INTEGER, false, 0, "" }
+  , { 0 }
+  }
+}
+
+/* The following won't work when analyzing non-proprietary PGNs */
+,
+{ "NMEA - Write Fields reply group function", 126208, true, 8, 202,
+  { { "Function Code", BYTES(1), RES_INTEGER, false, "=6", "Write Fields Reply" }
+  , { "PGN", 24, RES_INTEGER, false, 0, "Commanded PGN" }
+  , { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "Only for proprietary PGNs" }         // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs" }                        // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, "Only for proprietary PGNs" } // TODO: Only in PGN when field PGN is proprietary. Sigh.
+  , { "Unique ID", 8, RES_INTEGER, false, 0, "" }
+  , { "# of Selection Pairs", 8, 1, false, 0, "" }
+  , { "# of Parameters", 8, 1, false, 0, "" }
+  , { "Selection Parameter", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Selection Value", LEN_VARIABLE, RES_INTEGER, false, 0, "" }
+  , { "Parameter", BYTES(1), RES_INTEGER, false, 0, "" }
+  , { "Value", LEN_VARIABLE, RES_INTEGER, false, 0, "" }
   , { 0 }
   }
 }
@@ -1405,10 +1487,10 @@ Pgn pgnList[] =
 { "Man Overboard Notification", 127233, true, 35, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "MOB Emitter ID", BYTES(4), RES_INTEGER, false, 0, "Identifier for each MOB emitter, unique to the vessel" }
-  , { "Man Overboard Status", 3, RES_LOOKUP, false, "0=MOB Emitter Activated,1=Manual on-board MOB Button Activation,2=Test Mode,3=MOB Not Active", "" }
+  , { "Man Overboard Status", 3, RES_LOOKUP, false, ",0=MOB Emitter Activated,1=Manual on-board MOB Button Activation,2=Test Mode,3=MOB Not Active", "" }
   , { "Reserved", 5, RES_BINARY, false, 0, "" }
   , { "Activation Time", BYTES(4), RES_TIME, false, "s", "Time of day (UTC) when MOB was activated" }
-  , { "Position Source", 3, RES_LOOKUP, false, "0=Position estimated by the Vessel,1=Position reported by MOB emitter", "" }
+  , { "Position Source", 3, RES_LOOKUP, false, ",0=Position estimated by the Vessel,1=Position reported by MOB emitter", "" }
   , { "Reserved", 5, RES_BINARY, false, 0, "" }
   , { "Position Date", BYTES(2), RES_DATE, false, "", "Date of MOB position" }
   , { "Position Time", BYTES(4), RES_TIME, false, "s", "Time of day of MOB position (UTC)" }
@@ -1419,7 +1501,7 @@ Pgn pgnList[] =
   , { "COG", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "SOG", BYTES(2), 0.01, false, "m/s", "" }
   , { "MMSI of vessel of origin", BYTES(4), RES_INTEGER, false, "MMSI", "" }
-  , { "MOB Emitter Battery Status", 3, RES_LOOKUP, false, "0=Good,1=Low", "" }
+  , { "MOB Emitter Battery Status", 3, RES_LOOKUP, false, ",0=Good,1=Low", "" }
   , { "Reserved", 5, RES_BINARY, false, 0, "" }
   , { 0 }
   }
@@ -1592,7 +1674,7 @@ Pgn pgnList[] =
 ,
 { "Binary Switch Bank Status", 127501, false, 8, 1,
   { { "Indicator Bank Instance", BYTES(1), 1, false, 0, "" }
-  , { "Indicator", 2, RES_LOOKUP, false, ",0=Off,1=On", "" }
+  , { "Indicator", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
   , { 0 }
   }
 }
@@ -1881,7 +1963,7 @@ Pgn pgnList[] =
   , { "Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
   , { "Latitude", BYTES(8), RES_LATITUDE, true, "deg", "" }
   , { "Longitude", BYTES(8), RES_LONGITUDE, true, "deg", "" }
-  , { "Altitude", BYTES(8), 1e-6, true, "m", "" }
+  , { "Altitude", BYTES(8), 1e-6, true, "m", "Altitude referenced to WGS-84" }
   , { "GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS, "" }
   , { "Method", 4, RES_LOOKUP, false, LOOKUP_GNS_METHOD, "" }
   , { "Integrity", 2, RES_LOOKUP, false, LOOKUP_GNS_INTEGRITY, "" }
@@ -1982,7 +2064,7 @@ Pgn pgnList[] =
   , { "Beam", BYTES(2), 0.1, false, "m", "" }
   , { "Position reference from Starboard", BYTES(2), 0.1, false, "m", "" }
   , { "Position reference from Bow", BYTES(2), 0.1, false, "m", "" }
-  , { "Name", BYTES(20), RES_ASCII, false, 0, "0=unavailable" }
+  , { "Name", BYTES(20), RES_ASCII, false, 0, ",0=unavailable" }
   , { "DTE", 1, RES_LOOKUP, false, ",0=Available,1=Not available", "" }
   , { "AIS mode", 1, 1, false, ",0=Autonomous,1=Assigned", "" }
   , { "Reserved", 4, RES_BINARY, false, 0, "" }
@@ -2348,9 +2430,9 @@ Pgn pgnList[] =
   { { "Message ID", 6, 1, false, 0, "" }
   , { "Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
   , { "User ID", BYTES(4), RES_INTEGER, false, "MMSI", "" }
-  , { "IMO number", BYTES(4), RES_INTEGER, false, 0, "0=unavailable" }
-  , { "Callsign", BYTES(7), RES_ASCII, false, 0, "0=unavailable" }
-  , { "Name", BYTES(20), RES_ASCII, false, 0, "0=unavailable" }
+  , { "IMO number", BYTES(4), RES_INTEGER, false, 0, ",0=unavailable" }
+  , { "Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable" }
+  , { "Name", BYTES(20), RES_ASCII, false, 0, ",0=unavailable" }
   , { "Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, "" }
   , { "Length", BYTES(2), 0.1, false, "m", "" }
   , { "Beam", BYTES(2), 0.1, false, "m", "" }
@@ -2359,7 +2441,7 @@ Pgn pgnList[] =
   , { "ETA Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970" }
   , { "ETA Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight" }
   , { "Draft", BYTES(2), 0.01, false, "m", "" }
-  , { "Destination", BYTES(20), RES_ASCII, false, 0, "0=unavailable" }
+  , { "Destination", BYTES(20), RES_ASCII, false, 0, ",0=unavailable" }
   , { "AIS version indicator", 2, RES_LOOKUP, false, ",0=ITU-R M.1371-1,1=ITU-R M.1371-3", "" }
   , { "GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS_AIS, "" }
   , { "DTE", 1, RES_LOOKUP, false, ",0=available,1=not available", "" }
@@ -2683,14 +2765,14 @@ Pgn pgnList[] =
   , { "User ID", BYTES(4), RES_INTEGER, false, "MMSI", "" }
   , { "Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, "" }
   , { "Vendor ID", BYTES(7), RES_ASCII, false, 0, "" }
-  , { "Callsign", BYTES(7), RES_ASCII, false, 0, "0=unavailable" }
+  , { "Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable" }
   , { "Length", BYTES(2), 0.1, false, "m", "" }
   , { "Beam", BYTES(2), 0.1, false, "m", "" }
   , { "Position reference from Starboard", BYTES(2), 0.1, false, "m", "" }
   , { "Position reference from Bow", BYTES(2), 0.1, false, "m", "" }
   , { "Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "MMSI of mother ship sent by daughter vessels" }
   , { "Reserved", 2, RES_BINARY, false, 0, "reserved" }
-  , { "Spare", 6, RES_INTEGER, false, 0, "0=unavailable" }
+  , { "Spare", 6, RES_INTEGER, false, 0, ",0=unavailable" }
   , { 0 }
   }
 }
@@ -2934,7 +3016,7 @@ Pgn pgnList[] =
 { "Actual Pressure", 130314, false, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Pressure Instance", BYTES(1), 1, false, 0, "" }
-  , { "Pressure Source", BYTES(1), 1, false, 0, "" }
+  , { "Pressure Source", BYTES(1), 1, false, LOOKUP_PRESSURE_SOURCE, "" }
   , { "Pressure", BYTES(4), RES_PRESSURE_HIRES, false, "dPa", "" }
   , { 0 }
   }
@@ -2944,8 +3026,8 @@ Pgn pgnList[] =
 { "Set Pressure", 130315, true, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Pressure Instance", BYTES(1), 1, false, 0, "" }
-  , { "Pressure Source", BYTES(1), RES_LOOKUP, false, ",0=Atmospheric,1=Water,2=Steam,3=Compressed Air,4=Hydraulic", "" }
-  , { "Pressure", BYTES(4), 2.1*100000, false, "kPa", "" }
+  , { "Pressure Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, "" }
+  , { "Pressure", BYTES(4), RES_PRESSURE_HIRES, false, "dPa", "" }
   , { 0 }
   }
 }
@@ -3073,7 +3155,7 @@ Pgn pgnList[] =
   */
 ,
 { "Watermaker Input Setting and Status", 130567, true, 24, 0,
-  { { "Watermaker Operating State", 6, RES_LOOKUP, false, "0=Stopped,1=Starting,2=Running,3=Stopping,4=Flushing,5=Rinsing,6=Initiating,7=Manual Mode,62=Error,63=Unavailable", "" }
+  { { "Watermaker Operating State", 6, RES_LOOKUP, false, ",0=Stopped,1=Starting,2=Running,3=Stopping,4=Flushing,5=Rinsing,6=Initiating,7=Manual Mode,62=Error,63=Unavailable", "" }
   , { "Production Start/Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
   , { "Rinse Start/Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
   , { "Low Pressure Pump Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
@@ -3758,6 +3840,21 @@ Pgn pgnList[] =
   }
 }
 
+/* M/V Dirona */
+,
+{ "Maretron: Annunciator", 130824, false, 9, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Field 4", BYTES(1), 1, false, 0, "" }
+  , { "Field 5", BYTES(1), 1, false, 0, "" }
+  , { "Field 6", BYTES(2), 1, false, 0, "" }
+  , { "Field 7", BYTES(1), 1, false, 0, "" }
+  , { "Field 8", BYTES(2), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
 /* Uwe Lovas has seen this from EP-70R */
 ,
 { "Lowrance: unknown", 130827, false, 10, 0,
@@ -3912,14 +4009,14 @@ Pgn pgnList[] =
   , { "User ID", BYTES(4), RES_INTEGER, false, "MMSI", "" }
   , { "Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, "" }
   , { "Vendor ID", BYTES(7), RES_ASCII, false, 0, "" }
-  , { "Callsign", BYTES(7), RES_ASCII, false, 0, "0=unavailable" }
+  , { "Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable" }
   , { "Length", BYTES(2), 0.1, false, "m", "" }
   , { "Beam", BYTES(2), 0.1, false, "m", "" }
   , { "Position reference from Starboard", BYTES(2), 0.1, false, "m", "" }
   , { "Position reference from Bow", BYTES(2), 0.1, false, "m", "" }
   , { "Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "Id of mother ship sent by daughter vessels" }
   , { "", 2, 1, false, 0, "" }
-  , { "Spare", 6, RES_INTEGER, false, 0, "0=unavailable" }
+  , { "Spare", 6, RES_INTEGER, false, 0, ",0=unavailable" }
   , { 0 }
   }
 }

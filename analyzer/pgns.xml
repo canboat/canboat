@@ -555,7 +555,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
              <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
            </EnumValues>
          </Field>
          <Field>
@@ -764,7 +769,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
              <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
            </EnumValues>
          </Field>
          <Field>
@@ -817,7 +827,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
              <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
            </EnumValues>
          </Field>
          <Field>
@@ -868,7 +883,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -909,7 +924,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -950,7 +965,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -991,7 +1006,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -1139,7 +1154,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1267,7 +1282,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1396,7 +1411,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1525,7 +1540,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1684,7 +1699,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1813,7 +1828,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -1942,7 +1957,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2071,7 +2086,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Units>Hz</Units>
-           <Resolution>0</Resolution>
+           <Resolution>0.0078125</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2203,7 +2218,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
              <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
            </EnumValues>
          </Field>
          <Field>
@@ -2266,7 +2286,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
              <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
            </EnumValues>
          </Field>
          <Field>
@@ -3260,7 +3285,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>nmeaRequestGroupFunction</Id>
        <Description>NMEA - Request group function</Description>
        <Complete>true</Complete>
-       <Length>8</Length>
+       <Length>12</Length>
        <RepeatingFields>2</RepeatingFields>
        <Fields>
          <Field>
@@ -3295,6 +3320,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>32</BitLength>
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
+           <Units>s</Units>
+           <Resolution>0.001</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -3304,12 +3331,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>64</BitOffset>
            <BitStart>0</BitStart>
+           <Units>s</Units>
+           <Resolution>0.01</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>5</Order>
-           <Id>OfRequestedParameters</Id>
-           <Name># of Requested Parameters</Name>
+           <Id>OfParameters</Id>
+           <Name># of Parameters</Name>
            <Description>How many parameter pairs will follow</Description>
            <BitLength>8</BitLength>
            <BitOffset>80</BitOffset>
@@ -3318,8 +3347,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>6</Order>
-           <Id>parameterIndex</Id>
-           <Name>Parameter Index</Name>
+           <Id>parameter</Id>
+           <Name>Parameter</Name>
            <Description>Parameter index</Description>
            <BitLength>8</BitLength>
            <BitOffset>88</BitOffset>
@@ -3330,8 +3359,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>7</Order>
-           <Id>parameterValue</Id>
-           <Name>Parameter Value</Name>
+           <Id>value</Id>
+           <Name>Value</Name>
            <Description>Parameter value, variable length</Description>
            <BitLength>0</BitLength>
            <BitOffset>96</BitOffset>
@@ -3367,7 +3396,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>2</Order>
            <Id>pgn</Id>
            <Name>PGN</Name>
-           <Description>Commanded or requested PGN</Description>
+           <Description>Commanded PGN</Description>
            <BitLength>24</BitLength>
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
@@ -3396,8 +3425,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>5</Order>
-           <Id>OfCommandedParameters</Id>
-           <Name># of Commanded Parameters</Name>
+           <Id>OfParameters</Id>
+           <Name># of Parameters</Name>
            <Description>How many parameter pairs will follow</Description>
            <BitLength>8</BitLength>
            <BitOffset>40</BitOffset>
@@ -3406,8 +3435,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>6</Order>
-           <Id>parameterIndex</Id>
-           <Name>Parameter Index</Name>
+           <Id>parameter</Id>
+           <Name>Parameter</Name>
            <Description>Parameter index</Description>
            <BitLength>8</BitLength>
            <BitOffset>48</BitOffset>
@@ -3418,8 +3447,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>7</Order>
-           <Id>parameterValue</Id>
-           <Name>Parameter Value</Name>
+           <Id>value</Id>
+           <Name>Value</Name>
            <Description>Parameter value, variable length</Description>
            <BitLength>0</BitLength>
            <BitOffset>56</BitOffset>
@@ -3455,7 +3484,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>2</Order>
            <Id>pgn</Id>
            <Name>PGN</Name>
-           <Description>Commanded or requested PGN</Description>
+           <Description>Commanded PGN</Description>
            <BitLength>24</BitLength>
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
@@ -3470,7 +3499,17 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>4</BitLength>
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Acknowledge' />
+             <EnumPair Value='1' Name='PGN not supported' />
+             <EnumPair Value='2' Name='PGN not available' />
+             <EnumPair Value='3' Name='Access denied' />
+             <EnumPair Value='4' Name='Not supported' />
+             <EnumPair Value='5' Name='Tag not supported' />
+             <EnumPair Value='6' Name='Read or Write not supported' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -3479,12 +3518,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>4</BitLength>
            <BitOffset>36</BitOffset>
            <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Acknowledge' />
+             <EnumPair Value='1' Name='Transmit Interval/Priority not supported' />
+             <EnumPair Value='2' Name='Transmit Interval to low' />
+             <EnumPair Value='3' Name='Access denied' />
+             <EnumPair Value='4' Name='Not supported' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>5</Order>
-           <Id>OfCommandedParameters</Id>
-           <Name># of Commanded Parameters</Name>
+           <Id>OfParameters</Id>
+           <Name># of Parameters</Name>
            <BitLength>8</BitLength>
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
@@ -3492,10 +3539,604 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>6</Order>
-           <Id>parameterError</Id>
-           <Name>Parameter Error</Name>
+           <Id>parameter</Id>
+           <Name>Parameter</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Acknowledge' />
+             <EnumPair Value='1' Name='Invalid parameter field' />
+             <EnumPair Value='2' Name='Temporary error' />
+             <EnumPair Value='3' Name='Parameter out of range' />
+             <EnumPair Value='4' Name='Access denied' />
+             <EnumPair Value='5' Name='Not supported' />
+             <EnumPair Value='6' Name='Read or Write not supported' />
+           </EnumValues>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126208</PGN>
+       <Id>nmeaReadFieldsGroupFunction</Id>
+       <Description>NMEA - Read Fields group function</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFieldSet1>2</RepeatingFieldSet1>
+       <RepeatingFieldSet2>1</RepeatingFieldSet2>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>functionCode</Id>
+           <Name>Function Code</Name>
+           <Description>Read Fields</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>3</Match>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>pgn</Id>
+           <Name>PGN</Name>
+           <Description>Commanded PGN</Description>
+           <BitLength>24</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <BitLength>11</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>43</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>45</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
+             <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>uniqueId</Id>
+           <Name>Unique ID</Name>
            <BitLength>8</BitLength>
            <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>OfSelectionPairs</Id>
+           <Name># of Selection Pairs</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>OfParameters</Id>
+           <Name># of Parameters</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>selectionParameter</Id>
+           <Name>Selection Parameter</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>selectionValue</Id>
+           <Name>Selection Value</Name>
+           <BitLength>0</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>parameter</Id>
+           <Name>Parameter</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126208</PGN>
+       <Id>nmeaReadFieldsReplyGroupFunction</Id>
+       <Description>NMEA - Read Fields reply group function</Description>
+       <Complete>true</Complete>
+       <Length>8</Length>
+       <RepeatingFieldSet1>2</RepeatingFieldSet1>
+       <RepeatingFieldSet2>2</RepeatingFieldSet2>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>functionCode</Id>
+           <Name>Function Code</Name>
+           <Description>Read Fields Reply</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>4</Match>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>pgn</Id>
+           <Name>PGN</Name>
+           <Description>Commanded PGN</Description>
+           <BitLength>24</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Only for proprietary PGNs</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>Only for proprietary PGNs</Description>
+           <BitLength>2</BitLength>
+           <BitOffset>43</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Only for proprietary PGNs</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>45</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
+             <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>uniqueId</Id>
+           <Name>Unique ID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>OfSelectionPairs</Id>
+           <Name># of Selection Pairs</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>OfParameters</Id>
+           <Name># of Parameters</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>selectionParameter</Id>
+           <Name>Selection Parameter</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>selectionValue</Id>
+           <Name>Selection Value</Name>
+           <BitLength>0</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>parameter</Id>
+           <Name>Parameter</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>value</Id>
+           <Name>Value</Name>
+           <BitLength>0</BitLength>
+           <BitOffset>88</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126208</PGN>
+       <Id>nmeaWriteFieldsGroupFunction</Id>
+       <Description>NMEA - Write Fields group function</Description>
+       <Complete>true</Complete>
+       <Length>8</Length>
+       <RepeatingFieldSet1>2</RepeatingFieldSet1>
+       <RepeatingFieldSet2>2</RepeatingFieldSet2>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>functionCode</Id>
+           <Name>Function Code</Name>
+           <Description>Write Fields</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>5</Match>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>pgn</Id>
+           <Name>PGN</Name>
+           <Description>Commanded PGN</Description>
+           <BitLength>24</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Only for proprietary PGNs</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>Only for proprietary PGNs</Description>
+           <BitLength>2</BitLength>
+           <BitOffset>43</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Only for proprietary PGNs</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>45</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
+             <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>uniqueId</Id>
+           <Name>Unique ID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>OfSelectionPairs</Id>
+           <Name># of Selection Pairs</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>OfParameters</Id>
+           <Name># of Parameters</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>selectionParameter</Id>
+           <Name>Selection Parameter</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>selectionValue</Id>
+           <Name>Selection Value</Name>
+           <BitLength>0</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>parameter</Id>
+           <Name>Parameter</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>value</Id>
+           <Name>Value</Name>
+           <BitLength>0</BitLength>
+           <BitOffset>88</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126208</PGN>
+       <Id>nmeaWriteFieldsReplyGroupFunction</Id>
+       <Description>NMEA - Write Fields reply group function</Description>
+       <Complete>true</Complete>
+       <Length>8</Length>
+       <RepeatingFieldSet1>2</RepeatingFieldSet1>
+       <RepeatingFieldSet2>2</RepeatingFieldSet2>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>functionCode</Id>
+           <Name>Function Code</Name>
+           <Description>Write Fields Reply</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>6</Match>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>pgn</Id>
+           <Name>PGN</Name>
+           <Description>Commanded PGN</Description>
+           <BitLength>24</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Only for proprietary PGNs</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>Only for proprietary PGNs</Description>
+           <BitLength>2</BitLength>
+           <BitOffset>43</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Only for proprietary PGNs</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>45</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
+             <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>uniqueId</Id>
+           <Name>Unique ID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>OfSelectionPairs</Id>
+           <Name># of Selection Pairs</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>OfParameters</Id>
+           <Name># of Parameters</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>selectionParameter</Id>
+           <Name>Selection Parameter</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>selectionValue</Id>
+           <Name>Selection Value</Name>
+           <BitLength>0</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>parameter</Id>
+           <Name>Parameter</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>value</Id>
+           <Name>Value</Name>
+           <BitLength>0</BitLength>
+           <BitOffset>88</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Integer</Type>
                   <Resolution>1</Resolution>
@@ -4876,7 +5517,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
              <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
            </EnumValues>
          </Field>
          <Field>
@@ -5264,9 +5910,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>3</BitLength>
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
-           <Units>0=MOB Emitter Activated,1=Manual on-board MOB Button Activation,2=Test Mode,3=MOB Not Active</Units>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='MOB Emitter Activated' />
+             <EnumPair Value='1' Name='Manual on-board MOB Button Activation' />
+             <EnumPair Value='2' Name='Test Mode' />
+             <EnumPair Value='3' Name='MOB Not Active' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>4</Order>
@@ -5298,9 +5949,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>3</BitLength>
            <BitOffset>80</BitOffset>
            <BitStart>0</BitStart>
-           <Units>0=Position estimated by the Vessel,1=Position reported by MOB emitter</Units>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Position estimated by the Vessel' />
+             <EnumPair Value='1' Name='Position reported by MOB emitter' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>7</Order>
@@ -5427,9 +6081,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>3</BitLength>
            <BitOffset>272</BitOffset>
            <BitStart>0</BitStart>
-           <Units>0=Good,1=Low</Units>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Good' />
+             <EnumPair Value='1' Name='Low' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>18</Order>
@@ -5999,10 +6656,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>2</Order>
            <Id>oilPressure</Id>
            <Name>Oil pressure</Name>
-           <Description>hPa</Description>
            <BitLength>16</BitLength>
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
+           <Units>hPa</Units>
                   <Type>Pressure</Type>
            <Signed>false</Signed>
          </Field>
@@ -6015,7 +6672,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitStart>0</BitStart>
            <Units>K</Units>
                   <Type>Temperature</Type>
-                  <Resolution>0.01</Resolution>
+                  <Resolution>0.1</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -6080,6 +6737,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>136</BitOffset>
            <BitStart>0</BitStart>
+           <Units>hPa</Units>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -6099,6 +6757,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>160</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Bitfield</Type>
            <Signed>false</Signed>
            <EnumBitValues>
              <EnumPair Bit='0' Name='Check Engine' />
@@ -6126,6 +6785,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>16</BitLength>
            <BitOffset>176</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Bitfield</Type>
            <Signed>false</Signed>
            <EnumBitValues>
              <EnumPair Bit='0' Name='Warning Level 1' />
@@ -6231,7 +6891,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitStart>0</BitStart>
            <Units>K</Units>
                   <Type>Temperature</Type>
-                  <Resolution>0.01</Resolution>
+                  <Resolution>0.1</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -6457,6 +7117,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <EnumValues>
              <EnumPair Value='0' Name='Off' />
              <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
            </EnumValues>
          </Field>
        </Fields>
@@ -8217,6 +8878,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>6</Order>
            <Id>altitude</Id>
            <Name>Altitude</Name>
+           <Description>Altitude referenced to WGS-84</Description>
            <BitLength>64</BitLength>
            <BitOffset>184</BitOffset>
            <BitStart>0</BitStart>
@@ -9297,7 +9959,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>22</Order>
            <Id>name</Id>
            <Name>Name</Name>
-           <Description>0=unavailable</Description>
            <BitLength>160</BitLength>
            <BitOffset>256</BitOffset>
            <BitStart>0</BitStart>
@@ -11809,7 +12470,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>imoNumber</Id>
            <Name>IMO number</Name>
-           <Description>0=unavailable</Description>
            <BitLength>32</BitLength>
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
@@ -11821,7 +12481,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>5</Order>
            <Id>callsign</Id>
            <Name>Callsign</Name>
-           <Description>0=unavailable</Description>
            <BitLength>56</BitLength>
            <BitOffset>72</BitOffset>
            <BitStart>0</BitStart>
@@ -11832,7 +12491,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>6</Order>
            <Id>name</Id>
            <Name>Name</Name>
-           <Description>0=unavailable</Description>
            <BitLength>160</BitLength>
            <BitOffset>128</BitOffset>
            <BitStart>0</BitStart>
@@ -11983,7 +12641,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>15</Order>
            <Id>destination</Id>
            <Name>Destination</Name>
-           <Description>0=unavailable</Description>
            <BitLength>160</BitLength>
            <BitOffset>424</BitOffset>
            <BitStart>0</BitStart>
@@ -14673,7 +15330,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>6</Order>
            <Id>callsign</Id>
            <Name>Callsign</Name>
-           <Description>0=unavailable</Description>
            <BitLength>56</BitLength>
            <BitOffset>104</BitOffset>
            <BitStart>0</BitStart>
@@ -14752,7 +15408,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>13</Order>
            <Id>spare</Id>
            <Name>Spare</Name>
-           <Description>0=unavailable</Description>
            <BitLength>6</BitLength>
            <BitOffset>258</BitOffset>
            <BitStart>2</BitStart>
@@ -16130,7 +16785,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>2</Order>
            <Id>pressureInstance</Id>
            <Name>Pressure Instance</Name>
-           <BitLength>4</BitLength>
+           <BitLength>8</BitLength>
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
@@ -16139,19 +16794,21 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>3</Order>
            <Id>pressureSource</Id>
            <Name>Pressure Source</Name>
-           <BitLength>4</BitLength>
-           <BitOffset>12</BitOffset>
-           <BitStart>4</BitStart>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>4</Order>
            <Id>pressure</Id>
            <Name>Pressure</Name>
-           <BitLength>16</BitLength>
-           <BitOffset>16</BitOffset>
+           <BitLength>32</BitLength>
+           <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
-           <Units></Units>
+           <Units>dPa</Units>
+                  <Type>Pressure (hires)</Type>
+                  <Resolution>0.1</Resolution>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -16206,8 +16863,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>32</BitLength>
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
-           <Units>kPa</Units>
-           <Resolution>210000</Resolution>
+           <Units>dPa</Units>
+                  <Type>Pressure (hires)</Type>
+                  <Resolution>0.1</Resolution>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -16273,6 +16931,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Units>K</Units>
+                  <Type>Temperature (hires)</Type>
+                  <Resolution>0.001</Resolution>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -16283,6 +16943,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>48</BitOffset>
            <BitStart>0</BitStart>
            <Units>K</Units>
+                  <Type>Temperature</Type>
+                  <Resolution>0.1</Resolution>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -17128,9 +17790,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>6</BitLength>
            <BitOffset>0</BitOffset>
            <BitStart>0</BitStart>
-           <Units>0=Stopped,1=Starting,2=Running,3=Stopping,4=Flushing,5=Rinsing,6=Initiating,7=Manual Mode,62=Error,63=Unavailable</Units>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Stopped' />
+             <EnumPair Value='1' Name='Starting' />
+             <EnumPair Value='2' Name='Running' />
+             <EnumPair Value='3' Name='Stopping' />
+             <EnumPair Value='4' Name='Flushing' />
+             <EnumPair Value='5' Name='Rinsing' />
+             <EnumPair Value='6' Name='Initiating' />
+             <EnumPair Value='7' Name='Manual Mode' />
+             <EnumPair Value='62' Name='Error' />
+             <EnumPair Value='63' Name='Unavailable' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>2</Order>
@@ -19850,7 +20523,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
+             <EnumPair Value='0' Name='Global' />
+             <EnumPair Value='1' Name='Highway' />
+             <EnumPair Value='2' Name='Agriculture' />
+             <EnumPair Value='3' Name='Construction' />
              <EnumPair Value='4' Name='Marine' />
+             <EnumPair Value='5' Name='Industrial' />
            </EnumValues>
          </Field>
          <Field>
@@ -21936,6 +22614,95 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>130824</PGN>
+       <Id>maretronAnnunciator</Id>
+       <Description>Maretron: Annunciator</Description>
+       <Complete>false</Complete>
+       <Length>9</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Maretron</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>137</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>field4</Id>
+           <Name>Field 4</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>field5</Id>
+           <Name>Field 5</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>field6</Id>
+           <Name>Field 6</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>field7</Id>
+           <Name>Field 7</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>field8</Id>
+           <Name>Field 8</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>130827</PGN>
        <Id>lowranceUnknown</Id>
        <Description>Lowrance: unknown</Description>
@@ -22847,7 +23614,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>11</Order>
            <Id>callsign</Id>
            <Name>Callsign</Name>
-           <Description>0=unavailable</Description>
            <BitLength>56</BitLength>
            <BitOffset>136</BitOffset>
            <BitStart>0</BitStart>
@@ -22924,7 +23690,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>18</Order>
            <Id>spare</Id>
            <Name>Spare</Name>
-           <Description>0=unavailable</Description>
            <BitLength>6</BitLength>
            <BitOffset>290</BitOffset>
            <BitStart>2</BitStart>

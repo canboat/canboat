@@ -161,12 +161,23 @@ void checkPgnList(void)
 
 Field * getField(uint32_t pgnId, uint32_t field)
 {
-  int index;
 
   Pgn* pgn = searchForPgn(pgnId);
-  if (pgn && field < pgn->fieldCount)
+
+  if (!pgn)
+  {
+    return 0;
+  }
+  if (field < pgn->fieldCount)
   {
     return pgn->fieldList + field;
+  }
+  if (pgn->repeatingFields)
+  {
+    uint32_t startOfRepeatingFields = pgn->fieldCount - pgn->repeatingFields;
+    uint32_t index = startOfRepeatingFields + ((field - startOfRepeatingFields) % pgn->repeatingFields);
+
+    return pgn->fieldList + index;
   }
   return 0;
 }
