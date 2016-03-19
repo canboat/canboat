@@ -3016,7 +3016,7 @@ Pgn pgnList[] =
 { "Actual Pressure", 130314, false, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Pressure Instance", BYTES(1), 1, false, 0, "" }
-  , { "Pressure Source", BYTES(1), 1, false, LOOKUP_PRESSURE_SOURCE, "" }
+  , { "Pressure Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, "" }
   , { "Pressure", BYTES(4), RES_PRESSURE_HIRES, false, "dPa", "" }
   , { 0 }
   }
