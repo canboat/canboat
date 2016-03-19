@@ -30,7 +30,7 @@ all: $(TARGETS)
 $(ANALYZER): analyzer.c pgn.c analyzer.h pgn.h ../common/common.c ../common/common.h Makefile
 	$(CC) $(CFLAGS) -o $(ANALYZER) -I../common pgn.c analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
-json: $(ANALYZER)
+json: $(ANALYZER) pgns2json.xslt
 	$(ANALYZER) -explain-xml >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
 
 clean:

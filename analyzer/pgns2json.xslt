@@ -353,6 +353,10 @@
     <xsl:call-template name="indent"/>{"<xsl:value-of select="@Value"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
+  <xsl:template match="EnumBitValues/EnumPair">
+    <xsl:call-template name="indent"/>{"<xsl:value-of select="@Bit"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+  </xsl:template>
+
     <xsl:template match="PGNInfo">
     <xsl:call-template name="indent"/>"<xsl:value-of select="./PGN"/>":<xsl:apply-templates/><xsl:if test="not(position() = last())">,</xsl:if>
     </xsl:template>
