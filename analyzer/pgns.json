@@ -14934,7 +14934,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"0": "Atmospheric"},
+              {"1": "Water"},
+              {"2": "Steam"},
+              {"3": "Compressed Air"},
+              {"4": "Hydraulic"}]},
           {
             "Order":4,
             "Id":"pressure",
