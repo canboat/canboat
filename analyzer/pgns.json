@@ -6009,7 +6009,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitStart":0,
             "Type":"Bitfield",
             "Signed":false,
-            "EnumBitValues":
+            "EnumBitValues":[
               {"0": "Check Engine"},
               {"1": "Over Temperature"},
               {"2": "Low Oil Pressure"},
@@ -6025,7 +6025,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
               {"12": "Rev Limit Exceeded"},
               {"13": "EGR System"},
               {"14": "Throttle Position Sensor"},
-              {"15": "Emergency Stop"}},
+              {"15": "Emergency Stop"}]},
           {
             "Order":12,
             "Id":"discreteStatus2",
@@ -6035,7 +6035,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             "BitStart":0,
             "Type":"Bitfield",
             "Signed":false,
-            "EnumBitValues":
+            "EnumBitValues":[
               {"0": "Warning Level 1"},
               {"1": "Warning Level 2"},
               {"2": "Power Reduction"},
@@ -6043,7 +6043,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
               {"4": "Engine Comm Error"},
               {"5": "Sub or Secondary Throttle"},
               {"6": "Neutral Start Protect"},
-              {"7": "Engine Shutting Down"}},
+              {"7": "Engine Shutting Down"}]},
           {
             "Order":13,
             "Id":"percentEngineLoad",
