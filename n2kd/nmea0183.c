@@ -46,6 +46,7 @@ extern bool rateLimit;
  * PGN 128267 "Water Depth"    -> $xxDBK/DBS/DBT
  * PGN 128267 "Water Speed"    -> $xxVHW
  * PGN 127245 "Rudder"         -> $xxRSA
+ * PGN 130311 "Environmental Parameters - water temperature" -> $xxMTW
 
  * Some others are in gps_ais.c file
  * PGN 129026 "Track made good and Ground speed" -> $xxVTG
@@ -60,12 +61,14 @@ extern bool rateLimit;
  * {"timestamp":"2015-12-07-21:51:11.381","prio":"2","src":"4","dst":"255","pgn":"128259","description":"Speed","fields":{"Speed Water Referenced":0.30}}
  * {"timestamp":"2015-12-09-21:53:47.497","prio":"2","src":"1","dst":"255","pgn":"127245","description":"Rudder","fields":{"Angle Order":-0.0,"Position":6.8}}
  * {"timestamp":"2015-12-11T17:56:55.755Z","prio":6,"src":2,"dst":255,"pgn":129539,"description":"GNSS DOPs","fields":{"SID":239,"Desired Mode":"3D","Actual Mode":"3D","HDOP":1.21,"VDOP":1.83,"TDOP":327.67}}
+ * {"timestamp":"2016-04-14T20:27:02.303Z","prio":5,"src":35,"dst":255,"pgn":130311,"description":"Environmental Parameters","fields":{"SID":222,"Temperature Source":"Sea Temperature","Temperature":17.16}}
  */
 
 #define PGN_VESSEL_HEADING (127250)
 #define PGN_WIND_DATA      (130306)
 #define PGN_WATER_DEPTH    (128267)
 #define PGN_WATER_SPEED    (128259)
+#define PGN_ENVIRONMENTAL  (130311)
 #define PGN_RUDDER         (127245)
 #define PGN_SOG_COG        (129026)
 #define PGN_GPS_DOP        (129539)
@@ -83,7 +86,8 @@ extern bool rateLimit;
 #define GPS_DOP        (6)
 #define GPS_POSITION   (7)
 #define AIS_POSITION   (8)
-#define SENTENCE_COUNT (9)
+#define ENVIRONMENTAL   (9)
+#define SENTENCE_COUNT (10)
 
 static int64_t rateLimitPassed[256][SENTENCE_COUNT];
 
@@ -399,6 +403,39 @@ static void nmea0183WaterSpeed( StringBuffer * msg183, int src, const char * msg
 }
 
 /*
+
+=== MTW - Mean Temperature of Water ===
+------------------------------------------------------------------------------
+$--MTW,x.x,C*hh<CR><LF>
+------------------------------------------------------------------------------
+
+Field Number:
+1. Degrees
+2. Unit of Measurement, Celcius
+3. Checksum
+*/
+
+static void nmea0183WaterTemperature( StringBuffer * msg183, int src, const char * msg )
+{
+  char temperature_string[10];
+  char source_string[10];
+  double temperature;
+
+  getJSONValue(msg, "Temperature Source", source_string, sizeof(source_string));
+  if (strcmp(source_string, "Sea Temperature") >= 0)
+  {
+    return;
+  }
+
+  // NOTE - in pgns.json 130311 Temperature Unit comes as K while DST800 is definetely sending in Celcius so no conversion is made
+  if(getJSONValue(msg, "Temperature", temperature_string, sizeof(temperature_string))) {
+    temperature = strtod(temperature_string, 0);
+  }
+
+  nmea0183CreateMessage(msg183, src, "MTW,%04.1f,C", temperature);
+}
+
+/*
 === RSA - Rudder Sensor Angle ===
 ------------------------------------------------------------------------------
         1   2 3   4 5
@@ -497,6 +534,9 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
   case PGN_WATER_SPEED:
     j = WATER_SPEED;
     break;
+  case PGN_ENVIRONMENTAL:
+    j = ENVIRONMENTAL;
+    break;
   case PGN_RUDDER:
     j = RUDDER;
     break;
@@ -556,6 +596,9 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
     break;
   case PGN_WATER_SPEED:
     nmea0183WaterSpeed(msg183, src, msg);
+    break;
+  case PGN_ENVIRONMENTAL:
+    nmea0183WaterTemperature(msg183, src, msg);
     break;
   case PGN_RUDDER:
     nmea0183Rudder(msg183, src, msg);
