@@ -477,7 +477,7 @@ static void nmea0183DistanceTraveled( StringBuffer * msg183, int src, const char
   }
 
 
-  nmea0183CreateMessage(msg183, src, "VLW,%04.1f,N,%04.1f,N", (total_log / 1852), (trip_log / 1852));
+  nmea0183CreateMessage(msg183, src, "VLW,%.1f,N,%.1f,N", (total_log / 1852), (trip_log / 1852));
 }
 
 /*
