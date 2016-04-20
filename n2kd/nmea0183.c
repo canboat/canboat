@@ -249,6 +249,7 @@ static void nmea0183WindData( StringBuffer * msg183, int src, const char * msg )
   char reference[10];
   double speedInMetersPerSecond;
   double speedInKMPerHour;
+  double speedInKnots;
 
   if (!getJSONValue(msg, "Wind Speed", speed, sizeof(speed))
    || !getJSONValue(msg, "Wind Angle", angle, sizeof(angle))
@@ -259,6 +260,7 @@ static void nmea0183WindData( StringBuffer * msg183, int src, const char * msg )
 
   speedInMetersPerSecond = strtod(speed, 0);
   speedInKMPerHour = speedInMetersPerSecond * 3.6;
+  speedInKnots = speedInKMPerHour / 1.852;
 
   if (strcmp(reference, "True") >= 0)
   {
@@ -267,6 +269,7 @@ static void nmea0183WindData( StringBuffer * msg183, int src, const char * msg )
   else if (strcmp(reference, "Apparent") == 0)
   {
     nmea0183CreateMessage(msg183, src, "MWV,%s,R,%.1f,K,A", angle, speedInKMPerHour);
+    nmea0183CreateMessage(msg183, src, "MWD,,T,%s,M,%.1f,N,%.1f,M", angle, speedInKnots, speedInMetersPerSecond);
   }
 }
 
