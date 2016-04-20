@@ -265,11 +265,11 @@ static void nmea0183WindData( StringBuffer * msg183, int src, const char * msg )
   if (strcmp(reference, "True") >= 0)
   {
     nmea0183CreateMessage(msg183, src, "MWV,%s,T,%.1f,K,A", angle, speedInKMPerHour);
+    nmea0183CreateMessage(msg183, src, "MWD,,T,%s,M,%.1f,N,%.1f,M", angle, speedInKnots, speedInMetersPerSecond);
   }
   else if (strcmp(reference, "Apparent") == 0)
   {
     nmea0183CreateMessage(msg183, src, "MWV,%s,R,%.1f,K,A", angle, speedInKMPerHour);
-    nmea0183CreateMessage(msg183, src, "MWD,,T,%s,M,%.1f,N,%.1f,M", angle, speedInKnots, speedInMetersPerSecond);
   }
 }
 
