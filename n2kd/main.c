@@ -827,6 +827,10 @@ static bool storeMessage(char * line, size_t len)
     valid = secondaryKeyTimeout[k];
   }
   logDebug("stored prn %d timeout=%d 2ndKey=%d\n", prn, valid, k);
+  if (key2)
+  {
+    free(key2);
+  }
   m->m_time = now + valid;
   return true;
 }
