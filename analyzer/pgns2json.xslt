@@ -336,10 +336,7 @@
       <xsl:text>  </xsl:text>
     </xsl:for-each>
   </xsl:template>
-  
-  <!-- JS: include comments -->
-  <xsl:template match="comment()">/*<xsl:value-of select="."/>*/</xsl:template>
-  
+
   <!-- convert root element to an anonymous container -->
   <xsl:template match="/*">
     <xsl:apply-templates select="node()"/>
