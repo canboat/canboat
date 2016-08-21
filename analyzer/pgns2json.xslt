@@ -351,7 +351,7 @@
   </xsl:template>
 
   <xsl:template match="EnumValues/EnumPair">
-    <xsl:call-template name="indent"/>{"<xsl:value-of select="@Value"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+    <xsl:call-template name="indent"/>{"name":"<xsl:value-of select="@Name"/>","value":"<xsl:value-of select="@Value"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="EnumBitValues/EnumPair">
