@@ -968,6 +968,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
 
   extractNumber(field, data, startBit, bits, &value, &maxValue);
 
+
   /* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
    * but I don't yet know which datafields reserve the reserved values.
    */
@@ -1150,7 +1151,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
     else
     {
 
-      if (field->resolution == RES_INTEGER)
+      if (field->resolution == RES_INTEGER || field->resolution == RES_BITFIELD)
       {
         if (showJson)
         {
@@ -1208,7 +1209,6 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
 
           // Many more to follow, but pgn.h is not yet complete enough...
         }
-
 
         if (showJson)
         {
@@ -2137,6 +2137,7 @@ bool printPgn(RawMessage* msg, uint8_t *dataStart, int length, bool showData, bo
       int len;
       int k;
 
+ 
       /* These fields have only been found to start on byte boundaries,
        * making their location easier
        */
@@ -2324,6 +2325,7 @@ ascii_string:
       }
       else
       {
+
         logError("Unknown resolution %f for %s\n", field->resolution, fieldName);
       }
     }
