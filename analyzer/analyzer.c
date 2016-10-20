@@ -1023,8 +1023,8 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
         mprintf("%s %s = %s", getSep(), fieldName, s);
       }
     }
-    else
-    if (field->resolution == RES_LOOKUP && field->units)
+
+    else if (field->resolution == RES_LOOKUP && field->units)
     {
       char lookfor[20];
       char * s, * e;
@@ -1058,7 +1058,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
       }
     }
 
-    else if (field->resolution == RES_LOOKUP && field->units)
+    else if (field->resolution == RES_BITFIELD && field->units)
     {
       char lookfor[20];
       char * s, * e;
@@ -1066,10 +1066,11 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
       uint64_t bitValue;
       char sep;
 
+      logDebug("RES_BITFIELD value %"PRIx64"\n", value);
       if (showJson)
       {
         mprintf("%s\"%s\": ", getSep(), fieldName);
-        sep = '{';
+        sep = '[';
       }
       else
       {
@@ -1079,7 +1080,8 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
 
       for (bitValue = 1, bit = 0; bitValue <= maxValue; (bitValue *= 2), bit++)
       {
-        if (value & bitValue)
+        logDebug("RES_BITFIELD is bit %u value %"PRIx64" set %d\n", bit, bitValue, (value & value) >= 0);
+        if ((value & bitValue) != 0)
         {
           sprintf(lookfor, ",%u=", bit);
           s = strstr(field->units, lookfor);
@@ -1108,7 +1110,14 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
       }
       if (showJson)
       {
-        mprintf("}");
+        if (sep != '[')
+        {
+          mprintf("]");
+        }
+        else
+        {
+          mprintf("[]");
+        }
       }
     }
 
