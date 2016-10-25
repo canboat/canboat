@@ -2622,6 +2622,223 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>65288</PGN>
+       <Id>seatalkAlarm</Id>
+       <Description>Seatalk: Alarm</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Raymarine</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1851</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>sid</Id>
+           <Name>SID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>alarmStatus</Id>
+           <Name>Alarm Status</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Alarm condition not met' />
+             <EnumPair Value='1' Name='Alarm condition met and not silenced' />
+             <EnumPair Value='2' Name='Alarm condition met and silenced' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>alarmId</Id>
+           <Name>Alarm ID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No Alarm' />
+             <EnumPair Value='1' Name='Shallow Depth' />
+             <EnumPair Value='2' Name='Deep Depth' />
+             <EnumPair Value='3' Name='Shallow Anchor' />
+             <EnumPair Value='4' Name='Deep Anchor' />
+             <EnumPair Value='5' Name='Off Course' />
+             <EnumPair Value='6' Name='AWA High' />
+             <EnumPair Value='7' Name='AWA Low' />
+             <EnumPair Value='8' Name='AWS High' />
+             <EnumPair Value='9' Name='AWS Low' />
+             <EnumPair Value='10' Name='TWA High' />
+             <EnumPair Value='11' Name='TWA Low' />
+             <EnumPair Value='120C' Name='TWS High' />
+             <EnumPair Value='13' Name='TWS Low' />
+             <EnumPair Value='14' Name='WP Arrival' />
+             <EnumPair Value='15' Name='Boat Speed High' />
+             <EnumPair Value='16' Name='Boat Speed Low' />
+             <EnumPair Value='17' Name='Sea Temp High' />
+             <EnumPair Value='18' Name='Sea Temp Low' />
+             <EnumPair Value='19' Name='Pilot Watch' />
+             <EnumPair Value='20' Name='Pilot Off Course' />
+             <EnumPair Value='21' Name='Pilot Wind Shift' />
+             <EnumPair Value='22' Name='Pilot Low Battery' />
+             <EnumPair Value='23' Name='Pilot Last Minute Of Watch' />
+             <EnumPair Value='24' Name='Pilot No NMEA Data' />
+             <EnumPair Value='25' Name='Pilot Large XTE' />
+             <EnumPair Value='26' Name='Pilot NMEA DataError' />
+             <EnumPair Value='27' Name='Pilot CU Disconnected' />
+             <EnumPair Value='28' Name='Pilot Auto Release' />
+             <EnumPair Value='29' Name='Pilot Way Point Advance' />
+             <EnumPair Value='30' Name='Pilot Drive Stopped' />
+             <EnumPair Value='31' Name='Pilot Type Unspecified' />
+             <EnumPair Value='32' Name='Pilot Calibration Required' />
+             <EnumPair Value='33' Name='Pilot Last Heading' />
+             <EnumPair Value='34' Name='Pilot No Pilot' />
+             <EnumPair Value='35' Name='Pilot Route Complete' />
+             <EnumPair Value='36' Name='Pilot Variable Text' />
+             <EnumPair Value='37' Name='GPS Failure' />
+             <EnumPair Value='38' Name='MOB' />
+             <EnumPair Value='39' Name='Seatalk1 Anchor' />
+             <EnumPair Value='40' Name='Pilot Swapped Motor Power' />
+             <EnumPair Value='41' Name='Pilot Standby Too Fast To Fish' />
+             <EnumPair Value='42' Name='Pilot No GPS Fix' />
+             <EnumPair Value='43' Name='Pilot No GPS COG' />
+             <EnumPair Value='44' Name='Pilot Start Up' />
+             <EnumPair Value='45' Name='Pilot Too Slow' />
+             <EnumPair Value='46' Name='Pilot No Compass' />
+             <EnumPair Value='47' Name='Pilot Rate Gyro Fault' />
+             <EnumPair Value='48' Name='Pilot Current Limit' />
+             <EnumPair Value='49' Name='Pilot Way Point Advance Port' />
+             <EnumPair Value='50' Name='Pilot Way Point Advance Stbd' />
+             <EnumPair Value='51' Name='Pilot No Wind Data' />
+             <EnumPair Value='52' Name='Pilot No Speed Data' />
+             <EnumPair Value='53' Name='Pilot Seatalk Fail1' />
+             <EnumPair Value='54' Name='Pilot Seatalk Fail2' />
+             <EnumPair Value='55' Name='Pilot Warning Too Fast To Fish' />
+             <EnumPair Value='56' Name='Pilot Auto Dockside Fail' />
+             <EnumPair Value='57' Name='Pilot Turn Too Fast' />
+             <EnumPair Value='58' Name='Pilot No Nav Data' />
+             <EnumPair Value='59' Name='Pilot Lost Waypoint Data' />
+             <EnumPair Value='60' Name='Pilot EEPROM Corrupt' />
+             <EnumPair Value='61' Name='Pilot Rudder Feedback Fail' />
+             <EnumPair Value='62' Name='Pilot Autolearn Fail1' />
+             <EnumPair Value='63' Name='Pilot Autolearn Fail2' />
+             <EnumPair Value='64' Name='Pilot Autolearn Fail3' />
+             <EnumPair Value='65' Name='Pilot Autolearn Fail4' />
+             <EnumPair Value='66' Name='Pilot Autolearn Fail5' />
+             <EnumPair Value='67' Name='Pilot Autolearn Fail6' />
+             <EnumPair Value='68' Name='Pilot Warning Cal Required' />
+             <EnumPair Value='69' Name='Pilot Warning OffCourse' />
+             <EnumPair Value='70' Name='Pilot Warning XTE' />
+             <EnumPair Value='71' Name='Pilot Warning Wind Shift' />
+             <EnumPair Value='72' Name='Pilot Warning Drive Short' />
+             <EnumPair Value='73' Name='Pilot Warning Clutch Short' />
+             <EnumPair Value='74' Name='Pilot Warning Solenoid Short' />
+             <EnumPair Value='75' Name='Pilot Joystick Fault' />
+             <EnumPair Value='76' Name='Pilot No Joystick Data' />
+             <EnumPair Value='77' Name='not assigned' />
+             <EnumPair Value='78' Name='not assigned' />
+             <EnumPair Value='79' Name='not assigned' />
+             <EnumPair Value='80' Name='Pilot Invalid Command' />
+             <EnumPair Value='81' Name='AIS TX Malfunction' />
+             <EnumPair Value='82' Name='AIS Antenna VSWR fault' />
+             <EnumPair Value='83' Name='AIS Rx channel 1 malfunction' />
+             <EnumPair Value='84' Name='AIS Rx channel 2 malfunction' />
+             <EnumPair Value='85' Name='AIS No sensor position in use' />
+             <EnumPair Value='86' Name='AIS No valid SOG information' />
+             <EnumPair Value='87' Name='AIS No valid COG information' />
+             <EnumPair Value='88' Name='AIS 12V alarm' />
+             <EnumPair Value='89' Name='AIS 6V alarm' />
+             <EnumPair Value='90' Name='AIS Noise threshold exceeded channel A' />
+             <EnumPair Value='91' Name='AIS Noise threshold exceeded channel B' />
+             <EnumPair Value='92' Name='AIS Transmitter PA fault' />
+             <EnumPair Value='93' Name='AIS 3V3 alarm' />
+             <EnumPair Value='94' Name='AIS Rx channel 70 malfunction' />
+             <EnumPair Value='95' Name='AIS Heading lost/invalid' />
+             <EnumPair Value='96' Name='AIS internal GPS lost' />
+             <EnumPair Value='97' Name='AIS No sensor position' />
+             <EnumPair Value='98' Name='AIS Lock failure' />
+             <EnumPair Value='99' Name='AIS Internal GGA timeout' />
+             <EnumPair Value='100' Name='AIS Protocol stack restart' />
+             <EnumPair Value='101' Name='Pilot No IPS communications' />
+             <EnumPair Value='102' Name='Pilot Power-On or Sleep-Switch Reset While Engaged     ' />
+             <EnumPair Value='103' Name='Pilot Unexpected Reset While Engaged' />
+             <EnumPair Value='104' Name='AIS Dangerous Target' />
+             <EnumPair Value='105' Name='AIS Lost Target' />
+             <EnumPair Value='106' Name='AIS Safety Related Message (used to silence)' />
+             <EnumPair Value='107' Name='AIS Connection Lost' />
+             <EnumPair Value='108' Name='No Fix' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>alarmGroup</Id>
+           <Name>Alarm Group</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Instrument' />
+             <EnumPair Value='1' Name='Autopilot' />
+             <EnumPair Value='2' Name='Radar' />
+             <EnumPair Value='3' Name='Chart Plotter' />
+             <EnumPair Value='4' Name='AIS' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>alarmPriority</Id>
+           <Name>Alarm Priority</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>65289</PGN>
        <Id>simnetTrimTabSensorCalibration</Id>
        <Description>Simnet: Trim Tab Sensor Calibration</Description>
@@ -2886,6 +3103,444 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>65345</PGN>
+       <Id>seatalkPilotWindDatum</Id>
+       <Description>Seatalk: Pilot Wind Datum</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Raymarine</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1851</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>windDatum</Id>
+           <Name>Wind Datum</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>rollingAverageWindAngle</Id>
+           <Name>Rolling Average Wind Angle</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>65359</PGN>
+       <Id>seatalkPilotHeading</Id>
+       <Description>Seatalk: Pilot Heading</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Raymarine</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1851</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>sid</Id>
+           <Name>SID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>headingTrue</Id>
+           <Name>Heading True</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>headingMagnetic</Id>
+           <Name>Heading Magnetic</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>65360</PGN>
+       <Id>seatalkPilotLockedHeading</Id>
+       <Description>Seatalk: Pilot Locked Heading</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Raymarine</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1851</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>sid</Id>
+           <Name>SID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>targetHeadingTrue</Id>
+           <Name>Target Heading True</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>targetHeadingMagnetic</Id>
+           <Name>Target Heading Magnetic</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>65361</PGN>
+       <Id>seatalkSilenceAlarm</Id>
+       <Description>Seatalk: Silence Alarm</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Raymarine</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1851</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>alarmId</Id>
+           <Name>Alarm ID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No Alarm' />
+             <EnumPair Value='1' Name='Shallow Depth' />
+             <EnumPair Value='2' Name='Deep Depth' />
+             <EnumPair Value='3' Name='Shallow Anchor' />
+             <EnumPair Value='4' Name='Deep Anchor' />
+             <EnumPair Value='5' Name='Off Course' />
+             <EnumPair Value='6' Name='AWA High' />
+             <EnumPair Value='7' Name='AWA Low' />
+             <EnumPair Value='8' Name='AWS High' />
+             <EnumPair Value='9' Name='AWS Low' />
+             <EnumPair Value='10' Name='TWA High' />
+             <EnumPair Value='11' Name='TWA Low' />
+             <EnumPair Value='120C' Name='TWS High' />
+             <EnumPair Value='13' Name='TWS Low' />
+             <EnumPair Value='14' Name='WP Arrival' />
+             <EnumPair Value='15' Name='Boat Speed High' />
+             <EnumPair Value='16' Name='Boat Speed Low' />
+             <EnumPair Value='17' Name='Sea Temp High' />
+             <EnumPair Value='18' Name='Sea Temp Low' />
+             <EnumPair Value='19' Name='Pilot Watch' />
+             <EnumPair Value='20' Name='Pilot Off Course' />
+             <EnumPair Value='21' Name='Pilot Wind Shift' />
+             <EnumPair Value='22' Name='Pilot Low Battery' />
+             <EnumPair Value='23' Name='Pilot Last Minute Of Watch' />
+             <EnumPair Value='24' Name='Pilot No NMEA Data' />
+             <EnumPair Value='25' Name='Pilot Large XTE' />
+             <EnumPair Value='26' Name='Pilot NMEA DataError' />
+             <EnumPair Value='27' Name='Pilot CU Disconnected' />
+             <EnumPair Value='28' Name='Pilot Auto Release' />
+             <EnumPair Value='29' Name='Pilot Way Point Advance' />
+             <EnumPair Value='30' Name='Pilot Drive Stopped' />
+             <EnumPair Value='31' Name='Pilot Type Unspecified' />
+             <EnumPair Value='32' Name='Pilot Calibration Required' />
+             <EnumPair Value='33' Name='Pilot Last Heading' />
+             <EnumPair Value='34' Name='Pilot No Pilot' />
+             <EnumPair Value='35' Name='Pilot Route Complete' />
+             <EnumPair Value='36' Name='Pilot Variable Text' />
+             <EnumPair Value='37' Name='GPS Failure' />
+             <EnumPair Value='38' Name='MOB' />
+             <EnumPair Value='39' Name='Seatalk1 Anchor' />
+             <EnumPair Value='40' Name='Pilot Swapped Motor Power' />
+             <EnumPair Value='41' Name='Pilot Standby Too Fast To Fish' />
+             <EnumPair Value='42' Name='Pilot No GPS Fix' />
+             <EnumPair Value='43' Name='Pilot No GPS COG' />
+             <EnumPair Value='44' Name='Pilot Start Up' />
+             <EnumPair Value='45' Name='Pilot Too Slow' />
+             <EnumPair Value='46' Name='Pilot No Compass' />
+             <EnumPair Value='47' Name='Pilot Rate Gyro Fault' />
+             <EnumPair Value='48' Name='Pilot Current Limit' />
+             <EnumPair Value='49' Name='Pilot Way Point Advance Port' />
+             <EnumPair Value='50' Name='Pilot Way Point Advance Stbd' />
+             <EnumPair Value='51' Name='Pilot No Wind Data' />
+             <EnumPair Value='52' Name='Pilot No Speed Data' />
+             <EnumPair Value='53' Name='Pilot Seatalk Fail1' />
+             <EnumPair Value='54' Name='Pilot Seatalk Fail2' />
+             <EnumPair Value='55' Name='Pilot Warning Too Fast To Fish' />
+             <EnumPair Value='56' Name='Pilot Auto Dockside Fail' />
+             <EnumPair Value='57' Name='Pilot Turn Too Fast' />
+             <EnumPair Value='58' Name='Pilot No Nav Data' />
+             <EnumPair Value='59' Name='Pilot Lost Waypoint Data' />
+             <EnumPair Value='60' Name='Pilot EEPROM Corrupt' />
+             <EnumPair Value='61' Name='Pilot Rudder Feedback Fail' />
+             <EnumPair Value='62' Name='Pilot Autolearn Fail1' />
+             <EnumPair Value='63' Name='Pilot Autolearn Fail2' />
+             <EnumPair Value='64' Name='Pilot Autolearn Fail3' />
+             <EnumPair Value='65' Name='Pilot Autolearn Fail4' />
+             <EnumPair Value='66' Name='Pilot Autolearn Fail5' />
+             <EnumPair Value='67' Name='Pilot Autolearn Fail6' />
+             <EnumPair Value='68' Name='Pilot Warning Cal Required' />
+             <EnumPair Value='69' Name='Pilot Warning OffCourse' />
+             <EnumPair Value='70' Name='Pilot Warning XTE' />
+             <EnumPair Value='71' Name='Pilot Warning Wind Shift' />
+             <EnumPair Value='72' Name='Pilot Warning Drive Short' />
+             <EnumPair Value='73' Name='Pilot Warning Clutch Short' />
+             <EnumPair Value='74' Name='Pilot Warning Solenoid Short' />
+             <EnumPair Value='75' Name='Pilot Joystick Fault' />
+             <EnumPair Value='76' Name='Pilot No Joystick Data' />
+             <EnumPair Value='77' Name='not assigned' />
+             <EnumPair Value='78' Name='not assigned' />
+             <EnumPair Value='79' Name='not assigned' />
+             <EnumPair Value='80' Name='Pilot Invalid Command' />
+             <EnumPair Value='81' Name='AIS TX Malfunction' />
+             <EnumPair Value='82' Name='AIS Antenna VSWR fault' />
+             <EnumPair Value='83' Name='AIS Rx channel 1 malfunction' />
+             <EnumPair Value='84' Name='AIS Rx channel 2 malfunction' />
+             <EnumPair Value='85' Name='AIS No sensor position in use' />
+             <EnumPair Value='86' Name='AIS No valid SOG information' />
+             <EnumPair Value='87' Name='AIS No valid COG information' />
+             <EnumPair Value='88' Name='AIS 12V alarm' />
+             <EnumPair Value='89' Name='AIS 6V alarm' />
+             <EnumPair Value='90' Name='AIS Noise threshold exceeded channel A' />
+             <EnumPair Value='91' Name='AIS Noise threshold exceeded channel B' />
+             <EnumPair Value='92' Name='AIS Transmitter PA fault' />
+             <EnumPair Value='93' Name='AIS 3V3 alarm' />
+             <EnumPair Value='94' Name='AIS Rx channel 70 malfunction' />
+             <EnumPair Value='95' Name='AIS Heading lost/invalid' />
+             <EnumPair Value='96' Name='AIS internal GPS lost' />
+             <EnumPair Value='97' Name='AIS No sensor position' />
+             <EnumPair Value='98' Name='AIS Lock failure' />
+             <EnumPair Value='99' Name='AIS Internal GGA timeout' />
+             <EnumPair Value='100' Name='AIS Protocol stack restart' />
+             <EnumPair Value='101' Name='Pilot No IPS communications' />
+             <EnumPair Value='102' Name='Pilot Power-On or Sleep-Switch Reset While Engaged     ' />
+             <EnumPair Value='103' Name='Pilot Unexpected Reset While Engaged' />
+             <EnumPair Value='104' Name='AIS Dangerous Target' />
+             <EnumPair Value='105' Name='AIS Lost Target' />
+             <EnumPair Value='106' Name='AIS Safety Related Message (used to silence)' />
+             <EnumPair Value='107' Name='AIS Connection Lost' />
+             <EnumPair Value='108' Name='No Fix' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>alarmGroup</Id>
+           <Name>Alarm Group</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Instrument' />
+             <EnumPair Value='1' Name='Autopilot' />
+             <EnumPair Value='2' Name='Radar' />
+             <EnumPair Value='3' Name='Chart Plotter' />
+             <EnumPair Value='4' Name='AIS' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>65371</PGN>
        <Id>seatalkKeypadMessage</Id>
        <Description>Seatalk: Keypad Message</Description>
@@ -3060,6 +3715,90 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>65379</PGN>
+       <Id>seatalkPilotMode</Id>
+       <Description>Seatalk: Pilot Mode</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Raymarine</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1851</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>pilotMode</Id>
+           <Name>Pilot Mode</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>subMode</Id>
+           <Name>Sub Mode</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>pilotModeData</Id>
+           <Name>Pilot Mode Data</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>24</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
        </Fields>
