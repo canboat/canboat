@@ -368,6 +368,129 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] =
     ",105=Enhanced geographic area" \
     ",106=Number of persons on board" )
 
+#define LOOKUP_SEATALK_ALARM_STATUS ( \
+    ",0=Alarm condition not met" \
+    ",1=Alarm condition met and not silenced" \
+    ",2=Alarm condition met and silenced")
+
+#define LOOKUP_SEATALK_ALARM_ID ( \
+    ",0=No Alarm" \
+    ",1=Shallow Depth" \
+    ",2=Deep Depth" \
+    ",3=Shallow Anchor" \
+    ",4=Deep Anchor" \
+    ",5=Off Course" \
+    ",6=AWA High" \
+    ",7=AWA Low" \
+    ",8=AWS High" \
+    ",9=AWS Low" \
+    ",10=TWA High" \
+    ",11=TWA Low" \
+    ",120C=TWS High" \
+    ",13=TWS Low" \
+    ",14=WP Arrival" \
+    ",15=Boat Speed High" \
+    ",16=Boat Speed Low" \
+    ",17=Sea Temp High" \
+    ",18=Sea Temp Low" \
+    ",19=Pilot Watch" \
+    ",20=Pilot Off Course" \
+    ",21=Pilot Wind Shift" \
+    ",22=Pilot Low Battery" \
+    ",23=Pilot Last Minute Of Watch" \
+    ",24=Pilot No NMEA Data" \
+    ",25=Pilot Large XTE" \
+    ",26=Pilot NMEA DataError" \
+    ",27=Pilot CU Disconnected" \
+    ",28=Pilot Auto Release" \
+    ",29=Pilot Way Point Advance" \
+    ",30=Pilot Drive Stopped" \
+    ",31=Pilot Type Unspecified" \
+    ",32=Pilot Calibration Required" \
+    ",33=Pilot Last Heading" \
+    ",34=Pilot No Pilot" \
+    ",35=Pilot Route Complete" \
+    ",36=Pilot Variable Text" \
+    ",37=GPS Failure" \
+    ",38=MOB" \
+    ",39=Seatalk1 Anchor" \
+    ",40=Pilot Swapped Motor Power" \
+    ",41=Pilot Standby Too Fast To Fish" \
+    ",42=Pilot No GPS Fix" \
+    ",43=Pilot No GPS COG" \
+    ",44=Pilot Start Up" \
+    ",45=Pilot Too Slow" \
+    ",46=Pilot No Compass" \
+    ",47=Pilot Rate Gyro Fault" \
+    ",48=Pilot Current Limit" \
+    ",49=Pilot Way Point Advance Port" \
+    ",50=Pilot Way Point Advance Stbd" \
+    ",51=Pilot No Wind Data" \
+    ",52=Pilot No Speed Data" \
+    ",53=Pilot Seatalk Fail1" \
+    ",54=Pilot Seatalk Fail2" \
+    ",55=Pilot Warning Too Fast To Fish" \
+    ",56=Pilot Auto Dockside Fail" \
+    ",57=Pilot Turn Too Fast" \
+    ",58=Pilot No Nav Data" \
+    ",59=Pilot Lost Waypoint Data" \
+    ",60=Pilot EEPROM Corrupt" \
+    ",61=Pilot Rudder Feedback Fail" \
+    ",62=Pilot Autolearn Fail1" \
+    ",63=Pilot Autolearn Fail2" \
+    ",64=Pilot Autolearn Fail3" \
+    ",65=Pilot Autolearn Fail4" \
+    ",66=Pilot Autolearn Fail5" \
+    ",67=Pilot Autolearn Fail6" \
+    ",68=Pilot Warning Cal Required" \
+    ",69=Pilot Warning OffCourse" \
+    ",70=Pilot Warning XTE" \
+    ",71=Pilot Warning Wind Shift" \
+    ",72=Pilot Warning Drive Short" \
+    ",73=Pilot Warning Clutch Short" \
+    ",74=Pilot Warning Solenoid Short" \
+    ",75=Pilot Joystick Fault" \
+    ",76=Pilot No Joystick Data" \
+    ",77=not assigned" \
+    ",78=not assigned" \
+    ",79=not assigned" \
+    ",80=Pilot Invalid Command" \
+    ",81=AIS TX Malfunction" \
+    ",82=AIS Antenna VSWR fault" \
+    ",83=AIS Rx channel 1 malfunction" \
+    ",84=AIS Rx channel 2 malfunction" \
+    ",85=AIS No sensor position in use" \
+    ",86=AIS No valid SOG information" \
+    ",87=AIS No valid COG information" \
+    ",88=AIS 12V alarm" \
+    ",89=AIS 6V alarm" \
+    ",90=AIS Noise threshold exceeded channel A" \
+    ",91=AIS Noise threshold exceeded channel B" \
+    ",92=AIS Transmitter PA fault" \
+    ",93=AIS 3V3 alarm" \
+    ",94=AIS Rx channel 70 malfunction" \
+    ",95=AIS Heading lost/invalid" \
+    ",96=AIS internal GPS lost" \
+    ",97=AIS No sensor position" \
+    ",98=AIS Lock failure" \
+    ",99=AIS Internal GGA timeout" \
+    ",100=AIS Protocol stack restart" \
+    ",101=Pilot No IPS communications" \
+    ",102=Pilot Power-On or Sleep-Switch Reset While Engaged     " \
+    ",103=Pilot Unexpected Reset While Engaged" \
+    ",104=AIS Dangerous Target" \
+    ",105=AIS Lost Target" \
+    ",106=AIS Safety Related Message (used to silence)" \
+    ",107=AIS Connection Lost" \
+    ",108=No Fix" )
+
+#define LOOKUP_SEATALK_ALARM_GROUP ( \
+    ",0=Instrument" \
+    ",1=Autopilot" \
+    ",2=Radar" \
+    ",3=Chart Plotter" \
+    ",4=AIS" )
+
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
 
 typedef struct
@@ -948,6 +1071,18 @@ Pgn pgnList[] =
 }
 
 ,
+{ "Seatalk: Alarm", 65288, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "SID", BYTES(1), RES_BINARY, false, 0, "" }
+  , { "Alarm Status", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_STATUS, "" }
+  , { "Alarm ID", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_ID, "" }
+  , { "Alarm Group", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_GROUP, "" }
+  , { "Alarm Priority", BYTES(2), RES_BINARY, false, 0, "" }
+  }
+}
+,
 { "Simnet: Trim Tab Sensor Calibration", 65289, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
@@ -996,6 +1131,51 @@ Pgn pgnList[] =
 }
 
 ,
+{ "Seatalk: Pilot Wind Datum", 65345, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Wind Datum", BYTES(2), RES_RADIANS, false, "rad", "" }    
+  , { "Rolling Average Wind Angle", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Reserved", BYTES(2), 1, false, 0, "" }
+  }
+}
+,
+{ "Seatalk: Pilot Heading", 65359, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "SID", BYTES(1), RES_BINARY, false, 0, "" }
+  , { "Heading True", BYTES(2), RES_RADIANS, false, "rad", "" }    
+  , { "Heading Magnetic", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Reserved", BYTES(1), 1, false, 0, "" }
+  }
+}
+
+,
+{ "Seatalk: Pilot Locked Heading", 65360, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "SID", BYTES(1), RES_BINARY, false, 0, "" }
+  , { "Target Heading True", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Target Heading Magnetic", BYTES(2), RES_RADIANS, false, "rad", "" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "" }
+  }
+}
+
+,
+{ "Seatalk: Silence Alarm", 65361, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Alarm ID", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_ID, "" }
+  , { "Alarm Group", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_GROUP, "" }
+  , { "Reserved", 32, RES_BINARY, false, 0, "" }
+  }
+}
+
+,
 { "Seatalk: Keypad Message", 65371, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
@@ -1021,6 +1201,17 @@ Pgn pgnList[] =
   }
 }
 
+,
+{ "Seatalk: Pilot Mode", 65379, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Pilot Mode", BYTES(1), RES_BINARY, false, 0, "" }
+  , { "Sub Mode", BYTES(1), RES_BINARY, false, 0, "" }
+  , { "Pilot Mode Data", BYTES(1), RES_BINARY, false, 0, "" }
+  , { "Reserved", BYTES(3), RES_BINARY, false, 0, "" }    
+  }
+}
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
 ,
 { "Airmar: Depth Quality Factor", 65408, false, 8, 0,
