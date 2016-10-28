@@ -165,7 +165,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] =
           ",20=Wing In Ground,29=Wing In Ground (no other information)" \
           ",30=Fishing,31=Towing,32=Towing exceeds 200m or wider than 25m,33=Engaged in dredging or underwater operations,34=Engaged in diving operations" \
           ",35=Engaged in military operations,36=Sailing,37=Pleasure" \
-          ",40=High speed craft,71=High speed craft carrying dangerous goods,72=High speed craft hazard cat B,73=High speed craft hazard cat C,74=High speed craft hazard cat D,79=High speed craft (no additional information)" \
+          ",40=High speed craft,41=High speed craft carrying dangerous goods,42=High speed craft hazard cat B,43=High speed craft hazard cat C,44=High speed craft hazard cat D,49=High speed craft (no additional information)" \
           ",50=Pilot vessel,51=SAR,52=Tug,53=Port tender,54=Anti-pollution,55=Law enforcement,56=Spare,57=Spare #2,58=Medical,59=RR Resolution No.18" \
           ",60=Passenger ship,69=Passenger ship (no additional information)" \
           ",70=Cargo ship,71=Cargo ship carrying dangerous goods,72=Cargo ship hazard cat B,73=Cargo ship hazard cat C,74=Cargo ship hazard cat D,79=Cargo ship (no additional information)" \
@@ -1740,7 +1740,7 @@ Pgn pgnList[] =
 }
 
 ,
-{ "DC Detailed Status", 127506, false, 8, 0,
+{ "DC Detailed Status", 127506, false, 9, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "DC Instance", BYTES(1), 1, false, 0, "" }
   , { "DC Type", BYTES(1), 1, false, 0, "" }
