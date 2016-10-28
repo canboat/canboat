@@ -8255,7 +8255,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>dcDetailedStatus</Id>
        <Description>DC Detailed Status</Description>
        <Complete>false</Complete>
-       <Length>8</Length>
+       <Length>9</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -10571,11 +10571,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='36' Name='Sailing' />
              <EnumPair Value='37' Name='Pleasure' />
              <EnumPair Value='40' Name='High speed craft' />
-             <EnumPair Value='71' Name='High speed craft carrying dangerous goods' />
-             <EnumPair Value='72' Name='High speed craft hazard cat B' />
-             <EnumPair Value='73' Name='High speed craft hazard cat C' />
-             <EnumPair Value='74' Name='High speed craft hazard cat D' />
-             <EnumPair Value='79' Name='High speed craft (no additional information)' />
+             <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
+             <EnumPair Value='42' Name='High speed craft hazard cat B' />
+             <EnumPair Value='43' Name='High speed craft hazard cat C' />
+             <EnumPair Value='44' Name='High speed craft hazard cat D' />
+             <EnumPair Value='49' Name='High speed craft (no additional information)' />
              <EnumPair Value='50' Name='Pilot vessel' />
              <EnumPair Value='51' Name='SAR' />
              <EnumPair Value='52' Name='Tug' />
@@ -13258,11 +13258,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='36' Name='Sailing' />
              <EnumPair Value='37' Name='Pleasure' />
              <EnumPair Value='40' Name='High speed craft' />
-             <EnumPair Value='71' Name='High speed craft carrying dangerous goods' />
-             <EnumPair Value='72' Name='High speed craft hazard cat B' />
-             <EnumPair Value='73' Name='High speed craft hazard cat C' />
-             <EnumPair Value='74' Name='High speed craft hazard cat D' />
-             <EnumPair Value='79' Name='High speed craft (no additional information)' />
+             <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
+             <EnumPair Value='42' Name='High speed craft hazard cat B' />
+             <EnumPair Value='43' Name='High speed craft hazard cat C' />
+             <EnumPair Value='44' Name='High speed craft hazard cat D' />
+             <EnumPair Value='49' Name='High speed craft (no additional information)' />
              <EnumPair Value='50' Name='Pilot vessel' />
              <EnumPair Value='51' Name='SAR' />
              <EnumPair Value='52' Name='Tug' />
@@ -16018,11 +16018,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='36' Name='Sailing' />
              <EnumPair Value='37' Name='Pleasure' />
              <EnumPair Value='40' Name='High speed craft' />
-             <EnumPair Value='71' Name='High speed craft carrying dangerous goods' />
-             <EnumPair Value='72' Name='High speed craft hazard cat B' />
-             <EnumPair Value='73' Name='High speed craft hazard cat C' />
-             <EnumPair Value='74' Name='High speed craft hazard cat D' />
-             <EnumPair Value='79' Name='High speed craft (no additional information)' />
+             <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
+             <EnumPair Value='42' Name='High speed craft hazard cat B' />
+             <EnumPair Value='43' Name='High speed craft hazard cat C' />
+             <EnumPair Value='44' Name='High speed craft hazard cat D' />
+             <EnumPair Value='49' Name='High speed craft (no additional information)' />
              <EnumPair Value='50' Name='Pilot vessel' />
              <EnumPair Value='51' Name='SAR' />
              <EnumPair Value='52' Name='Tug' />
@@ -24310,11 +24310,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='36' Name='Sailing' />
              <EnumPair Value='37' Name='Pleasure' />
              <EnumPair Value='40' Name='High speed craft' />
-             <EnumPair Value='71' Name='High speed craft carrying dangerous goods' />
-             <EnumPair Value='72' Name='High speed craft hazard cat B' />
-             <EnumPair Value='73' Name='High speed craft hazard cat C' />
-             <EnumPair Value='74' Name='High speed craft hazard cat D' />
-             <EnumPair Value='79' Name='High speed craft (no additional information)' />
+             <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
+             <EnumPair Value='42' Name='High speed craft hazard cat B' />
+             <EnumPair Value='43' Name='High speed craft hazard cat C' />
+             <EnumPair Value='44' Name='High speed craft hazard cat D' />
+             <EnumPair Value='49' Name='High speed craft (no additional information)' />
              <EnumPair Value='50' Name='Pilot vessel' />
              <EnumPair Value='51' Name='SAR' />
              <EnumPair Value='52' Name='Tug' />

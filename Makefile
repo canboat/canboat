@@ -12,6 +12,7 @@ SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analy
 
 all:	bin
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
+	$(MAKE) -C analyzer json
 
 bin:
 	mkdir -p rel/$(PLATFORM)
