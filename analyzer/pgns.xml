@@ -21740,6 +21740,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Source</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -21757,8 +21758,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>6</Order>
-           <Id>b</Id>
-           <Name>B</Name>
+           <Id>sourceId</Id>
+           <Name>Source ID</Name>
            <BitLength>8</BitLength>
            <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
@@ -21766,8 +21767,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>7</Order>
-           <Id>c</Id>
-           <Name>C</Name>
+           <Id>currentSourceId</Id>
+           <Name>Current Source ID</Name>
            <BitLength>8</BitLength>
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
@@ -21799,6 +21800,167 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>64</BitOffset>
            <BitStart>0</BitStart>
                   <Type>ASCII string starting with length byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130820</PGN>
+       <Id>fusionTrackInfo</Id>
+       <Description>Fusion: Track Info</Description>
+       <Complete>false</Complete>
+       <Length>23</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Fusion</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>419</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <Description>Track Info</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>4</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>a</Id>
+           <Name>A</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>transport</Id>
+           <Name>Transport</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='1' Name='Playing' />
+             <EnumPair Value='2' Name='Paused' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>x</Id>
+           <Name>X</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>44</BitOffset>
+           <BitStart>4</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>b</Id>
+           <Name>B</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>track</Id>
+           <Name>Track #</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>c</Id>
+           <Name>C</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>trackCount</Id>
+           <Name>Track Count</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>88</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>e</Id>
+           <Name>E</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>104</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>trackLength</Id>
+           <Name>Track Length</Name>
+           <BitLength>24</BitLength>
+           <BitOffset>120</BitOffset>
+           <BitStart>0</BitStart>
+           <Resolution>0.001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>14</Order>
+           <Id>g</Id>
+           <Name>G</Name>
+           <BitLength>24</BitLength>
+           <BitOffset>144</BitOffset>
+           <BitStart>0</BitStart>
+           <Resolution>0.001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>15</Order>
+           <Id>h</Id>
+           <Name>H</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>168</BitOffset>
+           <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -21849,6 +22011,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Track Title</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -21931,6 +22094,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Track Artist</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22013,6 +22177,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Track Album</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22043,6 +22208,163 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Album</Name>
            <BitLength>80</BitLength>
            <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII string starting with length byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130820</PGN>
+       <Id>fusionUnitName</Id>
+       <Description>Fusion: Unit Name</Description>
+       <Complete>false</Complete>
+       <Length>32</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Fusion</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>419</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <Description>Unit Name</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>33</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>a</Id>
+           <Name>A</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>name</Id>
+           <Name>Name</Name>
+           <BitLength>112</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII string starting with length byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130820</PGN>
+       <Id>fusionZoneName</Id>
+       <Description>Fusion: Zone Name</Description>
+       <Complete>false</Complete>
+       <Length>32</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Fusion</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>419</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <Description>Zone Name</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>45</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>a</Id>
+           <Name>A</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>number</Id>
+           <Name>Number</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>name</Id>
+           <Name>Name</Name>
+           <BitLength>104</BitLength>
+           <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
                   <Type>ASCII string starting with length byte</Type>
            <Signed>false</Signed>
@@ -22095,6 +22417,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Track Progress</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22178,6 +22501,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>AM/FM Station</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22188,32 +22512,56 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>5</Order>
            <Id>a</Id>
            <Name>A</Name>
-           <BitLength>24</BitLength>
+           <BitLength>8</BitLength>
            <BitOffset>24</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>6</Order>
-           <Id>frequency</Id>
-           <Name>Frequency</Name>
-           <BitLength>32</BitLength>
-           <BitOffset>48</BitOffset>
+           <Id>amFm</Id>
+           <Name>AM/FM</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
-           <Units>Hz</Units>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='AM' />
+             <EnumPair Value='1' Name='FM' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>7</Order>
            <Id>b</Id>
            <Name>B</Name>
            <BitLength>8</BitLength>
-           <BitOffset>80</BitOffset>
+           <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
          <Field>
            <Order>8</Order>
+           <Id>frequency</Id>
+           <Name>Frequency</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>Hz</Units>
+           <Resolution>1e-06</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>c</Id>
+           <Name>C</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
            <Id>track</Id>
            <Name>Track</Name>
            <BitLength>80</BitLength>
@@ -22270,6 +22618,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>VHF</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22360,6 +22709,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Squelch</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22441,6 +22791,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Scan</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22527,6 +22878,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Menu Item</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22663,6 +23015,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Replay</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22811,6 +23164,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Mute</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22888,6 +23242,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Sub Volume</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -22991,6 +23346,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Tone</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -23093,6 +23449,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Volume</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -23196,6 +23553,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>messageId</Id>
            <Name>Message ID</Name>
+           <Description>Transport</Description>
            <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
@@ -23222,7 +23580,304 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Signed>false</Signed>
            <EnumValues>
              <EnumPair Value='1' Name='Paused' />
+             <EnumPair Value='2' Name='Play' />
            </EnumValues>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130820</PGN>
+       <Id>fusionSiriusxmChannel</Id>
+       <Description>Fusion: SiriusXM Channel</Description>
+       <Complete>false</Complete>
+       <Length>32</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Fusion</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>419</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <Description>SiriusXM Channel</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>36</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>a</Id>
+           <Name>A</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>channel</Id>
+           <Name>Channel</Name>
+           <BitLength>96</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII string starting with length byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130820</PGN>
+       <Id>fusionSiriusxmTitle</Id>
+       <Description>Fusion: SiriusXM Title</Description>
+       <Complete>false</Complete>
+       <Length>32</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Fusion</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>419</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <Description>SiriusXM Title</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>37</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>a</Id>
+           <Name>A</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>title</Id>
+           <Name>Title</Name>
+           <BitLength>96</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII string starting with length byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130820</PGN>
+       <Id>fusionSiriusxmArtist</Id>
+       <Description>Fusion: SiriusXM Artist</Description>
+       <Complete>false</Complete>
+       <Length>32</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Fusion</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>419</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <Description>SiriusXM Artist</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>38</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>a</Id>
+           <Name>A</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>artist</Id>
+           <Name>Artist</Name>
+           <BitLength>96</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII string starting with length byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130820</PGN>
+       <Id>fusionSiriusxmGenre</Id>
+       <Description>Fusion: SiriusXM Genre</Description>
+       <Complete>false</Complete>
+       <Length>32</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Fusion</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>419</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <Description>SiriusXM Genre</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>40</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>a</Id>
+           <Name>A</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>genre</Id>
+           <Name>Genre</Name>
+           <BitLength>96</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII string starting with length byte</Type>
+           <Signed>false</Signed>
          </Field>
        </Fields>
     </PGNInfo>
