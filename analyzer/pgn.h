@@ -3785,10 +3785,10 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=2", "" }
+  , { "Message ID", BYTES(1), 1, false, "=2", "Source" }
   , { "A", BYTES(1), 1, false, 0, "" }
-  , { "B", BYTES(1), 1, false, 0, "" }
-  , { "C", BYTES(1), 1, false, 0, "" }
+  , { "Source ID", BYTES(1), 1, false, 0, "" }
+  , { "Current Source ID", BYTES(1), 1, false, 0, "" }
   , { "D", BYTES(1), 1, false, 0, "" }
   , { "E", BYTES(1), 1, false, 0, "" }
   , { "Source", BYTES(5), RES_STRINGLZ, false, 0, "" }
@@ -3797,11 +3797,30 @@ Pgn pgnList[] =
 }
 
 ,
+{ "Fusion: Track Info", 130820, false, 23, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Message ID", BYTES(1), 1, false, "=4", "Track Info" }
+  , { "A", BYTES(2), 1, false, 0, "" }
+  , { "Transport", 4, RES_LOOKUP, false, ",1=Playing,2=Paused", "" }
+  , { "X", 4, 1, false, 0, "" }
+  , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Track #", BYTES(2), 1, false, 0, "" }
+  , { "C", BYTES(2), 1, false, 0, "" }
+  , { "Track Count", BYTES(2), 1, false, 0, "" }
+  , { "E", BYTES(2), 1, false, 0, "" }
+  , { "Track Length", BYTES(3), 0.001, false, 0, "" }
+  , { "G", BYTES(3), 0.001, false, 0, "" }
+  , { "H", BYTES(2), 1, false, 0, "" }
+  }
+}
+,
 { "Fusion: Track", 130820, false, 0x20, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=5", "" }
+  , { "Message ID", BYTES(1), 1, false, "=5", "Track Title" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(5), 1, false, 0, "" }
   , { "Track", BYTES(10), RES_STRINGLZ, false, 0, "" }
@@ -3814,7 +3833,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=6", "" }
+  , { "Message ID", BYTES(1), 1, false, "=6", "Track Artist" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(5), 1, false, 0, "" }
   , { "Artist", BYTES(10), RES_STRINGLZ, false, 0, "" }
@@ -3827,10 +3846,35 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=7", "" }
+  , { "Message ID", BYTES(1), 1, false, "=7", "Track Album" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(5), 1, false, 0, "" }
   , { "Album", BYTES(10), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Unit Name", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Message ID", BYTES(1), 1, false, "=33", "Unit Name" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Name", BYTES(14), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: Zone Name", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Message ID", BYTES(1), 1, false, "=45", "Zone Name" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "Number", BYTES(1), 1, false, 0, "" }    
+  , { "Name", BYTES(13), RES_STRINGLZ, false, 0, "" }
   , { 0 }
   }
 }
@@ -3840,7 +3884,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=9", "" }
+  , { "Message ID", BYTES(1), 1, false, "=9", "Track Progress" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "Progress", BYTES(3), 0.001, false, "s", "" }
@@ -3853,10 +3897,12 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=11", "" }
-  , { "A", BYTES(3), 1, false, 0, "" }
-  , { "Frequency", BYTES(4), 1, false, "Hz", "" }
+  , { "Message ID", BYTES(1), 1, false, "=11", "AM/FM Station" }
+  , { "A", BYTES(1), 1, false, 0, "" }
+  , { "AM/FM", BYTES(1), RES_LOOKUP, false, ",0=AM,1=FM", "" }
   , { "B", BYTES(1), 1, false, 0, "" }
+  , { "Frequency", BYTES(4), 0.000001, false, "Hz", "" }
+  , { "C", BYTES(1), 1, false, 0, "" }
   , { "Track", BYTES(10), RES_STRINGLZ, false, 0, "" }
   , { 0 }
   }
@@ -3867,7 +3913,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=12", "" }
+  , { "Message ID", BYTES(1), 1, false, "=12", "VHF" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "Channel", BYTES(1), 1, false, 0, "" }
@@ -3881,7 +3927,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=13", "" }
+  , { "Message ID", BYTES(1), 1, false, "=13", "Squelch" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "Squelch", BYTES(1), 1, false, 0, "" }
@@ -3894,7 +3940,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=14", "" }
+  , { "Message ID", BYTES(1), 1, false, "=14", "Scan" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "Scan", BYTES(1), RES_LOOKUP, false, ",0=Off,1=Scan", "" }
@@ -3907,7 +3953,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=17", "" }
+  , { "Message ID", BYTES(1), 1, false, "=17", "Menu Item" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "Line", BYTES(1), 1, false, 0, "" }
@@ -3926,7 +3972,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=20", "" }
+  , { "Message ID", BYTES(1), 1, false, "=20", "Replay" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "Mode", BYTES(1), RES_LOOKUP, false, ",9=USB Repeat,10=USB Shuffle,12=iPod Repeat,13=iPod Shuffle", "" }
   , { "C", BYTES(3), 1, false, 0, "" }
@@ -3945,7 +3991,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=23", "" }
+  , { "Message ID", BYTES(1), 1, false, "=23", "Mute" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "Mute", BYTES(1), RES_LOOKUP, false, ",1=Muted,2=Not Muted", "" }
   , { 0 }
@@ -3958,7 +4004,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=26", "" }
+  , { "Message ID", BYTES(1), 1, false, "=26", "Sub Volume" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "Zone 1", BYTES(1), 1, false, "vol", "" }
   , { "Zone 2", BYTES(1), 1, false, "vol", "" }
@@ -3974,7 +4020,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=27", "" }
+  , { "Message ID", BYTES(1), 1, false, "=27", "Tone" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "B", BYTES(1), 1, false, 0, "" }
   , { "Bass", BYTES(1), 1, true, "vol", "" }
@@ -3989,7 +4035,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=29", "" }
+  , { "Message ID", BYTES(1), 1, false, "=29", "Volume" }
   , { "A", BYTES(1), 1, false, 0, "" }
   , { "Zone 1", BYTES(1), 1, false, "vol", "" }
   , { "Zone 2", BYTES(1), 1, false, "vol", "" }
@@ -4004,9 +4050,57 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Message ID", BYTES(1), 1, false, "=32", "" }
+  , { "Message ID", BYTES(1), 1, false, "=32", "Transport" }
   , { "A", BYTES(1), 1, false, 0, "" }
-  , { "Transport", BYTES(1), RES_LOOKUP, false, ",1=Paused", "" }
+  , { "Transport", BYTES(1), RES_LOOKUP, false, ",1=Paused,2=Play", "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: SiriusXM Channel", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Message ID", BYTES(1), 1, false, "=36", "SiriusXM Channel" }
+  , { "A", BYTES(4), 1, false, 0, "" }
+  , { "Channel", BYTES(12), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: SiriusXM Title", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Message ID", BYTES(1), 1, false, "=37", "SiriusXM Title" }
+  , { "A", BYTES(4), 1, false, 0, "" }
+  , { "Title", BYTES(12), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: SiriusXM Artist", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Message ID", BYTES(1), 1, false, "=38", "SiriusXM Artist" }
+  , { "A", BYTES(4), 1, false, 0, "" }
+  , { "Artist", BYTES(12), RES_STRINGLZ, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Fusion: SiriusXM Genre", 130820, false, 0x20, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Message ID", BYTES(1), 1, false, "=40", "SiriusXM Genre" }
+  , { "A", BYTES(4), 1, false, 0, "" }
+  , { "Genre", BYTES(12), RES_STRINGLZ, false, 0, "" }
   , { 0 }
   }
 }
