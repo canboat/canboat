@@ -102,11 +102,15 @@ void sbAppendString(StringBuffer * sb, const char * string);
 
 int getJSONValue( const char * message, const char * fieldName, char * value, size_t len );
 void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int * pgn, unsigned int * src, unsigned int * dst);
+unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst);
 
 SOCKET open_socket_stream(const char * url);
 
 #define DATE_LENGTH 60
 const char * now(char str[DATE_LENGTH]);
+
+uint8_t scanNibble(char c);
+int scanHex(char ** p, uint8_t * m);
 
 # define CANBOAT_COMMON
 #endif

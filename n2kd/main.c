@@ -30,6 +30,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+/* The code ignores the result for write, but closes the socket anyway, so there is nothing to be gained */
+#pragma GCC diagnostic ignored "-Wunused-result"
 
 #include "common.h"
 #include <signal.h>
@@ -825,6 +827,10 @@ static bool storeMessage(char * line, size_t len)
     valid = secondaryKeyTimeout[k];
   }
   logDebug("stored prn %d timeout=%d 2ndKey=%d\n", prn, valid, k);
+  if (key2)
+  {
+    free(key2);
+  }
   m->m_time = now + valid;
   return true;
 }

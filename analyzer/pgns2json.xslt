@@ -336,10 +336,7 @@
       <xsl:text>  </xsl:text>
     </xsl:for-each>
   </xsl:template>
-  
-  <!-- JS: include comments -->
-  <xsl:template match="comment()">/*<xsl:value-of select="."/>*/</xsl:template>
-  
+
   <!-- convert root element to an anonymous container -->
   <xsl:template match="/*">
     <xsl:apply-templates select="node()"/>
@@ -347,10 +344,18 @@
 
   <xsl:template match="EnumValues">
     <xsl:call-template name="indent"/>"EnumValues":[<xsl:apply-templates/>]<xsl:if test="not(following-sibling::*)">}</xsl:if>
-</xsl:template>
+  </xsl:template>
+
+  <xsl:template match="EnumBitValues">
+    <xsl:call-template name="indent"/>"EnumBitValues":[<xsl:apply-templates/>]<xsl:if test="not(following-sibling::*)">}</xsl:if>
+  </xsl:template>
 
   <xsl:template match="EnumValues/EnumPair">
-    <xsl:call-template name="indent"/>{"<xsl:value-of select="@Value"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+    <xsl:call-template name="indent"/>{"name":"<xsl:value-of select="@Name"/>","value":"<xsl:value-of select="@Value"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="EnumBitValues/EnumPair">
+    <xsl:call-template name="indent"/>{"<xsl:value-of select="@Bit"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
     <xsl:template match="PGNInfo">

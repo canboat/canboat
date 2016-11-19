@@ -405,6 +405,25 @@ void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int
 
 }
 
+/*
+  This does the opposite from getISO11783BitsFromCanId: given n2k fields produces the extended frame CAN id
+*/
+unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst)
+{
+  unsigned int canId = src | 0x80000000U;  // src bits are the lowest ones of the CAN ID. Also set the highest bit to 1 as n2k uses only extended frames (EFF bit).
+
+  if((unsigned char)pgn == 0) {  // PDU 1 (assumed if 8 lowest bits of the PGN are 0)
+    canId += dst << 8;
+    canId += pgn << 8;
+    canId += prio << 26;
+  } else {                       // PDU 2
+    canId += pgn << 8;
+    canId += prio << 26;
+  }
+
+  return canId;
+}
+
 static void resolve_address(const char * url, char ** host, const char ** service)
 {
   const char *s;
@@ -496,3 +515,44 @@ SOCKET open_socket_stream(const char * url)
   return sockfd;
 }
 
+uint8_t scanNibble(char c)
+{
+  if (isdigit(c))
+  {
+    return c - '0';
+  }
+  if (c >= 'A' && c <= 'F')
+  {
+    return c - 'A' + 10;
+  }
+  if (c >= 'a' && c <= 'f')
+  {
+    return c - 'a' + 10;
+  }
+  return 16;
+}
+
+int scanHex(char ** p, uint8_t * m)
+{
+  uint8_t hi, lo;
+
+  if (!(*p)[0] || !(*p)[1])
+  {
+    return 1;
+  }
+
+  hi = scanNibble((*p)[0]);
+  if (hi > 15)
+  {
+    return 1;
+  }
+  lo = scanNibble((*p)[1]);
+  if (lo > 15)
+  {
+    return 1;
+  }
+  (*p) += 2;
+  *m = hi << 4 | lo;
+  /* printf("(b=%02X,p=%p) ", *m, *p); */
+  return 0;
+}

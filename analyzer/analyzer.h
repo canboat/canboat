@@ -69,10 +69,6 @@ typedef unsigned __int64 uint64_t;
 # endif
 #endif
 
-#ifndef ARRAY_SIZE
-# define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
-#endif
-
 #ifndef min
 # define min(x,y) ((x)<=(y)?(x):(y))
 #endif
@@ -83,29 +79,4 @@ typedef unsigned __int64 uint64_t;
 #include "pgn.h"
 
 #define DST_GLOBAL (0xff) /* The address used when a message is addressed to -all- stations */
-
-typedef struct
-{
-  char timestamp[30 + 1];
-  uint8_t prio;
-  uint32_t pgn;
-  uint8_t dst;
-  uint8_t src;
-  uint8_t len;
-  uint8_t data[FASTPACKET_MAX_SIZE];
-} RawMessage;
-
-typedef struct
-{
-  size_t lastFastPacket;
-  size_t size;
-  size_t allocSize;
-  uint8_t * data;
-} Packet;
-
-typedef struct
-{
-  Packet packetList[ARRAY_SIZE(pgnList)];
-} DevicePackets;
-
 
