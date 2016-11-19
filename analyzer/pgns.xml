@@ -22906,6 +22906,365 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
        <PGN>130845</PGN>
+       <Id>simnetCompassHeadingOffset</Id>
+       <Description>Simnet: Compass Heading Offset</Description>
+       <Complete>false</Complete>
+       <Length>14</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Simrad</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1857</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <BitLength>6</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>repeatIndicator</Id>
+           <Name>Repeat indicator</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>22</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Initial' />
+             <EnumPair Value='1' Name='First retransmission' />
+             <EnumPair Value='2' Name='Second retransmission' />
+             <EnumPair Value='3' Name='Final retransmission' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>unused</Id>
+           <Name>Unused</Name>
+           <BitLength>24</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>type</Id>
+           <Name>Type</Name>
+           <Description>Heading Offset</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>0</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>a</Id>
+           <Name>A</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>angle</Id>
+           <Name>Angle</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>unused</Id>
+           <Name>Unused</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>96</BitOffset>
+           <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130845</PGN>
+       <Id>simnetCompassLocalField</Id>
+       <Description>Simnet: Compass Local Field</Description>
+       <Complete>false</Complete>
+       <Length>14</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Simrad</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1857</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <BitLength>6</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>repeatIndicator</Id>
+           <Name>Repeat indicator</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>22</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Initial' />
+             <EnumPair Value='1' Name='First retransmission' />
+             <EnumPair Value='2' Name='Second retransmission' />
+             <EnumPair Value='3' Name='Final retransmission' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>unused</Id>
+           <Name>Unused</Name>
+           <BitLength>24</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>type</Id>
+           <Name>Type</Name>
+           <Description>Local field</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>768</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>a</Id>
+           <Name>A</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>localField</Id>
+           <Name>Local field</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+           <Resolution>0.004</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>unused</Id>
+           <Name>Unused</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>96</BitOffset>
+           <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130845</PGN>
+       <Id>simnetCompassFieldAngle</Id>
+       <Description>Simnet: Compass Field Angle</Description>
+       <Complete>false</Complete>
+       <Length>14</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Simrad</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1857</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <BitLength>6</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>repeatIndicator</Id>
+           <Name>Repeat indicator</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>22</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Initial' />
+             <EnumPair Value='1' Name='First retransmission' />
+             <EnumPair Value='2' Name='Second retransmission' />
+             <EnumPair Value='3' Name='Final retransmission' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>unused</Id>
+           <Name>Unused</Name>
+           <BitLength>24</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>type</Id>
+           <Name>Type</Name>
+           <Description>Local field</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1024</Match>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>a</Id>
+           <Name>A</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>fieldAngle</Id>
+           <Name>Field angle</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>unused</Id>
+           <Name>Unused</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>96</BitOffset>
+           <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130845</PGN>
        <Id>simnetParameterHandle</Id>
        <Description>Simnet: Parameter Handle</Description>
        <Complete>false</Complete>

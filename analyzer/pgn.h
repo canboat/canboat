@@ -74,6 +74,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #define RES_LAT_LONG_PRECISION (10000000) /* 1e7 */
 #define RES_LAT_LONG (1.0e-7)
 #define RES_LAT_LONG_64 (1.0e-16)
+#define RES_PERCENTAGE (100.0 / 25000.0)
 
 typedef struct
 {
@@ -1607,7 +1608,7 @@ Pgn pgnList[] =
 { "Fluid Level", 127505, true, 7, 0,
   { { "Instance", 4, 1, false, 0, "" }
   , { "Type", 4, RES_LOOKUP, false, ",0=Fuel,1=Water,2=Gray water,3=Live well,4=Oil,5=Black water", "" }
-  , { "Level", BYTES(2), 100.0/25000, false, "%", "" }
+  , { "Level", BYTES(2), RES_PERCENTAGE, false, "%", "" }
   , { "Capacity", BYTES(4), 0.1, false, "L", "" }
   , { 0 }
   }
@@ -2858,7 +2859,7 @@ Pgn pgnList[] =
   , { "Temperature Source", 6, RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, "" }
   , { "Humidity Source", 2, RES_LOOKUP, false, LOOKUP_HUMIDITY_SOURCE, "" }
   , { "Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
-  , { "Humidity", BYTES(2), 100.0/25000, true, "%", "" }
+  , { "Humidity", BYTES(2), RES_PERCENTAGE, true, "%", "" }
   , { "Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { 0 }
   }
@@ -2880,8 +2881,8 @@ Pgn pgnList[] =
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Humidity Instance", BYTES(1), 1, false, 0, "" }
   , { "Humidity Source", BYTES(1), RES_LOOKUP, false, LOOKUP_HUMIDITY_SOURCE, "" }
-  , { "Actual Humidity", BYTES(2), 100.0/25000, true, "%", "" }
-  , { "Set Humidity", BYTES(2), 100.0/25000, true, "%", "" }
+  , { "Actual Humidity", BYTES(2), RES_PERCENTAGE, true, "%", "" }
+  , { "Set Humidity", BYTES(2), RES_PERCENTAGE, true, "%", "" }
   , { 0 }
   }
 }
@@ -3880,6 +3881,54 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { 0 }
+  }
+}
+
+,
+{ "Simnet: Compass Heading Offset", 130845, false, 0x0e, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Message ID", 6, 1, false, 0, "" }
+  , { "Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
+  , { "Unused", BYTES(3), 1, false, 0, "" }
+  , { "Type", BYTES(2), 1, false, "=0", "Heading Offset" }
+  , { "A", BYTES(2), RES_NOTUSED, false, 0, "" }
+  , { "Angle", BYTES(2), RES_RADIANS, true, "rad", "" }
+  , { "Unused", BYTES(2), RES_NOTUSED, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Simnet: Compass Local Field", 130845, false, 0x0e, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Message ID", 6, 1, false, 0, "" }
+  , { "Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
+  , { "Unused", BYTES(3), 1, false, 0, "" }
+  , { "Type", BYTES(2), 1, false, "=768", "Local field" }
+  , { "A", BYTES(2), RES_NOTUSED, false, 0, "" }
+  , { "Local field", BYTES(2), RES_PERCENTAGE, false, "%", "" }
+  , { "Unused", BYTES(2), RES_NOTUSED, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Simnet: Compass Field Angle", 130845, false, 0x0e, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Message ID", 6, 1, false, 0, "" }
+  , { "Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
+  , { "Unused", BYTES(3), 1, false, 0, "" }
+  , { "Type", BYTES(2), 1, false, "=1024", "Local field" }
+  , { "A", BYTES(2), 1, false, 0, "" }
+  , { "Field angle", BYTES(2), RES_RADIANS, true, "rad", "" }
+  , { "Unused", BYTES(2), RES_NOTUSED, false, 0, "" }
   , { 0 }
   }
 }
