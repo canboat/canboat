@@ -75,7 +75,6 @@ extern bool rateLimit;
 #define PGN_RUDDER         (127245)
 #define PGN_SOG_COG        (129026)
 #define PGN_GPS_DOP        (129539)
-#define PGN_RAPID_POSITION (129025)
 #define PGN_POSITION       (129029)
 #define PGN_AIS_A          (129038)
 #define PGN_AIS_B          (129039)
@@ -97,9 +96,7 @@ static int64_t rateLimitPassed[256][SENTENCE_COUNT];
 
 void nmea0183CreateMessage( StringBuffer * msg183, int src, const char * format, ...)
 {
-  char line[80];
-  int chk;
-  size_t len;
+  unsigned int chk;
   size_t i;
   va_list ap;
 
@@ -112,22 +109,19 @@ void nmea0183CreateMessage( StringBuffer * msg183, int src, const char * format,
   // code with the src value 0-255 translated into
   // A..N A..N with A representing 0, B representing 1, etc.
 
-  snprintf(line, sizeof(line), "$%c%c"
+  sbAppendFormat(msg183, "$%c%c"
           , ('A' + ((src >> 4) & 0xf))
           , ('A' + ((src     ) & 0xf))
           );
-  vsnprintf(line + 3, sizeof(line) - 3, format, ap);
+  sbAppendFormatV(msg183, format, ap);
   va_end(ap);
 
-  len = strlen(line);
   chk = 0;
-  for (i = 1; i < len; i++)
+  for (i = 1; i < msg183->len; i++)
   {
-    chk ^= line[i];
+    chk ^= (unsigned int) msg183->data[i];
   }
-  sbAppendString(msg183, line);
-  snprintf(line, sizeof(line), "*%02X\r\n", chk);
-  sbAppendString(msg183, line);
+  sbAppendFormat(msg183, "*%02X\r\n", chk);
   logDebug("nmea0183 = %s", sbGet(msg183));
 }
 
@@ -594,7 +588,6 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
   case PGN_GPS_DOP:
     j = GPS_DOP;
     break;
-  case PGN_RAPID_POSITION:
   case PGN_POSITION:
     j = GPS_POSITION;
     break;
@@ -660,7 +653,6 @@ void convertJSONToNMEA0183( StringBuffer * msg183, const char * msg )
   case PGN_GPS_DOP:
     nmea0183GSA(msg183, src, msg);
     break;
-  case PGN_RAPID_POSITION:
   case PGN_POSITION:
     nmea0183GLL(msg183, src, msg);
     break;

@@ -88,7 +88,7 @@ void die(const char * t);
 void setLogLevel(LogLevel level);
 void setProgName(char * name);
 
-typedef struct StringBuf
+typedef struct StringBuffer
 {
   char * data;
   size_t len;
@@ -99,6 +99,16 @@ StringBuffer sbNew;
 #define sbGet(sb) (sb->data)
 void sbAppendData(StringBuffer * sb, const void * data, size_t len);
 void sbAppendString(StringBuffer * sb, const char * string);
+void sbAppendFormat(StringBuffer *const sb, const char *const format, ...);
+void sbAppendFormatV(StringBuffer *const sb, const char *const format, va_list ap);
+
+#define sbTerminate(sb)                        \
+  {                                            \
+    if (sb->data)                              \
+    {                                          \
+      sb->data[sb->len] = '\0';                \
+    }                                          \
+  }
 
 int getJSONValue( const char * message, const char * fieldName, char * value, size_t len );
 void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int * pgn, unsigned int * src, unsigned int * dst);

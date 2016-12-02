@@ -6,20 +6,36 @@
 #include "gps_ais.h"
 #include "nmea0183.h"
 
-static void removeChar(char *str, char garbage) {
+#define MMSI_LENGTH sizeof("244060807")
+#define LAT_LENGTH sizeof("-123.1234567890")
+#define LON_LENGTH sizeof("-123.1234567890")
+#define ANGLE_LENGTH sizeof("-123.999")
+#define SPEED_LENGTH sizeof("-12345.999")
+#define OTHER_LENGTH (20)
+
+
+static void removeChar(char *str, char garbage)
+{
   char *src, *dst;
-  for (src = dst = str; *src != '\0'; src++) {
-      *dst = *src;
-      if (*dst != garbage) dst++;
+
+  for (src = dst = str; *src; src++)
+  {
+    *dst = *src;
+    if (*dst != garbage)
+    {
+      dst++;
+    }
   }
-  *dst = '\0';
+  *dst = 0;
 }
 
-static double convert2kCoordinateToNMEA0183(double coordinate) {
-  double digrees;
+static double convert2kCoordinateToNMEA0183(double coordinate)
+{
+  double degrees;
   double result;
-  digrees = floor(coordinate);
-  result = digrees * 100 + (coordinate - digrees) * 60;
+
+  degrees = floor(coordinate);
+  result = degrees * 100 + (coordinate - degrees) * 60;
   return result;
 }
 
@@ -49,8 +65,8 @@ $GPVTG,,T,,M,0.150,N,0.278,K,D*2F<0x0D><0x0A>
 
 void nmea0183VTG( StringBuffer * msg183, int src, const char * msg )
 {
-  char sog[10];
-  char cog[10];
+  char sog[SPEED_LENGTH];
+  char cog[ANGLE_LENGTH];
   double speed = 0;
   double course = 0;
 
@@ -100,10 +116,10 @@ Field Number:
 
 void nmea0183GSA( StringBuffer * msg183, int src, const char * msg )
 {
-  char mode_string[10];
-  char pdop_string[10];
-  char hdop_string[10];
-  char vdop_string[10];
+  char mode_string[OTHER_LENGTH];
+  char pdop_string[OTHER_LENGTH];
+  char hdop_string[OTHER_LENGTH];
+  char vdop_string[OTHER_LENGTH];
   double pdop = 0;
   double hdop = 0;
   double vdop = 0;
@@ -149,17 +165,20 @@ $GPGLL,3609.42711,N,00521.36949,W,200015.00,A,D*72
 
 void nmea0183GLL( StringBuffer * msg183, int src, const char * msg )
 {
-  char lat_string[10];
-  char lon_string[10];
-  char time_string[10];
+  char lat_string[LAT_LENGTH];
+  char lon_string[LON_LENGTH];
+  char time_string[OTHER_LENGTH] = "";
   char lat_hemisphere = 'N';
   char lon_hemisphere = 'E';
   double latitude = 0;
   double longitude = 0;
   int x;
 
-  getJSONValue(msg, "Latitude", lat_string, sizeof(lat_string));
-  getJSONValue(msg, "Longitude", lon_string, sizeof(lon_string));
+  if (!getJSONValue(msg, "Latitude", lat_string, sizeof(lat_string))
+   || !getJSONValue(msg, "Longitude", lon_string, sizeof(lon_string)))
+  {
+    return;
+  }
 
   latitude = strtod(lat_string, 0);
   longitude = strtod(lon_string, 0);
@@ -205,14 +224,14 @@ void nmea0183AIVDM( StringBuffer * msg183, int src, const char * msg )
   struct tm *utc_time;
   time_t current_time;
 
-  char mmsi_string[10];
-  char lat_string[10];
-  char lon_string[10];
-  char sog_string[10];
-  char heading_string[10];
-  char cog_string[10];
-  char rate_of_turn_string[10];
-  char navigation_status_string[10];
+  char mmsi_string[MMSI_LENGTH];
+  char lat_string[LAT_LENGTH];
+  char lon_string[LON_LENGTH];
+  char sog_string[SPEED_LENGTH];
+  char heading_string[ANGLE_LENGTH];
+  char cog_string[ANGLE_LENGTH];
+  char rate_of_turn_string[ANGLE_LENGTH];
+  char navigation_status_string[OTHER_LENGTH];
   double cog = 0;
 
   current_time = time(NULL);
