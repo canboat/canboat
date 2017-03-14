@@ -208,6 +208,58 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] =
           ",5=Reserved" \
           )
 
+#define LOOKUP_AIS_ASSIGNED_MODE ( \
+          ",0=Autonomous and continuous" \
+          ",1=Assigned mode" \
+          )
+
+#define LOOKUP_ATON_TYPE ( \
+          ",0=Default: Type of AtoN not specified" \
+          ",1=Referece point" \
+          ",2=RACON" \
+          ",3=Fixed structure off-shore" \
+          ",4=Reserved for future use" \
+          ",5=Fixed light: without sectors" \
+          ",6=Fixed light: with sectors" \
+          ",7=Fixed leading light front" \
+          ",8=Fixed leading light rear" \
+          ",9=Fixed beacon: cardinal N" \
+          ",10=Fixed beacon: cardinal E" \
+          ",11=Fixed beacon: cardinal S" \
+          ",12=Fixed beacon: cardinal W" \
+          ",13=Fixed beacon: port hand" \
+          ",14=Fixed beacon: starboard hand" \
+          ",15=Fixed beacon: preferred channel port hand" \
+          ",16=Fixed beacon: preferred channel starboard hand" \
+          ",17=Fixed beacon: isolated danger" \
+          ",18=Fixed beacon: safe water" \
+          ",20=Floating AtoN: cardinal N" \
+          ",21=Floating AtoN: cardinal E" \
+          ",22=Floating AtoN: cardinal S" \
+          ",23=Floating AtoN: cardinal W" \
+          ",24=Floating AtoN: port hand mark" \
+          ",25=Floating AtoN: starboard hand mark" \
+          ",26=Floating AtoN: preferred channel port hand" \
+          ",27=Floating AtoN: preferred channel starboard hand" \
+          ",28=Floating AtoN: isolated danger" \
+          ",29=Floating AtoN: safe water" \
+          ",30=Floating AtoN: special mark" \
+          ",31=Floating AtoN: light vessel/LANBY/rigs" \
+          )
+
+#define LOOKUP_POSITION_FIX_DEVICE ( \
+          ",0=Default: undefined" \
+          ",1=GPS" \
+          ",2=GLONASS" \
+          ",3=Combined GPS/GLONASS" \
+          ",4=Loran-C" \
+          ",5=Chayka" \
+          ",6=Integrated navigation system" \
+          ",7=Surveyed" \
+          ",8=Galileo" \
+          ",15=Internal GNSS" \
+          )
+
 #define LOOKUP_ENGINE_INSTANCE ( ",0=Single Engine or Dual Engine Port,1=Dual Engine Starboard" )
 
 // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
@@ -2261,6 +2313,35 @@ Pgn pgnList[] =
   , { "AIS mode", 1, 1, false, ",0=Autonomous,1=Assigned", "" }
   , { "Reserved", 4, RES_BINARY, false, 0, "" }
   , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "AIS Aids to Navigation (AtoN) Report", 129041, true, 60, 0,
+  { { "Message ID", 6, 1, false, 0, "" }
+  , { "Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
+  , { "User ID", BYTES(4), RES_INTEGER, false, "MMSI", "" }
+  , { "Longitude", BYTES(4), RES_LATITUDE, true, "deg", "" }
+  , { "Latitude", BYTES(4), RES_LONGITUDE, true, "deg", "" }
+  , { "Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, "" }
+  , { "AIS RAIM Flag", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, "" }
+  , { "Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated" }
+  , { "Length/Diameter", BYTES(2), 0.1, false, "m", "" }
+  , { "Beam/Diameter", BYTES(2), 0.1, false, "m", "" }
+  , { "Position Reference from Starboard Edge", BYTES(2), 0.1, false, "m", "" }
+  , { "Position Reference from True North Facing Edge", BYTES(2), 0.1, false, "m", "" }
+  , { "AtoN Type", 5, RES_LOOKUP, false, LOOKUP_ATON_TYPE, "" }
+  , { "Off Position Indicator", 1, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Virtual AtoN Flag", 1, RES_LOOKUP, false, LOOKUP_YES_NO, "" }
+  , { "Assigned Mode Flag", 1, RES_LOOKUP, false, LOOKUP_AIS_ASSIGNED_MODE, "" }
+  , { "AIS Spare", 1, RES_BINARY, false, 0, "" }
+  , { "Position Fixing Device Type", 4, RES_LOOKUP, false, LOOKUP_POSITION_FIX_DEVICE, "" }
+  , { "Reserved", 3, RES_BINARY, false, 0, "" }
+  , { "AtoN Status", 8, RES_BINARY, false, 0, "00000000 = default" }
+  , { "AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, "" }
+  , { "Reserved", 3, RES_BINARY, false, 0, "" }
+  , { "AtoN Name", BYTES(34), RES_STRINGLAU, false, 0, "" }
   , { 0 }
   }
 }
