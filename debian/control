@@ -18,11 +18,12 @@ Description: canboat binary applicaions
 
 Package: n2kd-config
 Architecture: all
+Depends: ${misc:Depends}
 Description: Provides the n2kd default config file
  Delivers the default n2kd config file
 
 Package: n2kd-scripts
 Architecture: all
-Depends: n2kd-config, n2kd-bin
+Depends: ${misc:Depends}, n2kd-config, n2kd-bin
 Description: canboat perl applications
  Provides list-product-information, n2kd_monitor, n2kd_nmea_monitor
