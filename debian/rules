@@ -1,4 +1,8 @@
 #!/usr/bin/make -f
 
+include /usr/share/dpkg/default.mk
+
+PREFIX=/usr
+
 %:
-	dh $@
+	dh PREFIX=$(PREFIX) $@
