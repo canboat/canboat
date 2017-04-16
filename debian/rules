@@ -2,7 +2,7 @@
 
 include /usr/share/dpkg/default.mk
 
-PREFIX=/usr
+PREFIX := /usr
 
 %:
 	dh PREFIX=$(PREFIX) $@
