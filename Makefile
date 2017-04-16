@@ -6,6 +6,11 @@
 # $Id:$
 #
 
+DESTDIR ?= ""
+PREFIX ?= /usr/local
+EXEC_PREFIX ?= $(PREFIX)
+BINDIR=$(EXEC_PREFIX)/bin
+
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 OS=$(shell uname -o 2>&1)
 SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analyzer socketcan-writer
@@ -21,7 +26,7 @@ clean:
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
 	
 install:
-	for i in rel/$(PLATFORM)/* util/* */*_monitor; do f=`basename $$i`; rm -f /usr/local/bin/$$f; cp $$i /usr/local/bin; done
+	for i in rel/$(PLATFORM)/* util/* */*_monitor; do f=`basename $$i`; rm -f $(DESTDIR)$(BINDIR)/$$f; cp $$i $(DESTDIR)$(BINDIR); done
 	-killall -9 actisense-serial n2kd socketcan-writer
 
 zip:
