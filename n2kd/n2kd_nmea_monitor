@@ -33,16 +33,25 @@
 # along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-use ConfigReader::Simple;
+use Config::General;
 
 my $configFile = '/etc/default/n2kd_nmea';
-my $config = ConfigReader::Simple->new($configFile);
+my $configObject = Config::General->new(-ConfigFile => $configFile,
+		-MergeDuplicateOptions => 1,
+#		-DefaultConfig => {
+#			NMEA_DEVICE => "/dev/ttyACM0",
+#			MONITOR => "false",
+#			N2KD_OPTIONS => "-p 6000",
+#		}
+	);
 
-die "Could not read config! $ConfigReader::Simple::ERROR\n" unless ref $config;
+die "Could not read config from $configFile!\n" unless ref $configObject;
 
-my $NMEA_DEVICE = $config->get('NMEA_DEVICE');
-my $MONITOR = $config->get('MONITOR');
-my $N2KD_OPTIONS = $config->get('N2KD_OPTIONS');
+my %config = $configObject->getall();
+
+my $NMEA_DEVICE = $config{'NMEA_DEVICE'};
+my $MONITOR = $config{'MONITOR'};
+my $N2KD_OPTIONS = $config{'N2KD_OPTIONS'};
 die "Configuration file $configFile incomplete: No NMEA_DEVICE" unless $NMEA_DEVICE;
 
 my $LOGFILE = '/var/log/n2kd_nmea_monitor.log';

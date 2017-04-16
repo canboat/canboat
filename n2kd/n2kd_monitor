@@ -35,18 +35,27 @@
 # along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-use ConfigReader::Simple;
+use Config::General;
 
 my $configFile = '/etc/default/n2kd';
-my $config = ConfigReader::Simple->new($configFile);
+my $configObject = Config::General->new(-ConfigFile => $configFile,
+                -MergeDuplicateOptions => 1,
+#               -DefaultConfig => {
+#                       ACTISENSE_PRIMARY => "/dev/ttyUSB0",
+#                       MONITOR => "false",
+#                       N2KD_OPTIONS => "",
+#                }
+        );
 
-die "Could not read config! $ConfigReader::Simple::ERROR\n" unless ref $config;
+die "Could not read config from $configFile!\n" unless ref $configObject;
 
-my $ACTISENSE_PRIMARY = $config->get('ACTISENSE_PRIMARY');
-my $ACTISENSE_SECONDARY = $config->get('ACTISENSE_SECONDARY');
-my $MONITOR = $config->get('MONITOR');
-my $N2KD_OPTIONS = $config->get('N2KD_OPTIONS');
-my $ANALYZER_OPTIONS = $config->get('ANALYZER_OPTIONS');
+my %config = $configObject->getall();
+
+my $ACTISENSE_PRIMARY = $config{'ACTISENSE_PRIMARY'};
+my $ACTISENSE_SECONDARY = $config{'ACTISENSE_SECONDARY'};
+my $MONITOR = $config{'MONITOR'};
+my $N2KD_OPTIONS = $config{'N2KD_OPTIONS'};
+my $ANALYZER_OPTIONS = $config{'ANALYZER_OPTIONS'};
 die "Configuration file $configFile incomplete: No ACTISENSE_PRIMARY" unless $ACTISENSE_PRIMARY;
 
 my $LOGFILE = '/var/log/n2kd_monitor.log';
