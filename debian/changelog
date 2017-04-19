@@ -1,8 +1,3 @@
-n2kd (0.2) unstable; urgency=low
-
-  * Fixed wrong dependency php-cli to php5-cli
-
- -- EngSaS - Joachim Langenbach <info@engsas.de> Wed, 19 Apr 2017 15:44 +0100
 n2kd (0.1) unstable; urgency=low
 
   * Initial release of canboat
