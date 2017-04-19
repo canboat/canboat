@@ -24,6 +24,6 @@ Description: Provides the n2kd default config file
 
 Package: n2kd-scripts
 Architecture: all
-Depends: ${misc:Depends}, libconfig-general-perl, php-cli, n2kd-config, n2kd-bin
+Depends: ${misc:Depends}, libconfig-general-perl, php5-cli, n2kd-config, n2kd-bin
 Description: canboat perl applications
  Provides list-product-information, n2kd_monitor, n2kd_nmea_monitor
