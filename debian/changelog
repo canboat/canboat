@@ -1,0 +1,16 @@
+n2kd (0.2.1) unstable; urgency=low
+
+  * Added n2kd-bin postinst script, to configure ftdi_sio driver
+    for actisense
+
+ -- EngSaS - Joachim Langenbach <info@engsas.de>  Fri, 21 Apr 2017 18:56:00 +0200
+n2kd (0.2) unstable; urgency=low
+
+  * Fixed wrong dependency php-cli to php5-cli
+
+ -- EngSaS - Joachim Langenbach <info@engsas.de>  Wed, 19 Apr 2017 15:44:00 +0100
+n2kd (0.1) unstable; urgency=low
+
+  * Initial release of canboat
+
+ -- EngSaS - Joachim Langenbach <info@engsas.de>  Sun, 16 Apr 2017 15:08:00 +0100

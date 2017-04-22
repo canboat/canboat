@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/default.mk
+
+export PREFIX=/usr
+
+%:
+	dh $@

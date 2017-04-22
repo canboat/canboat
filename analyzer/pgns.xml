@@ -10758,6 +10758,342 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>129041</PGN>
+       <Id>aisAidsToNavigationAtonReport</Id>
+       <Description>AIS Aids to Navigation (AtoN) Report</Description>
+       <Complete>true</Complete>
+       <Length>60</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <BitLength>6</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>repeatIndicator</Id>
+           <Name>Repeat Indicator</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>6</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Initial' />
+             <EnumPair Value='1' Name='First retransmission' />
+             <EnumPair Value='2' Name='Second retransmission' />
+             <EnumPair Value='3' Name='Final retransmission' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>userId</Id>
+           <Name>User ID</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>MMSI</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>longitude</Id>
+           <Name>Longitude</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>deg</Units>
+                  <Type>Latitude</Type>
+                  <Resolution>0.0000001</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>latitude</Id>
+           <Name>Latitude</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>deg</Units>
+                  <Type>Longitude</Type>
+                  <Resolution>0.0000001</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>positionAccuracy</Id>
+           <Name>Position Accuracy</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>104</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Low' />
+             <EnumPair Value='1' Name='High' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>aisRaimFlag</Id>
+           <Name>AIS RAIM Flag</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>105</BitOffset>
+           <BitStart>1</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='not in use' />
+             <EnumPair Value='1' Name='in use' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>timeStamp</Id>
+           <Name>Time Stamp</Name>
+           <Description>0-59 = UTC second when the report was generated</Description>
+           <BitLength>6</BitLength>
+           <BitOffset>106</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='60' Name='Not available' />
+             <EnumPair Value='61' Name='Manual input mode' />
+             <EnumPair Value='62' Name='Dead reckoning mode' />
+             <EnumPair Value='63' Name='Positioning system is inoperative' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>lengthDiameter</Id>
+           <Name>Length/Diameter</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>112</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m</Units>
+           <Resolution>0.1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>beamDiameter</Id>
+           <Name>Beam/Diameter</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>128</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m</Units>
+           <Resolution>0.1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>positionReferenceFromStarboardEdge</Id>
+           <Name>Position Reference from Starboard Edge</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>144</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m</Units>
+           <Resolution>0.1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>positionReferenceFromTrueNorthFacingEdge</Id>
+           <Name>Position Reference from True North Facing Edge</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>160</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m</Units>
+           <Resolution>0.1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>atonType</Id>
+           <Name>AtoN Type</Name>
+           <BitLength>5</BitLength>
+           <BitOffset>176</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Default: Type of AtoN not specified' />
+             <EnumPair Value='1' Name='Referece point' />
+             <EnumPair Value='2' Name='RACON' />
+             <EnumPair Value='3' Name='Fixed structure off-shore' />
+             <EnumPair Value='4' Name='Reserved for future use' />
+             <EnumPair Value='5' Name='Fixed light: without sectors' />
+             <EnumPair Value='6' Name='Fixed light: with sectors' />
+             <EnumPair Value='7' Name='Fixed leading light front' />
+             <EnumPair Value='8' Name='Fixed leading light rear' />
+             <EnumPair Value='9' Name='Fixed beacon: cardinal N' />
+             <EnumPair Value='10' Name='Fixed beacon: cardinal E' />
+             <EnumPair Value='11' Name='Fixed beacon: cardinal S' />
+             <EnumPair Value='12' Name='Fixed beacon: cardinal W' />
+             <EnumPair Value='13' Name='Fixed beacon: port hand' />
+             <EnumPair Value='14' Name='Fixed beacon: starboard hand' />
+             <EnumPair Value='15' Name='Fixed beacon: preferred channel port hand' />
+             <EnumPair Value='16' Name='Fixed beacon: preferred channel starboard hand' />
+             <EnumPair Value='17' Name='Fixed beacon: isolated danger' />
+             <EnumPair Value='18' Name='Fixed beacon: safe water' />
+             <EnumPair Value='20' Name='Floating AtoN: cardinal N' />
+             <EnumPair Value='21' Name='Floating AtoN: cardinal E' />
+             <EnumPair Value='22' Name='Floating AtoN: cardinal S' />
+             <EnumPair Value='23' Name='Floating AtoN: cardinal W' />
+             <EnumPair Value='24' Name='Floating AtoN: port hand mark' />
+             <EnumPair Value='25' Name='Floating AtoN: starboard hand mark' />
+             <EnumPair Value='26' Name='Floating AtoN: preferred channel port hand' />
+             <EnumPair Value='27' Name='Floating AtoN: preferred channel starboard hand' />
+             <EnumPair Value='28' Name='Floating AtoN: isolated danger' />
+             <EnumPair Value='29' Name='Floating AtoN: safe water' />
+             <EnumPair Value='30' Name='Floating AtoN: special mark' />
+             <EnumPair Value='31' Name='Floating AtoN: light vessel/LANBY/rigs' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>14</Order>
+           <Id>offPositionIndicator</Id>
+           <Name>Off Position Indicator</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>181</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>15</Order>
+           <Id>virtualAtonFlag</Id>
+           <Name>Virtual AtoN Flag</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>182</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>16</Order>
+           <Id>assignedModeFlag</Id>
+           <Name>Assigned Mode Flag</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>183</BitOffset>
+           <BitStart>7</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Autonomous and continuous' />
+             <EnumPair Value='1' Name='Assigned mode' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>17</Order>
+           <Id>aisSpare</Id>
+           <Name>AIS Spare</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>184</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>18</Order>
+           <Id>positionFixingDeviceType</Id>
+           <Name>Position Fixing Device Type</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>185</BitOffset>
+           <BitStart>1</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Default: undefined' />
+             <EnumPair Value='1' Name='GPS' />
+             <EnumPair Value='2' Name='GLONASS' />
+             <EnumPair Value='3' Name='Combined GPS/GLONASS' />
+             <EnumPair Value='4' Name='Loran-C' />
+             <EnumPair Value='5' Name='Chayka' />
+             <EnumPair Value='6' Name='Integrated navigation system' />
+             <EnumPair Value='7' Name='Surveyed' />
+             <EnumPair Value='8' Name='Galileo' />
+             <EnumPair Value='15' Name='Internal GNSS' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>19</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>189</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>20</Order>
+           <Id>atonStatus</Id>
+           <Name>AtoN Status</Name>
+           <Description>00000000 = default</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>192</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>21</Order>
+           <Id>aisTransceiverInformation</Id>
+           <Name>AIS Transceiver information</Name>
+           <BitLength>5</BitLength>
+           <BitOffset>200</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Channel A VDL reception' />
+             <EnumPair Value='1' Name='Channel B VDL reception' />
+             <EnumPair Value='2' Name='Channel A VDL transmission' />
+             <EnumPair Value='3' Name='Channel B VDL transmission' />
+             <EnumPair Value='4' Name='Own information not broadcast' />
+             <EnumPair Value='5' Name='Reserved' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>22</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>205</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>23</Order>
+           <Id>atonName</Id>
+           <Name>AtoN Name</Name>
+           <BitLength>272</BitLength>
+           <BitOffset>208</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>129044</PGN>
        <Id>datum</Id>
        <Description>Datum</Description>
