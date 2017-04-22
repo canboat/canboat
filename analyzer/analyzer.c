@@ -22,8 +22,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #define  GLOBALS
-#include "common.h"
 #include "analyzer.h"
+#include "common.h"
 
 enum RawFormats
 {
@@ -62,6 +62,7 @@ bool showRaw = false;
 bool showData = false;
 bool showBytes = false;
 bool showJson = false;
+bool showJsonValue = false;
 bool showSI = false; // Output everything in strict SI units
 char * sep = " ";
 char closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
@@ -88,7 +89,7 @@ void camelCase(bool upperCamelCase);
 void usage(char ** argv, char ** av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
-  printf("Usage: %s [[-raw] [-json [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] [-src <src> | <pgn>]] ["
+  printf("Usage: %s [[-raw] [-json [-nv] [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] [-src <src> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
@@ -174,6 +175,10 @@ int main(int argc, char ** argv)
     else if (strcasecmp(av[1], "-json") == 0)
     {
       showJson = true;
+    }
+    else if (strcasecmp(av[1], "-nv") == 0)
+    {
+      showJsonValue = true;
     }
     else if (strcasecmp(av[1], "-data") == 0)
     {
@@ -1036,7 +1041,11 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
         s += strlen(lookfor);
         e = strchr(s, ',');
         e = e ? e : s + strlen(s);
-        if (showJson)
+        if (showJsonValue)
+        {
+          mprintf("%s\"%s\":{\"value\":%"PRId64",\"name\":\"%.*s\"}", getSep(), fieldName, value, (int) (e - s), s);
+        }
+        else if (showJson)
         {
           mprintf("%s\"%s\":\"%.*s\"", getSep(), fieldName, (int) (e - s), s);
         }
@@ -1143,11 +1152,20 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
       }
       if (!m)
       {
+        if (showJson)
+        {
+          mprintf("%s \"%s\":%"PRId64, getSep(), fieldName, value);
+          return true;
+        }
         sprintf(unknownManufacturer, "Unknown Manufacturer %"PRId64, value);
         m = unknownManufacturer;
       }
 
-      if (showJson)
+      if (showJsonValue)
+      {
+        mprintf("%s \"%s\":{\"value\":%"PRId64",\"name\":\"%s\"}", getSep(), fieldName, value, m);
+      }
+      else if (showJson)
       {
         mprintf("%s \"%s\": \"%s\"", getSep(), fieldName, m);
       }

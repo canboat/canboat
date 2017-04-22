@@ -22431,10 +22431,10 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"0": "Initial"},
-              {"1": "First retransmission"},
-              {"2": "Second retransmission"},
-              {"3": "Final retransmission"}]},
+              {"name":"Initial","value":"0"},
+              {"name":"First retransmission","value":"1"},
+              {"name":"Second retransmission","value":"2"},
+              {"name":"Final retransmission","value":"3"}]},
           {
             "Order":6,
             "Id":"unused",
@@ -22538,10 +22538,10 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"0": "Initial"},
-              {"1": "First retransmission"},
-              {"2": "Second retransmission"},
-              {"3": "Final retransmission"}]},
+              {"name":"Initial","value":"0"},
+              {"name":"First retransmission","value":"1"},
+              {"name":"Second retransmission","value":"2"},
+              {"name":"Final retransmission","value":"3"}]},
           {
             "Order":6,
             "Id":"unused",
@@ -22645,10 +22645,10 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"0": "Initial"},
-              {"1": "First retransmission"},
-              {"2": "Second retransmission"},
-              {"3": "Final retransmission"}]},
+              {"name":"Initial","value":"0"},
+              {"name":"First retransmission","value":"1"},
+              {"name":"Second retransmission","value":"2"},
+              {"name":"Final retransmission","value":"3"}]},
           {
             "Order":6,
             "Id":"unused",
