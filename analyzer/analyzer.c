@@ -1177,7 +1177,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
     else
     {
 
-      if (field->resolution == RES_INTEGER)
+      if (field->resolution == RES_INTEGER  || field->resolution == RES_BITFIELD)
       {
         if (showJson)
         {
