@@ -26,10 +26,10 @@ TARGETS=$(COMMAND) $(REQUEST)
 all: $(TARGETS)
 
 $(COMMAND): command.c ../common/common.c ../common/common.h
-	$(CC) -o $(COMMAND) -I../common command.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(COMMAND) -I../common command.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(REQUEST): request.c ../common/common.c ../common/common.h
-	$(CC) -o $(REQUEST) -I../common request.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(REQUEST) -I../common request.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
