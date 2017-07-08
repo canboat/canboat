@@ -743,6 +743,16 @@ Pgn pgnList[] =
 }
 
 ,
+{ "Victron Battery Register", 61184, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=358", "Victron" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Register Id", BYTES(2), 1, false, 0, "" }
+  , { "Payload", BYTES(4), 1, false, 0, "" }
+  }
+}
+
+,
 { "Manufacturer Proprietary single-frame addressed", 61184, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
