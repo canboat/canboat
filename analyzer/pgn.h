@@ -553,7 +553,7 @@ typedef struct
   bool       known;             /* Are we pretty sure we've got all fields with correct definitions? */
   uint32_t   size;              /* (Minimal) size of this PGN. Helps to determine fast/single frame and initial malloc */
   uint32_t   repeatingFields;   /* How many fields at the end repeat until the PGN is exhausted? */
-  Field      fieldList[28];     /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
+  Field      fieldList[30];     /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t   fieldCount;        /* Filled by C, no need to set in initializers. */
   char     * camelDescription;  /* Filled by C, no need to set in initializers. */
   bool       unknownPgn;        /* true = this is a catch-all for unknown PGNs */
@@ -1928,11 +1928,37 @@ Pgn pgnList[] =
 ,
 { "Binary Switch Bank Status", 127501, false, 8, 1,
   { { "Indicator Bank Instance", BYTES(1), 1, false, 0, "" }
-  , { "Indicator", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator1", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator2", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator3", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator4", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator5", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator6", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator7", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator8", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator9", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator10", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator11", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator12", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator13", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator14", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator15", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator16", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator17", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator18", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator19", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator20", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator21", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator22", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator23", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator24", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator25", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator26", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator27", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
+  , { "Indicator28", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
   , { 0 }
   }
 }
-
 ,
 { "Switch Bank Control", 127502, false, 8, 1,
   { { "Switch Bank Instance", BYTES(1), 1, false, 0, "" }
