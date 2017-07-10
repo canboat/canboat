@@ -398,7 +398,7 @@ static void fillFieldCounts(void)
     for (j = 0; pgnList[i].fieldList[j].name && j < ARRAY_SIZE(pgnList[i].fieldList); j++);
     if (j == ARRAY_SIZE(pgnList[i].fieldList))
     {
-      logError("Internal error: PGN %d '%s' does not have correct fieldlist (%d).\n", pgnList[i].pgn, pgnList[i].description, j);
+      logError("Internal error: PGN %d '%s' does not have correct fieldlist.\n", pgnList[i].pgn, pgnList[i].description);
       exit(2);
     }
     if (j == 0 && pgnList[i].known)
