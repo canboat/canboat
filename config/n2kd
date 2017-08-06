@@ -1,3 +1,5 @@
+# CAN_INTERFACE=<network_interface>
+# OR
 # ACTISENSE_PRIMARY_DEVICE=<devicename>
 
 # OPTIONAL OPTIONS:

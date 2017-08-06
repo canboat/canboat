@@ -21,12 +21,11 @@ PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
 CANDUMP2ANALYZER=$(TARGETDIR)/candump2analyzer
 TARGETS=$(CANDUMP2ANALYZER)
-CFLAGS=-O3
 
 all: $(TARGETS)
 
 $(CANDUMP2ANALYZER): candump2analyzer.c ../common/common.c ../common/common.h Makefile
-	$(CC) $(CFLAGS) -o $(CANDUMP2ANALYZER) -I../common candump2analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(CANDUMP2ANALYZER) -I../common candump2analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

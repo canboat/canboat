@@ -22,13 +22,12 @@ TARGETDIR=../rel/$(PLATFORM)
 N2KD=$(TARGETDIR)/n2kd
 N2KD_MONITOR=$(TARGETDIR)/n2kd_monitor
 TARGETS=$(N2KD) $(N2KD_MONITOR)
-CFLAGS=-O3
-LDLIBS=-lm
+LDLIBS+=-lm
 
 all: $(TARGETS)
 
 $(N2KD): main.c nmea0183.c gps_ais.h nmea0183.h ../common/common.c ../common/common.h Makefile
-	$(CC) $(CFLAGS) -o $(N2KD) -I../common main.c gps_ais.c nmea0183.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(N2KD) -I../common main.c gps_ais.c nmea0183.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(N2KD_MONITOR): n2kd_monitor
 	cp n2kd_monitor $(N2KD_MONITOR)

@@ -23,7 +23,6 @@ PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
 TARGET1=../rel/$(PLATFORM)/nmea0183-serial
 TARGETLIST=$(TARGET1)
-CFLAGS=-O3
 
 all:	$(TARGETDIR) $(TARGETLIST)
 
@@ -34,4 +33,4 @@ clean:
 	-rm -f $(TARGETLIST) *.elf *.gdb
 
 $(TARGET1):	nmeareader.c ../common/common.c ../common/common.h
-	$(CC) -o $(TARGET1) $(CFLAGS) -I../common nmeareader.c ../common/common.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(TARGET1) $(CFLAGS) -I../common nmeareader.c ../common/common.c
