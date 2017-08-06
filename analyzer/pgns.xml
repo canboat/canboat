@@ -7908,11 +7908,416 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>2</Order>
-           <Id>indicator</Id>
-           <Name>Indicator</Name>
+           <Id>indicator1</Id>
+           <Name>Indicator1</Name>
            <BitLength>2</BitLength>
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>indicator2</Id>
+           <Name>Indicator2</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>10</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>indicator3</Id>
+           <Name>Indicator3</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>12</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>indicator4</Id>
+           <Name>Indicator4</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>14</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>indicator5</Id>
+           <Name>Indicator5</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>indicator6</Id>
+           <Name>Indicator6</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>18</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>indicator7</Id>
+           <Name>Indicator7</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>20</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>indicator8</Id>
+           <Name>Indicator8</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>22</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>indicator9</Id>
+           <Name>Indicator9</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>indicator10</Id>
+           <Name>Indicator10</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>26</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>indicator11</Id>
+           <Name>Indicator11</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>28</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>indicator12</Id>
+           <Name>Indicator12</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>30</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>14</Order>
+           <Id>indicator13</Id>
+           <Name>Indicator13</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>15</Order>
+           <Id>indicator14</Id>
+           <Name>Indicator14</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>34</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>16</Order>
+           <Id>indicator15</Id>
+           <Name>Indicator15</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>36</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>17</Order>
+           <Id>indicator16</Id>
+           <Name>Indicator16</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>38</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>18</Order>
+           <Id>indicator17</Id>
+           <Name>Indicator17</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>19</Order>
+           <Id>indicator18</Id>
+           <Name>Indicator18</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>42</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>20</Order>
+           <Id>indicator19</Id>
+           <Name>Indicator19</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>44</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>21</Order>
+           <Id>indicator20</Id>
+           <Name>Indicator20</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>46</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>22</Order>
+           <Id>indicator21</Id>
+           <Name>Indicator21</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>23</Order>
+           <Id>indicator22</Id>
+           <Name>Indicator22</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>50</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>24</Order>
+           <Id>indicator23</Id>
+           <Name>Indicator23</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>52</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>25</Order>
+           <Id>indicator24</Id>
+           <Name>Indicator24</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>54</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>26</Order>
+           <Id>indicator25</Id>
+           <Name>Indicator25</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>27</Order>
+           <Id>indicator26</Id>
+           <Name>Indicator26</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>58</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>28</Order>
+           <Id>indicator27</Id>
+           <Name>Indicator27</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>60</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>29</Order>
+           <Id>indicator28</Id>
+           <Name>Indicator28</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>62</BitOffset>
+           <BitStart>6</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
