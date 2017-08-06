@@ -1,9 +1,0 @@
-usr/bin/actisense-serial
-usr/bin/analyzer
-usr/bin/candump2analyzer
-usr/bin/command-group-function
-usr/bin/iptee
-usr/bin/n2kd
-usr/bin/nmea0183-serial
-usr/bin/request-group-function
-usr/bin/socketcan-writer
