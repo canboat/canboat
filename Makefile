@@ -21,8 +21,8 @@ MKDIR = mkdir -p
 
 CONFDIR=$(SYSCONFDIR)/default
 
-ROOT_UID=1
-ROOT_GID=1
+ROOT_UID=0
+ROOT_GID=0
 ROOT_MOD=0644
 
 all:	bin
