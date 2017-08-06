@@ -1,7 +1,7 @@
 #
 # Makefile for all UNIX style platforms including Cygwin
 #
-# (C) 2009-2015, Kees Verruijt, Harlingen, The Netherlands
+# (C) 2009-2017, Kees Verruijt, Harlingen, The Netherlands
 #
 # $Id:$
 #
@@ -25,13 +25,15 @@ all:	bin
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
 	$(MAKE) -C analyzer json
 
-bin:
-	$(MKDIR) rel/$(PLATFORM)
+bin:	rel/$(PLATFORM)
+
+rel/$(PLATFORM):
+	$(MKDIR) -p rel/$(PLATFORM)
 
 clean:
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
 	
-install: $(DESTDIR)$(BINDIR) $(DESTDIR)$(CONFDIR)
+install: rel/$(PLATFORM)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(CONFDIR)
 	for i in rel/$(PLATFORM)/* util/* */*_monitor; do f=`basename $$i`; rm -f $(DESTDIR)$(BINDIR)/$$f; cp $$i $(DESTDIR)$(BINDIR); done
 	for i in config/*; do install --group=root --owner=root --mode=0644 $$i $(DESTDIR)$(CONFDIR); done
 	-killall -9 actisense-serial n2kd socketcan-writer
@@ -44,7 +46,7 @@ zip:
 .PHONY : $(SUBDIRS) clean install zip bin
 
 $(DESTDIR)$(BINDIR):
-	$(MKDIR) $(DESTDIR)$(BINDIR)
+	$(MKDIR) -p $(DESTDIR)$(BINDIR)
 
 $(DESTDIR)$(CONFDIR):
-	$(MKDIR) $(DESTDIR)$(CONFDIR)
+	$(MKDIR) -p $(DESTDIR)$(CONFDIR)
