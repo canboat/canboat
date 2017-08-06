@@ -21,6 +21,10 @@ MKDIR = mkdir -p
 
 CONFDIR=$(SYSCONFDIR)/default
 
+ROOT_UID=1
+ROOT_GID=1
+ROOT_MOD=0644
+
 all:	bin
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
 	$(MAKE) -C analyzer json
@@ -35,8 +39,8 @@ clean:
 	
 install: rel/$(PLATFORM)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(CONFDIR)
 	for i in rel/$(PLATFORM)/* util/* */*_monitor; do f=`basename $$i`; rm -f $(DESTDIR)$(BINDIR)/$$f; cp $$i $(DESTDIR)$(BINDIR); done
-	for i in config/*; do install --group=root --owner=root --mode=0644 $$i $(DESTDIR)$(CONFDIR); done
-	-killall -9 actisense-serial n2kd socketcan-writer
+	for i in config/*; do install -g $(ROOT_GID) -o $(ROOT_UID) -m $(ROOT_MOD) $$i $(DESTDIR)$(CONFDIR); done
+	-killall -9 actisense-serial n2kd socketcan-writer || echo 'No running processes killed'
 
 zip:
 	(cd rel; zip -r ../packetlogger_`date +%Y%m%d`.zip *)
