@@ -30,9 +30,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include <time.h>
 #include "common.h"
 
-#define MSG_BUF_SIZE 		2000
-#define CANDUMP_DATA_INC	3
-#define MAX_DATA_BYTES		223
+#define MSG_BUF_SIZE 			2000
+#define CANDUMP_DATA_INC		3
+#define CANDUMP_LOG_DATA_INC	2
+#define MAX_DATA_BYTES			223
 
 // There are at least two variations in candump output
 // format which are currently handled...
@@ -40,6 +41,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #define FMT_TBD			0
 #define FMT_1			1	// Angstrom ex:	"<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0"
 #define FMT_2			2	// Debian ex:	"   can0  09F8027F   [8]  00 FC FF FF 00 00 FF FF"
+#define FMT_3			3	// candump log ex:	"(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF"
 
 int main(int argc, char ** argv)
 {
@@ -72,6 +74,8 @@ int main(int argc, char ** argv)
 		//
 		unsigned int canid;
 		int size;
+		time_t currentTime;
+		unsigned int candump_data_inc = CANDUMP_DATA_INC;
 
 		// Determine which candump format is being used.
 		//
@@ -82,6 +86,11 @@ int main(int argc, char ** argv)
 			//
 			if (sscanf(msg, "<%x> [%d] ", &canid, &size) == 2) format = FMT_1;
 			else if (sscanf(msg, " %*s %x [%d] ", &canid, &size) == 2) format = FMT_2;
+			else if (sscanf(msg, "(%ld.%*d) %*s %8x#",&currentTime, &canid) == 2) {
+						format = FMT_3; 
+						candump_data_inc = CANDUMP_LOG_DATA_INC;
+						size = (strlen(strchr(msg,'#'))-1)/2;
+					}
 			else continue;
 		}
 		else if (format == FMT_1)
@@ -91,6 +100,11 @@ int main(int argc, char ** argv)
 		else if (format == FMT_2)
 		{
 			if (sscanf(msg, " %*s %x [%d] ", &canid, &size) != 2) continue;
+		}
+		else if (format == FMT_3)
+		{
+			if (sscanf(msg, "(%ld.%*d) %*s %8x#",&currentTime, &canid) != 2) continue;	
+			size = (strlen(strchr(msg,'#'))-1)/2;
 		}
 
 		unsigned int pri;
@@ -106,9 +120,10 @@ int main(int argc, char ** argv)
 		// capability, with this utility just performing a format
 		// conversion.
 		//
-		time_t currentTime;
 		struct tm * utc;
-		time(&currentTime);
+		if (format != FMT_3) {
+			time(&currentTime);
+		}
 		utc = gmtime(&currentTime);
 
 		// Output all but the data bytes.
@@ -122,12 +137,14 @@ int main(int argc, char ** argv)
 		//
 		int i;
 		char *p;
+		char separator;
 		unsigned int data[MAX_DATA_BYTES];
-		for (p = msg; p < msg + sizeof(msg) && *p != 0 && *p != ']'; ++p);
-		if (*p == ']') {
-			while (*(++p) == ' ');
-			for (i = 0; i < size; i++, p += CANDUMP_DATA_INC)
-			{
+		
+		separator = (format == FMT_3)?'#':']';
+		for (p = msg; p < msg + sizeof(msg) && *p != 0 && *p != separator; ++p);
+		if (*p == separator) {
+			if (format == FMT_3){p++;} else {while (*(++p) == ' ');}
+			for (i = 0; i < size; i++, p += candump_data_inc) {
 				sscanf(p, "%2x", &data[i]);
 				fprintf(outfile, ",%02x", data[i]);
 			}
