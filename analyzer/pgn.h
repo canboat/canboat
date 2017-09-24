@@ -1088,14 +1088,14 @@ Pgn pgnList[] =
   , { 0 }
   }
 }
-
+  /* https://www.lowrance.com/Root/Installation%20Guides/Lowrance/Temperature-Sensor_IG_988-10923-001.pdf */
 ,
 { "Lowrance: Temperature", 65285, false, 8, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "Lowrance" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Temperature Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, "" }
   , { "Temperature Instance", 4, 1, false, 0, "" }
-  , { "Temperature Source", 4, 1, false, 0, "" }
   , { "Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { 0 }
   }
