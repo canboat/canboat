@@ -2471,20 +2471,38 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>4</Order>
-           <Id>temperatureInstance</Id>
-           <Name>Temperature Instance</Name>
-           <BitLength>4</BitLength>
+           <Id>temperatureSource</Id>
+           <Name>Temperature Source</Name>
+           <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Sea Temperature' />
+             <EnumPair Value='1' Name='Outside Temperature' />
+             <EnumPair Value='2' Name='Inside Temperature' />
+             <EnumPair Value='3' Name='Engine Room Temperature' />
+             <EnumPair Value='4' Name='Main Cabin Temperature' />
+             <EnumPair Value='5' Name='Live Well Temperature' />
+             <EnumPair Value='6' Name='Bait Well Temperature' />
+             <EnumPair Value='7' Name='Refridgeration Temperature' />
+             <EnumPair Value='8' Name='Heating System Temperature' />
+             <EnumPair Value='9' Name='Dew Point Temperature' />
+             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
+             <EnumPair Value='11' Name='Theoretical Wind Chill Temperature' />
+             <EnumPair Value='12' Name='Heat Index Temperature' />
+             <EnumPair Value='13' Name='Freezer Temperature' />
+             <EnumPair Value='14' Name='Exhaust Gas Temperature' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>5</Order>
-           <Id>temperatureSource</Id>
-           <Name>Temperature Source</Name>
+           <Id>temperatureInstance</Id>
+           <Name>Temperature Instance</Name>
            <BitLength>4</BitLength>
-           <BitOffset>20</BitOffset>
-           <BitStart>4</BitStart>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
          <Field>
@@ -2492,8 +2510,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>actualTemperature</Id>
            <Name>Actual Temperature</Name>
            <BitLength>16</BitLength>
-           <BitOffset>24</BitOffset>
-           <BitStart>0</BitStart>
+           <BitOffset>28</BitOffset>
+           <BitStart>4</BitStart>
            <Units>K</Units>
                   <Type>Temperature</Type>
                   <Resolution>0.01</Resolution>
