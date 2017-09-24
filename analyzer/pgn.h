@@ -1457,6 +1457,34 @@ Pgn pgnList[] =
 
 /* proprietary PDU1 (addressed) fast-packet range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
+  /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
+,
+{ "Seatalk1: Keystroke", 126720, false, 21, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0" }
+  , { "command", BYTES(1), RES_BINARY, false, "=134", "0x86" }
+  , { "device", BYTES(1), RES_LOOKUP, false, ",33=S100", "" }
+  , { "key", BYTES(2), RES_LOOKUP, false, ",64005=-1,63495=+1,64770=Standby,65025=Auto,63240=+10,63750=-10,56865=-1 and -10,56610=+1 and +10", "" }
+  , { "Unknown data", BYTES(14), RES_BINARY, false, 0, "" } // xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF FF | FF FF FF FF FF | 42 00 F8 02 05])
+  , { 0 }
+  }
+}
+
+,
+{ "Seatalk1: Device Indentification", 126720, false, 8, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0" }
+  , { "command", BYTES(1), RES_BINARY, false, "=144", "0x90" }
+  , { "Reserved", BYTES(1), RES_NOTUSED, false, 0, "" } // 0x00
+  , { "device", BYTES(1), RES_LOOKUP, false, ",3=S100,5=Course Computer", "" }
+  , { 0 }
+  }
+}
+
   /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
 ,
 { "Airmar: Attitude Offset", 126720, true, 9, 0,
