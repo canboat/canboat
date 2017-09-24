@@ -21,8 +21,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #define UINT16_OUT_OF_RANGE (MAX_UINT16 - 1)
 #define UINT16_UNKNOWN (MAX_UINT16)
@@ -1094,8 +1094,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "Lowrance" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Temperature Instance", 4, 1, false, 0, "" }
-  , { "Temperature Source", 4, 1, false, 0, "" }
+  , { "Temperature Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, "" }
   , { "Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { 0 }
   }
@@ -1198,7 +1197,7 @@ Pgn pgnList[] =
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-  , { "Wind Datum", BYTES(2), RES_RADIANS, false, "rad", "" }    
+  , { "Wind Datum", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Rolling Average Wind Angle", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Reserved", BYTES(2), 1, false, 0, "" }
   }
@@ -1209,7 +1208,7 @@ Pgn pgnList[] =
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "SID", BYTES(1), RES_BINARY, false, 0, "" }
-  , { "Heading True", BYTES(2), RES_RADIANS, false, "rad", "" }    
+  , { "Heading True", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Heading Magnetic", BYTES(2), RES_RADIANS, false, "rad", "" }
   , { "Reserved", BYTES(1), 1, false, 0, "" }
   }
@@ -1272,7 +1271,7 @@ Pgn pgnList[] =
   , { "Pilot Mode", BYTES(1), RES_BINARY, false, 0, "" }
   , { "Sub Mode", BYTES(1), RES_BINARY, false, 0, "" }
   , { "Pilot Mode Data", BYTES(1), RES_BINARY, false, 0, "" }
-  , { "Reserved", BYTES(3), RES_BINARY, false, 0, "" }    
+  , { "Reserved", BYTES(3), RES_BINARY, false, 0, "" }
   }
 }
   /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
@@ -3991,7 +3990,7 @@ Pgn pgnList[] =
   , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
   , { "Message ID", BYTES(1), 1, false, "=45", "Zone Name" }
   , { "A", BYTES(1), 1, false, 0, "" }
-  , { "Number", BYTES(1), 1, false, 0, "" }    
+  , { "Number", BYTES(1), 1, false, 0, "" }
   , { "Name", BYTES(13), RES_STRINGLZ, false, 0, "" }
   , { 0 }
   }
