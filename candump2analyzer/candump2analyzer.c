@@ -46,7 +46,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 void gettimeval(struct timeval *tv, double sec)
 {
-	printf("%f %ld\n", sec, (unsigned int)sec);
 	tv->tv_sec = sec;
 	tv->tv_usec = (sec - tv->tv_sec) * 1000000;
 }
