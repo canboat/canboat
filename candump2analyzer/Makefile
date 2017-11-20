@@ -21,6 +21,7 @@ PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
 CANDUMP2ANALYZER=$(TARGETDIR)/candump2analyzer
 TARGETS=$(CANDUMP2ANALYZER)
+CFLAGS=-lm
 
 all: $(TARGETS)
 

@@ -26,6 +26,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+#include <math.h>
 #include <stdio.h>
 #include <time.h>
 #include "common.h"
@@ -42,6 +43,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #define FMT_1			1	// Angstrom ex:	"<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0"
 #define FMT_2			2	// Debian ex:	"   can0  09F8027F   [8]  00 FC FF FF 00 00 FF FF"
 #define FMT_3			3	// candump log ex:	"(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF"
+
+void gettimeval(struct timeval *tv, double sec)
+{
+	printf("%f %ld\n", sec, (unsigned int)sec);
+	tv->tv_sec = sec;
+	tv->tv_usec = (sec - tv->tv_sec) * 1000000;
+}
 
 int main(int argc, char ** argv)
 {
@@ -74,7 +82,7 @@ int main(int argc, char ** argv)
 		//
 		unsigned int canid;
 		int size;
-		time_t currentTime;
+		double currentTime;
 		unsigned int candump_data_inc = CANDUMP_DATA_INC;
 
 		// Determine which candump format is being used.
@@ -86,7 +94,7 @@ int main(int argc, char ** argv)
 			//
 			if (sscanf(msg, "<%x> [%d] ", &canid, &size) == 2) format = FMT_1;
 			else if (sscanf(msg, " %*s %x [%d] ", &canid, &size) == 2) format = FMT_2;
-			else if (sscanf(msg, "(%ld.%*d) %*s %8x#",&currentTime, &canid) == 2) {
+			else if (sscanf(msg, "(%lf) %*s %8x#", &currentTime, &canid) == 2) {
 						format = FMT_3; 
 						candump_data_inc = CANDUMP_LOG_DATA_INC;
 						size = (strlen(strchr(msg,'#'))-1)/2;
@@ -103,7 +111,7 @@ int main(int argc, char ** argv)
 		}
 		else if (format == FMT_3)
 		{
-			if (sscanf(msg, "(%ld.%*d) %*s %8x#",&currentTime, &canid) != 2) continue;	
+			if (sscanf(msg, "(%lf) %*s %8x#", &currentTime, &canid) != 2) continue;	
 			size = (strlen(strchr(msg,'#'))-1)/2;
 		}
 
@@ -114,24 +122,40 @@ int main(int argc, char ** argv)
 
 		getISO11783BitsFromCanId(canid, &pri, &pgn, &src, &dst);
 
-		// Get current time.
-		// Note that we can't get fractional seconds from gmtime().
-		// It would be more practical if candump provided a timestamp
-		// capability, with this utility just performing a format
-		// conversion.
-		//
+		int msec;
+		char timestamp[20];
+		struct timeval tv;
 		struct tm * utc;
-		if (format != FMT_3) {
-			time(&currentTime);
+
+		// If the candump format includes a usec timestamp, convert
+		// that to a timeval, otherwise use gettimeofday.
+		//
+		if (format == FMT_3) {
+			gettimeval(&tv, currentTime);
+		} else {
+			gettimeofday(&tv, NULL);
 		}
-		utc = gmtime(&currentTime);
+
+		// strftime doesn't support fractional seconds, so use another
+		// variable.
+		//
+		msec = lrint(tv.tv_usec / 1000.0);
+		if(msec >= 1000) {
+			msec -= 1000;
+			tv.tv_sec++;
+		}
+
+		utc = gmtime(&tv.tv_sec);
+
+		// %F = YYYY-MM-DD
+		// %T = HH:MM:SS
+		//
+		strftime(timestamp, 20, "%F-%T", utc);
 
 		// Output all but the data bytes.
 		//
-		fprintf(outfile, "%04d-%02d-%02d-%02d:%02d:%02d.000,%d,%d,%d,%d,%d",
-				utc->tm_year + 1900, utc->tm_mon + 1, utc->tm_mday,
-				utc->tm_hour, utc->tm_min, utc->tm_sec,
-				pri, pgn, src, dst, size);
+		fprintf(outfile, "%s.%03d,%d,%d,%d,%d,%d",
+			timestamp, msec, pri, pgn, src, dst, size);
 
 		// Now process the data bytes.
 		//
