@@ -92,7 +92,7 @@ typedef struct
 # define RES_NOTUSED (0)
 # define RES_RADIANS (1e-4)
 # define RES_ROTATION (1e-3/32.0)
-# define RES_HIRES_ROTATION ((1e-3/32.0) * 0.0001)
+# define RES_HIRES_ROTATION (1e-6/32.0)
 # define RES_ASCII (-1.0)
 # define RES_LATITUDE (-2.0)
 # define RES_LONGITUDE (-3.0)

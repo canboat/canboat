@@ -6635,7 +6635,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"rad/s",
-            "Resolution":3.125e-09,
+            "Resolution":3.125e-08,
             "Signed":true}]},
       "127257":{
         "PGN":127257,

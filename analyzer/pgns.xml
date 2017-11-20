@@ -7457,7 +7457,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>3.125e-09</Resolution>
+           <Resolution>3.125e-08</Resolution>
            <Signed>true</Signed>
          </Field>
        </Fields>
