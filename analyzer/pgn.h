@@ -2320,6 +2320,7 @@ Pgn pgnList[] =
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Depth", BYTES(4), 0.01, false, "m", "Depth below transducer" }
   , { "Offset", BYTES(2), 0.001, true, "m", "Distance between transducer and surface (positive) or keel (negative)" }
+  , { "Range", BYTES(1), 10, false, "m", "Max measurement range" }
   , { 0 }
   }
 }
