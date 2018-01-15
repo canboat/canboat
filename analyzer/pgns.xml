@@ -9690,7 +9690,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>speedWaterReferencedType</Id>
            <Name>Speed Water Referenced Type</Name>
-           <BitLength>4</BitLength>
+           <BitLength>8</BitLength>
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
@@ -9702,6 +9702,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='3' Name='Correlation (ultra sound)' />
              <EnumPair Value='4' Name='Electro Magnetic' />
            </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>speedDirection</Id>
+           <Name>Speed Direction</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
          </Field>
        </Fields>
     </PGNInfo>

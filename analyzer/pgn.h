@@ -2308,7 +2308,8 @@ Pgn pgnList[] =
   { { "SID", BYTES(1), 1, false, 0, "" }
   , { "Speed Water Referenced", BYTES(2), 0.01, false, "m/s", "" }
   , { "Speed Ground Referenced", BYTES(2), 0.01, false, "m/s", "" }
-  , { "Speed Water Referenced Type", 4, RES_LOOKUP, false, LOOKUP_WATER_REFERENCE, "" }
+  , { "Speed Water Referenced Type", BYTES(1), RES_LOOKUP, false, LOOKUP_WATER_REFERENCE, "" }
+  , { "Speed Direction", 4, 1, false, 0, "" }
   , { 0 }
   }
 }
