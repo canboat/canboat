@@ -366,6 +366,7 @@ static void parseAndWriteIn(int handle, const unsigned char * cmd)
     return;
   }
 
+  logDebug("About to write:  %s\n", cmd);
   writeMessage(handle, N2K_MSG_SEND, msg, m - msg);
 }
 
@@ -387,6 +388,7 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
 {
   unsigned char bst[255];
   unsigned char *b = bst;
+  unsigned char *r = bst;
   unsigned char *lenPtr;
   unsigned char crc;
 
@@ -415,10 +417,34 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
   *b++ = DLE;
   *b++ = ETX;
 
-  if (write(handle, bst, b - bst) != b - bst)
+  int retryCount = 5;
+  int needs_written = b - bst;
+  int written;
+  do
+    {
+      written = write(handle, r, needs_written);
+      if ( written != -1 )
+	{
+	  r += written;
+	  needs_written -= written;
+	}
+      else if ( errno == EAGAIN )
+	{
+	  retryCount--;
+	  usleep(25000);
+	}
+      else
+        {
+          break;
+        }
+        
+    } while ( needs_written > 0 && retryCount >= 0 );
+
+  if ( written == -1 )
   {
     logError("Unable to write command '%.*s' to NGT-1-A device\n", (int) len, cmd);
   }
+
   logDebug("Written command %X len %d\n", command, (int) len);
 }
 
