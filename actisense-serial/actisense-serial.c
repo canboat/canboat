@@ -375,7 +375,7 @@ static void writeRaw(int handle, const unsigned char * cmd, const size_t len)
 {
   if (write(handle, cmd, len) != len)
   {
-    logError("XXUnable to write command '%.*s' to NGT-1-A device\n", (int) len, cmd);
+    logError("Unable to write command '%.*s' to NGT-1-A device\n", (int) len, cmd);
     exit(1);
   }
   logDebug("Written %d bytes\n", (int) len);
