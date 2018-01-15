@@ -428,11 +428,16 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
 	  r += written;
 	  needs_written -= written;
 	}
-      else
+      else if ( errno == EAGAIN )
 	{
 	  retryCount--;
 	  usleep(25000);
 	}
+      else
+        {
+          break;
+        }
+        
     } while ( needs_written > 0 && retryCount >= 0 );
 
   if ( written == -1 )
