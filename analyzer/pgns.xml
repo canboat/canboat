@@ -9755,6 +9755,18 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Resolution>0.001</Resolution>
            <Signed>true</Signed>
          </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>range</Id>
+           <Name>Range</Name>
+           <Description>Max measurement range</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m</Units>
+           <Resolution>10</Resolution>
+           <Signed>false</Signed>
+         </Field>
        </Fields>
     </PGNInfo>
     <PGNInfo>
