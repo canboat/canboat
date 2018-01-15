@@ -435,10 +435,6 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
 	}
     } while ( needs_written > 0 && retryCount >= 0 );
 
-  if ( retryCount != 5 ) {
-    logError("Had to retry: %d\n", (int) retryCount);
-  }
-
   if ( written == -1 )
   {
     logError("Unable to write command '%.*s' to NGT-1-A device\n", (int) len, cmd);
