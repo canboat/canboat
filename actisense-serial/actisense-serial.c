@@ -61,6 +61,7 @@ static int readonly = 0;
 static int writeonly = 0;
 static int passthru = 0;
 static long timeout = 0;
+static int outputCommands = 0;
 static bool isFile;
 
 enum MSG_State
@@ -128,6 +129,10 @@ int main(int argc, char ** argv)
       debug = 1;
       setLogLevel(LOGLEVEL_DEBUG);
     }
+    else if (strcasecmp(argv[1], "-o") == 0)
+    {
+      outputCommands = 1;
+    }
     else if (!device)
     {
       device = argv[1];
@@ -153,6 +158,7 @@ int main(int argc, char ** argv)
     "  -v      verbose\n"
     "  -d      debug\n"
     "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
+    "  -o      output commands sent to stdin to the stdout \n"
     "  <device> can be a serial device, a normal file containing a raw log,\n"
     "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
     "\n" 
@@ -243,8 +249,11 @@ retry:
       {
         parseAndWriteIn(handle, msg);
       }
-      fprintf(stdout, "%s", msg);
-      fflush(stdout);
+      if ( outputCommands ) 
+      {
+        fprintf(stdout, "%s", msg);
+        fflush(stdout);
+      }
     }
     else if (writeonly)
     {
