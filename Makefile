@@ -32,7 +32,7 @@ all:	bin
 bin:	rel/$(PLATFORM)
 
 rel/$(PLATFORM):
-	$(MKDIR) -p rel/$(PLATFORM)
+	$(MKDIR) rel/$(PLATFORM)
 
 clean:
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
@@ -50,7 +50,7 @@ zip:
 .PHONY : $(SUBDIRS) clean install zip bin
 
 $(DESTDIR)$(BINDIR):
-	$(MKDIR) -p $(DESTDIR)$(BINDIR)
+	$(MKDIR) $(DESTDIR)$(BINDIR)
 
 $(DESTDIR)$(CONFDIR):
-	$(MKDIR) -p $(DESTDIR)$(CONFDIR)
+	$(MKDIR) $(DESTDIR)$(CONFDIR)
