@@ -1,6 +1,6 @@
 
-#include <common.h>
 #include "analyzer.h"
+#include <common.h>
 
 Pgn *searchForPgn(int pgn)
 {
@@ -35,7 +35,7 @@ Pgn *searchForPgn(int pgn)
  * Return the last Pgn entry for which unknown == true && prn is smaller than requested.
  * This is slower, but is not used often.
  */
-static Pgn *searchForUnknownPgn(pgnId)
+static Pgn *searchForUnknownPgn(int pgnId)
 {
   Pgn *unknown = pgnList;
   Pgn *pgn;
