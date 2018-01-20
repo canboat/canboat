@@ -13996,7 +13996,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisUtcAndDateReport</Id>
        <Description>AIS UTC and Date Report</Description>
        <Complete>false</Complete>
-       <Length>8</Length>
+       <Length>26</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
