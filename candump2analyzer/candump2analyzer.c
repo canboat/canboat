@@ -32,11 +32,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include "common.h"
 
 #define MSG_BUF_SIZE 			2000
-#define CANDUMP_DATA_INC		3
-#define CANDUMP_LOG_DATA_INC	2
+#define CANDUMP_DATA_INC_3		3
+#define CANDUMP_DATA_INC_2		2
 #define MAX_DATA_BYTES			223
 
-// There are at least two variations in candump output
+// There are at least three variations in candump output
 // format which are currently handled...
 //
 #define FMT_TBD			0
@@ -68,6 +68,7 @@ int main(int argc, char ** argv)
 	// For every line in the candump file...
 	//
 	int format = FMT_TBD;
+	unsigned int candump_data_inc = CANDUMP_DATA_INC_3;
 	while(fgets(msg, sizeof(msg) - 1, infile))
 	{
 		// Ignore empty and comment lines within the candump input.
@@ -82,7 +83,6 @@ int main(int argc, char ** argv)
 		unsigned int canid;
 		int size;
 		double currentTime;
-		unsigned int candump_data_inc = CANDUMP_DATA_INC;
 
 		// Determine which candump format is being used.
 		//
@@ -95,7 +95,7 @@ int main(int argc, char ** argv)
 			else if (sscanf(msg, " %*s %x [%d] ", &canid, &size) == 2) format = FMT_2;
 			else if (sscanf(msg, "(%lf) %*s %8x#", &currentTime, &canid) == 2) {
 						format = FMT_3; 
-						candump_data_inc = CANDUMP_LOG_DATA_INC;
+						candump_data_inc = CANDUMP_DATA_INC_2;
 						size = (strlen(strchr(msg,'#'))-1)/2;
 					}
 			else continue;
@@ -162,7 +162,7 @@ int main(int argc, char ** argv)
 		char *p;
 		char separator;
 		unsigned int data[MAX_DATA_BYTES];
-		
+
 		separator = (format == FMT_3)?'#':']';
 		for (p = msg; p < msg + sizeof(msg) && *p != 0 && *p != separator; ++p);
 		if (*p == separator) {
