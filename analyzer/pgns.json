@@ -12426,7 +12426,7 @@
         "Id":"aisUtcAndDateReport",
         "Description":"AIS UTC and Date Report",
         "Complete":false,
-        "Length":8,
+        "Length":26,
         "RepeatingFields":0,
         "Fields":[
           {

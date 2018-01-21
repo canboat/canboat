@@ -2880,7 +2880,7 @@ Pgn pgnList[] =
 }
 
 ,
-{ "AIS UTC and Date Report", 129793, false, 8, 0,
+{ "AIS UTC and Date Report", 129793, false, 0x1a, 0,
   { { "Message ID", 6, 1, false, 0, "" }
   , { "Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, "" }
   , { "User ID", BYTES(4), RES_INTEGER, false, "MMSI", "" }
