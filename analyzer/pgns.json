@@ -2,9 +2,9 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"GPL v3",
-    "PGNs":{
+    "PGNs": [
     
-      "59392":{
+      {
         "PGN":59392,
         "Id":"isoAcknowledgement",
         "Description":"ISO Acknowledgement",
@@ -55,7 +55,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "59904":{
+      {
         "PGN":59904,
         "Id":"isoRequest",
         "Description":"ISO Request",
@@ -73,7 +73,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}}},
-      "60160":{
+      {
         "PGN":60160,
         "Id":"isoTransportProtocolDataTransfer",
         "Description":"ISO Transport Protocol, Data Transfer",
@@ -97,7 +97,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Signed":false}]},
-      "60416":{
+      {
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementRequestToSend",
         "Description":"ISO Transport Protocol, Connection Management - Request To Send",
@@ -153,7 +153,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "60416":{
+      {
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementClearToSend",
         "Description":"ISO Transport Protocol, Connection Management - Clear To Send",
@@ -209,7 +209,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "60416":{
+      {
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementEndOfMessage",
         "Description":"ISO Transport Protocol, Connection Management - End Of Message",
@@ -265,7 +265,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "60416":{
+      {
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementBroadcastAnnounce",
         "Description":"ISO Transport Protocol, Connection Management - Broadcast Announce",
@@ -321,7 +321,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "60416":{
+      {
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementAbort",
         "Description":"ISO Transport Protocol, Connection Management - Abort",
@@ -368,7 +368,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "60928":{
+      {
         "PGN":60928,
         "Id":"isoAddressClaim",
         "Description":"ISO Address Claim",
@@ -493,7 +493,7 @@
             "BitStart":7,
             "Type":"Binary data",
             "Signed":false}]},
-      "61184":{
+      {
         "PGN":61184,
         "Id":"seatalkWirelessKeypadLightControl",
         "Description":"Seatalk: Wireless Keypad Light Control",
@@ -568,7 +568,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Signed":false}]},
-      "61184":{
+      {
         "PGN":61184,
         "Id":"seatalkWirelessKeypadLightControl",
         "Description":"Seatalk: Wireless Keypad Light Control",
@@ -631,7 +631,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Signed":false}]},
-      "61184":{
+      {
         "PGN":61184,
         "Id":"victronBatteryRegister",
         "Description":"Victron Battery Register",
@@ -686,7 +686,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Signed":false}]},
-      "61184":{
+      {
         "PGN":61184,
         "Id":"manufacturerProprietarySingleFrameAddressed",
         "Description":"Manufacturer Proprietary single-frame addressed",
@@ -737,7 +737,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "61440":{
+      {
         "PGN":61440,
         "Id":"unknownSingleFrameNonAddressed",
         "Description":"Unknown single-frame non-addressed",
@@ -788,7 +788,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "65001":{
+      {
         "PGN":65001,
         "Id":"bus1PhaseCBasicAcQuantities",
         "Description":"Bus #1 Phase C Basic AC Quantities",
@@ -824,7 +824,7 @@
             "Units":"Hz",
             "Resolution":"0.0078125",
             "Signed":false}]},
-      "65002":{
+      {
         "PGN":65002,
         "Id":"bus1PhaseBBasicAcQuantities",
         "Description":"Bus #1 Phase B Basic AC Quantities",
@@ -860,7 +860,7 @@
             "Units":"Hz",
             "Resolution":"0.0078125",
             "Signed":false}]},
-      "65003":{
+      {
         "PGN":65003,
         "Id":"bus1PhaseABasicAcQuantities",
         "Description":"Bus #1 Phase A Basic AC Quantities",
@@ -896,7 +896,7 @@
             "Units":"Hz",
             "Resolution":"0.0078125",
             "Signed":false}]},
-      "65004":{
+      {
         "PGN":65004,
         "Id":"bus1AverageBasicAcQuantities",
         "Description":"Bus #1 Average Basic AC Quantities",
@@ -932,7 +932,7 @@
             "Units":"Hz",
             "Resolution":"0.0078125",
             "Signed":false}]},
-      "65005":{
+      {
         "PGN":65005,
         "Id":"utilityTotalAcEnergy",
         "Description":"Utility Total AC Energy",
@@ -958,7 +958,7 @@
             "BitStart":0,
             "Units":"kWh",
             "Signed":false}]},
-      "65006":{
+      {
         "PGN":65006,
         "Id":"utilityPhaseCAcReactivePower",
         "Description":"Utility Phase C AC Reactive Power",
@@ -997,7 +997,7 @@
               {"name":"Leading","value":"0"},
               {"name":"Lagging","value":"1"},
               {"name":"Error","value":"2"}]}]},
-      "65007":{
+      {
         "PGN":65007,
         "Id":"utilityPhaseCAcPower",
         "Description":"Utility Phase C AC Power",
@@ -1025,7 +1025,7 @@
             "Units":"VA",
             "Signed":true,
             "Offset":-2000000000}]},
-      "65008":{
+      {
         "PGN":65008,
         "Id":"utilityPhaseCBasicAcQuantities",
         "Description":"Utility Phase C Basic AC Quantities",
@@ -1070,7 +1070,7 @@
             "BitStart":0,
             "Units":"A",
             "Signed":false}]},
-      "65009":{
+      {
         "PGN":65009,
         "Id":"utilityPhaseBAcReactivePower",
         "Description":"Utility Phase B AC Reactive Power",
@@ -1109,7 +1109,7 @@
               {"name":"Leading","value":"0"},
               {"name":"Lagging","value":"1"},
               {"name":"Error","value":"2"}]}]},
-      "65010":{
+      {
         "PGN":65010,
         "Id":"utilityPhaseBAcPower",
         "Description":"Utility Phase B AC Power",
@@ -1137,7 +1137,7 @@
             "Units":"VA",
             "Signed":true,
             "Offset":-2000000000}]},
-      "65011":{
+      {
         "PGN":65011,
         "Id":"utilityPhaseBBasicAcQuantities",
         "Description":"Utility Phase B Basic AC Quantities",
@@ -1182,7 +1182,7 @@
             "BitStart":0,
             "Units":"A",
             "Signed":false}]},
-      "65012":{
+      {
         "PGN":65012,
         "Id":"utilityPhaseAAcReactivePower",
         "Description":"Utility Phase A AC Reactive Power",
@@ -1222,7 +1222,7 @@
               {"name":"Leading","value":"0"},
               {"name":"Lagging","value":"1"},
               {"name":"Error","value":"2"}]}]},
-      "65013":{
+      {
         "PGN":65013,
         "Id":"utilityPhaseAAcPower",
         "Description":"Utility Phase A AC Power",
@@ -1250,7 +1250,7 @@
             "Units":"VA",
             "Signed":true,
             "Offset":-2000000000}]},
-      "65014":{
+      {
         "PGN":65014,
         "Id":"utilityPhaseABasicAcQuantities",
         "Description":"Utility Phase A Basic AC Quantities",
@@ -1295,7 +1295,7 @@
             "BitStart":0,
             "Units":"A",
             "Signed":false}]},
-      "65015":{
+      {
         "PGN":65015,
         "Id":"utilityTotalAcReactivePower",
         "Description":"Utility Total AC Reactive Power",
@@ -1335,7 +1335,7 @@
               {"name":"Leading","value":"0"},
               {"name":"Lagging","value":"1"},
               {"name":"Error","value":"2"}]}]},
-      "65016":{
+      {
         "PGN":65016,
         "Id":"utilityTotalAcPower",
         "Description":"Utility Total AC Power",
@@ -1363,7 +1363,7 @@
             "Units":"VA",
             "Signed":true,
             "Offset":-2000000000}]},
-      "65017":{
+      {
         "PGN":65017,
         "Id":"utilityAverageBasicAcQuantities",
         "Description":"Utility Average Basic AC Quantities",
@@ -1408,7 +1408,7 @@
             "BitStart":0,
             "Units":"A",
             "Signed":false}]},
-      "65018":{
+      {
         "PGN":65018,
         "Id":"generatorTotalAcEnergy",
         "Description":"Generator Total AC Energy",
@@ -1434,7 +1434,7 @@
             "BitStart":0,
             "Units":"kWh",
             "Signed":false}]},
-      "65019":{
+      {
         "PGN":65019,
         "Id":"generatorPhaseCAcReactivePower",
         "Description":"Generator Phase C AC Reactive Power",
@@ -1474,7 +1474,7 @@
               {"name":"Leading","value":"0"},
               {"name":"Lagging","value":"1"},
               {"name":"Error","value":"2"}]}]},
-      "65020":{
+      {
         "PGN":65020,
         "Id":"generatorPhaseCAcPower",
         "Description":"Generator Phase C AC Power",
@@ -1502,7 +1502,7 @@
             "Units":"VA",
             "Signed":false,
             "Offset":-2000000000}]},
-      "65021":{
+      {
         "PGN":65021,
         "Id":"generatorPhaseCBasicAcQuantities",
         "Description":"Generator Phase C Basic AC Quantities",
@@ -1547,7 +1547,7 @@
             "BitStart":0,
             "Units":"A",
             "Signed":false}]},
-      "65022":{
+      {
         "PGN":65022,
         "Id":"generatorPhaseBAcReactivePower",
         "Description":"Generator Phase B AC Reactive Power",
@@ -1587,7 +1587,7 @@
               {"name":"Leading","value":"0"},
               {"name":"Lagging","value":"1"},
               {"name":"Error","value":"2"}]}]},
-      "65023":{
+      {
         "PGN":65023,
         "Id":"generatorPhaseBAcPower",
         "Description":"Generator Phase B AC Power",
@@ -1615,7 +1615,7 @@
             "Units":"VA",
             "Signed":false,
             "Offset":-2000000000}]},
-      "65024":{
+      {
         "PGN":65024,
         "Id":"generatorPhaseBBasicAcQuantities",
         "Description":"Generator Phase B Basic AC Quantities",
@@ -1660,7 +1660,7 @@
             "BitStart":0,
             "Units":"A",
             "Signed":false}]},
-      "65025":{
+      {
         "PGN":65025,
         "Id":"generatorPhaseAAcReactivePower",
         "Description":"Generator Phase A AC Reactive Power",
@@ -1700,7 +1700,7 @@
               {"name":"Leading","value":"0"},
               {"name":"Lagging","value":"1"},
               {"name":"Error","value":"2"}]}]},
-      "65026":{
+      {
         "PGN":65026,
         "Id":"generatorPhaseAAcPower",
         "Description":"Generator Phase A AC Power",
@@ -1728,7 +1728,7 @@
             "Units":"VA",
             "Signed":false,
             "Offset":-2000000000}]},
-      "65027":{
+      {
         "PGN":65027,
         "Id":"generatorPhaseABasicAcQuantities",
         "Description":"Generator Phase A Basic AC Quantities",
@@ -1773,7 +1773,7 @@
             "BitStart":0,
             "Units":"A",
             "Signed":false}]},
-      "65028":{
+      {
         "PGN":65028,
         "Id":"generatorTotalAcReactivePower",
         "Description":"Generator Total AC Reactive Power",
@@ -1813,7 +1813,7 @@
               {"name":"Leading","value":"0"},
               {"name":"Lagging","value":"1"},
               {"name":"Error","value":"2"}]}]},
-      "65029":{
+      {
         "PGN":65029,
         "Id":"generatorTotalAcPower",
         "Description":"Generator Total AC Power",
@@ -1841,7 +1841,7 @@
             "Units":"VA",
             "Signed":false,
             "Offset":-2000000000}]},
-      "65030":{
+      {
         "PGN":65030,
         "Id":"generatorAverageBasicAcQuantities",
         "Description":"Generator Average Basic AC Quantities",
@@ -1886,7 +1886,7 @@
             "BitStart":0,
             "Units":"A",
             "Signed":false}]},
-      "65240":{
+      {
         "PGN":65240,
         "Id":"isoCommandedAddress",
         "Description":"ISO Commanded Address",
@@ -2018,7 +2018,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":false}]},
-      "65280":{
+      {
         "PGN":65280,
         "Id":"manufacturerProprietarySingleFrameNonAddressed",
         "Description":"Manufacturer Proprietary single-frame non-addressed",
@@ -2069,7 +2069,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "65285":{
+      {
         "PGN":65285,
         "Id":"airmarBootStateAcknowledgment",
         "Description":"Airmar: Boot State Acknowledgment",
@@ -2121,7 +2121,7 @@
               {"name":"in Startup Monitor","value":"0"},
               {"name":"running Bootloader","value":"1"},
               {"name":"running Application","value":"2"}]}]},
-      "65285":{
+      {
         "PGN":65285,
         "Id":"lowranceTemperature",
         "Description":"Lowrance: Temperature",
@@ -2196,7 +2196,7 @@
             "Type":"Temperature",
             "Resolution":"0.01",
             "Signed":false}]},
-      "65286":{
+      {
         "PGN":65286,
         "Id":"airmarBootStateRequest",
         "Description":"Airmar: Boot State Request",
@@ -2235,7 +2235,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "65287":{
+      {
         "PGN":65287,
         "Id":"airmarAccessLevel",
         "Description":"Airmar: Access Level",
@@ -2318,7 +2318,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "65287":{
+      {
         "PGN":65287,
         "Id":"simnetConfigureTemperatureSensor",
         "Description":"Simnet: Configure Temperature Sensor",
@@ -2357,7 +2357,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "65288":{
+      {
         "PGN":65288,
         "Id":"seatalkAlarm",
         "Description":"Seatalk: Alarm",
@@ -2561,7 +2561,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "65289":{
+      {
         "PGN":65289,
         "Id":"simnetTrimTabSensorCalibration",
         "Description":"Simnet: Trim Tab Sensor Calibration",
@@ -2600,7 +2600,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "65290":{
+      {
         "PGN":65290,
         "Id":"simnetPaddleWheelSpeedConfiguration",
         "Description":"Simnet: Paddle Wheel Speed Configuration",
@@ -2639,7 +2639,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "65292":{
+      {
         "PGN":65292,
         "Id":"simnetClearFluidLevelWarnings",
         "Description":"Simnet: Clear Fluid Level Warnings",
@@ -2678,7 +2678,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "65293":{
+      {
         "PGN":65293,
         "Id":"simnetLgc2000Configuration",
         "Description":"Simnet: LGC-2000 Configuration",
@@ -2717,7 +2717,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "65325":{
+      {
         "PGN":65325,
         "Id":"simnetReprogramStatus",
         "Description":"Simnet: Reprogram Status",
@@ -2756,7 +2756,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "65341":{
+      {
         "PGN":65341,
         "Id":"simnetAutopilotMode",
         "Description":"Simnet: Autopilot Mode",
@@ -2795,7 +2795,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "65345":{
+      {
         "PGN":65345,
         "Id":"seatalkPilotWindDatum",
         "Description":"Seatalk: Pilot Wind Datum",
@@ -2862,7 +2862,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false}]},
-      "65359":{
+      {
         "PGN":65359,
         "Id":"seatalkPilotHeading",
         "Description":"Seatalk: Pilot Heading",
@@ -2938,7 +2938,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Signed":false}]},
-      "65360":{
+      {
         "PGN":65360,
         "Id":"seatalkPilotLockedHeading",
         "Description":"Seatalk: Pilot Locked Heading",
@@ -3015,7 +3015,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "65361":{
+      {
         "PGN":65361,
         "Id":"seatalkSilenceAlarm",
         "Description":"Seatalk: Silence Alarm",
@@ -3197,7 +3197,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "65371":{
+      {
         "PGN":65371,
         "Id":"seatalkKeypadMessage",
         "Description":"Seatalk: Keypad Message",
@@ -3293,7 +3293,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false}]},
-      "65374":{
+      {
         "PGN":65374,
         "Id":"seatalkKeypadHeartbeat",
         "Description":"SeaTalk: Keypad Heartbeat",
@@ -3356,7 +3356,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Signed":false}]},
-      "65379":{
+      {
         "PGN":65379,
         "Id":"seatalkPilotMode",
         "Description":"Seatalk: Pilot Mode",
@@ -3431,7 +3431,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "65408":{
+      {
         "PGN":65408,
         "Id":"airmarDepthQualityFactor",
         "Description":"Airmar: Depth Quality Factor",
@@ -3489,7 +3489,7 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No Depth Lock","value":"0"}]}]},
-      "65410":{
+      {
         "PGN":65410,
         "Id":"airmarDeviceInformation",
         "Description":"Airmar: Device Information",
@@ -3566,7 +3566,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "65480":{
+      {
         "PGN":65480,
         "Id":"simnetAutopilotMode",
         "Description":"Simnet: Autopilot Mode",
@@ -3605,7 +3605,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "65536":{
+      {
         "PGN":65536,
         "Id":"unknownFastPacketAddressed",
         "Description":"Unknown fast-packet addressed",
@@ -3622,7 +3622,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}}},
-      "126208":{
+      {
         "PGN":126208,
         "Id":"nmeaRequestGroupFunction",
         "Description":"NMEA - Request group function",
@@ -3704,7 +3704,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "126208":{
+      {
         "PGN":126208,
         "Id":"nmeaCommandGroupFunction",
         "Description":"NMEA - Command group function",
@@ -3783,7 +3783,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "126208":{
+      {
         "PGN":126208,
         "Id":"nmeaAcknowledgeGroupFunction",
         "Description":"NMEA - Acknowledge group function",
@@ -3871,7 +3871,7 @@
               {"name":"Access denied","value":"4"},
               {"name":"Not supported","value":"5"},
               {"name":"Read or Write not supported","value":"6"}]}]},
-      "126208":{
+      {
         "PGN":126208,
         "Id":"nmeaReadFieldsGroupFunction",
         "Description":"NMEA - Read Fields group function",
@@ -3993,7 +3993,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "126208":{
+      {
         "PGN":126208,
         "Id":"nmeaReadFieldsReplyGroupFunction",
         "Description":"NMEA - Read Fields reply group function",
@@ -4128,7 +4128,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "126208":{
+      {
         "PGN":126208,
         "Id":"nmeaWriteFieldsGroupFunction",
         "Description":"NMEA - Write Fields group function",
@@ -4263,7 +4263,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "126208":{
+      {
         "PGN":126208,
         "Id":"nmeaWriteFieldsReplyGroupFunction",
         "Description":"NMEA - Write Fields reply group function",
@@ -4398,7 +4398,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "126270":{
+      {
         "PGN":126270,
         "Id":"maretronSlaveResponse",
         "Description":"Maretron: Slave Response",
@@ -4471,7 +4471,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Signed":false}]},
-      "126464":{
+      {
         "PGN":126464,
         "Id":"pgnListTransmitAndReceive",
         "Description":"PGN List (Transmit and Receive)",
@@ -4502,7 +4502,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"seatalk1Keystroke",
         "Description":"Seatalk1: Keystroke",
@@ -4602,7 +4602,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"seatalk1DeviceIndentification",
         "Description":"Seatalk1: Device Indentification",
@@ -4685,7 +4685,7 @@
             "EnumValues":[
               {"name":"S100","value":"3"},
               {"name":"Course Computer","value":"5"}]}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarAttitudeOffset",
         "Description":"Airmar: Attitude Offset",
@@ -4769,7 +4769,7 @@
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":true}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarCalibrateCompass",
         "Description":"Airmar: Calibrate Compass",
@@ -4959,7 +4959,7 @@
             "Units":"s",
             "Resolution":"0.05",
             "Signed":true}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarTrueWindOptions",
         "Description":"Airmar: True Wind Options",
@@ -5146,7 +5146,7 @@
             "Units":"s",
             "Resolution":"0.05",
             "Signed":true}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarSimulateMode",
         "Description":"Airmar: Simulate Mode",
@@ -5219,7 +5219,7 @@
             "BitStart":2,
             "Type":"Binary data",
             "Signed":false}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarCalibrateDepth",
         "Description":"Airmar: Calibrate Depth",
@@ -5291,7 +5291,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarCalibrateSpeed",
         "Description":"Airmar: Calibrate Speed",
@@ -5373,7 +5373,7 @@
             "Units":"m/s",
             "Resolution":"0.01",
             "Signed":false}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarCalibrateTemperature",
         "Description":"Airmar: Calibrate Temperature",
@@ -5468,7 +5468,7 @@
             "Units":"K",
             "Resolution":"0.001",
             "Signed":true}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarSpeedFilter",
         "Description":"Airmar: Speed Filter",
@@ -5561,7 +5561,7 @@
             "Units":"s",
             "Resolution":"0.01",
             "Signed":false}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarTemperatureFilter",
         "Description":"Airmar: Temperature Filter",
@@ -5655,7 +5655,7 @@
             "Units":"s",
             "Resolution":"0.01",
             "Signed":false}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarNmea2000Options",
         "Description":"Airmar: NMEA 2000 options",
@@ -5730,7 +5730,7 @@
             "BitStart":2,
             "Type":"Binary data",
             "Signed":false}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"airmarAddressableMultiFrame",
         "Description":"Airmar: Addressable Multi-Frame",
@@ -5779,7 +5779,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "126720":{
+      {
         "PGN":126720,
         "Id":"manufacturerProprietaryFastPacketAddressed",
         "Description":"Manufacturer Proprietary fast-packet addressed",
@@ -5830,7 +5830,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "126976":{
+      {
         "PGN":126976,
         "Id":"unknownFastPacketNonAddressed",
         "Description":"Unknown fast-packet non-addressed",
@@ -5847,49 +5847,49 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}}},
-      "126983":{
+      {
         "PGN":126983,
         "Id":"alert",
         "Description":"Alert",
         "Complete":false,
         "Length":8,
         "RepeatingFields":0},
-      "126984":{
+      {
         "PGN":126984,
         "Id":"alertResponse",
         "Description":"Alert Response",
         "Complete":false,
         "Length":8,
         "RepeatingFields":0},
-      "126985":{
+      {
         "PGN":126985,
         "Id":"alertText",
         "Description":"Alert Text",
         "Complete":false,
         "Length":8,
         "RepeatingFields":0},
-      "126986":{
+      {
         "PGN":126986,
         "Id":"alertConfiguration",
         "Description":"Alert Configuration",
         "Complete":false,
         "Length":8,
         "RepeatingFields":0},
-      "126987":{
+      {
         "PGN":126987,
         "Id":"alertThreshold",
         "Description":"Alert Threshold",
         "Complete":false,
         "Length":8,
         "RepeatingFields":0},
-      "126988":{
+      {
         "PGN":126988,
         "Id":"alertValue",
         "Description":"Alert Value",
         "Complete":false,
         "Length":8,
         "RepeatingFields":0},
-      "126992":{
+      {
         "PGN":126992,
         "Id":"systemTime",
         "Description":"System Time",
@@ -5955,7 +5955,7 @@
             "Type":"Time",
             "Resolution":"0.0001",
             "Signed":false}]},
-      "126993":{
+      {
         "PGN":126993,
         "Id":"heartbeat",
         "Description":"Heartbeat",
@@ -5994,7 +5994,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "126996":{
+      {
         "PGN":126996,
         "Id":"productInformation",
         "Description":"Product Information",
@@ -6070,7 +6070,7 @@
             "BitOffset":1064,
             "BitStart":0,
             "Signed":false}]},
-      "126998":{
+      {
         "PGN":126998,
         "Id":"configurationInformation",
         "Description":"Configuration Information",
@@ -6127,7 +6127,7 @@
             "BitOffset":352,
             "BitStart":0,
             "Signed":false}]},
-      "127233":{
+      {
         "PGN":127233,
         "Id":"manOverboardNotification",
         "Description":"Man Overboard Notification",
@@ -6329,7 +6329,7 @@
             "BitStart":3,
             "Type":"Binary data",
             "Signed":false}]},
-      "127237":{
+      {
         "PGN":127237,
         "Id":"headingTrackControl",
         "Description":"Heading/Track control",
@@ -6499,7 +6499,7 @@
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":false}]},
-      "127245":{
+      {
         "PGN":127245,
         "Id":"rudder",
         "Description":"Rudder",
@@ -6553,7 +6553,7 @@
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":true}]},
-      "127250":{
+      {
         "PGN":127250,
         "Id":"vesselHeading",
         "Description":"Vessel Heading",
@@ -6611,7 +6611,7 @@
             "EnumValues":[
               {"name":"True","value":"0"},
               {"name":"Magnetic","value":"1"}]}]},
-      "127251":{
+      {
         "PGN":127251,
         "Id":"rateOfTurn",
         "Description":"Rate of Turn",
@@ -6637,7 +6637,7 @@
             "Units":"rad/s",
             "Resolution":3.125e-08,
             "Signed":true}]},
-      "127257":{
+      {
         "PGN":127257,
         "Id":"attitude",
         "Description":"Attitude",
@@ -6683,7 +6683,7 @@
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":true}]},
-      "127258":{
+      {
         "PGN":127258,
         "Id":"magneticVariation",
         "Description":"Magnetic Variation",
@@ -6750,7 +6750,7 @@
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":true}]},
-      "127488":{
+      {
         "PGN":127488,
         "Id":"engineParametersRapidUpdate",
         "Description":"Engine Parameters, Rapid Update",
@@ -6799,7 +6799,7 @@
             "BitStart":0,
             "Units":null,
             "Signed":true}]},
-      "127489":{
+      {
         "PGN":127489,
         "Id":"engineParametersDynamic",
         "Description":"Engine Parameters, Dynamic",
@@ -6974,7 +6974,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":true}]},
-      "127493":{
+      {
         "PGN":127493,
         "Id":"transmissionParametersDynamic",
         "Description":"Transmission Parameters, Dynamic",
@@ -7056,7 +7056,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "127496":{
+      {
         "PGN":127496,
         "Id":"tripParametersVessel",
         "Description":"Trip Parameters, Vessel",
@@ -7103,7 +7103,7 @@
             "Units":"s",
             "Resolution":"0.001",
             "Signed":false}]},
-      "127497":{
+      {
         "PGN":127497,
         "Id":"tripParametersEngine",
         "Description":"Trip Parameters, Engine",
@@ -7162,7 +7162,7 @@
             "Units":"L/h",
             "Resolution":"0.1",
             "Signed":true}]},
-      "127498":{
+      {
         "PGN":127498,
         "Id":"engineParametersStatic",
         "Description":"Engine Parameters, Static",
@@ -7206,7 +7206,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Signed":false}]},
-      "127501":{
+      {
         "PGN":127501,
         "Id":"binarySwitchBankStatus",
         "Description":"Binary Switch Bank Status",
@@ -7586,7 +7586,7 @@
               {"name":"Off","value":"0"},
               {"name":"On","value":"1"},
               {"name":"Failed","value":"2"}]}]},
-      "127502":{
+      {
         "PGN":127502,
         "Id":"switchBankControl",
         "Description":"Switch Bank Control",
@@ -7614,7 +7614,7 @@
             "EnumValues":[
               {"name":"Off","value":"0"},
               {"name":"On","value":"1"}]}]},
-      "127503":{
+      {
         "PGN":127503,
         "Id":"acInputStatus",
         "Description":"AC Input Status",
@@ -7747,7 +7747,7 @@
             "Units":"Cos Phi",
             "Resolution":"0.01",
             "Signed":false}]},
-      "127504":{
+      {
         "PGN":127504,
         "Id":"acOutputStatus",
         "Description":"AC Output Status",
@@ -7879,7 +7879,7 @@
             "Units":"Cos Phi",
             "Resolution":"0.01",
             "Signed":false}]},
-      "127505":{
+      {
         "PGN":127505,
         "Id":"fluidLevel",
         "Description":"Fluid Level",
@@ -7931,7 +7931,7 @@
             "Units":"L",
             "Resolution":"0.1",
             "Signed":false}]},
-      "127506":{
+      {
         "PGN":127506,
         "Id":"dcDetailedStatus",
         "Description":"DC Detailed Status",
@@ -7997,7 +7997,7 @@
             "Units":"V",
             "Resolution":"0.01",
             "Signed":false}]},
-      "127507":{
+      {
         "PGN":127507,
         "Id":"chargerStatus",
         "Description":"Charger Status",
@@ -8096,7 +8096,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Signed":false}]},
-      "127508":{
+      {
         "PGN":127508,
         "Id":"batteryStatus",
         "Description":"Battery Status",
@@ -8151,7 +8151,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Signed":false}]},
-      "127509":{
+      {
         "PGN":127509,
         "Id":"inverterStatus",
         "Description":"Inverter Status",
@@ -8207,7 +8207,7 @@
             "EnumValues":[
               {"name":"Standby","value":"0"},
               {"name":"On","value":"1"}]}]},
-      "127510":{
+      {
         "PGN":127510,
         "Id":"chargerConfigurationStatus",
         "Description":"Charger Configuration Status",
@@ -8309,7 +8309,7 @@
             "BitOffset":80,
             "BitStart":0,
             "Signed":false}]},
-      "127511":{
+      {
         "PGN":127511,
         "Id":"inverterConfigurationStatus",
         "Description":"Inverter Configuration Status",
@@ -8381,7 +8381,7 @@
             "BitOffset":50,
             "BitStart":2,
             "Signed":false}]},
-      "127512":{
+      {
         "PGN":127512,
         "Id":"agsConfigurationStatus",
         "Description":"AGS Configuration Status",
@@ -8413,7 +8413,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false}]},
-      "127513":{
+      {
         "PGN":127513,
         "Id":"batteryConfigurationStatus",
         "Description":"Battery Configuration Status",
@@ -8504,7 +8504,7 @@
             "BitOffset":96,
             "BitStart":0,
             "Signed":false}]},
-      "127514":{
+      {
         "PGN":127514,
         "Id":"agsStatus",
         "Description":"AGS Status",
@@ -8560,7 +8560,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Signed":false}]},
-      "128259":{
+      {
         "PGN":128259,
         "Id":"speed",
         "Description":"Speed",
@@ -8619,7 +8619,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false}]},
-      "128267":{
+      {
         "PGN":128267,
         "Id":"waterDepth",
         "Description":"Water Depth",
@@ -8668,7 +8668,7 @@
             "Units":"m",
             "Resolution":10,
             "Signed":false}]},
-      "128275":{
+      {
         "PGN":128275,
         "Id":"distanceLog",
         "Description":"Distance Log",
@@ -8720,7 +8720,7 @@
             "BitStart":0,
             "Units":"m",
             "Signed":false}]},
-      "128520":{
+      {
         "PGN":128520,
         "Id":"trackedTargetData",
         "Description":"Tracked Target Data",
@@ -8886,7 +8886,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "129025":{
+      {
         "PGN":129025,
         "Id":"positionRapidUpdate",
         "Description":"Position, Rapid Update",
@@ -8916,7 +8916,7 @@
             "Type":"Longitude",
             "Resolution":"0.0000001",
             "Signed":true}]},
-      "129026":{
+      {
         "PGN":129026,
         "Id":"cogSogRapidUpdate",
         "Description":"COG & SOG, Rapid Update",
@@ -8984,7 +8984,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "129027":{
+      {
         "PGN":129027,
         "Id":"positionDeltaRapidUpdate",
         "Description":"Position Delta, Rapid Update",
@@ -9024,7 +9024,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Signed":true}]},
-      "129028":{
+      {
         "PGN":129028,
         "Id":"altitudeDeltaRapidUpdate",
         "Description":"Altitude Delta, Rapid Update",
@@ -9092,7 +9092,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":true}]},
-      "129029":{
+      {
         "PGN":129029,
         "Id":"gnssPositionData",
         "Description":"GNSS Position Data",
@@ -9313,7 +9313,7 @@
             "Units":"s",
             "Resolution":"0.01",
             "Signed":false}]},
-      "129033":{
+      {
         "PGN":129033,
         "Id":"timeDate",
         "Description":"Time & Date",
@@ -9357,7 +9357,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":true}]},
-      "129038":{
+      {
         "PGN":129038,
         "Id":"aisClassAPositionReport",
         "Description":"AIS Class A Position Report",
@@ -9578,7 +9578,7 @@
             "BitStart":1,
             "Type":"Binary data",
             "Signed":false}]},
-      "129039":{
+      {
         "PGN":129039,
         "Id":"aisClassBPositionReport",
         "Description":"AIS Class B Position Report",
@@ -9839,7 +9839,7 @@
             "EnumValues":[
               {"name":"SOTDMA","value":"0"},
               {"name":"ITDMA","value":"1"}]}]},
-      "129040":{
+      {
         "PGN":129040,
         "Id":"aisClassBExtendedPositionReport",
         "Description":"AIS Class B Extended Position Report",
@@ -10176,7 +10176,7 @@
               {"name":"Channel B VDL transmission","value":"3"},
               {"name":"Own information not broadcast","value":"4"},
               {"name":"Reserved","value":"5"}]}]},
-      "129041":{
+      {
         "PGN":129041,
         "Id":"aisAidsToNavigationAtonReport",
         "Description":"AIS Aids to Navigation (AtoN) Report",
@@ -10477,7 +10477,7 @@
             "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
-      "129044":{
+      {
         "PGN":129044,
         "Id":"datum",
         "Description":"Datum",
@@ -10537,7 +10537,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "129045":{
+      {
         "PGN":129045,
         "Id":"userDatum",
         "Description":"User Datum",
@@ -10650,7 +10650,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "129283":{
+      {
         "PGN":129283,
         "Id":"crossTrackError",
         "Description":"Cross Track Error",
@@ -10713,7 +10713,7 @@
             "Units":"m",
             "Resolution":"0.01",
             "Signed":true}]},
-      "129284":{
+      {
         "PGN":129284,
         "Id":"navigationData",
         "Description":"Navigation Data",
@@ -10879,7 +10879,7 @@
             "Units":"m/s",
             "Resolution":"0.01",
             "Signed":true}]},
-      "129285":{
+      {
         "PGN":129285,
         "Id":"navigationRouteWpInformation",
         "Description":"Navigation - Route/WP Information",
@@ -11003,7 +11003,7 @@
             "Type":"Longitude",
             "Resolution":"0.0000001",
             "Signed":true}]},
-      "129291":{
+      {
         "PGN":129291,
         "Id":"setDriftRapidUpdate",
         "Description":"Set & Drift, Rapid Update",
@@ -11061,7 +11061,7 @@
             "Units":"m/s",
             "Resolution":"0.01",
             "Signed":false}]},
-      "129301":{
+      {
         "PGN":129301,
         "Id":"navigationRouteTimeToFromMark",
         "Description":"Navigation - Route / Time to+from Mark",
@@ -11121,7 +11121,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false}]},
-      "129302":{
+      {
         "PGN":129302,
         "Id":"bearingAndDistanceBetweenTwoMarks",
         "Description":"Bearing and Distance between two Marks",
@@ -11219,7 +11219,7 @@
             "BitOffset":104,
             "BitStart":0,
             "Signed":false}]},
-      "129538":{
+      {
         "PGN":129538,
         "Id":"gnssControlStatus",
         "Description":"GNSS Control Status",
@@ -11334,7 +11334,7 @@
             "EnumValues":[
               {"name":"use last 3D height","value":"0"},
               {"name":"Use antenna altitude","value":"1"}]}]},
-      "129539":{
+      {
         "PGN":129539,
         "Id":"gnssDops",
         "Description":"GNSS DOPs",
@@ -11424,7 +11424,7 @@
             "BitStart":0,
             "Resolution":"0.01",
             "Signed":false}]},
-      "129540":{
+      {
         "PGN":129540,
         "Id":"gnssSatsInView",
         "Description":"GNSS Sats in View",
@@ -11541,7 +11541,7 @@
             "BitStart":4,
             "Type":"Binary data",
             "Signed":false}]},
-      "129541":{
+      {
         "PGN":129541,
         "Id":"gpsAlmanacData",
         "Description":"GPS Almanac Data",
@@ -11653,7 +11653,7 @@
             "BitOffset":96,
             "BitStart":0,
             "Signed":false}]},
-      "129542":{
+      {
         "PGN":129542,
         "Id":"gnssPseudorangeNoiseStatistics",
         "Description":"GNSS Pseudorange Noise Statistics",
@@ -11725,7 +11725,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":false}]},
-      "129545":{
+      {
         "PGN":129545,
         "Id":"gnssRaimOutput",
         "Description":"GNSS RAIM Output",
@@ -11815,7 +11815,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":false}]},
-      "129546":{
+      {
         "PGN":129546,
         "Id":"gnssRaimSettings",
         "Description":"GNSS RAIM Settings",
@@ -11855,7 +11855,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Signed":false}]},
-      "129547":{
+      {
         "PGN":129547,
         "Id":"gnssPseudorangeErrorStatistics",
         "Description":"GNSS Pseudorange Error Statistics",
@@ -11927,7 +11927,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":false}]},
-      "129549":{
+      {
         "PGN":129549,
         "Id":"dgnssCorrections",
         "Description":"DGNSS Corrections",
@@ -12024,7 +12024,7 @@
             "BitOffset":96,
             "BitStart":0,
             "Signed":false}]},
-      "129550":{
+      {
         "PGN":129550,
         "Id":"gnssDifferentialCorrectionReceiverInterface",
         "Description":"GNSS Differential Correction Receiver Interface",
@@ -12080,7 +12080,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Signed":false}]},
-      "129551":{
+      {
         "PGN":129551,
         "Id":"gnssDifferentialCorrectionReceiverSignal",
         "Description":"GNSS Differential Correction Receiver Signal",
@@ -12202,7 +12202,7 @@
             "BitOffset":104,
             "BitStart":0,
             "Signed":false}]},
-      "129556":{
+      {
         "PGN":129556,
         "Id":"glonassAlmanacData",
         "Description":"GLONASS Almanac Data",
@@ -12314,7 +12314,7 @@
             "BitOffset":96,
             "BitStart":0,
             "Signed":false}]},
-      "129792":{
+      {
         "PGN":129792,
         "Id":"aisDgnssBroadcastBinaryMessage",
         "Description":"AIS DGNSS Broadcast Binary Message",
@@ -12421,7 +12421,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "129793":{
+      {
         "PGN":129793,
         "Id":"aisUtcAndDateReport",
         "Description":"AIS UTC and Date Report",
@@ -12606,7 +12606,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "129794":{
+      {
         "PGN":129794,
         "Id":"aisClassAStaticAndVoyageRelatedData",
         "Description":"AIS Class A Static and Voyage Related Data",
@@ -12884,7 +12884,7 @@
               {"name":"Channel B VDL transmission","value":"3"},
               {"name":"Own information not broadcast","value":"4"},
               {"name":"Reserved","value":"5"}]}]},
-      "129795":{
+      {
         "PGN":129795,
         "Id":"aisAddressedBinaryMessage",
         "Description":"AIS Addressed Binary Message",
@@ -13017,7 +13017,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "129796":{
+      {
         "PGN":129796,
         "Id":"aisAcknowledge",
         "Description":"AIS Acknowledge",
@@ -13130,7 +13130,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "129797":{
+      {
         "PGN":129797,
         "Id":"aisBinaryBroadcastMessage",
         "Description":"AIS Binary Broadcast Message",
@@ -13221,7 +13221,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "129798":{
+      {
         "PGN":129798,
         "Id":"aisSarAircraftPositionReport",
         "Description":"AIS SAR Aircraft Position Report",
@@ -13410,7 +13410,7 @@
             "BitStart":1,
             "Type":"Binary data",
             "Signed":false}]},
-      "129799":{
+      {
         "PGN":129799,
         "Id":"radioFrequencyModePower",
         "Description":"Radio Frequency/Mode/Power",
@@ -13470,7 +13470,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Signed":false}]},
-      "129800":{
+      {
         "PGN":129800,
         "Id":"aisUtcDateInquiry",
         "Description":"AIS UTC/Date Inquiry",
@@ -13562,7 +13562,7 @@
             "BitStart":6,
             "Type":"Binary data",
             "Signed":false}]},
-      "129801":{
+      {
         "PGN":129801,
         "Id":"aisAddressedSafetyRelatedMessage",
         "Description":"AIS Addressed Safety Related Message",
@@ -13681,7 +13681,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "129802":{
+      {
         "PGN":129802,
         "Id":"aisSafetyRelatedBroadcastMessage",
         "Description":"AIS Safety Related Broadcast Message",
@@ -13766,7 +13766,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "129803":{
+      {
         "PGN":129803,
         "Id":"aisInterrogation",
         "Description":"AIS Interrogation",
@@ -13922,7 +13922,7 @@
             "BitStart":6,
             "Type":"Binary data",
             "Signed":false}]},
-      "129804":{
+      {
         "PGN":129804,
         "Id":"aisAssignmentModeCommand",
         "Description":"AIS Assignment Mode Command",
@@ -14030,7 +14030,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "129805":{
+      {
         "PGN":129805,
         "Id":"aisDataLinkManagementMessage",
         "Description":"AIS Data Link Management Message",
@@ -14146,7 +14146,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "129806":{
+      {
         "PGN":129806,
         "Id":"aisChannelManagement",
         "Description":"AIS Channel Management",
@@ -14367,7 +14367,7 @@
             "BitOffset":232,
             "BitStart":0,
             "Signed":false}]},
-      "129807":{
+      {
         "PGN":129807,
         "Id":"aisClassBGroupAssignment",
         "Description":"AIS Class B Group Assignment",
@@ -14533,7 +14533,7 @@
             "BitOffset":210,
             "BitStart":2,
             "Signed":false}]},
-      "129808":{
+      {
         "PGN":129808,
         "Id":"dscDistressCallInformation",
         "Description":"DSC Distress Call Information",
@@ -14790,7 +14790,7 @@
             "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
-      "129808":{
+      {
         "PGN":129808,
         "Id":"dscCallInformation",
         "Description":"DSC Call Information",
@@ -15052,7 +15052,7 @@
             "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
-      "129809":{
+      {
         "PGN":129809,
         "Id":"aisClassBStaticDataMsg24PartA",
         "Description":"AIS Class B static data (msg 24 Part A)",
@@ -15102,7 +15102,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "129810":{
+      {
         "PGN":129810,
         "Id":"aisClassBStaticDataMsg24PartB",
         "Description":"AIS Class B static data (msg 24 Part B)",
@@ -15290,21 +15290,21 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130060":{
+      {
         "PGN":130060,
         "Id":"label",
         "Description":"Label",
         "Complete":false,
         "Length":0,
         "RepeatingFields":0},
-      "130061":{
+      {
         "PGN":130061,
         "Id":"channelSourceConfiguration",
         "Description":"Channel Source Configuration",
         "Complete":false,
         "Length":0,
         "RepeatingFields":0},
-      "130064":{
+      {
         "PGN":130064,
         "Id":"routeAndWpServiceDatabaseList",
         "Description":"Route and WP Service - Database List",
@@ -15419,7 +15419,7 @@
             "BitOffset":184,
             "BitStart":0,
             "Signed":false}]},
-      "130065":{
+      {
         "PGN":130065,
         "Id":"routeAndWpServiceRouteList",
         "Description":"Route and WP Service - Route List",
@@ -15502,7 +15502,7 @@
             "BitOffset":110,
             "BitStart":6,
             "Signed":false}]},
-      "130066":{
+      {
         "PGN":130066,
         "Id":"routeAndWpServiceRouteWpListAttributes",
         "Description":"Route and WP Service - Route/WP-List Attributes",
@@ -15615,7 +15615,7 @@
             "BitOffset":166,
             "BitStart":6,
             "Signed":false}]},
-      "130067":{
+      {
         "PGN":130067,
         "Id":"routeAndWpServiceRouteWpNamePosition",
         "Description":"Route and WP Service - Route - WP Name & Position",
@@ -15702,7 +15702,7 @@
             "Type":"Longitude",
             "Resolution":"0.0000001",
             "Signed":true}]},
-      "130068":{
+      {
         "PGN":130068,
         "Id":"routeAndWpServiceRouteWpName",
         "Description":"Route and WP Service - Route - WP Name",
@@ -15767,7 +15767,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "130069":{
+      {
         "PGN":130069,
         "Id":"routeAndWpServiceXteLimitNavigationMethod",
         "Description":"Route and WP Service - XTE Limit & Navigation Method",
@@ -15848,7 +15848,7 @@
             "BitStart":4,
             "Type":"Binary data",
             "Signed":false}]},
-      "130070":{
+      {
         "PGN":130070,
         "Id":"routeAndWpServiceWpComment",
         "Description":"Route and WP Service - WP Comment",
@@ -15913,7 +15913,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "130071":{
+      {
         "PGN":130071,
         "Id":"routeAndWpServiceRouteComment",
         "Description":"Route and WP Service - Route Comment",
@@ -15970,7 +15970,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "130072":{
+      {
         "PGN":130072,
         "Id":"routeAndWpServiceDatabaseComment",
         "Description":"Route and WP Service - Database Comment",
@@ -16019,7 +16019,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "130073":{
+      {
         "PGN":130073,
         "Id":"routeAndWpServiceRadiusOfTurn",
         "Description":"Route and WP Service - Radius of Turn",
@@ -16083,7 +16083,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Signed":false}]},
-      "130074":{
+      {
         "PGN":130074,
         "Id":"routeAndWpServiceWpListWpNamePosition",
         "Description":"Route and WP Service - WP List - WP Name & Position",
@@ -16172,7 +16172,7 @@
             "Type":"Longitude",
             "Resolution":"0.0000001",
             "Signed":true}]},
-      "130306":{
+      {
         "PGN":130306,
         "Id":"windData",
         "Description":"Wind Data",
@@ -16223,7 +16223,7 @@
               {"name":"Apparent","value":"2"},
               {"name":"True (boat referenced)","value":"3"},
               {"name":"True (water referenced)","value":"4"}]}]},
-      "130310":{
+      {
         "PGN":130310,
         "Id":"environmentalParameters",
         "Description":"Environmental Parameters",
@@ -16271,7 +16271,7 @@
             "Units":"hPa",
             "Type":"Pressure",
             "Signed":false}]},
-      "130311":{
+      {
         "PGN":130311,
         "Id":"environmentalParameters",
         "Description":"Environmental Parameters",
@@ -16355,7 +16355,7 @@
             "Units":"hPa",
             "Type":"Pressure",
             "Signed":false}]},
-      "130312":{
+      {
         "PGN":130312,
         "Id":"temperature",
         "Description":"Temperature",
@@ -16426,7 +16426,7 @@
             "Type":"Temperature",
             "Resolution":"0.01",
             "Signed":false}]},
-      "130313":{
+      {
         "PGN":130313,
         "Id":"humidity",
         "Description":"Humidity",
@@ -16482,7 +16482,7 @@
             "Units":"%",
             "Resolution":"0.004",
             "Signed":true}]},
-      "130314":{
+      {
         "PGN":130314,
         "Id":"actualPressure",
         "Description":"Actual Pressure",
@@ -16532,7 +16532,7 @@
             "Type":"Pressure (hires)",
             "Resolution":"0.1",
             "Signed":false}]},
-      "130315":{
+      {
         "PGN":130315,
         "Id":"setPressure",
         "Description":"Set Pressure",
@@ -16582,7 +16582,7 @@
             "Type":"Pressure (hires)",
             "Resolution":"0.1",
             "Signed":false}]},
-      "130316":{
+      {
         "PGN":130316,
         "Id":"temperatureExtendedRange",
         "Description":"Temperature Extended Range",
@@ -16653,7 +16653,7 @@
             "Type":"Temperature",
             "Resolution":"0.1",
             "Signed":false}]},
-      "130320":{
+      {
         "PGN":130320,
         "Id":"tideStationData",
         "Description":"Tide Station Data",
@@ -16782,7 +16782,7 @@
             "BitStart":0,
             "Type":"String with start/stop byte",
             "Signed":false}]},
-      "130321":{
+      {
         "PGN":130321,
         "Id":"salinityStationData",
         "Description":"Salinity Station Data",
@@ -16900,7 +16900,7 @@
             "BitStart":0,
             "Type":"String with start/stop byte",
             "Signed":false}]},
-      "130322":{
+      {
         "PGN":130322,
         "Id":"currentStationData",
         "Description":"Current Station Data",
@@ -17031,7 +17031,7 @@
             "BitStart":0,
             "Type":"String with start/stop byte",
             "Signed":false}]},
-      "130323":{
+      {
         "PGN":130323,
         "Id":"meteorologicalStationData",
         "Description":"Meteorological Station Data",
@@ -17197,7 +17197,7 @@
             "BitStart":0,
             "Type":"String with start/stop byte",
             "Signed":false}]},
-      "130324":{
+      {
         "PGN":130324,
         "Id":"mooredBuoyStationData",
         "Description":"Moored Buoy Station Data",
@@ -17390,14 +17390,14 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "130560":{
+      {
         "PGN":130560,
         "Id":"payloadMass",
         "Description":"Payload Mass",
         "Complete":false,
         "Length":0,
         "RepeatingFields":0},
-      "130567":{
+      {
         "PGN":130567,
         "Id":"watermakerInputSettingAndStatus",
         "Description":"Watermaker Input Setting and Status",
@@ -17672,7 +17672,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130570":{
+      {
         "PGN":130570,
         "Id":"libraryDataFile",
         "Description":"Library Data File",
@@ -17882,7 +17882,7 @@
             "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
-      "130571":{
+      {
         "PGN":130571,
         "Id":"libraryDataGroup",
         "Description":"Library Data Group",
@@ -18028,7 +18028,7 @@
             "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
-      "130572":{
+      {
         "PGN":130572,
         "Id":"libraryDataSearch",
         "Description":"Library Data Search",
@@ -18179,7 +18179,7 @@
             "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
-      "130573":{
+      {
         "PGN":130573,
         "Id":"supportedSourceData",
         "Description":"Supported Source Data",
@@ -18385,7 +18385,7 @@
             "EnumBitValues":[
               {"1": "Play Queue"},
               {"2": "All"}]}]},
-      "130574":{
+      {
         "PGN":130574,
         "Id":"supportedZoneData",
         "Description":"Supported Zone Data",
@@ -18450,7 +18450,7 @@
             "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
-      "130576":{
+      {
         "PGN":130576,
         "Id":"smallCraftStatus",
         "Description":"Small Craft Status",
@@ -18474,7 +18474,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Signed":true}]},
-      "130577":{
+      {
         "PGN":130577,
         "Id":"directionData",
         "Description":"Direction Data",
@@ -18587,7 +18587,7 @@
             "Units":"m/s",
             "Resolution":"0.01",
             "Signed":false}]},
-      "130578":{
+      {
         "PGN":130578,
         "Id":"vesselSpeedComponents",
         "Description":"Vessel Speed Components",
@@ -18655,7 +18655,7 @@
             "Units":"m/s",
             "Resolution":"0.001",
             "Signed":true}]},
-      "130579":{
+      {
         "PGN":130579,
         "Id":"systemConfiguration",
         "Description":"System Configuration",
@@ -18738,7 +18738,7 @@
             "BitStart":4,
             "Type":"Binary data",
             "Signed":false}]},
-      "130580":{
+      {
         "PGN":130580,
         "Id":"systemConfigurationDeprecated",
         "Description":"System Configuration (deprecated)",
@@ -18799,7 +18799,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130581":{
+      {
         "PGN":130581,
         "Id":"zoneConfigurationDeprecated",
         "Description":"Zone Configuration (deprecated)",
@@ -18864,7 +18864,7 @@
             "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
-      "130582":{
+      {
         "PGN":130582,
         "Id":"zoneVolume",
         "Description":"Zone Volume",
@@ -18956,7 +18956,7 @@
               {"name":"Back right","value":"10"},
               {"name":"Surround left","value":"11"},
               {"name":"Surround right","value":"12"}]}]},
-      "130583":{
+      {
         "PGN":130583,
         "Id":"availableAudioEqPresets",
         "Description":"Available Audio EQ presets",
@@ -19025,7 +19025,7 @@
             "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
-      "130584":{
+      {
         "PGN":130584,
         "Id":"availableBluetoothAddresses",
         "Description":"Available Bluetooth addresses",
@@ -19106,7 +19106,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130585":{
+      {
         "PGN":130585,
         "Id":"bluetoothSourceStatus",
         "Description":"Bluetooth source status",
@@ -19172,7 +19172,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130586":{
+      {
         "PGN":130586,
         "Id":"zoneConfiguration",
         "Description":"Zone Configuration",
@@ -19353,7 +19353,7 @@
               {"name":"Back right","value":"10"},
               {"name":"Surround left","value":"11"},
               {"name":"Surround right","value":"12"}]}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubInit2",
         "Description":"SonicHub: Init #2",
@@ -19444,7 +19444,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubAmRadio",
         "Description":"SonicHub: AM Radio",
@@ -19572,7 +19572,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubZoneInfo",
         "Description":"SonicHub: Zone info",
@@ -19653,7 +19653,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubSource",
         "Description":"SonicHub: Source",
@@ -19741,7 +19741,7 @@
               {"name":"AUX","value":"4"},
               {"name":"AUX 2","value":"5"},
               {"name":"Mic","value":"6"}]}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubSourceList",
         "Description":"SonicHub: Source List",
@@ -19841,7 +19841,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubControl",
         "Description":"SonicHub: Control",
@@ -19924,7 +19924,7 @@
             "EnumValues":[
               {"name":"Mute on","value":"1"},
               {"name":"Mute off","value":"2"}]}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubUnknown",
         "Description":"SonicHub: Unknown",
@@ -20015,7 +20015,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubFmRadio",
         "Description":"SonicHub: FM Radio",
@@ -20143,7 +20143,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubPlaylist",
         "Description":"SonicHub: Playlist",
@@ -20277,7 +20277,7 @@
             "Units":"s",
             "Resolution":"0.001",
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubTrack",
         "Description":"SonicHub: Track",
@@ -20367,7 +20367,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubArtist",
         "Description":"SonicHub: Artist",
@@ -20457,7 +20457,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubAlbum",
         "Description":"SonicHub: Album",
@@ -20547,7 +20547,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubMenuItem",
         "Description":"SonicHub: Menu Item",
@@ -20661,7 +20661,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubZones",
         "Description":"SonicHub: Zones",
@@ -20742,7 +20742,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubMaxVolume",
         "Description":"SonicHub: Max Volume",
@@ -20836,7 +20836,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubVolume",
         "Description":"SonicHub: Volume",
@@ -20930,7 +20930,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubInit1",
         "Description":"SonicHub: Init #1",
@@ -21001,7 +21001,7 @@
             "EnumValues":[
               {"name":"Set","value":"0"},
               {"name":"Ack","value":"128"}]}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubPosition",
         "Description":"SonicHub: Position",
@@ -21082,7 +21082,7 @@
             "Units":"s",
             "Resolution":"0.001",
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"sonichubInit3",
         "Description":"SonicHub: Init #3",
@@ -21173,7 +21173,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"simradTextMessage",
         "Description":"Simrad: Text Message",
@@ -21281,7 +21281,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "130816":{
+      {
         "PGN":130816,
         "Id":"manufacturerProprietaryFastPacketNonAddressed",
         "Description":"Manufacturer Proprietary fast-packet non-addressed",
@@ -21332,7 +21332,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "130817":{
+      {
         "PGN":130817,
         "Id":"navicoProductInformation",
         "Description":"Navico: Product Information",
@@ -21441,7 +21441,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "130818":{
+      {
         "PGN":130818,
         "Id":"simnetReprogramData",
         "Description":"Simnet: Reprogram Data",
@@ -21509,7 +21509,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "130819":{
+      {
         "PGN":130819,
         "Id":"simnetRequestReprogram",
         "Description":"Simnet: Request Reprogram",
@@ -21548,7 +21548,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"simnetReprogramStatus",
         "Description":"Simnet: Reprogram Status",
@@ -21613,7 +21613,7 @@
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"furunoUnknown",
         "Description":"Furuno: Unknown",
@@ -21692,7 +21692,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionSourceName",
         "Description":"Fusion: Source Name",
@@ -21790,7 +21790,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionTrackInfo",
         "Description":"Fusion: Track Info",
@@ -21933,7 +21933,7 @@
             "BitOffset":168,
             "BitStart":0,
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionTrack",
         "Description":"Fusion: Track",
@@ -22007,7 +22007,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionArtist",
         "Description":"Fusion: Artist",
@@ -22081,7 +22081,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionAlbum",
         "Description":"Fusion: Album",
@@ -22155,7 +22155,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionUnitName",
         "Description":"Fusion: Unit Name",
@@ -22221,7 +22221,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionZoneName",
         "Description":"Fusion: Zone Name",
@@ -22295,7 +22295,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionPlayProgress",
         "Description":"Fusion: Play Progress",
@@ -22370,7 +22370,7 @@
             "Units":"s",
             "Resolution":"0.001",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionAmFmStation",
         "Description":"Fusion: AM/FM Station",
@@ -22474,7 +22474,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionVhf",
         "Description":"Fusion: VHF",
@@ -22555,7 +22555,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionSquelch",
         "Description":"Fusion: Squelch",
@@ -22628,7 +22628,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionScan",
         "Description":"Fusion: Scan",
@@ -22705,7 +22705,7 @@
             "EnumValues":[
               {"name":"Off","value":"0"},
               {"name":"Scan","value":"1"}]}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionMenuItem",
         "Description":"Fusion: Menu Item",
@@ -22827,7 +22827,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionReplay",
         "Description":"Fusion: Replay",
@@ -22959,7 +22959,7 @@
             "BitOffset":104,
             "BitStart":0,
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionMute",
         "Description":"Fusion: Mute",
@@ -23028,7 +23028,7 @@
             "EnumValues":[
               {"name":"Muted","value":"1"},
               {"name":"Not Muted","value":"2"}]}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionSubVolume",
         "Description":"Fusion: Sub Volume",
@@ -23121,7 +23121,7 @@
             "BitStart":0,
             "Units":"vol",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionTone",
         "Description":"Fusion: Tone",
@@ -23213,7 +23213,7 @@
             "BitStart":0,
             "Units":"vol",
             "Signed":true}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionVolume",
         "Description":"Fusion: Volume",
@@ -23306,7 +23306,7 @@
             "BitStart":0,
             "Units":"vol",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionTransport",
         "Description":"Fusion: Transport",
@@ -23375,7 +23375,7 @@
             "EnumValues":[
               {"name":"Paused","value":"1"},
               {"name":"Play","value":"2"}]}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionSiriusxmChannel",
         "Description":"Fusion: SiriusXM Channel",
@@ -23441,7 +23441,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionSiriusxmTitle",
         "Description":"Fusion: SiriusXM Title",
@@ -23507,7 +23507,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionSiriusxmArtist",
         "Description":"Fusion: SiriusXM Artist",
@@ -23573,7 +23573,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130820":{
+      {
         "PGN":130820,
         "Id":"fusionSiriusxmGenre",
         "Description":"Fusion: SiriusXM Genre",
@@ -23639,7 +23639,7 @@
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
-      "130821":{
+      {
         "PGN":130821,
         "Id":"furunoUnknown",
         "Description":"Furuno: Unknown",
@@ -23758,7 +23758,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Signed":false}]},
-      "130824":{
+      {
         "PGN":130824,
         "Id":"maretronAnnunciator",
         "Description":"Maretron: Annunciator",
@@ -23837,7 +23837,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Signed":false}]},
-      "130827":{
+      {
         "PGN":130827,
         "Id":"lowranceUnknown",
         "Description":"Lowrance: unknown",
@@ -23924,7 +23924,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":false}]},
-      "130828":{
+      {
         "PGN":130828,
         "Id":"simnetSetSerialNumber",
         "Description":"Simnet: Set Serial Number",
@@ -23963,7 +23963,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130831":{
+      {
         "PGN":130831,
         "Id":"suzukiEngineAndStorageDeviceConfig",
         "Description":"Suzuki: Engine and Storage Device Config",
@@ -24000,7 +24000,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130832":{
+      {
         "PGN":130832,
         "Id":"simnetFuelUsedHighResolution",
         "Description":"Simnet: Fuel Used - High Resolution",
@@ -24039,7 +24039,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130834":{
+      {
         "PGN":130834,
         "Id":"simnetEngineAndTankConfiguration",
         "Description":"Simnet: Engine and Tank Configuration",
@@ -24078,7 +24078,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130835":{
+      {
         "PGN":130835,
         "Id":"simnetSetEngineAndTankConfiguration",
         "Description":"Simnet: Set Engine and Tank Configuration",
@@ -24117,7 +24117,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130836":{
+      {
         "PGN":130836,
         "Id":"simnetFluidLevelSensorConfiguration",
         "Description":"Simnet: Fluid Level Sensor Configuration",
@@ -24239,7 +24239,7 @@
             "BitOffset":104,
             "BitStart":0,
             "Signed":true}]},
-      "130837":{
+      {
         "PGN":130837,
         "Id":"simnetFuelFlowTurbineConfiguration",
         "Description":"Simnet: Fuel Flow Turbine Configuration",
@@ -24278,7 +24278,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130838":{
+      {
         "PGN":130838,
         "Id":"simnetFluidLevelWarning",
         "Description":"Simnet: Fluid Level Warning",
@@ -24317,7 +24317,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130839":{
+      {
         "PGN":130839,
         "Id":"simnetPressureSensorConfiguration",
         "Description":"Simnet: Pressure Sensor Configuration",
@@ -24356,7 +24356,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130840":{
+      {
         "PGN":130840,
         "Id":"simnetDataUserGroupConfiguration",
         "Description":"Simnet: Data User Group Configuration",
@@ -24395,7 +24395,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130842":{
+      {
         "PGN":130842,
         "Id":"simnetAisClassBStaticDataMsg24PartA",
         "Description":"Simnet: AIS Class B static data (msg 24 Part A)",
@@ -24494,7 +24494,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "130842":{
+      {
         "PGN":130842,
         "Id":"simnetAisClassBStaticDataMsg24PartB",
         "Description":"Simnet: AIS Class B static data (msg 24 Part B)",
@@ -24729,7 +24729,7 @@
             "Type":"Integer",
             "Resolution":1,
             "Signed":false}]},
-      "130843":{
+      {
         "PGN":130843,
         "Id":"simnetSonarStatusFrequencyAndDspVoltage",
         "Description":"Simnet: Sonar Status, Frequency and DSP Voltage",
@@ -24768,7 +24768,7 @@
             "Match":4,
             "Type":"Lookup table",
             "Signed":false}]},
-      "130845":{
+      {
         "PGN":130845,
         "Id":"simnetCompassHeadingOffset",
         "Description":"Simnet: Compass Heading Offset",
@@ -24875,7 +24875,7 @@
             "BitStart":0,
             "Resolution":0,
             "Signed":false}]},
-      "130845":{
+      {
         "PGN":130845,
         "Id":"simnetCompassLocalField",
         "Description":"Simnet: Compass Local Field",
@@ -24982,7 +24982,7 @@
             "BitStart":0,
             "Resolution":0,
             "Signed":false}]},
-      "130845":{
+      {
         "PGN":130845,
         "Id":"simnetCompassFieldAngle",
         "Description":"Simnet: Compass Field Angle",
@@ -25088,7 +25088,7 @@
             "BitStart":0,
             "Resolution":0,
             "Signed":false}]},
-      "130845":{
+      {
         "PGN":130845,
         "Id":"simnetParameterHandle",
         "Description":"Simnet: Parameter Handle",
@@ -25234,7 +25234,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Signed":false}]},
-      "130847":{
+      {
         "PGN":130847,
         "Id":"seatalkNodeStatistics",
         "Description":"SeaTalk: Node Statistics",
@@ -25311,7 +25311,7 @@
             "Units":"V",
             "Resolution":"0.01",
             "Signed":false}]},
-      "130850":{
+      {
         "PGN":130850,
         "Id":"simnetEventCommandApCommand",
         "Description":"Simnet: Event Command: AP command",
@@ -25425,7 +25425,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Signed":false}]},
-      "130850":{
+      {
         "PGN":130850,
         "Id":"simnetEventCommandAlarm",
         "Description":"Simnet: Event Command: Alarm?",
@@ -25529,7 +25529,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Signed":false}]},
-      "130850":{
+      {
         "PGN":130850,
         "Id":"simnetEventCommandUnknown",
         "Description":"Simnet: Event Command: Unknown",
@@ -25619,7 +25619,7 @@
             "BitOffset":80,
             "BitStart":0,
             "Signed":false}]},
-      "130851":{
+      {
         "PGN":130851,
         "Id":"simnetEventReplyApCommand",
         "Description":"Simnet: Event Reply: AP command",
@@ -25733,7 +25733,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Signed":false}]},
-      "130856":{
+      {
         "PGN":130856,
         "Id":"simnetAlarmMessage",
         "Description":"Simnet: Alarm Message",
@@ -25805,7 +25805,7 @@
             "BitStart":0,
             "Type":"ASCII text",
             "Signed":false}]},
-      "130880":{
+      {
         "PGN":130880,
         "Id":"airmarAdditionalWeatherData",
         "Description":"Airmar: Additional Weather Data",
@@ -25885,7 +25885,7 @@
             "Type":"Temperature",
             "Resolution":"0.01",
             "Signed":false}]},
-      "130881":{
+      {
         "PGN":130881,
         "Id":"airmarHeaterControl",
         "Description":"Airmar: Heater Control",
@@ -25965,7 +25965,7 @@
             "Type":"Temperature",
             "Resolution":"0.01",
             "Signed":false}]},
-      "130944":{
+      {
         "PGN":130944,
         "Id":"airmarPost",
         "Description":"Airmar: POST",
@@ -26067,5 +26067,5 @@
             "EnumValues":[
               {"name":"Pass","value":"0"}]}]}
     }
-    }
+    ]
     
