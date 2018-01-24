@@ -359,14 +359,14 @@
   </xsl:template>
 
     <xsl:template match="PGNInfo">
-    <xsl:call-template name="indent"/>"<xsl:value-of select="./PGN"/>":<xsl:apply-templates/><xsl:if test="not(position() = last())">,</xsl:if>
+    <xsl:call-template name="indent"/><xsl:apply-templates/><xsl:if test="not(position() = last())">,</xsl:if>
     </xsl:template>
 
     <xsl:template match="PGNs">
-    "PGNs":{
+    "PGNs": [
     <xsl:apply-templates/>
     }
-    }
+    ]
     </xsl:template>
     
 </xsl:stylesheet>
