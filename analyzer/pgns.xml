@@ -10432,7 +10432,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>geoidalSeparation</Id>
            <Name>Geoidal Separation</Name>
            <Description>Geoidal Separation</Description>
-           <BitLength>16</BitLength>
+           <BitLength>32</BitLength>
            <BitOffset>304</BitOffset>
            <BitStart>0</BitStart>
            <Units>m</Units>
@@ -10445,7 +10445,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Reference Stations</Name>
            <Description>Number of reference stations</Description>
            <BitLength>8</BitLength>
-           <BitOffset>320</BitOffset>
+           <BitOffset>336</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
@@ -10454,7 +10454,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>referenceStationType</Id>
            <Name>Reference Station Type</Name>
            <BitLength>4</BitLength>
-           <BitOffset>328</BitOffset>
+           <BitOffset>344</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
@@ -10475,7 +10475,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>referenceStationId</Id>
            <Name>Reference Station ID</Name>
            <BitLength>12</BitLength>
-           <BitOffset>332</BitOffset>
+           <BitOffset>348</BitOffset>
            <BitStart>4</BitStart>
            <Units></Units>
            <Signed>false</Signed>
@@ -10485,7 +10485,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>ageOfDgnssCorrections</Id>
            <Name>Age of DGNSS Corrections</Name>
            <BitLength>16</BitLength>
-           <BitOffset>344</BitOffset>
+           <BitOffset>360</BitOffset>
            <BitStart>0</BitStart>
            <Units>s</Units>
            <Resolution>0.01</Resolution>
