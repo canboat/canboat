@@ -1,5 +1,5 @@
-#!/usr/bin/php5
-<?
+
+<?php
 #
 # Format a particular N2K command
 #
@@ -33,7 +33,7 @@
   function usage()
   {
     global $commands;
-    echo "Usage: $argv[0] <dst> <command> where <command> is one of:\n";
+    echo "Usage: format-message <dst> <command> where <command> is one of:\n";
     foreach ($commands as $key => $value)
     {
       echo "  $key\n";
@@ -55,7 +55,6 @@
     $data = json_decode($s, true);
     return $data;
   }
-
 
   class PhpSafeEval
   {

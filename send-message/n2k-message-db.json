@@ -3,4 +3,9 @@
   , "pgn" :  59904
   , "data": "pack('VX',$pgn)"
   }
+, "setvolume":
+  { "args": "zone,level"
+  , "pgn": 130816
+  , "data": "'\013\099\0ff\018\00'. pack('X1', $zone) . pack('X1', $level)"
+  }
 }
