@@ -3015,6 +3015,160 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>65309</PGN>
+       <Id>navicoWirelessBatteryStatus</Id>
+       <Description>Navico: Wireless Battery Status</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Navico</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>275</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>status</Id>
+           <Name>Status</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>batteryStatus</Id>
+           <Name>Battery Status</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>batteryChargeStatus</Id>
+           <Name>Battery Charge Status</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>24</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>65312</PGN>
+       <Id>navicoWirelessSignalStatus</Id>
+       <Description>Navico: Wireless Signal Status</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Navico</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>275</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>unknown</Id>
+           <Name>Unknown</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>signalStrength</Id>
+           <Name>Signal Strength</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>24</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>65325</PGN>
        <Id>simnetReprogramStatus</Id>
        <Description>Simnet: Reprogram Status</Description>
@@ -8962,6 +9116,46 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitLength>8</BitLength>
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>128000</PGN>
+       <Id>leewayAngle</Id>
+       <Description>Leeway Angle</Description>
+       <Complete>true</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>sid</Id>
+           <Name>SID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>leewayAngle</Id>
+           <Name>Leeway Angle</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>rad</Units>
+           <Resolution>0.0001</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>40</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
            <Signed>false</Signed>
          </Field>
        </Fields>
@@ -24010,6 +24204,78 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>I</Name>
            <BitLength>8</BitLength>
            <BitOffset>88</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130824</PGN>
+       <Id>bGWindData</Id>
+       <Description>B&amp;G: Wind data</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>B&amp;G</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>381</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>field4</Id>
+           <Name>Field 4</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>field5</Id>
+           <Name>Field 5</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>timestamp</Id>
+           <Name>Timestamp</Name>
+           <Description>Increasing field, what else can it be?</Description>
+           <BitLength>32</BitLength>
+           <BitOffset>32</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>

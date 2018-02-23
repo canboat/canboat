@@ -1672,6 +1672,38 @@ static void explainPGN(Pgn pgn)
   printf("\n\n");
 }
 
+
+/*
+ * Print string but replace special characters by their XML entity.
+ */
+static void printXML(const char *p)
+{
+  for (; p && *p; p++)
+  {
+    switch (*p)
+    {
+    case '&':
+      fputs("&amp;", stdout);
+      break;
+
+    case '<':
+      fputs("&lt;", stdout);
+      break;
+
+    case '>':
+      fputs("&gt;", stdout);
+      break;
+
+    case '"':
+      fputs("&quot;", stdout);
+      break;
+
+    default:
+      putchar(*p);
+    }
+  }
+}
+
 static void explainPGNXML(Pgn pgn)
 {
   int i;
@@ -1686,19 +1718,7 @@ static void explainPGNXML(Pgn pgn)
          , pgn.pgn
          , pgn.camelDescription
          );
-
-  for (p = pgn.description; p && *p; p++)
-  {
-    if (*p != '&')
-    {
-      putchar(*p);
-    }
-    else
-    {
-      fputs("&amp;", stdout);
-    }
-  }
-
+  printXML(pgn.description);
   printf("</Description>\n"
          "       <Complete>%s</Complete>\n"
          "       <Length>%u</Length>\n"
@@ -1716,8 +1736,6 @@ static void explainPGNXML(Pgn pgn)
     printf("       <RepeatingFields>%u</RepeatingFields>\n", pgn.repeatingFields);
   }
 
-
-
   if (pgn.fieldList[0].name)
   {
     printf("       <Fields>\n");
@@ -1730,11 +1748,15 @@ static void explainPGNXML(Pgn pgn)
       printf("         <Field>\n"
              "           <Order>%d</Order>\n"
              "           <Id>%s</Id>\n"
-             "           <Name>%s</Name>\n", i + 1, f.camelName, f.name);
+             "           <Name>", i + 1, f.camelName);
+      printXML(f.name);
+      printf("</Name>\n", f.name);
 
       if (f.description && f.description[0] && f.description[0] != ',')
       {
-        printf("           <Description>%s</Description>\n", f.description);
+        printf("           <Description>");
+        printXML(f.description);
+        printf("</Description>\n");
       }
       printf("           <BitLength>%u</BitLength>\n", f.size);
       if (showBitOffset)

@@ -1116,6 +1116,31 @@ Pgn pgnList[] =
 }
 
 ,
+{ "Navico: Wireless Battery Status", 65309, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Status", BYTES(1), 1, false, 0, "" }
+  , { "Battery Status", BYTES(1), 1, false, "%", "" }
+  , { "Battery Charge Status", BYTES(1), 1, false, "%", "" }
+  , { "Reserved", BYTES(3), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "Navico: Wireless Signal Status", 65312, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Unknown", BYTES(1), 1, false, 0, "" }
+  , { "Signal Strength", BYTES(1), 1, false, "%", "" }
+  , { "Reserved", BYTES(3), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
 { "Simnet: Reprogram Status", 65325, false, 0x08, 0,
   { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
   , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
@@ -2049,6 +2074,16 @@ Pgn pgnList[] =
   }
 }
 
+  /* https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf */
+,
+{ "Leeway Angle", 128000, true, 8, 0,
+  { { "SID", BYTES(1), 1, false, 0, "" }
+  , { "Leeway Angle", BYTES(2), RES_RADIANS, false, "rad", "" }    
+  , { "Reserved", BYTES(5), RES_BINARY, false, 0, "" }
+  , { 0 }
+  }
+}
+
   /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
 ,
 { "Speed", 128259, true, 6, 0,
@@ -2059,6 +2094,7 @@ Pgn pgnList[] =
   , { 0 }
   }
 }
+
 
   /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
 ,
@@ -4122,6 +4158,18 @@ Pgn pgnList[] =
   , { "G", BYTES(1), 1, false, 0, "" }
   , { "H", BYTES(1), 1, false, 0, "" }
   , { "I", BYTES(1), 1, false, 0, "" }
+  , { 0 }
+  }
+}
+
+,
+{ "B&G: Wind data", 130824, false, 0x08, 0,
+  { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=381", "B&G" }
+  , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
+  , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
+  , { "Field 4", BYTES(1), 1, false, 0, "" }
+  , { "Field 5", BYTES(1), 1, false, 0, "" }
+  , { "Timestamp", BYTES(4), 1, false, 0, "Increasing field, what else can it be?" }
   , { 0 }
   }
 }
