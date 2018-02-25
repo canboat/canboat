@@ -1273,7 +1273,7 @@ static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t 
         mprintf("%s %s = RESERVED3", getSep(), fieldName);
         break;
       default:
-        mprintf("%s %s = Unhandled value %ld (%ld)", getSep(), fieldName, value, value - maxValue);
+        mprintf("%s %s = Unhandled value %ld max %ld (%ld)", getSep(), fieldName, value, maxValue, value - maxValue);
       }
     }
   }

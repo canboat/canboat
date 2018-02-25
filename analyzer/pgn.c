@@ -238,9 +238,10 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
   uint64_t bitMask;
   uint64_t allOnes;
   uint64_t valueInThisByte;
+  uint64_t maxv;
 
   *value = 0;
-  *maxValue = 0;
+  maxv = 0;
 
   while (bitsRemaining)
   {
@@ -254,7 +255,7 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
     valueInThisByte = (*data & bitMask) >> firstBit;
 
     *value |= valueInThisByte << magnitude;
-    *maxValue |= (int64_t) allOnes << magnitude;
+    maxv |= allOnes << magnitude;
 
     magnitude += bitsInThisByte;
     bitsRemaining -= bitsInThisByte;
@@ -268,7 +269,7 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
 
   if (hasSign)
   {
-    *maxValue >>= 1;
+    maxv >>= 1;
 
     if (field->offset) /* J1939 Excess-K notation */
     {
@@ -289,6 +290,8 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
       }
     }
   }
+
+  *maxValue = (int64_t) maxv;
 }
 
 static char * findFirstOccurrence(char * msg, char c)
