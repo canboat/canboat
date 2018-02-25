@@ -2418,7 +2418,7 @@ Pgn pgnList[] =
   , { "Number of SVs", BYTES(1), 1, false, 0, "Number of satellites used in solution" }
   , { "HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision" }
   , { "PDOP", BYTES(2), 0.01, true, 0, "Probable dilution of precision" }
-  , { "Geoidal Separation", BYTES(2), 0.01, true, "m", "Geoidal Separation" }
+  , { "Geoidal Separation", BYTES(4), 0.01, true, "m", "Geoidal Separation" }
   , { "Reference Stations", BYTES(1), 1, false, 0, "Number of reference stations" }
   , { "Reference Station Type", 4, RES_LOOKUP, false, LOOKUP_GNS, "" }
   , { "Reference Station ID", 12, 1, false, "" }
