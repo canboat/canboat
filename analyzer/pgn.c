@@ -361,9 +361,7 @@ int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
   }
   else
   {
-    logError("Too long data for RAWFORMAT_PLAIN! Input: %s", msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
-    return 2;
+    return -1;
   }
 
   return setParsedValues(m, prio, pgn, dst, src, len);
@@ -442,7 +440,7 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
   unsigned int id;
 
   p = findFirstOccurrence(msg, ' ');
-  if(!p)
+  if (p < msg + 4 || p >= msg + sizeof(m->timestamp))
   {
     return 1;
   }

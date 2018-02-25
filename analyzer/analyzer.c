@@ -27,13 +27,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 enum RawFormats
 {
+  RAWFORMAT_UNKNOWN,
   RAWFORMAT_PLAIN,
   RAWFORMAT_FAST,
   RAWFORMAT_AIRMAR,
   RAWFORMAT_CHETCO
 };
 
-enum RawFormats format = RAWFORMAT_PLAIN;
+enum RawFormats format = RAWFORMAT_UNKNOWN;
 
 enum GeoFormats
 {
@@ -75,16 +76,15 @@ size_t heapSize = 0;
 int g_variableFieldRepeat[2]; // Actual number of repetitions
 int g_variableFieldIndex;
 
-static void fillManufacturers(void);
-static void fillFieldCounts(void);
+static enum RawFormats detectFormat(const char * msg);
+static bool printCanFormat(RawMessage * msg);
 static bool printNumber(char * fieldName, Field * field, uint8_t * data, size_t startBit, size_t bits);
-
-void initialize(void);
-void printCanRaw(RawMessage * msg);
-bool printCanFormat(RawMessage * msg);
-void explain(void);
-void explainXML(void);
-void camelCase(bool upperCamelCase);
+static void camelCase(bool upperCamelCase);
+static void explain(void);
+static void explainXML(void);
+static void fillFieldCounts(void);
+static void fillManufacturers(void);
+static void printCanRaw(RawMessage * msg);
 
 void usage(char ** argv, char ** av)
 {
@@ -250,7 +250,7 @@ int main(int argc, char ** argv)
   while (fgets(msg, sizeof(msg) - 1, file))
   {
     RawMessage m;
-    unsigned int prio, pgn, dst, src, len, junk;
+    unsigned int prio, pgn, dst, src, junk;
     char * p;
     unsigned int i;
 
@@ -259,96 +259,88 @@ int main(int argc, char ** argv)
       continue;
     }
 
-    if (format != RAWFORMAT_CHETCO && msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
+    if (format == RAWFORMAT_UNKNOWN)
     {
-      logDebug("Detected Chetco protocol with all data on one line\n");
-      format = RAWFORMAT_CHETCO;
+      format = detectFormat(msg);
     }
 
-    if (format != RAWFORMAT_CHETCO)
+    switch (format)
     {
-      if (format != RAWFORMAT_AIRMAR)
+    case RAWFORMAT_PLAIN:
+      r = parseRawFormatPlain(msg, &m, showJson);
+      if (r >= 0)
       {
-        p = strchr(msg, ',');
+        break;
       }
-      else
-      {
-        p = strchr(msg, ' ');
-      }
+      // Else fall through to fast!
 
-      if (!p)
-      {
-        p = strchr(msg, ' ');
-        if (p && (p[1] == '-' || p[2] == '-'))
-        {
-          if (format != RAWFORMAT_AIRMAR)
-          {
-            logDebug("Detected Airmar protocol with all data on one line\n");
-          }
-          format = RAWFORMAT_AIRMAR;
-        }
-      }
-      if (!p || p >= msg + sizeof(m.timestamp) - 1)
-      {
-        logError("Error reading message, scanning timestamp from %s", msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
-        continue;
-      }
+    case RAWFORMAT_FAST:
+      r = parseRawFormatFast(msg, &m, showJson);
+      break;
+
+    case RAWFORMAT_AIRMAR:
+      r = parseRawFormatAirmar(msg, &m, showJson);
+      break;
+
+    case RAWFORMAT_CHETCO:
+      r = parseRawFormatChetco(msg, &m, showJson);
+
+    default:
+      logError("Unknown message format\n");
+      exit(1);
     }
 
-    if (format == RAWFORMAT_PLAIN)
+    if (r == 0)
     {
-      r = sscanf( p
-        , ",%*u,%*u,%*u,%*u,%u"
-        ",%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x"
-        , &len
-      );
-      if (r < 1)
-      {
-        logError("Error reading message, scanned %u from %s", r, msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
-        continue;
-      }
-      if(len <= 8)
-      {
-        if(parseRawFormatPlain(msg, &m, showJson))
-        {
-          continue;  // Some error occurred -> skip line
-        }
-      }
-      else
-      {
-        logDebug("Detected Fast protocol with all data on one line\n");
-        format = RAWFORMAT_FAST;
-      }
+      printCanFormat(&m);
+      printCanRaw(&m);
     }
-    if (format == RAWFORMAT_FAST)
+    else
     {
-      if(parseRawFormatFast(msg, &m, showJson))
-      {
-        continue;  // Some error occurred -> skip line
-      }
+      logError("Unknown message error %d: %s\n", r, msg);
     }
-    else if (format == RAWFORMAT_AIRMAR)
-    {
-      if(parseRawFormatAirmar(msg, &m, showJson))
-      {
-        continue;  // Some error occurred -> skip line
-      }
-    }
-    else if (format == RAWFORMAT_CHETCO)
-    {
-      if(parseRawFormatChetco(msg, &m, showJson))
-      {
-        continue;  // Some error occurred -> skip line
-      }
-    }
-
-    printCanFormat(&m);
-    printCanRaw(&m);
   }
 
   return 0;
+}
+
+enum RawFormats detectFormat(const char * msg)
+{
+  char * p;
+  int r;
+  unsigned int len;
+
+  if (msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
+  {
+    logInfo("Detected Chetco protocol with all data on one line\n");
+    return RAWFORMAT_CHETCO;
+  }
+
+  p = strchr(msg, ' ');
+  if (p && (p[1] == '-' || p[2] == '-'))
+  {
+    logInfo("Detected Airmar protocol with all data on one line\n");
+    return RAWFORMAT_AIRMAR;
+  }
+
+  p = strchr(msg, ',');
+  if (p)
+  {
+    r = sscanf(p, ",%*u,%*u,%*u,%*u,%u,%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x", &len);
+    if (r < 1)
+    {
+      return RAWFORMAT_UNKNOWN;
+    }
+    if (len > 8)
+    {
+      logInfo("Detected normal format with all data on one line\n");
+      return RAWFORMAT_FAST;
+    }
+    logInfo("Assuming normal format with one line per packet\n");
+    return RAWFORMAT_PLAIN;
+  }
+
+  return RAWFORMAT_UNKNOWN;
 }
 
 char * getSep()
@@ -439,7 +431,7 @@ void mwrite(FILE * stream)
   mreset();
 }
 
-void printCanRaw(RawMessage * msg)
+static void printCanRaw(RawMessage * msg)
 {
   size_t i;
   FILE * f = stdout;
@@ -1548,7 +1540,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage * msg)
   printPgn(msg, packet->data, packet->size, showData, showJson);
 }
 
-bool printCanFormat(RawMessage * msg)
+static bool printCanFormat(RawMessage * msg)
 {
   size_t i;
   size_t unknownIndex = 0;
@@ -1863,7 +1855,7 @@ static void explainPGNXML(Pgn pgn)
   printf("    </PGNInfo>\n");
 }
 
-void explain(void)
+static void explain(void)
 {
   int i;
 
@@ -1927,7 +1919,7 @@ char * camelize(const char *str, bool upperCamelCase)
   return ptr;
 }
 
-void camelCase(bool upperCamelCase)
+static void camelCase(bool upperCamelCase)
 {
   int i, j;
 
@@ -1941,7 +1933,7 @@ void camelCase(bool upperCamelCase)
   }
 }
 
-void explainXML(void)
+static void explainXML(void)
 {
   int i;
 
