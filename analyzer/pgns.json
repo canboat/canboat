@@ -6860,7 +6860,7 @@
             "BitStart":0,
             "Units":"V",
             "Resolution":"0.01",
-            "Signed":false},
+            "Signed":true},
           {
             "Order":6,
             "Id":"fuelRate",
