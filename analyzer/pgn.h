@@ -2032,7 +2032,7 @@ Pgn pgnList[] =
   , { "Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Oil temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", "" }
   , { "Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
-  , { "Alternator Potential", BYTES(2), 0.01, false, "V", "" }
+  , { "Alternator Potential", BYTES(2), 0.01, true, "V", "" }
   , { "Fuel Rate", BYTES(2), 0.1, true, "L/h", "" }
   , { "Total Engine hours", BYTES(4), 1.0, false, "s", "" }
   , { "Coolant Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
