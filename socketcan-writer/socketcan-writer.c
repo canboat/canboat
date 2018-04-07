@@ -21,14 +21,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <net/if.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
+#include <net/if.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define  GLOBALS
+#include "common.h"
 #include "pgn.h"
 
 static int openCanDevice(char * device, int * socket);
@@ -44,13 +45,13 @@ int main(int argc, char ** argv)
   int socket;
 
   setProgName(argv[0]);
-  if(argc != 2)
+  if (argc != 2)
   {
     puts("Usage: socketcan-writer <can-device>");
     exit(1);
   }
 
-  if(openCanDevice(argv[1], &socket))
+  if (openCanDevice(argv[1], &socket))
   {
     exit(1);
   }
