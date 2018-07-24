@@ -466,9 +466,13 @@ static bool printLatLon(char * name, double resolution, uint8_t * data, size_t b
 {
   uint64_t absVal;
   int64_t value;
+  size_t i;
 
   value = 0;
-  memcpy(&value, data, bytes);
+  for (i = 0; i < bytes; i++)
+  {
+    value |= data[i] << (i * 8);
+  }
   if (bytes == 4 && ((data[3] & 0x80) > 0))
   {
     value |= UINT64_C(0xffffffff00000000);
@@ -2303,13 +2307,13 @@ ascii_string:
       }
       else if (field->resolution == RES_DATE)
       {
-        memcpy((void *) &valueu16, data, 2);
+        valueu16 = data[0] + (data[1] << 8);
         printDate(fieldName, valueu16);
         currentDate = valueu16;
       }
       else if (field->resolution == RES_TIME)
       {
-        memcpy((void *) &valueu32, data, 4);
+        valueu32 = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
         printTime(fieldName, valueu32);
         currentTime = valueu32;
       }
