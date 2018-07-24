@@ -29,10 +29,20 @@ static void removeChar(char *str, char garbage)
   *dst = 0;
 }
 
-static double convert2kCoordinateToNMEA0183(double coordinate)
+static double convert2kCoordinateToNMEA0183(const char * coordinateString, const char *hemispheres, char *hemisphere)
 {
+  double coordinate = strtod(coordinateString, 0);
   double degrees;
   double result;
+
+  if (coordinate < 0) {
+    *hemisphere = hemispheres[1];
+    coordinate = coordinate * -1.;
+  }
+  else
+  {
+    *hemisphere = hemispheres[0];
+  }
 
   degrees = floor(coordinate);
   result = degrees * 100 + (coordinate - degrees) * 60;
@@ -65,23 +75,16 @@ $GPVTG,,T,,M,0.150,N,0.278,K,D*2F<0x0D><0x0A>
 
 void nmea0183VTG( StringBuffer * msg183, int src, const char * msg )
 {
-  char sog[SPEED_LENGTH];
-  char cog[ANGLE_LENGTH];
-  double speed = 0;
-  double course = 0;
+  char sogString[SPEED_LENGTH];
+  char cogString[ANGLE_LENGTH];
 
-  if (!getJSONValue(msg, "SOG", sog, sizeof(sog)) || !getJSONValue(msg, "COG", cog, sizeof(cog)))
+  if (getJSONValue(msg, "SOG", sogString, sizeof(sogString))
+   && getJSONValue(msg, "COG", cogString, sizeof(cogString)))
   {
-    return;
+    double speed = strtod(sogString, 0);
+
+    nmea0183CreateMessage(msg183, src, "VTG,%s,T,,M,%04.3f,N,%04.3f,K", cogString, SPEED_M_S_TO_KNOTS(speed), SPEED_M_S_TO_KMH(speed));
   }
-
-  speed = strtod(sog, 0);
-  course = strtod(cog, 0);
-
-#define KNOTS_TO_KMH(knots) (knots / 1.852)
-
-  nmea0183CreateMessage(msg183, src, "VTG,%04.1f,T,,M,%04.3f,N,%04.3f,K", course, speed, KNOTS_TO_KMH(speed));
-
 }
 
 /*
@@ -116,28 +119,21 @@ Field Number:
 
 void nmea0183GSA( StringBuffer * msg183, int src, const char * msg )
 {
-  char mode_string[OTHER_LENGTH];
-  char pdop_string[OTHER_LENGTH];
-  char hdop_string[OTHER_LENGTH];
-  char vdop_string[OTHER_LENGTH];
-  double pdop = 0;
-  double hdop = 0;
-  double vdop = 0;
+  char modeString[OTHER_LENGTH] = "";
+  char pdopString[OTHER_LENGTH] = "";
+  char hdopString[OTHER_LENGTH] = "";
+  char vdopString[OTHER_LENGTH] = "";
 
-  getJSONValue(msg, "Actual Mode", mode_string, sizeof(mode_string));
+  getJSONValue(msg, "Actual Mode", modeString, sizeof(modeString));
+  getJSONValue(msg, "PDOP", pdopString, sizeof(pdopString));
+  getJSONValue(msg, "HDOP", hdopString, sizeof(hdopString));
+  getJSONValue(msg, "VDOP", vdopString, sizeof(vdopString));
 
-  if(getJSONValue(msg, "PDOP", pdop_string, sizeof(pdop_string))) {
-    pdop = strtod(pdop_string, 0);
-  }
-  if(getJSONValue(msg, "HDOP", hdop_string, sizeof(hdop_string))) {
-    hdop = strtod(hdop_string, 0);
-  }
-  if(getJSONValue(msg, "VDOP", vdop_string, sizeof(vdop_string))) {
-    vdop = strtod(vdop_string, 0);
-  }
+  modeString[1] = 0; // Abbreviate string, or still empty if not in N2K PGN
 
-  nmea0183CreateMessage(msg183, src, "GSA,M,%c,,,,,,,,,,,,,%.3f,%.3f,%.3f", mode_string[0], pdop, hdop, vdop);
+  nmea0183CreateMessage(msg183, src, "GSA,M,%s,,,,,,,,,,,,,%s,%s,%s", modeString, pdopString, hdopString, vdopString);
 }
+
 /*
 === GLL - Geographic Position - Latitude/Longitude ===
 
@@ -165,41 +161,24 @@ $GPGLL,3609.42711,N,00521.36949,W,200015.00,A,D*72
 
 void nmea0183GLL( StringBuffer * msg183, int src, const char * msg )
 {
-  char lat_string[LAT_LENGTH];
-  char lon_string[LON_LENGTH];
-  char time_string[OTHER_LENGTH] = "";
-  char lat_hemisphere = 'N';
-  char lon_hemisphere = 'E';
-  double latitude = 0;
-  double longitude = 0;
-  int x;
+  char latString[LAT_LENGTH];
+  char lonString[LON_LENGTH];
 
-  if (!getJSONValue(msg, "Latitude", lat_string, sizeof(lat_string))
-   || !getJSONValue(msg, "Longitude", lon_string, sizeof(lon_string)))
+  if (getJSONValue(msg, "Latitude", latString, sizeof(latString))
+   && getJSONValue(msg, "Longitude", lonString, sizeof(lonString)))
   {
-    return;
+    char timeString[OTHER_LENGTH] = "";
+    char latHemisphere;
+    char lonHemisphere;
+    double latitude = convert2kCoordinateToNMEA0183(latString, "NS", &latHemisphere);
+    double longitude = convert2kCoordinateToNMEA0183(lonString, "EW", &lonHemisphere);
+
+    if (getJSONValue(msg, "Time", timeString, sizeof(timeString))){
+      removeChar(timeString, ':');
+    }
+
+    nmea0183CreateMessage(msg183, src, "GLL,%.4f,%c,%.4f,%c,%s,A,D", latitude, latHemisphere, longitude, lonHemisphere, timeString);
   }
-
-  latitude = strtod(lat_string, 0);
-  longitude = strtod(lon_string, 0);
-
-  if(latitude < 0) {
-    lat_hemisphere = 'S';
-    latitude = latitude * -1;
-  }
-  latitude = convert2kCoordinateToNMEA0183(latitude);
-
-  if(longitude < 0) {
-    lon_hemisphere = 'W';
-    longitude = longitude * -1;
-  }
-  longitude = convert2kCoordinateToNMEA0183(longitude);
-
-  if(getJSONValue(msg, "Time", time_string, sizeof(time_string))){
-    removeChar(time_string, ':');
-  }
-
-  nmea0183CreateMessage(msg183, src, "GLL,%.4f,%c,%.4f,%c,%s,A,D", latitude, lat_hemisphere, longitude, lon_hemisphere, time_string);
 }
 
 /*
@@ -217,6 +196,8 @@ AIVDM - Automatic Information System (AIS) position reports from other vessels -
 7. Course over Ground
 8. Rate of turn
 9. Navigation status
+
+These are not rate limited, as each one is for a different vessel.
 */
 
 void nmea0183AIVDM( StringBuffer * msg183, int src, const char * msg )
@@ -224,30 +205,30 @@ void nmea0183AIVDM( StringBuffer * msg183, int src, const char * msg )
   struct tm *utc_time;
   time_t current_time;
 
-  char mmsi_string[MMSI_LENGTH];
-  char lat_string[LAT_LENGTH];
-  char lon_string[LON_LENGTH];
-  char sog_string[SPEED_LENGTH];
-  char heading_string[ANGLE_LENGTH];
-  char cog_string[ANGLE_LENGTH];
-  char rate_of_turn_string[ANGLE_LENGTH];
-  char navigation_status_string[OTHER_LENGTH];
+  char mmsiString[MMSI_LENGTH];
+  char latString[LAT_LENGTH];
+  char lonString[LON_LENGTH];
+  char sogString[SPEED_LENGTH];
+  char headingString[ANGLE_LENGTH];
+  char cogString[ANGLE_LENGTH];
+  char rateOfTurnString[ANGLE_LENGTH];
+  char navigationStatusString[OTHER_LENGTH];
   double cog = 0;
 
   current_time = time(NULL);
   utc_time = gmtime(&current_time);
 
-  getJSONValue(msg, "User ID", mmsi_string, sizeof(mmsi_string));
-  getJSONValue(msg, "Latitude", lat_string, sizeof(lat_string));
-  getJSONValue(msg, "Longitude", lon_string, sizeof(lon_string));
-  getJSONValue(msg, "SOG", sog_string, sizeof(sog_string));
-  getJSONValue(msg, "COG", cog_string, sizeof(cog_string));
-  getJSONValue(msg, "Heading", heading_string, sizeof(heading_string));
-  getJSONValue(msg, "Rate of Turn", rate_of_turn_string, sizeof(rate_of_turn_string));
-  getJSONValue(msg, "Nav Status", navigation_status_string, sizeof(navigation_status_string));
+  getJSONValue(msg, "User ID", mmsiString, sizeof(mmsiString));
+  getJSONValue(msg, "Latitude", latString, sizeof(latString));
+  getJSONValue(msg, "Longitude", lonString, sizeof(lonString));
+  getJSONValue(msg, "SOG", sogString, sizeof(sogString));
+  getJSONValue(msg, "COG", cogString, sizeof(cogString));
+  getJSONValue(msg, "Heading", headingString, sizeof(headingString));
+  getJSONValue(msg, "Rate of Turn", rateOfTurnString, sizeof(rateOfTurnString));
+  getJSONValue(msg, "Nav Status", navigationStatusString, sizeof(navigationStatusString));
 
-  cog = strtod(cog_string, 0);
+  cog = strtod(cogString, 0);
 
   // This does not work yet. It needs to be encoded to format like !AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C - from http://catb.org/gpsd/AIVDM.html
-  // nmea0183CreateMessage(msg183, src, "VDM,%d%d%d,%s,%s,%s,%s,%s,%.3f,%s,%s", utc_time->tm_hour, utc_time->tm_min, utc_time->tm_sec, mmsi_string, lat_string, lon_string, sog_string, heading_string, cog, rate_of_turn_string, navigation_status_string);
+  // nmea0183CreateMessage(msg183, src, "PVDM,%d%d%d,%s,%s,%s,%s,%s,%.3f,%s,%s", utc_time->tm_hour, utc_time->tm_min, utc_time->tm_sec, mmsiString, latString, lonString, sogString, headingString, cog, rateOfTurnString, navigationStatusString);
 }
