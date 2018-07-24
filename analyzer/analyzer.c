@@ -496,7 +496,7 @@ static bool printLatLon(char * name, double resolution, uint8_t * data, size_t b
   value = 0;
   for (i = 0; i < bytes; i++)
   {
-    value |= data[i] << (i * 8);
+    value |= ((uint64_t) data[i]) << (i * 8);
   }
   if (bytes == 4 && ((data[3] & 0x80) > 0))
   {
