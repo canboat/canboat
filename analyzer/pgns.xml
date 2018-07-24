@@ -2781,7 +2781,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='9' Name='AWS Low' />
              <EnumPair Value='10' Name='TWA High' />
              <EnumPair Value='11' Name='TWA Low' />
-             <EnumPair Value='120C' Name='TWS High' />
+             <EnumPair Value='12' Name='TWS High' />
              <EnumPair Value='13' Name='TWS Low' />
              <EnumPair Value='14' Name='WP Arrival' />
              <EnumPair Value='15' Name='Boat Speed High' />
@@ -3637,7 +3637,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='9' Name='AWS Low' />
              <EnumPair Value='10' Name='TWA High' />
              <EnumPair Value='11' Name='TWA Low' />
-             <EnumPair Value='120C' Name='TWS High' />
+             <EnumPair Value='12' Name='TWS High' />
              <EnumPair Value='13' Name='TWS Low' />
              <EnumPair Value='14' Name='WP Arrival' />
              <EnumPair Value='15' Name='Boat Speed High' />
@@ -10943,10 +10943,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='6' Name='Aground' />
              <EnumPair Value='7' Name='Engaged in Fishing' />
              <EnumPair Value='8' Name='Under way sailing' />
-             <EnumPair Value='9' Name='Hazardous material' />
-             <EnumPair Value=' High Speed,10' Name='Hazardous material, Wing in Ground,14=AIS-SART' />
-             <EnumPair Value='10' Name='Hazardous material' />
-             <EnumPair Value=' Wing in Ground,14' Name='AIS-SART' />
+             <EnumPair Value='9' Name='Hazardous material - High Speed' />
+             <EnumPair Value='10' Name='Hazardous material - Wing in Ground' />
              <EnumPair Value='14' Name='AIS-SART' />
            </EnumValues>
          </Field>

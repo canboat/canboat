@@ -316,8 +316,8 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] =
             ",6=Aground" \
             ",7=Engaged in Fishing" \
             ",8=Under way sailing" \
-            ",9=Hazardous material, High Speed" \
-            ",10=Hazardous material, Wing in Ground" \
+            ",9=Hazardous material - High Speed" \
+            ",10=Hazardous material - Wing in Ground" \
             ",14=AIS-SART" )
 
 #define LOOKUP_POWER_FACTOR ( ",0=Leading,1=Lagging,2=Error" )
@@ -439,7 +439,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] =
     ",9=AWS Low" \
     ",10=TWA High" \
     ",11=TWA Low" \
-    ",120C=TWS High" \
+    ",12=TWS High" \
     ",13=TWS Low" \
     ",14=WP Arrival" \
     ",15=Boat Speed High" \
