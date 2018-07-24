@@ -733,6 +733,68 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
        <PGN>61184</PGN>
+       <Id>victronBatteryRegister</Id>
+       <Description>Victron Battery Register</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Victron</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>358</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>registerId</Id>
+           <Name>Register Id</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>payload</Id>
+           <Name>Payload</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>61184</PGN>
        <Id>manufacturerProprietarySingleFrameAddressed</Id>
        <Description>Manufacturer Proprietary single-frame addressed</Description>
        <Complete>false</Complete>
@@ -2409,24 +2471,33 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>4</Order>
-           <Id>temperatureInstance</Id>
-           <Name>Temperature Instance</Name>
-           <BitLength>4</BitLength>
+           <Id>temperatureSource</Id>
+           <Name>Temperature Source</Name>
+           <BitLength>8</BitLength>
            <BitOffset>16</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
            <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Sea Temperature' />
+             <EnumPair Value='1' Name='Outside Temperature' />
+             <EnumPair Value='2' Name='Inside Temperature' />
+             <EnumPair Value='3' Name='Engine Room Temperature' />
+             <EnumPair Value='4' Name='Main Cabin Temperature' />
+             <EnumPair Value='5' Name='Live Well Temperature' />
+             <EnumPair Value='6' Name='Bait Well Temperature' />
+             <EnumPair Value='7' Name='Refridgeration Temperature' />
+             <EnumPair Value='8' Name='Heating System Temperature' />
+             <EnumPair Value='9' Name='Dew Point Temperature' />
+             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
+             <EnumPair Value='11' Name='Theoretical Wind Chill Temperature' />
+             <EnumPair Value='12' Name='Heat Index Temperature' />
+             <EnumPair Value='13' Name='Freezer Temperature' />
+             <EnumPair Value='14' Name='Exhaust Gas Temperature' />
+           </EnumValues>
          </Field>
          <Field>
            <Order>5</Order>
-           <Id>temperatureSource</Id>
-           <Name>Temperature Source</Name>
-           <BitLength>4</BitLength>
-           <BitOffset>20</BitOffset>
-           <BitStart>4</BitStart>
-           <Signed>false</Signed>
-         </Field>
-         <Field>
-           <Order>6</Order>
            <Id>actualTemperature</Id>
            <Name>Actual Temperature</Name>
            <BitLength>16</BitLength>
@@ -5157,6 +5228,211 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
        <PGN>126720</PGN>
+       <Id>seatalk1Keystroke</Id>
+       <Description>Seatalk1: Keystroke</Description>
+       <Complete>false</Complete>
+       <Length>21</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Raymarine</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1851</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>proprietaryId</Id>
+           <Name>Proprietary ID</Name>
+           <Description>0x81f0</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>33264</Match>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>command</Id>
+           <Name>command</Name>
+           <Description>0x86</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>134</Match>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>device</Id>
+           <Name>device</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='33' Name='S100' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>key</Id>
+           <Name>key</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='64005' Name='-1' />
+             <EnumPair Value='63495' Name='+1' />
+             <EnumPair Value='64770' Name='Standby' />
+             <EnumPair Value='65025' Name='Auto' />
+             <EnumPair Value='63240' Name='+10' />
+             <EnumPair Value='63750' Name='-10' />
+             <EnumPair Value='56865' Name='-1 and -10' />
+             <EnumPair Value='56610' Name='+1 and +10' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>unknownData</Id>
+           <Name>Unknown data</Name>
+           <BitLength>112</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126720</PGN>
+       <Id>seatalk1DeviceIndentification</Id>
+       <Description>Seatalk1: Device Indentification</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>manufacturerCode</Id>
+           <Name>Manufacturer Code</Name>
+           <Description>Raymarine</Description>
+           <BitLength>11</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>1851</Match>
+                  <Type>Manufacturer code</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>11</BitOffset>
+           <BitStart>3</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>industryCode</Id>
+           <Name>Industry Code</Name>
+           <Description>Marine Industry</Description>
+           <BitLength>3</BitLength>
+           <BitOffset>13</BitOffset>
+           <BitStart>5</BitStart>
+           <Match>4</Match>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>proprietaryId</Id>
+           <Name>Proprietary ID</Name>
+           <Description>0x81f0</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>33264</Match>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>command</Id>
+           <Name>command</Name>
+           <Description>0x90</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Match>144</Match>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+           <Resolution>0</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>device</Id>
+           <Name>device</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='3' Name='S100' />
+             <EnumPair Value='5' Name='Course Computer' />
+           </EnumValues>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>126720</PGN>
        <Id>airmarAttitudeOffset</Id>
        <Description>Airmar: Attitude Offset</Description>
        <Complete>true</Complete>
@@ -7335,7 +7611,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
            <Units>rad/s</Units>
-           <Resolution>3.125e-09</Resolution>
+           <Resolution>3.125e-08</Resolution>
            <Signed>true</Signed>
          </Field>
        </Fields>
@@ -7589,7 +7865,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <BitStart>0</BitStart>
            <Units>V</Units>
            <Resolution>0.01</Resolution>
-           <Signed>false</Signed>
+           <Signed>true</Signed>
          </Field>
          <Field>
            <Order>6</Order>
@@ -8000,11 +8276,416 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
          </Field>
          <Field>
            <Order>2</Order>
-           <Id>indicator</Id>
-           <Name>Indicator</Name>
+           <Id>indicator1</Id>
+           <Name>Indicator1</Name>
            <BitLength>2</BitLength>
            <BitOffset>8</BitOffset>
            <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>indicator2</Id>
+           <Name>Indicator2</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>10</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>indicator3</Id>
+           <Name>Indicator3</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>12</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>indicator4</Id>
+           <Name>Indicator4</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>14</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>indicator5</Id>
+           <Name>Indicator5</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>indicator6</Id>
+           <Name>Indicator6</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>18</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>indicator7</Id>
+           <Name>Indicator7</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>20</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>indicator8</Id>
+           <Name>Indicator8</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>22</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>indicator9</Id>
+           <Name>Indicator9</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>indicator10</Id>
+           <Name>Indicator10</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>26</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>indicator11</Id>
+           <Name>Indicator11</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>28</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>indicator12</Id>
+           <Name>Indicator12</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>30</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>14</Order>
+           <Id>indicator13</Id>
+           <Name>Indicator13</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>15</Order>
+           <Id>indicator14</Id>
+           <Name>Indicator14</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>34</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>16</Order>
+           <Id>indicator15</Id>
+           <Name>Indicator15</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>36</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>17</Order>
+           <Id>indicator16</Id>
+           <Name>Indicator16</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>38</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>18</Order>
+           <Id>indicator17</Id>
+           <Name>Indicator17</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>19</Order>
+           <Id>indicator18</Id>
+           <Name>Indicator18</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>42</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>20</Order>
+           <Id>indicator19</Id>
+           <Name>Indicator19</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>44</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>21</Order>
+           <Id>indicator20</Id>
+           <Name>Indicator20</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>46</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>22</Order>
+           <Id>indicator21</Id>
+           <Name>Indicator21</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>23</Order>
+           <Id>indicator22</Id>
+           <Name>Indicator22</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>50</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>24</Order>
+           <Id>indicator23</Id>
+           <Name>Indicator23</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>52</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>25</Order>
+           <Id>indicator24</Id>
+           <Name>Indicator24</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>54</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>26</Order>
+           <Id>indicator25</Id>
+           <Name>Indicator25</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>27</Order>
+           <Id>indicator26</Id>
+           <Name>Indicator26</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>58</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>28</Order>
+           <Id>indicator27</Id>
+           <Name>Indicator27</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>60</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Off' />
+             <EnumPair Value='1' Name='On' />
+             <EnumPair Value='2' Name='Failed' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>29</Order>
+           <Id>indicator28</Id>
+           <Name>Indicator28</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>62</BitOffset>
+           <BitStart>6</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
            <EnumValues>
@@ -9203,7 +9884,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Order>4</Order>
            <Id>speedWaterReferencedType</Id>
            <Name>Speed Water Referenced Type</Name>
-           <BitLength>4</BitLength>
+           <BitLength>8</BitLength>
            <BitOffset>40</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
@@ -9215,6 +9896,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='3' Name='Correlation (ultra sound)' />
              <EnumPair Value='4' Name='Electro Magnetic' />
            </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>speedDirection</Id>
+           <Name>Speed Direction</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
          </Field>
        </Fields>
     </PGNInfo>
@@ -9258,6 +9948,18 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Units>m</Units>
            <Resolution>0.001</Resolution>
            <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>range</Id>
+           <Name>Range</Name>
+           <Description>Max measurement range</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m</Units>
+           <Resolution>10</Resolution>
+           <Signed>false</Signed>
          </Field>
        </Fields>
     </PGNInfo>
@@ -9924,7 +10626,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>geoidalSeparation</Id>
            <Name>Geoidal Separation</Name>
            <Description>Geoidal Separation</Description>
-           <BitLength>16</BitLength>
+           <BitLength>32</BitLength>
            <BitOffset>304</BitOffset>
            <BitStart>0</BitStart>
            <Units>m</Units>
@@ -9937,7 +10639,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Name>Reference Stations</Name>
            <Description>Number of reference stations</Description>
            <BitLength>8</BitLength>
-           <BitOffset>320</BitOffset>
+           <BitOffset>336</BitOffset>
            <BitStart>0</BitStart>
            <Signed>false</Signed>
          </Field>
@@ -9946,7 +10648,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>referenceStationType</Id>
            <Name>Reference Station Type</Name>
            <BitLength>4</BitLength>
-           <BitOffset>328</BitOffset>
+           <BitOffset>344</BitOffset>
            <BitStart>0</BitStart>
                   <Type>Lookup table</Type>
            <Signed>false</Signed>
@@ -9967,7 +10669,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>referenceStationId</Id>
            <Name>Reference Station ID</Name>
            <BitLength>12</BitLength>
-           <BitOffset>332</BitOffset>
+           <BitOffset>348</BitOffset>
            <BitStart>4</BitStart>
            <Units></Units>
            <Signed>false</Signed>
@@ -9977,7 +10679,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Id>ageOfDgnssCorrections</Id>
            <Name>Age of DGNSS Corrections</Name>
            <BitLength>16</BitLength>
-           <BitOffset>344</BitOffset>
+           <BitOffset>360</BitOffset>
            <BitStart>0</BitStart>
            <Units>s</Units>
            <Resolution>0.01</Resolution>
@@ -10948,6 +11650,342 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
              <EnumPair Value='4' Name='Own information not broadcast' />
              <EnumPair Value='5' Name='Reserved' />
            </EnumValues>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>129041</PGN>
+       <Id>aisAidsToNavigationAtonReport</Id>
+       <Description>AIS Aids to Navigation (AtoN) Report</Description>
+       <Complete>true</Complete>
+       <Length>60</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>messageId</Id>
+           <Name>Message ID</Name>
+           <BitLength>6</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>repeatIndicator</Id>
+           <Name>Repeat Indicator</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>6</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Initial' />
+             <EnumPair Value='1' Name='First retransmission' />
+             <EnumPair Value='2' Name='Second retransmission' />
+             <EnumPair Value='3' Name='Final retransmission' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>userId</Id>
+           <Name>User ID</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>MMSI</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>longitude</Id>
+           <Name>Longitude</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>deg</Units>
+                  <Type>Latitude</Type>
+                  <Resolution>0.0000001</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>latitude</Id>
+           <Name>Latitude</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>deg</Units>
+                  <Type>Longitude</Type>
+                  <Resolution>0.0000001</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>positionAccuracy</Id>
+           <Name>Position Accuracy</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>104</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Low' />
+             <EnumPair Value='1' Name='High' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>aisRaimFlag</Id>
+           <Name>AIS RAIM Flag</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>105</BitOffset>
+           <BitStart>1</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='not in use' />
+             <EnumPair Value='1' Name='in use' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>timeStamp</Id>
+           <Name>Time Stamp</Name>
+           <Description>0-59 = UTC second when the report was generated</Description>
+           <BitLength>6</BitLength>
+           <BitOffset>106</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='60' Name='Not available' />
+             <EnumPair Value='61' Name='Manual input mode' />
+             <EnumPair Value='62' Name='Dead reckoning mode' />
+             <EnumPair Value='63' Name='Positioning system is inoperative' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>lengthDiameter</Id>
+           <Name>Length/Diameter</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>112</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m</Units>
+           <Resolution>0.1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>beamDiameter</Id>
+           <Name>Beam/Diameter</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>128</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m</Units>
+           <Resolution>0.1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>positionReferenceFromStarboardEdge</Id>
+           <Name>Position Reference from Starboard Edge</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>144</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m</Units>
+           <Resolution>0.1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>positionReferenceFromTrueNorthFacingEdge</Id>
+           <Name>Position Reference from True North Facing Edge</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>160</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>m</Units>
+           <Resolution>0.1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>atonType</Id>
+           <Name>AtoN Type</Name>
+           <BitLength>5</BitLength>
+           <BitOffset>176</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Default: Type of AtoN not specified' />
+             <EnumPair Value='1' Name='Referece point' />
+             <EnumPair Value='2' Name='RACON' />
+             <EnumPair Value='3' Name='Fixed structure off-shore' />
+             <EnumPair Value='4' Name='Reserved for future use' />
+             <EnumPair Value='5' Name='Fixed light: without sectors' />
+             <EnumPair Value='6' Name='Fixed light: with sectors' />
+             <EnumPair Value='7' Name='Fixed leading light front' />
+             <EnumPair Value='8' Name='Fixed leading light rear' />
+             <EnumPair Value='9' Name='Fixed beacon: cardinal N' />
+             <EnumPair Value='10' Name='Fixed beacon: cardinal E' />
+             <EnumPair Value='11' Name='Fixed beacon: cardinal S' />
+             <EnumPair Value='12' Name='Fixed beacon: cardinal W' />
+             <EnumPair Value='13' Name='Fixed beacon: port hand' />
+             <EnumPair Value='14' Name='Fixed beacon: starboard hand' />
+             <EnumPair Value='15' Name='Fixed beacon: preferred channel port hand' />
+             <EnumPair Value='16' Name='Fixed beacon: preferred channel starboard hand' />
+             <EnumPair Value='17' Name='Fixed beacon: isolated danger' />
+             <EnumPair Value='18' Name='Fixed beacon: safe water' />
+             <EnumPair Value='20' Name='Floating AtoN: cardinal N' />
+             <EnumPair Value='21' Name='Floating AtoN: cardinal E' />
+             <EnumPair Value='22' Name='Floating AtoN: cardinal S' />
+             <EnumPair Value='23' Name='Floating AtoN: cardinal W' />
+             <EnumPair Value='24' Name='Floating AtoN: port hand mark' />
+             <EnumPair Value='25' Name='Floating AtoN: starboard hand mark' />
+             <EnumPair Value='26' Name='Floating AtoN: preferred channel port hand' />
+             <EnumPair Value='27' Name='Floating AtoN: preferred channel starboard hand' />
+             <EnumPair Value='28' Name='Floating AtoN: isolated danger' />
+             <EnumPair Value='29' Name='Floating AtoN: safe water' />
+             <EnumPair Value='30' Name='Floating AtoN: special mark' />
+             <EnumPair Value='31' Name='Floating AtoN: light vessel/LANBY/rigs' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>14</Order>
+           <Id>offPositionIndicator</Id>
+           <Name>Off Position Indicator</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>181</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>15</Order>
+           <Id>virtualAtonFlag</Id>
+           <Name>Virtual AtoN Flag</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>182</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>16</Order>
+           <Id>assignedModeFlag</Id>
+           <Name>Assigned Mode Flag</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>183</BitOffset>
+           <BitStart>7</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Autonomous and continuous' />
+             <EnumPair Value='1' Name='Assigned mode' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>17</Order>
+           <Id>aisSpare</Id>
+           <Name>AIS Spare</Name>
+           <BitLength>1</BitLength>
+           <BitOffset>184</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>18</Order>
+           <Id>positionFixingDeviceType</Id>
+           <Name>Position Fixing Device Type</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>185</BitOffset>
+           <BitStart>1</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Default: undefined' />
+             <EnumPair Value='1' Name='GPS' />
+             <EnumPair Value='2' Name='GLONASS' />
+             <EnumPair Value='3' Name='Combined GPS/GLONASS' />
+             <EnumPair Value='4' Name='Loran-C' />
+             <EnumPair Value='5' Name='Chayka' />
+             <EnumPair Value='6' Name='Integrated navigation system' />
+             <EnumPair Value='7' Name='Surveyed' />
+             <EnumPair Value='8' Name='Galileo' />
+             <EnumPair Value='15' Name='Internal GNSS' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>19</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>189</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>20</Order>
+           <Id>atonStatus</Id>
+           <Name>AtoN Status</Name>
+           <Description>00000000 = default</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>192</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>21</Order>
+           <Id>aisTransceiverInformation</Id>
+           <Name>AIS Transceiver information</Name>
+           <BitLength>5</BitLength>
+           <BitOffset>200</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Channel A VDL reception' />
+             <EnumPair Value='1' Name='Channel B VDL reception' />
+             <EnumPair Value='2' Name='Channel A VDL transmission' />
+             <EnumPair Value='3' Name='Channel B VDL transmission' />
+             <EnumPair Value='4' Name='Own information not broadcast' />
+             <EnumPair Value='5' Name='Reserved' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>22</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <BitLength>3</BitLength>
+           <BitOffset>205</BitOffset>
+           <BitStart>5</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>23</Order>
+           <Id>atonName</Id>
+           <Name>AtoN Name</Name>
+           <BitLength>272</BitLength>
+           <BitOffset>208</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
          </Field>
        </Fields>
     </PGNInfo>
@@ -13152,7 +14190,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        <Id>aisUtcAndDateReport</Id>
        <Description>AIS UTC and Date Report</Description>
        <Complete>false</Complete>
-       <Length>8</Length>
+       <Length>26</Length>
        <RepeatingFields>0</RepeatingFields>
        <Fields>
          <Field>
@@ -19030,6 +20068,868 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
        </Fields>
     </PGNInfo>
     <PGNInfo>
+       <PGN>130570</PGN>
+       <Id>libraryDataFile</Id>
+       <Description>Library Data File</Description>
+       <Complete>false</Complete>
+       <Length>233</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>source</Id>
+           <Name>Source</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Vessel alarm' />
+             <EnumPair Value='1' Name='AM' />
+             <EnumPair Value='2' Name='FM' />
+             <EnumPair Value='3' Name='Weather' />
+             <EnumPair Value='4' Name='DAB' />
+             <EnumPair Value='5' Name='Aux' />
+             <EnumPair Value='6' Name='USB' />
+             <EnumPair Value='7' Name='CD' />
+             <EnumPair Value='8' Name='MP3' />
+             <EnumPair Value='9' Name='Apple iOS' />
+             <EnumPair Value='10' Name='Android' />
+             <EnumPair Value='11' Name='Bluetooth' />
+             <EnumPair Value='12' Name='Sirius XM' />
+             <EnumPair Value='13' Name='Pandora' />
+             <EnumPair Value='14' Name='Spotify' />
+             <EnumPair Value='15' Name='Slacker' />
+             <EnumPair Value='16' Name='Songza' />
+             <EnumPair Value='17' Name='Apple Radio' />
+             <EnumPair Value='18' Name='Last FM' />
+             <EnumPair Value='19' Name='Ethernet' />
+             <EnumPair Value='20' Name='Video MP4' />
+             <EnumPair Value='21' Name='Video DVD' />
+             <EnumPair Value='22' Name='Video BluRay' />
+             <EnumPair Value='23' Name='HDMI' />
+             <EnumPair Value='24' Name='Video' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>number</Id>
+           <Name>Number</Name>
+           <Description>Source number per type</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>id</Id>
+           <Name>ID</Name>
+           <Description>Unique file ID</Description>
+           <BitLength>32</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>type</Id>
+           <Name>Type</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='File' />
+             <EnumPair Value='1' Name='Playlist Name' />
+             <EnumPair Value='2' Name='Genre Name' />
+             <EnumPair Value='3' Name='Album Name' />
+             <EnumPair Value='4' Name='Artist Name' />
+             <EnumPair Value='5' Name='Track Name' />
+             <EnumPair Value='6' Name='Station Name' />
+             <EnumPair Value='7' Name='Station Number' />
+             <EnumPair Value='8' Name='Favourite Number' />
+             <EnumPair Value='9' Name='Play Queue' />
+             <EnumPair Value='10' Name='Content Info' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>name</Id>
+           <Name>Name</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>track</Id>
+           <Name>Track</Name>
+           <BitLength>16</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>station</Id>
+           <Name>Station</Name>
+           <BitLength>16</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>favorite</Id>
+           <Name>Favorite</Name>
+           <BitLength>8</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>radioFrequency</Id>
+           <Name>Radio frequency</Name>
+           <BitLength>32</BitLength>
+           <BitStart>0</BitStart>
+           <Units>Hz</Units>
+           <Resolution>10</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>hdFrequency</Id>
+           <Name>HD Frequency</Name>
+           <BitLength>8</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>zone</Id>
+           <Name>Zone</Name>
+           <BitLength>8</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='All zones' />
+             <EnumPair Value='1' Name='Zone 1' />
+             <EnumPair Value='2' Name='Zone 2' />
+             <EnumPair Value='3' Name='Zone 3' />
+             <EnumPair Value='4' Name='Zone 4' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>inPlayQueue</Id>
+           <Name>In play queue</Name>
+           <BitLength>2</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>lockStatus</Id>
+           <Name>Lock status</Name>
+           <Description>Sirius XM only</Description>
+           <BitLength>2</BitLength>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Unlocked' />
+             <EnumPair Value='1' Name='Locked' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>14</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>Reserved</Description>
+           <BitLength>4</BitLength>
+           <BitStart>4</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>15</Order>
+           <Id>artist</Id>
+           <Name>Artist</Name>
+           <BitLength>16</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>16</Order>
+           <Id>album</Id>
+           <Name>Album</Name>
+           <BitLength>16</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>17</Order>
+           <Id>station</Id>
+           <Name>Station</Name>
+           <BitLength>16</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130571</PGN>
+       <Id>libraryDataGroup</Id>
+       <Description>Library Data Group</Description>
+       <Complete>false</Complete>
+       <Length>233</Length>
+       <RepeatingFields>2</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>source</Id>
+           <Name>Source</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Vessel alarm' />
+             <EnumPair Value='1' Name='AM' />
+             <EnumPair Value='2' Name='FM' />
+             <EnumPair Value='3' Name='Weather' />
+             <EnumPair Value='4' Name='DAB' />
+             <EnumPair Value='5' Name='Aux' />
+             <EnumPair Value='6' Name='USB' />
+             <EnumPair Value='7' Name='CD' />
+             <EnumPair Value='8' Name='MP3' />
+             <EnumPair Value='9' Name='Apple iOS' />
+             <EnumPair Value='10' Name='Android' />
+             <EnumPair Value='11' Name='Bluetooth' />
+             <EnumPair Value='12' Name='Sirius XM' />
+             <EnumPair Value='13' Name='Pandora' />
+             <EnumPair Value='14' Name='Spotify' />
+             <EnumPair Value='15' Name='Slacker' />
+             <EnumPair Value='16' Name='Songza' />
+             <EnumPair Value='17' Name='Apple Radio' />
+             <EnumPair Value='18' Name='Last FM' />
+             <EnumPair Value='19' Name='Ethernet' />
+             <EnumPair Value='20' Name='Video MP4' />
+             <EnumPair Value='21' Name='Video DVD' />
+             <EnumPair Value='22' Name='Video BluRay' />
+             <EnumPair Value='23' Name='HDMI' />
+             <EnumPair Value='24' Name='Video' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>number</Id>
+           <Name>Number</Name>
+           <Description>Source number per type</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>zone</Id>
+           <Name>Zone</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='All zones' />
+             <EnumPair Value='1' Name='Zone 1' />
+             <EnumPair Value='2' Name='Zone 2' />
+             <EnumPair Value='3' Name='Zone 3' />
+             <EnumPair Value='4' Name='Zone 4' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>groupId</Id>
+           <Name>Group ID</Name>
+           <Description>Unique group ID</Description>
+           <BitLength>32</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>idOffset</Id>
+           <Name>ID offset</Name>
+           <Description>First ID in this PGN</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>idCount</Id>
+           <Name>ID count</Name>
+           <Description>Number of IDs in this PGN</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>totalIdCount</Id>
+           <Name>Total ID count</Name>
+           <Description>Total IDs in group</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>88</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>idType</Id>
+           <Name>ID type</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>104</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Group' />
+             <EnumPair Value='1' Name='File' />
+             <EnumPair Value='2' Name='Encrypted group' />
+             <EnumPair Value='3' Name='Encrypted file' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>id</Id>
+           <Name>ID</Name>
+           <BitLength>32</BitLength>
+           <BitOffset>112</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>name</Id>
+           <Name>Name</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>144</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130572</PGN>
+       <Id>libraryDataSearch</Id>
+       <Description>Library Data Search</Description>
+       <Complete>false</Complete>
+       <Length>233</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>source</Id>
+           <Name>Source</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Vessel alarm' />
+             <EnumPair Value='1' Name='AM' />
+             <EnumPair Value='2' Name='FM' />
+             <EnumPair Value='3' Name='Weather' />
+             <EnumPair Value='4' Name='DAB' />
+             <EnumPair Value='5' Name='Aux' />
+             <EnumPair Value='6' Name='USB' />
+             <EnumPair Value='7' Name='CD' />
+             <EnumPair Value='8' Name='MP3' />
+             <EnumPair Value='9' Name='Apple iOS' />
+             <EnumPair Value='10' Name='Android' />
+             <EnumPair Value='11' Name='Bluetooth' />
+             <EnumPair Value='12' Name='Sirius XM' />
+             <EnumPair Value='13' Name='Pandora' />
+             <EnumPair Value='14' Name='Spotify' />
+             <EnumPair Value='15' Name='Slacker' />
+             <EnumPair Value='16' Name='Songza' />
+             <EnumPair Value='17' Name='Apple Radio' />
+             <EnumPair Value='18' Name='Last FM' />
+             <EnumPair Value='19' Name='Ethernet' />
+             <EnumPair Value='20' Name='Video MP4' />
+             <EnumPair Value='21' Name='Video DVD' />
+             <EnumPair Value='22' Name='Video BluRay' />
+             <EnumPair Value='23' Name='HDMI' />
+             <EnumPair Value='24' Name='Video' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>number</Id>
+           <Name>Number</Name>
+           <Description>Source number per type</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>groupId</Id>
+           <Name>Group ID</Name>
+           <Description>Unique group ID</Description>
+           <BitLength>32</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>groupType1</Id>
+           <Name>Group type 1</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='File' />
+             <EnumPair Value='1' Name='Playlist Name' />
+             <EnumPair Value='2' Name='Genre Name' />
+             <EnumPair Value='3' Name='Album Name' />
+             <EnumPair Value='4' Name='Artist Name' />
+             <EnumPair Value='5' Name='Track Name' />
+             <EnumPair Value='6' Name='Station Name' />
+             <EnumPair Value='7' Name='Station Number' />
+             <EnumPair Value='8' Name='Favourite Number' />
+             <EnumPair Value='9' Name='Play Queue' />
+             <EnumPair Value='10' Name='Content Info' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>groupName1</Id>
+           <Name>Group name 1</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>groupType2</Id>
+           <Name>Group type 2</Name>
+           <BitLength>8</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='File' />
+             <EnumPair Value='1' Name='Playlist Name' />
+             <EnumPair Value='2' Name='Genre Name' />
+             <EnumPair Value='3' Name='Album Name' />
+             <EnumPair Value='4' Name='Artist Name' />
+             <EnumPair Value='5' Name='Track Name' />
+             <EnumPair Value='6' Name='Station Name' />
+             <EnumPair Value='7' Name='Station Number' />
+             <EnumPair Value='8' Name='Favourite Number' />
+             <EnumPair Value='9' Name='Play Queue' />
+             <EnumPair Value='10' Name='Content Info' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>groupName2</Id>
+           <Name>Group name 2</Name>
+           <BitLength>16</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>groupType3</Id>
+           <Name>Group type 3</Name>
+           <BitLength>8</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='File' />
+             <EnumPair Value='1' Name='Playlist Name' />
+             <EnumPair Value='2' Name='Genre Name' />
+             <EnumPair Value='3' Name='Album Name' />
+             <EnumPair Value='4' Name='Artist Name' />
+             <EnumPair Value='5' Name='Track Name' />
+             <EnumPair Value='6' Name='Station Name' />
+             <EnumPair Value='7' Name='Station Number' />
+             <EnumPair Value='8' Name='Favourite Number' />
+             <EnumPair Value='9' Name='Play Queue' />
+             <EnumPair Value='10' Name='Content Info' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>groupName3</Id>
+           <Name>Group name 3</Name>
+           <BitLength>16</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130573</PGN>
+       <Id>supportedSourceData</Id>
+       <Description>Supported Source Data</Description>
+       <Complete>false</Complete>
+       <Length>233</Length>
+       <RepeatingFields>10</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>idOffset</Id>
+           <Name>ID offset</Name>
+           <Description>First ID in this PGN</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>idCount</Id>
+           <Name>ID count</Name>
+           <Description>Number of IDs in this PGN</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>totalIdCount</Id>
+           <Name>Total ID count</Name>
+           <Description>Total IDs in group</Description>
+           <BitLength>16</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>id</Id>
+           <Name>ID</Name>
+           <Description>Source ID</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>source</Id>
+           <Name>Source</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Vessel alarm' />
+             <EnumPair Value='1' Name='AM' />
+             <EnumPair Value='2' Name='FM' />
+             <EnumPair Value='3' Name='Weather' />
+             <EnumPair Value='4' Name='DAB' />
+             <EnumPair Value='5' Name='Aux' />
+             <EnumPair Value='6' Name='USB' />
+             <EnumPair Value='7' Name='CD' />
+             <EnumPair Value='8' Name='MP3' />
+             <EnumPair Value='9' Name='Apple iOS' />
+             <EnumPair Value='10' Name='Android' />
+             <EnumPair Value='11' Name='Bluetooth' />
+             <EnumPair Value='12' Name='Sirius XM' />
+             <EnumPair Value='13' Name='Pandora' />
+             <EnumPair Value='14' Name='Spotify' />
+             <EnumPair Value='15' Name='Slacker' />
+             <EnumPair Value='16' Name='Songza' />
+             <EnumPair Value='17' Name='Apple Radio' />
+             <EnumPair Value='18' Name='Last FM' />
+             <EnumPair Value='19' Name='Ethernet' />
+             <EnumPair Value='20' Name='Video MP4' />
+             <EnumPair Value='21' Name='Video DVD' />
+             <EnumPair Value='22' Name='Video BluRay' />
+             <EnumPair Value='23' Name='HDMI' />
+             <EnumPair Value='24' Name='Video' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>number</Id>
+           <Name>Number</Name>
+           <Description>Source number per type</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>name</Id>
+           <Name>Name</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>playSupport</Id>
+           <Name>Play support</Name>
+           <BitLength>16</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Bitfield</Type>
+           <Signed>false</Signed>
+           <EnumBitValues>
+             <EnumPair Bit='0' Name='Play' />
+             <EnumPair Bit='1' Name='Pause' />
+             <EnumPair Bit='2' Name='Stop' />
+             <EnumPair Bit='3' Name='FF (1x)' />
+             <EnumPair Bit='4' Name='FF (2x)' />
+             <EnumPair Bit='5' Name='FF (3x)' />
+             <EnumPair Bit='6' Name='FF (4x)' />
+             <EnumPair Bit='7' Name='RW (1x)' />
+             <EnumPair Bit='8' Name='RW (2x)' />
+             <EnumPair Bit='9' Name='RW (3x)' />
+             <EnumPair Bit='10' Name='RW (4x)' />
+             <EnumPair Bit='11' Name='Skip ahead' />
+             <EnumPair Bit='12' Name='Skip back' />
+             <EnumPair Bit='13' Name='Jog ahead' />
+             <EnumPair Bit='14' Name='Jog back' />
+             <EnumPair Bit='15' Name='Seek up' />
+             <EnumPair Bit='16' Name='Seek down' />
+             <EnumPair Bit='17' Name='Scan up' />
+             <EnumPair Bit='18' Name='Scan down' />
+             <EnumPair Bit='19' Name='Tune up' />
+             <EnumPair Bit='20' Name='Tune down' />
+             <EnumPair Bit='21' Name='Slow motion (.75x)' />
+             <EnumPair Bit='22' Name='Slow motion (.5x)' />
+             <EnumPair Bit='23' Name='Slow motion (.25x)' />
+             <EnumPair Bit='24' Name='Slow motion (.125x)' />
+             <EnumPair Bit='25' Name='Source renaming' />
+           </EnumBitValues>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>browseSupport</Id>
+           <Name>Browse support</Name>
+           <BitLength>16</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Bitfield</Type>
+           <Signed>false</Signed>
+           <EnumBitValues>
+             <EnumPair Bit='0' Name='File' />
+             <EnumPair Bit='1' Name='Playlist Name' />
+             <EnumPair Bit='2' Name='Genre Name' />
+             <EnumPair Bit='3' Name='Album Name' />
+             <EnumPair Bit='4' Name='Artist Name' />
+             <EnumPair Bit='5' Name='Track Name' />
+             <EnumPair Bit='6' Name='Station Name' />
+             <EnumPair Bit='7' Name='Station Number' />
+             <EnumPair Bit='8' Name='Favourite Number' />
+             <EnumPair Bit='9' Name='Play Queue' />
+             <EnumPair Bit='10' Name='Content Info' />
+           </EnumBitValues>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>thumbsSupport</Id>
+           <Name>Thumbs support</Name>
+           <BitLength>2</BitLength>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>connected</Id>
+           <Name>Connected</Name>
+           <BitLength>2</BitLength>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>repeatSupport</Id>
+           <Name>Repeat support</Name>
+           <BitLength>2</BitLength>
+           <BitStart>4</BitStart>
+                  <Type>Bitfield</Type>
+           <Signed>false</Signed>
+           <EnumBitValues>
+             <EnumPair Bit='1' Name='Song' />
+             <EnumPair Bit='2' Name='Play Queue' />
+           </EnumBitValues>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>shuffleSupport</Id>
+           <Name>Shuffle support</Name>
+           <BitLength>2</BitLength>
+           <BitStart>6</BitStart>
+                  <Type>Bitfield</Type>
+           <Signed>false</Signed>
+           <EnumBitValues>
+             <EnumPair Bit='1' Name='Play Queue' />
+             <EnumPair Bit='2' Name='All' />
+           </EnumBitValues>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130574</PGN>
+       <Id>supportedZoneData</Id>
+       <Description>Supported Zone Data</Description>
+       <Complete>false</Complete>
+       <Length>233</Length>
+       <RepeatingFields>2</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>firstZoneId</Id>
+           <Name>First zone ID</Name>
+           <Description>First Zone in this PGN</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>zoneCount</Id>
+           <Name>Zone count</Name>
+           <Description>Number of Zones in this PGN</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>totalZoneCount</Id>
+           <Name>Total zone count</Name>
+           <Description>Total Zones supported by this device</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>zoneId</Id>
+           <Name>Zone ID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='All zones' />
+             <EnumPair Value='1' Name='Zone 1' />
+             <EnumPair Value='2' Name='Zone 2' />
+             <EnumPair Value='3' Name='Zone 3' />
+             <EnumPair Value='4' Name='Zone 4' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>name</Id>
+           <Name>Name</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
        <PGN>130576</PGN>
        <Id>smallCraftStatus</Id>
        <Description>Small Craft Status</Description>
@@ -19257,6 +21157,792 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
            <Units>m/s</Units>
            <Resolution>0.001</Resolution>
            <Signed>true</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130579</PGN>
+       <Id>systemConfiguration</Id>
+       <Description>System Configuration</Description>
+       <Complete>false</Complete>
+       <Length>8</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>power</Id>
+           <Name>Power</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>defaultSettings</Id>
+           <Name>Default Settings</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>2</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Save current settings as user default' />
+             <EnumPair Value='1' Name='Load user default' />
+             <EnumPair Value='2' Name='Load Manufacturer default' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>tunerRegions</Id>
+           <Name>Tuner regions</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>4</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='USA' />
+             <EnumPair Value='1' Name='Europe' />
+             <EnumPair Value='2' Name='Asia' />
+             <EnumPair Value='3' Name='Middle East' />
+             <EnumPair Value='4' Name='Latin America' />
+             <EnumPair Value='5' Name='Australia' />
+             <EnumPair Value='6' Name='Russia' />
+             <EnumPair Value='7' Name='Japan' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>maxFavorites</Id>
+           <Name>Max favorites</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>videoProtocols</Id>
+           <Name>Video protocols</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Bitfield</Type>
+           <Signed>false</Signed>
+           <EnumBitValues>
+             <EnumPair Bit='0' Name='PAL' />
+             <EnumPair Bit='1' Name='NTSC' />
+           </EnumBitValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>Reserved</Description>
+           <BitLength>44</BitLength>
+           <BitOffset>20</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130580</PGN>
+       <Id>systemConfigurationDeprecated</Id>
+       <Description>System Configuration (deprecated)</Description>
+       <Complete>false</Complete>
+       <Length>2</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>power</Id>
+           <Name>Power</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>defaultSettings</Id>
+           <Name>Default Settings</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>2</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Save current settings as user default' />
+             <EnumPair Value='1' Name='Load user default' />
+             <EnumPair Value='2' Name='Load Manufacturer default' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>tunerRegions</Id>
+           <Name>Tuner regions</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>4</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='USA' />
+             <EnumPair Value='1' Name='Europe' />
+             <EnumPair Value='2' Name='Asia' />
+             <EnumPair Value='3' Name='Middle East' />
+             <EnumPair Value='4' Name='Latin America' />
+             <EnumPair Value='5' Name='Australia' />
+             <EnumPair Value='6' Name='Russia' />
+             <EnumPair Value='7' Name='Japan' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>maxFavorites</Id>
+           <Name>Max favorites</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130581</PGN>
+       <Id>zoneConfigurationDeprecated</Id>
+       <Description>Zone Configuration (deprecated)</Description>
+       <Complete>false</Complete>
+       <Length>14</Length>
+       <RepeatingFields>2</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>firstZoneId</Id>
+           <Name>First zone ID</Name>
+           <Description>First Zone in this PGN</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>zoneCount</Id>
+           <Name>Zone count</Name>
+           <Description>Number of Zones in this PGN</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>totalZoneCount</Id>
+           <Name>Total zone count</Name>
+           <Description>Total Zones supported by this device</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>zoneId</Id>
+           <Name>Zone ID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='All zones' />
+             <EnumPair Value='1' Name='Zone 1' />
+             <EnumPair Value='2' Name='Zone 2' />
+             <EnumPair Value='3' Name='Zone 3' />
+             <EnumPair Value='4' Name='Zone 4' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>zoneName</Id>
+           <Name>Zone name</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130582</PGN>
+       <Id>zoneVolume</Id>
+       <Description>Zone Volume</Description>
+       <Complete>false</Complete>
+       <Length>4</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>zoneId</Id>
+           <Name>Zone ID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='All zones' />
+             <EnumPair Value='1' Name='Zone 1' />
+             <EnumPair Value='2' Name='Zone 2' />
+             <EnumPair Value='3' Name='Zone 3' />
+             <EnumPair Value='4' Name='Zone 4' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>volume</Id>
+           <Name>Volume</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>volumeChange</Id>
+           <Name>Volume change</Name>
+           <Description>Write only</Description>
+           <BitLength>2</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Up' />
+             <EnumPair Value='1' Name='Down' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>mute</Id>
+           <Name>Mute</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>18</BitOffset>
+           <BitStart>2</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>reserved</Id>
+           <Name>Reserved</Name>
+           <Description>Reserved</Description>
+           <BitLength>4</BitLength>
+           <BitOffset>20</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Binary data</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>channel</Id>
+           <Name>Channel</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='All channels' />
+             <EnumPair Value='1' Name='Stereo full range' />
+             <EnumPair Value='2' Name='Stereo front' />
+             <EnumPair Value='3' Name='Stereo back' />
+             <EnumPair Value='4' Name='Stereo surround' />
+             <EnumPair Value='5' Name='Center' />
+             <EnumPair Value='6' Name='Subwoofer' />
+             <EnumPair Value='7' Name='Front left' />
+             <EnumPair Value='8' Name='Front right' />
+             <EnumPair Value='9' Name='Back left' />
+             <EnumPair Value='10' Name='Back right' />
+             <EnumPair Value='11' Name='Surround left' />
+             <EnumPair Value='12' Name='Surround right' />
+           </EnumValues>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130583</PGN>
+       <Id>availableAudioEqPresets</Id>
+       <Description>Available Audio EQ presets</Description>
+       <Complete>false</Complete>
+       <Length>233</Length>
+       <RepeatingFields>2</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>firstPreset</Id>
+           <Name>First preset</Name>
+           <Description>First preset in this PGN</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>presetCount</Id>
+           <Name>Preset count</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>totalPresetCount</Id>
+           <Name>Total preset count</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>presetType</Id>
+           <Name>Preset type</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Flat' />
+             <EnumPair Value='1' Name='Rock' />
+             <EnumPair Value='2' Name='Hall' />
+             <EnumPair Value='3' Name='Jazz' />
+             <EnumPair Value='4' Name='Pop' />
+             <EnumPair Value='5' Name='Live' />
+             <EnumPair Value='6' Name='Classic' />
+             <EnumPair Value='7' Name='Vocal' />
+             <EnumPair Value='8' Name='Arena' />
+             <EnumPair Value='9' Name='Cinema' />
+             <EnumPair Value='10' Name='Custom' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>presetName</Id>
+           <Name>Preset name</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130584</PGN>
+       <Id>availableBluetoothAddresses</Id>
+       <Description>Available Bluetooth addresses</Description>
+       <Complete>false</Complete>
+       <Length>233</Length>
+       <RepeatingFields>3</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>firstAddress</Id>
+           <Name>First address</Name>
+           <Description>First address in this PGN</Description>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>addressCount</Id>
+           <Name>Address count</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>totalAddressCount</Id>
+           <Name>Total address count</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>bluetoothAddress</Id>
+           <Name>Bluetooth address</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>status</Id>
+           <Name>Status</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Connected' />
+             <EnumPair Value='1' Name='Not connected' />
+             <EnumPair Value='2' Name='Not paired' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>deviceName</Id>
+           <Name>Device name</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>ASCII or UNICODE string starting with length and control byte</Type>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>signalStrength</Id>
+           <Name>Signal strength</Name>
+           <BitLength>8</BitLength>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130585</PGN>
+       <Id>bluetoothSourceStatus</Id>
+       <Description>Bluetooth source status</Description>
+       <Complete>false</Complete>
+       <Length>233</Length>
+       <RepeatingFields>0</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>sourceNumber</Id>
+           <Name>Source number</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>status</Id>
+           <Name>Status</Name>
+           <BitLength>4</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Reserved' />
+             <EnumPair Value='1' Name='Connected' />
+             <EnumPair Value='2' Name='Connecting' />
+             <EnumPair Value='3' Name='Not connected' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>forgetDevice</Id>
+           <Name>Forget device</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>12</BitOffset>
+           <BitStart>4</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>discovering</Id>
+           <Name>Discovering</Name>
+           <BitLength>2</BitLength>
+           <BitOffset>14</BitOffset>
+           <BitStart>6</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='No' />
+             <EnumPair Value='1' Name='Yes' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>bluetoothAddress</Id>
+           <Name>Bluetooth address</Name>
+           <BitLength>48</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+       </Fields>
+    </PGNInfo>
+    <PGNInfo>
+       <PGN>130586</PGN>
+       <Id>zoneConfiguration</Id>
+       <Description>Zone Configuration</Description>
+       <Complete>false</Complete>
+       <Length>14</Length>
+       <RepeatingFields>2</RepeatingFields>
+       <Fields>
+         <Field>
+           <Order>1</Order>
+           <Id>zoneId</Id>
+           <Name>Zone ID</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>0</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='All zones' />
+             <EnumPair Value='1' Name='Zone 1' />
+             <EnumPair Value='2' Name='Zone 2' />
+             <EnumPair Value='3' Name='Zone 3' />
+             <EnumPair Value='4' Name='Zone 4' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>2</Order>
+           <Id>volumeLimit</Id>
+           <Name>Volume limit</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>8</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>3</Order>
+           <Id>fade</Id>
+           <Name>Fade</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>16</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>4</Order>
+           <Id>balance</Id>
+           <Name>Balance</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>24</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>5</Order>
+           <Id>subVolume</Id>
+           <Name>Sub volume</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>32</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>6</Order>
+           <Id>eqTreble</Id>
+           <Name>EQ - Treble</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>40</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>7</Order>
+           <Id>eqMidRange</Id>
+           <Name>EQ - Mid range</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>48</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>8</Order>
+           <Id>eqBass</Id>
+           <Name>EQ - Bass</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>56</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>%</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>true</Signed>
+         </Field>
+         <Field>
+           <Order>9</Order>
+           <Id>presetType</Id>
+           <Name>Preset type</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>64</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Flat' />
+             <EnumPair Value='1' Name='Rock' />
+             <EnumPair Value='2' Name='Hall' />
+             <EnumPair Value='3' Name='Jazz' />
+             <EnumPair Value='4' Name='Pop' />
+             <EnumPair Value='5' Name='Live' />
+             <EnumPair Value='6' Name='Classic' />
+             <EnumPair Value='7' Name='Vocal' />
+             <EnumPair Value='8' Name='Arena' />
+             <EnumPair Value='9' Name='Cinema' />
+             <EnumPair Value='10' Name='Custom' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>10</Order>
+           <Id>audioFilter</Id>
+           <Name>Audio filter</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>72</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='Full range' />
+             <EnumPair Value='1' Name='High pass' />
+             <EnumPair Value='2' Name='Low pass' />
+             <EnumPair Value='3' Name='Band pass' />
+             <EnumPair Value='4' Name='Notch filter' />
+           </EnumValues>
+         </Field>
+         <Field>
+           <Order>11</Order>
+           <Id>highPassFilterFrequency</Id>
+           <Name>High pass filter frequency</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>80</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>Hz</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>12</Order>
+           <Id>lowPassFilterFrequency</Id>
+           <Name>Low pass filter frequency</Name>
+           <BitLength>16</BitLength>
+           <BitOffset>96</BitOffset>
+           <BitStart>0</BitStart>
+           <Units>Hz</Units>
+                  <Type>Integer</Type>
+                  <Resolution>1</Resolution>
+           <Signed>false</Signed>
+         </Field>
+         <Field>
+           <Order>13</Order>
+           <Id>channel</Id>
+           <Name>Channel</Name>
+           <BitLength>8</BitLength>
+           <BitOffset>112</BitOffset>
+           <BitStart>0</BitStart>
+                  <Type>Lookup table</Type>
+           <Signed>false</Signed>
+           <EnumValues>
+             <EnumPair Value='0' Name='All channels' />
+             <EnumPair Value='1' Name='Stereo full range' />
+             <EnumPair Value='2' Name='Stereo front' />
+             <EnumPair Value='3' Name='Stereo back' />
+             <EnumPair Value='4' Name='Stereo surround' />
+             <EnumPair Value='5' Name='Center' />
+             <EnumPair Value='6' Name='Subwoofer' />
+             <EnumPair Value='7' Name='Front left' />
+             <EnumPair Value='8' Name='Front right' />
+             <EnumPair Value='9' Name='Back left' />
+             <EnumPair Value='10' Name='Back right' />
+             <EnumPair Value='11' Name='Surround left' />
+             <EnumPair Value='12' Name='Surround right' />
+           </EnumValues>
          </Field>
        </Fields>
     </PGNInfo>

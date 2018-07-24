@@ -8,6 +8,7 @@
 # This assumes there is a configuration file /etc/default/n2kd
 # containing one or more of the following configuration settings:
 #
+#       CAN_INTERFACE=can0
 #       ACTISENSE_PRIMARY=/dev/actisense-1
 #       ACTISENSE_SECONDARY=/dev/actisense-2
 #       MONITOR=false
@@ -35,24 +36,36 @@
 # along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-use ConfigReader::Simple;
+use Config::General;
 
 my $configFile = '/etc/default/n2kd';
-my $config = ConfigReader::Simple->new($configFile);
+my $configObject = Config::General->new(-ConfigFile => $configFile,
+                -MergeDuplicateOptions => 1,
+#               -DefaultConfig => {
+#                       CAN_INTERFACE => "can0",
+#                       ACTISENSE_PRIMARY => "/dev/ttyUSB0",
+#                       MONITOR => "false",
+#                       N2KD_OPTIONS => "",
+#                }
+        );
 
-die "Could not read config! $ConfigReader::Simple::ERROR\n" unless ref $config;
+die "Could not read config from $configFile!\n" unless ref $configObject;
 
-my $ACTISENSE_PRIMARY = $config->get('ACTISENSE_PRIMARY');
-my $ACTISENSE_SECONDARY = $config->get('ACTISENSE_SECONDARY');
-my $MONITOR = $config->get('MONITOR');
-my $N2KD_OPTIONS = $config->get('N2KD_OPTIONS');
-my $ANALYZER_OPTIONS = $config->get('ANALYZER_OPTIONS');
-die "Configuration file $configFile incomplete: No ACTISENSE_PRIMARY" unless $ACTISENSE_PRIMARY;
+my %config = $configObject->getall();
+
+my $CAN_INTERFACE = $config{'CAN_INTERFACE'};
+my $ACTISENSE_PRIMARY = $config{'ACTISENSE_PRIMARY'};
+my $ACTISENSE_SECONDARY = $config{'ACTISENSE_SECONDARY'};
+my $MONITOR = $config{'MONITOR'};
+my $N2KD_OPTIONS = $config{'N2KD_OPTIONS'};
+my $ANALYZER_OPTIONS = $config{'ANALYZER_OPTIONS'};
+die "Configuration file $configFile incomplete: No ACTISENSE_PRIMARY" unless ($ACTISENSE_PRIMARY or $CAN_INTERFACE);
 
 my $LOGFILE = '/var/log/n2kd_monitor.log';
 my $N2KD_LOGFILE = '/var/log/n2kd.log';
 my $MONITOR_LOGFILE = '/var/log/n2k-status.log';
 
+my $CAN = 0;
 my $stat;
 my $n2kd;
 my $monitor;
@@ -92,6 +105,44 @@ sub sigHandler()
   $stop = 1;
 }
 
+# checks if CAN_INTERFACE network interface is configured and up
+# if not true, it configures and brings it up
+# return undef, if it could not bring the interfac up and 1 on success
+sub manageCanInterface($)
+{
+  # disable experimental warnings (smartmatch), because
+  # the messages lead to failing n2kd_monitor service
+  no if ($] >= 5.018), 'warnings' => 'experimental';
+
+  my $CAN_INTERFACE = shift;
+
+  my @result = `ip a show $CAN_INTERFACE up`;
+  if(scalar(@result) < 1 or !(/$CAN_INTERFACE/ ~~ @result))
+  {
+    @result = `ip a show $CAN_INTERFACE`;
+    if(scalar(@result) < 1 or !(/$CAN_INTERFACE/ ~~ @result))
+    {
+      if(system("ip link add $CAN_INTERFACE type can bitrate 250000") == 0)
+      {
+        logText("Added $CAN_INTERFACE network interface\n");
+      }
+      else
+      {
+        logText("Failed to add $CAN_INTERFACE\n");
+        return undef;
+      }
+    }
+    @result = `ip link set $CAN_INTERFACE up type can bitrate 250000`;
+    if(scalar(@result) != 0)
+    {
+      logText("Failed to bring $CAN_INTERFACE up\n");
+      return undef;
+    }
+  }
+  logText("$CAN_INTERFACE up");
+  return 1;
+}
+
 daemonize();
 
 logText("Delayed start of N2KD monitor.");
@@ -101,7 +152,17 @@ logText("Starting N2KD monitor.");
 $SIG{'INT'} = 'sigHandler';
 $SIG{'HUP'} = 'sigHandler';
 
-if (!stat($ACTISENSE_PRIMARY))
+if($CAN_INTERFACE)
+{
+  logText("Using socket can interface $CAN_INTERFACE, disabling ACTISENSE_PRIMARY");
+  $CAN = 1;
+  if(!manageCanInterface($CAN_INTERFACE))
+  {
+    die "Could not add or bring $CAN_INTERFACE up\n";
+  }
+}
+
+if (!$CAN_INTERFACE and !stat($ACTISENSE_PRIMARY))
 {
   logText("Waiting for $ACTISENSE_PRIMARY to appear.");
 }
@@ -126,9 +187,9 @@ for (;;)
     }
   }
 
-  if ($stop == 0 and stat($ACTISENSE_PRIMARY))
+  if ($stop == 0 and ($CAN or stat($ACTISENSE_PRIMARY)))
   {
-    if (!$stat)
+    if (!$CAN and !$stat)
     {
       logText("Hardware device $ACTISENSE_PRIMARY found.");
       $stat = 1;
@@ -141,7 +202,11 @@ for (;;)
         open STDOUT, '>&PIPEWRITE' or die "Can't reassign PIPEWRITE: $!";
         open STDERR, '>>', $N2KD_LOGFILE or die "Can't write to $N2KD_LOGFILE $!";
         $ENV{'PATH'} = '/usr/local/bin:/bin:/usr/bin';
-        if ($ACTISENSE_SECONDARY)
+        if($CAN)
+        {
+            exec '/bin/bash', '-c', "candump $CAN_INTERFACE | candump2analyzer | analyzer $ANALYZER_OPTIONS -json | n2kd $N2KD_OPTIONS";
+        }
+        elsif ($ACTISENSE_SECONDARY)
         {
           exec '/bin/bash', '-c', "actisense-serial -t 10 $ACTISENSE_PRIMARY | actisense-serial $ACTISENSE_SECONDARY -t 10 | analyzer $ANALYZER_OPTIONS -json | n2kd $N2KD_OPTIONS";
         }
@@ -178,7 +243,7 @@ for (;;)
   }
   else
   {
-    if ($stop == 0 and $stat)
+    if ($stop == 0 and !$CAN and $stat)
     {
       logText("Hardware device $ACTISENSE_PRIMARY disappeared.");
       $stat = undef;
@@ -187,7 +252,14 @@ for (;;)
     {
       logText("Requesting stop for N2K port daemon $n2kd.");
       kill 2, $n2kd;
-      system 'killall -9 actisense-serial';
+      if($CAN)
+      {
+        system 'killall -9 candump';
+      }
+      else
+      {
+        system 'killall -9 actisense-serial';
+      }
     }
     if ($stop)
     {

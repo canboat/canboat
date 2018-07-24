@@ -1,6 +1,6 @@
 
-#include <common.h>
 #include "analyzer.h"
+#include <common.h>
 
 Pgn *searchForPgn(int pgn)
 {
@@ -35,7 +35,7 @@ Pgn *searchForPgn(int pgn)
  * Return the last Pgn entry for which unknown == true && prn is smaller than requested.
  * This is slower, but is not used often.
  */
-static Pgn *searchForUnknownPgn(pgnId)
+static Pgn *searchForUnknownPgn(int pgnId)
 {
   Pgn *unknown = pgnList;
   Pgn *pgn;
@@ -238,9 +238,10 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
   uint64_t bitMask;
   uint64_t allOnes;
   uint64_t valueInThisByte;
+  uint64_t maxv;
 
   *value = 0;
-  *maxValue = 0;
+  maxv = 0;
 
   while (bitsRemaining)
   {
@@ -254,7 +255,7 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
     valueInThisByte = (*data & bitMask) >> firstBit;
 
     *value |= valueInThisByte << magnitude;
-    *maxValue |= (int64_t) allOnes << magnitude;
+    maxv |= allOnes << magnitude;
 
     magnitude += bitsInThisByte;
     bitsRemaining -= bitsInThisByte;
@@ -268,7 +269,7 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
 
   if (hasSign)
   {
-    *maxValue >>= 1;
+    maxv >>= 1;
 
     if (field->offset) /* J1939 Excess-K notation */
     {
@@ -289,6 +290,8 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
       }
     }
   }
+
+  *maxValue = (int64_t) maxv;
 }
 
 static char * findFirstOccurrence(char * msg, char c)
@@ -361,9 +364,7 @@ int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
   }
   else
   {
-    logError("Too long data for RAWFORMAT_PLAIN! Input: %s", msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
-    return 2;
+    return -1;
   }
 
   return setParsedValues(m, prio, pgn, dst, src, len);
@@ -442,7 +443,7 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
   unsigned int id;
 
   p = findFirstOccurrence(msg, ' ');
-  if(!p)
+  if (p < msg + 4 || p >= msg + sizeof(m->timestamp))
   {
     return 1;
   }

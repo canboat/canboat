@@ -31,7 +31,7 @@ endif
 all: $(TARGETS)
 
 $(SOCKETCAN_WRITER): socketcan-writer.c ../analyzer/*.h ../analyzer/*.c ../common/*.h ../common/*.c
-	$(CC) -o $(SOCKETCAN_WRITER) -I../analyzer -I../common socketcan-writer.c ../analyzer/pgn.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(SOCKETCAN_WRITER) -I../analyzer -I../common socketcan-writer.c ../analyzer/pgn.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

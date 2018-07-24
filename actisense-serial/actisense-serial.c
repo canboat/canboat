@@ -24,18 +24,18 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "common.h"
 
+#include <fcntl.h>
+#include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <time.h>
 #include <string.h>
-#include <termios.h>
-#include <fcntl.h>
-#include <stdbool.h>
-#include <sys/stat.h>
 #include <sys/select.h>
+#include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/wait.h>
+#include <termios.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "actisense.h"
@@ -61,6 +61,7 @@ static int readonly = 0;
 static int writeonly = 0;
 static int passthru = 0;
 static long timeout = 0;
+static int outputCommands = 0;
 static bool isFile;
 
 enum MSG_State
@@ -75,6 +76,8 @@ enum ReadyDescriptor
   FD1_Ready = 0x0001,
   FD2_Ready = 0x0002
 };
+
+int baudRate = B115200;
 
 static enum ReadyDescriptor isready(int fd1, int fd2);
 static int readIn(unsigned char * msg, size_t len);
@@ -96,6 +99,7 @@ int main(int argc, char ** argv)
   char * device = 0;
   struct stat statbuf;
   int pid = 0;
+  int speed;
 
   setProgName(argv[0]);
   while (argc > 1)
@@ -123,10 +127,39 @@ int main(int argc, char ** argv)
       timeout = strtol(argv[1], 0, 10);
       logDebug("timeout set to %ld seconds\n", timeout);
     }
+    else if (strcasecmp(argv[1], "-s") == 0 && argc > 2)
+    {
+      argc--;
+      argv++;
+      speed = strtol(argv[1], 0, 10);
+      switch (speed)
+      {
+        case 38400:
+          baudRate = B38400;
+          break;
+        case 57600:
+          baudRate = B57600;
+          break;
+        case 115200:
+          baudRate = B115200;
+          break;
+        case 230400:
+          baudRate = B230400;
+          break;
+        default:
+          device = 0;
+          break;
+      }
+      logDebug("speed set to %d (%d) baud\n", speed, baudRate);
+    }
     else if (strcasecmp(argv[1], "-d") == 0)
     {
       debug = 1;
       setLogLevel(LOGLEVEL_DEBUG);
+    }
+    else if (strcasecmp(argv[1], "-o") == 0)
+    {
+      outputCommands = 1;
     }
     else if (!device)
     {
@@ -143,8 +176,8 @@ int main(int argc, char ** argv)
 
   if (!device)
   {
-    fprintf(stderr, 
-    "Usage: %s [-w] -[-p] [-r] [-v] [-d] [-t <n>] device\n"
+    fprintf(stderr,
+    "Usage: %s [-w] -[-p] [-r] [-v] [-d] [-s <n>] [-t <n>] device\n"
     "\n"
     "Options:\n"
     "  -w      writeonly mode, no data is read from device\n"
@@ -152,13 +185,15 @@ int main(int argc, char ** argv)
     "  -p      passthru mode, data on stdin is sent to stdout but not to device\n"
     "  -v      verbose\n"
     "  -d      debug\n"
+    "  -s <n>  set baudrate to 38400, 57600, 115200 or 230400\n"
     "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
+    "  -o      output commands sent to stdin to the stdout \n"
     "  <device> can be a serial device, a normal file containing a raw log,\n"
     "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
-    "\n" 
+    "\n"
     "  Examples: %s /dev/ttyUSB0\n"
     "            %s tcp://192.168.1.1:10001\n"
-    "\n" 
+    "\n"
     COPYRIGHT, name, name, name);
     exit(1);
   }
@@ -202,8 +237,7 @@ retry:
     if (debug) fprintf(stderr, "Device is a serial port, set the attributes.\n");
 
     memset(&attr, 0, sizeof(attr));
-    cfsetispeed(&attr, B115200);
-    cfsetospeed(&attr, B115200);
+    cfsetspeed(&attr, baudRate);
     attr.c_cflag |= CS8 | CLOCAL | CREAD;
 
     attr.c_iflag |= IGNPAR;
@@ -243,8 +277,11 @@ retry:
       {
         parseAndWriteIn(handle, msg);
       }
-      fprintf(stdout, "%s", msg);
-      fflush(stdout);
+      if ( outputCommands )
+      {
+        fprintf(stdout, "%s", msg);
+        fflush(stdout);
+      }
     }
     else if (writeonly)
     {
@@ -366,6 +403,7 @@ static void parseAndWriteIn(int handle, const unsigned char * cmd)
     return;
   }
 
+  logDebug("About to write:  %s\n", cmd);
   writeMessage(handle, N2K_MSG_SEND, msg, m - msg);
 }
 
@@ -387,6 +425,7 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
 {
   unsigned char bst[255];
   unsigned char *b = bst;
+  unsigned char *r = bst;
   unsigned char *lenPtr;
   unsigned char crc;
 
@@ -415,10 +454,34 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
   *b++ = DLE;
   *b++ = ETX;
 
-  if (write(handle, bst, b - bst) != b - bst)
+  int retryCount = 5;
+  int needs_written = b - bst;
+  int written;
+  do
+    {
+      written = write(handle, r, needs_written);
+      if ( written != -1 )
+	{
+	  r += written;
+	  needs_written -= written;
+	}
+      else if ( errno == EAGAIN )
+	{
+	  retryCount--;
+	  usleep(25000);
+	}
+      else
+        {
+          break;
+        }
+
+    } while ( needs_written > 0 && retryCount >= 0 );
+
+  if ( written == -1 )
   {
     logError("Unable to write command '%.*s' to NGT-1-A device\n", (int) len, cmd);
   }
+
   logDebug("Written command %X len %d\n", command, (int) len);
 }
 

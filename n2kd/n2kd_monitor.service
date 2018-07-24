@@ -1,0 +1,17 @@
+[Unit]
+Description=n2kd Monitor service
+After=network.target
+
+[Service]
+Type=forking
+User=root
+Group=root
+PrivateDevices=no
+SyslogLevel=err
+ExecStart=/usr/bin/n2kd_monitor
+StandardOutput=syslog
+StandardError=syslog
+WorkingDirectory=/tmp
+
+[Install]
+WantedBy=multi-user.target

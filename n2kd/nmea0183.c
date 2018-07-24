@@ -29,8 +29,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 
 #include "gps_ais.h"
-#include "nmea0183.h"
 #include "n2kd.h"
+#include "nmea0183.h"
 
 extern char * srcFilter;
 extern bool rateLimit;
@@ -98,6 +98,7 @@ void nmea0183CreateMessage( StringBuffer * msg183, int src, const char * format,
 {
   unsigned int chk;
   size_t i;
+  char first, second;
   va_list ap;
 
   va_start(ap, format);
@@ -107,13 +108,20 @@ void nmea0183CreateMessage( StringBuffer * msg183, int src, const char * format,
   // but that throws some implementations of receivers off as they
   // cannot handle numeric senders. So now we produce a 2 character
   // code with the src value 0-255 translated into
-  // A..N A..N with A representing 0, B representing 1, etc.
+  // A..Q A..P with A representing 0, B representing 1, etc.
+  // P is skipped for the initial letter, as that represents 'proprietary'
+  // and OpenCPN does not allow this.
 
-  sbAppendFormat(msg183, "$%c%c"
-          , ('A' + ((src >> 4) & 0xf))
-          , ('A' + ((src     ) & 0xf))
-          );
+  first  = 'A' + ((src >> 4) & 0xf);
+  second = 'A' + ((src     ) & 0xf);
+  if (first >= 'P')
+  {
+    first++;
+  }
+
+  sbAppendFormat(msg183, "$%c%c", first, second);
   sbAppendFormatV(msg183, format, ap);
+
   va_end(ap);
 
   chk = 0;
