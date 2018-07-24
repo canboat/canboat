@@ -31,7 +31,9 @@ enum RawFormats
   RAWFORMAT_PLAIN,
   RAWFORMAT_FAST,
   RAWFORMAT_AIRMAR,
-  RAWFORMAT_CHETCO
+  RAWFORMAT_CHETCO,
+  RAWFORMAT_GARMIN_CSV1,
+  RAWFORMAT_GARMIN_CSV2
 };
 
 enum RawFormats format = RAWFORMAT_UNKNOWN;
@@ -151,7 +153,7 @@ int main(int argc, char ** argv)
       }
       else
       {
-        usage(argv, av);
+        usage(argv, av + 1);
       }
       ac--;
       av++;
@@ -218,7 +220,7 @@ int main(int argc, char ** argv)
       }
       else
       {
-        usage(argv, av);
+        usage(argv, av + 1);
       }
     }
   }
@@ -262,6 +264,11 @@ int main(int argc, char ** argv)
     if (format == RAWFORMAT_UNKNOWN)
     {
       format = detectFormat(msg);
+      if (format == RAWFORMAT_GARMIN_CSV1 || format == RAWFORMAT_GARMIN_CSV2)
+      {
+        // Skip first line containing header line
+        continue;
+      }
     }
 
     switch (format)
@@ -284,6 +291,12 @@ int main(int argc, char ** argv)
 
     case RAWFORMAT_CHETCO:
       r = parseRawFormatChetco(msg, &m, showJson);
+      break;
+
+    case RAWFORMAT_GARMIN_CSV1:
+    case RAWFORMAT_GARMIN_CSV2:
+      r = parseRawFormatGarminCSV(msg, &m, showJson, format == RAWFORMAT_GARMIN_CSV2);
+      break;
 
     default:
       logError("Unknown message format\n");
@@ -314,6 +327,18 @@ enum RawFormats detectFormat(const char * msg)
   {
     logInfo("Detected Chetco protocol with all data on one line\n");
     return RAWFORMAT_CHETCO;
+  }
+
+  if (strcmp(msg, "Sequence #,Timestamp,PGN,Name,Manufacturer,Remote Address,Local Address,Priority,Single Frame,Size,Packet\n") == 0)
+  {
+    logInfo("Detected Garmin CSV protocol with relative timestamps\n");
+    return RAWFORMAT_GARMIN_CSV1;
+  }
+
+  if (strcmp(msg, "Sequence #,Month_Day_Year_Hours_Minutes_Seconds_msTicks,PGN,Processed PGN,Name,Manufacturer,Remote Address,Local Address,Priority,Single Frame,Size,Packet\n") == 0)
+  {
+    logInfo("Detected Garmin CSV protocol with absolute timestamps\n");
+    return RAWFORMAT_GARMIN_CSV2;
   }
 
   p = strchr(msg, ' ');

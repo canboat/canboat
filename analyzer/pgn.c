@@ -294,13 +294,25 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
   *maxValue = (int64_t) maxv;
 }
 
-static char * findFirstOccurrence(char * msg, char c)
+static char * findOccurrence(char * msg, char c, int count)
 {
+  int i;
+  char * p;
+
   if (*msg == 0 || *msg == '\n')
   {
     return 0;
   }
-  return strchr(msg, c);
+  for (i = 0, p = msg; p && i < count; i++, p++)
+  {
+    p = strchr(p, c);
+    if (!p)
+    {
+      return 0;
+    }
+  }
+  logDebug("Found occurrence #%d of '%c' in msg '%s' at '%s'\n", count, c, msg, p);
+  return p;
 }
 
 static int setParsedValues(RawMessage * m, unsigned int prio, unsigned int pgn, unsigned int dst, unsigned int src, unsigned int len)
@@ -320,11 +332,12 @@ int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
   char * p;
   unsigned int data[8];
 
-  p = findFirstOccurrence(msg, ',');
-  if(!p)
+  p = findOccurrence(msg, ',', 1);
+  if (!p)
   {
     return 1;
   }
+  p--; // Back to comma
 
   memcpy(m->timestamp, msg, p - msg);
   m->timestamp[p - msg] = 0;
@@ -375,11 +388,12 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
   unsigned int prio, pgn, dst, src, len, r, i;
   char * p;
 
-  p = findFirstOccurrence(msg, ',');
-  if(!p)
+  p = findOccurrence(msg, ',', 1);
+  if (!p)
   {
     return 1;
   }
+  p--; // Back to comma
 
   memcpy(m->timestamp, msg, p - msg);
   m->timestamp[p - msg] = 0;
@@ -399,20 +413,14 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
     if (!showJson) fprintf(stdout, "%s", msg);
     return 2;
   }
-  for (i = 0; *p && i < 5;)
-  {
-    if (*++p == ',')
-    {
-      i++;
-    }
-  }
+
+  p = findOccurrence(p, ',', 6);
   if (!p)
   {
     logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
     if (!showJson) fprintf(stdout, "%s", msg);
     return 2;
   }
-  p++;
   for (i = 0; i < len; i++)
   {
     if (scanHex(&p, &m->data[i]))
@@ -442,7 +450,7 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
   char * p;
   unsigned int id;
 
-  p = findFirstOccurrence(msg, ' ');
+  p = findOccurrence(msg, ' ', 1);
   if (p < msg + 4 || p >= msg + sizeof(m->timestamp))
   {
     return 1;
@@ -514,8 +522,8 @@ int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
 
   t = (time_t) tstamp / 1000;
   localtime_r(&t, &tm);
-  strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%d-%H:%M:%S", &tm);
-  sprintf(m->timestamp + strlen(m->timestamp), ",%u", tstamp % 1000);
+  strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT%H:%M:%S", &tm);
+  sprintf(m->timestamp + strlen(m->timestamp), ",%3.3u", tstamp % 1000);
 
   p = msg + STRSIZE("$PCDIN,01FD07,089C77D!,03,"); // Fixed length where data bytes start;
 
@@ -530,4 +538,75 @@ int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
   }
 
   return setParsedValues(m, 0, pgn, 255, src, i + 1);
+}
+
+/*
+Sequence #,Timestamp,PGN,Name,Manufacturer,Remote Address,Local Address,Priority,Single Frame,Size,Packet
+0,486942,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF
+129,491183,129029,GNSS Position Data,Unknown Manufacturer,3,255,3,0,43,0xFFDF40A6E9BB22C04B3666C18FBF0600A6C33CA5F84B01A0293B140000000010FC01AC26AC264A12000000
+*/
+int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool absolute)
+{
+  unsigned int seq, tstamp, pgn, src, dst, prio, single, count;
+  time_t t;
+  struct tm tm;
+  char * p;
+  int consumed;
+  unsigned int i;
+
+  if (*msg == 0 || *msg == '\n')
+  {
+    return 1;
+  }
+
+  if (absolute)
+  {
+    unsigned int month, day, year, hours, minutes, seconds, ms;
+
+    if (sscanf(msg, "%u,%u_%u_%u_%u_%u_%u_%u,%u,", &seq, &month, &day, &year, &hours, &minutes, &seconds, &ms, &pgn) < 9)
+    {
+      logError("Error reading Garmin CSV message: %s", msg);
+      if (!showJson) fprintf(stdout, "%s", msg);
+      return 2;
+    }
+    snprintf(m->timestamp, sizeof(m->timestamp), "%04u-%02u-%02uT%02u:%02u:%02u,%03u", year, month, day, hours, minutes, seconds, ms % 1000);
+
+    p = findOccurrence(msg, ',', 6);
+  }
+  else
+  {
+    if (sscanf(msg, "%u,%u,%u,", &seq, &tstamp, &pgn) < 3)
+    {
+      logError("Error reading Garmin CSV message: %s", msg);
+      if (!showJson) fprintf(stdout, "%s", msg);
+      return 2;
+    }
+
+    t = (time_t) tstamp / 1000;
+    localtime_r(&t, &tm);
+    strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT%H:%M:%S", &tm);
+    sprintf(m->timestamp + strlen(m->timestamp), ",%3.3u", tstamp % 1000);
+
+    p = findOccurrence(msg, ',', 5);
+  }
+
+  if (!p || sscanf(p, "%u,%u,%u,%u,%u,0x%n", &src, &dst, &prio, &single, &count, &consumed) < 5)
+  {
+    logError("Error reading Garmin CSV message: %s", msg);
+    if (!showJson) fprintf(stdout, "%s", msg);
+    return 3;
+  }
+  p += consumed;
+
+  for (i = 0; *p && i < count; i++)
+  {
+    if (scanHex(&p, &m->data[i]))
+    {
+      logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+      if (!showJson) fprintf(stdout, "%s", msg);
+      return 2;
+    }
+  }
+
+  return setParsedValues(m, prio, pgn, dst, src, i + 1);
 }
