@@ -2042,10 +2042,10 @@ Pgn pgnList[] =
 // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
 ,
 { "Engine Parameters, Rapid Update", 127488, true, 8, 0,
-  { { "Engine Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
-  , { "Engine Speed", BYTES(2), 0.25, false, "rpm", "" }
-  , { "Engine Boost Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
-  , { "Engine Tilt/Trim", BYTES(1), 1, true, "", "" }
+  { { "Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
+  , { "Speed", BYTES(2), 0.25, false, "rpm", "" }
+  , { "Boost Pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
+  , { "Tilt/Trim", BYTES(1), 1, true, "", "" }
   , { 0 }
   }
 }
@@ -2053,7 +2053,7 @@ Pgn pgnList[] =
 // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
 ,
 { "Engine Parameters, Dynamic", 127489, true, 26, 0,
-  { { "Engine Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
+  { { "Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
   , { "Oil temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", "" }
   , { "Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
@@ -2073,7 +2073,7 @@ Pgn pgnList[] =
 
 ,
 { "Transmission Parameters, Dynamic", 127493, true, 8, 0,
-  { { "Engine Instance", 8, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
+  { { "Instance", 8, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Transmission Gear", 2, RES_LOOKUP, false, LOOKUP_GEAR_STATUS, "" }
   , { "Reserved", 6, RES_BINARY, false, 0, "" }
   , { "Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", "" }
@@ -2096,7 +2096,7 @@ Pgn pgnList[] =
 
 ,
 { "Trip Parameters, Engine", 127497, true, 9, 0,
-  { { "Engine Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
+  { { "Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Trip Fuel Used", BYTES(2), 1, false, "L", "" }
   , { "Fuel Rate, Average", BYTES(2), 0.1, true, "L/h", "" }
   , { "Fuel Rate, Economy", BYTES(2), 0.1, true, "L/h", "" }
@@ -2107,7 +2107,7 @@ Pgn pgnList[] =
 
 ,
 { "Engine Parameters, Static", 127498, true, 8, 0,
-  { { "Engine Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
+  { { "Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, "" }
   , { "Rated Engine Speed", BYTES(2), 1, false, 0, "" }
   , { "VIN", BYTES(1), 1, false, 0, "" }
   , { "Software ID", BYTES(2), 1, false, 0, "" }
@@ -2117,7 +2117,7 @@ Pgn pgnList[] =
 
 ,
 { "Binary Switch Bank Status", 127501, false, 8, 1,
-  { { "Indicator Bank Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "Indicator1", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
   , { "Indicator2", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
   , { "Indicator3", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", "" }
@@ -2160,7 +2160,7 @@ Pgn pgnList[] =
   /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
 ,
 { "AC Input Status", 127503, true, 8, 10,
-  { { "AC Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "Number of Lines", BYTES(1), 1, false, 0, "" }
 
   , { "Line", 2, RES_LOOKUP, false, ",0=Line 1,1=Line 2,2=Line 3,3=Reserved", "" }
@@ -2180,7 +2180,7 @@ Pgn pgnList[] =
   /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
 ,
 { "AC Output Status", 127504, true, 8, 10,
-  { { "AC Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "Number of Lines", BYTES(1), 1, false, 0, "" }
 
   , { "Line", 2, RES_LOOKUP, false, ",0=Line 1,1=Line 2,2=Line 3", "" }
@@ -2212,7 +2212,7 @@ Pgn pgnList[] =
 ,
 { "DC Detailed Status", 127506, false, 9, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "DC Instance", BYTES(1), 1, false, 0, "" }
+  , { "Instance", BYTES(1), 1, false, 0, "" }
   , { "DC Type", BYTES(1), 1, false, 0, "" }
   , { "State of Charge", BYTES(1), 1, false, 0, "" }
   , { "State of Health", BYTES(1), 1, false, 0, "" }
@@ -2225,7 +2225,7 @@ Pgn pgnList[] =
 // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
 ,
 { "Charger Status", 127507, false, 8, 0,
-  { { "Charger Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "Battery Instance", BYTES(1), 1, false, 0, "" }
   , { "Operating State", 4, RES_LOOKUP, false, ",0=Not charging,1=Bulk,2=Absorption,3=Overcharge,4=Equalise,5=Float,6=No Float,7=Constant VI,8=Disabled,9=Fault", "" }
   , { "Charge Mode", 4, RES_LOOKUP, false, ",0=Standalone mode,1=Primary mode,2=Secondary mode,3=Echo mode", "" }
@@ -2239,7 +2239,7 @@ Pgn pgnList[] =
 
 ,
 { "Battery Status", 127508, true, 8, 0,
-  { { "Battery Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "Voltage", BYTES(2), 0.01, true, "V", "" }
   , { "Current", BYTES(2), 0.1, true, "A", "" }
   , { "Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
@@ -2250,7 +2250,7 @@ Pgn pgnList[] =
 
 ,
 { "Inverter Status", 127509, false, 8, 0,
-  { { "Inverter Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "AC Instance", BYTES(1), 1, false, 0, "" }
   , { "DC Instance", BYTES(1), 1, false, 0, "" }
   , { "Operating State", 4, RES_LOOKUP, false, ",0=Standby,1=On", "" }
@@ -2261,7 +2261,7 @@ Pgn pgnList[] =
 
 ,
 { "Charger Configuration Status", 127510, false, 8, 0,
-  { { "Charger Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "Battery Instance", BYTES(1), 1, false, 0, "" }
   , { "Charger Enable/Disable", 2, 1, false, 0, "" }
   , { "Reserved", 6, RES_BINARY, false, 0, "" }
@@ -2278,7 +2278,7 @@ Pgn pgnList[] =
 
 ,
 { "Inverter Configuration Status", 127511, false, 8, 0,
-  { { "Inverter Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "AC Instance", BYTES(1), 1, false, 0, "" }
   , { "DC Instance", BYTES(1), 1, false, 0, "" }
   , { "Inverter Enable/Disable", 2, 1, false, 0, "" }
@@ -2292,7 +2292,7 @@ Pgn pgnList[] =
 
 ,
 { "AGS Configuration Status", 127512, false, 8, 0,
-  { { "AGS Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "Generator Instance", BYTES(1), 1, false, 0, "" }
   , { "AGS Mode", BYTES(1), 1, false, 0, "" }
   , { 0 }
@@ -2301,7 +2301,7 @@ Pgn pgnList[] =
 
 ,
 { "Battery Configuration Status", 127513, false, 8, 0,
-  { { "Battery Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "Battery Type", BYTES(1), 1, false, 0, "" }
   , { "Supports Equalization", 2, 1, false, 0, "" }
   , { "Reserved", 6, RES_BINARY, false, 0, "" }
@@ -2317,7 +2317,7 @@ Pgn pgnList[] =
 
 ,
 { "AGS Status", 127514, false, 8, 0,
-  { { "AGS Instance", BYTES(1), 1, false, 0, "" }
+  { { "Instance", BYTES(1), 1, false, 0, "" }
   , { "Generator Instance", BYTES(1), 1, false, 0, "" }
   , { "AGS Operating State", BYTES(1), 1, false, 0, "" }
   , { "Generator State", BYTES(1), 1, false, 0, "" }
@@ -3505,8 +3505,8 @@ Pgn pgnList[] =
 ,
 { "Temperature", 130312, true, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Temperature Instance", BYTES(1), 1, false, 0, "" }
-  , { "Temperature Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, "" }
+  , { "Instance", BYTES(1), 1, false, 0, "" }
+  , { "Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, "" }
   , { "Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { "Set Temperature", BYTES(2), RES_TEMPERATURE, false, "K", "" }
   , { 0 }
@@ -3516,8 +3516,8 @@ Pgn pgnList[] =
 ,
 { "Humidity", 130313, true, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Humidity Instance", BYTES(1), 1, false, 0, "" }
-  , { "Humidity Source", BYTES(1), RES_LOOKUP, false, LOOKUP_HUMIDITY_SOURCE, "" }
+  , { "Instance", BYTES(1), 1, false, 0, "" }
+  , { "Source", BYTES(1), RES_LOOKUP, false, LOOKUP_HUMIDITY_SOURCE, "" }
   , { "Actual Humidity", BYTES(2), RES_PERCENTAGE, true, "%", "" }
   , { "Set Humidity", BYTES(2), RES_PERCENTAGE, true, "%", "" }
   , { 0 }
@@ -3527,8 +3527,8 @@ Pgn pgnList[] =
 ,
 { "Actual Pressure", 130314, false, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Pressure Instance", BYTES(1), 1, false, 0, "" }
-  , { "Pressure Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, "" }
+  , { "Instance", BYTES(1), 1, false, 0, "" }
+  , { "Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, "" }
   , { "Pressure", BYTES(4), RES_PRESSURE_HIRES, false, "dPa", "" }
   , { 0 }
   }
@@ -3537,8 +3537,8 @@ Pgn pgnList[] =
 ,
 { "Set Pressure", 130315, true, 8, 0,
   { { "SID", BYTES(1), 1, false, 0, "" }
-  , { "Pressure Instance", BYTES(1), 1, false, 0, "" }
-  , { "Pressure Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, "" }
+  , { "Instance", BYTES(1), 1, false, 0, "" }
+  , { "Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, "" }
   , { "Pressure", BYTES(4), RES_PRESSURE_HIRES, false, "dPa", "" }
   , { 0 }
   }

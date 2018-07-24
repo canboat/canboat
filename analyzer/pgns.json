@@ -6897,8 +6897,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"engineInstance",
-            "Name":"Engine Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -6909,8 +6909,8 @@
               {"name":"Dual Engine Starboard","value":"1"}]},
           {
             "Order":2,
-            "Id":"engineSpeed",
-            "Name":"Engine Speed",
+            "Id":"speed",
+            "Name":"Speed",
             "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
@@ -6919,8 +6919,8 @@
             "Signed":false},
           {
             "Order":3,
-            "Id":"engineBoostPressure",
-            "Name":"Engine Boost Pressure",
+            "Id":"boostPressure",
+            "Name":"Boost Pressure",
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
@@ -6929,8 +6929,8 @@
             "Signed":false},
           {
             "Order":4,
-            "Id":"engineTiltTrim",
-            "Name":"Engine Tilt/Trim",
+            "Id":"tiltTrim",
+            "Name":"Tilt/Trim",
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
@@ -6946,8 +6946,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"engineInstance",
-            "Name":"Engine Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -7121,8 +7121,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"engineInstance",
-            "Name":"Engine Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -7250,8 +7250,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"engineInstance",
-            "Name":"Engine Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -7309,8 +7309,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"engineInstance",
-            "Name":"Engine Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -7353,8 +7353,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"indicatorBankInstance",
-            "Name":"Indicator Bank Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -7761,8 +7761,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"acInstance",
-            "Name":"AC Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -7894,8 +7894,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"acInstance",
-            "Name":"AC Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -8086,8 +8086,8 @@
             "Signed":false},
           {
             "Order":2,
-            "Id":"dcInstance",
-            "Name":"DC Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":8,
             "BitStart":0,
@@ -8144,8 +8144,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"chargerInstance",
-            "Name":"Charger Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -8243,8 +8243,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"batteryInstance",
-            "Name":"Battery Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -8298,8 +8298,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"inverterInstance",
-            "Name":"Inverter Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -8354,8 +8354,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"chargerInstance",
-            "Name":"Charger Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -8456,8 +8456,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"inverterInstance",
-            "Name":"Inverter Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -8528,8 +8528,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"agsInstance",
-            "Name":"AGS Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -8560,8 +8560,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"batteryInstance",
-            "Name":"Battery Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -8651,8 +8651,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"agsInstance",
-            "Name":"AGS Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -16543,16 +16543,16 @@
             "Signed":false},
           {
             "Order":2,
-            "Id":"temperatureInstance",
-            "Name":"Temperature Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":8,
             "BitStart":0,
             "Signed":false},
           {
             "Order":3,
-            "Id":"temperatureSource",
-            "Name":"Temperature Source",
+            "Id":"source",
+            "Name":"Source",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -16614,16 +16614,16 @@
             "Signed":false},
           {
             "Order":2,
-            "Id":"humidityInstance",
-            "Name":"Humidity Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":8,
             "BitStart":0,
             "Signed":false},
           {
             "Order":3,
-            "Id":"humiditySource",
-            "Name":"Humidity Source",
+            "Id":"source",
+            "Name":"Source",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -16670,16 +16670,16 @@
             "Signed":false},
           {
             "Order":2,
-            "Id":"pressureInstance",
-            "Name":"Pressure Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":8,
             "BitStart":0,
             "Signed":false},
           {
             "Order":3,
-            "Id":"pressureSource",
-            "Name":"Pressure Source",
+            "Id":"source",
+            "Name":"Source",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -16720,16 +16720,16 @@
             "Signed":false},
           {
             "Order":2,
-            "Id":"pressureInstance",
-            "Name":"Pressure Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":8,
             "BitStart":0,
             "Signed":false},
           {
             "Order":3,
-            "Id":"pressureSource",
-            "Name":"Pressure Source",
+            "Id":"source",
+            "Name":"Source",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
