@@ -2201,11 +2201,12 @@ Pgn pgnList[] =
   /* http://www.maretron.com/support/manuals/TLA100UM_1.2.pdf */
   /* Observed from EP65R */
 ,
-{ "Fluid Level", 127505, true, 7, 0,
+{ "Fluid Level", 127505, true, 8, 0,
   { { "Instance", 4, 1, false, 0, "" }
   , { "Type", 4, RES_LOOKUP, false, ",0=Fuel,1=Water,2=Gray water,3=Live well,4=Oil,5=Black water", "" }
   , { "Level", BYTES(2), RES_PERCENTAGE, false, "%", "" }
   , { "Capacity", BYTES(4), 0.1, false, "L", "" }
+  , { "Reserved", BYTES(1), RES_BINARY, false, 0, "Reserved" }   
   , { 0 }
   }
 }
