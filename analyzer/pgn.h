@@ -727,6 +727,7 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson);
 int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson);
 int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson);
 int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool absolute);
+int parseRawFormatYDWG02(char * msg, RawMessage * m, bool showJson);
 
 #ifdef GLOBALS
 Pgn pgnList[] =
