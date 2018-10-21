@@ -16,7 +16,7 @@ where you can find instructions on how to build the programs on your own compute
 
 ## Version history
 
-See (CHANGELOG.md).
+See [Changelog](CHANGELOG.md).
 
 ---
 
