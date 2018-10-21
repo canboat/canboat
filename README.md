@@ -1,17 +1,14 @@
-CANBOAT
--------
+# CANBOAT
 
 A small but effective set of command-line utilities to work with CAN networks on BOATs. Guess you now know where the name comes from.
 
-The most common version of CAN networks on board, and in fact at the moment the only ones that this suite can analyze, are NMEA 2000 PGNs.
+The most common version of CAN networks on board, and in fact at the moment the only ones that this suite can analyse, are NMEA 2000 PGNs.
 
 The NMEA 2000 database and implementation is copyrighted by the NMEA (National Marine Electronics Association). Access is restricted to members and parties that pay for it. If they do so they are not able to divulge the content of the database, thus making it impossible for open source developers to get access to it.
 
 For this reason we have reverse engineered the NMEA 2000 database by network observation and assembling data from public sources.
 
-To use the programs included in this project you will need the excellent Actisense NGT-1 PC gateway if you run Microsoft Windows or OS X. On Linux you can use the NGT-1 or the built in Linux ''socketcan'' driver.
-
-This code uses reverse engineered knowledge to access the NGT-1 directly. It does not use the Actisense DLL or SDK.
+To use the programs included in this project you may need a supported CAN interface. This can be a marketed-as-such NMEA 2000 Gateway or a non NMEA specific CAN interface. 
 
 For more information go to the CANBoat Wiki at
 
