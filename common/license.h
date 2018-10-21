@@ -19,6 +19,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+#include "version.h"
 
 # define LICENSE \
 "This file is part of CANboat.\n" \
@@ -36,7 +37,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 "You should have received a copy of the GNU General Public License\n" \
 "along with CANboat.  If not, see <http://www.gnu.org/licenses/>.\n" \
 
-# define COPYRIGHT "(C) 2009-2015 Keversoft B.V., Harlingen, The Netherlands\n" \
+# define COPYRIGHT "CANboat version v" VERSION "\n\n" \
+                   "(C) 2009-2018 Keversoft B.V., Harlingen, The Netherlands\n" \
                    "For more information see https://github.com/canboat/canboat\n" \
                    "\n"LICENSE"\n"
-
