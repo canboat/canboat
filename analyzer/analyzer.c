@@ -1994,6 +1994,7 @@ static void explainXML(void)
     "  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
     "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
     "  <License>GPL v3</License>\n"
+    "  <Version>" VERSION "</Version>\n"
     "  <PGNs>\n"
     );
 
