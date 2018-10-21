@@ -1715,31 +1715,40 @@ static void explainPGN(Pgn pgn)
 /*
  * Print string but replace special characters by their XML entity.
  */
-static void printXML(const char *p)
+static void printXML(int indent, const char * element, const char *p)
 {
-  for (; p && *p; p++)
+  if (p)
   {
-    switch (*p)
+    for (int i = 0; i < indent; i++)
     {
-    case '&':
-      fputs("&amp;", stdout);
-      break;
-
-    case '<':
-      fputs("&lt;", stdout);
-      break;
-
-    case '>':
-      fputs("&gt;", stdout);
-      break;
-
-    case '"':
-      fputs("&quot;", stdout);
-      break;
-
-    default:
-      putchar(*p);
+      fputs(" ", stdout);
     }
+    printf("<%s>", element);
+    for (;*p; p++)
+    {
+      switch (*p)
+      {
+      case '&':
+        fputs("&amp;", stdout);
+        break;
+
+      case '<':
+        fputs("&lt;", stdout);
+        break;
+
+      case '>':
+        fputs("&gt;", stdout);
+        break;
+
+      case '"':
+        fputs("&quot;", stdout);
+        break;
+
+      default:
+        putchar(*p);
+      }
+    }
+    printf("</%s>\n", element);
   }
 }
 
@@ -1751,67 +1760,58 @@ static void explainPGNXML(Pgn pgn)
   bool showBitOffset = true;
 
   printf("    <PGNInfo>\n"
-         "       <PGN>%u</PGN>\n"
-         "       <Id>%s</Id>\n"
-         "       <Description>"
-         , pgn.pgn
-         , pgn.camelDescription
-         );
-  printXML(pgn.description);
-  printf("</Description>\n"
-         "       <Complete>%s</Complete>\n"
-         "       <Length>%u</Length>\n"
+         "      <PGN>%u</PGN>\n", pgn.pgn);
+  printXML(6, "Id", pgn.camelDescription);
+  printXML(6, "Description", pgn.description);
+  printf("      <Complete>%s</Complete>\n"
+         "      <Length>%u</Length>\n"
          , (pgn.known ? "true" : "false")
          , pgn.size
          );
 
   if (pgn.repeatingFields >= 100)
   {
-    printf("       <RepeatingFieldSet1>%u</RepeatingFieldSet1>\n", pgn.repeatingFields % 100);
-    printf("       <RepeatingFieldSet2>%u</RepeatingFieldSet2>\n", pgn.repeatingFields / 100);
+    printf("      <RepeatingFieldSet1>%u</RepeatingFieldSet1>\n", pgn.repeatingFields % 100);
+    printf("      <RepeatingFieldSet2>%u</RepeatingFieldSet2>\n", pgn.repeatingFields / 100);
   }
   else
   {
-    printf("       <RepeatingFields>%u</RepeatingFields>\n", pgn.repeatingFields);
+    printf("      <RepeatingFields>%u</RepeatingFields>\n", pgn.repeatingFields);
   }
 
   if (pgn.fieldList[0].name)
   {
-    printf("       <Fields>\n");
+    printf("      <Fields>\n");
 
     for (i = 0; i < ARRAY_SIZE(pgn.fieldList) && pgn.fieldList[i].name; i++)
     {
       Field f = pgn.fieldList[i];
 
 
-      printf("         <Field>\n"
-             "           <Order>%d</Order>\n"
-             "           <Id>%s</Id>\n"
-             "           <Name>", i + 1, f.camelName);
-      printXML(f.name);
-      printf("</Name>\n", f.name);
+      printf("        <Field>\n"
+             "          <Order>%d</Order>\n", i + 1);
+      printXML(10, "Id", f.camelName);
+      printXML(10, "Name", f.name);
 
       if (f.description && f.description[0] && f.description[0] != ',')
       {
-        printf("           <Description>");
-        printXML(f.description);
-        printf("</Description>\n");
+        printXML(10, "Description", f.description);
       }
-      printf("           <BitLength>%u</BitLength>\n", f.size);
+      printf("          <BitLength>%u</BitLength>\n", f.size);
       if (showBitOffset)
       {
-        printf("           <BitOffset>%u</BitOffset>\n", bitOffset);
+        printf("          <BitOffset>%u</BitOffset>\n", bitOffset);
       }
-      printf("           <BitStart>%u</BitStart>\n", bitOffset % 8);
+      printf("          <BitStart>%u</BitStart>\n", bitOffset % 8);
       bitOffset = bitOffset + f.size;
 
       if (f.units && f.units[0] == '=')
       {
-        printf("           <Match>%s</Match>\n", &f.units[1]);
+        printf("          <Match>%s</Match>\n", &f.units[1]);
       }
       else if (f.units && f.units[0] != ',')
       {
-        printf("           <Units>%s</Units>\n", f.units);
+        printf("          <Units>%s</Units>\n", f.units);
       }
 
       if (f.resolution < 0.0)
@@ -1819,39 +1819,39 @@ static void explainPGNXML(Pgn pgn)
         Resolution t = types[-1 * (int) f.resolution - 1];
         if (t.name)
         {
-          printf("                  <Type>%s</Type>\n", t.name);
+          printf("                 <Type>%s</Type>\n", t.name);
         }
         if (t.resolution)
         {
-          printf("                  <Resolution>%s</Resolution>\n", t.resolution);
+          printf("                 <Resolution>%s</Resolution>\n", t.resolution);
         }
         else if (f.resolution == RES_LATITUDE || f.resolution == RES_LONGITUDE)
         {
           if (f.size == BYTES(8))
           {
-            printf("                  <Resolution>%.16f</Resolution>\n", 1e-16);
+            printf("                 <Resolution>%.16f</Resolution>\n", 1e-16);
           }
           else
           {
-            printf("                  <Resolution>%.7f</Resolution>\n", 1e-7);
+            printf("                 <Resolution>%.7f</Resolution>\n", 1e-7);
           }
         }
       }
       else if (f.resolution != 1.0)
       {
-        printf("           <Resolution>%g</Resolution>\n", f.resolution);
+        printf("          <Resolution>%g</Resolution>\n", f.resolution);
       }
-      printf("           <Signed>%s</Signed>\n", f.hasSign ? "true" : "false");
+      printf("          <Signed>%s</Signed>\n", f.hasSign ? "true" : "false");
       if (f.offset != 0)
       {
-        printf("           <Offset>%d</Offset>\n", f.offset);
+        printf("          <Offset>%d</Offset>\n", f.offset);
       }
 
       if (f.resolution == RES_LOOKUP && f.units && f.units[0] == ',')
       {
         char * s, * e, * p;
 
-        printf("           <EnumValues>\n");
+        printf("          <EnumValues>\n");
 
         for (s = f.units + 1;; s = e + 1)
         {
@@ -1860,7 +1860,7 @@ static void explainPGNXML(Pgn pgn)
           p = strchr(s, '=');
           if (p)
           {
-            printf("             <EnumPair Value='%.*s' Name='%.*s' />\n", (int) (p - s), s, (int) (e - (p + 1)), p + 1);
+            printf("            <EnumPair Value='%.*s' Name='%.*s' />\n", (int) (p - s), s, (int) (e - (p + 1)), p + 1);
           }
           if (!*e)
           {
@@ -1868,14 +1868,14 @@ static void explainPGNXML(Pgn pgn)
           }
         }
 
-        printf("           </EnumValues>\n");
+        printf("          </EnumValues>\n");
       }
 
       if (f.resolution == RES_BITFIELD && f.units && f.units[0] == ',')
       {
         char * s, * e, * p;
 
-        printf("           <EnumBitValues>\n");
+        printf("          <EnumBitValues>\n");
 
         for (s = f.units + 1;; s = e + 1)
         {
@@ -1884,7 +1884,7 @@ static void explainPGNXML(Pgn pgn)
           p = strchr(s, '=');
           if (p)
           {
-            printf("             <EnumPair Bit='%.*s' Name='%.*s' />\n", (int) (p - s), s, (int) (e - (p + 1)), p + 1);
+            printf("            <EnumPair Bit='%.*s' Name='%.*s' />\n", (int) (p - s), s, (int) (e - (p + 1)), p + 1);
           }
           if (!*e)
           {
@@ -1892,16 +1892,16 @@ static void explainPGNXML(Pgn pgn)
           }
         }
 
-        printf("           </EnumBitValues>\n");
+        printf("          </EnumBitValues>\n");
       }
 
       if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU)
       {
         showBitOffset = false; // From here on there is no good bitoffset to be printed
       }
-      printf("         </Field>\n");
+      printf("        </Field>\n");
     }
-    printf("       </Fields>\n");
+    printf("      </Fields>\n");
   }
   printf("    </PGNInfo>\n");
 }
