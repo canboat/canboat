@@ -10,13 +10,13 @@ For this reason we have reverse engineered the NMEA 2000 database by network obs
 
 To use the programs included in this project you may need a supported CAN interface. This can be a marketed-as-such NMEA 2000 Gateway or a non NMEA specific CAN interface. 
 
-For more information go to the CANBoat Wiki at [http://github.com/canboat/canboat/wiki].
+For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 
 where you can find instructions on how to build the programs on your own computer and how to start extending the PGN database.
 
 ## Version history
 
-See [CHANGELOG.md].
+See (CHANGELOG.md).
 
 ---
 
