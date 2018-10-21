@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Add hyperlinks to README.md.
 - Rename + rework README to README.md for better readability on GitHub.
 
 ## [1.0.0] - 2018-10-21
