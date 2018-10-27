@@ -19,33 +19,27 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-
 #include "common.h"
 
-static const char * logLevels[] =
-{ "FATAL"
-, "ERROR"
-, "INFO"
-, "DEBUG"
-};
+static const char *logLevels[] = {"FATAL", "ERROR", "INFO", "DEBUG"};
 
 static LogLevel logLevel = LOGLEVEL_INFO;
 
-static char * progName;
+static char *progName;
 
 #ifndef WIN32
 
-const char * now(char str[DATE_LENGTH])
+const char *now(char str[DATE_LENGTH])
 {
   struct timeval tv;
-  time_t t;
-  struct tm tm;
-  int msec;
-  size_t len;
+  time_t         t;
+  struct tm      tm;
+  int            msec;
+  size_t         len;
 
   if (gettimeofday(&tv, (void *) 0) == 0)
   {
-    t = tv.tv_sec;
+    t    = tv.tv_sec;
     msec = tv.tv_usec / 1000L;
     gmtime_r(&t, &tm);
     strftime(str, DATE_LENGTH - 5, "%Y-%m-%dT%H:%M:%S", &tm);
@@ -62,11 +56,11 @@ const char * now(char str[DATE_LENGTH])
 
 #else
 
-const char * now(char str[DATE_LENGTH])
+const char *now(char str[DATE_LENGTH])
 {
   struct _timeb timebuffer;
-  struct tm tm;
-  size_t len;
+  struct tm     tm;
+  size_t        len;
 
   _ftime_s(&timebuffer);
   gmtime_s(&tm, &timebuffer.time);
@@ -79,7 +73,7 @@ const char * now(char str[DATE_LENGTH])
 
 #endif
 
-static int logBase(LogLevel level, const char * format, va_list ap)
+static int logBase(LogLevel level, const char *format, va_list ap)
 {
   char strTmp[DATE_LENGTH];
 
@@ -93,7 +87,7 @@ static int logBase(LogLevel level, const char * format, va_list ap)
   return vfprintf(stderr, format, ap);
 }
 
-int logInfo(const char * format, ...)
+int logInfo(const char *format, ...)
 {
   va_list ap;
   va_start(ap, format);
@@ -101,7 +95,7 @@ int logInfo(const char * format, ...)
   return logBase(LOGLEVEL_INFO, format, ap);
 }
 
-int logDebug(const char * format, ...)
+int logDebug(const char *format, ...)
 {
   va_list ap;
   va_start(ap, format);
@@ -109,7 +103,7 @@ int logDebug(const char * format, ...)
   return logBase(LOGLEVEL_DEBUG, format, ap);
 }
 
-int logError(const char * format, ...)
+int logError(const char *format, ...)
 {
   va_list ap;
   va_start(ap, format);
@@ -117,7 +111,7 @@ int logError(const char * format, ...)
   return logBase(LOGLEVEL_ERROR, format, ap);
 }
 
-void logAbort(const char * format, ...)
+void logAbort(const char *format, ...)
 {
   va_list ap;
   va_start(ap, format);
@@ -126,10 +120,10 @@ void logAbort(const char * format, ...)
   exit(2);
 }
 
-void die(const char * t)
+void die(const char *t)
 {
-  int e = errno;
-  char * s = 0;
+  int   e = errno;
+  char *s = 0;
 
   if (e)
   {
@@ -152,7 +146,12 @@ void setLogLevel(LogLevel level)
   logDebug("Loglevel now %d\n", logLevel);
 }
 
-void setProgName(char * name)
+bool isLogLevelEnabled(LogLevel level)
+{
+  return logLevel >= level;
+}
+
+void setProgName(char *name)
 {
   progName = strrchr(name, '/');
   if (!progName)
@@ -167,45 +166,6 @@ void setProgName(char * name)
   {
     progName++;
   }
-}
-
-void sbAppendData(StringBuffer * sb, const void * data, size_t len)
-{
-  while (len + sb->len + 1 >= sb->alloc)
-  {
-    if (!sb->alloc)
-    {
-      sb->alloc = 64;
-    }
-    else
-    {
-      sb->alloc *= 2;
-    }
-  }
-  if (!sb->data)
-  {
-    sb->data = malloc(sb->alloc);
-  }
-  else
-  {
-    sb->data = realloc(sb->data, sb->alloc);
-  }
-  if (!sb->data)
-  {
-    die("Out of memory");
-  }
-  memcpy(sb->data + sb->len, data, len);
-  sb->len += len;
-  sb->data[sb->len] = 0;
-  logDebug("Appended %u bytes to %p len %u\n", len, sb->data, sb->len);
-  //logDebug("+ [%1.*s]\n", len, data);
-  //logDebug("= [%1.*s]\n", sb->len, sb->data);
-}
-
-void sbAppendString(StringBuffer * sb, const char * string)
-{
-  size_t len = strlen(string);
-  sbAppendData(sb, string, len);
 }
 
 static void sbReserve(StringBuffer *const sb, size_t len)
@@ -248,11 +208,39 @@ static void sbEnsureCapacity(StringBuffer *const sb, size_t len)
   }
 }
 
+void sbAppendData(StringBuffer *sb, const void *data, size_t len)
+{
+  sbEnsureCapacity(sb, len);
+  memcpy(sb->data + sb->len, data, len);
+  sb->len += len;
+  sb->data[sb->len] = 0;
+}
+
+char hexDigit(uint8_t b)
+{
+  return (b > 9) ? (char) b + 'A' - 10 : (char) b + '0';
+}
+
+void sbAppendDataHex(StringBuffer *sb, const void *data, size_t len)
+{
+  sbEnsureCapacity(sb, len * 3);
+
+  for (; len > 0; len--, data++)
+  {
+    sbAppendFormat(sb, " %c%c", hexDigit(((uint8_t *) data)[0] >> 4), hexDigit(((uint8_t *) data)[0] & 0x0f));
+  }
+}
+
+void sbAppendString(StringBuffer *sb, const char *string)
+{
+  size_t len = strlen(string);
+  sbAppendData(sb, string, len);
+}
 
 void sbAppendFormatV(StringBuffer *const sb, const char *const format, va_list ap)
 {
-  int n;
-  size_t len;
+  int     n;
+  size_t  len;
   va_list ap2;
 
   len = 128;
@@ -304,10 +292,10 @@ void sbAppendFormat(StringBuffer *const sb, const char *const format, ...)
 /*
  * Retrieve a value out of a JSON styled message.
  */
-int getJSONValue( const char * message, const char * fieldName, char * value, size_t len )
+int getJSONValue(const char *message, const char *fieldName, char *value, size_t len)
 {
-  const char * loc = message + 1;
-  size_t fieldLen = strlen(fieldName);
+  const char *loc      = message + 1;
+  size_t      fieldLen = strlen(fieldName);
 
   for (;;)
   {
@@ -353,27 +341,27 @@ int getJSONValue( const char * message, const char * fieldName, char * value, si
       loc++;
       switch (*loc)
       {
-      case 'b':
-        *value++ = '\b';
-        loc++;
-        break;
-      case 'f':
-        *value++ = '\f';
-        loc++;
-        break;
-      case 'n':
-        *value++ = '\n';
-        loc++;
-        break;
-      case 'r':
-        *value++ = '\r';
-        loc++;
-        break;
-      case 't':
-        *value++ = '\t';
-        loc++;
-        break;
-      case 'u':
+        case 'b':
+          *value++ = '\b';
+          loc++;
+          break;
+        case 'f':
+          *value++ = '\f';
+          loc++;
+          break;
+        case 'n':
+          *value++ = '\n';
+          loc++;
+          break;
+        case 'r':
+          *value++ = '\r';
+          loc++;
+          break;
+        case 't':
+          *value++ = '\t';
+          loc++;
+          break;
+        case 'u':
         {
           unsigned int n;
           sscanf(loc, "%4x", &n);
@@ -382,8 +370,8 @@ int getJSONValue( const char * message, const char * fieldName, char * value, si
         }
         break;
 
-      default:
-        *value++ = *loc++;
+        default:
+          *value++ = *loc++;
       }
     }
     else if (*loc == '"')
@@ -399,7 +387,6 @@ int getJSONValue( const char * message, const char * fieldName, char * value, si
   *value = 0;
   return 1;
 }
-
 
 /*
  * Table 1 - Mapping of ISO 11783 into CAN's Arbitration and Control Fields
@@ -456,7 +443,7 @@ DLC# - Data Length Code Bit #n *CAN Defined Bit, Unchanged in ISO 11783
 (r) - recessive bit
 */
 
-void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int * pgn, unsigned int * src, unsigned int * dst)
+void getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int *pgn, unsigned int *src, unsigned int *dst)
 {
   unsigned char PF = (unsigned char) (id >> 16);
   unsigned char PS = (unsigned char) (id >> 8);
@@ -495,7 +482,6 @@ void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int
       *pgn = (DP << 16) + (PF << 8) + PS;
     }
   }
-
 }
 
 /*
@@ -503,13 +489,17 @@ void getISO11783BitsFromCanId(unsigned int id, unsigned int * prio, unsigned int
 */
 unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst)
 {
-  unsigned int canId = src | 0x80000000U;  // src bits are the lowest ones of the CAN ID. Also set the highest bit to 1 as n2k uses only extended frames (EFF bit).
+  unsigned int canId = src | 0x80000000U; // src bits are the lowest ones of the CAN ID. Also set the highest bit to 1 as n2k uses
+                                          // only extended frames (EFF bit).
 
-  if((unsigned char)pgn == 0) {  // PDU 1 (assumed if 8 lowest bits of the PGN are 0)
+  if ((unsigned char) pgn == 0)
+  { // PDU 1 (assumed if 8 lowest bits of the PGN are 0)
     canId += dst << 8;
     canId += pgn << 8;
     canId += prio << 26;
-  } else {                       // PDU 2
+  }
+  else
+  { // PDU 2
     canId += pgn << 8;
     canId += prio << 26;
   }
@@ -517,10 +507,10 @@ unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsig
   return canId;
 }
 
-static void resolve_address(const char * url, char ** host, const char ** service)
+static void resolve_address(const char *url, char **host, const char **service)
 {
   const char *s;
-  size_t hostlen;
+  size_t      hostlen;
 
   if (strncmp(url, "tcp:", STRSIZE("tcp:")) == 0)
   {
@@ -560,18 +550,18 @@ static void resolve_address(const char * url, char ** host, const char ** servic
   }
 }
 
-SOCKET open_socket_stream(const char * url)
+SOCKET open_socket_stream(const char *url)
 {
-  int sockfd = INVALID_SOCKET;
-  int n;
+  int             sockfd = INVALID_SOCKET;
+  int             n;
   struct addrinfo hints, *res, *addr;
-  char * host;
-  const char * service;
+  char *          host;
+  const char *    service;
 
   resolve_address(url, &host, &service);
 
   memset(&hints, 0, sizeof(hints));
-  hints.ai_family = AF_UNSPEC;
+  hints.ai_family   = AF_UNSPEC;
   hints.ai_socktype = SOCK_STREAM;
 
   n = getaddrinfo(host, service, &hints, &res);
@@ -625,7 +615,7 @@ uint8_t scanNibble(char c)
   return 16;
 }
 
-int scanHex(char ** p, uint8_t * m)
+int scanHex(char **p, uint8_t *m)
 {
   uint8_t hi, lo;
 

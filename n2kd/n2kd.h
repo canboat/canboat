@@ -18,14 +18,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include "common.h"
 #include <signal.h>
 #include <sys/select.h>
+#include "common.h"
 #include "nmea0183.h"
 
 extern uint16_t port;
-extern char * srcFilter;
-extern bool   rateLimit;
+extern char *   srcFilter;
+extern bool     rateLimit;
 extern uint32_t protocol;
 extern int      debug;
 

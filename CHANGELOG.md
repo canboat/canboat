@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Rename + rework README to README.md for better readability on GitHub.
+- Reformat all C code with new .clang-format file.
+- Refactor use of StringBuffer and logDebug in actisense-serial.
 
 ### Removed
 

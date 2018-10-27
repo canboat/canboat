@@ -23,7 +23,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #define BUFFER_SIZE 900
 
-static int readonly = 0;
+static int  readonly = 0;
 static bool isFile;
 
 enum ReadyDescriptor
@@ -34,14 +34,14 @@ enum ReadyDescriptor
 
 static enum ReadyDescriptor isready(int fd1, int fd2);
 
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
-  int r;
-  int handle;
+  int            r;
+  int            handle;
   struct termios attr;
-  char * device = 0;
-  struct stat statbuf;
-  int pid = 0;
+  char *         device = 0;
+  struct stat    statbuf;
+  int            pid = 0;
 
   setProgName(argv[0]);
 
@@ -79,10 +79,11 @@ int main(int argc, char ** argv)
 
   if (!device)
   {
-    fprintf(stderr, "Usage: nmea0183-serial [-r] [-d] <device> | -version\n\n"
-    "-r : read-only, do not pass stdin to stdout\n"
-    "-d : debug mode\n\n"
-    "Example: nmea0183-serial /dev/ttyUSB0\n\n"COPYRIGHT);
+    fprintf(stderr,
+            "Usage: nmea0183-serial [-r] [-d] <device> | -version\n\n"
+            "-r : read-only, do not pass stdin to stdout\n"
+            "-d : debug mode\n\n"
+            "Example: nmea0183-serial /dev/ttyUSB0\n\n" COPYRIGHT);
     exit(1);
   }
 
@@ -107,11 +108,11 @@ retry:
     logDebug("Device is a serial port, set the attributes.\n");
 
     memset(&attr, 0, sizeof(attr));
-    attr.c_cflag = B38400 | CS8 | CLOCAL | CREAD;
-    attr.c_iflag = IGNPAR;
-    attr.c_oflag = 0;
-    attr.c_lflag = 0;
-    attr.c_cc[VMIN] = 0;
+    attr.c_cflag     = B38400 | CS8 | CLOCAL | CREAD;
+    attr.c_iflag     = IGNPAR;
+    attr.c_oflag     = 0;
+    attr.c_lflag     = 0;
+    attr.c_cc[VMIN]  = 0;
     attr.c_cc[VTIME] = 1;
     tcflush(handle, TCIFLUSH);
     tcsetattr(handle, TCSANOW, &attr);
@@ -119,10 +120,10 @@ retry:
 
   for (;;)
   {
-    char msg[BUFFER_SIZE];
-    size_t msgLen;
+    char                 msg[BUFFER_SIZE];
+    size_t               msgLen;
     enum ReadyDescriptor r;
-    int b;
+    int                  b;
 
     r = isready(handle, readonly ? -1 : 0);
 
@@ -168,9 +169,9 @@ retry:
 
 static enum ReadyDescriptor isready(int fd1, int fd2)
 {
-  fd_set fds;
-  struct timeval timeout;
-  int setsize;
+  fd_set               fds;
+  struct timeval       timeout;
+  int                  setsize;
   enum ReadyDescriptor r;
 
   FD_ZERO(&fds);
@@ -182,7 +183,7 @@ static enum ReadyDescriptor isready(int fd1, int fd2)
   {
     FD_SET(fd2, &fds);
   }
-  timeout.tv_sec = 10;
+  timeout.tv_sec  = 10;
   timeout.tv_usec = 0;
   if (fd1 > fd2)
   {

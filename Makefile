@@ -47,7 +47,10 @@ zip:
 	./rel/$(PLATFORM)/analyzer -explain > packetlogger_`date +%Y%m%d`_explain.txt
 	./rel/$(PLATFORM)/analyzer -explain-xml > packetlogger_`date +%Y%m%d`_explain.xml
 
-.PHONY : $(SUBDIRS) clean install zip bin
+format:
+	for file in */*.c */*.h; do clang-format -i $$file; done
+
+.PHONY : $(SUBDIRS) clean install zip bin format
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)

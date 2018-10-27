@@ -33,19 +33,19 @@
 #define PACKED __attribute__((__packed__))
 
 typedef unsigned char uint8_t;
-typedef unsigned int uint32_t;
+typedef unsigned int  uint32_t;
 
 typedef struct
 {
   uint8_t functionCode;
   uint8_t pgn[3];
-  int     priority:4;
-  int     reserved:4;
+  int     priority : 4;
+  int     reserved : 4;
   uint8_t count;
   uint8_t parameters[MAX_FIELDS * 5];
 } PACKED command_group_function_t;
 
-void usage(char ** argv, char ** av)
+void usage(char **argv, char **av)
 {
   if (av)
   {
@@ -56,26 +56,26 @@ void usage(char ** argv, char ** av)
   fprintf(stderr, "       <value> is a hexadecimal value; the length of the value defines how many bytes are encoded\n");
   fprintf(stderr, "       Maximum # of fields: %d\n\n", MAX_FIELDS);
   fprintf(stderr, "This program uses PGN 126208 to command a device to set fields to a particular value.\n");
-  fprintf(stderr, "The use of this is thus completely dependent on what the device allows.\n\n"COPYRIGHT);
+  fprintf(stderr, "The use of this is thus completely dependent on what the device allows.\n\n" COPYRIGHT);
   exit(1);
 }
 
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
-  int ac = argc;
-  char ** av = argv;
-  long dest;
-  long pgn;
-  long prio;
-  long fields[MAX_FIELDS];
-  long values[MAX_FIELDS];
-  size_t cnt = 0;
+  int                      ac = argc;
+  char **                  av = argv;
+  long                     dest;
+  long                     pgn;
+  long                     prio;
+  long                     fields[MAX_FIELDS];
+  long                     values[MAX_FIELDS];
+  size_t                   cnt = 0;
   command_group_function_t command;
-  size_t i, bytes;
-  char * p, * e;
-  uint8_t * b;
-  uint32_t v;
-  char dateStr[DATE_LENGTH];
+  size_t                   i, bytes;
+  char *                   p, *e;
+  uint8_t *                b;
+  uint32_t                 v;
+  char                     dateStr[DATE_LENGTH];
 
   if (ac > 1 && strcasecmp(av[1], "-version") == 0)
   {
@@ -107,7 +107,7 @@ int main(int argc, char ** argv)
       for (i = (e - p) / 2; i; i--)
       {
         *b++ = (v & 255);
-        v = v >> 8;
+        v    = v >> 8;
       }
 
       cnt++;
@@ -119,12 +119,12 @@ int main(int argc, char ** argv)
   }
 
   command.functionCode = 1;
-  command.pgn[0] = (pgn) & 0xff;
-  command.pgn[1] = (pgn >> 8) & 0xff;
-  command.pgn[2] = (pgn >> 16);
-  command.priority = prio;
-  command.reserved = -1;
-  command.count = cnt;
+  command.pgn[0]       = (pgn) &0xff;
+  command.pgn[1]       = (pgn >> 8) & 0xff;
+  command.pgn[2]       = (pgn >> 16);
+  command.priority     = prio;
+  command.reserved     = -1;
+  command.count        = cnt;
 
   bytes = b - (uint8_t *) &command;
   printf("%s,2,126208,0,%lu,%zu", now(dateStr), dest, bytes);

@@ -13,7 +13,6 @@
 #define SPEED_LENGTH sizeof("-12345.999")
 #define OTHER_LENGTH (20)
 
-
 static void removeChar(char *str, char garbage)
 {
   char *src, *dst;
@@ -29,15 +28,16 @@ static void removeChar(char *str, char garbage)
   *dst = 0;
 }
 
-static double convert2kCoordinateToNMEA0183(const char * coordinateString, const char *hemispheres, char *hemisphere)
+static double convert2kCoordinateToNMEA0183(const char *coordinateString, const char *hemispheres, char *hemisphere)
 {
   double coordinate = strtod(coordinateString, 0);
   double degrees;
   double result;
 
-  if (coordinate < 0) {
+  if (coordinate < 0)
+  {
     *hemisphere = hemispheres[1];
-    coordinate = coordinate * -1.;
+    coordinate  = coordinate * -1.;
   }
   else
   {
@@ -45,7 +45,7 @@ static double convert2kCoordinateToNMEA0183(const char * coordinateString, const
   }
 
   degrees = floor(coordinate);
-  result = degrees * 100 + (coordinate - degrees) * 60;
+  result  = degrees * 100 + (coordinate - degrees) * 60;
   return result;
 }
 
@@ -69,21 +69,21 @@ Field Number:
 9. FAA mode indicator (NMEA 2.3 and later)
 10. Checksum
 
-{"timestamp":"2015-12-10T22:19:45.330Z","prio":2,"src":2,"dst":255,"pgn":129026,"description":"COG & SOG, Rapid Update","fields":{"SID":9,"COG Reference":"True","COG":0.0,"SOG":0.00}}
-$GPVTG,,T,,M,0.150,N,0.278,K,D*2F<0x0D><0x0A>
+{"timestamp":"2015-12-10T22:19:45.330Z","prio":2,"src":2,"dst":255,"pgn":129026,"description":"COG & SOG, Rapid
+Update","fields":{"SID":9,"COG Reference":"True","COG":0.0,"SOG":0.00}} $GPVTG,,T,,M,0.150,N,0.278,K,D*2F<0x0D><0x0A>
 */
 
-void nmea0183VTG( StringBuffer * msg183, int src, const char * msg )
+void nmea0183VTG(StringBuffer *msg183, int src, const char *msg)
 {
   char sogString[SPEED_LENGTH];
   char cogString[ANGLE_LENGTH];
 
-  if (getJSONValue(msg, "SOG", sogString, sizeof(sogString))
-   && getJSONValue(msg, "COG", cogString, sizeof(cogString)))
+  if (getJSONValue(msg, "SOG", sogString, sizeof(sogString)) && getJSONValue(msg, "COG", cogString, sizeof(cogString)))
   {
     double speed = strtod(sogString, 0);
 
-    nmea0183CreateMessage(msg183, src, "VTG,%s,T,,M,%04.3f,N,%04.3f,K", cogString, SPEED_M_S_TO_KNOTS(speed), SPEED_M_S_TO_KMH(speed));
+    nmea0183CreateMessage(
+        msg183, src, "VTG,%s,T,,M,%04.3f,N,%04.3f,K", cogString, SPEED_M_S_TO_KNOTS(speed), SPEED_M_S_TO_KMH(speed));
   }
 }
 
@@ -114,10 +114,11 @@ Field Number:
 17. VDOP
 18. Checksum
 
-{"timestamp":"2015-12-11T17:30:46.573Z","prio":6,"src":2,"dst":255,"pgn":129539,"description":"GNSS DOPs","fields":{"SID":177,"Desired Mode":"3D","Actual Mode":"3D","HDOP":0.97,"VDOP":1.57,"TDOP":327.67}}
+{"timestamp":"2015-12-11T17:30:46.573Z","prio":6,"src":2,"dst":255,"pgn":129539,"description":"GNSS
+DOPs","fields":{"SID":177,"Desired Mode":"3D","Actual Mode":"3D","HDOP":0.97,"VDOP":1.57,"TDOP":327.67}}
 */
 
-void nmea0183GSA( StringBuffer * msg183, int src, const char * msg )
+void nmea0183GSA(StringBuffer *msg183, int src, const char *msg)
 {
   char modeString[OTHER_LENGTH] = "";
   char pdopString[OTHER_LENGTH] = "";
@@ -154,26 +155,29 @@ Field Number:
 7. FAA mode indicator (NMEA 2.3 and later)
 8. Checksum
 
-{"timestamp":"2015-12-11T19:59:22.399Z","prio":2,"src":2,"dst":255,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude":36.1571104,"Longitude":-5.3561568}}
-{"timestamp":"2015-12-11T20:01:19.010Z","prio":3,"src":2,"dst":255,"pgn":129029,"description":"GNSS Position Data","fields":{"SID":10,"Date":"2015.12.11", "Time": "20:01:19","Latitude":36.1571168,"Longitude":-5.3561616,"GNSS type":"GPS+SBAS/WAAS","Method":"GNSS fix","Integrity":"Safe","Number of SVs":12,"HDOP":0.86,"PDOP":1.68,"Geoidal Separation":-0.01,"Reference Station ID":4087}}
-$GPGLL,3609.42711,N,00521.36949,W,200015.00,A,D*72
+{"timestamp":"2015-12-11T19:59:22.399Z","prio":2,"src":2,"dst":255,"pgn":129025,"description":"Position, Rapid
+Update","fields":{"Latitude":36.1571104,"Longitude":-5.3561568}}
+{"timestamp":"2015-12-11T20:01:19.010Z","prio":3,"src":2,"dst":255,"pgn":129029,"description":"GNSS Position
+Data","fields":{"SID":10,"Date":"2015.12.11", "Time": "20:01:19","Latitude":36.1571168,"Longitude":-5.3561616,"GNSS
+type":"GPS+SBAS/WAAS","Method":"GNSS fix","Integrity":"Safe","Number of SVs":12,"HDOP":0.86,"PDOP":1.68,"Geoidal
+Separation":-0.01,"Reference Station ID":4087}} $GPGLL,3609.42711,N,00521.36949,W,200015.00,A,D*72
 */
 
-void nmea0183GLL( StringBuffer * msg183, int src, const char * msg )
+void nmea0183GLL(StringBuffer *msg183, int src, const char *msg)
 {
   char latString[LAT_LENGTH];
   char lonString[LON_LENGTH];
 
-  if (getJSONValue(msg, "Latitude", latString, sizeof(latString))
-   && getJSONValue(msg, "Longitude", lonString, sizeof(lonString)))
+  if (getJSONValue(msg, "Latitude", latString, sizeof(latString)) && getJSONValue(msg, "Longitude", lonString, sizeof(lonString)))
   {
-    char timeString[OTHER_LENGTH] = "";
-    char latHemisphere;
-    char lonHemisphere;
-    double latitude = convert2kCoordinateToNMEA0183(latString, "NS", &latHemisphere);
+    char   timeString[OTHER_LENGTH] = "";
+    char   latHemisphere;
+    char   lonHemisphere;
+    double latitude  = convert2kCoordinateToNMEA0183(latString, "NS", &latHemisphere);
     double longitude = convert2kCoordinateToNMEA0183(lonString, "EW", &lonHemisphere);
 
-    if (getJSONValue(msg, "Time", timeString, sizeof(timeString))){
+    if (getJSONValue(msg, "Time", timeString, sizeof(timeString)))
+    {
       removeChar(timeString, ':');
     }
 
@@ -182,9 +186,18 @@ void nmea0183GLL( StringBuffer * msg183, int src, const char * msg )
 }
 
 /*
-{"timestamp":"2015-12-14T22:06:21.609Z","prio":4,"src":0,"dst":255,"pgn":129038,"description":"AIS Class A Position Report","fields":{"Message ID":1,"Repeat Indicator":"Initial","User ID":224593000,"Longitude":-5.4368332,"Latitude":36.1309824,"Position Accuracy":"Low","RAIM":"not in use","Time Stamp":"21","COG":165.0,"SOG":0.00,"Communication State":"33576","AIS Transceiver information":"Channel A VDL reception","Heading":51.0,"Rate of Turn":0.11,"Nav Status":"Under way using engine","Regional Application":1}}
-{"timestamp":"2015-12-14T22:06:21.662Z","prio":4,"src":0,"dst":255,"pgn":129039,"description":"AIS Class B Position Report","fields":{"Message ID":18,"Repeat Indicator":"Initial","User ID":235015519,"Longitude":-5.3561452,"Latitude":36.1571296,"Position Accuracy":"Low","RAIM":"not in use","Time Stamp":"5","COG":0.0,"SOG":0.00,"Communication State":"393222","AIS Transceiver information":"Own information not broadcast","Heading":31.0,"Unit type":"CS","Integrated Display":"No","DSC":"Yes","Band":"entire marine band","Can handle Msg 22":"Yes","AIS mode":"Autonomous","AIS communication state":"ITDMA"}}
-!AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C - from http://catb.org/gpsd/AIVDM.html
+{"timestamp":"2015-12-14T22:06:21.609Z","prio":4,"src":0,"dst":255,"pgn":129038,"description":"AIS Class A Position
+Report","fields":{"Message ID":1,"Repeat Indicator":"Initial","User
+ID":224593000,"Longitude":-5.4368332,"Latitude":36.1309824,"Position Accuracy":"Low","RAIM":"not in use","Time
+Stamp":"21","COG":165.0,"SOG":0.00,"Communication State":"33576","AIS Transceiver information":"Channel A VDL
+reception","Heading":51.0,"Rate of Turn":0.11,"Nav Status":"Under way using engine","Regional Application":1}}
+{"timestamp":"2015-12-14T22:06:21.662Z","prio":4,"src":0,"dst":255,"pgn":129039,"description":"AIS Class B Position
+Report","fields":{"Message ID":18,"Repeat Indicator":"Initial","User
+ID":235015519,"Longitude":-5.3561452,"Latitude":36.1571296,"Position Accuracy":"Low","RAIM":"not in use","Time
+Stamp":"5","COG":0.0,"SOG":0.00,"Communication State":"393222","AIS Transceiver information":"Own information not
+broadcast","Heading":31.0,"Unit type":"CS","Integrated Display":"No","DSC":"Yes","Band":"entire marine band","Can handle Msg
+22":"Yes","AIS mode":"Autonomous","AIS communication state":"ITDMA"}} !AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C - from
+http://catb.org/gpsd/AIVDM.html
 
 AIVDM - Automatic Information System (AIS) position reports from other vessels - from http://opencpn.org/ocpn/nmea_sentences
 1. Time (UTC)
@@ -200,23 +213,23 @@ AIVDM - Automatic Information System (AIS) position reports from other vessels -
 These are not rate limited, as each one is for a different vessel.
 */
 
-void nmea0183AIVDM( StringBuffer * msg183, int src, const char * msg )
+void nmea0183AIVDM(StringBuffer *msg183, int src, const char *msg)
 {
   struct tm *utc_time;
-  time_t current_time;
+  time_t     current_time;
 
-  char mmsiString[MMSI_LENGTH];
-  char latString[LAT_LENGTH];
-  char lonString[LON_LENGTH];
-  char sogString[SPEED_LENGTH];
-  char headingString[ANGLE_LENGTH];
-  char cogString[ANGLE_LENGTH];
-  char rateOfTurnString[ANGLE_LENGTH];
-  char navigationStatusString[OTHER_LENGTH];
+  char   mmsiString[MMSI_LENGTH];
+  char   latString[LAT_LENGTH];
+  char   lonString[LON_LENGTH];
+  char   sogString[SPEED_LENGTH];
+  char   headingString[ANGLE_LENGTH];
+  char   cogString[ANGLE_LENGTH];
+  char   rateOfTurnString[ANGLE_LENGTH];
+  char   navigationStatusString[OTHER_LENGTH];
   double cog = 0;
 
   current_time = time(NULL);
-  utc_time = gmtime(&current_time);
+  utc_time     = gmtime(&current_time);
 
   getJSONValue(msg, "User ID", mmsiString, sizeof(mmsiString));
   getJSONValue(msg, "Latitude", latString, sizeof(latString));
@@ -229,6 +242,8 @@ void nmea0183AIVDM( StringBuffer * msg183, int src, const char * msg )
 
   cog = strtod(cogString, 0);
 
-  // This does not work yet. It needs to be encoded to format like !AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C - from http://catb.org/gpsd/AIVDM.html
-  // nmea0183CreateMessage(msg183, src, "PVDM,%d%d%d,%s,%s,%s,%s,%s,%.3f,%s,%s", utc_time->tm_hour, utc_time->tm_min, utc_time->tm_sec, mmsiString, latString, lonString, sogString, headingString, cog, rateOfTurnString, navigationStatusString);
+  // This does not work yet. It needs to be encoded to format like !AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C - from
+  // http://catb.org/gpsd/AIVDM.html nmea0183CreateMessage(msg183, src, "PVDM,%d%d%d,%s,%s,%s,%s,%s,%.3f,%s,%s", utc_time->tm_hour,
+  // utc_time->tm_min, utc_time->tm_sec, mmsiString, latString, lonString, sogString, headingString, cog, rateOfTurnString,
+  // navigationStatusString);
 }

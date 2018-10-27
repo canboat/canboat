@@ -34,24 +34,24 @@ typedef enum ConnectionType
 
 typedef struct Client
 {
-  int   fd;
+  int            fd;
   ConnectionType ct;
-  bool  reconnect;
-  char *host;
-  char *port;
+  bool           reconnect;
+  char *         host;
+  char *         port;
 } Client;
 
 Client client[256]; /* Surely this is enough connections? */
-int clients;
+int    clients;
 
-int ipConnect(const char * host, const char * service, ConnectionType ct)
+int ipConnect(const char *host, const char *service, ConnectionType ct)
 {
-  int sockfd;
-  int n;
+  int             sockfd;
+  int             n;
   struct addrinfo hints, *res, *addr;
 
   memset(&hints, 0, sizeof(hints));
-  hints.ai_family = (ct == ServerTCP) ? AF_INET6 : AF_UNSPEC;
+  hints.ai_family   = (ct == ServerTCP) ? AF_INET6 : AF_UNSPEC;
   hints.ai_socktype = (ct == ClientTCP) ? SOCK_STREAM : SOCK_DGRAM;
 
   n = getaddrinfo(host, service, &hints, &res);
@@ -95,10 +95,8 @@ int ipConnect(const char * host, const char * service, ConnectionType ct)
   if (sockfd >= 0)
   {
     unsigned long nonblock = 1;
-    ioctl(sockfd, FIONBIO, &nonblock);  /* Set to non-blocking */
-    logInfo("Opened %s %s:%s\n"
-            , ((ct == ServerTCP) ? "server for" : "connection to")
-            , host, service);
+    ioctl(sockfd, FIONBIO, &nonblock); /* Set to non-blocking */
+    logInfo("Opened %s %s:%s\n", ((ct == ServerTCP) ? "server for" : "connection to"), host, service);
   }
 
   return sockfd;
@@ -108,12 +106,12 @@ int storeNewClient(int i, int sockfd)
 {
   union
   {
-    struct sockaddr any;
-    struct sockaddr_in in;
+    struct sockaddr     any;
+    struct sockaddr_in  in;
     struct sockaddr_in6 in6;
   } a;
 
-  char portstr[10];
+  char      portstr[10];
   socklen_t alen = sizeof(a);
 
   if (getpeername(sockfd, &a.any, &alen))
@@ -152,28 +150,26 @@ int storeNewClient(int i, int sockfd)
     logAbort("Unknown family %d\n", a.any.sa_family);
   }
 
-
-  client[i].fd = sockfd;
-  client[i].ct = ClientTCP;
+  client[i].fd        = sockfd;
+  client[i].ct        = ClientTCP;
   client[i].reconnect = false;
 
   return 1;
 }
 
-
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
-  char * host = 0;
-  char * port = 0;
-  ConnectionType ct = ClientUDP; // Default client type is UDP
-  char msg[LINESIZE];
-  int r;
-  int i;
-  char * line;
+  char *         host = 0;
+  char *         port = 0;
+  ConnectionType ct   = ClientUDP; // Default client type is UDP
+  char           msg[LINESIZE];
+  int            r;
+  int            i;
+  char *         line;
 
   setProgName(argv[0]);
 
-  for (i = 0; i < sizeof(client)/sizeof(client[0]); i++)
+  for (i = 0; i < sizeof(client) / sizeof(client[0]); i++)
   {
     client[i].fd = -1;
   }
@@ -217,13 +213,13 @@ int main(int argc, char ** argv)
     {
       port = argv[1];
 
-      client[clients].fd = -1;
-      client[clients].host = host;
-      client[clients].port = port;
-      client[clients].ct  = ct;
+      client[clients].fd        = -1;
+      client[clients].host      = host;
+      client[clients].port      = port;
+      client[clients].ct        = ct;
       client[clients].reconnect = true;
       clients++;
-      if (clients > sizeof(client)/sizeof(client[0]))
+      if (clients > sizeof(client) / sizeof(client[0]))
       {
         logAbort("Too many connections requested\n");
       }
@@ -236,10 +232,10 @@ int main(int argc, char ** argv)
 
   if (!clients)
   {
-    fprintf(stderr, "Usage: iptee [-w] [-t|-u] host port [host port ...] | -version\n\n"
-                    "This program forwards stdin to the given TCP and UDP ports.\n"
-                    "Stdin is also forwarded to stdout unless -w is used.\n"
-                    COPYRIGHT);
+    fprintf(stderr,
+            "Usage: iptee [-w] [-t|-u] host port [host port ...] | -version\n\n"
+            "This program forwards stdin to the given TCP and UDP ports.\n"
+            "Stdin is also forwarded to stdout unless -w is used.\n" COPYRIGHT);
     exit(1);
   }
   logInfo("Sending lines to %d servers\n", clients);
@@ -262,7 +258,7 @@ int main(int argc, char ** argv)
           {
             int j;
 
-            for (j = 0; j < sizeof(client)/sizeof(client[0]); j++)
+            for (j = 0; j < sizeof(client) / sizeof(client[0]); j++)
             {
               if (client[j].fd == -1 && client[j].reconnect == false)
               {
@@ -270,7 +266,7 @@ int main(int argc, char ** argv)
                 break;
               }
             }
-            if (j == sizeof(client)/sizeof(client[0]))
+            if (j == sizeof(client) / sizeof(client[0]))
             {
               logError("no room for new client\n");
               close(sockfd);
@@ -300,5 +296,5 @@ int main(int argc, char ** argv)
       fputs(msg, stdout);
     }
   }
-return 0;
+  return 0;
 }

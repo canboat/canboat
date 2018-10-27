@@ -19,5 +19,4 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-
-# define VERSION   "1.1.0"
+#define VERSION "1.1.0"

@@ -1,12 +1,33 @@
-#include <stdlib.h>
-#include <time.h>
-#include "analyzer.h"
+/*
+
+Analyzes NMEA 2000 PGNs.
+
+(C) 2009-2015, Kees Verruijt, Harlingen, The Netherlands.
+
+This file is part of CANboat.
+
+CANboat is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CANboat is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 #include <common.h>
+#include "analyzer.h"
 
 Pgn *searchForPgn(int pgn)
 {
   size_t start = 0;
-  size_t end = pgnListSize;
+  size_t end   = pgnListSize;
   size_t mid;
 
   while (start <= end)
@@ -55,11 +76,11 @@ static Pgn *searchForUnknownPgn(int pgnId)
   return unknown;
 }
 
-Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
+Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
 {
   Pgn *pgn = searchForPgn(pgnId);
-  int prn;
-  int i;
+  int  prn;
+  int  i;
 
   if (!pgn)
   {
@@ -76,11 +97,11 @@ Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
 
   for (; pgn->pgn == prn; pgn++) // we never get here for the last pgn, so no need to check for end of list
   {
-    int startBit = 0;
-    uint8_t *data = dataStart;
+    int      startBit = 0;
+    uint8_t *data     = dataStart;
 
     bool matchedFixedField = true;
-    bool hasFixedField = false;
+    bool hasFixedField     = false;
 
     /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
 
@@ -99,7 +120,7 @@ Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
     for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
     {
       const Field *field = &pgn->fieldList[i];
-      int bits = field->size;
+      int          bits  = field->size;
 
       if (field->units && field->units[0] == '=')
       {
@@ -135,11 +156,11 @@ Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
 void checkPgnList(void)
 {
   size_t i;
-  int prn = 0;
+  int    prn = 0;
 
   for (i = 0; i < pgnListSize; i++)
   {
-    Pgn * pgn;
+    Pgn *pgn;
 
     if (pgnList[i].pgn < prn)
     {
@@ -160,10 +181,9 @@ void checkPgnList(void)
   }
 }
 
-Field * getField(uint32_t pgnId, uint32_t field)
+Field *getField(uint32_t pgnId, uint32_t field)
 {
-
-  Pgn* pgn = searchForPgn(pgnId);
+  Pgn *pgn = searchForPgn(pgnId);
 
   if (!pgn)
   {
@@ -176,7 +196,7 @@ Field * getField(uint32_t pgnId, uint32_t field)
   if (pgn->repeatingFields)
   {
     uint32_t startOfRepeatingFields = pgn->fieldCount - pgn->repeatingFields;
-    uint32_t index = startOfRepeatingFields + ((field - startOfRepeatingFields) % pgn->repeatingFields);
+    uint32_t index                  = startOfRepeatingFields + ((field - startOfRepeatingFields) % pgn->repeatingFields);
 
     return pgn->fieldList + index;
   }
@@ -228,31 +248,31 @@ Field * getField(uint32_t pgnId, uint32_t field)
  *
  */
 
-void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t bits, int64_t * value, int64_t * maxValue)
+void extractNumber(const Field *field, uint8_t *data, size_t startBit, size_t bits, int64_t *value, int64_t *maxValue)
 {
   bool hasSign = field->hasSign;
 
-  size_t firstBit = startBit;
-  size_t bitsRemaining = bits;
-  size_t magnitude = 0;
-  size_t bitsInThisByte;
+  size_t   firstBit      = startBit;
+  size_t   bitsRemaining = bits;
+  size_t   magnitude     = 0;
+  size_t   bitsInThisByte;
   uint64_t bitMask;
   uint64_t allOnes;
   uint64_t valueInThisByte;
   uint64_t maxv;
 
   *value = 0;
-  maxv = 0;
+  maxv   = 0;
 
   while (bitsRemaining)
   {
     bitsInThisByte = min(8 - firstBit, bitsRemaining);
-    allOnes = (uint64_t) ((((uint64_t) 1) << bitsInThisByte) - 1);
+    allOnes        = (uint64_t)((((uint64_t) 1) << bitsInThisByte) - 1);
 
-    //How are bits ordered in bytes for bit fields? There are two ways, first field at LSB or first
-    //field as MSB.
-    //Experimentation, using the 129026 PGN, has shown that the most likely candidate is LSB.
-    bitMask = allOnes << firstBit;
+    // How are bits ordered in bytes for bit fields? There are two ways, first field at LSB or first
+    // field as MSB.
+    // Experimentation, using the 129026 PGN, has shown that the most likely candidate is LSB.
+    bitMask         = allOnes << firstBit;
     valueInThisByte = (*data & bitMask) >> firstBit;
 
     *value |= valueInThisByte << magnitude;
@@ -295,10 +315,10 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
   *maxValue = (int64_t) maxv;
 }
 
-static char * findOccurrence(char * msg, char c, int count)
+static char *findOccurrence(char *msg, char c, int count)
 {
-  int i;
-  char * p;
+  int   i;
+  char *p;
 
   if (*msg == 0 || *msg == '\n')
   {
@@ -316,7 +336,7 @@ static char * findOccurrence(char * msg, char c, int count)
   return p;
 }
 
-static int setParsedValues(RawMessage * m, unsigned int prio, unsigned int pgn, unsigned int dst, unsigned int src, unsigned int len)
+static int setParsedValues(RawMessage *m, unsigned int prio, unsigned int pgn, unsigned int dst, unsigned int src, unsigned int len)
 {
   m->prio = prio;
   m->pgn  = pgn;
@@ -327,10 +347,10 @@ static int setParsedValues(RawMessage * m, unsigned int prio, unsigned int pgn, 
   return 0;
 }
 
-int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
+int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, junk, r, i;
-  char * p;
+  char *       p;
   unsigned int data[8];
 
   p = findOccurrence(msg, ',', 1);
@@ -344,28 +364,28 @@ int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
   m->timestamp[p - msg] = 0;
 
   /* Moronic Windows does not support %hh<type> so we use intermediate variables */
-  r = sscanf( p
-    , ",%u,%u,%u,%u,%u"
-    ",%x,%x,%x,%x,%x,%x,%x,%x,%x"
-    , &prio
-    , &pgn
-    , &src
-    , &dst
-    , &len
-    , &data[0]
-    , &data[1]
-    , &data[2]
-    , &data[3]
-    , &data[4]
-    , &data[5]
-    , &data[6]
-    , &data[7]
-    , &junk
-  );
+  r = sscanf(p,
+             ",%u,%u,%u,%u,%u"
+             ",%x,%x,%x,%x,%x,%x,%x,%x,%x",
+             &prio,
+             &pgn,
+             &src,
+             &dst,
+             &len,
+             &data[0],
+             &data[1],
+             &data[2],
+             &data[3],
+             &data[4],
+             &data[5],
+             &data[6],
+             &data[7],
+             &junk);
   if (r < 5)
   {
     logError("Error reading message, scanned %u from %s", r, msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 2;
   }
 
@@ -384,10 +404,10 @@ int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
   return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
-int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
+int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, r, i;
-  char * p;
+  char *       p;
 
   p = findOccurrence(msg, ',', 1);
   if (!p)
@@ -400,18 +420,12 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
   m->timestamp[p - msg] = 0;
 
   /* Moronic Windows does not support %hh<type> so we use intermediate variables */
-  r = sscanf( p
-    , ",%u,%u,%u,%u,%u "
-    , &prio
-    , &pgn
-    , &src
-    , &dst
-    , &len
-  );
+  r = sscanf(p, ",%u,%u,%u,%u,%u ", &prio, &pgn, &src, &dst, &len);
   if (r < 5)
   {
     logError("Error reading message, scanned %u from %s", r, msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 2;
   }
 
@@ -419,7 +433,8 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
   if (!p)
   {
     logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 2;
   }
   for (i = 0; i < len; i++)
@@ -427,7 +442,8 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
     if (scanHex(&p, &m->data[i]))
     {
       logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
     if (i < len)
@@ -435,7 +451,8 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
       if (*p != ',' && !isspace(*p))
       {
         logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
+        if (!showJson)
+          fprintf(stdout, "%s", msg);
         return 2;
       }
       p++;
@@ -445,10 +462,10 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
   return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
-int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
+int parseRawFormatAirmar(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, i;
-  char * p;
+  char *       p;
   unsigned int id;
 
   p = findOccurrence(msg, ' ', 1);
@@ -470,7 +487,8 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
   if (*p != ' ')
   {
     logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 2;
   }
 
@@ -483,7 +501,8 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
     if (scanHex(&p, &m->data[i]))
     {
       logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
     if (i < len)
@@ -491,7 +510,8 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
       if (*p != ',' && *p != ' ')
       {
         logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
+        if (!showJson)
+          fprintf(stdout, "%s", msg);
         return 2;
       }
       p++;
@@ -501,13 +521,13 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
   return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
-int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
+int parseRawFormatChetco(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int pgn, src, i;
   unsigned int tstamp;
-  time_t t;
-  struct tm tm;
-  char * p;
+  time_t       t;
+  struct tm    tm;
+  char *       p;
 
   if (*msg == 0 || *msg == '\n')
   {
@@ -517,7 +537,8 @@ int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
   if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
   {
     logError("Error reading Chetco message: %s", msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 2;
   }
 
@@ -533,7 +554,8 @@ int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
     if (scanHex(&p, &m->data[i]))
     {
       logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
   }
@@ -544,15 +566,16 @@ int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
 /*
 Sequence #,Timestamp,PGN,Name,Manufacturer,Remote Address,Local Address,Priority,Single Frame,Size,Packet
 0,486942,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF
-129,491183,129029,GNSS Position Data,Unknown Manufacturer,3,255,3,0,43,0xFFDF40A6E9BB22C04B3666C18FBF0600A6C33CA5F84B01A0293B140000000010FC01AC26AC264A12000000
+129,491183,129029,GNSS Position Data,Unknown
+Manufacturer,3,255,3,0,43,0xFFDF40A6E9BB22C04B3666C18FBF0600A6C33CA5F84B01A0293B140000000010FC01AC26AC264A12000000
 */
-int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool absolute)
+int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolute)
 {
   unsigned int seq, tstamp, pgn, src, dst, prio, single, count;
-  time_t t;
-  struct tm tm;
-  char * p;
-  int consumed;
+  time_t       t;
+  struct tm    tm;
+  char *       p;
+  int          consumed;
   unsigned int i;
 
   if (*msg == 0 || *msg == '\n')
@@ -567,10 +590,20 @@ int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool abso
     if (sscanf(msg, "%u,%u_%u_%u_%u_%u_%u_%u,%u,", &seq, &month, &day, &year, &hours, &minutes, &seconds, &ms, &pgn) < 9)
     {
       logError("Error reading Garmin CSV message: %s", msg);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
-    snprintf(m->timestamp, sizeof(m->timestamp), "%04u-%02u-%02uT%02u:%02u:%02u,%03u", year, month, day, hours, minutes, seconds, ms % 1000);
+    snprintf(m->timestamp,
+             sizeof(m->timestamp),
+             "%04u-%02u-%02uT%02u:%02u:%02u,%03u",
+             year,
+             month,
+             day,
+             hours,
+             minutes,
+             seconds,
+             ms % 1000);
 
     p = findOccurrence(msg, ',', 6);
   }
@@ -579,7 +612,8 @@ int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool abso
     if (sscanf(msg, "%u,%u,%u,", &seq, &tstamp, &pgn) < 3)
     {
       logError("Error reading Garmin CSV message: %s", msg);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
 
@@ -594,7 +628,8 @@ int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool abso
   if (!p || sscanf(p, "%u,%u,%u,%u,%u,0x%n", &src, &dst, &prio, &single, &count, &consumed) < 5)
   {
     logError("Error reading Garmin CSV message: %s", msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 3;
   }
   p += consumed;
@@ -604,7 +639,8 @@ int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool abso
     if (scanHex(&p, &m->data[i]))
     {
       logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
   }
@@ -621,34 +657,41 @@ int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool abso
 pi@yacht:~/canboat/analyzer $ netcat 192.168.3.2 1457 | analyzer -json
 INFO 2018-10-16T09:57:39.665Z [analyzer] Detected YDWG-02 protocol with all data on one line
 INFO 2018-10-16T09:57:39.665Z [analyzer] New PGN 128267 for device 35 (heap 5055 bytes)
-{"timestamp":"2018-10-16T22:25:25.166","prio":3,"src":35,"dst":255,"pgn":128267,"description":"Water Depth","fields":{"Offset":0.000}}
-INFO 2018-10-16T09:57:39.665Z [analyzer] New PGN 128259 for device 35 (heap 5070 bytes)
-{"timestamp":"2018-10-16T22:25:25.177","prio":2,"src":35,"dst":255,"pgn":128259,"description":"Speed","fields":{"Speed Water Referenced":0.00,"Speed Water Referenced Type":"Paddle wheel"}}
-INFO 2018-10-16T09:57:39.666Z [analyzer] New PGN 128275 for device 35 (heap 5091 bytes)
-{"timestamp":"2018-10-16T22:25:25.179","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance Log","fields":{"Date":"1980.05.04"}}
-INFO 2018-10-16T09:57:39.666Z [analyzer] New PGN 130311 for device 35 (heap 5106 bytes)
-{"timestamp":"2018-10-16T22:25:25.181","prio":5,"src":35,"dst":255,"pgn":130311,"description":"Environmental Parameters","fields":{"Temperature Source":"Sea Temperature","Temperature":13.39}}
-{"timestamp":"2018-10-16T22:25:25.181","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance Log","fields":{"Date":"2006.11.06", "Time": "114:38:39.07076","Log":1940}}
-{"timestamp":"2018-10-16T22:25:25.185","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance Log","fields":{"Date":"1970.07.14"}}
-INFO 2018-10-16T09:57:39.666Z [analyzer] New PGN 130316 for device 35 (heap 5121 bytes)
-{"timestamp":"2018-10-16T22:25:25.482","prio":5,"src":35,"dst":255,"pgn":130316,"description":"Temperature Extended Range","fields":{"Instance":0,"Source":"Sea Temperature","Temperature":13.40}}
-{"timestamp":"2018-10-16T22:25:25.683","prio":5,"src":35,"dst":255,"pgn":130311,"description":"Environmental Parameters","fields":{"Temperature Source":"Sea Temperature","Temperature":13.39}}
+{"timestamp":"2018-10-16T22:25:25.166","prio":3,"src":35,"dst":255,"pgn":128267,"description":"Water
+Depth","fields":{"Offset":0.000}} INFO 2018-10-16T09:57:39.665Z [analyzer] New PGN 128259 for device 35 (heap 5070 bytes)
+{"timestamp":"2018-10-16T22:25:25.177","prio":2,"src":35,"dst":255,"pgn":128259,"description":"Speed","fields":{"Speed Water
+Referenced":0.00,"Speed Water Referenced Type":"Paddle wheel"}} INFO 2018-10-16T09:57:39.666Z [analyzer] New PGN 128275 for device
+35 (heap 5091 bytes)
+{"timestamp":"2018-10-16T22:25:25.179","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance
+Log","fields":{"Date":"1980.05.04"}} INFO 2018-10-16T09:57:39.666Z [analyzer] New PGN 130311 for device 35 (heap 5106 bytes)
+{"timestamp":"2018-10-16T22:25:25.181","prio":5,"src":35,"dst":255,"pgn":130311,"description":"Environmental
+Parameters","fields":{"Temperature Source":"Sea Temperature","Temperature":13.39}}
+{"timestamp":"2018-10-16T22:25:25.181","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance
+Log","fields":{"Date":"2006.11.06", "Time": "114:38:39.07076","Log":1940}}
+{"timestamp":"2018-10-16T22:25:25.185","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance
+Log","fields":{"Date":"1970.07.14"}} INFO 2018-10-16T09:57:39.666Z [analyzer] New PGN 130316 for device 35 (heap 5121 bytes)
+{"timestamp":"2018-10-16T22:25:25.482","prio":5,"src":35,"dst":255,"pgn":130316,"description":"Temperature Extended
+Range","fields":{"Instance":0,"Source":"Sea Temperature","Temperature":13.40}}
+{"timestamp":"2018-10-16T22:25:25.683","prio":5,"src":35,"dst":255,"pgn":130311,"description":"Environmental
+Parameters","fields":{"Temperature Source":"Sea Temperature","Temperature":13.39}}
 */
-int parseRawFormatYDWG02(char * msg, RawMessage * m, bool showJson)
+int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
 {
-  char *token;
-  char *nexttoken;
-  time_t tiden;
-  struct tm tm;
-  char D;
+  char *       token;
+  char *       nexttoken;
+  time_t       tiden;
+  struct tm    tm;
+  char         D;
   unsigned int msgid;
   unsigned int prio, pgn, src, dst;
-  int i;
+  int          i;
 
   // parse timestamp. YDWG doesn't give us date so let's figure it out ourself
   token = strtok_r(msg, " ", &nexttoken);
   if (!token)
+  {
     return -1;
+  }
   tiden = time(NULL);
   localtime_r(&tiden, &tm);
   strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT", &tm);
@@ -657,23 +700,27 @@ int parseRawFormatYDWG02(char * msg, RawMessage * m, bool showJson)
   // parse direction, not really used in analyzer
   token = strtok_r(NULL, " ", &nexttoken);
   if (!token)
+  {
     return -1;
+  }
   D = token[0];
 
   // parse msgid
   token = strtok_r(NULL, " ", &nexttoken);
   if (!token)
+  {
     return -1;
+  }
   msgid = strtoul(token, NULL, 16);
   getISO11783BitsFromCanId(msgid, &prio, &pgn, &src, &dst);
 
   // parse data
   i = 0;
-  while (token = strtok_r(NULL, " ", &nexttoken))
+  while ((token = strtok_r(NULL, " ", &nexttoken)) != 0)
   {
     m->data[i] = strtoul(token, NULL, 16);
     i++;
-    if (i>FASTPACKET_MAX_SIZE)
+    if (i > FASTPACKET_MAX_SIZE)
     {
       return -1;
     }
