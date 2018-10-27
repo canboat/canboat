@@ -1,0 +1,68 @@
+#
+# See http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+#
+BasedOnStyle:                                   'Google'
+IndentWidth:                                    '2'
+TabWidth:                                       '8'
+UseTab:                                         'Never'
+ColumnLimit:                                    '132'
+
+AlignAfterOpenBracket:                          'true'
+AlignConsecutiveAssignments:                    'true'
+AlignConsecutiveDeclarations:                   'true'
+AlignEscapedNewlinesLeft:                       'true'
+AlignOperands:                                  'true'
+AlignTrailingComments:                          'true'
+
+# Braces and blocks
+BreakBeforeBraces:                              'Custom'
+AllowAllParametersOfDeclarationOnNextLine:      'false'
+AllowShortBlocksOnASingleLine:                  'false'
+AllowShortCaseLabelsOnASingleLine:              'false'
+AllowShortFunctionsOnASingleLine:               'false'
+AllowShortIfStatementsOnASingleLine:            'false'
+AllowShortLoopsOnASingleLine:                   'false'
+AlwaysBreakAfterDefinitionReturnType:           'false'
+AlwaysBreakBeforeMultilineStrings:              'false'
+BinPackArguments:                               'false'
+BinPackParameters:                              'false'
+BreakBeforeBinaryOperators:                     'true'
+BreakBeforeTernaryOperators:                    'true'
+BreakConstructorInitializersBeforeComma:        'true'
+IndentCaseLabels:                               'true'
+KeepEmptyLinesAtTheStartOfBlocks:               'false'
+BraceWrapping: {
+  AfterClass:                                   'true'
+  AfterControlStatement:                        'true'
+  AfterEnum:                                    'true'
+  AfterFunction:                                'true'
+  AfterNamespace:                               'true'
+  AfterObjCDeclaration:                         'true'
+  AfterStruct:                                  'true'
+  AfterUnion:                                   'true'
+  BeforeCatch:                                  'true'
+  BeforeElse:                                   'true'
+  IndentBraces:                                 'false'
+}
+
+# Spaces
+SpaceAfterCStyleCast:                           'true'
+SpaceBeforeAssignmentOperators:                 'true'
+SpaceBeforeParens:                              'ControlStatements'
+SpaceInEmptyParentheses:                        'false'
+SpacesBeforeTrailingComments:                   '1'
+SpacesInCStyleCastParentheses:                  'false'
+SpacesInParentheses:                            'false'
+SpacesInSquareBrackets:                         'false'
+
+# Empty lines
+KeepEmptyLinesAtTheStartOfBlocks:               'false'
+MaxEmptyLinesToKeep:                            '1'
+
+# Pointers (*, &)
+PointerAlignment:                               'Right'
+DerivePointerAlignment:                         'false'
+
+# Comments
+PenaltyBreakComment:                            '1000'
+

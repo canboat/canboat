@@ -46,22 +46,21 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
  * It instructs the NGT1 to clear its PGN message TX list, thus it starts
  * sending all PGNs.
  */
-static unsigned char NGT_STARTUP_SEQ[] =
-  { 0x11   /* msg byte 1, meaning ? */
-  , 0x02   /* msg byte 2, meaning ? */
-  , 0x00   /* msg byte 3, meaning ? */
-  };
-
+static unsigned char NGT_STARTUP_SEQ[] = {
+    0x11, /* msg byte 1, meaning ? */
+    0x02, /* msg byte 2, meaning ? */
+    0x00  /* msg byte 3, meaning ? */
+};
 
 #define BUFFER_SIZE 900
 
-static int debug = 0;
-static int verbose = 0;
-static int readonly = 0;
-static int writeonly = 0;
-static int passthru = 0;
-static long timeout = 0;
-static int outputCommands = 0;
+static int  debug          = 0;
+static int  verbose        = 0;
+static int  readonly       = 0;
+static int  writeonly      = 0;
+static int  passthru       = 0;
+static long timeout        = 0;
+static int  outputCommands = 0;
 static bool isFile;
 
 enum MSG_State
@@ -80,26 +79,26 @@ enum ReadyDescriptor
 int baudRate = B115200;
 
 static enum ReadyDescriptor isready(int fd1, int fd2);
-static int readIn(unsigned char * msg, size_t len);
-static void parseAndWriteIn(int handle, const unsigned char * cmd);
-static void writeRaw(int handle, const unsigned char * cmd, const size_t len);
-static void writeMessage(int handle, unsigned char command, const unsigned char * cmd, const size_t len);
-static void readNGT1Byte(unsigned char c);
-static int readNGT1(int handle);
-static void messageReceived(const unsigned char * msg, size_t msgLen);
-static void n2kMessageReceived(const unsigned char * msg, size_t msgLen);
-static void ngtMessageReceived(const unsigned char * msg, size_t msgLen);
+static int                  readIn(unsigned char *msg, size_t len);
+static void                 parseAndWriteIn(int handle, const unsigned char *cmd);
+static void                 writeRaw(int handle, const unsigned char *cmd, const size_t len);
+static void                 writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len);
+static void                 readNGT1Byte(unsigned char c);
+static int                  readNGT1(int handle);
+static void                 messageReceived(const unsigned char *msg, size_t msgLen);
+static void                 n2kMessageReceived(const unsigned char *msg, size_t msgLen);
+static void                 ngtMessageReceived(const unsigned char *msg, size_t msgLen);
 
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
-  int r;
-  int handle;
+  int            r;
+  int            handle;
   struct termios attr;
-  char * name = argv[0];
-  char * device = 0;
-  struct stat statbuf;
-  int pid = 0;
-  int speed;
+  char *         name   = argv[0];
+  char *         device = 0;
+  struct stat    statbuf;
+  int            pid = 0;
+  int            speed;
 
   setProgName(argv[0]);
   while (argc > 1)
@@ -159,7 +158,6 @@ int main(int argc, char ** argv)
     }
     else if (strcasecmp(argv[1], "-d") == 0)
     {
-      debug = 1;
       setLogLevel(LOGLEVEL_DEBUG);
     }
     else if (strcasecmp(argv[1], "-o") == 0)
@@ -182,33 +180,35 @@ int main(int argc, char ** argv)
   if (!device)
   {
     fprintf(stderr,
-    "Usage: %s [-w] -[-p] [-r] [-v] [-d] [-s <n>] [-t <n>] device\n"
-    "\n"
-    "Options:\n"
-    "  -w      writeonly mode, no data is read from device\n"
-    "  -r      readonly mode, no data is sent to device\n"
-    "  -p      passthru mode, data on stdin is sent to stdout but not to device\n"
-    "  -v      verbose\n"
-    "  -d      debug\n"
-    "  -s <n>  set baudrate to 38400, 57600, 115200 or 230400\n"
-    "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
-    "  -o      output commands sent to stdin to the stdout \n"
-    "  <device> can be a serial device, a normal file containing a raw log,\n"
-    "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
-    "\n"
-    "  Examples: %s /dev/ttyUSB0\n"
-    "            %s tcp://192.168.1.1:10001\n"
-    "\n"
-    COPYRIGHT, name, name, name);
+            "Usage: %s [-w] -[-p] [-r] [-v] [-d] [-s <n>] [-t <n>] device\n"
+            "\n"
+            "Options:\n"
+            "  -w      writeonly mode, no data is read from device\n"
+            "  -r      readonly mode, no data is sent to device\n"
+            "  -p      passthru mode, data on stdin is sent to stdout but not to device\n"
+            "  -v      verbose\n"
+            "  -d      debug\n"
+            "  -s <n>  set baudrate to 38400, 57600, 115200 or 230400\n"
+            "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
+            "  -o      output commands sent to stdin to the stdout \n"
+            "  <device> can be a serial device, a normal file containing a raw log,\n"
+            "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
+            "\n"
+            "  Examples: %s /dev/ttyUSB0\n"
+            "            %s tcp://192.168.1.1:10001\n"
+            "\n" COPYRIGHT,
+            name,
+            name,
+            name);
     exit(1);
   }
 
 retry:
-  if (debug) fprintf(stderr, "Opening %s\n", device);
+  logDebug("Opening %s\n", device);
   if (strncmp(device, "tcp:", STRSIZE("tcp:")) == 0)
   {
     handle = open_socket_stream(device);
-    if (debug) fprintf(stderr, "socket = %d\n", handle);
+    logDebug("socket = %d\n", handle);
     isFile = true;
     if (handle < 0)
     {
@@ -219,15 +219,15 @@ retry:
   else
   {
     handle = open(device, O_RDWR | O_NOCTTY | O_NONBLOCK);
-    if (debug) fprintf(stderr, "fd = %d\n", handle);
+    logDebug("fd = %d\n", handle);
     if (handle < 0)
     {
-      fprintf(stderr, "Cannot open NGT-1-A device %s\n", device);
+      logError("Cannot open NGT-1-A device %s\n", device);
       exit(1);
     }
     if (fstat(handle, &statbuf) < 0)
     {
-      fprintf(stderr, "Cannot determine device %s\n", device);
+      logError("Cannot determine device %s\n", device);
       exit(1);
     }
     isFile = S_ISREG(statbuf.st_mode);
@@ -235,23 +235,23 @@ retry:
 
   if (isFile)
   {
-    if (debug) fprintf(stderr, "Device is a normal file, do not set the attributes.\n");
+    logInfo("Device is a normal file, do not set the attributes.\n");
   }
   else
   {
-    if (debug) fprintf(stderr, "Device is a serial port, set the attributes.\n");
+    logDebug("Device is a serial port, set the attributes.\n");
 
     memset(&attr, 0, sizeof(attr));
     cfsetspeed(&attr, baudRate);
     attr.c_cflag |= CS8 | CLOCAL | CREAD;
 
     attr.c_iflag |= IGNPAR;
-    attr.c_cc[VMIN] = 1;
+    attr.c_cc[VMIN]  = 1;
     attr.c_cc[VTIME] = 0;
     tcflush(handle, TCIFLUSH);
     tcsetattr(handle, TCSANOW, &attr);
 
-    if (debug) fprintf(stderr, "Device is a serial port, send the startup sequence.\n");
+    logDebug("Device is a serial port, send the startup sequence.\n");
 
     writeMessage(handle, NGT_MSG_SEND, NGT_STARTUP_SEQ, sizeof(NGT_STARTUP_SEQ));
     sleep(2);
@@ -259,8 +259,8 @@ retry:
 
   for (;;)
   {
-    unsigned char msg[BUFFER_SIZE];
-    size_t msgLen;
+    unsigned char        msg[BUFFER_SIZE];
+    size_t               msgLen;
     enum ReadyDescriptor r;
 
     r = isready(writeonly ? -1 : handle, readonly ? -1 : 0);
@@ -282,7 +282,7 @@ retry:
       {
         parseAndWriteIn(handle, msg);
       }
-      if ( outputCommands )
+      if (outputCommands)
       {
         fprintf(stdout, "%s", msg);
         fflush(stdout);
@@ -300,10 +300,10 @@ retry:
 
 static enum ReadyDescriptor isready(int fd1, int fd2)
 {
-  fd_set fds;
-  struct timeval waitfor;
-  int setsize;
-  int r;
+  fd_set               fds;
+  struct timeval       waitfor;
+  int                  setsize;
+  int                  r;
   enum ReadyDescriptor ret = 0;
 
   FD_ZERO(&fds);
@@ -315,7 +315,7 @@ static enum ReadyDescriptor isready(int fd1, int fd2)
   {
     FD_SET(fd2, &fds);
   }
-  waitfor.tv_sec = timeout ? timeout : 10;
+  waitfor.tv_sec  = timeout ? timeout : 10;
   waitfor.tv_usec = 0;
   if (fd1 > fd2)
   {
@@ -348,10 +348,10 @@ static enum ReadyDescriptor isready(int fd1, int fd2)
   return ret;
 }
 
-static void parseAndWriteIn(int handle, const unsigned char * cmd)
+static void parseAndWriteIn(int handle, const unsigned char *cmd)
 {
-  unsigned char msg[500];
-  unsigned char * m;
+  unsigned char  msg[500];
+  unsigned char *m;
 
   unsigned int prio;
   unsigned int pgn;
@@ -359,11 +359,11 @@ static void parseAndWriteIn(int handle, const unsigned char * cmd)
   unsigned int dst;
   unsigned int bytes;
 
-  char * p;
-  int i;
-  int b;
+  char *       p;
+  int          i;
+  int          b;
   unsigned int byt;
-  int r;
+  int          r;
 
   if (!cmd || !*cmd || *cmd == '\n')
   {
@@ -380,7 +380,7 @@ static void parseAndWriteIn(int handle, const unsigned char * cmd)
   if (r == 5)
   {
     p += i - 1;
-    m = msg;
+    m    = msg;
     *m++ = (unsigned char) prio;
     *m++ = (unsigned char) pgn;
     *m++ = (unsigned char) (pgn >> 8);
@@ -412,8 +412,7 @@ static void parseAndWriteIn(int handle, const unsigned char * cmd)
   writeMessage(handle, N2K_MSG_SEND, msg, m - msg);
 }
 
-
-static void writeRaw(int handle, const unsigned char * cmd, const size_t len)
+static void writeRaw(int handle, const unsigned char *cmd, const size_t len)
 {
   if (write(handle, cmd, len) != len)
   {
@@ -426,20 +425,20 @@ static void writeRaw(int handle, const unsigned char * cmd, const size_t len)
 /*
  * Wrap the PGN or NGT message and send to NGT
  */
-static void writeMessage(int handle, unsigned char command, const unsigned char * cmd, const size_t len)
+static void writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len)
 {
-  unsigned char bst[255];
+  unsigned char  bst[255];
   unsigned char *b = bst;
   unsigned char *r = bst;
   unsigned char *lenPtr;
-  unsigned char crc;
+  unsigned char  crc;
 
   int i;
 
-  *b++ = DLE;
-  *b++ = STX;
-  *b++ = command;
-  crc = command;
+  *b++   = DLE;
+  *b++   = STX;
+  *b++   = command;
+  crc    = command;
   lenPtr = b++;
 
   for (i = 0; i < len; i++)
@@ -455,34 +454,34 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
   *lenPtr = i;
   crc += i;
 
-  *b++ = (unsigned char) (256 - (int)crc);
+  *b++ = (unsigned char) (256 - (int) crc);
   *b++ = DLE;
   *b++ = ETX;
 
-  int retryCount = 5;
+  int retryCount    = 5;
   int needs_written = b - bst;
   int written;
   do
+  {
+    written = write(handle, r, needs_written);
+    if (written != -1)
     {
-      written = write(handle, r, needs_written);
-      if ( written != -1 )
-	{
-	  r += written;
-	  needs_written -= written;
-	}
-      else if ( errno == EAGAIN )
-	{
-	  retryCount--;
-	  usleep(25000);
-	}
-      else
-        {
-          break;
-        }
+      r += written;
+      needs_written -= written;
+    }
+    else if (errno == EAGAIN)
+    {
+      retryCount--;
+      usleep(25000);
+    }
+    else
+    {
+      break;
+    }
 
-    } while ( needs_written > 0 && retryCount >= 0 );
+  } while (needs_written > 0 && retryCount >= 0);
 
-  if ( written == -1 )
+  if (written == -1)
   {
     logError("Unable to write command '%.*s' to NGT-1-A device\n", (int) len, cmd);
   }
@@ -490,19 +489,16 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
   logDebug("Written command %X len %d\n", command, (int) len);
 }
 
-static int readIn(unsigned char * msg, size_t msgLen)
+static int readIn(unsigned char *msg, size_t msgLen)
 {
-  bool printed = 0;
-  char * s;
+  bool  printed = 0;
+  char *s;
 
   s = fgets((char *) msg, msgLen, stdin);
 
   if (s)
   {
-    if (debug)
-    {
-      fprintf(stderr, "in: %s", s);
-    }
+    logDebug("in: %s", s);
 
     return 1;
   }
@@ -516,11 +512,11 @@ static int readIn(unsigned char * msg, size_t msgLen)
 
 static void readNGT1Byte(unsigned char c)
 {
-  static enum MSG_State state = MSG_START;
-  static bool startEscape = false;
-  static bool noEscape = false;
-  static unsigned char buf[500];
-  static unsigned char * head = buf;
+  static enum MSG_State state       = MSG_START;
+  static bool           startEscape = false;
+  static bool           noEscape    = false;
+  static unsigned char  buf[500];
+  static unsigned char *head = buf;
 
   logDebug("received byte %02x state=%d offset=%d\n", c, state, head - buf);
 
@@ -537,18 +533,18 @@ static void readNGT1Byte(unsigned char c)
     if (c == ETX)
     {
       messageReceived(buf, head - buf);
-      head = buf;
+      head  = buf;
       state = MSG_START;
     }
     else if (c == STX)
     {
-      head = buf;
+      head  = buf;
       state = MSG_MESSAGE;
     }
     else if ((c == DLE) || ((c == ESC) && isFile) || noEscape)
     {
       *head++ = c;
-      state = MSG_MESSAGE;
+      state   = MSG_MESSAGE;
     }
     else
     {
@@ -582,9 +578,9 @@ static void readNGT1Byte(unsigned char c)
 
 static int readNGT1(int handle)
 {
-  size_t i;
-  ssize_t r;
-  bool printed = 0;
+  size_t        i;
+  ssize_t       r;
+  bool          printed = 0;
   unsigned char c;
   unsigned char buf[500];
 
@@ -596,15 +592,12 @@ static int readNGT1(int handle)
   }
 
   logDebug("Read %d bytes from device\n", (int) r);
-  if (debug)
+  if (isLogLevelEnabled(LOGLEVEL_DEBUG))
   {
-    fprintf(stderr, "read: ");
-    for (i = 0; i < r; i++)
-    {
-      c = buf[i];
-      fprintf(stderr, " %02X", c);
-    }
-    fprintf(stderr, "\n");
+    StringBuffer sb = sbNew;
+    sbAppendDataHex(&sb, buf, r);
+    logDebug("message:%s\n", sbGet(&sb));
+    sbClean(&sb);
   }
 
   for (i = 0; i < r; i++)
@@ -616,13 +609,13 @@ static int readNGT1(int handle)
   return r;
 }
 
-static void messageReceived(const unsigned char * msg, size_t msgLen)
+static void messageReceived(const unsigned char *msg, size_t msgLen)
 {
-  unsigned char command;
-  unsigned char checksum = 0;
-  unsigned char * payload;
-  unsigned char payloadLen;
-  size_t i;
+  unsigned char  command;
+  unsigned char  checksum = 0;
+  unsigned char *payload;
+  unsigned char  payloadLen;
+  size_t         i;
 
   if (msgLen < 3)
   {
@@ -640,7 +633,7 @@ static void messageReceived(const unsigned char * msg, size_t msgLen)
     return;
   }
 
-  command = msg[0];
+  command    = msg[0];
   payloadLen = msg[1];
 
   logDebug("message command = %02x len = %u\n", command, payloadLen);
@@ -655,12 +648,12 @@ static void messageReceived(const unsigned char * msg, size_t msgLen)
   }
 }
 
-static void ngtMessageReceived(const unsigned char * msg, size_t msgLen)
+static void ngtMessageReceived(const unsigned char *msg, size_t msgLen)
 {
   size_t i;
-  char line[1000];
+  char   line[1000];
   char * p;
-  char dateStr[DATE_LENGTH];
+  char   dateStr[DATE_LENGTH];
 
   if (msgLen < 12)
   {
@@ -681,17 +674,17 @@ static void ngtMessageReceived(const unsigned char * msg, size_t msgLen)
   fflush(stdout);
 }
 
-static void n2kMessageReceived(const unsigned char * msg, size_t msgLen)
+static void n2kMessageReceived(const unsigned char *msg, size_t msgLen)
 {
   unsigned int prio, src, dst;
   unsigned int pgn;
-  size_t i;
+  size_t       i;
   unsigned int id;
   unsigned int len;
   unsigned int data[8];
-  char line[800];
-  char * p;
-  char dateStr[DATE_LENGTH];
+  char         line[800];
+  char *       p;
+  char         dateStr[DATE_LENGTH];
 
   if (msgLen < 11)
   {
@@ -703,7 +696,7 @@ static void n2kMessageReceived(const unsigned char * msg, size_t msgLen)
   dst  = msg[4];
   src  = msg[5];
   /* Skip the timestamp logged by the NGT-1-A in bytes 6-9 */
-  len  = msg[10];
+  len = msg[10];
 
   if (len > 223)
   {

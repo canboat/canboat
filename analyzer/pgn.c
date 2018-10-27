@@ -1,11 +1,11 @@
 
-#include "analyzer.h"
 #include <common.h>
+#include "analyzer.h"
 
 Pgn *searchForPgn(int pgn)
 {
   size_t start = 0;
-  size_t end = pgnListSize;
+  size_t end   = pgnListSize;
   size_t mid;
 
   while (start <= end)
@@ -54,11 +54,11 @@ static Pgn *searchForUnknownPgn(int pgnId)
   return unknown;
 }
 
-Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
+Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
 {
   Pgn *pgn = searchForPgn(pgnId);
-  int prn;
-  int i;
+  int  prn;
+  int  i;
 
   if (!pgn)
   {
@@ -75,11 +75,11 @@ Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
 
   for (; pgn->pgn == prn; pgn++) // we never get here for the last pgn, so no need to check for end of list
   {
-    int startBit = 0;
-    uint8_t *data = dataStart;
+    int      startBit = 0;
+    uint8_t *data     = dataStart;
 
     bool matchedFixedField = true;
-    bool hasFixedField = false;
+    bool hasFixedField     = false;
 
     /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
 
@@ -98,7 +98,7 @@ Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
     for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
     {
       const Field *field = &pgn->fieldList[i];
-      int bits = field->size;
+      int          bits  = field->size;
 
       if (field->units && field->units[0] == '=')
       {
@@ -134,11 +134,11 @@ Pgn* getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
 void checkPgnList(void)
 {
   size_t i;
-  int prn = 0;
+  int    prn = 0;
 
   for (i = 0; i < pgnListSize; i++)
   {
-    Pgn * pgn;
+    Pgn *pgn;
 
     if (pgnList[i].pgn < prn)
     {
@@ -159,10 +159,9 @@ void checkPgnList(void)
   }
 }
 
-Field * getField(uint32_t pgnId, uint32_t field)
+Field *getField(uint32_t pgnId, uint32_t field)
 {
-
-  Pgn* pgn = searchForPgn(pgnId);
+  Pgn *pgn = searchForPgn(pgnId);
 
   if (!pgn)
   {
@@ -175,7 +174,7 @@ Field * getField(uint32_t pgnId, uint32_t field)
   if (pgn->repeatingFields)
   {
     uint32_t startOfRepeatingFields = pgn->fieldCount - pgn->repeatingFields;
-    uint32_t index = startOfRepeatingFields + ((field - startOfRepeatingFields) % pgn->repeatingFields);
+    uint32_t index                  = startOfRepeatingFields + ((field - startOfRepeatingFields) % pgn->repeatingFields);
 
     return pgn->fieldList + index;
   }
@@ -227,31 +226,31 @@ Field * getField(uint32_t pgnId, uint32_t field)
  *
  */
 
-void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t bits, int64_t * value, int64_t * maxValue)
+void extractNumber(const Field *field, uint8_t *data, size_t startBit, size_t bits, int64_t *value, int64_t *maxValue)
 {
   bool hasSign = field->hasSign;
 
-  size_t firstBit = startBit;
-  size_t bitsRemaining = bits;
-  size_t magnitude = 0;
-  size_t bitsInThisByte;
+  size_t   firstBit      = startBit;
+  size_t   bitsRemaining = bits;
+  size_t   magnitude     = 0;
+  size_t   bitsInThisByte;
   uint64_t bitMask;
   uint64_t allOnes;
   uint64_t valueInThisByte;
   uint64_t maxv;
 
   *value = 0;
-  maxv = 0;
+  maxv   = 0;
 
   while (bitsRemaining)
   {
     bitsInThisByte = min(8 - firstBit, bitsRemaining);
-    allOnes = (uint64_t) ((((uint64_t) 1) << bitsInThisByte) - 1);
+    allOnes        = (uint64_t)((((uint64_t) 1) << bitsInThisByte) - 1);
 
-    //How are bits ordered in bytes for bit fields? There are two ways, first field at LSB or first
-    //field as MSB.
-    //Experimentation, using the 129026 PGN, has shown that the most likely candidate is LSB.
-    bitMask = allOnes << firstBit;
+    // How are bits ordered in bytes for bit fields? There are two ways, first field at LSB or first
+    // field as MSB.
+    // Experimentation, using the 129026 PGN, has shown that the most likely candidate is LSB.
+    bitMask         = allOnes << firstBit;
     valueInThisByte = (*data & bitMask) >> firstBit;
 
     *value |= valueInThisByte << magnitude;
@@ -294,10 +293,10 @@ void extractNumber(const Field * field, uint8_t * data, size_t startBit, size_t 
   *maxValue = (int64_t) maxv;
 }
 
-static char * findOccurrence(char * msg, char c, int count)
+static char *findOccurrence(char *msg, char c, int count)
 {
-  int i;
-  char * p;
+  int   i;
+  char *p;
 
   if (*msg == 0 || *msg == '\n')
   {
@@ -315,7 +314,7 @@ static char * findOccurrence(char * msg, char c, int count)
   return p;
 }
 
-static int setParsedValues(RawMessage * m, unsigned int prio, unsigned int pgn, unsigned int dst, unsigned int src, unsigned int len)
+static int setParsedValues(RawMessage *m, unsigned int prio, unsigned int pgn, unsigned int dst, unsigned int src, unsigned int len)
 {
   m->prio = prio;
   m->pgn  = pgn;
@@ -326,10 +325,10 @@ static int setParsedValues(RawMessage * m, unsigned int prio, unsigned int pgn, 
   return 0;
 }
 
-int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
+int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, junk, r, i;
-  char * p;
+  char *       p;
   unsigned int data[8];
 
   p = findOccurrence(msg, ',', 1);
@@ -343,28 +342,28 @@ int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
   m->timestamp[p - msg] = 0;
 
   /* Moronic Windows does not support %hh<type> so we use intermediate variables */
-  r = sscanf( p
-    , ",%u,%u,%u,%u,%u"
-    ",%x,%x,%x,%x,%x,%x,%x,%x,%x"
-    , &prio
-    , &pgn
-    , &src
-    , &dst
-    , &len
-    , &data[0]
-    , &data[1]
-    , &data[2]
-    , &data[3]
-    , &data[4]
-    , &data[5]
-    , &data[6]
-    , &data[7]
-    , &junk
-  );
+  r = sscanf(p,
+             ",%u,%u,%u,%u,%u"
+             ",%x,%x,%x,%x,%x,%x,%x,%x,%x",
+             &prio,
+             &pgn,
+             &src,
+             &dst,
+             &len,
+             &data[0],
+             &data[1],
+             &data[2],
+             &data[3],
+             &data[4],
+             &data[5],
+             &data[6],
+             &data[7],
+             &junk);
   if (r < 5)
   {
     logError("Error reading message, scanned %u from %s", r, msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 2;
   }
 
@@ -383,10 +382,10 @@ int parseRawFormatPlain(char * msg, RawMessage * m, bool showJson)
   return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
-int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
+int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, r, i;
-  char * p;
+  char *       p;
 
   p = findOccurrence(msg, ',', 1);
   if (!p)
@@ -399,18 +398,12 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
   m->timestamp[p - msg] = 0;
 
   /* Moronic Windows does not support %hh<type> so we use intermediate variables */
-  r = sscanf( p
-    , ",%u,%u,%u,%u,%u "
-    , &prio
-    , &pgn
-    , &src
-    , &dst
-    , &len
-  );
+  r = sscanf(p, ",%u,%u,%u,%u,%u ", &prio, &pgn, &src, &dst, &len);
   if (r < 5)
   {
     logError("Error reading message, scanned %u from %s", r, msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 2;
   }
 
@@ -418,7 +411,8 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
   if (!p)
   {
     logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 2;
   }
   for (i = 0; i < len; i++)
@@ -426,7 +420,8 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
     if (scanHex(&p, &m->data[i]))
     {
       logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
     if (i < len)
@@ -434,7 +429,8 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
       if (*p != ',' && !isspace(*p))
       {
         logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
+        if (!showJson)
+          fprintf(stdout, "%s", msg);
         return 2;
       }
       p++;
@@ -444,10 +440,10 @@ int parseRawFormatFast(char * msg, RawMessage * m, bool showJson)
   return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
-int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
+int parseRawFormatAirmar(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, i;
-  char * p;
+  char *       p;
   unsigned int id;
 
   p = findOccurrence(msg, ' ', 1);
@@ -469,7 +465,8 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
   if (*p != ' ')
   {
     logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 2;
   }
 
@@ -482,7 +479,8 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
     if (scanHex(&p, &m->data[i]))
     {
       logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
     if (i < len)
@@ -490,7 +488,8 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
       if (*p != ',' && *p != ' ')
       {
         logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
-        if (!showJson) fprintf(stdout, "%s", msg);
+        if (!showJson)
+          fprintf(stdout, "%s", msg);
         return 2;
       }
       p++;
@@ -500,13 +499,13 @@ int parseRawFormatAirmar(char * msg, RawMessage * m, bool showJson)
   return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
-int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
+int parseRawFormatChetco(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int pgn, src, i;
   unsigned int tstamp;
-  time_t t;
-  struct tm tm;
-  char * p;
+  time_t       t;
+  struct tm    tm;
+  char *       p;
 
   if (*msg == 0 || *msg == '\n')
   {
@@ -516,7 +515,8 @@ int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
   if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
   {
     logError("Error reading Chetco message: %s", msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 2;
   }
 
@@ -532,7 +532,8 @@ int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
     if (scanHex(&p, &m->data[i]))
     {
       logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
   }
@@ -543,15 +544,16 @@ int parseRawFormatChetco(char * msg, RawMessage * m, bool showJson)
 /*
 Sequence #,Timestamp,PGN,Name,Manufacturer,Remote Address,Local Address,Priority,Single Frame,Size,Packet
 0,486942,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF
-129,491183,129029,GNSS Position Data,Unknown Manufacturer,3,255,3,0,43,0xFFDF40A6E9BB22C04B3666C18FBF0600A6C33CA5F84B01A0293B140000000010FC01AC26AC264A12000000
+129,491183,129029,GNSS Position Data,Unknown
+Manufacturer,3,255,3,0,43,0xFFDF40A6E9BB22C04B3666C18FBF0600A6C33CA5F84B01A0293B140000000010FC01AC26AC264A12000000
 */
-int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool absolute)
+int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolute)
 {
   unsigned int seq, tstamp, pgn, src, dst, prio, single, count;
-  time_t t;
-  struct tm tm;
-  char * p;
-  int consumed;
+  time_t       t;
+  struct tm    tm;
+  char *       p;
+  int          consumed;
   unsigned int i;
 
   if (*msg == 0 || *msg == '\n')
@@ -566,10 +568,20 @@ int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool abso
     if (sscanf(msg, "%u,%u_%u_%u_%u_%u_%u_%u,%u,", &seq, &month, &day, &year, &hours, &minutes, &seconds, &ms, &pgn) < 9)
     {
       logError("Error reading Garmin CSV message: %s", msg);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
-    snprintf(m->timestamp, sizeof(m->timestamp), "%04u-%02u-%02uT%02u:%02u:%02u,%03u", year, month, day, hours, minutes, seconds, ms % 1000);
+    snprintf(m->timestamp,
+             sizeof(m->timestamp),
+             "%04u-%02u-%02uT%02u:%02u:%02u,%03u",
+             year,
+             month,
+             day,
+             hours,
+             minutes,
+             seconds,
+             ms % 1000);
 
     p = findOccurrence(msg, ',', 6);
   }
@@ -578,7 +590,8 @@ int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool abso
     if (sscanf(msg, "%u,%u,%u,", &seq, &tstamp, &pgn) < 3)
     {
       logError("Error reading Garmin CSV message: %s", msg);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
 
@@ -593,7 +606,8 @@ int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool abso
   if (!p || sscanf(p, "%u,%u,%u,%u,%u,0x%n", &src, &dst, &prio, &single, &count, &consumed) < 5)
   {
     logError("Error reading Garmin CSV message: %s", msg);
-    if (!showJson) fprintf(stdout, "%s", msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
     return 3;
   }
   p += consumed;
@@ -603,7 +617,8 @@ int parseRawFormatGarminCSV(char * msg, RawMessage * m, bool showJson, bool abso
     if (scanHex(&p, &m->data[i]))
     {
       logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
-      if (!showJson) fprintf(stdout, "%s", msg);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
       return 2;
     }
   }
