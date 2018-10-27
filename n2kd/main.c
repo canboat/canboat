@@ -34,10 +34,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #pragma GCC diagnostic ignored "-Wunused-result"
 
 #include "common.h"
+#include "n2kd.h"
+#include "nmea0183.h"
 #include <signal.h>
 #include <sys/select.h>
-#include "nmea0183.h"
-#include "n2kd.h"
 
 #define PORT 2597
 
@@ -945,7 +945,12 @@ int main (int argc, char **argv)
 
   while (argc > 1)
   {
-    if (strcasecmp(argv[1], "-d") == 0)
+    if (strcasecmp(argv[1], "-version") == 0)
+    {
+      printf("%s\n", VERSION);
+      exit(0);
+    }
+    else if (strcasecmp(argv[1], "-d") == 0)
     {
       setLogLevel(LOGLEVEL_DEBUG);
       debug = 1;
@@ -983,14 +988,15 @@ int main (int argc, char **argv)
     }
     else
     {
-      fprintf(stderr, "usage: n2kd [-d] [-q] [-o] [-r] [--src-filter <srclist>] [--rate-limit] [-p <port>]\n\n"
+      fprintf(stderr, "usage: n2kd [-d] [-q] [-o] [-r] [--src-filter <srclist>] [--rate-limit] [-p <port>] | -version\n\n"
                       "  -d                      debug mode\n"
                       "  -q                      quiet mode\n"
                       "  -o                      output mode, send all TCP client data to stdout (as well as stdin)\n"
                       "  -r                      restrict mode, send no data to stdout\n"
                       "  --src-filter <srclist>  restrict NMEA0183 stream to particular N2K sources\n"
                       "  --rate-limit            restrict NMEA0183 stream to one message per source per second\n"
-                      "  -p <port>               Start servers at <port> instead of 2597\n\n"
+                      "  -p <port>               Start servers at <port> instead of 2597\n"
+                      "  -version                Show version number on stdout\n\n"
                       COPYRIGHT);
       exit(1);
     }
@@ -1009,4 +1015,3 @@ int main (int argc, char **argv)
 
   exit(0);
 }
-

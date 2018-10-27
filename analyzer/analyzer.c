@@ -96,7 +96,7 @@ void usage(char ** argv, char ** av)
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
-         "-explain | -explain-xml [-upper-camel]]\n", argv[0]);
+         "-explain | -explain-xml [-upper-camel]] | -version\n", argv[0]);
   exit(1);
 }
 
@@ -114,7 +114,12 @@ int main(int argc, char ** argv)
 
   for ( ; ac > 1; ac--, av++)
   {
-    if (strcasecmp(av[1], "-explain-xml") == 0)
+    if (strcasecmp(av[1], "-version") == 0)
+    {
+      printf("%s\n", VERSION);
+      exit(0);
+    }
+    else if (strcasecmp(av[1], "-explain-xml") == 0)
     {
       doExplainXML = true;
     }
