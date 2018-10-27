@@ -7,8 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+
+## [1.1.0] - 2018-10-27
+
+### Added
+- Add -version option to all C binaries
 - Add hyperlinks to README.md.
+
+### Changed
 - Rename + rework README to README.md for better readability on GitHub.
+
+### Removed
 
 ## [1.0.0] - 2018-10-21
 ### Added

@@ -58,6 +58,10 @@ int main(int argc, char ** argv)
 	FILE * outfile = stdout;
 
 	if (argc > 1) {
+            if (strcasecmp(argv[1], "-version") == 0) {
+                printf("%s\n", VERSION);
+                exit(0);
+            }
 	    infile = fopen(argv[1], "r");
 	    if (! infile) {
 		fprintf(stderr, "Could not open input file '%s' (%s)\n",
@@ -193,4 +197,3 @@ int main(int argc, char ** argv)
 		fflush(outfile);
 	}
 }
-

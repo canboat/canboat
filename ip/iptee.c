@@ -180,7 +180,12 @@ int main(int argc, char ** argv)
 
   while (argc > 1)
   {
-    if (strcasecmp(argv[1], "-w") == 0)
+    if (strcasecmp(argv[1], "-version") == 0)
+    {
+      printf("%s\n", VERSION);
+      exit(0);
+    }
+    else if (strcasecmp(argv[1], "-w") == 0)
     {
       writeonly = true;
     }
@@ -231,7 +236,7 @@ int main(int argc, char ** argv)
 
   if (!clients)
   {
-    fprintf(stderr, "Usage: iptee [-w] [-t|-u] host port [host port ...]\n\n"
+    fprintf(stderr, "Usage: iptee [-w] [-t|-u] host port [host port ...] | -version\n\n"
                     "This program forwards stdin to the given TCP and UDP ports.\n"
                     "Stdin is also forwarded to stdout unless -w is used.\n"
                     COPYRIGHT);

@@ -5,16 +5,16 @@
  *
  */
 
+#include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <time.h>
 #include <string.h>
-#include <stdbool.h>
 #include <sys/time.h>
+#include <time.h>
 
-#include "license.h"
 #include "common.h"
+#include "license.h"
 
 /*
 , "NMEA - Command/Request/Acknowledge group function", 126208, false, 15, 2,
@@ -51,7 +51,7 @@ void usage(char ** argv, char ** av)
   {
     fprintf(stderr, "Unknown or invalid argument %s\n", av[0]);
   }
-  fprintf(stderr, "Usage: %s <dest> <prio> <pgn> <field>=<value> ...\n\n", argv[0]);
+  fprintf(stderr, "Usage: %s <dest> <prio> <pgn> <field>=<value> ... | -version\n\n", argv[0]);
   fprintf(stderr, "       <field> is a decimal value\n");
   fprintf(stderr, "       <value> is a hexadecimal value; the length of the value defines how many bytes are encoded\n");
   fprintf(stderr, "       Maximum # of fields: %d\n\n", MAX_FIELDS);
@@ -77,6 +77,10 @@ int main(int argc, char ** argv)
   uint32_t v;
   char dateStr[DATE_LENGTH];
 
+  if (ac > 1 && strcasecmp(av[1], "-version") == 0)
+  {
+    printf("%s\n", VERSION);
+  }
   if (ac < 5 || ac > 4 + MAX_FIELDS)
   {
     usage(argv, 0);

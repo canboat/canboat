@@ -47,6 +47,11 @@ int main(int argc, char ** argv)
 
   while (argc > 1)
   {
+    if (strcasecmp(argv[1], "-version") == 0)
+    {
+      printf("%s\n", VERSION);
+      exit(0);
+    }
     if (strcasecmp(argv[1], "-r") == 0)
     {
       readonly = 1;
@@ -74,7 +79,7 @@ int main(int argc, char ** argv)
 
   if (!device)
   {
-    fprintf(stderr, "Usage: nmea0183-serial [-r] [-d] device\n\n"
+    fprintf(stderr, "Usage: nmea0183-serial [-r] [-d] <device> | -version\n\n"
     "-r : read-only, do not pass stdin to stdout\n"
     "-d : debug mode\n\n"
     "Example: nmea0183-serial /dev/ttyUSB0\n\n"COPYRIGHT);

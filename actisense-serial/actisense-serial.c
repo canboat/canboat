@@ -104,7 +104,12 @@ int main(int argc, char ** argv)
   setProgName(argv[0]);
   while (argc > 1)
   {
-    if (strcasecmp(argv[1], "-w") == 0)
+    if (strcasecmp(argv[1], "-version") == 0)
+    {
+      printf("%s\n", VERSION);
+      exit(0);
+    }
+    else if (strcasecmp(argv[1], "-w") == 0)
     {
       writeonly = 1;
     }
@@ -721,4 +726,3 @@ static void n2kMessageReceived(const unsigned char * msg, size_t msgLen)
   puts(line);
   fflush(stdout);
 }
-
