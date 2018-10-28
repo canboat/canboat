@@ -70,24 +70,17 @@ enum MSG_State
   MSG_MESSAGE
 };
 
-enum ReadyDescriptor
-{
-  FD1_Ready = 0x0001,
-  FD2_Ready = 0x0002
-};
-
 int baudRate = B115200;
 
-static enum ReadyDescriptor isready(int fd1, int fd2);
-static int                  readIn(unsigned char *msg, size_t len);
-static void                 parseAndWriteIn(int handle, const unsigned char *cmd);
-static void                 writeRaw(int handle, const unsigned char *cmd, const size_t len);
-static void                 writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len);
-static void                 readNGT1Byte(unsigned char c);
-static int                  readNGT1(int handle);
-static void                 messageReceived(const unsigned char *msg, size_t msgLen);
-static void                 n2kMessageReceived(const unsigned char *msg, size_t msgLen);
-static void                 ngtMessageReceived(const unsigned char *msg, size_t msgLen);
+static int  readIn(unsigned char *msg, size_t len);
+static void parseAndWriteIn(int handle, const unsigned char *cmd);
+static void writeRaw(int handle, const unsigned char *cmd, const size_t len);
+static void writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len);
+static void readNGT1Byte(unsigned char c);
+static int  readNGT1(int handle);
+static void messageReceived(const unsigned char *msg, size_t msgLen);
+static void n2kMessageReceived(const unsigned char *msg, size_t msgLen);
+static void ngtMessageReceived(const unsigned char *msg, size_t msgLen);
 
 int main(int argc, char **argv)
 {
@@ -259,20 +252,18 @@ retry:
 
   for (;;)
   {
-    unsigned char        msg[BUFFER_SIZE];
-    size_t               msgLen;
-    enum ReadyDescriptor r;
+    unsigned char msg[BUFFER_SIZE];
+    size_t        msgLen;
+    int           r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : 0, INVALID_SOCKET, timeout);
 
-    r = isready(writeonly ? -1 : handle, readonly ? -1 : 0);
-
-    if ((r & FD1_Ready) > 0)
+    if ((r & FD1_ReadReady) > 0)
     {
       if (!readNGT1(handle))
       {
         break;
       }
     }
-    if ((r & FD2_Ready) > 0)
+    if ((r & FD2_ReadReady) > 0)
     {
       if (!readIn(msg, sizeof(msg)))
       {
@@ -296,56 +287,6 @@ retry:
 
   close(handle);
   return 0;
-}
-
-static enum ReadyDescriptor isready(int fd1, int fd2)
-{
-  fd_set               fds;
-  struct timeval       waitfor;
-  int                  setsize;
-  int                  r;
-  enum ReadyDescriptor ret = 0;
-
-  FD_ZERO(&fds);
-  if (fd1 >= 0)
-  {
-    FD_SET(fd1, &fds);
-  }
-  if (fd2 >= 0)
-  {
-    FD_SET(fd2, &fds);
-  }
-  waitfor.tv_sec  = timeout ? timeout : 10;
-  waitfor.tv_usec = 0;
-  if (fd1 > fd2)
-  {
-    setsize = fd1 + 1;
-  }
-  else
-  {
-    setsize = fd2 + 1;
-  }
-  r = select(setsize, &fds, 0, 0, &waitfor);
-  if (r < 0)
-  {
-    logAbort("I/O error; restart by quit\n");
-  }
-  if (r > 0)
-  {
-    if (fd1 >= 0 && FD_ISSET(fd1, &fds))
-    {
-      ret |= FD1_Ready;
-    }
-    if (fd2 >= 0 && FD_ISSET(fd2, &fds))
-    {
-      ret |= FD2_Ready;
-    }
-  }
-  if (!ret && timeout)
-  {
-    logAbort("Timeout %ld seconds; restart by quit\n", timeout);
-  }
-  return ret;
 }
 
 static void parseAndWriteIn(int handle, const unsigned char *cmd)
@@ -595,8 +536,8 @@ static int readNGT1(int handle)
   if (isLogLevelEnabled(LOGLEVEL_DEBUG))
   {
     StringBuffer sb = sbNew;
-    sbAppendDataHex(&sb, buf, r);
-    logDebug("message:%s\n", sbGet(&sb));
+    sbAppendDecodeHex(&sb, buf, r);
+    logDebug("message: %s\n", sbGet(&sb));
     sbClean(&sb);
   }
 
