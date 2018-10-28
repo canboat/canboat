@@ -44,12 +44,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #define BUFFER_SIZE 900
 
-static int  verbose        = 0;
-static int  readonly       = 0;
-static int  writeonly      = 0;
-static int  passthru       = 0;
-static long timeout        = 0;
-static int  outputCommands = 0;
+static bool verbose;
+static bool readonly;
+static bool writeonly;
+static bool passthru;
+static long timeout;
 static bool isFile;
 
 int baudRate = B230400;
@@ -59,6 +58,8 @@ StringBuffer writeBuffer; // What we still have to write to device
 StringBuffer readBuffer;  // What we have already read from device
 StringBuffer inBuffer;    // What we have already read from stdin but is not complete yet
 StringBuffer dataBuffer;  // Temporary buffer during parse or generate
+StringBuffer txList;      // TX list to send to iKonvert
+StringBuffer rxList;      // RX list to send to iKonvert
 
 uint64_t lastNow; // Epoch time of last timestamp
 uint64_t lastTS;  // Last timestamp received from iKonvert. Beware roll-around, max value is 999999
@@ -87,19 +88,39 @@ int main(int argc, char **argv)
     }
     else if (strcasecmp(argv[1], "-w") == 0)
     {
-      writeonly = 1;
+      writeonly = true;
     }
     else if (strcasecmp(argv[1], "-p") == 0)
     {
-      passthru = 1;
+      passthru = true;
     }
     else if (strcasecmp(argv[1], "-r") == 0)
     {
-      readonly = 1;
+      readonly = true;
     }
     else if (strcasecmp(argv[1], "-v") == 0)
     {
-      verbose = 1;
+      verbose = true;
+    }
+    else if (strcasecmp(argv[1], "-rx") == 0 && argc > 2)
+    {
+      argc--;
+      argv++;
+      if (sbGetLength(&rxList) > 0)
+      {
+        sbAppendString(&rxList, ",");
+      }
+      sbAppendFormat(&rxList, "%s", argv[1]);
+    }
+    else if (strcasecmp(argv[1], "-tx") == 0 && argc > 2)
+    {
+      argc--;
+      argv++;
+      if (sbGetLength(&txList) > 0)
+      {
+        sbAppendString(&txList, ",");
+      }
+      sbAppendFormat(&txList, "%s", argv[1]);
     }
     else if (strcasecmp(argv[1], "-t") == 0 && argc > 2)
     {
@@ -137,10 +158,6 @@ int main(int argc, char **argv)
     {
       setLogLevel(LOGLEVEL_DEBUG);
     }
-    else if (strcasecmp(argv[1], "-o") == 0)
-    {
-      outputCommands = 1;
-    }
     else if (!device)
     {
       device = argv[1];
@@ -160,14 +177,15 @@ int main(int argc, char **argv)
             "Usage: %s [-w] -[-p] [-r] [-v] [-d] [-s <n>] [-t <n>] device\n"
             "\n"
             "Options:\n"
-            "  -w      writeonly mode, no data is read from device\n"
-            "  -r      readonly mode, no data is sent to device\n"
-            "  -p      passthru mode, data on stdin is sent to stdout but not to device\n"
+            "  -w      writeonly mode, data from device is not sent to stdout\n"
+            "  -r      readonly mode, data from stdin is not sent to device\n"
+            "  -p      passthru mode, data from stdin is sent to stdout\n"
             "  -v      verbose\n"
             "  -d      debug\n"
+            "  -rx <list> Set PGN receive list\n"
+            "  -tx <list> Set PGN transmit list\n"
             "  -s <n>  set baudrate to 38400, 57600, 115200 or 230400\n"
             "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
-            "  -o      output commands sent to stdin to the stdout \n"
             "  <device> can be a serial device, a normal file containing a raw log,\n"
             "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
             "\n"
@@ -227,7 +245,8 @@ retry:
 
     logDebug("Device is a serial port, send the startup sequence.\n");
 
-    // TODO rx/tx list set
+    sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_RX_LIST_MSG, sbGet(&rxList));
+    sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_TX_LIST_MSG, sbGet(&txList));
     sbAppendFormat(&writeBuffer, "%s\r\n", TX_ONLINE_MSG);
   }
 
@@ -259,7 +278,7 @@ retry:
     if ((rd & FD2_ReadReady) > 0)
     {
       r = read(STDIN, data, sizeof data);
-      if (r > 0 && !readonly) // if readonly we just ignore data coming from stdin
+      if (r > 0)
       {
         sbAppendData(&inBuffer, data, r);
         processInBuffer(&inBuffer, &writeBuffer);
@@ -310,13 +329,23 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
     return;
   }
 
-  if (parseFastFormat(in, &msg))
+  if (!readonly && parseFastFormat(in, &msg))
   {
     // Format msg as iKonvert message
     sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
     sbAppendEncodeBase64(out, msg.data, msg.len);
   }
-  sbDelete(in, 0, p - sbGet(in));
+  if (passthru)
+  {
+    ssize_t r = write(STDOUT, sbGet(in), p + 1 - sbGet(in));
+
+    if (r <= 0)
+    {
+      logAbort("Cannot write to output\n");
+    }
+  }
+
+  sbDelete(in, 0, p + 1 - sbGet(in));
 }
 
 static void computeIKonvertTime(RawMessage *msg, unsigned int t1, unsigned int t2)
@@ -394,29 +423,33 @@ static void parseIKonvertAsciiMessage(const char *msg)
   {
     int load, errors, count, uptime, addr, rejected;
     // Network status message
-    if (parseInt(&msg, &load, 0) && load != 0)
+    //
+    if (verbose || isLogLevelEnabled(LOGLEVEL_DEBUG))
     {
-      logInfo("CAN Bus load %d%%\n", load);
-    }
-    if (parseInt(&msg, &errors, 0) && errors != 0)
-    {
-      logInfo("CAN Bus errors %d\n", errors);
-    }
-    if (parseInt(&msg, &count, 0) && count != 0)
-    {
-      logInfo("CAN device count %d\n", count);
-    }
-    if (parseInt(&msg, &uptime, 0) && uptime != 0)
-    {
-      logInfo("iKonvert uptime %ds\n", uptime);
-    }
-    if (parseInt(&msg, &addr, 0) && addr != 0)
-    {
-      logInfo("iKonvert address %d\n", addr);
-    }
-    if (parseInt(&msg, &rejected, 0) && rejected != 0)
-    {
-      logInfo("iKonvert rejected %d TX message requests\n", rejected);
+      if (parseInt(&msg, &load, 0) && load != 0)
+      {
+        logInfo("CAN Bus load %d%%\n", load);
+      }
+      if (parseInt(&msg, &errors, 0) && errors != 0)
+      {
+        logInfo("CAN Bus errors %d\n", errors);
+      }
+      if (parseInt(&msg, &count, 0) && count != 0)
+      {
+        logInfo("CAN device count %d\n", count);
+      }
+      if (parseInt(&msg, &uptime, 0) && uptime != 0)
+      {
+        logInfo("iKonvert uptime %ds\n", uptime);
+      }
+      if (parseInt(&msg, &addr, 0) && addr != 0)
+      {
+        logInfo("iKonvert address %d\n", addr);
+      }
+      if (parseInt(&msg, &rejected, 0) && rejected != 0)
+      {
+        logInfo("iKonvert rejected %d TX message requests\n", rejected);
+      }
     }
     return;
   }
@@ -443,6 +476,10 @@ static void processReadBuffer(StringBuffer *in, int out)
     {
       parseIKonvertAsciiMessage(w);
       w = sbGet(in);
+    }
+    else if (writeonly)
+    {
+      // ignore message
     }
     else if (parseIKonvertFormat(in, &msg))
     {
