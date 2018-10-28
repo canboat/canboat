@@ -42,7 +42,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "license.h"
 
-#define BUFFER_SIZE 900
+#define IKONVERT_BEM 0x40100
 
 static bool verbose;
 static bool readonly;
@@ -400,71 +400,116 @@ static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
   return true;
 }
 
-static void parseIKonvertAsciiMessage(const char *msg)
+static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
 {
   int error;
   int pgn;
 
   if (parseConst(&msg, "ACK,"))
   {
-    logInfo("iKonvert acknowledge of %s\n", msg);
-    return;
+    if (verbose)
+    {
+      logInfo("iKonvert acknowledge of %s\n", msg);
+    }
+    return false;
   }
 
   if (parseConst(&msg, "NAK,"))
   {
-    if (parseInt(&msg, &error, -1))
+    if (parseInt(&msg, &error, -1) && verbose)
     {
       logInfo("iKonvert NAK %d: %s\n", error, msg);
     }
-    return;
+    return false;
   }
   if (parseInt(&msg, &pgn, -1) && pgn == 0)
   {
-    int load, errors, count, uptime, addr, rejected;
-    // Network status message
-    //
-    if (verbose || isLogLevelEnabled(LOGLEVEL_DEBUG))
+    n2k->pgn  = IKONVERT_BEM;
+    n2k->prio = 7;
+    n2k->src  = 0;
+    n2k->dst  = 255;
+    storeTimestamp(n2k->timestamp, getNow());
+
+    int    load, errors, count, uptime, addr, rejected;
+    size_t off;
+
+    n2k->len = 15;
+    memset(n2k->data, 0xff, n2k->len);
+
+    if (parseInt(&msg, &load, 0xff))
     {
-      if (parseInt(&msg, &load, 0) && load != 0)
+      n2k->data[0] = (uint8_t) load;
+      if (verbose)
       {
         logInfo("CAN Bus load %d%%\n", load);
       }
-      if (parseInt(&msg, &errors, 0) && errors != 0)
+    }
+    if (parseInt(&msg, &errors, -1))
+    {
+      n2k->data[1] = (uint8_t)(errors >> 0);
+      n2k->data[2] = (uint8_t)(errors >> 8);
+      n2k->data[3] = (uint8_t)(errors >> 16);
+      n2k->data[4] = (uint8_t)(errors >> 24);
+      if (verbose)
       {
         logInfo("CAN Bus errors %d\n", errors);
       }
-      if (parseInt(&msg, &count, 0) && count != 0)
+    }
+    if (parseInt(&msg, &count, 0) && count != 0)
+    {
+      n2k->data[5] = (uint8_t) count;
+      if (verbose)
       {
         logInfo("CAN device count %d\n", count);
       }
-      if (parseInt(&msg, &uptime, 0) && uptime != 0)
+    }
+    if (parseInt(&msg, &uptime, 0) && uptime != 0)
+    {
+      n2k->data[6] = (uint8_t)(uptime >> 0);
+      n2k->data[7] = (uint8_t)(uptime >> 8);
+      n2k->data[8] = (uint8_t)(uptime >> 16);
+      n2k->data[9] = (uint8_t)(uptime >> 24);
+      if (verbose)
       {
         logInfo("iKonvert uptime %ds\n", uptime);
       }
-      if (parseInt(&msg, &addr, 0) && addr != 0)
+    }
+    if (parseInt(&msg, &addr, 0) && addr != 0)
+    {
+      n2k->data[10] = (uint8_t) addr;
+      if (verbose)
       {
         logInfo("iKonvert address %d\n", addr);
       }
-      if (parseInt(&msg, &rejected, 0) && rejected != 0)
+    }
+    if (parseInt(&msg, &rejected, 0) && rejected != 0)
+    {
+      n2k->data[11] = (uint8_t)(rejected >> 0);
+      n2k->data[12] = (uint8_t)(rejected >> 8);
+      n2k->data[13] = (uint8_t)(rejected >> 16);
+      n2k->data[14] = (uint8_t)(rejected >> 24);
+      if (verbose)
       {
         logInfo("iKonvert rejected %d TX message requests\n", rejected);
       }
     }
-    return;
+    return true;
   }
   logError("Unknown iKonvert message: %s\n", msg);
+  return false;
 }
 
 static void processReadBuffer(StringBuffer *in, int out)
 {
   RawMessage  msg;
   char *      p;
+  bool        sendMessage;
   const char *w = sbGet(in);
 
   while ((p = strchr(w, '\n')) != 0)
   {
     memset(&msg, 0, sizeof msg);
+    sendMessage = false;
 
     p[0] = 0;
     if (p > w + 1 && p[-1] == '\r')
@@ -472,16 +517,27 @@ static void processReadBuffer(StringBuffer *in, int out)
       p[-1] = 0;
     }
 
-    if (parseConst(&w, IKONVERT_ASCII_PREFIX))
-    {
-      parseIKonvertAsciiMessage(w);
-      w = sbGet(in);
-    }
-    else if (writeonly)
+    if (writeonly)
     {
       // ignore message
     }
-    else if (parseIKonvertFormat(in, &msg))
+    else if (parseConst(&w, IKONVERT_ASCII_PREFIX))
+    {
+      if (parseIKonvertAsciiMessage(w, &msg))
+      {
+        sendMessage = true;
+      }
+    }
+    else if ((parseConst(&w, IKONVERT_ASCII_PREFIX) && parseIKonvertAsciiMessage(w, &msg)) || parseIKonvertFormat(in, &msg))
+    {
+      sendMessage = true;
+    }
+    else
+    {
+      logError("Ignoring unknown or invalid message '%s'\n", sbGet(in));
+    }
+
+    if (sendMessage)
     {
       ssize_t r;
 
@@ -498,10 +554,6 @@ static void processReadBuffer(StringBuffer *in, int out)
 
       sbEmpty(&dataBuffer);
     }
-    else
-    {
-      logError("Ignoring invalid message '%s'\n", sbGet(in));
-    }
-    sbDelete(in, 0, p + 1 - w);
+    sbDelete(in, 0, p + 1 - sbGet(in));
   }
 }

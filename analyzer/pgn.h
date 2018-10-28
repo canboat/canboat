@@ -632,6 +632,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",4=Notch filter")
 
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
+#define IKONVERT_BEM 0x40100  /* iKonvert specific fake PGNs */
 
 typedef struct
 {
@@ -5865,6 +5866,20 @@ Pgn pgnList[] = {
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Model ID", BYTES(2), RES_INTEGER, false, 0, ""},
       {"Serial ID", BYTES(4), RES_INTEGER, false, 0, ""},
+      {0}}}
+
+    ,
+    {"iKonvert: Network status",
+     IKONVERT_BEM,
+     true,
+     15,
+     0,
+     {{"CAN network load", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Errors", BYTES(4), RES_INTEGER, false, 0, ""},
+      {"Device count", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Uptime", BYTES(4), RES_INTEGER, false, 0, "s"},
+      {"Gateway address", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Rejected TX requests", BYTES(4), RES_INTEGER, false, 0, ""},
       {0}}}
 
 };
