@@ -26,14 +26,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 static int  readonly = 0;
 static bool isFile;
 
-enum ReadyDescriptor
-{
-  FD1_Ready = 0x0001,
-  FD2_Ready = 0x0002
-};
-
-static enum ReadyDescriptor isready(int fd1, int fd2);
-
 int main(int argc, char **argv)
 {
   int            r;
@@ -125,9 +117,9 @@ retry:
     enum ReadyDescriptor r;
     int                  b;
 
-    r = isready(handle, readonly ? -1 : 0);
+    r = isReady(handle, readonly ? INVALID_SOCKET : STDIN, INVALID_SOCKET, 0);
 
-    if ((r & FD1_Ready) > 0)
+    if ((r & FD1_ReadReady) > 0)
     {
       b = read(handle, msg, sizeof(msg));
       if (b < 0)
@@ -136,13 +128,13 @@ retry:
       }
       else if (b > 0)
       {
-        if (write(1, msg, b) < b)
+        if (write(STDOUT, msg, b) < b)
         {
           break;
         }
       }
     }
-    if ((r & FD2_Ready) > 0)
+    if ((r & FD2_ReadReady) > 0)
     {
       b = read(0, msg, sizeof(msg));
       if (b < 0)
@@ -151,7 +143,7 @@ retry:
       }
       else if (b > 0)
       {
-        if (write(1, msg, b) < b)
+        if (write(STDOUT, msg, b) < b)
         {
           break;
         }
@@ -165,47 +157,4 @@ retry:
 
   close(handle);
   return 0;
-}
-
-static enum ReadyDescriptor isready(int fd1, int fd2)
-{
-  fd_set               fds;
-  struct timeval       timeout;
-  int                  setsize;
-  enum ReadyDescriptor r;
-
-  FD_ZERO(&fds);
-  if (fd1 >= 0)
-  {
-    FD_SET(fd1, &fds);
-  }
-  if (fd2 >= 0)
-  {
-    FD_SET(fd2, &fds);
-  }
-  timeout.tv_sec  = 10;
-  timeout.tv_usec = 0;
-  if (fd1 > fd2)
-  {
-    setsize = fd1 + 1;
-  }
-  else
-  {
-    setsize = fd2 + 1;
-  }
-  r = select(setsize, &fds, 0, 0, &timeout);
-  if (!r)
-  {
-    return 0;
-  }
-  r = 0;
-  if (fd1 >= 0 && FD_ISSET(fd1, &fds))
-  {
-    r |= FD1_Ready;
-  }
-  if (fd2 >= 0 && FD_ISSET(fd2, &fds))
-  {
-    r |= FD2_Ready;
-  }
-  return r;
 }

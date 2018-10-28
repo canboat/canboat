@@ -21,62 +21,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <stdbool.h>
-#include <stdint.h>
-
-#define UINT16_OUT_OF_RANGE (MAX_UINT16 - 1)
-#define UINT16_UNKNOWN (MAX_UINT16)
-
-#ifndef ARRAY_SIZE
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
-#endif
-
-/*
- * Notes on the NMEA 2000 packet structure
- * ---------------------------------------
- *
- * http://www.nmea.org/Assets/pgn059392.pdf tells us that:
- * - All messages shall set the reserved bit in the CAN ID field to zero on transmit.
- * - Data field reserve bits or reserve bytes shall be filled with ones. i.e. a reserve
- *   byte will be set to a hex value of FF, a single reservie bit would be set to a value of 1.
- * - Data field extra bytes shall be illed with a hex value of FF.
- * - If the PGN in a Command or Request is not recognized by the destination it shall
- *   reply with the PGN 059392 ACK or NACK message using a destination specific address.
- *
- */
-
-/*
- * NMEA 2000 uses the 8 'data' bytes as follows:
- * data[0] is an 'order' that increments, or not (depending a bit on implementation).
- * If the size of the packet <= 7 then the data follows in data[1..7]
- * If the size of the packet > 7 then the next byte data[1] is the size of the payload
- * and data[0] is divided into 5 bits index into the fast packet, and 3 bits 'order
- * that increases.
- * This means that for 'fast packets' the first bucket (sub-packet) contains 6 payload
- * bytes and 7 for remaining. Since the max index is 31, the maximal payload is
- * 6 + 31 * 7 = 223 bytes
- */
-
-/*
- * Some packets include a "SID", explained by Maretron as follows:
- * SID: The sequence identifier field is used to tie related PGNs together. For example,
- * the DST100 will transmit identical SIDs for Speed (PGN 128259) and Water depth
- * (128267) to indicate that the readings are linked together (i.e., the data from each
- * PGN was taken at the same time although reported at slightly different times).
- */
-
-#define FASTPACKET_INDEX (0)
-#define FASTPACKET_SIZE (1)
-#define FASTPACKET_BUCKET_0_SIZE (6)
-#define FASTPACKET_BUCKET_N_SIZE (7)
-#define FASTPACKET_BUCKET_0_OFFSET (2)
-#define FASTPACKET_BUCKET_N_OFFSET (1)
-#define FASTPACKET_MAX_INDEX (0x1f)
-#define FASTPACKET_MAX_SIZE (FASTPACKET_BUCKET_0_SIZE + FASTPACKET_BUCKET_N_SIZE * (FASTPACKET_MAX_INDEX - 1))
-
-#define Pi (3.141592654)
-#define RadianToDegree (360.0 / 2 / Pi)
-#define BYTES(x) ((x) * (8))
+#include "common.h"
 
 #define RES_LAT_LONG_PRECISION (10000000) /* 1e7 */
 #define RES_LAT_LONG (1.0e-7)
@@ -700,17 +645,6 @@ typedef struct
   char *   camelDescription; /* Filled by C, no need to set in initializers. */
   bool     unknownPgn;       /* true = this is a catch-all for unknown PGNs */
 } Pgn;
-
-typedef struct
-{
-  char     timestamp[30 + 1];
-  uint8_t  prio;
-  uint32_t pgn;
-  uint8_t  dst;
-  uint8_t  src;
-  uint8_t  len;
-  uint8_t  data[FASTPACKET_MAX_SIZE];
-} RawMessage;
 
 // Returns the first pgn that matches the given id, or 0 if not found.
 Pgn *searchForPgn(int pgn);
