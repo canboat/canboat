@@ -2382,7 +2382,7 @@ Pgn pgnList[] = {
      127501,
      false,
      8,
-     1,
+     0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
       {"Indicator1", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
       {"Indicator2", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
