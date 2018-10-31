@@ -333,7 +333,7 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
   {
     // Format msg as iKonvert message
     sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
-    sbAppendEncodeBase64(out, msg.data, msg.len);
+    sbAppendEncodeBase64(out, msg.data, msg.len, BASE64_RFC);
   }
   if (passthru)
   {
@@ -392,7 +392,7 @@ static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
   msg->dst  = dst;
 
   p += i;
-  sbAppendDecodeBase64(&dataBuffer, p, end - p);
+  sbAppendDecodeBase64(&dataBuffer, p, end - p, BASE64_RFC);
   msg->len = CB_MIN(sbGetLength(&dataBuffer), FASTPACKET_MAX_SIZE);
   memcpy(msg->data, sbGet(&dataBuffer), msg->len);
   sbEmpty(&dataBuffer);
