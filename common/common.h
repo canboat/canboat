@@ -73,6 +73,10 @@ typedef int SOCKET;
 #define INVALID_SOCKET (-1)
 #endif
 
+#define STDIN (0)
+#define STDOUT (1)
+#define STDERR (2)
+
 typedef enum LogLevel
 {
   LOGLEVEL_FATAL,
@@ -97,16 +101,42 @@ typedef struct StringBuffer
   size_t alloc;
 } StringBuffer;
 
+enum Base64Encoding
+{
+  BASE64_RFC,
+  BASE64_AIS
+};
+
 StringBuffer sbNew;
-void         sbAppendData(StringBuffer *sb, const void *data, size_t len);
-void         sbAppendDataHex(StringBuffer *sb, const void *data, size_t len);
-void         sbAppendString(StringBuffer *sb, const char *string);
-void         sbAppendFormat(StringBuffer *const sb, const char *const format, ...);
-void         sbAppendFormatV(StringBuffer *const sb, const char *const format, va_list ap);
+
+void sbAppendEncodeHex(StringBuffer *sb, const void *data, size_t len); // 00,11,fa,de
+void sbAppendDecodeHex(StringBuffer *sb, const void *data, size_t len);
+void sbAppendEncodeBase64(StringBuffer *sb, const uint8_t *data, size_t len, enum Base64Encoding encoding); // binary to Base64
+void sbAppendDecodeBase64(StringBuffer *sb, const char *data, size_t len, enum Base64Encoding encoding);    // base64 to binary
+void sbAppendData(StringBuffer *sb, const void *data, size_t len);
+void sbAppendString(StringBuffer *sb, const char *string);
+void sbAppendFormat(StringBuffer *const sb, const char *const format, ...);
+void sbAppendFormatV(StringBuffer *const sb, const char *const format, va_list ap);
+void sbDelete(StringBuffer *sb, size_t start, size_t end);
+void sbEnsureCapacity(StringBuffer *const sb, size_t len);
+
 #define sbGet(sb) ((sb)->data)
-#define sbEmpty(sb) \
-  {                 \
-    (sb)->len = 0;  \
+#define sbGetLength(sb) ((sb)->len)
+#define sbTerminate(sb)             \
+  {                                 \
+    if ((sb)->data)                 \
+    {                               \
+      (sb)->data[(sb)->len] = '\0'; \
+    }                               \
+  }
+#define sbTruncate(sb, newLen)             \
+  {                                        \
+    (sb)->len = CB_MIN(newLen, (sb)->len); \
+    sbTerminate(sb);                       \
+  }
+#define sbEmpty(sb)    \
+  {                    \
+    sbTruncate(sb, 0); \
   }
 #define sbClean(sb)     \
   {                     \
@@ -115,13 +145,8 @@ void         sbAppendFormatV(StringBuffer *const sb, const char *const format, v
       free((sb)->data); \
       (sb)->data = 0;   \
     }                   \
-  }
-#define sbTerminate(sb)             \
-  {                                 \
-    if ((sb)->data)                 \
-    {                               \
-      (sb)->data[(sb)->len] = '\0'; \
-    }                               \
+    (sb)->alloc = 0;    \
+    (sb)->len   = 0;    \
   }
 
 int          getJSONValue(const char *message, const char *fieldName, char *value, size_t len);
@@ -132,9 +157,96 @@ SOCKET open_socket_stream(const char *url);
 
 #define DATE_LENGTH 60
 const char *now(char str[DATE_LENGTH]);
+uint64_t    getNow(void);
+void        storeTimestamp(char *buf, uint64_t when);
 
 uint8_t scanNibble(char c);
 int     scanHex(char **p, uint8_t *m);
+
+enum ReadyDescriptor
+{
+  FD1_ReadReady  = 0x0001,
+  FD2_ReadReady  = 0x0002,
+  FD1_WriteReady = 0x0004,
+  FD3_WriteReady = 0x0008
+};
+
+/*
+ * Wait for R/W fd1, Read fd2 or Write fd3
+ */
+int isReady(int fd1, int fd2, int fd3, int timeout);
+
+int writeSerial(int handle, const uint8_t *data, size_t len);
+
+#define UINT16_OUT_OF_RANGE (MAX_UINT16 - 1)
+#define UINT16_UNKNOWN (MAX_UINT16)
+
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
+#endif
+
+/*
+ * Notes on the NMEA 2000 packet structure
+ * ---------------------------------------
+ *
+ * http://www.nmea.org/Assets/pgn059392.pdf tells us that:
+ * - All messages shall set the reserved bit in the CAN ID field to zero on transmit.
+ * - Data field reserve bits or reserve bytes shall be filled with ones. i.e. a reserve
+ *   byte will be set to a hex value of FF, a single reservie bit would be set to a value of 1.
+ * - Data field extra bytes shall be illed with a hex value of FF.
+ * - If the PGN in a Command or Request is not recognized by the destination it shall
+ *   reply with the PGN 059392 ACK or NACK message using a destination specific address.
+ *
+ */
+
+/*
+ * Some packets include a "SID", explained by Maretron as follows:
+ * SID: The sequence identifier field is used to tie related PGNs together. For example,
+ * the DST100 will transmit identical SIDs for Speed (PGN 128259) and Water depth
+ * (128267) to indicate that the readings are linked together (i.e., the data from each
+ * PGN was taken at the same time although reported at slightly different times).
+ */
+
+/*
+ * NMEA 2000 uses the 8 'data' bytes as follows:
+ * data[0] is an 'order' that increments, or not (depending a bit on implementation).
+ * If the size of the packet <= 7 then the data follows in data[1..7]
+ * If the size of the packet > 7 then the next byte data[1] is the size of the payload
+ * and data[0] is divided into 5 bits index into the fast packet, and 3 bits 'order
+ * that increases.
+ * This means that for 'fast packets' the first bucket (sub-packet) contains 6 payload
+ * bytes and 7 for remaining. Since the max index is 31, the maximal payload is
+ * 6 + 31 * 7 = 223 bytes
+ */
+
+#define FASTPACKET_INDEX (0)
+#define FASTPACKET_SIZE (1)
+#define FASTPACKET_BUCKET_0_SIZE (6)
+#define FASTPACKET_BUCKET_N_SIZE (7)
+#define FASTPACKET_BUCKET_0_OFFSET (2)
+#define FASTPACKET_BUCKET_N_OFFSET (1)
+#define FASTPACKET_MAX_INDEX (0x1f)
+#define FASTPACKET_MAX_SIZE (FASTPACKET_BUCKET_0_SIZE + FASTPACKET_BUCKET_N_SIZE * (FASTPACKET_MAX_INDEX - 1))
+
+typedef struct
+{
+  char     timestamp[DATE_LENGTH];
+  uint8_t  prio;
+  uint32_t pgn;
+  uint8_t  dst;
+  uint8_t  src;
+  uint8_t  len;
+  uint8_t  data[FASTPACKET_MAX_SIZE];
+} RawMessage;
+
+bool parseFastFormat(StringBuffer *src, RawMessage *msg);
+
+bool parseInt(const char **msg, int *value, int defValue);
+bool parseConst(const char **msg, const char *str);
+
+#define Pi (3.141592654)
+#define RadianToDegree (360.0 / 2 / Pi)
+#define BYTES(x) ((x) * (8))
 
 #define CANBOAT_COMMON
 #endif
