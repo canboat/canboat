@@ -33,7 +33,8 @@ enum RawFormats
   RAWFORMAT_AIRMAR,
   RAWFORMAT_CHETCO,
   RAWFORMAT_GARMIN_CSV1,
-  RAWFORMAT_GARMIN_CSV2
+  RAWFORMAT_GARMIN_CSV2,
+  RAWFORMAT_YDWG02
 };
 
 enum RawFormats format = RAWFORMAT_UNKNOWN;
@@ -305,6 +306,10 @@ int main(int argc, char **argv)
         r = parseRawFormatGarminCSV(msg, &m, showJson, format == RAWFORMAT_GARMIN_CSV2);
         break;
 
+      case RAWFORMAT_YDWG02:
+        r = parseRawFormatYDWG02(msg, &m, showJson);
+        break;
+
       default:
         logError("Unknown message format\n");
         exit(1);
@@ -374,6 +379,16 @@ enum RawFormats detectFormat(const char *msg)
     }
     logInfo("Assuming normal format with one line per packet\n");
     return RAWFORMAT_PLAIN;
+  }
+
+  {
+    int  a, b, c, d, f;
+    char e;
+    if (sscanf(msg, "%d:%d:%d.%d %c %08X ", &a, &b, &c, &d, &e, &f) == 6)
+    {
+      logInfo("Detected YDWG-02 protocol with all data on one line\n");
+      return RAWFORMAT_YDWG02;
+    }
   }
 
   return RAWFORMAT_UNKNOWN;

@@ -1,3 +1,25 @@
+/*
+
+Analyzes NMEA 2000 PGNs.
+
+(C) 2009-2015, Kees Verruijt, Harlingen, The Netherlands.
+
+This file is part of CANboat.
+
+CANboat is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CANboat is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include <common.h>
 #include "analyzer.h"
@@ -624,4 +646,85 @@ int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolu
   }
 
   return setParsedValues(m, prio, pgn, dst, src, i + 1);
+}
+
+/* Yacht Digital, YDWG-02
+
+   Example output: 00:17:55.475 R 0DF50B23 FF FF FF FF FF 00 00 FF
+
+   Example usage:
+
+pi@yacht:~/canboat/analyzer $ netcat 192.168.3.2 1457 | analyzer -json
+INFO 2018-10-16T09:57:39.665Z [analyzer] Detected YDWG-02 protocol with all data on one line
+INFO 2018-10-16T09:57:39.665Z [analyzer] New PGN 128267 for device 35 (heap 5055 bytes)
+{"timestamp":"2018-10-16T22:25:25.166","prio":3,"src":35,"dst":255,"pgn":128267,"description":"Water
+Depth","fields":{"Offset":0.000}} INFO 2018-10-16T09:57:39.665Z [analyzer] New PGN 128259 for device 35 (heap 5070 bytes)
+{"timestamp":"2018-10-16T22:25:25.177","prio":2,"src":35,"dst":255,"pgn":128259,"description":"Speed","fields":{"Speed Water
+Referenced":0.00,"Speed Water Referenced Type":"Paddle wheel"}} INFO 2018-10-16T09:57:39.666Z [analyzer] New PGN 128275 for device
+35 (heap 5091 bytes)
+{"timestamp":"2018-10-16T22:25:25.179","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance
+Log","fields":{"Date":"1980.05.04"}} INFO 2018-10-16T09:57:39.666Z [analyzer] New PGN 130311 for device 35 (heap 5106 bytes)
+{"timestamp":"2018-10-16T22:25:25.181","prio":5,"src":35,"dst":255,"pgn":130311,"description":"Environmental
+Parameters","fields":{"Temperature Source":"Sea Temperature","Temperature":13.39}}
+{"timestamp":"2018-10-16T22:25:25.181","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance
+Log","fields":{"Date":"2006.11.06", "Time": "114:38:39.07076","Log":1940}}
+{"timestamp":"2018-10-16T22:25:25.185","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance
+Log","fields":{"Date":"1970.07.14"}} INFO 2018-10-16T09:57:39.666Z [analyzer] New PGN 130316 for device 35 (heap 5121 bytes)
+{"timestamp":"2018-10-16T22:25:25.482","prio":5,"src":35,"dst":255,"pgn":130316,"description":"Temperature Extended
+Range","fields":{"Instance":0,"Source":"Sea Temperature","Temperature":13.40}}
+{"timestamp":"2018-10-16T22:25:25.683","prio":5,"src":35,"dst":255,"pgn":130311,"description":"Environmental
+Parameters","fields":{"Temperature Source":"Sea Temperature","Temperature":13.39}}
+*/
+int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
+{
+  char *       token;
+  char *       nexttoken;
+  time_t       tiden;
+  struct tm    tm;
+  char         D;
+  unsigned int msgid;
+  unsigned int prio, pgn, src, dst;
+  int          i;
+
+  // parse timestamp. YDWG doesn't give us date so let's figure it out ourself
+  token = strtok_r(msg, " ", &nexttoken);
+  if (!token)
+  {
+    return -1;
+  }
+  tiden = time(NULL);
+  localtime_r(&tiden, &tm);
+  strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT", &tm);
+  sprintf(m->timestamp + strlen(m->timestamp), "%s", token);
+
+  // parse direction, not really used in analyzer
+  token = strtok_r(NULL, " ", &nexttoken);
+  if (!token)
+  {
+    return -1;
+  }
+  D = token[0];
+
+  // parse msgid
+  token = strtok_r(NULL, " ", &nexttoken);
+  if (!token)
+  {
+    return -1;
+  }
+  msgid = strtoul(token, NULL, 16);
+  getISO11783BitsFromCanId(msgid, &prio, &pgn, &src, &dst);
+
+  // parse data
+  i = 0;
+  while ((token = strtok_r(NULL, " ", &nexttoken)) != 0)
+  {
+    m->data[i] = strtoul(token, NULL, 16);
+    i++;
+    if (i > FASTPACKET_MAX_SIZE)
+    {
+      return -1;
+    }
+  }
+
+  return setParsedValues(m, prio, pgn, dst, src, i);
 }
