@@ -8349,7 +8349,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <Description>Binary Switch Bank Status</Description>
       <Complete>false</Complete>
       <Length>8</Length>
-      <RepeatingFields>1</RepeatingFields>
+      <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>

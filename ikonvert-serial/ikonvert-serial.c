@@ -30,7 +30,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/select.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/wait.h>
@@ -44,12 +43,17 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #define IKONVERT_BEM 0x40100
 
+#define SEND_ALL_INIT_MESSAGES (4)
+
 static bool verbose;
 static bool readonly;
 static bool writeonly;
 static bool passthru;
 static long timeout;
 static bool isFile;
+static bool isSerialDevice;
+static int  sendInitState;
+static int  sequentialStatusMessages;
 
 int baudRate = B230400;
 
@@ -66,6 +70,7 @@ uint64_t lastTS;  // Last timestamp received from iKonvert. Beware roll-around, 
 
 static void processInBuffer(StringBuffer *in, StringBuffer *out);
 static void processReadBuffer(StringBuffer *in, int out);
+static void initializeDevice(void);
 
 int main(int argc, char **argv)
 {
@@ -231,7 +236,7 @@ retry:
   }
   else
   {
-    logDebug("Device is a serial port, set the attributes.\n");
+    logDebug("Device is a serial port, set the attributes for %d baud.\n", baudRate);
 
     memset(&attr, 0, sizeof(attr));
     cfsetspeed(&attr, baudRate);
@@ -243,11 +248,8 @@ retry:
     tcflush(handle, TCIFLUSH);
     tcsetattr(handle, TCSANOW, &attr);
 
-    logDebug("Device is a serial port, send the startup sequence.\n");
-
-    sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_RX_LIST_MSG, sbGet(&rxList));
-    sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_TX_LIST_MSG, sbGet(&txList));
-    sbAppendFormat(&writeBuffer, "%s\r\n", TX_ONLINE_MSG);
+    isSerialDevice = true;
+    initializeDevice();
   }
 
   for (;;)
@@ -255,8 +257,9 @@ retry:
     uint8_t data[128];
     size_t  len;
     ssize_t r;
+    int     writeHandle = (sbGetLength(&writeBuffer) > 0) ? handle : INVALID_SOCKET;
 
-    int rd = isReady(handle, STDIN, STDOUT, timeout);
+    int rd = isReady(handle, STDIN, writeHandle, timeout);
 
     if ((rd & FD1_ReadReady) > 0)
     {
@@ -293,11 +296,15 @@ retry:
       }
     }
 
-    if ((rd & FD1_WriteReady) > 0 && sbGetLength(&writeBuffer) > 0)
+    if ((rd & FD3_WriteReady) > 0 && sbGetLength(&writeBuffer) > 0)
     {
       r = write(handle, sbGet(&writeBuffer), sbGetLength(&writeBuffer));
       if (r > 0)
       {
+        if (verbose)
+        {
+          logInfo("Sent [%-1.*s]\n", r, sbGet(&writeBuffer));
+        }
         sbDelete(&writeBuffer, 0, (size_t) r); // Eliminate written bytes from buffer
       }
       if (r == 0)
@@ -306,9 +313,16 @@ retry:
       }
     }
 
-    if ((rd & FD3_WriteReady) > 0 && sbGetLength(&readBuffer) > 0)
+    if (sbGetLength(&readBuffer) > 0)
     {
+      logDebug("readBuffer len=%zu\n", sbGetLength(&readBuffer));
       processReadBuffer(&readBuffer, STDOUT);
+    }
+
+    if (rd == 0)
+    {
+      logDebug("Timeout\n");
+      initializeDevice();
     }
   }
 
@@ -382,7 +396,6 @@ static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
   r = sscanf(p, RX_PGN_MSG_PREFIX "%n", &pgn, &prio, &src, &dst, &t1, &t2, &i);
   if (r != 6)
   {
-    logError("parseIKonvertFormat: %s not all fields found, r=%d\n", RX_PGN_MSG_PREFIX, r);
     return false;
   }
 
@@ -400,30 +413,110 @@ static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
   return true;
 }
 
+static void initializeDevice(void)
+{
+  sendInitState = SEND_ALL_INIT_MESSAGES;
+}
+
+static void sendNextInitCommand(void)
+{
+  logDebug("sendNextInitCommand state=%d serial=%d\n", sendInitState, isSerialDevice);
+  if (sendInitState > 0 && isSerialDevice)
+  {
+    switch (sendInitState)
+    {
+      case 4:
+        logInfo("iKonvert initialization start\n");
+        if (sbGetLength(&rxList) > 0 || sbGetLength(&txList) > 0)
+        {
+          sbAppendFormat(&writeBuffer, "%s\r\n", TX_RESET_MSG);
+        }
+        else
+        {
+          sbAppendFormat(&writeBuffer, "%s\r\n", TX_OFFLINE_MSG);
+        }
+        break;
+
+      case 3:
+        if (sbGetLength(&rxList) > 0)
+        {
+          sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_RX_LIST_MSG, sbGet(&rxList));
+          break;
+        }
+
+      case 2:
+        if (sbGetLength(&txList) > 0)
+        {
+          sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_TX_LIST_MSG, sbGet(&txList));
+          sendInitState = 2; // in case we fell thru
+          break;
+        }
+
+      case 1:
+        sbAppendFormat(&writeBuffer, TX_ONLINE_MSG "\r\n", sbGetLength(&rxList) > 0 ? "NORMAL" : "ALL");
+        sendInitState = 1; // in case we fell thru
+        break;
+
+      default:
+        logError("Invalid sendInitState value %d\n", sendInitState);
+        break;
+    }
+    sendInitState--;
+  }
+}
+
 static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
 {
   int error;
   int pgn;
 
-  if (parseConst(&msg, "ACK,"))
+  logDebug("Message %s check start with %s\n", msg, IKONVERT_ASCII_PREFIX);
+  if (!parseConst(&msg, IKONVERT_ASCII_PREFIX))
+  {
+    logDebug("Message %s doesnt start with %s\n", msg, IKONVERT_ASCII_PREFIX);
+    return false;
+  }
+
+  if (parseConst(&msg, RX_TEXT_MSG))
+  {
+    if (verbose)
+    {
+      logInfo("Connected to %s\n", msg);
+    }
+    return true;
+  }
+
+  if (parseConst(&msg, RX_ACK_MSG))
   {
     if (verbose)
     {
       logInfo("iKonvert acknowledge of %s\n", msg);
     }
-    return false;
+    return true;
   }
 
-  if (parseConst(&msg, "NAK,"))
+  if (parseConst(&msg, RX_NAK_MSG))
   {
     if (parseInt(&msg, &error, -1) && verbose)
     {
       logInfo("iKonvert NAK %d: %s\n", error, msg);
     }
-    return false;
+    initializeDevice();
+    return true;
   }
   if (parseInt(&msg, &pgn, -1) && pgn == 0)
   {
+    if (strcmp(msg, ",,,,,") == 0)
+    {
+      logDebug("iKonvert keep-alive seen\n");
+      sequentialStatusMessages++;
+      if (sequentialStatusMessages > 10)
+      {
+        initializeDevice();
+      }
+      return true;
+    }
+
     n2k->pgn  = IKONVERT_BEM;
     n2k->prio = 7;
     n2k->src  = 0;
@@ -493,6 +586,7 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
         logInfo("iKonvert rejected %d TX message requests\n", rejected);
       }
     }
+
     return true;
   }
   logError("Unknown iKonvert message: %s\n", msg);
@@ -503,57 +597,81 @@ static void processReadBuffer(StringBuffer *in, int out)
 {
   RawMessage  msg;
   char *      p;
-  bool        sendMessage;
-  const char *w = sbGet(in);
+  const char *w;
+  bool        allowInit = true;
 
-  while ((p = strchr(w, '\n')) != 0)
+  logDebug("processReadBuffer len=%zu\n", sbGetLength(in));
+  while ((p = sbSearchChar(in, '\n')) != 0)
   {
-    memset(&msg, 0, sizeof msg);
-    sendMessage = false;
+    w = sbGet(in);
+    if ((p - w > sizeof IKONVERT_ASCII_PREFIX) && (w[0] == '$' || w[0] == '!'))
+    {
+      logDebug("processReadBuffer found record len=%zu\n", p - w);
+      memset(&msg, 0, sizeof msg);
 
-    p[0] = 0;
-    if (p > w + 1 && p[-1] == '\r')
-    {
-      p[-1] = 0;
-    }
+      p[0] = 0;
 
-    if (writeonly)
-    {
-      // ignore message
-    }
-    else if (parseConst(&w, IKONVERT_ASCII_PREFIX))
-    {
-      if (parseIKonvertAsciiMessage(w, &msg))
+      if (p > w + 1 && p[-1] == '\r')
       {
-        sendMessage = true;
+        p[-1] = 0;
       }
-    }
-    else if ((parseConst(&w, IKONVERT_ASCII_PREFIX) && parseIKonvertAsciiMessage(w, &msg)) || parseIKonvertFormat(in, &msg))
-    {
-      sendMessage = true;
+
+      logDebug("Received [%s]\n", w);
+
+      if (writeonly)
+      {
+        // ignore message
+      }
+      else if (parseIKonvertAsciiMessage(sbGet(in), &msg))
+      {
+        logDebug("ASCII message [%s] handled\n", sbGet(in));
+        // great
+        if (allowInit)
+        {
+          sendNextInitCommand();
+          allowInit = false;
+        }
+      }
+      else if (parseIKonvertFormat(in, &msg))
+      {
+        sequentialStatusMessages = 0;
+        if (sendInitState > 0)
+        {
+          msg.len = 0;
+        }
+      }
+      else
+      {
+        logError("Ignoring unknown or invalid message '%s'\n", sbGet(in));
+      }
+
+      if (msg.len > 0)
+      {
+        ssize_t r;
+
+        // Format msg as FAST message
+        sbAppendFormat(&dataBuffer, "%s,%u,%u,%u,%u,%u,", msg.timestamp, msg.prio, msg.pgn, msg.src, msg.dst, msg.len);
+        sbAppendDecodeHex(&dataBuffer, msg.data, msg.len);
+        sbAppendString(&dataBuffer, "\n");
+
+        r = write(out, sbGet(&dataBuffer), sbGetLength(&dataBuffer));
+        if (r <= 0)
+        {
+          logAbort("Cannot write to output\n");
+        }
+
+        sbEmpty(&dataBuffer);
+      }
     }
     else
     {
-      logError("Ignoring unknown or invalid message '%s'\n", sbGet(in));
-    }
-
-    if (sendMessage)
-    {
-      ssize_t r;
-
-      // Format msg as FAST message
-      sbAppendFormat(&dataBuffer, "%s,%u,%u,%u,%u,%u,", msg.timestamp, msg.prio, msg.pgn, msg.src, msg.dst, msg.len);
-      sbAppendDecodeHex(&dataBuffer, msg.data, msg.len);
-      sbAppendString(&dataBuffer, "\n");
-
-      r = write(out, sbGet(&dataBuffer), sbGetLength(&dataBuffer));
-      if (r <= 0)
-      {
-        logAbort("Cannot write to output\n");
-      }
-
-      sbEmpty(&dataBuffer);
+      logDebug("Junk record len=%zu\n", p + 1 - sbGet(in));
     }
     sbDelete(in, 0, p + 1 - sbGet(in));
+  }
+  if (sbGetLength(in) > 0 && *sbGet(in) != '$' && *sbGet(in) != '!')
+  {
+    // Remove any gibberish from buffer
+    sbEmpty(in);
   }
 }

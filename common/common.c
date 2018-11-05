@@ -248,7 +248,7 @@ void sbAppendData(StringBuffer *sb, const void *data, size_t len)
 
 char hexDigit(uint8_t b)
 {
-  return (b > 9) ? (char) b + 'A' - 10 : (char) b + '0';
+  return (b > 9) ? (char) b + 'a' - 10 : (char) b + '0';
 }
 
 void sbAppendDecodeHex(StringBuffer *sb, const void *data, size_t len)
@@ -420,6 +420,20 @@ int getJSONValue(const char *message, const char *fieldName, char *value, size_t
   }
   *value = 0;
   return 1;
+}
+
+char *sbSearchChar(const StringBuffer *const in, char c)
+{
+  char *p = sbGet(in);
+
+  for (size_t i = 0; i < in->len; i++)
+  {
+    if (p[i] == c)
+    {
+      return p + i;
+    }
+  }
+  return 0;
 }
 
 /*
@@ -688,7 +702,6 @@ int isReady(int fd1, int fd2, int fd3, int timeout)
   if (fd1 > INVALID_SOCKET)
   {
     FD_SET(fd1, &fds);
-    FD_SET(fd1, &fdw);
   }
   if (fd2 > INVALID_SOCKET)
   {
@@ -711,10 +724,6 @@ int isReady(int fd1, int fd2, int fd3, int timeout)
     if (fd1 > INVALID_SOCKET && FD_ISSET(fd1, &fds))
     {
       ret |= FD1_ReadReady;
-    }
-    if (fd1 > INVALID_SOCKET && FD_ISSET(fd1, &fdw))
-    {
-      ret |= FD1_WriteReady;
     }
     if (fd2 > INVALID_SOCKET && FD_ISSET(fd2, &fds))
     {

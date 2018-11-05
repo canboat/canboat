@@ -109,18 +109,19 @@ enum Base64Encoding
 
 StringBuffer sbNew;
 
-void sbAppendEncodeHex(StringBuffer *sb, const void *data, size_t len); // 00,11,fa,de
-void sbAppendDecodeHex(StringBuffer *sb, const void *data, size_t len);
-void sbAppendEncodeBase64(StringBuffer *sb, const uint8_t *data, size_t len, enum Base64Encoding encoding); // binary to Base64
-void sbAppendDecodeBase64(StringBuffer *sb, const char *data, size_t len, enum Base64Encoding encoding);    // base64 to binary
-void sbAppendData(StringBuffer *sb, const void *data, size_t len);
-void sbAppendString(StringBuffer *sb, const char *string);
-void sbAppendFormat(StringBuffer *const sb, const char *const format, ...);
-void sbAppendFormatV(StringBuffer *const sb, const char *const format, va_list ap);
-void sbDelete(StringBuffer *sb, size_t start, size_t end);
-void sbEnsureCapacity(StringBuffer *const sb, size_t len);
+void  sbAppendEncodeHex(StringBuffer *sb, const void *data, size_t len); // 00,11,fa,de
+void  sbAppendDecodeHex(StringBuffer *sb, const void *data, size_t len);
+void  sbAppendEncodeBase64(StringBuffer *sb, const uint8_t *data, size_t len, enum Base64Encoding encoding); // binary to Base64
+void  sbAppendDecodeBase64(StringBuffer *sb, const char *data, size_t len, enum Base64Encoding encoding);    // base64 to binary
+void  sbAppendData(StringBuffer *sb, const void *data, size_t len);
+void  sbAppendString(StringBuffer *sb, const char *string);
+void  sbAppendFormat(StringBuffer *const sb, const char *const format, ...);
+void  sbAppendFormatV(StringBuffer *const sb, const char *const format, va_list ap);
+void  sbDelete(StringBuffer *sb, size_t start, size_t end);
+void  sbEnsureCapacity(StringBuffer *const sb, size_t len);
+char *sbSearchChar(const StringBuffer *const sb, char c);
 
-#define sbGet(sb) ((sb)->data)
+#define sbGet(sb) ((sb)->data ? (sb)->data : "")
 #define sbGetLength(sb) ((sb)->len)
 #define sbTerminate(sb)             \
   {                                 \
@@ -167,8 +168,7 @@ enum ReadyDescriptor
 {
   FD1_ReadReady  = 0x0001,
   FD2_ReadReady  = 0x0002,
-  FD1_WriteReady = 0x0004,
-  FD3_WriteReady = 0x0008
+  FD3_WriteReady = 0x0004
 };
 
 /*

@@ -7424,7 +7424,7 @@
         "Description":"Binary Switch Bank Status",
         "Complete":false,
         "Length":8,
-        "RepeatingFields":1,
+        "RepeatingFields":0,
         "Fields":[
           {
             "Order":1,

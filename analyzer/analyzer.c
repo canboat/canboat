@@ -1559,7 +1559,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
     {
       if (packet->lastFastPacket + 1 != fastPacketIndex)
       {
-        logError("PGN %u malformed packet for %u received; expected %zu but got %zu\n",
+        logError("PGN %u malformed packet from %u received; expected %zu but got %zu\n",
                  pgn->pgn,
                  msg->src,
                  packet->lastFastPacket + 1,
