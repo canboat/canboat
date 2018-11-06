@@ -536,7 +536,7 @@ static int readNGT1(int handle)
   if (isLogLevelEnabled(LOGLEVEL_DEBUG))
   {
     StringBuffer sb = sbNew;
-    sbAppendDecodeHex(&sb, buf, r);
+    sbAppendEncodeHex(&sb, buf, r, ' ');
     logDebug("message: %s\n", sbGet(&sb));
     sbClean(&sb);
   }

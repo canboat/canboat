@@ -10,7 +10,7 @@
 #define ALIVE_MSG PRIVATE_MSG ",,,,,,"
 
 #define RX_PGN_MSG_PREFIX IKONVERT_BINARY_PREFIX "%u,%u,%u,%u,%u.%u," // pgn, prio, src, dst, time followed by Base64 data
-#define TX_PGN_MSG_PREFIX IKONVERT_BINARY_PREFIX "%u,%u,"             // pgn, dst followed by Base64 data
+#define TX_PGN_MSG_PREFIX IKONVERT_BINARY_PREFIX "%u,%u,,"            // pgn, dst followed by Base64 data
 #define RX_NETWORK_STATUS_MSG PRIVATE_MSG "%u,%u,%u,%u,%u,%u"         // load, errors, count, uptime, addr, rejected tx pgn requests
 #define TX_RESET_MSG IKONVERT_ASCII_PREFIX "N2NET_RESET"              // reset device incl tx/rx lists
 #define TX_SET_RX_LIST_MSG IKONVERT_ASCII_PREFIX "RX_LIST"            // followed by [, <pgn>] ...
@@ -18,10 +18,13 @@
 #define TX_ONLINE_MSG IKONVERT_ASCII_PREFIX "N2NET_INIT,%s"           // Mode=NORMAL or ALL
 #define TX_RESET_MSG IKONVERT_ASCII_PREFIX "N2NET_RESET"              // Reset device
 #define TX_OFFLINE_MSG IKONVERT_ASCII_PREFIX "N2NET_OFFLINE"          // Take device online
+#define TX_SHOWLISTS_MSG IKONVERT_ASCII_PREFIX "SHOW_LISTS"           // Show RX and TX lists
 #define TX_SETUP_MSG IKONVERT_ASCII_PREFIX "N2NET_SETUP,%u,%u,%u,%u,," // Instance, Address, Baud, Checksum (A/V/nil
 #define RX_NAK_MSG "NAK,"                                              // Error # followed by string
 #define RX_ACK_MSG "ACK,"                                              // Acknowledgement of command
 #define RX_TEXT_MSG "TEXT,"                                            // Status text
+#define RX_SHOW_RX_LIST_MSG "ShowRXTable,"
+#define RX_SHOW_TX_LIST_MSG "ShowTXTable,"
 
 #define BAUD_RATE 230400
 

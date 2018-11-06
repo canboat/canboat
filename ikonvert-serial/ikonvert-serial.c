@@ -43,7 +43,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #define IKONVERT_BEM 0x40100
 
-#define SEND_ALL_INIT_MESSAGES (8)
+#define SEND_ALL_INIT_MESSAGES (10)
 
 static bool verbose;
 static bool readonly;
@@ -262,6 +262,8 @@ retry:
 
     int rd = isReady(handle, inHandle, writeHandle, timeout);
 
+    logDebug("isReady(%d, %d, %d, %d) = %d\n", handle, inHandle, writeHandle, timeout, rd);
+
     if ((rd & FD1_ReadReady) > 0)
     {
       r = read(handle, data, sizeof data);
@@ -341,6 +343,10 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
 
   if (!p)
   {
+    if (sbGetLength(in) > 128)
+    {
+      sbEmpty(in);
+    }
     return;
   }
 
@@ -348,8 +354,9 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
   {
     // Format msg as iKonvert message
     sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
-    sbAppendEncodeBase64(out, msg.data, msg.len, BASE64_RFC);
+    sbAppendEncodeHex(out, msg.data, msg.len, 0);
     sbAppendFormat(out, "\r\n");
+    logDebug("SendBuffer [%s]\n", sbGet(out));
   }
   if (passthru)
   {
@@ -434,7 +441,7 @@ static void sendNextInitCommand(void)
   {
     switch (sendInitState)
     {
-      case 8:
+      case 10:
         logInfo("iKonvert initialization start\n");
         if (sbGetLength(&rxList) > 0 || sbGetLength(&txList) > 0)
         {
@@ -446,17 +453,25 @@ static void sendNextInitCommand(void)
         }
         break;
 
-      case 6:
+      case 8:
         if (sbGetLength(&rxList) > 0)
         {
           sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_RX_LIST_MSG, sbGet(&rxList));
           break;
         }
 
-      case 4:
+      case 6:
         if (sbGetLength(&txList) > 0)
         {
           sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_TX_LIST_MSG, sbGet(&txList));
+          sendInitState = 6; // in case we fell thru
+          break;
+        }
+
+      case 4:
+        if (verbose || isLogLevelEnabled(LOG_DEBUG))
+        {
+          sbAppendFormat(&writeBuffer, "%s\r\n", TX_SHOWLISTS_MSG);
           sendInitState = 4; // in case we fell thru
           break;
         }
@@ -479,10 +494,8 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
   int error;
   int pgn;
 
-  logDebug("Message %s check start with %s\n", msg, IKONVERT_ASCII_PREFIX);
   if (!parseConst(&msg, IKONVERT_ASCII_PREFIX))
   {
-    logDebug("Message %s doesnt start with %s\n", msg, IKONVERT_ASCII_PREFIX);
     return false;
   }
 
@@ -491,6 +504,34 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     if (verbose)
     {
       logInfo("Connected to %s\n", msg);
+    }
+    if (sendInitState == 9)
+    {
+      sendInitState--;
+      logDebug("iKonvert initialization next phase %d\n", sendInitState);
+    }
+    return true;
+  }
+
+  if (parseConst(&msg, RX_SHOW_RX_LIST_MSG))
+  {
+    if (verbose)
+    {
+      logInfo("iKonvert will receive PGNs %s\n", msg);
+    }
+    return true;
+  }
+
+  if (parseConst(&msg, RX_SHOW_TX_LIST_MSG))
+  {
+    if (verbose)
+    {
+      logInfo("iKonvert will transmit PGNs %s\n", msg);
+    }
+    if (sendInitState == 3)
+    {
+      sendInitState--;
+      logDebug("iKonvert initialization next phase %d\n", sendInitState);
     }
     return true;
   }
@@ -504,7 +545,7 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     if ((sendInitState > 0) && (sendInitState % 2 == 1))
     {
       sendInitState--;
-      logInfo("iKonvert initialization next phase %d\n", sendInitState);
+      logDebug("iKonvert initialization next phase %d\n", sendInitState);
     }
     return true;
   }
@@ -665,7 +706,7 @@ static void processReadBuffer(StringBuffer *in, int out)
 
         // Format msg as FAST message
         sbAppendFormat(&dataBuffer, "%s,%u,%u,%u,%u,%u,", msg.timestamp, msg.prio, msg.pgn, msg.src, msg.dst, msg.len);
-        sbAppendDecodeHex(&dataBuffer, msg.data, msg.len);
+        sbAppendEncodeHex(&dataBuffer, msg.data, msg.len, ',');
         sbAppendString(&dataBuffer, "\n");
 
         r = write(out, sbGet(&dataBuffer), sbGetLength(&dataBuffer));

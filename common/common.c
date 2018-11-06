@@ -251,16 +251,16 @@ char hexDigit(uint8_t b)
   return (b > 9) ? (char) b + 'a' - 10 : (char) b + '0';
 }
 
-void sbAppendDecodeHex(StringBuffer *sb, const void *data, size_t len)
+void sbAppendEncodeHex(StringBuffer *sb, const void *data, size_t len, char separator)
 {
   sbEnsureCapacity(sb, sb->len + len * 3);
 
   for (; len > 0; len--, data++)
   {
     sbAppendFormat(sb, "%c%c", hexDigit(((uint8_t *) data)[0] >> 4), hexDigit(((uint8_t *) data)[0] & 0x0f));
-    if (len > 1)
+    if (len > 1 && separator != '\0')
     {
-      sbAppendString(sb, ",");
+      sbAppendData(sb, &separator, 1);
     }
   }
 }
