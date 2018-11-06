@@ -858,7 +858,7 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
 
     p += i - 1;
 
-    for (b = 0; b < CB_MAX(bytes, FASTPACKET_MAX_SIZE); b++)
+    for (b = 0; b < CB_MIN(bytes, FASTPACKET_MAX_SIZE); b++)
     {
       if ((sscanf(p, ",%x%n", &byt, &i) == 1) && (byt < 256))
       {
@@ -866,7 +866,7 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
       }
       else
       {
-        logError("Unable to parse incoming message '%s' at offset %u\n", sbGet(in), b);
+        logError("Unable to parse incoming message '%s' data byte %u\n", sbGet(in), b);
         return false;
       }
       p += i;

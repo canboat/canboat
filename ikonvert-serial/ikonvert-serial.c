@@ -43,7 +43,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #define IKONVERT_BEM 0x40100
 
-#define SEND_ALL_INIT_MESSAGES (4)
+#define SEND_ALL_INIT_MESSAGES (8)
 
 static bool verbose;
 static bool readonly;
@@ -258,8 +258,9 @@ retry:
     size_t  len;
     ssize_t r;
     int     writeHandle = (sbGetLength(&writeBuffer) > 0) ? handle : INVALID_SOCKET;
+    int     inHandle    = (sendInitState == 0) ? STDIN : INVALID_SOCKET;
 
-    int rd = isReady(handle, STDIN, writeHandle, timeout);
+    int rd = isReady(handle, inHandle, writeHandle, timeout);
 
     if ((rd & FD1_ReadReady) > 0)
     {
@@ -348,6 +349,7 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
     // Format msg as iKonvert message
     sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
     sbAppendEncodeBase64(out, msg.data, msg.len, BASE64_RFC);
+    sbAppendFormat(out, "\r\n");
   }
   if (passthru)
   {
@@ -415,7 +417,14 @@ static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
 
 static void initializeDevice(void)
 {
-  sendInitState = SEND_ALL_INIT_MESSAGES;
+  if (isSerialDevice)
+  {
+    sendInitState = SEND_ALL_INIT_MESSAGES;
+  }
+  else
+  {
+    sendInitState = 0;
+  }
 }
 
 static void sendNextInitCommand(void)
@@ -425,7 +434,7 @@ static void sendNextInitCommand(void)
   {
     switch (sendInitState)
     {
-      case 4:
+      case 8:
         logInfo("iKonvert initialization start\n");
         if (sbGetLength(&rxList) > 0 || sbGetLength(&txList) > 0)
         {
@@ -437,29 +446,29 @@ static void sendNextInitCommand(void)
         }
         break;
 
-      case 3:
+      case 6:
         if (sbGetLength(&rxList) > 0)
         {
           sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_RX_LIST_MSG, sbGet(&rxList));
           break;
         }
 
-      case 2:
+      case 4:
         if (sbGetLength(&txList) > 0)
         {
           sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_TX_LIST_MSG, sbGet(&txList));
-          sendInitState = 2; // in case we fell thru
+          sendInitState = 4; // in case we fell thru
           break;
         }
 
-      case 1:
+      case 2:
         sbAppendFormat(&writeBuffer, TX_ONLINE_MSG "\r\n", sbGetLength(&rxList) > 0 ? "NORMAL" : "ALL");
-        sendInitState = 1; // in case we fell thru
+        sendInitState = 2; // in case we fell thru
         break;
 
       default:
-        logError("Invalid sendInitState value %d\n", sendInitState);
-        break;
+        logDebug("Waiting for ack value %d\n", sendInitState);
+        return;
     }
     sendInitState--;
   }
@@ -491,6 +500,11 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     if (verbose)
     {
       logInfo("iKonvert acknowledge of %s\n", msg);
+    }
+    if ((sendInitState > 0) && (sendInitState % 2 == 1))
+    {
+      sendInitState--;
+      logInfo("iKonvert initialization next phase %d\n", sendInitState);
     }
     return true;
   }
