@@ -25032,8 +25032,9 @@
             "Signed":false},
           {
             "Order":17,
-            "Id":null,
-            "Name":null,
+            "Id":"unused",
+            "Name":"Unused",
+            "Description":"Unused",
             "BitLength":2,
             "BitOffset":288,
             "BitStart":0,

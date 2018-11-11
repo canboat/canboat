@@ -28128,8 +28128,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
         </Field>
         <Field>
           <Order>17</Order>
-          <Id></Id>
-          <Name></Name>
+          <Id>unused</Id>
+          <Name>Unused</Name>
+          <Description>Unused</Description>
           <BitLength>2</BitLength>
           <BitOffset>288</BitOffset>
           <BitStart>0</BitStart>
