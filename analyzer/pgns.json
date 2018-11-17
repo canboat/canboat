@@ -25032,11 +25032,13 @@
             "Signed":false},
           {
             "Order":17,
-            "Id":null,
-            "Name":null,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "Description":"reserved",
             "BitLength":2,
             "BitOffset":288,
             "BitStart":0,
+            "Type":"Binary data",
             "Signed":false},
           {
             "Order":18,

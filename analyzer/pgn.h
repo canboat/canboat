@@ -5528,7 +5528,7 @@ Pgn pgnList[] = {
       {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
       {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
       {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "Id of mother ship sent by daughter vessels"},
-      {"", 2, 1, false, 0, ""},
+      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
       {"Spare", 6, RES_INTEGER, false, 0, ",0=unavailable"},
       {0}}}
 

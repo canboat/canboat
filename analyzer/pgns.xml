@@ -28128,11 +28128,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
         </Field>
         <Field>
           <Order>17</Order>
-          <Id></Id>
-          <Name></Name>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>288</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
