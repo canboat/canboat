@@ -16432,7 +16432,7 @@
         "Id":"windData",
         "Description":"Wind Data",
         "Complete":true,
-        "Length":6,
+        "Length":8,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -16477,13 +16477,22 @@
               {"name":"Magnetic (ground referenced to Magnetic North)","value":"1"},
               {"name":"Apparent","value":"2"},
               {"name":"True (boat referenced)","value":"3"},
-              {"name":"True (water referenced)","value":"4"}]}]},
+              {"name":"True (water referenced)","value":"4"}]},
+          {
+            "Order":5,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":21,
+            "BitOffset":43,
+            "BitStart":3,
+            "Type":"Binary data",
+            "Signed":false}]},
       {
         "PGN":130310,
         "Id":"environmentalParameters",
         "Description":"Environmental Parameters",
         "Complete":true,
-        "Length":7,
+        "Length":8,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -16525,6 +16534,15 @@
             "BitStart":0,
             "Units":"hPa",
             "Type":"Pressure",
+            "Signed":false},
+          {
+            "Order":5,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Type":"Binary data",
             "Signed":false}]},
       {
         "PGN":130311,

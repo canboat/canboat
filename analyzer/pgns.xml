@@ -18486,7 +18486,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <Id>windData</Id>
       <Description>Wind Data</Description>
       <Complete>true</Complete>
-      <Length>6</Length>
+      <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -18537,6 +18537,16 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='4' Name='True (water referenced)' />
           </EnumValues>
         </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>21</BitLength>
+          <BitOffset>43</BitOffset>
+          <BitStart>3</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -18544,7 +18554,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <Id>environmentalParameters</Id>
       <Description>Environmental Parameters</Description>
       <Complete>true</Complete>
-      <Length>7</Length>
+      <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -18589,6 +18599,16 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitStart>0</BitStart>
           <Units>hPa</Units>
                  <Type>Pressure</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>

@@ -3965,12 +3965,13 @@ Pgn pgnList[] = {
     {"Wind Data",
      130306,
      true,
-     6,
+     8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
       {"Wind Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, ""},
+      {"Reserved", 5 + BYTES(2), RES_BINARY, false, 0, ""},
       {0}}}
 
     /* Water temperature, Transducer Measurement */
@@ -3978,12 +3979,13 @@ Pgn pgnList[] = {
     {"Environmental Parameters",
      130310,
      true,
-     7,
+     8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Outside Ambient Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
+      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
       {0}}}
 
     ,
