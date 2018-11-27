@@ -143,6 +143,12 @@ int main(int argc, char **argv)
         case 230400:
           baudRate = B230400;
           break;
+        case 460800:
+          baudRate = B460800;
+          break;
+        case 921600:
+          baudRate = B921600;
+          break;
         default:
           device = 0;
           break;
