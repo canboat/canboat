@@ -153,6 +153,16 @@ int main(int argc, char **argv)
         case 230400:
           baudRate = B230400;
           break;
+#ifdef B460800
+        case 460800:
+          baudRate = B460800;
+          break;
+#endif
+#ifdef B921600
+        case 921600:
+          baudRate = B921600;
+          break;
+#endif
         default:
           device = 0;
           break;
@@ -189,7 +199,14 @@ int main(int argc, char **argv)
             "  -d      debug\n"
             "  -rx <list> Set PGN receive list\n"
             "  -tx <list> Set PGN transmit list\n"
-            "  -s <n>  set baudrate to 38400, 57600, 115200 or 230400\n"
+            "  -s <n>  set baudrate to 38400, 57600, 115200, 230400"
+#ifdef B460800
+            ", 460800"
+#endif
+#ifdef B921600
+            ", 921600"
+#endif
+            "\n"
             "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
             "  <device> can be a serial device, a normal file containing a raw log,\n"
             "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
