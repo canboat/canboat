@@ -154,7 +154,7 @@ int main(int argc, char **argv)
           break;
 #endif
         default:
-          device = 0;
+          baudRate = speed;
           break;
       }
       logDebug("speed set to %d (%d) baud\n", speed, baudRate);
@@ -232,13 +232,11 @@ retry:
     logDebug("fd = %d\n", handle);
     if (handle < 0)
     {
-      logError("Cannot open NGT-1-A device %s\n", device);
-      exit(1);
+      logAbort("Cannot open NGT-1-A device %s\n", device);
     }
     if (fstat(handle, &statbuf) < 0)
     {
-      logError("Cannot determine device %s\n", device);
-      exit(1);
+      logAbort("Cannot determine device %s\n", device);
     }
     isFile = S_ISREG(statbuf.st_mode);
   }
@@ -252,7 +250,10 @@ retry:
     logDebug("Device is a serial port, set the attributes.\n");
 
     memset(&attr, 0, sizeof(attr));
-    cfsetspeed(&attr, baudRate);
+    if (cfsetspeed(&attr, baudRate) < 0)
+    {
+      logAbort("Could not set baudrate %d\n", speed);
+    }
     attr.c_cflag |= CS8 | CLOCAL | CREAD;
 
     attr.c_iflag |= IGNPAR;
@@ -374,8 +375,7 @@ static void writeRaw(int handle, const unsigned char *cmd, const size_t len)
 {
   if (write(handle, cmd, len) != len)
   {
-    logError("Unable to write command '%.*s' to NGT-1-A device\n", (int) len, cmd);
-    exit(1);
+    logAbort("Unable to write command '%.*s' to NGT-1-A device\n", (int) len, cmd);
   }
   logDebug("Written %d bytes\n", (int) len);
 }

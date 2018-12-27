@@ -56,6 +56,7 @@ static int  sendInitState;
 static int  sequentialStatusMessages;
 
 int baudRate = B230400;
+int speed = 230400;
 
 // Yeah globals. We're trying to avoid malloc()/free() to run quickly on limited memory hardware
 StringBuffer writeBuffer; // What we still have to write to device
@@ -81,7 +82,6 @@ int main(int argc, char **argv)
   char *         device = 0;
   struct stat    statbuf;
   int            pid = 0;
-  int            speed;
 
   setProgName(argv[0]);
   while (argc > 1)
@@ -253,10 +253,14 @@ retry:
   }
   else
   {
-    logDebug("Device is a serial port, set the attributes for %d baud.\n", baudRate);
+    logDebug("Device is a serial port, set the attributes for %d baud.\n", speed);
 
     memset(&attr, 0, sizeof(attr));
-    cfsetspeed(&attr, baudRate);
+    if (cfsetspeed(&attr, baudRate) < 0)
+    {
+      logAbort("Cannot set baudrate %d\n", speed);
+    }
+
     attr.c_cflag |= CS8 | CLOCAL | CREAD;
 
     attr.c_iflag |= IGNPAR;
@@ -401,8 +405,10 @@ static void computeIKonvertTime(RawMessage *msg, unsigned int t1, unsigned int t
     lastNow = getNow();
     lastTS  = ts;
   }
+  logDebug("computeIKonvertTime(%u, %u) -> ts=%llu lastTS=%llu lastNow = %llu\n", t1, t2, ts, lastTS, lastNow);
   // Compute the difference between lastTS and ts
   lastNow += ts - lastTS;
+  lastTS = ts;
   storeTimestamp(msg->timestamp, lastNow);
 }
 
