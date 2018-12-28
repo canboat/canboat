@@ -338,6 +338,11 @@ static void parseAndWriteIn(int handle, const unsigned char *cmd)
   r = sscanf(p, ",%u,%u,%u,%u,%u,%n", &prio, &pgn, &src, &dst, &bytes, &i);
   if (r == 5)
   {
+    if (pgn >= 0x40000)
+    { // Ignore synthetic CANboat PGNs that report original device status.
+      return;
+    }
+
     p += i - 1;
     m    = msg;
     *m++ = (unsigned char) prio;

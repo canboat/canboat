@@ -279,7 +279,7 @@ retry:
     size_t  len;
     ssize_t r;
     int     writeHandle = (sbGetLength(&writeBuffer) > 0) ? handle : INVALID_SOCKET;
-    int     inHandle    = (sendInitState == 0) ? STDIN : INVALID_SOCKET;
+    int     inHandle    = (sendInitState == 0 && writeHandle == INVALID_SOCKET) ? STDIN : INVALID_SOCKET;
 
     int rd = isReady(handle, inHandle, writeHandle, timeout);
 
@@ -371,11 +371,14 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
     return;
   }
 
-  if (!readonly && parseFastFormat(in, &msg))
+  if (!readonly 
+    && parseFastFormat(in, &msg) 
+    && msg.pgn < 0x40000 // Ignore synthetic CANboat PGNs 
+     )
   {
     // Format msg as iKonvert message
     sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
-    sbAppendEncodeHex(out, msg.data, msg.len, 0);
+    sbAppendEncodeBase64(out, msg.data, msg.len, 0);
     sbAppendFormat(out, "\r\n");
     logDebug("SendBuffer [%s]\n", sbGet(out));
   }

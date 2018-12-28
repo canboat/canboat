@@ -10,7 +10,7 @@
 #define ALIVE_MSG PRIVATE_MSG ",,,,,,"
 
 #define RX_PGN_MSG_PREFIX IKONVERT_BINARY_PREFIX "%u,%u,%u,%u,%u.%u," // pgn, prio, src, dst, time followed by Base64 data
-#define TX_PGN_MSG_PREFIX IKONVERT_BINARY_PREFIX "%u,%u,,"            // pgn, dst followed by Base64 data
+#define TX_PGN_MSG_PREFIX IKONVERT_BINARY_PREFIX "%u,%u,"             // pgn, dst followed by Base64 data
 #define RX_NETWORK_STATUS_MSG PRIVATE_MSG "%u,%u,%u,%u,%u,%u"         // load, errors, count, uptime, addr, rejected tx pgn requests
 #define TX_RESET_MSG IKONVERT_ASCII_PREFIX "N2NET_RESET"              // reset device incl tx/rx lists
 #define TX_SET_RX_LIST_MSG IKONVERT_ASCII_PREFIX "RX_LIST"            // followed by [, <pgn>] ...
