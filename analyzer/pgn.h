@@ -671,7 +671,7 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson);
 #ifdef GLOBALS
 Pgn pgnList[] = {
 
-    /* PDU1 (addressed) single-frame range 0E800 to 0xEEFF (59392 - 61183) */
+    /* PDU1 (addressed) single-frame PGN range 0E800 to 0xEEFF (59392 - 61183) */
 
     {"Unknown single-frame addressed", 0, false, 8, 0, {{"Data", BYTES(8), RES_BINARY, false, 0, ""}, {0}}, 0, 0, true}
 
@@ -799,7 +799,7 @@ Pgn pgnList[] = {
       {"Reserved", 1, RES_BINARY, false, 0, "ISO Self Configurable"},
       {0}}}
 
-    /* PDU1 (addressed) single-frame range 0EF00 to 0xEFFF (61184 - 61439) */
+    /* PDU1 (addressed) single-frame PGN range 0EF00 to 0xEFFF (61184 - 61439) */
 
     /* The following probably have the wrong Proprietary ID */
     ,
@@ -1544,7 +1544,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {0}}}
 
-    /* PDU1 (addressed) fast-packet range 0x10000 to 0x1EEFF (65536 - 126719) */
+    /* PDU1 (addressed) fast-packet PGN range 0x10000 to 0x1EEFF (65536 - 126719) */
     ,
     {"Unknown fast-packet addressed", 65536, false, 255, 0, {{"Data", BYTES(255), RES_BINARY, false, 0, ""}, {0}}, 0, 0, true}
 
@@ -1773,7 +1773,7 @@ Pgn pgnList[] = {
       },
       {0}}}
 
-    /* proprietary PDU1 (addressed) fast-packet range 0x1EF00 to 0x1EFFF (126720 - 126975) */
+    /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
     /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
     ,
@@ -2071,7 +2071,7 @@ Pgn pgnList[] = {
      0,
      true}
 
-    /* PDU2 (non addressed) fast packet range 0x1F000 to 0x1FEFF (126976 - 130815) */
+    /* PDU2 (non addressed) fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815) */
     ,
     {"Unknown fast-packet non-addressed", 126976, false, 255, 0, {{"Data", BYTES(255), RES_BINARY, false, 0, ""}, {0}}, 0, 0, true}
 
@@ -4489,7 +4489,7 @@ Pgn pgnList[] = {
       {"Low pass filter frequency", BYTES(2), RES_INTEGER, false, "Hz", ""},
       {"Channel", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_CHANNEL, ""}}}
 
-    /* proprietary PDU2 (non addressed) fast packet range 0x1FF00 to 0x1FFFF (130816 - 131071) */
+    /* proprietary PDU2 (non addressed) fast packet PGN range 0x1FF00 to 0x1FFFF (130816 - 131071) */
     ,
     {"SonicHub: Init #2",
      130816,
