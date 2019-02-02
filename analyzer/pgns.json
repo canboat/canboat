@@ -7378,8 +7378,8 @@
         "PGN":127498,
         "Id":"engineParametersStatic",
         "Description":"Engine Parameters, Static",
-        "Complete":true,
-        "Length":8,
+        "Complete":false,
+        "Length":52,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -7406,17 +7406,19 @@
             "Order":3,
             "Id":"vin",
             "Name":"VIN",
-            "BitLength":8,
+            "BitLength":136,
             "BitOffset":24,
             "BitStart":0,
+            "Type":"ASCII text",
             "Signed":false},
           {
             "Order":4,
             "Id":"softwareId",
             "Name":"Software ID",
-            "BitLength":16,
-            "BitOffset":32,
+            "BitLength":256,
+            "BitOffset":160,
             "BitStart":0,
+            "Type":"ASCII text",
             "Signed":false}]},
       {
         "PGN":127501,

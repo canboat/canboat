@@ -2365,13 +2365,13 @@ Pgn pgnList[] = {
     ,
     {"Engine Parameters, Static",
      127498,
-     true,
-     8,
+     false,
+     52,
      0,
      {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
       {"Rated Engine Speed", BYTES(2), 1, false, 0, ""},
-      {"VIN", BYTES(1), 1, false, 0, ""},
-      {"Software ID", BYTES(2), 1, false, 0, ""},
+      {"VIN", BYTES(17), RES_ASCII, false, 0, ""},
+      {"Software ID", BYTES(32), RES_ASCII, false, 0, ""},
       {0}}}
 
     ,

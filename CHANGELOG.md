@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Update guessed content of PGN 127498
+
 ## [1.2.0] - 2019-02-01
 
 ### Added

@@ -8296,8 +8296,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127498</PGN>
       <Id>engineParametersStatic</Id>
       <Description>Engine Parameters, Static</Description>
-      <Complete>true</Complete>
-      <Length>8</Length>
+      <Complete>false</Complete>
+      <Length>52</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -8327,18 +8327,20 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>3</Order>
           <Id>vin</Id>
           <Name>VIN</Name>
-          <BitLength>8</BitLength>
+          <BitLength>136</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>ASCII text</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>softwareId</Id>
           <Name>Software ID</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>256</BitLength>
+          <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>ASCII text</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
