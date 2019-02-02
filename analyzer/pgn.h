@@ -2314,7 +2314,7 @@ Pgn pgnList[] = {
       {"Fuel Rate", BYTES(2), 0.1, true, "L/h", ""},
       {"Total Engine hours", BYTES(4), 1.0, false, "s", ""},
       {"Coolant Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Fuel Pressure", BYTES(2), 1, false, "hPa", ""},
+      {"Fuel Pressure", BYTES(2), 1, false, "kPa", ""},
       {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
       {"Discrete Status 1", BYTES(2), RES_BITFIELD, false, LOOKUP_ENGINE_STATUS_1, ""},
       {"Discrete Status 2", BYTES(2), RES_BITFIELD, false, LOOKUP_ENGINE_STATUS_2, ""},

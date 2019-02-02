@@ -7109,7 +7109,7 @@
             "BitLength":16,
             "BitOffset":136,
             "BitStart":0,
-            "Units":"hPa",
+            "Units":"kPa",
             "Signed":false},
           {
             "Order":10,

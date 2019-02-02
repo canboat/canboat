@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Update guessed content of PGN 127498
+- Update PGN 127489 Fuel Pressure units (Issue 141.)
+- Update guessed content of PGN 127498 (Issue 142.)
 
 ## [1.2.0] - 2019-02-01
 

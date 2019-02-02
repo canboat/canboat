@@ -7992,7 +7992,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>16</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Units>hPa</Units>
+          <Units>kPa</Units>
           <Signed>false</Signed>
         </Field>
         <Field>
