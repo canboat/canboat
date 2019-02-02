@@ -6,7 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2019-02-01
+
+### Added
+- support for Digital Yacht iKonvert
+- actisense-serial supports higher baud rates 460800 and 921600 (where supported by OS)
+- analyzer can read YDWG-02 logfiles
+- replay utility to play back raw logfiles with same rate as they were recorded
+
 ### Changed
+- Fixed calculation of negative numbers
+- Minor fixes to some PGNs.
 
 ## [1.1.0] - 2018-10-27
 
