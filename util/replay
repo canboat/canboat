@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+
+use Date::Parse qw(str2time);
+
+my $prevTime = 0;
+my $filterSource = 0;
+my $tstamp, $rest, $time, $msec, $src;
+
+if ($ARGC > 1)
+{
+  $filterSource = $ARGV[1];
+}
+
+while (my $line = <STDIN>)
+{
+  ($tstamp, $src, $rest) = split(/,/, $line, 3);
+  $time = str2time($tstamp);
+
+  if ($prevTime == 0)
+  {
+    $prevTime = $time;
+  }
+
+  if ($filterSource == 0 || $filterSource == $src)
+  {
+    if ($time > $prevTime)
+    { 
+      $sec = ($time - $prevTime);
+      select(undef, undef, undef, $sec);
+    }
+    $prevTime = $time;
+    print $line;
+  }
+}
