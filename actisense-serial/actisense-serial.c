@@ -338,7 +338,7 @@ static void parseAndWriteIn(int handle, const unsigned char *cmd)
   r = sscanf(p, ",%u,%u,%u,%u,%u,%n", &prio, &pgn, &src, &dst, &bytes, &i);
   if (r == 5)
   {
-    if (pgn >= 0x40000)
+    if (pgn >= ACTISENSE_BEM)
     { // Ignore synthetic CANboat PGNs that report original device status.
       return;
     }
@@ -624,7 +624,7 @@ static void ngtMessageReceived(const unsigned char *msg, size_t msgLen)
     return;
   }
 
-  sprintf(line, "%s,%u,%u,%u,%u,%u", now(dateStr), 0, 0x40000 + msg[0], 0, 0, (unsigned int) msgLen - 1);
+  sprintf(line, "%s,%u,%u,%u,%u,%u", now(dateStr), 0, ACTISENSE_BEM + msg[0], 0, 0, (unsigned int) msgLen - 1);
   p = line + strlen(line);
   for (i = 1; i < msgLen && p < line + sizeof(line) - 5; i++)
   {

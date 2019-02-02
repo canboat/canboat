@@ -144,14 +144,13 @@ StringBuffer nmeaMessage; /* Buffer for sending to NMEA0183 TCP clients */
 
 #define MIN_PGN (59391)
 #define MAX_PGN (131000)
-#define ACTISENSE_BEM (0x40000)
-#define ACTISENSE_RNG (0x100)
+#define CANBOAT_RNG (CANBOAT_PGN_END - CANBOAT_PGN_START + 1)
 #define NMEA_RNG (MAX_PGN - MIN_PGN + 1)
 
-#define PGN_SPACE (ACTISENSE_RNG + NMEA_RNG)
+#define PGN_SPACE (CANBOAT_RNG + NMEA_RNG)
 #define PrnToIdx(prn)                 \
   ((prn <= MAX_PGN) ? (prn - MIN_PGN) \
-                    : ((prn <= ACTISENSE_BEM + ACTISENSE_RNG && prn >= ACTISENSE_BEM) ? (prn + NMEA_RNG - ACTISENSE_BEM) : -1))
+                    : ((prn <= CANBOAT_PGN_START + CANBOAT_RNG && prn >= CANBOAT_PGN_START) ? (prn + NMEA_RNG - CANBOAT_PGN_START) : -1))
 
 /*
  * We store messages and where they come from.

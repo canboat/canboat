@@ -41,8 +41,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "license.h"
 
-#define IKONVERT_BEM 0x40100
-
 #define SEND_ALL_INIT_MESSAGES (10)
 
 static bool verbose;
@@ -206,7 +204,7 @@ int main(int argc, char **argv)
 #ifdef B921600
             ", 921600"
 #endif
-            "\n"
+            " (default 230400)\n"
             "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
             "  <device> can be a serial device, a normal file containing a raw log,\n"
             "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
@@ -364,7 +362,7 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
 
   if (!p)
   {
-    if (sbGetLength(in) > 128)
+    if (sbGetLength(in) > sizeof("2019-01-20T14:42:04.636Z,0,129540,") + 3 * FASTPACKET_MAX_SIZE)
     {
       sbEmpty(in);
     }
@@ -373,7 +371,7 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
 
   if (!readonly 
     && parseFastFormat(in, &msg) 
-    && msg.pgn < 0x40000 // Ignore synthetic CANboat PGNs 
+    && msg.pgn < CANBOAT_PGN_START
      )
   {
     // Format msg as iKonvert message
@@ -582,7 +580,6 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     {
       logInfo("iKonvert NAK %d: %s\n", error, msg);
     }
-    initializeDevice();
     return true;
   }
   if (parseInt(&msg, &pgn, -1) && pgn == 0)

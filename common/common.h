@@ -247,5 +247,15 @@ bool parseConst(const char **msg, const char *str);
 #define RadianToDegree (360.0 / 2 / Pi)
 #define BYTES(x) ((x) * (8))
 
+/*
+ * The 'converter' programs generate fake PGNs containing data that they generate
+ * themselves or via proprietary non-PGN serial messages.
+ * These need unique fake PGNs.
+ */
+#define CANBOAT_PGN_START   0x40000
+#define CANBOAT_PGN_END     0x401FF
+#define ACTISENSE_BEM       0x40000 /* Actisense specific fake PGNs */
+#define IKONVERT_BEM        0x40100  /* iKonvert specific fake PGNs */
+
 #define CANBOAT_COMMON
 #endif

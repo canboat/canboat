@@ -19,7 +19,7 @@
 #define TX_RESET_MSG IKONVERT_ASCII_PREFIX "N2NET_RESET"              // Reset device
 #define TX_OFFLINE_MSG IKONVERT_ASCII_PREFIX "N2NET_OFFLINE"          // Take device online
 #define TX_SHOWLISTS_MSG IKONVERT_ASCII_PREFIX "SHOW_LISTS"           // Show RX and TX lists
-#define TX_SETUP_MSG IKONVERT_ASCII_PREFIX "N2NET_SETUP,%u,%u,%u,%u,," // Instance, Address, Baud, Checksum (A/V/nil
+#define TX_SETUP_MSG IKONVERT_ASCII_PREFIX "N2NET_SETUP,%u,%u,%u,%u,," // Instance, Address, Baud, Checksum (A/V/nil)
 #define RX_NAK_MSG "NAK,"                                              // Error # followed by string
 #define RX_ACK_MSG "ACK,"                                              // Acknowledgement of command
 #define RX_TEXT_MSG "TEXT,"                                            // Status text
