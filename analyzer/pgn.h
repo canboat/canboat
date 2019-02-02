@@ -1135,7 +1135,7 @@ Pgn pgnList[] = {
      false,
      8,
      0,
-     {{"Real Power", BYTES(2), 1, false, "W", "", -2000000000}, {"Apparent Power", BYTES(2), 1, false, "VA", "", -2000000000}, {0}}}
+     {{"Real Power", BYTES(4), 1, false, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, false, "VA", "", -2000000000}, {0}}}
 
     ,
     {"Generator Phase A Basic AC Quantities",

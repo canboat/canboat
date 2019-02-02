@@ -1966,7 +1966,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>1</Order>
           <Id>realPower</Id>
           <Name>Real Power</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
@@ -1977,8 +1977,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>2</Order>
           <Id>apparentPower</Id>
           <Name>Apparent Power</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
           <Signed>false</Signed>
