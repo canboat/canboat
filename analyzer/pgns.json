@@ -7398,9 +7398,11 @@
             "Order":2,
             "Id":"ratedEngineSpeed",
             "Name":"Rated Engine Speed",
+            "Description":"rpm",
             "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
+            "Resolution":"0.25",
             "Signed":false},
           {
             "Order":3,

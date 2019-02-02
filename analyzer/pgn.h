@@ -2369,7 +2369,7 @@ Pgn pgnList[] = {
      52,
      0,
      {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
-      {"Rated Engine Speed", BYTES(2), 1, false, 0, ""},
+      {"Rated Engine Speed", BYTES(2), 0.25, false, 0, "rpm"},
       {"VIN", BYTES(17), RES_ASCII, false, 0, ""},
       {"Software ID", BYTES(32), RES_ASCII, false, 0, ""},
       {0}}}

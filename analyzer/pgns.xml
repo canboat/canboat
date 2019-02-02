@@ -8318,9 +8318,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>2</Order>
           <Id>ratedEngineSpeed</Id>
           <Name>Rated Engine Speed</Name>
+          <Description>rpm</Description>
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>0.25</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
