@@ -307,7 +307,7 @@ void extractNumber(const Field *field, uint8_t *data, size_t startBit, size_t bi
         /* 0000.0000.0000.0000.0111.1111.1111.1101 value    */
         /* 0000.0000.0000.0000.0111.1111.1111.1111 maxvalue */
         /* 1111.1111.1111.1111.1000.0000.0000.0000 ~maxvalue */
-        *value |= ~*maxValue;
+        *value |= ~maxv;
       }
     }
   }
