@@ -6,10 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2019-02-01
+
 ### Changed
 - Update PGN 127489 Fuel Pressure units (Issue 141.)
 - Update PGN 127498 ASCII string lengths (Issue 142.)
 - Update PGN 127498 Max Speed resolution and unit (Issue 140.)
+- Update PGN 65026 Generator AC Real/Apparent Power values should be 4 bytes
 
 ## [1.2.0] - 2019-02-01
 
