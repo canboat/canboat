@@ -9437,7 +9437,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <Id>inverterStatus</Id>
       <Description>Inverter Status</Description>
       <Complete>false</Complete>
-      <Length>8</Length>
+      <Length>4</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -13145,7 +13145,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
         </Field>
       </Fields>
     </PGNInfo>

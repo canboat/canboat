@@ -8378,7 +8378,7 @@
         "Id":"inverterStatus",
         "Description":"Inverter Status",
         "Complete":false,
-        "Length":8,
+        "Length":4,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -11678,7 +11678,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":"0.01",
-            "Signed":false}]},
+            "Signed":true}]},
       {
         "PGN":129540,
         "Id":"gnssSatsInView",

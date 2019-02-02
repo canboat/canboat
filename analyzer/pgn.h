@@ -631,9 +631,6 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",3=Band pass"                   \
    ",4=Notch filter")
 
-#define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
-#define IKONVERT_BEM 0x40100  /* iKonvert specific fake PGNs */
-
 typedef struct
 {
   char *   description;
@@ -2535,7 +2532,7 @@ Pgn pgnList[] = {
     {"Inverter Status",
      127509,
      false,
-     8,
+     4,
      0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
       {"AC Instance", BYTES(1), 1, false, 0, ""},
@@ -3120,7 +3117,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
       {"HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision"},
       {"VDOP", BYTES(2), 0.01, true, 0, "Vertical dilution of precision"},
-      {"TDOP", BYTES(2), 0.01, false, 0, "Time dilution of precision"},
+      {"TDOP", BYTES(2), 0.01, true, 0, "Time dilution of precision"},
       {0}}}
 
     ,
