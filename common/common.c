@@ -861,7 +861,7 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
   if (r == 5)
   {
     // now store the timestamp, unchanged
-    memset(msg->timestamp, sizeof msg->timestamp, 0);
+    memset(msg->timestamp, 0, sizeof msg->timestamp);
     memcpy(msg->timestamp, sbGet(in), CB_MAX(p - sbGet(in), sizeof msg->timestamp - 1));
 
     msg->prio = prio;
