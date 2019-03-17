@@ -197,7 +197,8 @@ typedef struct {
 /*
 Adds integer values to the packed 6 bit byte ais vector.
 */
-static int addAisInt(long int value, int len, aisVector *payload) {
+static int addAisInt(long int value, int len, aisVector *payload)
+{
   int i, k;
   unsigned char nibble;
 
@@ -226,7 +227,8 @@ static int addAisInt(long int value, int len, aisVector *payload) {
 /*
 Adds ascii strings to the packed 6 bit byte ais vector.
 */
-static int addAisString(char* string, int len, aisVector *payload) {
+static int addAisString(char* string, int len, aisVector *payload)
+{
   int i, k;
   char *j;
   unsigned char nextchar;
@@ -270,7 +272,8 @@ strings exceeding the buffer capacity into several substrings. In currently enco
 AIS sentences the maximum size of strings are 20 characters. The negative effect of
 increased memory fotprint is seen as insignificant.
 */
-char* aisString(const char *msg, const char *fieldName) {
+char* aisString(const char *msg, const char *fieldName)
+{
   static char jsonString[21];
 
   if (!getJSONValue(msg, fieldName, jsonString, sizeof(jsonString))) jsonString[0] = '\0';
@@ -280,7 +283,8 @@ char* aisString(const char *msg, const char *fieldName) {
 /*
 Handles text strings longer than 20 characters.
 */
-static int addAisLongString(const char *msg, const char *fieldName, int maxSize, bool padd, aisVector *payload) {
+static int addAisLongString(const char *msg, const char *fieldName, int maxSize, bool padd, aisVector *payload)
+{
   char* jsonString;
   int len;
 
@@ -307,7 +311,8 @@ static int addAisLongString(const char *msg, const char *fieldName, int maxSize,
 /*
 Extracts and encodes next 6 bit value from the packed ais vector.
 */
-char nextPayloadChar(aisVector *bitVec, int *opos, unsigned char *padding) {
+char nextPayloadChar(aisVector *bitVec, int *opos, unsigned char *padding)
+{
   unsigned char i;
   int start = *opos / 8;
 
@@ -334,7 +339,8 @@ With a total of 80 maximum chars exkluding end of line per sentence, and
 20 chars head + tail in the nmea 0183 carrier protocol, this leaves 60
 char payload, corresponding to 360 bits ais data, or 45 bytes.
 */
-static void aisToNmea0183( StringBuffer *msg183, int src, char *aisTalkerId, char channel, aisVector *bitVec ) {
+static void aisToNmea0183( StringBuffer *msg183, int src, char *aisTalkerId, char channel, aisVector *bitVec )
+{
   static char sequenceId = '0';
   int opos = 0;
   unsigned char padding = 0;
@@ -372,7 +378,8 @@ int aisEnum(const char*, const char*);
 /*
 Ais nummerical values
 */
-long int aisInteger(const char *msg, const char *fieldName) {
+long int aisInteger(const char *msg, const char *fieldName)
+{
   typedef struct {
     int hash;
     const char *value;
@@ -417,7 +424,8 @@ long int aisInteger(const char *msg, const char *fieldName) {
   return aisEnum(msg, "Time Stamp");  /* Time Stamp enum values */
 }
 
-long int aisFloat(const char *msg, const char *fieldName) {
+long int aisFloat(const char *msg, const char *fieldName)
+{
 #define DEGREES_PER_RADIAN (57.295779513)
 #define KNOTS_IN_MS (1.943844492)
 #define ROT_MULTIPLICATOR (4.733)
@@ -526,7 +534,8 @@ long int aisFloat(const char *msg, const char *fieldName) {
 /*
 Routine to enumerate ais enum fields based on the json string value.
 */
-int aisEnum(const char *msg, const char *fieldName) {
+int aisEnum(const char *msg, const char *fieldName)
+{
   typedef struct {
     int hash;
     const char *value;
@@ -948,7 +957,8 @@ int aisEnum(const char *msg, const char *fieldName) {
 }
 
 // Ship dimensions must be translated from pgn
-long int aisShipDimensions(const char *msg, bool ship) {
+long int aisShipDimensions(const char *msg, bool ship)
+{
   long int length, beam, refBow, refStarboard, toStern, toPort;
 
   // Fetch pgn values
@@ -974,7 +984,8 @@ long int aisShipDimensions(const char *msg, bool ship) {
 }
 
 // Estimated time of arrival must be translated from pgn
-long int aisETA(const char *msg) {
+long int aisETA(const char *msg)
+{
   char jstr[11];
   unsigned int month = 0, day = 0, hour = 24, minute = 60;
 
@@ -998,7 +1009,8 @@ long int aisETA(const char *msg) {
 }
 
 // PGN "Position Date" must be translated to sentence UTC date
-long int aisDate(const char *msg) {
+long int aisDate(const char *msg)
+{
   char jstr[11];
   unsigned int year = 0, month = 0, day = 0;
 
@@ -1015,7 +1027,8 @@ long int aisDate(const char *msg) {
 }
 
 // PGN "Position Time" must be translated to sentence UTC time
-long int aisTime(const char *msg) {
+long int aisTime(const char *msg)
+{
   char jstr[9];
   unsigned int hour = 24, minute = 60, second = 60;
 
@@ -1034,7 +1047,8 @@ long int aisTime(const char *msg) {
 }
 
 // "AIS Aids to Navigation (AtoN) Report" has a special name format
-char* aisAtoNName(const char *msg, bool extended, int* len) {
+char* aisAtoNName(const char *msg, bool extended, int* len)
+{
   // The name splits in two parts, name and name extension.
   static char jsonString[35];
   int i;
@@ -1066,7 +1080,8 @@ char* aisAtoNName(const char *msg, bool extended, int* len) {
   return jsonString;
 }
 
-void nmea0183AIVDM( StringBuffer * msg183, int source, const char * msg ) {
+void nmea0183AIVDM( StringBuffer * msg183, int source, const char * msg )
+{
 
   long int msgid, pgn;
   char jstr[10];
