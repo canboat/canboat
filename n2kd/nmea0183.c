@@ -49,11 +49,19 @@ extern bool  rateLimit;
  * PGN 128275 "Distance Log"   -> $xxVLW
 
  * Some others are in gps_ais.c file
- * PGN 129026 "Track made good and Ground speed" -> $xxVTG
- * PGN 129539 "GPS DOP"                          -> $xxGSA
- * PGN 129025 or 129029 "GPS Position"           -> $xxGLL
- * PGN 129038 and 129039 "AIS from other boats"  -> !AIVDM - NOT FINISHED! AIVDM/AIVDO protocol encoding is needed
-
+ * PGN 129026 "Track made good and Ground speed"           -> $xxVTG
+ * PGN 129539 "GPS DOP"                                    -> $xxGSA
+ * PGN 129025 or 129029 "GPS Position"                     -> $xxGLL
+ * PGN 129038 "Class A Position Report"                    -> !AIVDM
+ * PGN 129039 "AIS Class B Position Report"                -> !AIVDM
+ * PGN 129040 "AIS Class B Extended Position Report"       -> !AIVDM
+ * PGN 129041 "AIS Aids to Navigation (AtoN) Report"       -> !AIVDM
+ * PGN 129793 "AIS UTC and Date Report"                    -> !AIVDM
+ * PGN 129794 "AIS Class A Static and Voyage Related Data" -> !AIVDM
+ * PGN 129798 "AIS SAR Aircraft Position Report"           -> !AIVDM   PGN incomplete
+ * PGN 129802 "AIS Safety Related Broadcast Message"       -> !AIVDM   PGN incomplete
+ * PGN 129809 "AIS Class B "CS" Static Data Report, Part A"-> !AIVDM   PGN incomplete
+ * PGN 129810 "AIS Class B "CS" Static Data Report, Part B"-> !AIVDM   PGN incomplete
  * Typical output of these from analyzer:
  * {"timestamp":"2010-09-12-10:57:41.217","prio":"2","src":"36","dst":"255","pgn":"127250","description":"Vessel
  Heading","fields":{"SID":"116","Heading":"10.1","Deviation":"0.0","Variation":"0.0","Reference":"Magnetic"}}
@@ -87,6 +95,14 @@ extern bool  rateLimit;
 #define PGN_POSITION_RAPID (129025)
 #define PGN_AIS_A (129038)
 #define PGN_AIS_B (129039)
+#define PGN_AIS_4 (129793)
+#define PGN_AIS_5 (129794)
+#define PGN_AIS_9 (129798)
+#define PGN_AIS_14 (129802)
+#define PGN_AIS_19 (129040)
+#define PGN_AIS_21 (129041)
+#define PGN_AIS_24A (129809)
+#define PGN_AIS_24B (129810)
 
 enum
 {
@@ -131,13 +147,17 @@ void nmea0183CreateMessage(StringBuffer *msg183, int src, const char *format, ..
     first++;
   }
 
-  sbAppendFormat(msg183, "$%c%c", first, second);
+  // Prepare for calculation of checksum
+  i = msg183->len;
+
+  if (src > 255) sbAppendFormat(msg183, "!%c%c", first, second);
+  else sbAppendFormat(msg183, "$%c%c", first, second);
   sbAppendFormatV(msg183, format, ap);
 
   va_end(ap);
 
   chk = 0;
-  for (i = 1; i < msg183->len; i++)
+  for (i++ ; i < msg183->len; i++)
   {
     chk ^= (unsigned int) msg183->data[i];
   }
@@ -557,6 +577,14 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
       break;
     case PGN_AIS_A:
     case PGN_AIS_B:
+    case PGN_AIS_4:
+    case PGN_AIS_5:
+    case PGN_AIS_9:
+    case PGN_AIS_14:
+    case PGN_AIS_19:
+    case PGN_AIS_21:
+    case PGN_AIS_24A:
+    case PGN_AIS_24B:
       rateType = RATE_NO_LIMIT;
       break;
     default:
@@ -623,6 +651,14 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
       break;
     case PGN_AIS_A:
     case PGN_AIS_B:
+    case PGN_AIS_4:
+    case PGN_AIS_5:
+    case PGN_AIS_9:
+    case PGN_AIS_14:
+    case PGN_AIS_19:
+    case PGN_AIS_21:
+    case PGN_AIS_24A:
+    case PGN_AIS_24B:
       nmea0183AIVDM(msg183, src, msg);
       break;
     default:
