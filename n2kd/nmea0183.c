@@ -79,7 +79,8 @@ extern bool  rateLimit;
  Parameters","fields":{"SID":222,"Temperature Source":"Sea Temperature","Temperature":17.16}}
  * {"timestamp":"2016-04-20T21:03:57.631Z","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance
  Log","fields":{"Log":57688,"Trip Log":57688}}
- * {"timestamp":"2019-02-02T19:45:02.051Z","prio":2,"src":43,"dst":255,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude":37.8670000,"Longitude":-122.3150000}}
+ * {"timestamp":"2019-02-02T19:45:02.051Z","prio":2,"src":43,"dst":255,"pgn":129025,"description":"Position, Rapid
+ Update","fields":{"Latitude":37.8670000,"Longitude":-122.3150000}}
  */
 
 #define PGN_VESSEL_HEADING (127250)
@@ -150,14 +151,16 @@ void nmea0183CreateMessage(StringBuffer *msg183, int src, const char *format, ..
   // Prepare for calculation of checksum
   i = msg183->len;
 
-  if (src > 255) sbAppendFormat(msg183, "!%c%c", first, second);
-  else sbAppendFormat(msg183, "$%c%c", first, second);
+  if (src > 255)
+    sbAppendFormat(msg183, "!%c%c", first, second);
+  else
+    sbAppendFormat(msg183, "$%c%c", first, second);
   sbAppendFormatV(msg183, format, ap);
 
   va_end(ap);
 
   chk = 0;
-  for (i++ ; i < msg183->len; i++)
+  for (i++; i < msg183->len; i++)
   {
     chk ^= (unsigned int) msg183->data[i];
   }
