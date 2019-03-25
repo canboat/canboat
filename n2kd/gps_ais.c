@@ -362,7 +362,7 @@ Splits the ais payload into sentences, ASCII encodes the payload, creates
 and sends the relelvant NMEA 0183 sentences.
 With a total of 80 maximum chars exkluding end of line per sentence, and
 20 chars head + tail in the nmea 0183 carrier protocol, this leaves 60
-char payload, corresponding to 360 bits ais data, or 45 bytes.
+char payload, corresponding to 360 bits ais data.
 */
 static void aisToNmea0183(StringBuffer *msg183, int src, char *aisTalkerId, char channel, aisVector *bitVec)
 {
@@ -381,10 +381,10 @@ static void aisToNmea0183(StringBuffer *msg183, int src, char *aisTalkerId, char
 
   while (fragCntr <= fragments)
   {
-    char payload[46];
+    char payload[61];
     int  i = 0;
 
-    while (i < 45 && opos <= bitVec->pos)
+    while (i < 60 && opos <= bitVec->pos)
     {
       payload[i] = nextPayloadChar(bitVec, &opos, &padding);
       if (payload[i] == '\0')
@@ -523,7 +523,8 @@ long int aisFloat(const char *msg, const char *fieldName)
   int      sign;
   long int result;
 
-  floatParam paramRange[] = {{p0, "Rate of Turn", -127, 127, 128, DEGREES_PER_RADIAN * 60},
+  floatParam paramRange[] = {// pgns.json says rad/s, but output rather indicates rad/min
+                             {p0, "Rate of Turn", -127, 127, -128, DEGREES_PER_RADIAN},
                              {p1, "SOG", 0, 1022, 1023, KNOTS_IN_MS * SOG_MULTIPLICATOR},
                              {p2, "COG", 0, 3599, 3600, COG_MULTIPLICATOR},
                              // pgns.json says rad, but output indicates degrees
@@ -1029,7 +1030,7 @@ int aisEnum(const char *msg, const char *fieldName)
                        {h105, 7, "surveyed"},
                        {h106, 8, "Galileo"},
                        {h107, 15, "internal GNSS"}, // Not supported by canboat
-                       // DTE
+                                                    // DTE
                        {h108, 0, "available"},
                        {h109, 1, "not available"},
                        {h110, 0, "Available"},
