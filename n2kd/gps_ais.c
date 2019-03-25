@@ -431,6 +431,9 @@ long int aisInteger(const char *msg, const char *fieldName)
   static const int p4 = 'I' + 'M' + 'O' + ' ' + 'n' + 'u' + 'm' + 'b' + 'e' + 'r';
   static const int p5 = 'M' + 'o' + 't' + 'h' + 'e' + 'r' + 's' + 'h' + 'i' + 'p' + ' ' + 'U' + 's' + 'e' + 'r' + ' ' + 'I' + 'D';
   static const int p6 = 'S' + 'o' + 'u' + 'r' + 'c' + 'e' + ' ' + 'I' + 'D';
+  static const int p7 = 'S' + 'e' + 'q' + 'u' + 'e' + 'n' + 'c' + 'e' + ' ' + 'N' + 'u' + 'm' + 'b' + 'e' + 'r';
+  static const int p8 = 'D' + 'e' + 's' + 't' + 'i' + 'n' + 'a' + 't' + 'i' + 'o' + 'n' + ' ' + 'I' + 'D';
+  static const int p9 = 'R' + 'e' + 't' + 'r' + 'a' + 'n' + 's' + 'm' + 'i' + 't' + ' ' + 'f' + 'l' + 'a' + 'g';
 
   char     jsonString[40];
   int      i, h = 0;
@@ -442,7 +445,10 @@ long int aisInteger(const char *msg, const char *fieldName)
                            {p3, "Communication State", 0, 524287, 393222},
                            {p4, "IMO number", 1000000, 9999999, 0},
                            {p5, "Mothership User ID", 0, 999999999, 0},
-                           {p6, "Source ID", 0, 999999999, 0}};
+                           {p6, "Source ID", 0, 999999999, 0},
+                           {p7, "Sequence Number", 0, 3, 0},
+                           {p8, "Destination ID", 0, 999999999, 0},
+                           {p9, "Retransmit flag", 0, 1, 0}};
 
   // Calculate index
   for (i = 0; fieldName[i] != '\0'; i++)
@@ -1375,6 +1381,16 @@ void nmea0183AIVDM(StringBuffer *msg183, int source, const char *msg)
       addAisInt(aisEnum(msg, "RAIM"), 1, &aisPayload);
       addAisInt(aisEnum(msg, "AIS communication state"), 1, &aisPayload); // Not in PGN?, defaults to 0
       addAisInt(aisInteger(msg, "Communication State"), 19, &aisPayload);
+      break;
+    case 12: // PGN 129801 "AIS Addressed Safety Related Message"
+      addAisInt(msgid, 6, &aisPayload);
+      addAisInt(aisEnum(msg, "Repeat Indicator"), 2, &aisPayload);
+      addAisInt(aisInteger(msg, "Source ID"), 30, &aisPayload);
+      addAisInt(aisInteger(msg, "Sequence Number"), 2, &aisPayload);
+      addAisInt(aisInteger(msg, "Destination ID"), 30, &aisPayload);
+      addAisInt(aisInteger(msg, "Retransmit flag"), 1, &aisPayload);
+      addAisInt(0, 1, &aisPayload); // Spare
+      addAisLongString(msg, "Safety Related Text", 156, true, &aisPayload);
       break;
     case 14: // PGN 129802 "AIS Safety Related Broadcast Message"
       /* Note: The AIS sentence transmitts up to 161 characters of text in the message

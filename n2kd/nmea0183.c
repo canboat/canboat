@@ -59,6 +59,7 @@ extern bool  rateLimit;
  * PGN 129793 "AIS UTC and Date Report"                    -> !AIVDM
  * PGN 129794 "AIS Class A Static and Voyage Related Data" -> !AIVDM
  * PGN 129798 "AIS SAR Aircraft Position Report"           -> !AIVDM   PGN incomplete
+ * PGN 129801 "AIS Addressed Safety Related Message"       -> !AIVDM
  * PGN 129802 "AIS Safety Related Broadcast Message"       -> !AIVDM   PGN incomplete
  * PGN 129809 "AIS Class B "CS" Static Data Report, Part A"-> !AIVDM   PGN incomplete
  * PGN 129810 "AIS Class B "CS" Static Data Report, Part B"-> !AIVDM   PGN incomplete
@@ -99,6 +100,8 @@ extern bool  rateLimit;
 #define PGN_AIS_4 (129793)
 #define PGN_AIS_5 (129794)
 #define PGN_AIS_9 (129798)
+#define PGN_AIS_9 (129798)
+#define PGN_AIS_12 (129801)
 #define PGN_AIS_14 (129802)
 #define PGN_AIS_19 (129040)
 #define PGN_AIS_21 (129041)
@@ -583,6 +586,7 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
     case PGN_AIS_4:
     case PGN_AIS_5:
     case PGN_AIS_9:
+    case PGN_AIS_12:
     case PGN_AIS_14:
     case PGN_AIS_19:
     case PGN_AIS_21:
@@ -657,6 +661,7 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
     case PGN_AIS_4:
     case PGN_AIS_5:
     case PGN_AIS_9:
+    case PGN_AIS_12:
     case PGN_AIS_14:
     case PGN_AIS_19:
     case PGN_AIS_21:
