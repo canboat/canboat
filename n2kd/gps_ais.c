@@ -474,6 +474,7 @@ long int aisInteger(const char *msg, const char *fieldName)
 long int aisFloat(const char *msg, const char *fieldName)
 {
 #define DEGREES_PER_RADIAN (57.295779513)
+#define SECONDS_PER_MINUTE (60.0)
 #define KNOTS_IN_MS (1.943844492)
 #define ROT_MULTIPLICATOR (4.733)
 #define SOG_MULTIPLICATOR (10.0)
@@ -529,8 +530,8 @@ long int aisFloat(const char *msg, const char *fieldName)
   int      sign;
   long int result;
 
-  floatParam paramRange[] = {// pgns.json says rad/s, but output rather indicates rad/min
-                             {p0, "Rate of Turn", -127, 127, -128, DEGREES_PER_RADIAN},
+  floatParam paramRange[] = {// pgns.json says rad/s, but output indicates deg/s
+                             {p0, "Rate of Turn", -127, 127, -128, SECONDS_PER_MINUTE},
                              {p1, "SOG", 0, 1022, 1023, KNOTS_IN_MS * SOG_MULTIPLICATOR},
                              {p2, "COG", 0, 3599, 3600, COG_MULTIPLICATOR},
                              // pgns.json says rad, but output indicates degrees
