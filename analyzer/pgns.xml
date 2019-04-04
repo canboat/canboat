@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v1.2.0
+CANboat version v1.2.1
 
 (C) 2009-2018 Keversoft B.V., Harlingen, The Netherlands
 For more information see https://github.com/canboat/canboat
@@ -26,7 +26,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>GPL v3</License>
-  <Version>1.2.0</Version>
+  <Version>1.2.1</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -8792,7 +8792,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <Description>Switch Bank Control</Description>
       <Complete>false</Complete>
       <Length>8</Length>
-      <RepeatingFields>1</RepeatingFields>
+      <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -8805,11 +8805,389 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
         </Field>
         <Field>
           <Order>2</Order>
-          <Id>switch</Id>
-          <Name>Switch</Name>
+          <Id>switch1</Id>
+          <Name>Switch1</Name>
           <BitLength>2</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>switch2</Id>
+          <Name>Switch2</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>10</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>switch3</Id>
+          <Name>Switch3</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>12</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>switch4</Id>
+          <Name>Switch4</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>14</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>switch5</Id>
+          <Name>Switch5</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>switch6</Id>
+          <Name>Switch6</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>18</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>switch7</Id>
+          <Name>Switch7</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>switch8</Id>
+          <Name>Switch8</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>switch9</Id>
+          <Name>Switch9</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>switch10</Id>
+          <Name>Switch10</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>26</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>switch11</Id>
+          <Name>Switch11</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>switch12</Id>
+          <Name>Switch12</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>switch13</Id>
+          <Name>Switch13</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>switch14</Id>
+          <Name>Switch14</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>34</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>switch15</Id>
+          <Name>Switch15</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>36</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>switch16</Id>
+          <Name>Switch16</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>38</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>switch17</Id>
+          <Name>Switch17</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>19</Order>
+          <Id>switch18</Id>
+          <Name>Switch18</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>42</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>20</Order>
+          <Id>switch19</Id>
+          <Name>Switch19</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>44</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>21</Order>
+          <Id>switch20</Id>
+          <Name>Switch20</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>46</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>22</Order>
+          <Id>switch21</Id>
+          <Name>Switch21</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>23</Order>
+          <Id>switch22</Id>
+          <Name>Switch22</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>50</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>24</Order>
+          <Id>switch23</Id>
+          <Name>Switch23</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>52</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>25</Order>
+          <Id>switch24</Id>
+          <Name>Switch24</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>54</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>26</Order>
+          <Id>switch25</Id>
+          <Name>Switch25</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>27</Order>
+          <Id>switch26</Id>
+          <Name>Switch26</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>58</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>28</Order>
+          <Id>switch27</Id>
+          <Name>Switch27</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>60</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>29</Order>
+          <Id>switch28</Id>
+          <Name>Switch28</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>62</BitOffset>
+          <BitStart>6</BitStart>
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues>
