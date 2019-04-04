@@ -530,11 +530,19 @@ long int aisFloat(const char *msg, const char *fieldName)
   int      sign;
   long int result;
 
-  floatParam paramRange[] = {// pgns.json says rad/s, but output indicates deg/s
-                             {p0, "Rate of Turn", -127, 127, -128, SECONDS_PER_MINUTE},
+  floatParam paramRange[] = {{/* Min and max values of RoT are -127 and 127, but these values have
+                                 special meaning, which is currently not present in canboats
+                                 definition of the parameter. We therefore defaults if we
+                                 get values with magnitude above 126.
+                              */
+                              p0,
+                              "Rate of Turn",
+                              -126,
+                              126,
+                              -128,
+                              SECONDS_PER_MINUTE},
                              {p1, "SOG", 0, 1022, 1023, KNOTS_IN_MS * SOG_MULTIPLICATOR},
                              {p2, "COG", 0, 3599, 3600, COG_MULTIPLICATOR},
-                             // pgns.json says rad, but output indicates degrees
                              {p3, "Heading", 0, 359, 511, NO_MULTIPLICATOR},
                              {p4, "Longitude", -108000000, 108000000, 0x6791AC0, LON_MULTIPLICATOR},
                              {p5, "Latitude", -54000000, 54000000, 0x3412140, LAT_MULTIPLICATOR},
@@ -543,7 +551,6 @@ long int aisFloat(const char *msg, const char *fieldName)
                              {p8, "Position reference from Starboard", 0, 630, 0, SIZE_MULTIPLICATOR},
                              {p9, "Position reference from Bow", 0, 5110, 0, SIZE_MULTIPLICATOR},
                              {p10, "Draft", 0, 255, 0, DRAUGHT_MULTIPLICATOR},
-                             // Assumed degrees as in "Heading", despite rads
                              {p11, "True Heading", 0, 359, 511, NO_MULTIPLICATOR},
                              {p12, "Length/Diameter", 0, 10220, 0, SIZE_MULTIPLICATOR},
                              {p13, "Beam/Diameter", 0, 1260, 0, SIZE_MULTIPLICATOR},
@@ -570,14 +577,7 @@ long int aisFloat(const char *msg, const char *fieldName)
   switch (paramRange[i].hash)
   {
     case p0:
-      result = ROT_MULTIPLICATOR * sqrt(value) + 0.5;
-      break;
-    case p2:
-      result = ((long int) (value + 0.5)) % 3600;
-      break;
-    case p3:
-    case p11:
-      result = ((long int) (value + 0.5)) % 360;
+      result = (long int) (ROT_MULTIPLICATOR * sqrt(value) + 0.5);
       break;
     case p10:
       result = (long int) (value + 0.9);
@@ -587,10 +587,10 @@ long int aisFloat(const char *msg, const char *fieldName)
       break;
   }
   result *= sign;
-  if (result < paramRange[i].min)
-    return paramRange[i].min;
-  if (result > paramRange[i].max && result != paramRange[i].defValue)
-    return paramRange[i].max;
+  // Make shure values are valid
+  if (result != paramRange[i].defValue)
+    if (result < paramRange[i].min || result > paramRange[i].max)
+      result = paramRange[i].defValue;
   return result;
 }
 
