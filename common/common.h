@@ -247,6 +247,11 @@ bool parseConst(const char **msg, const char *str);
 #define RadianToDegree (360.0 / 2 / Pi)
 #define BYTES(x) ((x) * (8))
 
+int logInfo(const char *format, ...);
+int logDebug(const char *format, ...);
+int logError(const char *format, ...);
+void logAbort(const char *format, ...);
+
 /*
  * The 'converter' programs generate fake PGNs containing data that they generate
  * themselves or via proprietary non-PGN serial messages.

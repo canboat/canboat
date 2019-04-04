@@ -417,7 +417,12 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
   *lenPtr = i;
   crc += i;
 
-  *b++ = (unsigned char) (256 - (int) crc);
+  crc = 256 - (int)crc;
+  if (crc == DLE)
+  {
+    *b++ = DLE;
+  }
+  *b++ = crc;
   *b++ = DLE;
   *b++ = ETX;
 

@@ -101,26 +101,39 @@ static int logBase(LogLevel level, const char *format, va_list ap)
 
 int logInfo(const char *format, ...)
 {
+  int ret;
   va_list ap;
   va_start(ap, format);
 
-  return logBase(LOGLEVEL_INFO, format, ap);
+  ret = logBase(LOGLEVEL_INFO, format, ap);
+  va_end(ap);
+
+  return ret;
+
 }
 
 int logDebug(const char *format, ...)
 {
+  int ret;
   va_list ap;
   va_start(ap, format);
 
-  return logBase(LOGLEVEL_DEBUG, format, ap);
+  ret = logBase(LOGLEVEL_DEBUG, format, ap);
+  va_end(ap);
+
+  return ret;
 }
 
 int logError(const char *format, ...)
 {
+  int ret;
   va_list ap;
   va_start(ap, format);
 
-  return logBase(LOGLEVEL_ERROR, format, ap);
+  ret = logBase(LOGLEVEL_ERROR, format, ap);
+  va_end(ap);
+
+  return ret;
 }
 
 void logAbort(const char *format, ...)
@@ -129,6 +142,7 @@ void logAbort(const char *format, ...)
   va_start(ap, format);
 
   logBase(LOGLEVEL_FATAL, format, ap);
+  va_end(ap);
   exit(2);
 }
 
@@ -847,7 +861,7 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
   if (r == 5)
   {
     // now store the timestamp, unchanged
-    memset(msg->timestamp, sizeof msg->timestamp, 0);
+    memset(msg->timestamp, 0, sizeof msg->timestamp);
     memcpy(msg->timestamp, sbGet(in), CB_MAX(p - sbGet(in), sizeof msg->timestamp - 1));
 
     msg->prio = prio;
