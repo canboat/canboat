@@ -17608,7 +17608,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <Id>aisClassBStaticDataMsg24PartA</Id>
       <Description>AIS Class B static data (msg 24 Part A)</Description>
       <Complete>false</Complete>
-      <Length>25</Length>
+      <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -17658,6 +17658,35 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
                  <Type>ASCII text</Type>
           <Signed>false</Signed>
         </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>aisTransceiverInformation</Id>
+          <Name>AIS Transceiver information</Name>
+          <BitLength>5</BitLength>
+          <BitOffset>200</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Channel A VDL reception' />
+            <EnumPair Value='1' Name='Channel B VDL reception' />
+            <EnumPair Value='2' Name='Channel A VDL transmission' />
+            <EnumPair Value='3' Name='Channel B VDL transmission' />
+            <EnumPair Value='4' Name='Own information not broadcast' />
+            <EnumPair Value='5' Name='Reserved' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>reserved</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>205</BitOffset>
+          <BitStart>5</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -17665,7 +17694,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <Id>aisClassBStaticDataMsg24PartB</Id>
       <Description>AIS Class B static data (msg 24 Part B)</Description>
       <Complete>false</Complete>
-      <Length>33</Length>
+      <Length>34</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -17861,6 +17890,35 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitStart>2</BitStart>
                  <Type>Integer</Type>
                  <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>aisTransceiverInformation</Id>
+          <Name>AIS Transceiver information</Name>
+          <BitLength>5</BitLength>
+          <BitOffset>264</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Channel A VDL reception' />
+            <EnumPair Value='1' Name='Channel B VDL reception' />
+            <EnumPair Value='2' Name='Channel A VDL transmission' />
+            <EnumPair Value='3' Name='Channel B VDL transmission' />
+            <EnumPair Value='4' Name='Own information not broadcast' />
+            <EnumPair Value='5' Name='Reserved' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>reserved</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>269</BitOffset>
+          <BitStart>5</BitStart>
+                 <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>

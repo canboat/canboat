@@ -3753,19 +3753,21 @@ Pgn pgnList[] = {
     {"AIS Class B static data (msg 24 Part A)",
      129809,
      false,
-     20 + 4 + 1,
+     26,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
       {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Name", BYTES(20), RES_ASCII, false, 0, ""},
+      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
       {0}}}
 
     ,
     {"AIS Class B static data (msg 24 Part B)",
      129810,
      false,
-     0x25 - 4,
+     34,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
       {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
@@ -3780,6 +3782,8 @@ Pgn pgnList[] = {
       {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "MMSI of mother ship sent by daughter vessels"},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
       {"Spare", 6, RES_INTEGER, false, 0, ",0=unavailable"},
+      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
       {0}}}
 
     ,
