@@ -188,6 +188,12 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",30=Floating AtoN: special mark"                     \
    ",31=Floating AtoN: light vessel/LANBY/rigs")
 
+#define LOOKUP_AIS_SPECIAL_MANEUVER \
+  (",0=Not available" \
+   ",1=Not engaged in special maneuver" \
+   ",2=Engaged in special maneuver" \
+   ",3=Reserverd")
+
 #define LOOKUP_POSITION_FIX_DEVICE   \
   (",0=Default: undefined"           \
    ",1=GPS"                          \
@@ -2414,8 +2420,37 @@ Pgn pgnList[] = {
      127502,
      false,
      8,
-     1,
-     {{"Switch Bank Instance", BYTES(1), 1, false, 0, ""}, {"Switch", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {0}}}
+     0,
+     {{"Switch Bank Instance", BYTES(1), 1, false, 0, ""},
+      {"Switch1", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch2", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch3", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch4", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch5", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch6", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch7", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch8", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch9", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch10", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch11", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch12", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch13", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch14", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch15", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch16", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch17", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch18", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch19", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch20", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch21", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch22", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch23", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch24", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch25", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch26", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch27", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch28", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {0}}}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
@@ -2786,7 +2821,7 @@ Pgn pgnList[] = {
     {"AIS Class A Position Report",
      129038,
      true,
-     27,
+     28,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
       {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
@@ -2808,9 +2843,11 @@ Pgn pgnList[] = {
       {"Heading", BYTES(2), RES_RADIANS, false, "rad", "True heading"},
       {"Rate of Turn", BYTES(2), RES_ROTATION, true, "rad/s", ""},
       {"Nav Status", 4, RES_LOOKUP, false, LOOKUP_NAV_STATUS, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "reserved"},
-      {"Regional Application", 1, 1, false, 0, ""},
-      {"Reserved", 7, RES_BINARY, false, 0, "reserved"},
+      {"Special Maneuver Indicator", 2, RES_LOOKUP, false, LOOKUP_AIS_SPECIAL_MANEUVER, ""},
+      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
+      {"AIS Spare", 3, RES_BINARY, false, 0, ""},
+      {"Reserved", 5, RES_BINARY, false, 0, "reserved"},
+      {"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
     ,
@@ -3723,20 +3760,23 @@ Pgn pgnList[] = {
     ,
     {"AIS Class B static data (msg 24 Part A)",
      129809,
-     false,
-     20 + 4 + 1,
+     true,
+     27,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
       {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Name", BYTES(20), RES_ASCII, false, 0, ""},
+      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
+      {"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
     ,
     {"AIS Class B static data (msg 24 Part B)",
      129810,
-     false,
-     0x25 - 4,
+     true,
+     34,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
       {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
@@ -3751,6 +3791,8 @@ Pgn pgnList[] = {
       {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "MMSI of mother ship sent by daughter vessels"},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
       {"Spare", 6, RES_INTEGER, false, 0, ",0=unavailable"},
+      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
       {0}}}
 
     ,
