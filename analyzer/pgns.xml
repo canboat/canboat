@@ -2881,7 +2881,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='106' Name='AIS Safety Related Message (used to silence)' />
             <EnumPair Value='107' Name='AIS Connection Lost' />
             <EnumPair Value='108' Name='No Fix' />
-            <EnumPair Value='116' Name='Connectio lost to Digital Switching Unit' />
+            <EnumPair Value='116' Name='Connection lost to Digital Switching Unit' />
           </EnumValues>
         </Field>
         <Field>
@@ -3738,7 +3738,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='106' Name='AIS Safety Related Message (used to silence)' />
             <EnumPair Value='107' Name='AIS Connection Lost' />
             <EnumPair Value='108' Name='No Fix' />
-            <EnumPair Value='116' Name='Connectio lost to Digital Switching Unit' />
+            <EnumPair Value='116' Name='Connection lost to Digital Switching Unit' />
           </EnumValues>
         </Field>
         <Field>

@@ -2538,7 +2538,7 @@
               {"name":"AIS Safety Related Message (used to silence)","value":"106"},
               {"name":"AIS Connection Lost","value":"107"},
               {"name":"No Fix","value":"108"},
-              {"name":"Connectio lost to Digital Switching Unit","value":"116"}]},
+              {"name":"Connection lost to Digital Switching Unit","value":"116"}]},
           {
             "Order":7,
             "Id":"alarmGroup",
@@ -3312,7 +3312,7 @@
               {"name":"AIS Safety Related Message (used to silence)","value":"106"},
               {"name":"AIS Connection Lost","value":"107"},
               {"name":"No Fix","value":"108"},
-              {"name":"Connectio lost to Digital Switching Unit","value":"116"}]},
+              {"name":"Connection lost to Digital Switching Unit","value":"116"}]},
           {
             "Order":5,
             "Id":"alarmGroup",
