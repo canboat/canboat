@@ -490,7 +490,8 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",105=AIS Lost Target"                                         \
    ",106=AIS Safety Related Message (used to silence)"            \
    ",107=AIS Connection Lost"                                     \
-   ",108=No Fix")
+   ",108=No Fix"                                                  \
+   ",116=Connectio lost to Digital Switching Unit")
 
 #define LOOKUP_SEATALK_ALARM_GROUP \
   (",0=Instrument"                 \

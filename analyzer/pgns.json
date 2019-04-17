@@ -2537,7 +2537,8 @@
               {"name":"AIS Lost Target","value":"105"},
               {"name":"AIS Safety Related Message (used to silence)","value":"106"},
               {"name":"AIS Connection Lost","value":"107"},
-              {"name":"No Fix","value":"108"}]},
+              {"name":"No Fix","value":"108"},
+              {"name":"Connectio lost to Digital Switching Unit","value":"116"}]},
           {
             "Order":7,
             "Id":"alarmGroup",
@@ -3310,7 +3311,8 @@
               {"name":"AIS Lost Target","value":"105"},
               {"name":"AIS Safety Related Message (used to silence)","value":"106"},
               {"name":"AIS Connection Lost","value":"107"},
-              {"name":"No Fix","value":"108"}]},
+              {"name":"No Fix","value":"108"},
+              {"name":"Connectio lost to Digital Switching Unit","value":"116"}]},
           {
             "Order":5,
             "Id":"alarmGroup",
@@ -15664,7 +15666,7 @@
         "PGN":129809,
         "Id":"aisClassBStaticDataMsg24PartA",
         "Description":"AIS Class B static data (msg 24 Part A)",
-        "Complete":false,
+        "Complete":true,
         "Length":27,
         "RepeatingFields":0,
         "Fields":[
@@ -15750,7 +15752,7 @@
         "PGN":129810,
         "Id":"aisClassBStaticDataMsg24PartB",
         "Description":"AIS Class B static data (msg 24 Part B)",
-        "Complete":false,
+        "Complete":true,
         "Length":34,
         "RepeatingFields":0,
         "Fields":[
