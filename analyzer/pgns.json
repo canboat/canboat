@@ -15664,7 +15664,7 @@
         "PGN":129809,
         "Id":"aisClassBStaticDataMsg24PartA",
         "Description":"AIS Class B static data (msg 24 Part A)",
-        "Complete":false,
+        "Complete":true,
         "Length":27,
         "RepeatingFields":0,
         "Fields":[
@@ -15750,7 +15750,7 @@
         "PGN":129810,
         "Id":"aisClassBStaticDataMsg24PartB",
         "Description":"AIS Class B static data (msg 24 Part B)",
-        "Complete":false,
+        "Complete":true,
         "Length":34,
         "RepeatingFields":0,
         "Fields":[
@@ -15959,6 +15959,16 @@
             "BitOffset":269,
             "BitStart":5,
             "Type":"Binary data",
+            "Signed":false},
+          {
+            "Order":16,
+            "Id":"sequenceId",
+            "Name":"Sequence ID",
+            "BitLength":8,
+            "BitOffset":272,
+            "BitStart":0,
+            "Type":"Integer",
+            "Resolution":1,
             "Signed":false}]},
       {
         "PGN":130060,

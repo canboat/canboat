@@ -3793,6 +3793,7 @@ Pgn pgnList[] = {
       {"Spare", 6, RES_INTEGER, false, 0, ",0=unavailable"},
       {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
       {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
+      {"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
     ,

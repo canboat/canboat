@@ -17635,7 +17635,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129809</PGN>
       <Id>aisClassBStaticDataMsg24PartA</Id>
       <Description>AIS Class B static data (msg 24 Part A)</Description>
-      <Complete>false</Complete>
+      <Complete>true</Complete>
       <Length>27</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -17732,7 +17732,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129810</PGN>
       <Id>aisClassBStaticDataMsg24PartB</Id>
       <Description>AIS Class B static data (msg 24 Part B)</Description>
-      <Complete>false</Complete>
+      <Complete>true</Complete>
       <Length>34</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -17958,6 +17958,17 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitOffset>269</BitOffset>
           <BitStart>5</BitStart>
                  <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>sequenceId</Id>
+          <Name>Sequence ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>272</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
