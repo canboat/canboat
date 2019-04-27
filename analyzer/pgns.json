@@ -6822,7 +6822,17 @@
             "Signed":false,
             "EnumValues":[
               {"name":"True","value":"0"},
-              {"name":"Magnetic","value":"1"}]}]},
+              {"name":"Magnetic","value":"1"}]},
+          {
+            "Order":6,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "Description":"Reserved",
+            "BitLength":6,
+            "BitOffset":58,
+            "BitStart":2,
+            "Type":"Binary data",
+            "Signed":false}]},
       {
         "PGN":127251,
         "Id":"rateOfTurn",
@@ -15664,7 +15674,7 @@
         "PGN":129809,
         "Id":"aisClassBStaticDataMsg24PartA",
         "Description":"AIS Class B static data (msg 24 Part A)",
-        "Complete":false,
+        "Complete":true,
         "Length":27,
         "RepeatingFields":0,
         "Fields":[
@@ -15750,7 +15760,7 @@
         "PGN":129810,
         "Id":"aisClassBStaticDataMsg24PartB",
         "Description":"AIS Class B static data (msg 24 Part B)",
-        "Complete":false,
+        "Complete":true,
         "Length":34,
         "RepeatingFields":0,
         "Fields":[
