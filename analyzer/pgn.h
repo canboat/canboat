@@ -2250,6 +2250,7 @@ Pgn pgnList[] = {
       {"Deviation", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Variation", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
+      {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
     /* http://www.maretron.com/support/manuals/SSC200UM_1.7.pdf */
