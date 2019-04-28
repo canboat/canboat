@@ -15969,6 +15969,16 @@
             "BitOffset":269,
             "BitStart":5,
             "Type":"Binary data",
+            "Signed":false},
+          {
+            "Order":16,
+            "Id":"sequenceId",
+            "Name":"Sequence ID",
+            "BitLength":8,
+            "BitOffset":272,
+            "BitStart":0,
+            "Type":"Integer",
+            "Resolution":1,
             "Signed":false}]},
       {
         "PGN":130060,

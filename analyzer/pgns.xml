@@ -17971,6 +17971,17 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>sequenceId</Id>
+          <Name>Sequence ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>272</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
