@@ -20,13 +20,15 @@ You should have received a copy of the GNU General Public License
 along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
+#define _GNU_SOURCE
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <net/if.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 #define GLOBALS
 #include "common.h"
@@ -36,12 +38,18 @@ static int  openCanDevice(char *device, int *socket);
 static void writeRawPGNToCanSocket(RawMessage *msg, int socket);
 static void sendCanFrame(struct can_frame *frame, int socket);
 static void sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket);
+double time_diff(struct timeval x , struct timeval y);
 
 int main(int argc, char **argv)
 {
   FILE *file = stdin;
-  char  msg[2000];
-  int   socket;
+  char           msg[2000];
+  char *         milliSecond;
+  int            socket;
+  struct timeval frameTime;
+  struct timeval prevFrameTime;
+  struct tm      ctime;
+  unsigned long  usWait;
 
   setProgName(argv[0]);
   if (argc != 2)
@@ -55,12 +63,40 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+  prevFrameTime.tv_sec = 0;
+  prevFrameTime.tv_usec = 0;
+
   while (fgets(msg, sizeof(msg) - 1, file))
   {
     RawMessage m;
     if (parseRawFormatFast(msg, &m, false))
     {
       continue; // Parsing failed -> skip the line
+    }
+    if (strlen(m.timestamp) >= 19)
+    {
+      m.timestamp[10] = 'T'; // to support 'T', '-' and ' ' separators
+      memset(&ctime, 0, sizeof(struct tm));
+      milliSecond = strptime(m.timestamp, "%Y-%m-%dT%H:%M:%S", &ctime);
+      if ((milliSecond != NULL) && (milliSecond - m.timestamp >= 19)) // convert in tm struct => OK
+      {
+        frameTime.tv_sec = mktime(&ctime);
+        frameTime.tv_usec = (sscanf(milliSecond, ".%3ld", &frameTime.tv_usec) == 1) ? frameTime.tv_usec * 1000 : 0;
+        usWait = ((prevFrameTime.tv_sec == 0) && (prevFrameTime.tv_usec == 0)) ? 0 : time_diff(prevFrameTime, frameTime);
+        prevFrameTime = frameTime;
+      }
+      else // convert in tm struct failed
+      {
+        usWait = 0;
+      }
+    }
+    else // bad timestamp format YYYY-mm-dd[T|-| ]HH:MM:SS[.xxx] & min length 19 chrs
+    {
+      usWait = 0;
+    }
+    if (usWait > 0)
+    {
+        usleep(usWait);
     }
     writeRawPGNToCanSocket(&m, socket);
   }
@@ -174,4 +210,16 @@ static void sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int sock
     sendCanFrame(frame, socket);
     index++;
   }
+}
+
+double time_diff(struct timeval x , struct timeval y)
+{
+  double x_ms , y_ms , diff;
+
+  x_ms = (double)x.tv_sec*1000000 + (double)x.tv_usec;
+  y_ms = (double)y.tv_sec*1000000 + (double)y.tv_usec;
+
+  diff = (double)y_ms - (double)x_ms;
+
+  return diff;
 }
