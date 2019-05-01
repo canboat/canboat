@@ -7020,7 +7020,16 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":null,
-            "Signed":true}]},
+            "Signed":true},
+          {
+            "Order":5,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Type":"Binary data",
+            "Signed":false}]},
       {
         "PGN":127489,
         "Id":"engineParametersDynamic",

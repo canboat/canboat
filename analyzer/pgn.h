@@ -2304,6 +2304,7 @@ Pgn pgnList[] = {
       {"Speed", BYTES(2), 0.25, false, "rpm", ""},
       {"Boost Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Tilt/Trim", BYTES(1), 1, true, "", ""},
+      {"Reserved", BYTES(2), RES_BINARY, false, 0, ""},
       {0}}}
 
     // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
