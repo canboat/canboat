@@ -38,7 +38,7 @@ static int  openCanDevice(char *device, int *socket);
 static void writeRawPGNToCanSocket(RawMessage *msg, int socket);
 static void sendCanFrame(struct can_frame *frame, int socket);
 static void sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket);
-double time_diff(struct timeval x , struct timeval y);
+unsigned long time_diff(struct timeval x , struct timeval y, char *timestamp);
 
 int main(int argc, char **argv)
 {
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
       {
         frameTime.tv_sec = mktime(&ctime);
         frameTime.tv_usec = (sscanf(milliSecond, ".%3ld", &frameTime.tv_usec) == 1) ? frameTime.tv_usec * 1000 : 0;
-        usWait = ((prevFrameTime.tv_sec == 0) && (prevFrameTime.tv_usec == 0)) ? 0 : time_diff(prevFrameTime, frameTime);
+        usWait = ((prevFrameTime.tv_sec == 0) && (prevFrameTime.tv_usec == 0)) ? 0 : time_diff(prevFrameTime, frameTime, m.timestamp);
         prevFrameTime = frameTime;
       }
       else // convert in tm struct failed
@@ -212,7 +212,7 @@ static void sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int sock
   }
 }
 
-double time_diff(struct timeval x , struct timeval y)
+unsigned long time_diff(struct timeval x , struct timeval y, char *timestamp)
 {
   double x_ms , y_ms , diff;
 
@@ -220,6 +220,11 @@ double time_diff(struct timeval x , struct timeval y)
   y_ms = (double)y.tv_sec*1000000 + (double)y.tv_usec;
 
   diff = (double)y_ms - (double)x_ms;
+  if (diff < 0.0)
+  {
+    logError("Timestamp back in time at %s\n", timestamp);
+    return 0;
+  }
 
-  return diff;
+  return (unsigned long)diff;
 }
