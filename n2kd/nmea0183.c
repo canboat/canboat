@@ -61,8 +61,8 @@ extern bool  rateLimit;
  * PGN 129798 "AIS SAR Aircraft Position Report"           -> !AIVDM   PGN incomplete
  * PGN 129801 "AIS Addressed Safety Related Message"       -> !AIVDM
  * PGN 129802 "AIS Safety Related Broadcast Message"       -> !AIVDM   PGN incomplete
- * PGN 129809 "AIS Class B "CS" Static Data Report, Part A"-> !AIVDM   PGN incomplete
- * PGN 129810 "AIS Class B "CS" Static Data Report, Part B"-> !AIVDM   PGN incomplete
+ * PGN 129809 "AIS Class B "CS" Static Data Report, Part A"-> !AIVDM
+ * PGN 129810 "AIS Class B "CS" Static Data Report, Part B"-> !AIVDM
  * Typical output of these from analyzer:
  * {"timestamp":"2010-09-12-10:57:41.217","prio":"2","src":"36","dst":"255","pgn":"127250","description":"Vessel
  Heading","fields":{"SID":"116","Heading":"10.1","Deviation":"0.0","Variation":"0.0","Reference":"Magnetic"}}
@@ -99,7 +99,6 @@ extern bool  rateLimit;
 #define PGN_AIS_B (129039)
 #define PGN_AIS_4 (129793)
 #define PGN_AIS_5 (129794)
-#define PGN_AIS_9 (129798)
 #define PGN_AIS_9 (129798)
 #define PGN_AIS_12 (129801)
 #define PGN_AIS_14 (129802)

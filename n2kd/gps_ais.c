@@ -646,6 +646,8 @@ int aisEnum(const char *msg, const char *fieldName)
                          + 'a' + 't' + 'o' + 'r';
   static const int t20 = 'V' + 'i' + 'r' + 't' + 'u' + 'a' + 'l' + ' ' + 'A' + 't' + 'o' + 'N' + ' ' + 'F' + 'l' + 'a' + 'g';
   static const int t21 = 'A' + 's' + 's' + 'i' + 'g' + 'n' + 'e' + 'd' + ' ' + 'M' + 'o' + 'd' + 'e' + ' ' + 'F' + 'l' + 'a' + 'g';
+  static const int t22 = 'S' + 'p' + 'e' + 'c' + 'i' + 'a' + 'l' + ' ' + 'M' + 'a' + 'n' + 'e' + 'u' + 'v' + 'e' + 'r' + ' ' + 'I'
+                         + 'n' + 'd' + 'i' + 'c' + 'a' + 't' + 'o' + 'r';
 
   // Initialisation of value keys, done at most once
   static const int h0 = 'I' + 'n' + 'i' + 't' + 'i' + 'a' + 'l';
@@ -877,6 +879,13 @@ int aisEnum(const char *msg, const char *fieldName)
   static const int h144 = 'A' + 'u' + 't' + 'o' + 'n' + 'o' + 'm' + 'o' + 'u' + 's' + ' ' + 'a' + 'n' + 'd' + ' ' + 'c' + 'o' + 'n'
                           + 't' + 'i' + 'n' + 'u' + 'o' + 'u' + 's';
   static const int h145 = 'A' + 's' + 's' + 'i' + 'g' + 'n' + 'e' + 'd' + ' ' + 'm' + 'o' + 'd' + 'e';
+  // Special Maneuver Indicator
+  static const int h146 = 'N' + 'o' + 't' + ' ' + 'a' + 'v' + 'a' + 'i' + 'l' + 'a' + 'b' + 'l' + 'e';
+  static const int h147 = 'N' + 'o' + 't' + ' ' + 'e' + 'n' + 'g' + 'a' + 'g' + 'e' + 'd' + ' ' + 'i' + 'n' + ' ' + 's' + 'p' + 'e'
+                          + 'c' + 'i' + 'a' + 'l' + ' ' + 'm' + 'a' + 'n' + 'e' + 'u' + 'v' + 'e' + 'r';
+  static const int h148 = 'E' + 'n' + 'g' + 'a' + 'g' + 'e' + 'd' + ' ' + 'i' + 'n' + ' ' + 's' + 'p' + 'e' + 'c' + 'i' + 'a' + 'l'
+                          + ' ' + 'm' + 'a' + 'n' + 'e' + 'u' + 'v' + 'e' + 'r';
+  static const int h149 = 'R' + 'e' + 's' + 'e' + 'r' + 'v' + 'e' + 'r' + 'd';
 
   aisKey eType[] = {{t0, "Repeat Indicator", 0, 4, 0},
                     {t1, "Nav Status", 4, 16, 15},
@@ -899,7 +908,8 @@ int aisEnum(const char *msg, const char *fieldName)
                     {t18, "AtoN Type", 112, 32, 0},
                     {t19, "Off Position Indicator", 34, 2, 1}, // No documented default value
                     {t20, "Virtual AtoN Flag", 34, 2, 0},
-                    {t21, "Assigned Mode Flag", 144, 2, 0}};
+                    {t21, "Assigned Mode Flag", 144, 2, 0},
+                    {t22, "Special Maneuver Indicator", 146, 4, 0}};
 
   aisValue eValue[] = {// Repeat Indicator
                        {h0, 0, "Initial"},
@@ -1026,6 +1036,7 @@ int aisEnum(const char *msg, const char *fieldName)
                        {h95, 93, "Other hazard cat C"},
                        {h96, 94, "Other hazard cat D"},
                        {h97, 99, "Other (no additional information)"},
+
                        // EPFD fix types
                        {h98, 0, "undefined"},
                        {h99, 1, "GPS"},
@@ -1042,6 +1053,7 @@ int aisEnum(const char *msg, const char *fieldName)
                        {h109, 1, "not available"},
                        {h110, 0, "Available"},
                        {h111, 1, "Not available"},
+
                        // AtoN Type
                        {h112, 0, "Default: Type of AtoN not specified"},
                        {h113, 1, "Referece point"},
@@ -1075,9 +1087,16 @@ int aisEnum(const char *msg, const char *fieldName)
                        {h141, 29, "Floating AtoN: safe water"},
                        {h142, 30, "Floating AtoN: special mark"},
                        {h143, 31, "Floating AtoN: light vessel/LANBY/rigs"},
+
                        // Assigned Mode Flag
                        {h144, 0, "Autonomous and continuous"},
-                       {h145, 1, "Assigned mode"}};
+                       {h145, 1, "Assigned mode"},
+
+                       // Special Maneuver Indicator
+                       {h146, 0, "Not available"},
+                       {h147, 1, "Not engaged in special maneuver"},
+                       {h148, 2, "Engaged in special maneuver"},
+                       {h149, 3, "Reserverd"}};
 
   // Calculate field offset in eValue list. Dealing with compiled values
   for (i = 0; fieldName[i] != '\0'; i++)
@@ -1328,7 +1347,7 @@ void nmea0183AIVDM(StringBuffer *msg183, int source, const char *msg)
       addAisInt(aisFloat(msg, "COG"), 12, &aisPayload);
       addAisInt(aisFloat(msg, "Heading"), 9, &aisPayload);
       addAisInt(aisInteger(msg, "Time Stamp"), 6, &aisPayload);
-      addAisInt(0, 2, &aisPayload); /* Not decoded in canboat */
+      addAisInt(aisEnum(msg, "Special Maneuver Indicator"), 2, &aisPayload);
       addAisInt(0, 3, &aisPayload); /* Spare */
       addAisInt(aisEnum(msg, "RAIM"), 1, &aisPayload);
       addAisInt(aisInteger(msg, "Communication State"), 19, &aisPayload);
@@ -1455,36 +1474,32 @@ void nmea0183AIVDM(StringBuffer *msg183, int source, const char *msg)
       break;
     case 21: // PGN 129041 "AIS Aids to Navigation (AtoN) Report"
     {
-      int   len;
-      char *ename;
+        int   len;
+        char *ename;
 
-      addAisInt(msgid, 6, &aisPayload);
-      addAisInt(aisEnum(msg, "Repeat Indicator"), 2, &aisPayload);
-      addAisInt(aisInteger(msg, "User ID"), 30, &aisPayload);
-      addAisInt(aisEnum(msg, "AtoN Type"), 5, &aisPayload);
-      addAisString(aisAtoNName(msg, false, &len), 120, &aisPayload);
-      addAisInt(aisEnum(msg, "Position Accuracy"), 1, &aisPayload);
-      addAisInt(aisFloat(msg, "Longitude"), 28, &aisPayload);
-      addAisInt(aisFloat(msg, "Latitude"), 27, &aisPayload);
-      addAisInt(aisShipDimensions(msg, false), 30, &aisPayload);
-      addAisInt(aisEnum(msg, "GNSS type"), 4, &aisPayload);
-      addAisInt(aisInteger(msg, "Time Stamp"), 6, &aisPayload);
-      addAisInt(aisEnum(msg, "Off Position Indicator"), 1, &aisPayload);
-      addAisInt(0, 8, &aisPayload); /* Regional Reserved */
-      addAisInt(aisEnum(msg, "AIS RAIM flag"), 1, &aisPayload);
-      addAisInt(aisEnum(msg, "Virtual AtoN Flag"), 1, &aisPayload);
-      addAisInt(aisEnum(msg, "Assigned Mode Flag"), 1, &aisPayload);
-      addAisInt(0, 1, &aisPayload); // Spare
-      ename = aisAtoNName(msg, true, &len);
-      addAisString(ename, len, &aisPayload);
+        addAisInt(msgid, 6, &aisPayload);
+        addAisInt(aisEnum(msg, "Repeat Indicator"), 2, &aisPayload);
+        addAisInt(aisInteger(msg, "User ID"), 30, &aisPayload);
+        addAisInt(aisEnum(msg, "AtoN Type"), 5, &aisPayload);
+        addAisString(aisAtoNName(msg, false, &len), 120, &aisPayload);
+        addAisInt(aisEnum(msg, "Position Accuracy"), 1, &aisPayload);
+        addAisInt(aisFloat(msg, "Longitude"), 28, &aisPayload);
+        addAisInt(aisFloat(msg, "Latitude"), 27, &aisPayload);
+        addAisInt(aisShipDimensions(msg, false), 30, &aisPayload);
+        addAisInt(aisEnum(msg, "GNSS type"), 4, &aisPayload);
+        addAisInt(aisInteger(msg, "Time Stamp"), 6, &aisPayload);
+        addAisInt(aisEnum(msg, "Off Position Indicator"), 1, &aisPayload);
+        addAisInt(0, 8, &aisPayload); /* Regional Reserved */
+        addAisInt(aisEnum(msg, "AIS RAIM flag"), 1, &aisPayload);
+        addAisInt(aisEnum(msg, "Virtual AtoN Flag"), 1, &aisPayload);
+        addAisInt(aisEnum(msg, "Assigned Mode Flag"), 1, &aisPayload);
+        addAisInt(0, 1, &aisPayload); // Spare
+        ename = aisAtoNName(msg, true, &len);
+        addAisString(ename, len, &aisPayload);
     }
     break;
     case 24: // PGN 129809 "AIS Class B "CS" Static Data Report, Part A"
              // PGN 129810 "AIS Class B "CS" Static Data Report, Part B"
-      // The two PGNs of canboat are incomplete, there is no
-      // AIS Transceiver information in the json output despite
-      // prensence in the NMEA 2000 standard.
-      // The default values will be used until remedied.
       addAisInt(msgid, 6, &aisPayload);
       addAisInt(aisEnum(msg, "Repeat Indicator"), 2, &aisPayload);
       addAisInt(aisInteger(msg, "User ID"), 30, &aisPayload);
@@ -1499,7 +1514,6 @@ void nmea0183AIVDM(StringBuffer *msg183, int source, const char *msg)
         case 129810:                    // Part B
           addAisInt(1, 2, &aisPayload); // Part number
           addAisInt(aisEnum(msg, "Type of ship"), 8, &aisPayload);
-          // canboat seems to use older version of vendor ID, up to ITU-R 1371-3
           addAisString(aisString(msg, "Vendor ID"), 42, &aisPayload);
           addAisString(aisString(msg, "Callsign"), 42, &aisPayload);
           addAisInt(aisShipDimensions(msg, true), 30, &aisPayload);
