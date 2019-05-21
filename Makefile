@@ -8,10 +8,10 @@
 
 # s. https://www.gnu.org/prep/standards/html_node/Directory-Variables.html#Directory-Variables
 DESTDIR ?= ""
-PREFIX ?= /usr/local
+PREFIX ?= /usr
 EXEC_PREFIX ?= $(PREFIX)
 BINDIR=$(EXEC_PREFIX)/bin
-SYSCONFDIR=$(PREFIX)/etc
+SYSCONFDIR= /etc
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 OS=$(shell uname -o 2>&1)
