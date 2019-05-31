@@ -2146,15 +2146,14 @@ Pgn pgnList[] = {
     ,
     {"Configuration Information",
      126998,
-     false,
+     true,
      0x2a,
      0,
-     {{"Station ID", BYTES(2), 1, false, 0, ""},
-      {"Station Name", BYTES(2), 1, false, 0, ""},
-      {"A", BYTES(2), 1, false, 0, ""},
-      {"Manufacturer", BYTES(36), RES_ASCII, false, 0, ""},
-      {"Installation Description #1", BYTES(2), 1, false, 0, ""},
-      {"Installation Description #2", BYTES(2), 1, false, 0, ""},
+     {
+      {"Installation Description #1", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      {"Installation Description #2", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      {"Installation Description #3", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      {"Manufacturer Information", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
 
     /************ PERIODIC DATA PGNs **************/

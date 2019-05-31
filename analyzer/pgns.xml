@@ -7074,57 +7074,39 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <Fields>
         <Field>
           <Order>1</Order>
-          <Id>stationId</Id>
-          <Name>Station ID</Name>
+          <Id>installationDescription1</Id>
+          <Name>Installation Description #1</Name>
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>2</Order>
-          <Id>stationName</Id>
-          <Name>Station Name</Name>
+          <Id>installationDescription2</Id>
+          <Name>Installation Description #2</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>3</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>installationDescription3</Id>
+          <Name>Installation Description #3</Name>
           <BitLength>16</BitLength>
-          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>manufacturer</Id>
-          <Name>Manufacturer</Name>
-          <BitLength>288</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-                 <Type>ASCII text</Type>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>installationDescription1</Id>
-          <Name>Installation Description #1</Name>
+          <Id>manufacturerInformation</Id>
+          <Name>Manufacturer Information</Name>
           <BitLength>16</BitLength>
-          <BitOffset>336</BitOffset>
           <BitStart>0</BitStart>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>installationDescription2</Id>
-          <Name>Installation Description #2</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>352</BitOffset>
-          <BitStart>0</BitStart>
+                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
