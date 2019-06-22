@@ -185,6 +185,7 @@ int main(int argc, char **argv)
   int            r;
   int            i;
   char *         line;
+  size_t         len;
 
   setProgName(argv[0]);
 
@@ -272,6 +273,8 @@ int main(int argc, char **argv)
 
   while (fgets(msg, sizeof(msg), stdin))
   {
+    len = strlen(msg);
+
     for (i = 0; i < clients; i++)
     {
       if ((client[i].fd < 0) && (client[i].reconnect))
@@ -305,7 +308,7 @@ int main(int argc, char **argv)
         }
         else if (client[i].ct == ClientTCP)
         {
-          r = send(client[i].fd, msg, strlen(msg), 0);
+          r = send(client[i].fd, msg, len, 0);
           if (r == 0)
           {
             logError("EOF on %s:%s\n", client[i].host, client[i].port);
@@ -321,7 +324,7 @@ int main(int argc, char **argv)
         }
         else
         {
-          r = sendto(client[i].fd, msg, strlen(msg), 0, &client[i].sockaddr.any, client[i].socklen);
+          r = sendto(client[i].fd, msg, len, 0, &client[i].sockaddr.any, client[i].socklen);
           if (r < 0)
           {
             logError("error on %s:%s: %s\n", client[i].host, client[i].port, strerror(errno));
@@ -333,7 +336,12 @@ int main(int argc, char **argv)
     }
     if (!writeonly)
     {
-      fputs(msg, stdout);
+      logDebug("Writing %s\n", msg);
+      if (write(1, msg, len) == -1)
+      {
+        logError("Cannot write to stdout\n");
+        return 1;
+      };
     }
   }
   return 0;
