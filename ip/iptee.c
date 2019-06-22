@@ -20,6 +20,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "common.h"
+#include <signal.h>
 
 #define LINESIZE 1024
 
@@ -51,8 +52,8 @@ int ipConnect(const char *host, const char *service, ConnectionType ct)
   struct addrinfo hints, *res, *addr;
 
   memset(&hints, 0, sizeof(hints));
-  hints.ai_family   = (ct == ServerTCP) ? AF_INET6 : AF_UNSPEC;
-  hints.ai_socktype = (ct == ClientTCP) ? SOCK_STREAM : SOCK_DGRAM;
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = (ct == ClientUDP) ? SOCK_DGRAM : SOCK_STREAM;
 
   n = getaddrinfo(host, service, &hints, &res);
   if (n != 0)
@@ -154,6 +155,12 @@ int storeNewClient(int i, int sockfd)
   client[i].ct        = ClientTCP;
   client[i].reconnect = false;
 
+  logDebug("New TCP client socket %d addr %s port %s\n", sockfd, client[i].host, portstr);
+
+  if (i >= clients)
+  {
+    clients = i + 1;
+  }
   return 1;
 }
 
@@ -168,6 +175,8 @@ int main(int argc, char **argv)
   char *         line;
 
   setProgName(argv[0]);
+
+  signal(SIGPIPE, SIG_IGN);
 
   for (i = 0; i < sizeof(client) / sizeof(client[0]); i++)
   {
@@ -233,9 +242,18 @@ int main(int argc, char **argv)
   if (!clients)
   {
     fprintf(stderr,
-            "Usage: iptee [-w] [-t|-u] host port [host port ...] | -version\n\n"
+            "Usage: iptee [-w] [-d] [-q] [-s|-t|-u] host port [host port ...] | -version\n\n"
             "This program forwards stdin to the given TCP and UDP ports.\n"
-            "Stdin is also forwarded to stdout unless -w is used.\n" COPYRIGHT);
+            "Stdin is also forwarded to stdout unless -w is used.\n"
+            "\n"
+            "Options:\n"
+            "-w - writeonly - only write to network clients/servers, not stdout\n"
+            "-d - debug     - log debug information\n"
+            "-q - quiet     - do not log status information\n"
+            "-s - server    - host and port are a TCP server\n"
+            "-u - udp       - host and port are a UDP address that data is sent to\n"
+            "-t - tcp       - host and port are a TCP server that data is sent to\n"
+            COPYRIGHT);
     exit(1);
   }
   logInfo("Sending lines to %d servers\n", clients);
