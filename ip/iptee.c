@@ -33,19 +33,28 @@ typedef enum ConnectionType
   ServerTCP
 } ConnectionType;
 
+typedef union sockaddr_union
+{
+  struct sockaddr     any;
+  struct sockaddr_in  in;
+  struct sockaddr_in6 in6;
+} sockaddr_union;
+
 typedef struct Client
 {
-  int            fd;
-  ConnectionType ct;
-  bool           reconnect;
-  char *         host;
-  char *         port;
+  int                     fd;
+  ConnectionType          ct;
+  bool                    reconnect;
+  char *                  host;
+  char *                  port;
+  sockaddr_union          sockaddr;
+  socklen_t               socklen;
 } Client;
 
 Client client[256]; /* Surely this is enough connections? */
 int    clients;
 
-int ipConnect(const char *host, const char *service, ConnectionType ct)
+int ipConnect(const char *host, const char *service, ConnectionType ct, struct sockaddr *sockaddr, socklen_t *socklen)
 {
   int             sockfd;
   int             n;
@@ -71,17 +80,21 @@ int ipConnect(const char *host, const char *service, ConnectionType ct)
 
     if (ct == ServerTCP)
     {
-      if (!bind(sockfd, res->ai_addr, res->ai_addrlen) && !listen(sockfd, 10))
+      if (!bind(sockfd, addr->ai_addr, addr->ai_addrlen) && !listen(sockfd, 10))
       {
         break;
       }
     }
-    else
+    else if (ct == ClientTCP)
     {
-      if (!connect(sockfd, res->ai_addr, res->ai_addrlen))
+      if (!connect(sockfd, addr->ai_addr, addr->ai_addrlen))
       {
         break;
       }
+    }
+    else /* ClientUDP */
+    {
+      break;
     }
     close(sockfd);
     sockfd = -1;
@@ -90,10 +103,15 @@ int ipConnect(const char *host, const char *service, ConnectionType ct)
   {
     logError("Unable to open connection to %s:%s: %s\n", host, service, strerror(errno));
   }
+  else
+  {
+    *socklen = addr->ai_addrlen;
+    memcpy(sockaddr, addr->ai_addr, addr->ai_addrlen);
+  }
 
   freeaddrinfo(res);
 
-  if (sockfd >= 0)
+  if (sockfd >= 0 && ct != ClientUDP)
   {
     unsigned long nonblock = 1;
     ioctl(sockfd, FIONBIO, &nonblock); /* Set to non-blocking */
@@ -105,17 +123,11 @@ int ipConnect(const char *host, const char *service, ConnectionType ct)
 
 int storeNewClient(int i, int sockfd)
 {
-  union
-  {
-    struct sockaddr     any;
-    struct sockaddr_in  in;
-    struct sockaddr_in6 in6;
-  } a;
 
   char      portstr[10];
-  socklen_t alen = sizeof(a);
 
-  if (getpeername(sockfd, &a.any, &alen))
+  client[i].socklen = sizeof(client[i].sockaddr);
+  if (getpeername(sockfd, &client[i].sockaddr.any, &client[i].socklen))
   {
     logError("Unknown incoming client\n");
     close(sockfd);
@@ -134,21 +146,21 @@ int storeNewClient(int i, int sockfd)
   }
 
   client[i].host = calloc(INET6_ADDRSTRLEN + 2, 1);
-  if (a.any.sa_family == AF_INET)
+  if (client[i].sockaddr.any.sa_family == AF_INET)
   {
-    inet_ntop(a.any.sa_family, &a.in.sin_addr, client[i].host, INET6_ADDRSTRLEN + 1);
-    snprintf(portstr, sizeof(portstr), "%u", ntohs(a.in.sin_port));
+    inet_ntop(client[i].sockaddr.any.sa_family, &client[i].sockaddr.in.sin_addr, client[i].host, INET6_ADDRSTRLEN + 1);
+    snprintf(portstr, sizeof(portstr), "%u", ntohs(client[i].sockaddr.in.sin_port));
     client[i].port = strdup(portstr);
   }
-  else if (a.any.sa_family == AF_INET6)
+  else if (client[i].sockaddr.any.sa_family == AF_INET6)
   {
-    inet_ntop(a.any.sa_family, &a.in6.sin6_addr, client[i].host, INET6_ADDRSTRLEN + 1);
-    snprintf(portstr, sizeof(portstr), "%u", ntohs(a.in6.sin6_port));
+    inet_ntop(client[i].sockaddr.any.sa_family, &client[i].sockaddr.in6.sin6_addr, client[i].host, INET6_ADDRSTRLEN + 1);
+    snprintf(portstr, sizeof(portstr), "%u", ntohs(client[i].sockaddr.in6.sin6_port));
     client[i].port = strdup(portstr);
   }
   else
   {
-    logAbort("Unknown family %d\n", a.any.sa_family);
+    logAbort("Unknown family %d\n", client[i].sockaddr.any.sa_family);
   }
 
   client[i].fd        = sockfd;
@@ -264,7 +276,7 @@ int main(int argc, char **argv)
     {
       if ((client[i].fd < 0) && (client[i].reconnect))
       {
-        client[i].fd = ipConnect(client[i].host, client[i].port, client[i].ct);
+        client[i].fd = ipConnect(client[i].host, client[i].port, client[i].ct, &client[i].sockaddr.any, &client[i].socklen);
       }
       if (client[i].fd >= 0)
       {
@@ -291,9 +303,9 @@ int main(int argc, char **argv)
             }
           }
         }
-        else
+        else if (client[i].ct == ClientTCP)
         {
-          r = write(client[i].fd, msg, strlen(msg));
+          r = send(client[i].fd, msg, strlen(msg), 0);
           if (r == 0)
           {
             logError("EOF on %s:%s\n", client[i].host, client[i].port);
@@ -302,7 +314,17 @@ int main(int argc, char **argv)
           }
           if (r < 0)
           {
-            logError("error on %s:%s: %s\n", client[i].host, client[i].port, strerror(client[i].fd));
+            logError("error on %s:%s: %s\n", client[i].host, client[i].port, strerror(errno));
+            close(client[i].fd);
+            client[i].fd = -1;
+          }
+        }
+        else
+        {
+          r = sendto(client[i].fd, msg, strlen(msg), 0, &client[i].sockaddr.any, client[i].socklen);
+          if (r < 0)
+          {
+            logError("error on %s:%s: %s\n", client[i].host, client[i].port, strerror(errno));
             close(client[i].fd);
             client[i].fd = -1;
           }
