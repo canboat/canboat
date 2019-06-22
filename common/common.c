@@ -439,8 +439,9 @@ int getJSONValue(const char *message, const char *fieldName, char *value, size_t
 char *sbSearchChar(const StringBuffer *const in, char c)
 {
   char *p = sbGet(in);
+  size_t i;
 
-  for (size_t i = 0; i < in->len; i++)
+  for (i = 0; i < in->len; i++)
   {
     if (p[i] == c)
     {
