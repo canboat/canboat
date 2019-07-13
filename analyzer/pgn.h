@@ -1778,6 +1778,108 @@ Pgn pgnList[] = {
 
     /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
+    ,
+    {"Fusion: Media Control",
+     126720,
+     true,
+     3,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=3", "Media Control"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Play,2=Pause,4=Next,6=Prev", ""},
+      {0}}}    
+
+    ,
+    {"Fusion: Sirius Control",
+     126720,
+     true,
+     3,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=30", "Sirius Control"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Next,2=Prev", ""},
+      {0}}}
+
+    ,
+    {"Fusion: Request Status",
+     126720,
+     true,
+     3,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=1", "Request Status"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {0}}}
+
+    ,
+    {"Fusion: Set Source",
+     126720,
+     true,
+     3,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=2", "Set Source"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
+      {0}}}
+
+    ,
+    {"Fusion: Mute",
+     126720,
+     true,
+     3,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=17", "Mute"},
+      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Mute On,2=Mute Off", ""},
+      {0}}}
+
+    ,
+    {"Fusion: Set Zone Volume",
+     126720,
+     true,
+     6,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=24", "Set Zone Volume"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Volume", BYTES(1), RES_INTEGER, false, 0, ""},
+      {0}}}
+
+    ,
+    {"Fusion: Set All Volumes",
+     126720,
+     true,
+     9,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=25", "Set All Volumes"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Zone1", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Zone2", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Zone3", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Zone4", BYTES(1), RES_INTEGER, false, 0, ""},
+      {0}}}
+    
     /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
     ,
     {"Seatalk1: Keystroke",
@@ -5329,7 +5431,7 @@ Pgn pgnList[] = {
       {"A", BYTES(4), 1, false, 0, ""},
       {"Genre", BYTES(12), RES_STRINGLZ, false, 0, ""},
       {0}}}
-
+    
     /* M/V Dirona */
     ,
     {"Furuno: Unknown",
