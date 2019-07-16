@@ -7968,6 +7968,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -8055,7 +8057,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>2</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No' />
+            <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -8064,7 +8073,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>2</BitLength>
           <BitOffset>2</BitOffset>
           <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No' />
+            <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>3</Order>
@@ -8073,7 +8089,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>2</BitLength>
           <BitOffset>4</BitOffset>
           <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No' />
+            <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>4</Order>
@@ -8082,42 +8105,71 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No' />
+            <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>steeringMode</Id>
           <Name>Steering Mode</Name>
-          <BitLength>4</BitLength>
+          <BitLength>3</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Main Steering' />
+            <EnumPair Value='1' Name='Non-Follow-up Device' />
+            <EnumPair Value='10' Name='Follow-up Device' />
+            <EnumPair Value='11' Name='Heading Control Standalone' />
+            <EnumPair Value='100' Name='Heading Control' />
+            <EnumPair Value='101' Name='Track Control' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>turnMode</Id>
           <Name>Turn Mode</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>12</BitOffset>
-          <BitStart>4</BitStart>
+          <BitLength>3</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Rudder Limit controlled' />
+            <EnumPair Value='1' Name='turn rate controlled' />
+            <EnumPair Value='10' Name='radius controlled' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>headingReference</Id>
           <Name>Heading Reference</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>2</BitLength>
+          <BitOffset>14</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='True' />
+            <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>19</BitOffset>
-          <BitStart>3</BitStart>
+          <BitLength>5</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -8125,10 +8177,16 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>9</Order>
           <Id>commandedRudderDirection</Id>
           <Name>Commanded Rudder Direction</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>22</BitOffset>
-          <BitStart>6</BitStart>
+          <BitLength>3</BitLength>
+          <BitOffset>21</BitOffset>
+          <BitStart>5</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No Order' />
+            <EnumPair Value='1' Name='Move to starboard' />
+            <EnumPair Value='10' Name='Move to port' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>10</Order>
@@ -8353,6 +8411,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -11261,6 +11321,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -11289,6 +11351,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -11456,6 +11520,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -12416,6 +12482,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -12430,6 +12498,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -12459,6 +12529,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -13077,6 +13149,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -13091,6 +13165,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -13449,6 +13525,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -13504,6 +13582,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -13518,6 +13598,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -13532,6 +13614,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -13819,6 +13903,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -17954,6 +18040,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -18246,6 +18334,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21107,6 +21197,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21121,6 +21213,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21135,6 +21229,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21149,6 +21245,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21163,6 +21261,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21191,6 +21291,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21557,6 +21659,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -22124,6 +22228,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -22137,6 +22243,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -22305,6 +22413,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -22491,6 +22601,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -22586,6 +22698,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -22773,6 +22887,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -23028,6 +23144,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -23042,6 +23160,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
