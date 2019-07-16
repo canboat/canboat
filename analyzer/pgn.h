@@ -1250,6 +1250,23 @@ Pgn pgnList[] = {
       {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {0}}}
 
+    ,
+    {"Chetco: Dimmer",
+     65286,
+     true,
+     8,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=409", "Chetco"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, 1, false, 0, ""},
+      {"Instance", BYTES(1), 1, false, 0, ""},
+      {"Dimmer1", BYTES(1), 1, false, 0, ""},
+      {"Dimmer2", BYTES(1), 1, false, 0, ""},
+      {"Dimmer3", BYTES(1), 1, false, 0, ""},
+      {"Dimmer4", BYTES(1), 1, false, 0, ""},
+      {"Control", BYTES(1), 1, false, 0, ""},
+      {0}}}
+
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Boot State Request",

@@ -2515,6 +2515,101 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
       <PGN>65286</PGN>
+      <Id>chetcoDimmer</Id>
+      <Description>Chetco: Dimmer</Description>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Chetco</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>409</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>instance</Id>
+          <Name>Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>dimmer1</Id>
+          <Name>Dimmer1</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>dimmer2</Id>
+          <Name>Dimmer2</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>dimmer3</Id>
+          <Name>Dimmer3</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>dimmer4</Id>
+          <Name>Dimmer4</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>control</Id>
+          <Name>Control</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65286</PGN>
       <Id>airmarBootStateRequest</Id>
       <Description>Airmar: Boot State Request</Description>
       <Complete>true</Complete>
@@ -7676,7 +7771,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126998</PGN>
       <Id>configurationInformation</Id>
       <Description>Configuration Information</Description>
-      <Complete>false</Complete>
+      <Complete>true</Complete>
       <Length>42</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27971,89 +28066,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Name>Genre</Name>
           <BitLength>96</BitLength>
           <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
-                 <Type>ASCII string starting with length byte</Type>
-          <Signed>false</Signed>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130820</PGN>
-      <Id>fusionBtDevice</Id>
-      <Description>Fusion: BT Device</Description>
-      <Complete>false</Complete>
-      <Length>32</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>419</Match>
-                 <Type>Manufacturer code</Type>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-                 <Type>Lookup table</Type>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
-          <Description>BT Device</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>128</Match>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>40</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>deviceName</Id>
-          <Name>Device Name</Name>
-          <BitLength>80</BitLength>
-          <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
                  <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
