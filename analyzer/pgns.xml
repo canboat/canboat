@@ -8082,7 +8082,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>9</Order>
           <Id>commandedRudderDirection</Id>
           <Name>Commanded Rudder Direction</Name>
-          <BitLength>2</BitLength>
+          <BitLength>3</BitLength>
           <BitOffset>21</BitOffset>
           <BitStart>5</BitStart>
                  <Type>Lookup table</Type>
@@ -8098,8 +8098,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>commandedRudderAngle</Id>
           <Name>Commanded Rudder Angle</Name>
           <BitLength>16</BitLength>
-          <BitOffset>23</BitOffset>
-          <BitStart>7</BitStart>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
           <Units>rad</Units>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
@@ -8109,8 +8109,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>headingToSteerCourse</Id>
           <Name>Heading-To-Steer (Course)</Name>
           <BitLength>16</BitLength>
-          <BitOffset>39</BitOffset>
-          <BitStart>7</BitStart>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
           <Units>rad</Units>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
@@ -8120,8 +8120,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>track</Id>
           <Name>Track</Name>
           <BitLength>16</BitLength>
-          <BitOffset>55</BitOffset>
-          <BitStart>7</BitStart>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
           <Units>rad</Units>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
@@ -8131,8 +8131,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>rudderLimit</Id>
           <Name>Rudder Limit</Name>
           <BitLength>16</BitLength>
-          <BitOffset>71</BitOffset>
-          <BitStart>7</BitStart>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
           <Units>rad</Units>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
@@ -8142,8 +8142,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>offHeadingLimit</Id>
           <Name>Off-Heading Limit</Name>
           <BitLength>16</BitLength>
-          <BitOffset>87</BitOffset>
-          <BitStart>7</BitStart>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
           <Units>rad</Units>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
@@ -8153,8 +8153,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>radiusOfTurnOrder</Id>
           <Name>Radius of Turn Order</Name>
           <BitLength>16</BitLength>
-          <BitOffset>103</BitOffset>
-          <BitStart>7</BitStart>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
           <Units>rad</Units>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
@@ -8164,8 +8164,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>rateOfTurnOrder</Id>
           <Name>Rate of Turn Order</Name>
           <BitLength>16</BitLength>
-          <BitOffset>119</BitOffset>
-          <BitStart>7</BitStart>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
           <Units>rad/s</Units>
           <Resolution>3.125e-05</Resolution>
           <Signed>true</Signed>
@@ -8175,8 +8175,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>offTrackLimit</Id>
           <Name>Off-Track Limit</Name>
           <BitLength>16</BitLength>
-          <BitOffset>135</BitOffset>
-          <BitStart>7</BitStart>
+          <BitOffset>136</BitOffset>
+          <BitStart>0</BitStart>
           <Units>m</Units>
           <Signed>true</Signed>
         </Field>
@@ -8185,8 +8185,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>vesselHeading</Id>
           <Name>Vessel Heading</Name>
           <BitLength>16</BitLength>
-          <BitOffset>151</BitOffset>
-          <BitStart>7</BitStart>
+          <BitOffset>152</BitOffset>
+          <BitStart>0</BitStart>
           <Units>rad</Units>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>

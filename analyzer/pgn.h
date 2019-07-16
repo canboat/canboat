@@ -2310,7 +2310,7 @@ Pgn pgnList[] = {
       {"Turn Mode", 3, RES_LOOKUP, false, ",0=Rudder Limit controlled,1=turn rate controlled,10=radius controlled", ""},
       {"Heading Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
       {"Reserved", 5, RES_BINARY, false, 0, ""},
-      {"Commanded Rudder Direction", 2, RES_LOOKUP, false, ",0=No Order,1=Move to starboard,10=Move to port", ""},
+      {"Commanded Rudder Direction", 3, RES_LOOKUP, false, ",0=No Order,1=Move to starboard,10=Move to port", ""},
       {"Commanded Rudder Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Heading-To-Steer (Course)", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Track", BYTES(2), RES_RADIANS, false, "rad", ""},
