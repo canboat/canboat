@@ -256,10 +256,10 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
 
 #define LOOKUP_WATER_REFERENCE (",0=Paddle wheel,1=Pitot tube,2=Doppler,3=Correlation (ultra sound),4=Electro Magnetic")
 
-#define LOOKUP_YES_NO (",0=No,1=Yes")
+#define LOOKUP_YES_NO (",0=No,1=Yes,10=Error,11=Unavailable")
 #define LOOKUP_OK_WARNING (",0=OK,1=Warning")
 
-#define LOOKUP_DIRECTION_REFERENCE (",0=True,1=Magnetic")
+#define LOOKUP_DIRECTION_REFERENCE (",0=True,1=Magnetic,2=Error,3=Null")
 
 #define LOOKUP_NAV_STATUS                    \
   (",0=Under way using engine"               \
@@ -2302,15 +2302,15 @@ Pgn pgnList[] = {
      false,
      0x15,
      0,
-     {{"Rudder Limit Exceeded", 2, 1, false, 0, ""},
-      {"Off-Heading Limit Exceeded", 2, 1, false, 0, ""},
-      {"Off-Track Limit Exceeded", 2, 1, false, 0, ""},
-      {"Override", 2, 1, false, 0, ""},
-      {"Steering Mode", 4, 1, false, 0, ""},
-      {"Turn Mode", 4, 1, false, 0, ""},
-      {"Heading Reference", 3, 1, false, 0, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, ""},
-      {"Commanded Rudder Direction", 2, 1, false, 0, ""},
+     {{"Rudder Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      {"Off-Heading Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      {"Off-Track Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      {"Override", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      {"Steering Mode", 3, RES_LOOKUP, false, ",0=Main Steering,1=Non-Follow-up Device,10=Follow-up Device,11=Heading Control Standalone,100=Heading Control,101=Track Control", ""},
+      {"Turn Mode", 3, RES_LOOKUP, false, ",0=Rudder Limit controlled,1=turn rate controlled,10=radius controlled", ""},
+      {"Heading Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
+      {"Reserved", 5, RES_BINARY, false, 0, ""},
+      {"Commanded Rudder Direction", 2, RES_LOOKUP, false, ",0=No Order,1=Move to starboard,10=Move to port", ""},
       {"Commanded Rudder Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Heading-To-Steer (Course)", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Track", BYTES(2), RES_RADIANS, false, "rad", ""},

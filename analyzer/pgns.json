@@ -6831,7 +6831,7 @@
         "PGN":126998,
         "Id":"configurationInformation",
         "Description":"Configuration Information",
-        "Complete":false,
+        "Complete":true,
         "Length":42,
         "RepeatingFields":0,
         "Fields":[
@@ -7008,7 +7008,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"True","value":"0"},
-              {"name":"Magnetic","value":"1"}]},
+              {"name":"Magnetic","value":"1"},
+              {"name":"Error","value":"2"},
+              {"name":"Null","value":"3"}]},
           {
             "Order":13,
             "Id":"reserved",
@@ -7085,7 +7087,13 @@
             "BitLength":2,
             "BitOffset":0,
             "BitStart":0,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":2,
             "Id":"offHeadingLimitExceeded",
@@ -7093,7 +7101,13 @@
             "BitLength":2,
             "BitOffset":2,
             "BitStart":2,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":3,
             "Id":"offTrackLimitExceeded",
@@ -7101,7 +7115,13 @@
             "BitLength":2,
             "BitOffset":4,
             "BitStart":4,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":4,
             "Id":"override",
@@ -7109,38 +7129,63 @@
             "BitLength":2,
             "BitOffset":6,
             "BitStart":6,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":5,
             "Id":"steeringMode",
             "Name":"Steering Mode",
-            "BitLength":4,
+            "BitLength":3,
             "BitOffset":8,
             "BitStart":0,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Main Steering","value":"0"},
+              {"name":"Non-Follow-up Device","value":"1"},
+              {"name":"Follow-up Device","value":"10"},
+              {"name":"Heading Control Standalone","value":"11"},
+              {"name":"Heading Control","value":"100"},
+              {"name":"Track Control","value":"101"}]},
           {
             "Order":6,
             "Id":"turnMode",
             "Name":"Turn Mode",
-            "BitLength":4,
-            "BitOffset":12,
-            "BitStart":4,
-            "Signed":false},
+            "BitLength":3,
+            "BitOffset":11,
+            "BitStart":3,
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Rudder Limit controlled","value":"0"},
+              {"name":"turn rate controlled","value":"1"},
+              {"name":"radius controlled","value":"10"}]},
           {
             "Order":7,
             "Id":"headingReference",
             "Name":"Heading Reference",
-            "BitLength":3,
-            "BitOffset":16,
-            "BitStart":0,
-            "Signed":false},
+            "BitLength":2,
+            "BitOffset":14,
+            "BitStart":6,
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"True","value":"0"},
+              {"name":"Magnetic","value":"1"},
+              {"name":"Error","value":"2"},
+              {"name":"Null","value":"3"}]},
           {
             "Order":8,
             "Id":"reserved",
             "Name":"Reserved",
-            "BitLength":3,
-            "BitOffset":19,
-            "BitStart":3,
+            "BitLength":5,
+            "BitOffset":16,
+            "BitStart":0,
             "Type":"Binary data",
             "Signed":false},
           {
@@ -7148,16 +7193,21 @@
             "Id":"commandedRudderDirection",
             "Name":"Commanded Rudder Direction",
             "BitLength":2,
-            "BitOffset":22,
-            "BitStart":6,
-            "Signed":false},
+            "BitOffset":21,
+            "BitStart":5,
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"No Order","value":"0"},
+              {"name":"Move to starboard","value":"1"},
+              {"name":"Move to port","value":"10"}]},
           {
             "Order":10,
             "Id":"commandedRudderAngle",
             "Name":"Commanded Rudder Angle",
             "BitLength":16,
-            "BitOffset":24,
-            "BitStart":0,
+            "BitOffset":23,
+            "BitStart":7,
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":true},
@@ -7166,8 +7216,8 @@
             "Id":"headingToSteerCourse",
             "Name":"Heading-To-Steer (Course)",
             "BitLength":16,
-            "BitOffset":40,
-            "BitStart":0,
+            "BitOffset":39,
+            "BitStart":7,
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":false},
@@ -7176,8 +7226,8 @@
             "Id":"track",
             "Name":"Track",
             "BitLength":16,
-            "BitOffset":56,
-            "BitStart":0,
+            "BitOffset":55,
+            "BitStart":7,
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":false},
@@ -7186,8 +7236,8 @@
             "Id":"rudderLimit",
             "Name":"Rudder Limit",
             "BitLength":16,
-            "BitOffset":72,
-            "BitStart":0,
+            "BitOffset":71,
+            "BitStart":7,
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":false},
@@ -7196,8 +7246,8 @@
             "Id":"offHeadingLimit",
             "Name":"Off-Heading Limit",
             "BitLength":16,
-            "BitOffset":88,
-            "BitStart":0,
+            "BitOffset":87,
+            "BitStart":7,
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":false},
@@ -7206,8 +7256,8 @@
             "Id":"radiusOfTurnOrder",
             "Name":"Radius of Turn Order",
             "BitLength":16,
-            "BitOffset":104,
-            "BitStart":0,
+            "BitOffset":103,
+            "BitStart":7,
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":true},
@@ -7216,8 +7266,8 @@
             "Id":"rateOfTurnOrder",
             "Name":"Rate of Turn Order",
             "BitLength":16,
-            "BitOffset":120,
-            "BitStart":0,
+            "BitOffset":119,
+            "BitStart":7,
             "Units":"rad/s",
             "Resolution":3.125e-05,
             "Signed":true},
@@ -7226,8 +7276,8 @@
             "Id":"offTrackLimit",
             "Name":"Off-Track Limit",
             "BitLength":16,
-            "BitOffset":136,
-            "BitStart":0,
+            "BitOffset":135,
+            "BitStart":7,
             "Units":"m",
             "Signed":true},
           {
@@ -7235,8 +7285,8 @@
             "Id":"vesselHeading",
             "Name":"Vessel Heading",
             "BitLength":16,
-            "BitOffset":152,
-            "BitStart":0,
+            "BitOffset":151,
+            "BitStart":7,
             "Units":"rad",
             "Resolution":"0.0001",
             "Signed":false}]},
@@ -7351,7 +7401,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"True","value":"0"},
-              {"name":"Magnetic","value":"1"}]},
+              {"name":"Magnetic","value":"1"},
+              {"name":"Error","value":"2"},
+              {"name":"Null","value":"3"}]},
           {
             "Order":6,
             "Id":"reserved",
@@ -9903,7 +9955,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":5,
             "Id":"targetAcquisition",
@@ -9927,7 +9981,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"True","value":"0"},
-              {"name":"Magnetic","value":"1"}]},
+              {"name":"Magnetic","value":"1"},
+              {"name":"Error","value":"2"},
+              {"name":"Null","value":"3"}]},
           {
             "Order":7,
             "Id":"reserved",
@@ -10076,7 +10132,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"True","value":"0"},
-              {"name":"Magnetic","value":"1"}]},
+              {"name":"Magnetic","value":"1"},
+              {"name":"Error","value":"2"},
+              {"name":"Null","value":"3"}]},
           {
             "Order":3,
             "Id":"reserved",
@@ -10933,7 +10991,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":18,
             "Id":"dsc",
@@ -10945,7 +11005,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":19,
             "Id":"band",
@@ -10970,7 +11032,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":21,
             "Id":"aisMode",
@@ -11526,7 +11590,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":15,
             "Id":"virtualAtonFlag",
@@ -11538,7 +11604,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":16,
             "Id":"assignedModeFlag",
@@ -11858,7 +11926,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":5,
             "Id":"xte",
@@ -11906,7 +11976,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"True","value":"0"},
-              {"name":"Magnetic","value":"1"}]},
+              {"name":"Magnetic","value":"1"},
+              {"name":"Error","value":"2"},
+              {"name":"Null","value":"3"}]},
           {
             "Order":4,
             "Id":"perpendicularCrossed",
@@ -11918,7 +11990,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":5,
             "Id":"arrivalCircleEntered",
@@ -11930,7 +12004,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":6,
             "Id":"calculationType",
@@ -12186,7 +12262,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"True","value":"0"},
-              {"name":"Magnetic","value":"1"}]},
+              {"name":"Magnetic","value":"1"},
+              {"name":"Error","value":"2"},
+              {"name":"Null","value":"3"}]},
           {
             "Order":3,
             "Id":"reserved",
@@ -15867,7 +15945,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":15,
             "Id":"reserved",
@@ -16129,7 +16209,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":15,
             "Id":"reserved",
@@ -18682,7 +18764,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":3,
             "Id":"rinseStartStop",
@@ -18694,7 +18778,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":4,
             "Id":"lowPressurePumpStatus",
@@ -18706,7 +18792,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":5,
             "Id":"highPressurePumpStatus",
@@ -18718,7 +18806,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":6,
             "Id":"emergencyStop",
@@ -18730,7 +18820,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":7,
             "Id":"productSolenoidValveStatus",
@@ -18754,7 +18846,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":9,
             "Id":"salinityStatus",
@@ -19082,7 +19176,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":13,
             "Id":"lockStatus",
@@ -19597,7 +19693,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":11,
             "Id":"connected",
@@ -19608,7 +19706,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":12,
             "Id":"repeatSupport",
@@ -19754,7 +19854,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"True","value":"0"},
-              {"name":"Magnetic","value":"1"}]},
+              {"name":"Magnetic","value":"1"},
+              {"name":"Error","value":"2"},
+              {"name":"Null","value":"3"}]},
           {
             "Order":3,
             "Id":"reserved",
@@ -19920,7 +20022,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":2,
             "Id":"defaultSettings",
@@ -20003,7 +20107,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":2,
             "Id":"defaultSettings",
@@ -20168,7 +20274,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":5,
             "Id":"reserved",
@@ -20395,7 +20503,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":4,
             "Id":"discovering",
@@ -20407,7 +20517,9 @@
             "Signed":false,
             "EnumValues":[
               {"name":"No","value":"0"},
-              {"name":"Yes","value":"1"}]},
+              {"name":"Yes","value":"1"},
+              {"name":"Error","value":"10"},
+              {"name":"Unavailable","value":"11"}]},
           {
             "Order":5,
             "Id":"bluetoothAddress",
@@ -24882,80 +24994,6 @@
             "Name":"Genre",
             "BitLength":96,
             "BitOffset":56,
-            "BitStart":0,
-            "Type":"ASCII string starting with length byte",
-            "Signed":false}]},
-      {
-        "PGN":130820,
-        "Id":"fusionBtDevice",
-        "Description":"Fusion: BT Device",
-        "Complete":false,
-        "Length":32,
-        "RepeatingFields":0,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "Description":"Fusion",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Match":419,
-            "Type":"Manufacturer code",
-            "Signed":false},
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":0,
-            "Signed":false},
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "Description":"Marine Industry",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Match":4,
-            "Type":"Lookup table",
-            "Signed":false},
-          {
-            "Order":4,
-            "Id":"messageId",
-            "Name":"Message ID",
-            "Description":"BT Device",
-            "BitLength":8,
-            "BitOffset":16,
-            "BitStart":0,
-            "Match":128,
-            "Signed":false},
-          {
-            "Order":5,
-            "Id":"a",
-            "Name":"A",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
-            "Signed":false},
-          {
-            "Order":6,
-            "Id":"b",
-            "Name":"B",
-            "BitLength":40,
-            "BitOffset":32,
-            "BitStart":0,
-            "Signed":false},
-          {
-            "Order":7,
-            "Id":"deviceName",
-            "Name":"Device Name",
-            "BitLength":80,
-            "BitOffset":72,
             "BitStart":0,
             "Type":"ASCII string starting with length byte",
             "Signed":false}]},
