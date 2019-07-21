@@ -2515,6 +2515,101 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
       <PGN>65286</PGN>
+      <Id>chetcoDimmer</Id>
+      <Description>Chetco: Dimmer</Description>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Chetco</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>409</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>instance</Id>
+          <Name>Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>dimmer1</Id>
+          <Name>Dimmer1</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>dimmer2</Id>
+          <Name>Dimmer2</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>dimmer3</Id>
+          <Name>Dimmer3</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>dimmer4</Id>
+          <Name>Dimmer4</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>control</Id>
+          <Name>Control</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65286</PGN>
       <Id>airmarBootStateRequest</Id>
       <Description>Airmar: Boot State Request</Description>
       <Complete>true</Complete>
@@ -5314,6 +5409,614 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
       <PGN>126720</PGN>
+      <Id>fusionMediaControl</Id>
+      <Description>Fusion: Media Control</Description>
+      <Complete>true</Complete>
+      <Length>3</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Media Control</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>3</Match>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>unknown</Id>
+          <Name>Unknown</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='1' Name='Play' />
+            <EnumPair Value='2' Name='Pause' />
+            <EnumPair Value='4' Name='Next' />
+            <EnumPair Value='6' Name='Prev' />
+          </EnumValues>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionSiriusControl</Id>
+      <Description>Fusion: Sirius Control</Description>
+      <Complete>true</Complete>
+      <Length>3</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Sirius Control</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>30</Match>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>unknown</Id>
+          <Name>Unknown</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='1' Name='Next' />
+            <EnumPair Value='2' Name='Prev' />
+          </EnumValues>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionRequestStatus</Id>
+      <Description>Fusion: Request Status</Description>
+      <Complete>true</Complete>
+      <Length>3</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Request Status</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1</Match>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>unknown</Id>
+          <Name>Unknown</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionSetSource</Id>
+      <Description>Fusion: Set Source</Description>
+      <Complete>true</Complete>
+      <Length>3</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Set Source</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>2</Match>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>unknown</Id>
+          <Name>Unknown</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionMute</Id>
+      <Description>Fusion: Mute</Description>
+      <Complete>true</Complete>
+      <Length>3</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Mute</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>17</Match>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='1' Name='Mute On' />
+            <EnumPair Value='2' Name='Mute Off' />
+          </EnumValues>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionSetZoneVolume</Id>
+      <Description>Fusion: Set Zone Volume</Description>
+      <Complete>true</Complete>
+      <Length>6</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Set Zone Volume</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>24</Match>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>unknown</Id>
+          <Name>Unknown</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>zone</Id>
+          <Name>Zone</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>volume</Id>
+          <Name>Volume</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionSetAllVolumes</Id>
+      <Description>Fusion: Set All Volumes</Description>
+      <Complete>true</Complete>
+      <Length>9</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Set All Volumes</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>25</Match>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>unknown</Id>
+          <Name>Unknown</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>zone1</Id>
+          <Name>Zone1</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>zone2</Id>
+          <Name>Zone2</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>zone3</Id>
+          <Name>Zone3</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>zone4</Id>
+          <Name>Zone4</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
       <Id>seatalk1Keystroke</Id>
       <Description>Seatalk1: Keystroke</Description>
       <Complete>false</Complete>
@@ -7068,63 +7771,45 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126998</PGN>
       <Id>configurationInformation</Id>
       <Description>Configuration Information</Description>
-      <Complete>false</Complete>
+      <Complete>true</Complete>
       <Length>42</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>
-          <Id>stationId</Id>
-          <Name>Station ID</Name>
+          <Id>installationDescription1</Id>
+          <Name>Installation Description #1</Name>
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>2</Order>
-          <Id>stationName</Id>
-          <Name>Station Name</Name>
+          <Id>installationDescription2</Id>
+          <Name>Installation Description #2</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>3</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>installationDescription3</Id>
+          <Name>Installation Description #3</Name>
           <BitLength>16</BitLength>
-          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>manufacturer</Id>
-          <Name>Manufacturer</Name>
-          <BitLength>288</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-                 <Type>ASCII text</Type>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>installationDescription1</Id>
-          <Name>Installation Description #1</Name>
+          <Id>manufacturerInformation</Id>
+          <Name>Manufacturer Information</Name>
           <BitLength>16</BitLength>
-          <BitOffset>336</BitOffset>
           <BitStart>0</BitStart>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>installationDescription2</Id>
-          <Name>Installation Description #2</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>352</BitOffset>
-          <BitStart>0</BitStart>
+                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -7283,6 +7968,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -7370,7 +8057,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>2</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No' />
+            <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -7379,7 +8073,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>2</BitLength>
           <BitOffset>2</BitOffset>
           <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No' />
+            <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>3</Order>
@@ -7388,7 +8089,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>2</BitLength>
           <BitOffset>4</BitOffset>
           <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No' />
+            <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>4</Order>
@@ -7397,42 +8105,71 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No' />
+            <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>steeringMode</Id>
           <Name>Steering Mode</Name>
-          <BitLength>4</BitLength>
+          <BitLength>3</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Main Steering' />
+            <EnumPair Value='1' Name='Non-Follow-up Device' />
+            <EnumPair Value='10' Name='Follow-up Device' />
+            <EnumPair Value='11' Name='Heading Control Standalone' />
+            <EnumPair Value='100' Name='Heading Control' />
+            <EnumPair Value='101' Name='Track Control' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>turnMode</Id>
           <Name>Turn Mode</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>12</BitOffset>
-          <BitStart>4</BitStart>
+          <BitLength>3</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Rudder Limit controlled' />
+            <EnumPair Value='1' Name='turn rate controlled' />
+            <EnumPair Value='10' Name='radius controlled' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>headingReference</Id>
           <Name>Heading Reference</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>2</BitLength>
+          <BitOffset>14</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='True' />
+            <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>19</BitOffset>
-          <BitStart>3</BitStart>
+          <BitLength>5</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -7440,10 +8177,16 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>9</Order>
           <Id>commandedRudderDirection</Id>
           <Name>Commanded Rudder Direction</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>22</BitOffset>
-          <BitStart>6</BitStart>
+          <BitLength>3</BitLength>
+          <BitOffset>21</BitOffset>
+          <BitStart>5</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No Order' />
+            <EnumPair Value='1' Name='Move to starboard' />
+            <EnumPair Value='10' Name='Move to port' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>10</Order>
@@ -7668,6 +8411,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -10576,6 +11321,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -10604,6 +11351,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -10771,6 +11520,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -11731,6 +12482,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -11745,6 +12498,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -11774,6 +12529,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -12392,6 +13149,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -12406,6 +13165,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -12764,6 +13525,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -12819,6 +13582,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -12833,6 +13598,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -12847,6 +13614,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -13134,6 +13903,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -17269,6 +18040,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -17561,6 +18334,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -20422,6 +21197,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -20436,6 +21213,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -20450,6 +21229,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -20464,6 +21245,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -20478,6 +21261,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -20506,6 +21291,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -20872,6 +21659,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21439,6 +22228,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21452,6 +22243,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21620,6 +22413,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Null' />
           </EnumValues>
         </Field>
         <Field>
@@ -21806,6 +22601,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -21901,6 +22698,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -22088,6 +22887,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -22343,6 +23144,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -22357,6 +23160,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
+            <EnumPair Value='10' Name='Error' />
+            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>

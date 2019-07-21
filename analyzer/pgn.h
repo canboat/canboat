@@ -256,10 +256,10 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
 
 #define LOOKUP_WATER_REFERENCE (",0=Paddle wheel,1=Pitot tube,2=Doppler,3=Correlation (ultra sound),4=Electro Magnetic")
 
-#define LOOKUP_YES_NO (",0=No,1=Yes")
+#define LOOKUP_YES_NO (",0=No,1=Yes,10=Error,11=Unavailable")
 #define LOOKUP_OK_WARNING (",0=OK,1=Warning")
 
-#define LOOKUP_DIRECTION_REFERENCE (",0=True,1=Magnetic")
+#define LOOKUP_DIRECTION_REFERENCE (",0=True,1=Magnetic,2=Error,3=Null")
 
 #define LOOKUP_NAV_STATUS                    \
   (",0=Under way using engine"               \
@@ -1250,6 +1250,23 @@ Pgn pgnList[] = {
       {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {0}}}
 
+    ,
+    {"Chetco: Dimmer",
+     65286,
+     true,
+     8,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=409", "Chetco"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, 1, false, 0, ""},
+      {"Instance", BYTES(1), 1, false, 0, ""},
+      {"Dimmer1", BYTES(1), 1, false, 0, ""},
+      {"Dimmer2", BYTES(1), 1, false, 0, ""},
+      {"Dimmer3", BYTES(1), 1, false, 0, ""},
+      {"Dimmer4", BYTES(1), 1, false, 0, ""},
+      {"Control", BYTES(1), 1, false, 0, ""},
+      {0}}}
+
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Boot State Request",
@@ -1778,6 +1795,108 @@ Pgn pgnList[] = {
 
     /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
+    ,
+    {"Fusion: Media Control",
+     126720,
+     true,
+     3,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=3", "Media Control"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Play,2=Pause,4=Next,6=Prev", ""},
+      {0}}}    
+
+    ,
+    {"Fusion: Sirius Control",
+     126720,
+     true,
+     3,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=30", "Sirius Control"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Next,2=Prev", ""},
+      {0}}}
+
+    ,
+    {"Fusion: Request Status",
+     126720,
+     true,
+     3,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=1", "Request Status"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {0}}}
+
+    ,
+    {"Fusion: Set Source",
+     126720,
+     true,
+     3,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=2", "Set Source"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
+      {0}}}
+
+    ,
+    {"Fusion: Mute",
+     126720,
+     true,
+     3,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=17", "Mute"},
+      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Mute On,2=Mute Off", ""},
+      {0}}}
+
+    ,
+    {"Fusion: Set Zone Volume",
+     126720,
+     true,
+     6,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=24", "Set Zone Volume"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Volume", BYTES(1), RES_INTEGER, false, 0, ""},
+      {0}}}
+
+    ,
+    {"Fusion: Set All Volumes",
+     126720,
+     true,
+     9,
+     0, 
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=25", "Set All Volumes"},
+      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Zone1", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Zone2", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Zone3", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Zone4", BYTES(1), RES_INTEGER, false, 0, ""},
+      {0}}}
+    
     /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
     ,
     {"Seatalk1: Keystroke",
@@ -2146,15 +2265,14 @@ Pgn pgnList[] = {
     ,
     {"Configuration Information",
      126998,
-     false,
+     true,
      0x2a,
      0,
-     {{"Station ID", BYTES(2), 1, false, 0, ""},
-      {"Station Name", BYTES(2), 1, false, 0, ""},
-      {"A", BYTES(2), 1, false, 0, ""},
-      {"Manufacturer", BYTES(36), RES_ASCII, false, 0, ""},
-      {"Installation Description #1", BYTES(2), 1, false, 0, ""},
-      {"Installation Description #2", BYTES(2), 1, false, 0, ""},
+     {
+      {"Installation Description #1", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      {"Installation Description #2", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      {"Installation Description #3", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      {"Manufacturer Information", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
 
     /************ PERIODIC DATA PGNs **************/
@@ -2201,15 +2319,15 @@ Pgn pgnList[] = {
      false,
      0x15,
      0,
-     {{"Rudder Limit Exceeded", 2, 1, false, 0, ""},
-      {"Off-Heading Limit Exceeded", 2, 1, false, 0, ""},
-      {"Off-Track Limit Exceeded", 2, 1, false, 0, ""},
-      {"Override", 2, 1, false, 0, ""},
-      {"Steering Mode", 4, 1, false, 0, ""},
-      {"Turn Mode", 4, 1, false, 0, ""},
-      {"Heading Reference", 3, 1, false, 0, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, ""},
-      {"Commanded Rudder Direction", 2, 1, false, 0, ""},
+     {{"Rudder Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      {"Off-Heading Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      {"Off-Track Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      {"Override", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      {"Steering Mode", 3, RES_LOOKUP, false, ",0=Main Steering,1=Non-Follow-up Device,10=Follow-up Device,11=Heading Control Standalone,100=Heading Control,101=Track Control", ""},
+      {"Turn Mode", 3, RES_LOOKUP, false, ",0=Rudder Limit controlled,1=turn rate controlled,10=radius controlled", ""},
+      {"Heading Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
+      {"Reserved", 5, RES_BINARY, false, 0, ""},
+      {"Commanded Rudder Direction", 3, RES_LOOKUP, false, ",0=No Order,1=Move to starboard,10=Move to port", ""},
       {"Commanded Rudder Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Heading-To-Steer (Course)", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Track", BYTES(2), RES_RADIANS, false, "rad", ""},
@@ -5329,7 +5447,7 @@ Pgn pgnList[] = {
       {"A", BYTES(4), 1, false, 0, ""},
       {"Genre", BYTES(12), RES_STRINGLZ, false, 0, ""},
       {0}}}
-
+    
     /* M/V Dirona */
     ,
     {"Furuno: Unknown",
