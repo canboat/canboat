@@ -393,7 +393,6 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
   unsigned char  bst[255];
   unsigned char *b = bst;
   unsigned char *r = bst;
-  unsigned char *lenPtr;
   unsigned char  crc;
 
   int i;
@@ -402,7 +401,11 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
   *b++   = STX;
   *b++   = command;
   crc    = command;
-  lenPtr = b++;
+  *b++   = len;
+  if (len == DLE)
+  {
+    *b++ = DLE;
+  }
 
   for (i = 0; i < len; i++)
   {
@@ -414,7 +417,6 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
     crc += (unsigned char) cmd[i];
   }
 
-  *lenPtr = i;
   crc += i;
 
   crc = 256 - (int)crc;
