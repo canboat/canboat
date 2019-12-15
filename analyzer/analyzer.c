@@ -1736,9 +1736,11 @@ static void explainPGN(Pgn pgn)
  */
 static void printXML(int indent, const char *element, const char *p)
 {
+  int i;
+
   if (p)
   {
-    for (int i = 0; i < indent; i++)
+    for (i = 0; i < indent; i++)
     {
       fputs(" ", stdout);
     }
