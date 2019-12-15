@@ -5809,6 +5809,13 @@ Pgn pgnList[] = {
    ",10=Nav mode"               \
    ",13=Non Follow Up mode"     \
    ",15=Wind mode"              \
+   ",18=Square (Turn)"          \
+   ",19=C-Turn"                 \
+   ",20=U-Turn"                 \
+   ",21=Spiral (Turn)"          \
+   ",22=Zig Zag (Turn)"         \
+   ",23=Lazy-S (Turn)"          \
+   ",24=Depth (Turn)"           \
    ",26=Change Course")
 
 #define LOOKUP_SIMNET_DIRECTION \
@@ -5826,13 +5833,13 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command"},
-      {"B", BYTES(2), 1, false, 0, ""},
+      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, ",2,4", "AP command"},
+      {"B", BYTES(2), RES_NOTUSED, false, 0, ""},
       {"Controlling Device", BYTES(1), 1, false, 0, ""},
       {"Event", BYTES(2), RES_LOOKUP, false, LOOKUP_SIMNET_AP_EVENTS, ""},
       {"Direction", BYTES(1), RES_LOOKUP, false, LOOKUP_SIMNET_DIRECTION, ""},
       {"Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"G", BYTES(1), 1, false, 0, ""},
+      {"G", BYTES(1), RES_NOTUSED, false, 0, ""},
       {0}}}
 
     ,

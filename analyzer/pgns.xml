@@ -30190,9 +30190,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>2</Match>
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+          </EnumValues>
         </Field>
         <Field>
           <Order>5</Order>
@@ -30201,6 +30202,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30227,6 +30229,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='10' Name='Nav mode' />
             <EnumPair Value='13' Name='Non Follow Up mode' />
             <EnumPair Value='15' Name='Wind mode' />
+            <EnumPair Value='18' Name='Square (Turn)' />
+            <EnumPair Value='19' Name='C-Turn' />
+            <EnumPair Value='20' Name='U-Turn' />
+            <EnumPair Value='21' Name='Spiral (Turn)' />
+            <EnumPair Value='22' Name='Zig Zag (Turn)' />
+            <EnumPair Value='23' Name='Lazy-S (Turn)' />
+            <EnumPair Value='24' Name='Depth (Turn)' />
             <EnumPair Value='26' Name='Change Course' />
           </EnumValues>
         </Field>
@@ -30264,6 +30273,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>8</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -30573,6 +30583,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='10' Name='Nav mode' />
             <EnumPair Value='13' Name='Non Follow Up mode' />
             <EnumPair Value='15' Name='Wind mode' />
+            <EnumPair Value='18' Name='Square (Turn)' />
+            <EnumPair Value='19' Name='C-Turn' />
+            <EnumPair Value='20' Name='U-Turn' />
+            <EnumPair Value='21' Name='Spiral (Turn)' />
+            <EnumPair Value='22' Name='Zig Zag (Turn)' />
+            <EnumPair Value='23' Name='Lazy-S (Turn)' />
+            <EnumPair Value='24' Name='Depth (Turn)' />
             <EnumPair Value='26' Name='Change Course' />
           </EnumValues>
         </Field>
