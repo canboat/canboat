@@ -1797,6 +1797,24 @@ Pgn pgnList[] = {
     /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
     ,
+    {"Seatalk1: Pilot Mode",
+     126720,
+     false,
+     21,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
+      {"command", BYTES(1), RES_INTEGER, false, "=132", "0x84"},
+      {"Unknown 1", BYTES(3), RES_BINARY, false, 0, ""},
+      {"Pilot Mode", BYTES(1), RES_INTEGER, false, ",64=Standby,66=Auto,70=Wind,74=Track", ""},
+      {"Sub Mode", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Pilot Mode Data", BYTES(1), RES_BINARY, false, 0, ""},
+      {"Unknown 2", BYTES(10), RES_BINARY, false, 0, ""},
+      {0}}}
+
+    ,
     {"Fusion: Media Control",
      126720,
      true,
@@ -1915,7 +1933,7 @@ Pgn pgnList[] = {
        BYTES(2),
        RES_LOOKUP,
        false,
-       ",64005=-1,63495=+1,64770=Standby,65025=Auto,63240=+10,63750=-10,56865=-1 and -10,56610=+1 and +10",
+       ",64005=-1,63495=+1,64770=Standby,65025=Auto,64515=Wind,56355=Track,63240=+10,63750=-10,56865=-1 and -10,56610=+1 and +10",
        ""},
       {"Unknown data",
        BYTES(14),
