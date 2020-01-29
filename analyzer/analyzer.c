@@ -39,6 +39,14 @@ enum RawFormats
 
 enum RawFormats format = RAWFORMAT_UNKNOWN;
 
+enum MultiPackets
+{
+  MULTIPACKETS_COALESCED,
+  MULTIPACKETS_SEPARATE
+};
+
+enum MultiPackets multiPackets = MULTIPACKETS_SEPARATE;
+
 enum GeoFormats
 {
   GEO_DD,
@@ -338,6 +346,7 @@ enum RawFormats detectFormat(const char *msg)
   if (msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
   {
     logInfo("Detected Chetco protocol with all data on one line\n");
+    multiPackets = MULTIPACKETS_COALESCED;
     return RAWFORMAT_CHETCO;
   }
 
@@ -345,6 +354,7 @@ enum RawFormats detectFormat(const char *msg)
       == 0)
   {
     logInfo("Detected Garmin CSV protocol with relative timestamps\n");
+    multiPackets = MULTIPACKETS_COALESCED;
     return RAWFORMAT_GARMIN_CSV1;
   }
 
@@ -354,6 +364,7 @@ enum RawFormats detectFormat(const char *msg)
       == 0)
   {
     logInfo("Detected Garmin CSV protocol with absolute timestamps\n");
+    multiPackets = MULTIPACKETS_COALESCED;
     return RAWFORMAT_GARMIN_CSV2;
   }
 
@@ -361,6 +372,7 @@ enum RawFormats detectFormat(const char *msg)
   if (p && (p[1] == '-' || p[2] == '-'))
   {
     logInfo("Detected Airmar protocol with all data on one line\n");
+    multiPackets = MULTIPACKETS_COALESCED;
     return RAWFORMAT_AIRMAR;
   }
 
@@ -375,18 +387,21 @@ enum RawFormats detectFormat(const char *msg)
     if (len > 8)
     {
       logInfo("Detected normal format with all data on one line\n");
+      multiPackets = MULTIPACKETS_COALESCED;
       return RAWFORMAT_FAST;
     }
     logInfo("Assuming normal format with one line per packet\n");
+    multiPackets = MULTIPACKETS_SEPARATE;
     return RAWFORMAT_PLAIN;
   }
 
   {
     int  a, b, c, d, f;
     char e;
-    if (sscanf(msg, "%d:%d:%d.%d %c %08X ", &a, &b, &c, &d, &e, &f) == 6)
+    if (sscanf(msg, "%d:%d:%d.%d %c %02X ", &a, &b, &c, &d, &e, &f) == 6 && (e == 'R' || e == 'T'))
     {
-      logInfo("Detected YDWG-02 protocol with all data on one line\n");
+      logInfo("Detected YDWG-02 protocol with one line per packet\n");
+      multiPackets = MULTIPACKETS_SEPARATE;
       return RAWFORMAT_YDWG02;
     }
   }
@@ -1511,7 +1526,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
     }
   }
 
-  if (msg->len > 0x8 || format != RAWFORMAT_PLAIN)
+  if (msg->len > 0x8 || multiPackets == MULTIPACKETS_COALESCED)
   {
     if (packet->allocSize < msg->len)
     {
