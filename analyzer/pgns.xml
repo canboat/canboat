@@ -10363,7 +10363,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Battery' />
+            <EnumPair Value='1' Name='Alternator' />
+            <EnumPair Value='2' Name='Convertor' />
+            <EnumPair Value='3' Name='Solar Cell' />
+            <EnumPair Value='4' Name='Wind Generator' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>4</Order>

@@ -2641,7 +2641,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
-      {"DC Type", BYTES(1), 1, false, 0, ""},
+      {"DC Type", BYTES(1), RES_LOOKUP, false, ",0=Battery,1=Alternator,2=Convertor,3=Solar Cell,4=Wind Generator", ""},
       {"State of Charge", BYTES(1), 1, false, 0, ""},
       {"State of Health", BYTES(1), 1, false, 0, ""},
       {"Time Remaining", BYTES(2), 1, false, 0, ""},

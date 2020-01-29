@@ -9196,7 +9196,14 @@
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Battery","value":"0"},
+              {"name":"Alternator","value":"1"},
+              {"name":"Convertor","value":"2"},
+              {"name":"Solar Cell","value":"3"},
+              {"name":"Wind Generator","value":"4"}]},
           {
             "Order":4,
             "Id":"stateOfCharge",
