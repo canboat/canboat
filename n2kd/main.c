@@ -60,6 +60,8 @@ static void closeStream(int i);
 typedef void (*ReadHandler)(int i);
 /* ... is the prototype for the following types of read-read file descriptors: */
 static void handleClientRequest(int i);
+static void acceptAISClient(int i);
+static void acceptRawInputClient(int i);
 static void acceptJSONClient(int i);
 static void acceptJSONStreamClient(int i);
 static void acceptNMEA0183StreamClient(int i);
@@ -72,9 +74,13 @@ static void acceptNMEA0183StreamClient(int i);
 typedef enum StreamType
 {
   SOCKET_TYPE_ANY,
+  CLIENT_AIS,
+  CLIENT_INPUT_STREAM,
   CLIENT_JSON,
   CLIENT_JSON_STREAM,
   CLIENT_NMEA0183_STREAM,
+  SERVER_AIS,
+  SERVER_INPUT_STREAM,
   SERVER_JSON,
   SERVER_JSON_STREAM,
   SERVER_NMEA0183_STREAM,
@@ -86,9 +92,13 @@ typedef enum StreamType
 } StreamType;
 
 const char *streamTypeName[] = {"Any",
+                                "AIS client",
+                                "Raw input client",
                                 "JSON client",
                                 "JSON stream",
                                 "NMEA0183 stream",
+                                "AIS server",
+                                "Raw input server",
                                 "JSON server",
                                 "JSON stream server",
                                 "NMEA0183 stream server",
@@ -101,7 +111,11 @@ const char *streamTypeName[] = {"Any",
 ReadHandler readHandlers[SOCKET_TYPE_MAX] = {0,
                                              handleClientRequest,
                                              handleClientRequest,
+                                             handleClientRequest,
+                                             handleClientRequest,
                                              0,
+                                             acceptAISClient,
+                                             acceptRawInputClient,
                                              acceptJSONClient,
                                              acceptJSONStreamClient,
                                              acceptNMEA0183StreamClient,
@@ -203,14 +217,10 @@ size_t maxPgnList;
  * is completely separate from that of any other.
  */
 static char *secondaryKeyList[] = {
-    "Instance\"" // A different tank or sensor
-    ,
-    "\"Reference\"" // A different type of data value, for instance "True" and "Apparent"
-    ,
-    "\"Message ID\"" // Different AIS transmission source (station)
-    ,
-    "\"User ID\"" // Different AIS transmission source (station)
-    ,
+    "Instance\"", // A different tank or sensor. Note no leading " so any instance will do.
+    "\"Reference\"", // A different type of data value, for instance "True" and "Apparent"
+    "\"User ID\"", // Different AIS transmission source (station)
+    "\"Message ID\"", // Different AIS transmission source (station)
     "\"Proprietary ID\"" // Different SonicHub item
 };
 
@@ -278,6 +288,7 @@ int setFdUsed(SOCKET fd, StreamType ct)
 
   switch (stream[i].type)
   {
+    case CLIENT_AIS:
     case CLIENT_JSON:
     case CLIENT_JSON_STREAM:
     case CLIENT_NMEA0183_STREAM:
@@ -322,42 +333,23 @@ static void closeStream(int i)
   logDebug("closeStream(%d) (%u..%u fdMax=%d)\n", i, socketIdxMin, socketIdxMax, socketFdMax);
 }
 
-#define INITIAL_ALLOC 32768
-#define NEXT_ALLOC 32768
-#define MAKE_SPACE(x)                \
-  {                                  \
-    if (remain < (size_t)(x))        \
-    {                                \
-      alloc += NEXT_ALLOC;           \
-      state = realloc(state, alloc); \
-      remain += NEXT_ALLOC;          \
-    }                                \
-  }
-
-#define INC_L_REMAIN                \
-  {                                 \
-    l      = l + strlen(state + l); \
-    remain = alloc - l;             \
-  }
-
-static char *getFullStateJSON(void)
+static char *getFullStateJSON(StreamType stream)
 {
+  StringBuffer state = sbNew;
   char   separator = '{';
-  size_t alloc     = INITIAL_ALLOC;
-  char * state;
-  int    i, s;
-  Pgn *  pgn;
-  size_t remain = alloc;
-  size_t l;
   time_t now = time(0);
 
-  state = malloc(alloc);
+  int    i, s;
+  Pgn *  pgn;
+  size_t l;
+
   for (l = 0, i = 0; i < maxPgnList; i++)
   {
     pgn = *pgnList[i];
-    MAKE_SPACE(100 + strlen(pgn->p_description));
-    snprintf(state + l, remain, "%c\"%u\":\n  {\"description\":\"%s\"\n", separator, pgn->p_prn, pgn->p_description);
-    INC_L_REMAIN;
+
+    if ((stream == CLIENT_AIS) == (strncmp(pgn->p_description, "AIS", 3) == 0))
+    {
+    sbAppendFormat(&state, "%c\"%u\":\n  {\"description\":\"%s\"\n", separator, pgn->p_prn, pgn->p_description);
 
     for (s = 0; s < pgn->p_maxSrc; s++)
     {
@@ -365,27 +357,25 @@ static char *getFullStateJSON(void)
 
       if (m->m_time >= now)
       {
-        MAKE_SPACE(strlen(m->m_text) + 32);
-        snprintf(state + l, remain, "  ,\"%u%s%s\":%s", m->m_src, m->m_key2 ? "_" : "", m->m_key2 ? m->m_key2 : "", m->m_text);
-        INC_L_REMAIN;
+        sbAppendFormat(&state, "  ,\"%u%s%s\":%s", m->m_src, m->m_key2 ? "_" : "", m->m_key2 ? m->m_key2 : "", m->m_text);
       }
     }
-    strcpy(state + l, "  }\n");
-    INC_L_REMAIN;
+    sbAppendString(&state, "  }\n");
 
     separator = ',';
+    }
   }
   if (separator == ',')
   {
-    strcpy(state + l, "}\n");
+    sbAppendString(&state, "}\n");
   }
   else
   {
-    strcpy(state + l, "\n");
+    sbAppendString(&state, "\n");
   }
 
-  logDebug("state %d bytes\n", strlen(state));
-  return state;
+  logDebug("state %d bytes\n", sbGetLength(&state));
+  return state.data;
 }
 
 static void tcpServer(uint16_t port, StreamType st)
@@ -445,6 +435,10 @@ static void startTcpServers(void)
   logInfo("TCP JSON stream server listening on port %d\n", port + 1);
   tcpServer(port + 2, SERVER_NMEA0183_STREAM);
   logInfo("TCP NMEA0183 server listening on port %d\n", port + 2);
+  tcpServer(port + 3, SERVER_INPUT_STREAM);
+  logInfo("TCP input stream server listening on port %d\n", port + 3);
+  tcpServer(port + 4, SERVER_AIS);
+  logInfo("TCP AIS server listening on port %d\n", port + 4);
 }
 
 void acceptClient(SOCKET s, StreamType ct)
@@ -472,17 +466,27 @@ void acceptClient(SOCKET s, StreamType ct)
   }
 }
 
-void acceptJSONClient(int i)
+static void acceptAISClient(int i)
+{
+  acceptClient(stream[i].fd, CLIENT_AIS);
+}
+
+static void acceptRawInputClient(int i)
+{
+  acceptClient(stream[i].fd, CLIENT_INPUT_STREAM);
+}
+
+static void acceptJSONClient(int i)
 {
   acceptClient(stream[i].fd, CLIENT_JSON);
 }
 
-void acceptJSONStreamClient(int i)
+static void acceptJSONStreamClient(int i)
 {
   acceptClient(stream[i].fd, CLIENT_JSON_STREAM);
 }
 
-void acceptNMEA0183StreamClient(int i)
+static void acceptNMEA0183StreamClient(int i)
 {
   acceptClient(stream[i].fd, CLIENT_NMEA0183_STREAM);
 }
@@ -494,8 +498,9 @@ void writeAllClients(void)
   int            r;
   int            i;
   SOCKET         fd;
-  int64_t        now   = 0;
-  char *         state = 0;
+  int64_t        now      = 0;
+  char *         aisState = 0;
+  char *         state    = 0;
 
   logDebug("writeAllClients tcp.len=%d\n", tcpMessage.len);
   FD_ZERO(&ws);
@@ -530,12 +535,24 @@ void writeAllClients(void)
 
         switch (stream[i].type)
         {
+          case CLIENT_AIS:
+            if (stream[i].timeout && stream[i].timeout < now)
+            {
+              if (!aisState)
+              {
+                aisState = getFullStateJSON(CLIENT_AIS);
+              }
+              write(fd, aisState, strlen(aisState));
+              logDebug("JSON: wrote %u to %d, closing\n", strlen(aisState), fd);
+              closeStream(i);
+            }
+            break;
           case CLIENT_JSON:
             if (stream[i].timeout && stream[i].timeout < now)
             {
               if (!state)
               {
-                state = getFullStateJSON();
+                state = getFullStateJSON(CLIENT_JSON);
                 logDebug("json=%s", state);
               }
               write(fd, state, strlen(state));
@@ -568,6 +585,11 @@ void writeAllClients(void)
         }
       }
     }
+  }
+
+  if (aisState)
+  {
+    free(aisState);
   }
 
   if (state)
@@ -864,12 +886,19 @@ void handleClientRequest(int i)
       break;
     }
     len = p - stream[i].buffer;
-    sbAppendData(&tcpMessage, stream[i].buffer, len + 1);
-    if (stream[i].type != DATA_INPUT_STREAM || stream[outputIdx].type == DATA_OUTPUT_COPY)
+    if (stream[i].type == CLIENT_INPUT_STREAM)
     {
-      /* Send all TCP client input and the main stdin stream if the mode is -o */
-      /* directly to stdout */
-      sbAppendData(&outMessage, stream[i].buffer, len + 1);
+      write(stdoutfd, stream[i].buffer, len + 1);
+    }
+    else
+    {
+      sbAppendData(&tcpMessage, stream[i].buffer, len + 1);
+      if (stream[i].type != DATA_INPUT_STREAM || stream[outputIdx].type == DATA_OUTPUT_COPY)
+      {
+        /* Send all TCP client input and the main stdin stream if the mode is -o */
+        /* directly to stdout */
+        sbAppendData(&outMessage, stream[i].buffer, len + 1);
+      }
     }
     *p = 0;
     if (storeMessage(stream[i].buffer, len))
