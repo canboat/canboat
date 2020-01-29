@@ -34,15 +34,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include "common.h"
 #include "pgn.h"
 
-static int  openCanDevice(char *device, int *socket);
-static void writeRawPGNToCanSocket(RawMessage *msg, int socket);
-static void sendCanFrame(struct can_frame *frame, int socket);
-static void sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket);
-unsigned long time_diff(struct timeval x , struct timeval y, char *timestamp);
+static int    openCanDevice(char *device, int *socket);
+static void   writeRawPGNToCanSocket(RawMessage *msg, int socket);
+static void   sendCanFrame(struct can_frame *frame, int socket);
+static void   sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket);
+unsigned long time_diff(struct timeval x, struct timeval y, char *timestamp);
 
 int main(int argc, char **argv)
 {
-  FILE *file = stdin;
+  FILE *         file = stdin;
   char           msg[2000];
   char *         milliSecond;
   int            socket;
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  prevFrameTime.tv_sec = 0;
+  prevFrameTime.tv_sec  = 0;
   prevFrameTime.tv_usec = 0;
 
   while (fgets(msg, sizeof(msg) - 1, file))
@@ -80,9 +80,10 @@ int main(int argc, char **argv)
       milliSecond = strptime(m.timestamp, "%Y-%m-%dT%H:%M:%S", &ctime);
       if ((milliSecond != NULL) && (milliSecond - m.timestamp >= 19)) // convert in tm struct => OK
       {
-        frameTime.tv_sec = mktime(&ctime);
+        frameTime.tv_sec  = mktime(&ctime);
         frameTime.tv_usec = (sscanf(milliSecond, ".%3ld", &frameTime.tv_usec) == 1) ? frameTime.tv_usec * 1000 : 0;
-        usWait = ((prevFrameTime.tv_sec == 0) && (prevFrameTime.tv_usec == 0)) ? 0 : time_diff(prevFrameTime, frameTime, m.timestamp);
+        usWait
+            = ((prevFrameTime.tv_sec == 0) && (prevFrameTime.tv_usec == 0)) ? 0 : time_diff(prevFrameTime, frameTime, m.timestamp);
         prevFrameTime = frameTime;
       }
       else // convert in tm struct failed
@@ -96,7 +97,7 @@ int main(int argc, char **argv)
     }
     if (usWait > 0)
     {
-        usleep(usWait);
+      usleep(usWait);
     }
     writeRawPGNToCanSocket(&m, socket);
   }
@@ -212,19 +213,19 @@ static void sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int sock
   }
 }
 
-unsigned long time_diff(struct timeval x , struct timeval y, char *timestamp)
+unsigned long time_diff(struct timeval x, struct timeval y, char *timestamp)
 {
-  double x_ms , y_ms , diff;
+  double x_ms, y_ms, diff;
 
-  x_ms = (double)x.tv_sec*1000000 + (double)x.tv_usec;
-  y_ms = (double)y.tv_sec*1000000 + (double)y.tv_usec;
+  x_ms = (double) x.tv_sec * 1000000 + (double) x.tv_usec;
+  y_ms = (double) y.tv_sec * 1000000 + (double) y.tv_usec;
 
-  diff = (double)y_ms - (double)x_ms;
+  diff = (double) y_ms - (double) x_ms;
   if (diff < 0.0)
   {
     logError("Timestamp back in time at %s\n", timestamp);
     return 0;
   }
 
-  return (unsigned long)diff;
+  return (unsigned long) diff;
 }

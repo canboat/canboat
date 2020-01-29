@@ -54,7 +54,7 @@ static int  sendInitState;
 static int  sequentialStatusMessages;
 
 int baudRate = B230400;
-int speed = 230400;
+int speed    = 230400;
 
 // Yeah globals. We're trying to avoid malloc()/free() to run quickly on limited memory hardware
 StringBuffer writeBuffer; // What we still have to write to device
@@ -369,10 +369,7 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
     return;
   }
 
-  if (!readonly 
-    && parseFastFormat(in, &msg) 
-    && msg.pgn < CANBOAT_PGN_START
-     )
+  if (!readonly && parseFastFormat(in, &msg) && msg.pgn < CANBOAT_PGN_START)
   {
     // Format msg as iKonvert message
     sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);

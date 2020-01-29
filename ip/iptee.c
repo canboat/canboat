@@ -19,8 +19,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include "common.h"
 #include <signal.h>
+#include "common.h"
 
 #define LINESIZE 1024
 
@@ -42,13 +42,13 @@ typedef union sockaddr_union
 
 typedef struct Client
 {
-  int                     fd;
-  ConnectionType          ct;
-  bool                    reconnect;
-  char *                  host;
-  char *                  port;
-  sockaddr_union          sockaddr;
-  socklen_t               socklen;
+  int            fd;
+  ConnectionType ct;
+  bool           reconnect;
+  char *         host;
+  char *         port;
+  sockaddr_union sockaddr;
+  socklen_t      socklen;
 } Client;
 
 Client client[256]; /* Surely this is enough connections? */
@@ -61,7 +61,7 @@ int ipConnect(const char *host, const char *service, ConnectionType ct, struct s
   struct addrinfo hints, *res, *addr;
 
   memset(&hints, 0, sizeof(hints));
-  hints.ai_family = AF_INET;
+  hints.ai_family   = AF_INET;
   hints.ai_socktype = (ct == ClientUDP) ? SOCK_DGRAM : SOCK_STREAM;
 
   n = getaddrinfo(host, service, &hints, &res);
@@ -123,8 +123,7 @@ int ipConnect(const char *host, const char *service, ConnectionType ct, struct s
 
 int storeNewClient(int i, int sockfd)
 {
-
-  char      portstr[10];
+  char portstr[10];
 
   client[i].socklen = sizeof(client[i].sockaddr);
   if (getpeername(sockfd, &client[i].sockaddr.any, &client[i].socklen))
@@ -265,8 +264,7 @@ int main(int argc, char **argv)
             "-q - quiet     - do not log status information\n"
             "-s - server    - host and port are a TCP server\n"
             "-u - udp       - host and port are a UDP address that data is sent to\n"
-            "-t - tcp       - host and port are a TCP server that data is sent to\n"
-            COPYRIGHT);
+            "-t - tcp       - host and port are a TCP server that data is sent to\n" COPYRIGHT);
     exit(1);
   }
   logInfo("Sending lines to %d servers\n", clients);

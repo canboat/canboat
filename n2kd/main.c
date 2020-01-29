@@ -162,9 +162,10 @@ StringBuffer nmeaMessage; /* Buffer for sending to NMEA0183 TCP clients */
 #define NMEA_RNG (MAX_PGN - MIN_PGN + 1)
 
 #define PGN_SPACE (CANBOAT_RNG + NMEA_RNG)
-#define PrnToIdx(prn)                 \
-  ((prn <= MAX_PGN) ? (prn - MIN_PGN) \
-                    : ((prn <= CANBOAT_PGN_START + CANBOAT_RNG && prn >= CANBOAT_PGN_START) ? (prn + NMEA_RNG - CANBOAT_PGN_START) : -1))
+#define PrnToIdx(prn)    \
+  ((prn <= MAX_PGN)      \
+       ? (prn - MIN_PGN) \
+       : ((prn <= CANBOAT_PGN_START + CANBOAT_RNG && prn >= CANBOAT_PGN_START) ? (prn + NMEA_RNG - CANBOAT_PGN_START) : -1))
 
 /*
  * We store messages and where they come from.
@@ -217,10 +218,10 @@ size_t maxPgnList;
  * is completely separate from that of any other.
  */
 static char *secondaryKeyList[] = {
-    "Instance\"", // A different tank or sensor. Note no leading " so any instance will do.
-    "\"Reference\"", // A different type of data value, for instance "True" and "Apparent"
-    "\"User ID\"", // Different AIS transmission source (station)
-    "\"Message ID\"", // Different AIS transmission source (station)
+    "Instance\"",        // A different tank or sensor. Note no leading " so any instance will do.
+    "\"Reference\"",     // A different type of data value, for instance "True" and "Apparent"
+    "\"User ID\"",       // Different AIS transmission source (station)
+    "\"Message ID\"",    // Different AIS transmission source (station)
     "\"Proprietary ID\"" // Different SonicHub item
 };
 
@@ -335,9 +336,9 @@ static void closeStream(int i)
 
 static char *getFullStateJSON(StreamType stream)
 {
-  StringBuffer state = sbNew;
-  char   separator = '{';
-  time_t now = time(0);
+  StringBuffer state     = sbNew;
+  char         separator = '{';
+  time_t       now       = time(0);
 
   int    i, s;
   Pgn *  pgn;
@@ -347,22 +348,22 @@ static char *getFullStateJSON(StreamType stream)
   {
     pgn = *pgnList[i];
 
-    if ((stream == CLIENT_AIS) == (strncmp(pgn->p_description, "AIS", 3) == 0))
+    if ((stream == CLIENT_AIS) == (strncmp(pgn->p_description, "AIS", 3) == 0) || pgn->p_prn == 129029)
     {
-    sbAppendFormat(&state, "%c\"%u\":\n  {\"description\":\"%s\"\n", separator, pgn->p_prn, pgn->p_description);
+      sbAppendFormat(&state, "%c\"%u\":\n  {\"description\":\"%s\"\n", separator, pgn->p_prn, pgn->p_description);
 
-    for (s = 0; s < pgn->p_maxSrc; s++)
-    {
-      Message *m = &pgn->p_message[s];
-
-      if (m->m_time >= now)
+      for (s = 0; s < pgn->p_maxSrc; s++)
       {
-        sbAppendFormat(&state, "  ,\"%u%s%s\":%s", m->m_src, m->m_key2 ? "_" : "", m->m_key2 ? m->m_key2 : "", m->m_text);
-      }
-    }
-    sbAppendString(&state, "  }\n");
+        Message *m = &pgn->p_message[s];
 
-    separator = ',';
+        if (m->m_time >= now)
+        {
+          sbAppendFormat(&state, "  ,\"%u%s%s\":%s", m->m_src, m->m_key2 ? "_" : "", m->m_key2 ? m->m_key2 : "", m->m_text);
+        }
+      }
+      sbAppendString(&state, "  }\n");
+
+      separator = ',';
     }
   }
   if (separator == ',')

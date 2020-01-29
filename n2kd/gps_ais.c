@@ -1474,28 +1474,28 @@ void nmea0183AIVDM(StringBuffer *msg183, int source, const char *msg)
       break;
     case 21: // PGN 129041 "AIS Aids to Navigation (AtoN) Report"
     {
-        int   len;
-        char *ename;
+      int   len;
+      char *ename;
 
-        addAisInt(msgid, 6, &aisPayload);
-        addAisInt(aisEnum(msg, "Repeat Indicator"), 2, &aisPayload);
-        addAisInt(aisInteger(msg, "User ID"), 30, &aisPayload);
-        addAisInt(aisEnum(msg, "AtoN Type"), 5, &aisPayload);
-        addAisString(aisAtoNName(msg, false, &len), 120, &aisPayload);
-        addAisInt(aisEnum(msg, "Position Accuracy"), 1, &aisPayload);
-        addAisInt(aisFloat(msg, "Longitude"), 28, &aisPayload);
-        addAisInt(aisFloat(msg, "Latitude"), 27, &aisPayload);
-        addAisInt(aisShipDimensions(msg, false), 30, &aisPayload);
-        addAisInt(aisEnum(msg, "GNSS type"), 4, &aisPayload);
-        addAisInt(aisInteger(msg, "Time Stamp"), 6, &aisPayload);
-        addAisInt(aisEnum(msg, "Off Position Indicator"), 1, &aisPayload);
-        addAisInt(0, 8, &aisPayload); /* Regional Reserved */
-        addAisInt(aisEnum(msg, "AIS RAIM flag"), 1, &aisPayload);
-        addAisInt(aisEnum(msg, "Virtual AtoN Flag"), 1, &aisPayload);
-        addAisInt(aisEnum(msg, "Assigned Mode Flag"), 1, &aisPayload);
-        addAisInt(0, 1, &aisPayload); // Spare
-        ename = aisAtoNName(msg, true, &len);
-        addAisString(ename, len, &aisPayload);
+      addAisInt(msgid, 6, &aisPayload);
+      addAisInt(aisEnum(msg, "Repeat Indicator"), 2, &aisPayload);
+      addAisInt(aisInteger(msg, "User ID"), 30, &aisPayload);
+      addAisInt(aisEnum(msg, "AtoN Type"), 5, &aisPayload);
+      addAisString(aisAtoNName(msg, false, &len), 120, &aisPayload);
+      addAisInt(aisEnum(msg, "Position Accuracy"), 1, &aisPayload);
+      addAisInt(aisFloat(msg, "Longitude"), 28, &aisPayload);
+      addAisInt(aisFloat(msg, "Latitude"), 27, &aisPayload);
+      addAisInt(aisShipDimensions(msg, false), 30, &aisPayload);
+      addAisInt(aisEnum(msg, "GNSS type"), 4, &aisPayload);
+      addAisInt(aisInteger(msg, "Time Stamp"), 6, &aisPayload);
+      addAisInt(aisEnum(msg, "Off Position Indicator"), 1, &aisPayload);
+      addAisInt(0, 8, &aisPayload); /* Regional Reserved */
+      addAisInt(aisEnum(msg, "AIS RAIM flag"), 1, &aisPayload);
+      addAisInt(aisEnum(msg, "Virtual AtoN Flag"), 1, &aisPayload);
+      addAisInt(aisEnum(msg, "Assigned Mode Flag"), 1, &aisPayload);
+      addAisInt(0, 1, &aisPayload); // Spare
+      ename = aisAtoNName(msg, true, &len);
+      addAisString(ename, len, &aisPayload);
     }
     break;
     case 24: // PGN 129809 "AIS Class B "CS" Static Data Report, Part A"

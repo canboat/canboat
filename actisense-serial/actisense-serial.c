@@ -454,7 +454,7 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
   *lenPtr = i;
   crc += i;
 
-  crc = 256 - (int)crc;
+  crc = 256 - (int) crc;
   if (crc == DLE)
   {
     *b++ = DLE;
@@ -507,7 +507,7 @@ static StringBuffer inBuffer;
 static bool readIn(void)
 {
   unsigned char buf[BUFFER_SIZE];
-  ssize_t r;
+  ssize_t       r;
 
   r = read(STDIN_FILENO, buf, sizeof(buf));
 
@@ -527,8 +527,8 @@ static bool readIn(void)
  */
 static bool getInMsg(unsigned char *msg, size_t msgLen)
 {
-  char *  p;
-  size_t  len;
+  char * p;
+  size_t len;
 
   p = strchr(sbGet(&inBuffer), '\n');
   if (!p)
@@ -649,7 +649,7 @@ static int readNGT1(int handle)
 
     for (i = 0; i < r; i++)
     {
-      c = buf[i];
+      c      = buf[i];
       finish = readNGT1Byte(c);
     }
   } while (!finish);

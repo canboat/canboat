@@ -101,7 +101,7 @@ static int logBase(LogLevel level, const char *format, va_list ap)
 
 int logInfo(const char *format, ...)
 {
-  int ret;
+  int     ret;
   va_list ap;
   va_start(ap, format);
 
@@ -109,12 +109,11 @@ int logInfo(const char *format, ...)
   va_end(ap);
 
   return ret;
-
 }
 
 int logDebug(const char *format, ...)
 {
-  int ret;
+  int     ret;
   va_list ap;
   va_start(ap, format);
 
@@ -126,7 +125,7 @@ int logDebug(const char *format, ...)
 
 int logError(const char *format, ...)
 {
-  int ret;
+  int     ret;
   va_list ap;
   va_start(ap, format);
 
@@ -438,7 +437,7 @@ int getJSONValue(const char *message, const char *fieldName, char *value, size_t
 
 char *sbSearchChar(const StringBuffer *const in, char c)
 {
-  char *p = sbGet(in);
+  char * p = sbGet(in);
   size_t i;
 
   for (i = 0; i < in->len; i++)

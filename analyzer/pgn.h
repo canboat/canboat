@@ -188,10 +188,10 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",30=Floating AtoN: special mark"                     \
    ",31=Floating AtoN: light vessel/LANBY/rigs")
 
-#define LOOKUP_AIS_SPECIAL_MANEUVER \
-  (",0=Not available" \
+#define LOOKUP_AIS_SPECIAL_MANEUVER     \
+  (",0=Not available"                   \
    ",1=Not engaged in special maneuver" \
-   ",2=Engaged in special maneuver" \
+   ",2=Engaged in special maneuver"     \
    ",3=Reserverd")
 
 #define LOOKUP_POSITION_FIX_DEVICE   \
@@ -1800,7 +1800,7 @@ Pgn pgnList[] = {
      126720,
      true,
      3,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1808,14 +1808,14 @@ Pgn pgnList[] = {
       {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Command", BYTES(1), RES_LOOKUP, false, ",1=Play,2=Pause,4=Next,6=Prev", ""},
-      {0}}}    
+      {0}}}
 
     ,
     {"Fusion: Sirius Control",
      126720,
      true,
      3,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1830,7 +1830,7 @@ Pgn pgnList[] = {
      126720,
      true,
      3,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1843,7 +1843,7 @@ Pgn pgnList[] = {
      126720,
      true,
      3,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1857,7 +1857,7 @@ Pgn pgnList[] = {
      126720,
      true,
      3,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1870,7 +1870,7 @@ Pgn pgnList[] = {
      126720,
      true,
      6,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1885,7 +1885,7 @@ Pgn pgnList[] = {
      126720,
      true,
      9,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1896,7 +1896,7 @@ Pgn pgnList[] = {
       {"Zone3", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Zone4", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
-    
+
     /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
     ,
     {"Seatalk1: Keystroke",
@@ -2268,8 +2268,7 @@ Pgn pgnList[] = {
      true,
      0x2a,
      0,
-     {
-      {"Installation Description #1", BYTES(2), RES_STRINGLAU, false, 0, ""},
+     {{"Installation Description #1", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {"Installation Description #2", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {"Installation Description #3", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {"Manufacturer Information", BYTES(2), RES_STRINGLAU, false, 0, ""},
@@ -2323,7 +2322,13 @@ Pgn pgnList[] = {
       {"Off-Heading Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
       {"Off-Track Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
       {"Override", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Steering Mode", 3, RES_LOOKUP, false, ",0=Main Steering,1=Non-Follow-up Device,10=Follow-up Device,11=Heading Control Standalone,100=Heading Control,101=Track Control", ""},
+      {"Steering Mode",
+       3,
+       RES_LOOKUP,
+       false,
+       ",0=Main Steering,1=Non-Follow-up Device,10=Follow-up Device,11=Heading Control Standalone,100=Heading Control,101=Track "
+       "Control",
+       ""},
       {"Turn Mode", 3, RES_LOOKUP, false, ",0=Rudder Limit controlled,1=turn rate controlled,10=radius controlled", ""},
       {"Heading Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
       {"Reserved", 5, RES_BINARY, false, 0, ""},
@@ -2541,36 +2546,21 @@ Pgn pgnList[] = {
      false,
      8,
      0,
-     {{"Switch Bank Instance", BYTES(1), 1, false, 0, ""},
-      {"Switch1", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch2", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch3", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch4", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch5", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch6", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch7", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch8", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch9", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch10", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch11", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch12", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch13", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch14", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch15", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch16", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch17", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch18", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch19", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch20", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch21", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch22", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch23", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch24", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch25", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch26", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch27", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch28", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {0}}}
+     {{"Switch Bank Instance", BYTES(1), 1, false, 0, ""},   {"Switch1", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch2", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},  {"Switch3", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch4", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},  {"Switch5", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch6", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},  {"Switch7", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch8", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},  {"Switch9", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch10", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch11", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch12", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch13", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch14", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch15", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch16", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch17", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch18", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch19", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch20", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch21", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch22", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch23", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch24", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch25", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch26", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch27", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Switch28", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {0}}}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
@@ -5447,7 +5437,7 @@ Pgn pgnList[] = {
       {"A", BYTES(4), 1, false, 0, ""},
       {"Genre", BYTES(12), RES_STRINGLZ, false, 0, ""},
       {0}}}
-    
+
     /* M/V Dirona */
     ,
     {"Furuno: Unknown",
