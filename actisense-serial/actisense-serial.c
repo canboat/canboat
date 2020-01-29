@@ -72,11 +72,12 @@ enum MSG_State
 
 int baudRate = B115200;
 
-static int  readIn(unsigned char *msg, size_t len);
+static bool readIn(void);
+static bool getInMsg(unsigned char *msg, size_t len);
 static void parseAndWriteIn(int handle, const unsigned char *cmd);
 static void writeRaw(int handle, const unsigned char *cmd, const size_t len);
 static void writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len);
-static void readNGT1Byte(unsigned char c);
+static bool readNGT1Byte(unsigned char c);
 static int  readNGT1(int handle);
 static void messageReceived(const unsigned char *msg, size_t msgLen);
 static void n2kMessageReceived(const unsigned char *msg, size_t msgLen);
@@ -92,6 +93,9 @@ int main(int argc, char **argv)
   struct stat    statbuf;
   int            pid = 0;
   int            speed;
+  int            i;
+  int            wait;
+  time_t         lastPing = time(0);
 
   setProgName(argv[0]);
   while (argc > 1)
@@ -268,25 +272,46 @@ retry:
     sleep(2);
   }
 
-  for (;;)
+  // Do not read anything until we have seen 10 messages on bus
+  for (i = 0; i < 10;)
   {
     unsigned char msg[BUFFER_SIZE];
     size_t        msgLen;
-    int           r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : 0, INVALID_SOCKET, timeout);
+    int           r = isReady(handle, INVALID_SOCKET, INVALID_SOCKET, 1);
 
     if ((r & FD1_ReadReady) > 0)
     {
-      if (!readNGT1(handle))
+      if (readNGT1(handle) <= 0)
+      {
+        break;
+      }
+      i++;
+    }
+  }
+
+  for (wait = 1;;)
+  {
+    unsigned char msg[BUFFER_SIZE];
+    size_t        msgLen;
+    int           r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, wait);
+
+    if ((r & FD1_ReadReady) > 0)
+    {
+      if (readNGT1(handle) <= 0)
       {
         break;
       }
     }
     if ((r & FD2_ReadReady) > 0)
     {
-      if (!readIn(msg, sizeof(msg)))
+      if (!readIn())
       {
         break;
       }
+    }
+
+    if (getInMsg(msg, sizeof(msg)))
+    {
       if (!passthru)
       {
         parseAndWriteIn(handle, msg);
@@ -296,10 +321,20 @@ retry:
         fprintf(stdout, "%s", msg);
         fflush(stdout);
       }
+      wait = 0;
     }
-    else if (writeonly)
+    else
     {
-      break;
+      wait = 1;
+      if (writeonly)
+      {
+        break;
+      }
+      if (time(0) - lastPing > 20)
+      {
+        writeMessage(handle, NGT_MSG_SEND, NGT_STARTUP_SEQ, sizeof(NGT_STARTUP_SEQ));
+        lastPing = time(0);
+      }
     }
   }
 
@@ -329,6 +364,7 @@ static void parseAndWriteIn(int handle, const unsigned char *cmd)
     return;
   }
 
+  // Skip the time field, content is not used
   p = strchr((char *) cmd, ',');
   if (!p)
   {
@@ -336,6 +372,7 @@ static void parseAndWriteIn(int handle, const unsigned char *cmd)
   }
 
   r = sscanf(p, ",%u,%u,%u,%u,%u,%n", &prio, &pgn, &src, &dst, &bytes, &i);
+  logDebug("parseAndWriteIn %.20s = %d\n", p, r);
   if (r == 5)
   {
     if (pgn >= ACTISENSE_BEM)
@@ -457,20 +494,53 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
   logDebug("Written command %X len %d\n", command, (int) len);
 }
 
-static int readIn(unsigned char *msg, size_t msgLen)
+static StringBuffer inBuffer;
+
+/**
+ * Read from stdin, until we have a complete message and store it in msg.
+ *
+ * This is called when select() has seen that stdin is ready.
+ * We can only do a single read, which we do into a separate buffer.
+ *
+ * Return false on error
+ */
+static bool readIn(void)
 {
-  bool  printed = 0;
-  char *s;
+  unsigned char buf[BUFFER_SIZE];
+  ssize_t r;
 
-  s = fgets((char *) msg, msgLen, stdin);
+  r = read(STDIN_FILENO, buf, sizeof(buf));
 
-  if (s)
+  if (r <= 0)
   {
-    logDebug("in: %s", s);
-
-    return 1;
+    logAbort("EOF on reading stdin\n");
+    return false;
   }
-  return 0;
+
+  sbAppendData(&inBuffer, buf, r);
+  return true;
+}
+
+/**
+ * After readIn returns data, you can retrieve messages from the
+ * internal buffer until getInMsg() returns false.
+ */
+static bool getInMsg(unsigned char *msg, size_t msgLen)
+{
+  char *  p;
+  size_t  len;
+
+  p = strchr(sbGet(&inBuffer), '\n');
+  if (!p)
+  {
+    return false;
+  }
+  len = p - sbGet(&inBuffer) + 1;
+  memcpy(msg, sbGet(&inBuffer), len);
+  msg[len] = 0;
+  sbDelete(&inBuffer, 0, len);
+
+  return true;
 }
 
 /**
@@ -478,15 +548,13 @@ static int readIn(unsigned char *msg, size_t msgLen)
  *
  */
 
-static void readNGT1Byte(unsigned char c)
+static bool readNGT1Byte(unsigned char c)
 {
   static enum MSG_State state       = MSG_START;
   static bool           startEscape = false;
   static bool           noEscape    = false;
   static unsigned char  buf[500];
   static unsigned char *head = buf;
-
-  logDebug("received byte %02x state=%d offset=%d\n", c, state, head - buf);
 
   if (state == MSG_START)
   {
@@ -542,6 +610,8 @@ static void readNGT1Byte(unsigned char c)
       state = MSG_ESCAPE;
     }
   }
+
+  return state == MSG_START;
 }
 
 static int readNGT1(int handle)
@@ -551,28 +621,38 @@ static int readNGT1(int handle)
   bool          printed = 0;
   unsigned char c;
   unsigned char buf[500];
+  bool          finish;
 
-  r = read(handle, buf, sizeof(buf));
-
-  if (r <= 0) /* No char read, abort message read */
+  do
   {
-    logAbort("Unable to read from NGT1 device\n");
-  }
+    r = read(handle, buf, sizeof(buf));
+    logDebug("NGT read = %d\n", (int) r);
 
-  logDebug("Read %d bytes from device\n", (int) r);
-  if (isLogLevelEnabled(LOGLEVEL_DEBUG))
-  {
-    StringBuffer sb = sbNew;
-    sbAppendEncodeHex(&sb, buf, r, ' ');
-    logDebug("message: %s\n", sbGet(&sb));
-    sbClean(&sb);
-  }
+    if (r < 0 && errno == EAGAIN)
+    {
+      usleep(25000);
+      continue;
+    }
+    if (r <= 0) /* No char read, abort message read */
+    {
+      logAbort("Unable to read from NGT1 device, errno=%d\n", errno);
+    }
 
-  for (i = 0; i < r; i++)
-  {
-    c = buf[i];
-    readNGT1Byte(c);
-  }
+    if (isLogLevelEnabled(LOGLEVEL_DEBUG))
+    {
+      StringBuffer sb = sbNew;
+
+      sbAppendEncodeHex(&sb, buf, r, ' ');
+      logDebug("NGT data: %s\n", sbGet(&sb));
+      sbClean(&sb);
+    }
+
+    for (i = 0; i < r; i++)
+    {
+      c = buf[i];
+      finish = readNGT1Byte(c);
+    }
+  } while (!finish);
 
   return r;
 }
