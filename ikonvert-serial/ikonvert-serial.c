@@ -41,12 +41,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "license.h"
 
-#define SEND_ALL_INIT_MESSAGES (10)
+#define SEND_ALL_INIT_MESSAGES (14)
 
 static bool verbose;
 static bool readonly;
 static bool writeonly;
 static bool passthru;
+static bool rate_limit_off;
 static long timeout;
 static bool isFile;
 static bool isSerialDevice;
@@ -104,6 +105,11 @@ int main(int argc, char **argv)
     else if (strcasecmp(argv[1], "-v") == 0)
     {
       verbose = true;
+    }
+    else if (strcasecmp(argv[1], "--rate-limit-off") == 0
+          || strcasecmp(argv[1], "-l") == 0)
+    {
+      rate_limit_off = true;
     }
     else if (strcasecmp(argv[1], "-rx") == 0 && argc > 2)
     {
@@ -190,14 +196,15 @@ int main(int argc, char **argv)
             "Usage: %s [-w] -[-p] [-r] [-v] [-d] [-s <n>] [-t <n>] device\n"
             "\n"
             "Options:\n"
-            "  -w      writeonly mode, data from device is not sent to stdout\n"
-            "  -r      readonly mode, data from stdin is not sent to device\n"
-            "  -p      passthru mode, data from stdin is sent to stdout\n"
-            "  -v      verbose\n"
-            "  -d      debug\n"
-            "  -rx <list> Set PGN receive list\n"
-            "  -tx <list> Set PGN transmit list\n"
-            "  -s <n>  set baudrate to 38400, 57600, 115200, 230400"
+            "  -w                    writeonly mode, data from device is not sent to stdout\n"
+            "  -r                    readonly mode, data from stdin is not sent to device\n"
+            "  -p                    passthru mode, data from stdin is sent to stdout\n"
+            "  -v                    verbose\n"
+            "  -d                    debug\n"
+            "  -rx <list>            Set PGN receive list\n"
+            "  -tx <list>            Set PGN transmit list\n"
+            "  -l | --rate-limit-off Disable TX rate limits (use at own risk)\n"
+            "  -s <n>                set baudrate to 38400, 57600, 115200, 230400"
 #ifdef B460800
             ", 460800"
 #endif
@@ -205,7 +212,7 @@ int main(int argc, char **argv)
             ", 921600"
 #endif
             " (default 230400)\n"
-            "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
+            "  -t <n>                timeout, if no message is received after <n> seconds the program quits\n"
             "  <device> can be a serial device, a normal file containing a raw log,\n"
             "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
             "\n"
@@ -358,7 +365,30 @@ retry:
 static void processInBuffer(StringBuffer *in, StringBuffer *out)
 {
   RawMessage msg;
-  char *     p = strchr(sbGet(in), '\n');
+  char *     p;
+
+  while ((p = strchr(sbGet(in), '\n')) != 0)
+  {
+    if (!readonly && parseFastFormat(in, &msg) && msg.pgn < CANBOAT_PGN_START)
+    {
+      // Format msg as iKonvert message
+      sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
+      sbAppendEncodeBase64(out, msg.data, msg.len, 0);
+      sbAppendFormat(out, "\r\n");
+      logDebug("SendBuffer [%s]\n", sbGet(out));
+    }
+
+    if (passthru)
+    {
+      ssize_t r = write(STDOUT, sbGet(in), p + 1 - sbGet(in));
+
+      if (r <= 0)
+      {
+        logAbort("Cannot write to output\n");
+      }
+    }
+    sbDelete(in, 0, p + 1 - sbGet(in));
+  }
 
   if (!p)
   {
@@ -368,26 +398,6 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
     }
     return;
   }
-
-  if (!readonly && parseFastFormat(in, &msg) && msg.pgn < CANBOAT_PGN_START)
-  {
-    // Format msg as iKonvert message
-    sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
-    sbAppendEncodeBase64(out, msg.data, msg.len, 0);
-    sbAppendFormat(out, "\r\n");
-    logDebug("SendBuffer [%s]\n", sbGet(out));
-  }
-  if (passthru)
-  {
-    ssize_t r = write(STDOUT, sbGet(in), p + 1 - sbGet(in));
-
-    if (r <= 0)
-    {
-      logAbort("Cannot write to output\n");
-    }
-  }
-
-  sbDelete(in, 0, p + 1 - sbGet(in));
 }
 
 static void computeIKonvertTime(RawMessage *msg, unsigned int t1, unsigned int t2)
@@ -458,52 +468,68 @@ static void initializeDevice(void)
 static void sendNextInitCommand(void)
 {
   logDebug("sendNextInitCommand state=%d serial=%d\n", sendInitState, isSerialDevice);
-  if (sendInitState > 0 && isSerialDevice)
+  if (sendInitState > 0)
   {
     switch (sendInitState)
     {
-      case 10:
+      case 14:
         logInfo("iKonvert initialization start\n");
+        sbAppendFormat(&writeBuffer, "%s\r\n", TX_OFFLINE_MSG);
+        break;
+
+      case 12:
         if (sbGetLength(&rxList) > 0 || sbGetLength(&txList) > 0)
         {
           sbAppendFormat(&writeBuffer, "%s\r\n", TX_RESET_MSG);
+          break;
         }
-        else
-        {
-          sbAppendFormat(&writeBuffer, "%s\r\n", TX_OFFLINE_MSG);
-        }
-        break;
+        sendInitState = 10;
+        // and fallthru
 
-      case 8:
+      case 10:
         if (sbGetLength(&rxList) > 0)
         {
+          logInfo("iKonvert send RX list %s\n", sbGet(&rxList));
           sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_RX_LIST_MSG, sbGet(&rxList));
           break;
         }
+        sendInitState = 8;
+        // and fallthru
 
-      case 6:
+      case 8:
         if (sbGetLength(&txList) > 0)
         {
+          logInfo("iKonvert send TX list %s\n", sbGet(&txList));
           sbAppendFormat(&writeBuffer, "%s,%s\r\n", TX_SET_TX_LIST_MSG, sbGet(&txList));
-          sendInitState = 6; // in case we fell thru
           break;
         }
+        sendInitState = 6;
+        // and fallthru
 
-      case 4:
+      case 6:
         if (verbose || isLogLevelEnabled(LOG_DEBUG))
         {
           sbAppendFormat(&writeBuffer, "%s\r\n", TX_SHOWLISTS_MSG);
-          sendInitState = 4; // in case we fell thru
           break;
         }
+        sendInitState = 4;
+        // and fallthru
 
-      case 2:
+      case 4:
         sbAppendFormat(&writeBuffer, TX_ONLINE_MSG "\r\n", sbGetLength(&rxList) > 0 ? "NORMAL" : "ALL");
-        sendInitState = 2; // in case we fell thru
         break;
 
+      case 2:
+        if (rate_limit_off)
+        {
+          sbAppendFormat(&writeBuffer, "%s\r\n", TX_LIMIT_OFF);
+          // Note: this has no confirmation, so reset init and set initstate to 0
+        }
+        sendInitState = 0;
+        return;
+
       default:
-        logDebug("Waiting for ack value %d\n", sendInitState);
+        logInfo("Waiting for ack value %d\n", sendInitState);
         return;
     }
     sendInitState--;
@@ -522,11 +548,8 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
 
   if (parseConst(&msg, RX_TEXT_MSG))
   {
-    if (verbose)
-    {
-      logInfo("Connected to %s\n", msg);
-    }
-    if (sendInitState == 9)
+    logInfo("Connected to %s\n", msg);
+    if (sendInitState == 13)
     {
       sendInitState--;
       logDebug("iKonvert initialization next phase %d\n", sendInitState);
@@ -549,7 +572,7 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     {
       logInfo("iKonvert will transmit PGNs %s\n", msg);
     }
-    if (sendInitState == 3)
+    if (sendInitState == 5)
     {
       sendInitState--;
       logDebug("iKonvert initialization next phase %d\n", sendInitState);
@@ -665,6 +688,11 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     return true;
   }
   logError("Unknown iKonvert message: %s\n", msg);
+  if (sendInitState > 0)
+  {
+    initializeDevice();
+  }
+
   return false;
 }
 
