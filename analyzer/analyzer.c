@@ -1294,6 +1294,14 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
 
           // Many more to follow, but pgn.h is not yet complete enough...
         }
+        else if (units && !showSI)
+        {
+          if (strcmp(units, "C") == 0)
+          {
+            a /= 3600.0; // 3600 C = 1 Ah
+            units = "Ah";
+          }
+        }
 
         if (showJson)
         {

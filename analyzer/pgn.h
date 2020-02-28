@@ -2753,10 +2753,11 @@ Pgn pgnList[] = {
      * are 8 bits. It follows that Temperature Coefficient must be 8 bits
      * as well to fit in 10 bytes.
      *
-     * This could all be wrong, according to https://github.com/ttlappalainen/NMEA2000/
-     * the Supports Equalization is 2 bits, Battery Type, Chemistry and
+     * I'm now actually following https://github.com/ttlappalainen/NMEA2000/
+     * The Supports Equalization is 2 bits, Battery Type, Chemistry and
      * Nominal voltage are all 4 bits. Capacity and Peukert are both 2 bytes.
-     * but this only adds up to 9 bytes...
+     * but this only adds up to 8 bytes... Maybe the 10 was as this is transmitted
+     * as FAST pgn?
      */
     ,
     {"Battery Configuration Status",
@@ -2765,14 +2766,14 @@ Pgn pgnList[] = {
      10,
      0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Battery Type", BYTES(1), RES_LOOKUP, false, "0=Flooded,1=Gel,2=AGM", ""},
-      {"Supports Equalization", 1, 1, false, 0, ""},
-      {"Reserved", 7, RES_BINARY, false, 0, ""},
-      {"Nominal Voltage", BYTES(1), RES_LOOKUP, false, "0=6V,1=12V,2=24V,3=32V,4=36V,5=42V,5=48V", ""},
-      {"Chemistry", BYTES(1), RES_LOOKUP, false, "0=LeadAcid,1=Li,2=Nicad,3=Zno,4=NiMH", ""},
-      {"Capacity", BYTES(2), 1, false, 0, ""},
+      {"Battery Type", 4, RES_LOOKUP, false, "0=Flooded,1=Gel,2=AGM", ""},
+      {"Supports Equalization", 2, 1, false, 0, ""},
+      {"Reserved", 2, RES_BINARY, false, 0, ""},
+      {"Nominal Voltage", 4, RES_LOOKUP, false, "0=6V,1=12V,2=24V,3=32V,4=36V,5=42V,6=48V", ""},
+      {"Chemistry", 4, RES_LOOKUP, false, "0=LeadAcid,1=Li,2=Nicad,3=Zno,4=NiMH", ""},
+      {"Capacity", BYTES(2), 1, false, "C", ""},
       {"Temperature Coefficient", BYTES(1), RES_INTEGER, false, "%", ""},
-      {"Peukert Exponent", BYTES(1), 1, false, 0, ""},
+      {"Peukert Exponent", BYTES(1), 0.002, false, 0, "Possibly in Excess-1 notation"},
       {"Charge Efficiency Factor", BYTES(1), 1, false, "%", ""},
       {0}}}
 
