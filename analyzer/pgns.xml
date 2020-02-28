@@ -11009,13 +11009,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>8</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+          <Units>0=Flooded,1=Gel,2=AGM</Units>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>supportsEqualization</Id>
           <Name>Supports Equalization</Name>
-          <BitLength>2</BitLength>
+          <BitLength>1</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
@@ -11024,9 +11026,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>6</BitLength>
-          <BitOffset>18</BitOffset>
-          <BitStart>2</BitStart>
+          <BitLength>7</BitLength>
+          <BitOffset>17</BitOffset>
+          <BitStart>1</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -11037,8 +11039,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Units>0=6V,1=12V,2=24V,3=32V,4=36V,5=42V,5=48V</Units>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -11048,6 +11050,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Units>0=LeadAcid,1=Li,2=Nicad,3=Zno,4=NiMH</Units>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -11066,6 +11070,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
+          <Units>%</Units>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -11084,6 +11091,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
+          <Units>%</Units>
           <Signed>false</Signed>
         </Field>
       </Fields>
