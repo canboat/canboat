@@ -4,7 +4,7 @@
     "License":"GPL v3",
     "Version":"1.2.1",
     "PGNs": [
-    
+
       {
         "PGN":59392,
         "Id":"isoAcknowledgement",
@@ -27145,15 +27145,6 @@
             "BitStart":0,
             "Units":"rad",
             "Resolution":"0.0001",
-            "Signed":false},
-          {
-            "Order":10,
-            "Id":"g",
-            "Name":"G",
-            "BitLength":8,
-            "BitOffset":88,
-            "BitStart":0,
-            "Resolution":0,
             "Signed":false}]},
       {
         "PGN":130850,
@@ -27805,4 +27796,3 @@
               {"name":"Pass","value":"0"}]}]}
     ]
     }
-    

@@ -637,14 +637,6 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",3=Band pass"                   \
    ",4=Notch filter")
 
-#define LOOKUP_SIMRAD_PILOT_MODE               \
-  (",0=Standby"                                \
-   ",1=Auto, compass commanded"                \
-   ",2=Non Follow, hand commanded (not sure)"  \
-   ",3=Wind Mode"                              \
-   ",4=Track Mode"                             \
-   ",5=No Drift, COG referenced")
-
 typedef struct
 {
   char *   description;
@@ -1410,26 +1402,8 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"}}}
 
-    /* NOTE 65341 in pgn.h maybe is not correct */
     ,
-    {"Simnet: Autopilot Mode 0",
-     65340,             
-     false,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Autopilot Status 1", BYTES(1), RES_INTEGER, false, "=16", "Pilot ON"},
-      {"Autopilot Mode", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Autopilot Status 2", 3, RES_INTEGER, false, "=2", "Pilot ON"},
-      {"Reserved", 5, RES_NOTUSED, false, 0, ""},
-      {"Reserved", BYTES(2), RES_BINARY, false, 0, "0x00, 0x80"},
-      {0}}}
-
-    ,
-    {"Simnet: Autopilot Mode 1",
+    {"Simnet: Autopilot Mode",
      65341,
      false,
      0x08,
@@ -1578,7 +1552,6 @@ Pgn pgnList[] = {
       {"Supply Voltage", BYTES(2), 0.01, false, "V", ""},
       {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
       {0}}}
-
 
     ,
     {"Simnet: Autopilot Mode",
@@ -1823,29 +1796,11 @@ Pgn pgnList[] = {
     /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
     ,
-    {"Seatalk1: Pilot Mode",
-     126720,
-     false,
-     21,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
-      {"command", BYTES(1), RES_INTEGER, false, "=132", "0x84"},
-      {"Unknown 1", BYTES(3), RES_BINARY, false, 0, ""},
-      {"Pilot Mode", BYTES(1), RES_INTEGER, false, ",64=Standby,66=Auto,70=Wind,74=Track", ""},
-      {"Sub Mode", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Pilot Mode Data", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Unknown 2", BYTES(10), RES_BINARY, false, 0, ""},
-      {0}}}
-
-    ,
     {"Fusion: Media Control",
      126720,
      true,
      3,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1853,14 +1808,14 @@ Pgn pgnList[] = {
       {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Command", BYTES(1), RES_LOOKUP, false, ",1=Play,2=Pause,4=Next,6=Prev", ""},
-      {0}}}    
+      {0}}}
 
     ,
     {"Fusion: Sirius Control",
      126720,
      true,
      3,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1875,7 +1830,7 @@ Pgn pgnList[] = {
      126720,
      true,
      3,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1888,7 +1843,7 @@ Pgn pgnList[] = {
      126720,
      true,
      3,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1902,7 +1857,7 @@ Pgn pgnList[] = {
      126720,
      true,
      3,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1915,7 +1870,7 @@ Pgn pgnList[] = {
      126720,
      true,
      6,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1930,7 +1885,7 @@ Pgn pgnList[] = {
      126720,
      true,
      9,
-     0, 
+     0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
@@ -1941,7 +1896,7 @@ Pgn pgnList[] = {
       {"Zone3", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Zone4", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
-    
+
     /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
     ,
     {"Seatalk1: Keystroke",
@@ -1959,7 +1914,7 @@ Pgn pgnList[] = {
        BYTES(2),
        RES_LOOKUP,
        false,
-       ",64005=-1,63495=+1,64770=Standby,65025=Auto,64515=Wind,56355=Track,63240=+10,63750=-10,56865=-1 and -10,56610=+1 and +10",
+       ",64005=-1,63495=+1,64770=Standby,65025=Auto,63240=+10,63750=-10,56865=-1 and -10,56610=+1 and +10",
        ""},
       {"Unknown data",
        BYTES(14),
@@ -5492,7 +5447,7 @@ Pgn pgnList[] = {
       {"A", BYTES(4), 1, false, 0, ""},
       {"Genre", BYTES(12), RES_STRINGLZ, false, 0, ""},
       {0}}}
-    
+
     /* M/V Dirona */
     ,
     {"Furuno: Unknown",
@@ -5873,7 +5828,7 @@ Pgn pgnList[] = {
     {"Simnet: Event Command: AP command",
      130850,
      false,
-     13,
+     12,
      0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
@@ -5885,7 +5840,6 @@ Pgn pgnList[] = {
       {"Direction", BYTES(1), RES_LOOKUP, false, LOOKUP_SIMNET_DIRECTION, ""},
       {"Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"G", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"H", BYTES(1), RES_NOTUSED, false, 0, ""},
       {0}}}
 
     ,
