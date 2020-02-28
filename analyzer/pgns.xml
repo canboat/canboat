@@ -9114,6 +9114,104 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>127500</PGN>
+      <Id>loadControllerConnectionStateControl</Id>
+      <Description>Load Controller Connection State/Control</Description>
+      <Complete>false</Complete>
+      <Length>10</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sequenceId</Id>
+          <Name>Sequence ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>connectionId</Id>
+          <Name>Connection ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>state</Id>
+          <Name>State</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>status</Id>
+          <Name>Status</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>operationalStatusControl</Id>
+          <Name>Operational Status &amp; Control</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>pwmDutyCycle</Id>
+          <Name>PWM Duty Cycle</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>timeon</Id>
+          <Name>TimeON</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>timeoff</Id>
+          <Name>TimeOFF</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>127501</PGN>
       <Id>binarySwitchBankStatus</Id>
       <Description>Binary Switch Bank Status</Description>
@@ -21482,6 +21580,279 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Units>s</Units>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130569</PGN>
+      <Id>currentStatusAndFile</Id>
+      <Description>Current Status and File</Description>
+      <Complete>false</Complete>
+      <Length>233</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>zone</Id>
+          <Name>Zone</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='All zones' />
+            <EnumPair Value='1' Name='Zone 1' />
+            <EnumPair Value='2' Name='Zone 2' />
+            <EnumPair Value='3' Name='Zone 3' />
+            <EnumPair Value='4' Name='Zone 4' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>source</Id>
+          <Name>Source</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Vessel alarm' />
+            <EnumPair Value='1' Name='AM' />
+            <EnumPair Value='2' Name='FM' />
+            <EnumPair Value='3' Name='Weather' />
+            <EnumPair Value='4' Name='DAB' />
+            <EnumPair Value='5' Name='Aux' />
+            <EnumPair Value='6' Name='USB' />
+            <EnumPair Value='7' Name='CD' />
+            <EnumPair Value='8' Name='MP3' />
+            <EnumPair Value='9' Name='Apple iOS' />
+            <EnumPair Value='10' Name='Android' />
+            <EnumPair Value='11' Name='Bluetooth' />
+            <EnumPair Value='12' Name='Sirius XM' />
+            <EnumPair Value='13' Name='Pandora' />
+            <EnumPair Value='14' Name='Spotify' />
+            <EnumPair Value='15' Name='Slacker' />
+            <EnumPair Value='16' Name='Songza' />
+            <EnumPair Value='17' Name='Apple Radio' />
+            <EnumPair Value='18' Name='Last FM' />
+            <EnumPair Value='19' Name='Ethernet' />
+            <EnumPair Value='20' Name='Video MP4' />
+            <EnumPair Value='21' Name='Video DVD' />
+            <EnumPair Value='22' Name='Video BluRay' />
+            <EnumPair Value='23' Name='HDMI' />
+            <EnumPair Value='24' Name='Video' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>number</Id>
+          <Name>Number</Name>
+          <Description>Source number per type</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>id</Id>
+          <Name>ID</Name>
+          <Description>Unique file ID</Description>
+          <BitLength>32</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>playStatus</Id>
+          <Name>Play status</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Play' />
+            <EnumPair Value='1' Name='Pause' />
+            <EnumPair Value='2' Name='Stop' />
+            <EnumPair Value='3' Name='FF (1x)' />
+            <EnumPair Value='4' Name='FF (2x)' />
+            <EnumPair Value='5' Name='FF (3x)' />
+            <EnumPair Value='6' Name='FF (4x)' />
+            <EnumPair Value='7' Name='RW (1x)' />
+            <EnumPair Value='8' Name='RW (2x)' />
+            <EnumPair Value='9' Name='RW (3x)' />
+            <EnumPair Value='10' Name='RW (4x)' />
+            <EnumPair Value='11' Name='Skip ahead' />
+            <EnumPair Value='12' Name='Skip back' />
+            <EnumPair Value='13' Name='Jog ahead' />
+            <EnumPair Value='14' Name='Jog back' />
+            <EnumPair Value='15' Name='Seek up' />
+            <EnumPair Value='16' Name='Seek down' />
+            <EnumPair Value='17' Name='Scan up' />
+            <EnumPair Value='18' Name='Scan down' />
+            <EnumPair Value='19' Name='Tune up' />
+            <EnumPair Value='20' Name='Tune down' />
+            <EnumPair Value='21' Name='Slow motion (.75x)' />
+            <EnumPair Value='22' Name='Slow motion (.5x)' />
+            <EnumPair Value='23' Name='Slow motion (.25x)' />
+            <EnumPair Value='24' Name='Slow motion (.125x)' />
+            <EnumPair Value='25' Name='Source renaming' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>elapsedTrackTime</Id>
+          <Name>Elapsed Track Time</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>s</Units>
+                 <Type>Time</Type>
+                 <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>trackTime</Id>
+          <Name>Track Time</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>s</Units>
+                 <Type>Time</Type>
+                 <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>repeatStatus</Id>
+          <Name>Repeat Status</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='One' />
+            <EnumPair Value='2' Name='All' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>shuffleStatus</Id>
+          <Name>Shuffle Status</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>100</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='Play queue' />
+            <EnumPair Value='2' Name='All' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>saveFavoriteNumber</Id>
+          <Name>Save Favorite Number</Name>
+          <Description>Used to command AV to save current station as favorite</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>playFavoriteNumber</Id>
+          <Name>Play Favorite Number</Name>
+          <Description>Used to command AV to play indicated favorite station</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>thumbsUpDown</Id>
+          <Name>Thumbs Up/Down</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>signalStrength</Id>
+          <Name>Signal Strength</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>136</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>%</Units>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>radioFrequency</Id>
+          <Name>Radio Frequency</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>Hz</Units>
+          <Resolution>10</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>hdFrequencyMulticast</Id>
+          <Name>HD Frequency Multicast</Name>
+          <Description>Digital sub channel</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>176</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>deleteFavoriteNumber</Id>
+          <Name>Delete Favorite Number</Name>
+          <Description>Used to command AV to delete current station as favorite</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>184</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>totalNumberOfTracks</Id>
+          <Name>Total Number of Tracks</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
                  <Type>Integer</Type>
                  <Resolution>1</Resolution>
           <Signed>false</Signed>

@@ -2506,6 +2506,21 @@ Pgn pgnList[] = {
       {0}}}
 
     ,
+    {"Load Controller Connection State/Control",
+     127500,
+     false,
+     10,
+     0,
+     {{"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
+     {"Connection ID", BYTES(1), RES_INTEGER, false, 0, ""},
+     {"State", BYTES(1), RES_INTEGER, false, 0, ""},
+     {"Status", BYTES(1), RES_INTEGER, false, 0, ""},
+     {"Operational Status & Control", BYTES(1), RES_INTEGER, false, 0, ""},
+     {"PWM Duty Cycle", BYTES(1), RES_INTEGER, false, 0, ""},
+     {"TimeON", BYTES(2), RES_INTEGER, false, 0, ""},
+     {"TimeOFF", BYTES(2), RES_INTEGER, false, 0, ""}}}
+
+    ,
     {"Binary Switch Bank Status",
      127501,
      false,
