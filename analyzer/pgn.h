@@ -637,6 +637,14 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",3=Band pass"                   \
    ",4=Notch filter")
 
+#define LOOKUP_SIMRAD_PILOT_MODE               \
+  (",0=Standby"                                \
+   ",1=Auto, compass commanded"                \
+   ",2=Non Follow, hand commanded (not sure)"  \
+   ",3=Wind Mode"                              \
+   ",4=Track Mode"                             \
+   ",5=No Drift, COG referenced")
+
 typedef struct
 {
   char *   description;
@@ -1402,8 +1410,26 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"}}}
 
+    /* NOTE 65341 in pgn.h maybe is not correct */
     ,
-    {"Simnet: Autopilot Mode",
+    {"Simnet: Autopilot Mode 0",
+     65340,             
+     false,
+     0x08,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Autopilot Status 1", BYTES(1), RES_INTEGER, false, "=16", "Pilot ON"},
+      {"Autopilot Mode", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
+      {"Autopilot Status 2", 3, RES_INTEGER, false, "=2", "Pilot ON"},
+      {"Reserved", 5, RES_NOTUSED, false, 0, ""},
+      {"Reserved", BYTES(2), RES_BINARY, false, 0, "0x00, 0x80"},
+      {0}}}
+
+    ,
+    {"Simnet: Autopilot Mode 1",
      65341,
      false,
      0x08,
@@ -1552,6 +1578,7 @@ Pgn pgnList[] = {
       {"Supply Voltage", BYTES(2), 0.01, false, "V", ""},
       {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
       {0}}}
+
 
     ,
     {"Simnet: Autopilot Mode",
@@ -5846,7 +5873,7 @@ Pgn pgnList[] = {
     {"Simnet: Event Command: AP command",
      130850,
      false,
-     12,
+     13,
      0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
@@ -5858,6 +5885,7 @@ Pgn pgnList[] = {
       {"Direction", BYTES(1), RES_LOOKUP, false, LOOKUP_SIMNET_DIRECTION, ""},
       {"Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"G", BYTES(1), RES_NOTUSED, false, 0, ""},
+      {"H", BYTES(1), RES_NOTUSED, false, 0, ""},
       {0}}}
 
     ,
