@@ -10990,7 +10990,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <Id>batteryConfigurationStatus</Id>
       <Description>Battery Configuration Status</Description>
       <Complete>false</Complete>
-      <Length>8</Length>
+      <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -11034,11 +11034,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>5</Order>
           <Id>nominalVoltage</Id>
           <Name>Nominal Voltage</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>V</Units>
-          <Resolution>0.01</Resolution>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -11046,7 +11046,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>chemistry</Id>
           <Name>Chemistry</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
@@ -11055,7 +11055,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>capacity</Id>
           <Name>Capacity</Name>
           <BitLength>16</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
@@ -11063,8 +11063,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>8</Order>
           <Id>temperatureCoefficient</Id>
           <Name>Temperature Coefficient</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
@@ -11072,8 +11072,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>9</Order>
           <Id>peukertExponent</Id>
           <Name>Peukert Exponent</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>80</BitOffset>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
@@ -11081,8 +11081,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>10</Order>
           <Id>chargeEfficiencyFactor</Id>
           <Name>Charge Efficiency Factor</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>96</BitOffset>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>

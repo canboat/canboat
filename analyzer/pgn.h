@@ -2748,22 +2748,27 @@ Pgn pgnList[] = {
       {"AGS Mode", BYTES(1), 1, false, 0, ""},
       {0}}}
 
+    /* #143, @ksltd writes that it is definitely 10 bytes and that
+     * nominal voltage is a lookup, Peukert Exponent and Charge Efficiency
+     * are 8 bits. It follows that Temperature Coefficient must be 8 bits
+     * as well to fit in 10 bytes.
+     */
     ,
     {"Battery Configuration Status",
      127513,
      false,
-     8,
+     10,
      0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
       {"Battery Type", BYTES(1), 1, false, 0, ""},
       {"Supports Equalization", 2, 1, false, 0, ""},
       {"Reserved", 6, RES_BINARY, false, 0, ""},
-      {"Nominal Voltage", BYTES(2), 0.01, false, "V", ""},
+      {"Nominal Voltage", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Chemistry", BYTES(1), 1, false, 0, ""},
       {"Capacity", BYTES(2), 1, false, 0, ""},
-      {"Temperature Coefficient", BYTES(2), 1, false, 0, ""},
-      {"Peukert Exponent", BYTES(2), 1, false, 0, ""},
-      {"Charge Efficiency Factor", BYTES(2), 1, false, 0, ""},
+      {"Temperature Coefficient", BYTES(1), 1, false, 0, ""},
+      {"Peukert Exponent", BYTES(1), 1, false, 0, ""},
+      {"Charge Efficiency Factor", BYTES(1), 1, false, 0, ""},
       {0}}}
 
     ,
