@@ -348,7 +348,9 @@ static char *getFullStateJSON(StreamType stream)
   {
     pgn = *pgnList[i];
 
-    if ((stream == CLIENT_AIS) == (strncmp(pgn->p_description, "AIS", 3) == 0) || pgn->p_prn == 129029)
+    // AIS data only goes to AIS clients, non-AIS data to non-AIS clients, but
+    // PRNs 129026 and 129029 go to both.
+    if ((stream == CLIENT_AIS) == (strncmp(pgn->p_description, "AIS", 3) == 0) || pgn->p_prn == 129026 || pgn->p_prn == 129029)
     {
       sbAppendFormat(&state, "%c\"%u\":\n  {\"description\":\"%s\"\n", separator, pgn->p_prn, pgn->p_description);
 
