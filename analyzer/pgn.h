@@ -1759,21 +1759,6 @@ Pgn pgnList[] = {
     /************ RESPONSE TO REQUEST PGNS **************/
 
     ,
-    {"Maretron: Slave Response",
-     126270,
-     false,
-     8,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Product code", BYTES(2), 1, false, 0, "0x1b2=SSC200"},
-      {"Software code", BYTES(2), 1, false, 0, ""},
-      {"Command", BYTES(1), 1, false, 0, "0x50=Deviation calibration result"},
-      {"Status", BYTES(1), 1, false, 0, ""},
-      {0}}}
-
-    ,
     {"PGN List (Transmit and Receive)",
      126464,
      false,
@@ -2195,6 +2180,21 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, 0, ""},
+      {0}}}
+
+    ,
+    {"Maretron: Slave Response",
+     126720,
+     false,
+     8,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Product code", BYTES(2), 1, false, 0, "0x1b2=SSC200"},
+      {"Software code", BYTES(2), 1, false, 0, ""},
+      {"Command", BYTES(1), 1, false, 0, "0x50=Deviation calibration result"},
+      {"Status", BYTES(1), 1, false, 0, ""},
       {0}}}
 
     ,
