@@ -2752,6 +2752,11 @@ Pgn pgnList[] = {
      * nominal voltage is a lookup, Peukert Exponent and Charge Efficiency
      * are 8 bits. It follows that Temperature Coefficient must be 8 bits
      * as well to fit in 10 bytes.
+     *
+     * This could all be wrong, according to https://github.com/ttlappalainen/NMEA2000/
+     * the Supports Equalization is 2 bits, Battery Type, Chemistry and
+     * Nominal voltage are all 4 bits. Capacity and Peukert are both 2 bytes.
+     * but this only adds up to 9 bytes...
      */
     ,
     {"Battery Configuration Status",
