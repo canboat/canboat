@@ -1,0 +1,117 @@
+<?php
+#
+# Format a particular N2K command
+#
+# Example: this will request all product information
+#
+# 1970-01-01-00:00:00.000,6,59904,0,255,3,14,f0,01
+#
+#
+# (C) 2009-2015, Kees Verruijt, Harlingen, The Netherlands.
+#
+# This file is part of CANboat.
+#
+# CANboat is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# CANboat is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+  require_once('format-message.inc');
+  require_once('canboat-default.inc');
+
+  $format = getCanboatDefault('WRITE_FORMAT', 'CANBOAT');
+  
+  
+
+  function usage()
+  {
+    global $format_n2k_messages;
+
+    $p = new FormatMessage('request_pgn'); // fill format_n2k_messages
+
+    echo "Usage: format-message [--format YDWG|CANBOAT] <dst> <command>\n";
+    echo "  <dst> := destination address 0..254 or 255 for broadcast\n";
+    echo "  <command> := ...\n";
+    foreach ($format_n2k_messages as $key => $value)
+    {
+      printf("    %-15s %-20s %s\n", $key, $value['args'], $value['description']);
+    }
+    exit(1);
+  }
+
+  if (isset($argc))
+  {
+    if ($argc < 3)
+    {
+      usage();
+    }
+    if ($argv[1] == "--format")
+    {
+      $format = $argv[2];
+      $dst = $argv[3];
+      $command = $argv[4];
+      $n = 5;
+    }
+    else
+    {
+      $dst = $argv[1];
+      $command = $argv[2];
+      $n = 3;
+    }
+  }
+  else
+  {
+    if (!array_key_exists('command', $_REQUEST) || !array_key_exists('dst', $_REQUEST))
+    {
+      usage();
+    }
+    $dst = $_REQUEST['dst'];
+    $command = $_REQUEST['command'];
+    if (array_key_exists('format', $_REQUEST))
+    {
+      $format = $_REQUEST['format'];
+    }
+  }
+
+  $p = new FormatMessage($command);
+  $p->setFormat($format);
+  $args = $p->getArgs();
+
+  if (isset($argc))
+  {
+    foreach ($args as $arg)
+    {
+      if (!isset($argv[$n]))
+      {
+        echo "Missing argument $arg on commandline\n";
+        echo "Usage: $argv[0] $command ".join($args, ' ')."\n";
+        exit(1);
+      }
+      $p->setArg($arg, $argv[$n]);
+      $n++;
+    }
+  }
+  else
+  {
+    foreach ($args as $arg)
+    {
+      if (!isset($_REQUEST[$arg]))
+      {
+        echo "Missing argument $arg in request\n";
+        exit(1);
+      }
+      $p->setArg($arg, $argv[$n]);
+    }
+  }
+
+  echo $p->formatMessage($dst);
+?>

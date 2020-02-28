@@ -1,0 +1,47 @@
+{ "request_pgn":
+  { "args": "pgn"
+  , "pgn" :  59904
+  , "data": "pack('VX',$pgn)"
+  , "description": "Request a particular device to send a PGN"
+  }
+, "command_address":
+  { "args": "name,address"
+  , "pgn" :  65240
+  , "data": "pack('V', $name & xfffffff) . pack('V', $name >> 32) . pack('C', $address)"
+  , "description": "Request a particular device to change its network address"
+  }
+, "setvolume":
+  { "args": "zone,level"
+  , "pgn" : 130816
+  , "data": "'\\013\\099\\xff\\018\\00'. pack('X1', $zone) . pack('X1', $level)"
+  , "description": "Set audio volume"
+  }
+, "battery_status":
+  { "args": "instance,voltage,current,temperature,sid"
+  , "pgn": 127508
+  , "data": "pack('C', $instance) . pack('S', $voltage * 100.0) . pack('s', $current * 10.0). pack('S', (273.15 + $temperature) * 100.0) . pack('C', $sid)"
+  , "description": "Battery status"
+  }
+, "dc_detailed_status":
+  { "args": "sid,instance,type,state_of_charge,state_of_health,time_remaining,ripple_voltage"
+  , "pgn": 127506
+  , "data": "pack('C', $sid) . pack('C', $instance) . pack('C', $type). pack('C', $state_of_charge) . pack('C', $state_of_health) .  pack('S', $time_remaining) . pack('S', $ripple_voltage * 100.0)"
+  , "description": "DC detailed status"
+  }
+, "inverter_status" :
+  { "args": "instance,ac_instance,dc_instance,operating_state,inverter"
+  , "pgn": 127509
+  , "data": "pack('C', $instance) . pack('C', $ac_instance) . pack('C', $dc_instance). pack('C', ($operating_state + ($inverter << 4)))"
+  , "description": "Inverter status. Operating state and inverter are bitfields: 0=off, 1=on"
+  }
+, "engine_update":
+  { "args": "instance,rpm"
+  , "pgn": 127488
+  , "data": "pack('C', $instance) . pack('S', $rpm * 4.0) . str_repeat(pack('C', 255), 6)"
+  }
+, "engine_dynamic":
+  { "args": "instance,temperature,voltage_alt,fuel_rate,hours"
+  , "pgn": 127489
+  , "data": "pack('C', $instance) . pack('V', -1) . pack('S', (273.15 + $temperature) * 100.0) . pack('S', $voltage_alt) .  pack('s', $fuel_rate) . pack('V', $hours) . str_repeat(pack('C', 255), 11)"
+  }
+}
