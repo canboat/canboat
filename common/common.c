@@ -551,20 +551,22 @@ void getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int 
 */
 unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst)
 {
-  unsigned int canId = src | 0x80000000U; // src bits are the lowest ones of the CAN ID. Also set the highest bit to 1 as n2k uses
-                                          // only extended frames (EFF bit).
+  unsigned int canId
+      = (src & 0xff) | 0x80000000U; // src bits are the lowest ones of the CAN ID. Also set the highest bit to 1 as n2k uses
+  // only extended frames (EFF bit).
 
-  if ((unsigned char) pgn == 0)
-  { // PDU 1 (assumed if 8 lowest bits of the PGN are 0)
-    canId += dst << 8;
-    canId += pgn << 8;
-    canId += prio << 26;
+  unsigned int PF = (pgn >> 8) & 0xff;
+
+  if (PF < 240)
+  { // PDU 1
+    canId |= (dst & 0xff) << 8;
+    canId |= (pgn << 8);
   }
   else
   { // PDU 2
-    canId += pgn << 8;
-    canId += prio << 26;
+    canId |= pgn << 8;
   }
+  canId |= prio << 26;
 
   return canId;
 }

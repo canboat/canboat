@@ -114,6 +114,12 @@ static int openCanDevice(char *device, int *canSocket)
   struct sockaddr_can addr;
   struct ifreq        ifr;
 
+  if (strcmp(device, "stdout") == 0 || strcmp(device, "-") == 0)
+  {
+    *canSocket = STDOUT_FILENO;
+    return 0;
+  }
+
   if ((*canSocket = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0)
   {
     perror("socket");
