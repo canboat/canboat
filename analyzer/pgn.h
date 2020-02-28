@@ -175,6 +175,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",16=Fixed beacon: preferred channel starboard hand"  \
    ",17=Fixed beacon: isolated danger"                   \
    ",18=Fixed beacon: safe water"                        \
+   ",19=Fixed beacon: special mark"                        \
    ",20=Floating AtoN: cardinal N"                       \
    ",21=Floating AtoN: cardinal E"                       \
    ",22=Floating AtoN: cardinal S"                       \

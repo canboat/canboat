@@ -11746,6 +11746,7 @@
               {"name":"Fixed beacon: preferred channel starboard hand","value":"16"},
               {"name":"Fixed beacon: isolated danger","value":"17"},
               {"name":"Fixed beacon: safe water","value":"18"},
+              {"name":"Fixed beacon: special mark","value":"19"},
               {"name":"Floating AtoN: cardinal N","value":"20"},
               {"name":"Floating AtoN: cardinal E","value":"21"},
               {"name":"Floating AtoN: cardinal S","value":"22"},

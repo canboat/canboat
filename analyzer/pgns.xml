@@ -13229,6 +13229,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='16' Name='Fixed beacon: preferred channel starboard hand' />
             <EnumPair Value='17' Name='Fixed beacon: isolated danger' />
             <EnumPair Value='18' Name='Fixed beacon: safe water' />
+            <EnumPair Value='19' Name='Fixed beacon: special mark' />
             <EnumPair Value='20' Name='Floating AtoN: cardinal N' />
             <EnumPair Value='21' Name='Floating AtoN: cardinal E' />
             <EnumPair Value='22' Name='Floating AtoN: cardinal S' />
