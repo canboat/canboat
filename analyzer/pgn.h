@@ -638,6 +638,86 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",3=Band pass"                   \
    ",4=Notch filter")
 
+#define LOOKUP_ALERT_TYPE     \
+  (",0=Reserved"              \
+   ",1=Emergency Alarm"       \
+   ",2=Alarm"                 \
+   ",3=Reserved"              \
+   ",4=Reserved"              \
+   ",5=Warning"               \
+   ",6=Reserved"              \
+   ",7=Reserved"              \
+   ",8=Caution"               \
+   ",13=Reserved"             \
+   ",14=Data out of range"    \
+   ",15=Data not available")
+
+#define LOOKUP_ALERT_CATEGORY \
+  (",0=Navigational"          \
+   ",1=Technical"             \
+   ",13=Reserved"             \
+   ",14=Data out of range"    \
+   ",15=Data not available")
+
+#define LOOKUP_ALERT_TRIGGER_CONDITION \
+  (",0=Manual"                         \
+   ",1=Auto"                           \
+   ",2=Test"                           \
+   ",3=Disabled"                       \
+   ",13=Reserved"                      \
+   ",14=Data out of range"             \
+   ",15=Data not available")
+
+#define LOOKUP_ALERT_THRESHOLD_STATUS \
+  (",0=Normal"                        \
+   ",1=Threshold Exceeded"            \
+   ",2=Extreme Threshold Exceeded"    \
+   ",3=Low Threshold Exceeded"        \
+   ",4=Acknowledged"                  \
+   ",5=Awaiting Acknowledge"          \
+   ",253=Reserved"                    \
+   ",254=Data out of range"           \
+   ",255=Data not available")
+
+#define LOOKUP_ALERT_STATE       \
+  (",0=Disabled"                 \
+   ",1=Normal"                   \
+   ",2=Active"                   \
+   ",3=Silenced"                 \
+   ",4=Acknowledged"             \
+   ",5=Awaiting Acknowledge"     \
+   ",253=Reserved"               \
+   ",254=Data out of range"      \
+   ",255=Data not available")
+
+#define LOOKUP_ALERT_LANGUAGE_ID \
+  (",0=English (US)"             \
+   ",1=English (UK)"             \
+   ",2=Arabic"                   \
+   ",3=Chinese (simplified)"     \
+   ",4=Croatian"                 \
+   ",5=Danish"                   \
+   ",6=Dutch"                    \
+   ",7=Finnish"                  \
+   ",8=French"                   \
+   ",9=German"                   \
+   ",10=Greek"                   \
+   ",11=Italian"                 \
+   ",12=Japanese"                \
+   ",13=Korean"                  \
+   ",14=Norwegian"               \
+   ",15=Polish"                  \
+   ",16=Portuguese"              \
+   ",17=Russian"                 \
+   ",18=Spanish"                 \
+   ",19=Sweedish")
+
+#define LOOKUP_ALERT_RESPONSE_COMMAND \
+  (",0=Acknowledge"                   \
+   ",1=Temporary Silence"             \
+   ",2=Test Command off"              \
+   ",3=Test Command on")
+
 typedef struct
 {
   char *   description;
@@ -2217,13 +2297,73 @@ Pgn pgnList[] = {
     {"Unknown fast-packet non-addressed", 126976, false, 255, 0, {{"Data", BYTES(255), RES_BINARY, false, 0, ""}, {0}}, 0, 0, true}
 
     ,
-    {"Alert", 126983, false, 8, 0, {{0}}}
+    {"Alert",
+     126983,
+     true,
+     28,
+     0,
+     {{"Alert Type", 4, RES_LOOKUP, false, LOOKUP_ALERT_TYPE, ""},
+      {"Alert Category", 4, RES_LOOKUP, false, LOOKUP_ALERT_CATEGORY, ""},
+      {"Alert System", BYTES(1), 1, false, 0, ""},
+      {"Alert Sub-System", BYTES(1), 1, false, 0, ""},
+      {"Alert ID", BYTES(2), 1, false, 0, ""},
+      {"Data Source Network ID NAME", BYTES(8), 1, false, 0, ""},
+      {"Data Source Instance", BYTES(1), 1, false, 0, ""},
+      {"Data Source Index-Source", BYTES(1), 1, false, 0, ""},
+      {"Alert Occurrence Number", BYTES(1), 1, false, 0, ""},
+      {"Temporary Silence Status", 1, RES_LOOKUP, false, ",0=Not Temporary Silence,1=Temporary Silence", ""},
+      {"Acknowledge Status", 1, RES_LOOKUP, false, ",0=Not Acknowledged,1=Acknowledged", ""},
+      {"Escalation Status", 1, RES_LOOKUP, false, ",0=Not Escalated,1=Escalated", ""},
+      {"Temporary Silence Support", 1, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
+      {"Acknowledge Support", 1, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
+      {"Escalation Support", 1, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
+      {"NMEA Reserved", 2, RES_BINARY, false, 0, ""},
+      {"Acknowledge Source Network ID NAME", BYTES(8), 1, false, 0, ""},
+      {"Trigger Condition", 4, RES_LOOKUP, false, LOOKUP_ALERT_TRIGGER_CONDITION, ""},
+      {"Threshold Status", 4, RES_LOOKUP, false, LOOKUP_ALERT_THRESHOLD_STATUS, ""},
+      {"Alert Priority", BYTES(1), 1, false, 0, ""},
+      {"Alert State", BYTES(1), RES_LOOKUP, false, LOOKUP_ALERT_STATE, ""},
+      {0}}}
 
     ,
-    {"Alert Response", 126984, false, 8, 0, {{0}}}
+    {"Alert Response",
+     126984,
+     true,
+     25,
+     0,
+     {{"Alert Type", 4, RES_LOOKUP, false, LOOKUP_ALERT_TYPE, ""},
+      {"Alert Category", 4, RES_LOOKUP, false, LOOKUP_ALERT_CATEGORY, ""},
+      {"Alert System", BYTES(1), 1, false, 0, ""},
+      {"Alert Sub-System", BYTES(1), 1, false, 0, ""},
+      {"Alert ID", BYTES(2), 1, false, 0, ""},
+      {"Data Source Network ID NAME", BYTES(8), 1, false, 0, ""},
+      {"Data Source Instance", BYTES(1), 1, false, 0, ""},
+      {"Data Source Index-Source", BYTES(1), 1, false, 0, ""},
+      {"Alert Occurrence Number", BYTES(1), 1, false, 0, ""},
+      {"Acknowledge Source Network ID NAME", BYTES(8), 1, false, 0, ""},
+      {"Response Command", 2, RES_LOOKUP, false, LOOKUP_ALERT_RESPONSE_COMMAND, ""},
+      {"NMEA Reserved", 6, RES_BINARY, false, 0, ""},
+     {0}}}
 
     ,
-    {"Alert Text", 126985, false, 8, 0, {{0}}}
+    {"Alert Text",
+     126985,
+     true,
+     49,
+     0,
+     {{"Alert Type", 4, RES_LOOKUP, false, LOOKUP_ALERT_TYPE, ""},
+      {"Alert Category", 4, RES_LOOKUP, false, LOOKUP_ALERT_CATEGORY, ""},
+      {"Alert System", BYTES(1), 1, false, 0, ""},
+      {"Alert Sub-System", BYTES(1), 1, false, 0, ""},
+      {"Alert ID", BYTES(2), 1, false, 0, ""},
+      {"Data Source Network ID NAME", BYTES(8), 1, false, 0, ""},
+      {"Data Source Instance", BYTES(1), 1, false, 0, ""},
+      {"Data Source Index-Source", BYTES(1), 1, false, 0, ""},
+      {"Alert Occurrence Number", BYTES(1), 1, false, 0, ""},
+      {"Language ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ALERT_LANGUAGE_ID, ""},
+      {"Alert Text Description", BYTES(16), RES_STRINGLAU, false, 0, ""},
+      {"Alert Location Text Description", BYTES(16), RES_STRINGLAU, false, 0, ""},
+      {0}}}
 
     ,
     {"Alert Configuration", 126986, false, 8, 0, {{0}}}

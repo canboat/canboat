@@ -7643,25 +7643,602 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126983</PGN>
       <Id>alert</Id>
       <Description>Alert</Description>
-      <Complete>false</Complete>
-      <Length>8</Length>
+      <Complete>true</Complete>
+      <Length>28</Length>
       <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>alertType</Id>
+          <Name>Alert Type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Reserved' />
+            <EnumPair Value='1' Name='Emergency Alarm' />
+            <EnumPair Value='2' Name='Alarm' />
+            <EnumPair Value='3' Name='Reserved' />
+            <EnumPair Value='4' Name='Reserved' />
+            <EnumPair Value='5' Name='Warning' />
+            <EnumPair Value='6' Name='Reserved' />
+            <EnumPair Value='7' Name='Reserved' />
+            <EnumPair Value='8' Name='Caution' />
+            <EnumPair Value='13' Name='Reserved' />
+            <EnumPair Value='14' Name='Data out of range' />
+            <EnumPair Value='15' Name='Data not available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>alertCategory</Id>
+          <Name>Alert Category</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>4</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Navigational' />
+            <EnumPair Value='1' Name='Technical' />
+            <EnumPair Value='13' Name='Reserved' />
+            <EnumPair Value='14' Name='Data out of range' />
+            <EnumPair Value='15' Name='Data not available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>alertSystem</Id>
+          <Name>Alert System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>alertSubSystem</Id>
+          <Name>Alert Sub-System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>alertId</Id>
+          <Name>Alert ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>dataSourceNetworkIdName</Id>
+          <Name>Data Source Network ID NAME</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>dataSourceInstance</Id>
+          <Name>Data Source Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>dataSourceIndexSource</Id>
+          <Name>Data Source Index-Source</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>alertOccurrenceNumber</Id>
+          <Name>Alert Occurrence Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>temporarySilenceStatus</Id>
+          <Name>Temporary Silence Status</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Not Temporary Silence' />
+            <EnumPair Value='1' Name='Temporary Silence' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>acknowledgeStatus</Id>
+          <Name>Acknowledge Status</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>129</BitOffset>
+          <BitStart>1</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Not Acknowledged' />
+            <EnumPair Value='1' Name='Acknowledged' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>escalationStatus</Id>
+          <Name>Escalation Status</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>130</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Not Escalated' />
+            <EnumPair Value='1' Name='Escalated' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>temporarySilenceSupport</Id>
+          <Name>Temporary Silence Support</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>131</BitOffset>
+          <BitStart>3</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Not Supported' />
+            <EnumPair Value='1' Name='Supported' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>acknowledgeSupport</Id>
+          <Name>Acknowledge Support</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>132</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Not Supported' />
+            <EnumPair Value='1' Name='Supported' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>escalationSupport</Id>
+          <Name>Escalation Support</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>133</BitOffset>
+          <BitStart>5</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Not Supported' />
+            <EnumPair Value='1' Name='Supported' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>nmeaReserved</Id>
+          <Name>NMEA Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>134</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>acknowledgeSourceNetworkIdName</Id>
+          <Name>Acknowledge Source Network ID NAME</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>136</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>triggerCondition</Id>
+          <Name>Trigger Condition</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>200</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Manual' />
+            <EnumPair Value='1' Name='Auto' />
+            <EnumPair Value='2' Name='Test' />
+            <EnumPair Value='3' Name='Disabled' />
+            <EnumPair Value='13' Name='Reserved' />
+            <EnumPair Value='14' Name='Data out of range' />
+            <EnumPair Value='15' Name='Data not available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>19</Order>
+          <Id>thresholdStatus</Id>
+          <Name>Threshold Status</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>204</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Normal' />
+            <EnumPair Value='1' Name='Threshold Exceeded' />
+            <EnumPair Value='2' Name='Extreme Threshold Exceeded' />
+            <EnumPair Value='3' Name='Low Threshold Exceeded' />
+            <EnumPair Value='4' Name='Acknowledged' />
+            <EnumPair Value='5' Name='Awaiting Acknowledge' />
+            <EnumPair Value='253' Name='Reserved' />
+            <EnumPair Value='254' Name='Data out of range' />
+            <EnumPair Value='255' Name='Data not available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>20</Order>
+          <Id>alertPriority</Id>
+          <Name>Alert Priority</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>208</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>21</Order>
+          <Id>alertState</Id>
+          <Name>Alert State</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>216</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Disabled' />
+            <EnumPair Value='1' Name='Normal' />
+            <EnumPair Value='2' Name='Active' />
+            <EnumPair Value='3' Name='Silenced' />
+            <EnumPair Value='4' Name='Acknowledged' />
+            <EnumPair Value='5' Name='Awaiting Acknowledge' />
+            <EnumPair Value='253' Name='Reserved' />
+            <EnumPair Value='254' Name='Data out of range' />
+            <EnumPair Value='255' Name='Data not available' />
+          </EnumValues>
+        </Field>
+      </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>126984</PGN>
       <Id>alertResponse</Id>
       <Description>Alert Response</Description>
-      <Complete>false</Complete>
-      <Length>8</Length>
+      <Complete>true</Complete>
+      <Length>25</Length>
       <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>alertType</Id>
+          <Name>Alert Type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Reserved' />
+            <EnumPair Value='1' Name='Emergency Alarm' />
+            <EnumPair Value='2' Name='Alarm' />
+            <EnumPair Value='3' Name='Reserved' />
+            <EnumPair Value='4' Name='Reserved' />
+            <EnumPair Value='5' Name='Warning' />
+            <EnumPair Value='6' Name='Reserved' />
+            <EnumPair Value='7' Name='Reserved' />
+            <EnumPair Value='8' Name='Caution' />
+            <EnumPair Value='13' Name='Reserved' />
+            <EnumPair Value='14' Name='Data out of range' />
+            <EnumPair Value='15' Name='Data not available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>alertCategory</Id>
+          <Name>Alert Category</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>4</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Navigational' />
+            <EnumPair Value='1' Name='Technical' />
+            <EnumPair Value='13' Name='Reserved' />
+            <EnumPair Value='14' Name='Data out of range' />
+            <EnumPair Value='15' Name='Data not available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>alertSystem</Id>
+          <Name>Alert System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>alertSubSystem</Id>
+          <Name>Alert Sub-System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>alertId</Id>
+          <Name>Alert ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>dataSourceNetworkIdName</Id>
+          <Name>Data Source Network ID NAME</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>dataSourceInstance</Id>
+          <Name>Data Source Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>dataSourceIndexSource</Id>
+          <Name>Data Source Index-Source</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>alertOccurrenceNumber</Id>
+          <Name>Alert Occurrence Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>acknowledgeSourceNetworkIdName</Id>
+          <Name>Acknowledge Source Network ID NAME</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>responseCommand</Id>
+          <Name>Response Command</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Acknowledge' />
+            <EnumPair Value='1' Name='Temporary Silence' />
+            <EnumPair Value='2' Name='Test Command off' />
+            <EnumPair Value='3' Name='Test Command on' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>nmeaReserved</Id>
+          <Name>NMEA Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>194</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>126985</PGN>
       <Id>alertText</Id>
       <Description>Alert Text</Description>
-      <Complete>false</Complete>
-      <Length>8</Length>
+      <Complete>true</Complete>
+      <Length>49</Length>
       <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>alertType</Id>
+          <Name>Alert Type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Reserved' />
+            <EnumPair Value='1' Name='Emergency Alarm' />
+            <EnumPair Value='2' Name='Alarm' />
+            <EnumPair Value='3' Name='Reserved' />
+            <EnumPair Value='4' Name='Reserved' />
+            <EnumPair Value='5' Name='Warning' />
+            <EnumPair Value='6' Name='Reserved' />
+            <EnumPair Value='7' Name='Reserved' />
+            <EnumPair Value='8' Name='Caution' />
+            <EnumPair Value='13' Name='Reserved' />
+            <EnumPair Value='14' Name='Data out of range' />
+            <EnumPair Value='15' Name='Data not available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>alertCategory</Id>
+          <Name>Alert Category</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>4</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Navigational' />
+            <EnumPair Value='1' Name='Technical' />
+            <EnumPair Value='13' Name='Reserved' />
+            <EnumPair Value='14' Name='Data out of range' />
+            <EnumPair Value='15' Name='Data not available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>alertSystem</Id>
+          <Name>Alert System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>alertSubSystem</Id>
+          <Name>Alert Sub-System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>alertId</Id>
+          <Name>Alert ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>dataSourceNetworkIdName</Id>
+          <Name>Data Source Network ID NAME</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>dataSourceInstance</Id>
+          <Name>Data Source Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>dataSourceIndexSource</Id>
+          <Name>Data Source Index-Source</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>alertOccurrenceNumber</Id>
+          <Name>Alert Occurrence Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>languageId</Id>
+          <Name>Language ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='English (US)' />
+            <EnumPair Value='1' Name='English (UK)' />
+            <EnumPair Value='2' Name='Arabic' />
+            <EnumPair Value='3' Name='Chinese (simplified)' />
+            <EnumPair Value='4' Name='Croatian' />
+            <EnumPair Value='5' Name='Danish' />
+            <EnumPair Value='6' Name='Dutch' />
+            <EnumPair Value='7' Name='Finnish' />
+            <EnumPair Value='8' Name='French' />
+            <EnumPair Value='9' Name='German' />
+            <EnumPair Value='10' Name='Greek' />
+            <EnumPair Value='11' Name='Italian' />
+            <EnumPair Value='12' Name='Japanese' />
+            <EnumPair Value='13' Name='Korean' />
+            <EnumPair Value='14' Name='Norwegian' />
+            <EnumPair Value='15' Name='Polish' />
+            <EnumPair Value='16' Name='Portuguese' />
+            <EnumPair Value='17' Name='Russian' />
+            <EnumPair Value='18' Name='Spanish' />
+            <EnumPair Value='19' Name='Sweedish' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>alertTextDescription</Id>
+          <Name>Alert Text Description</Name>
+          <BitLength>128</BitLength>
+          <BitOffset>136</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>alertLocationTextDescription</Id>
+          <Name>Alert Location Text Description</Name>
+          <BitLength>128</BitLength>
+          <BitStart>0</BitStart>
+                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>126986</PGN>
