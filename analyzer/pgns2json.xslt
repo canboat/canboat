@@ -43,7 +43,7 @@
           <xsl:text>,</xsl:text>
         </xsl:if>
       </xsl:for-each>
-      <xsl:text>}</xsl:text>
+      <xsl:call-template name="indent"/><xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -295,7 +295,7 @@
       <xsl:when test="count(child::node())=0">null</xsl:when>
       <!-- other nodes -->
       <xsl:otherwise>
-      	<xsl:apply-templates select="child::node()"/>
+        <xsl:apply-templates select="child::node()"/>
       </xsl:otherwise>
     </xsl:choose>
     <!-- end of type check -->
@@ -327,7 +327,7 @@
     <xsl:if test="following-sibling::*">,</xsl:if>
     <xsl:if test="not(following-sibling::*)">]</xsl:if>
   </xsl:template>
-  
+
   <!-- JS: indent for reability -->
   <xsl:template name="indent">
     <xsl:text>
@@ -343,7 +343,8 @@
   </xsl:template>
 
   <xsl:template match="EnumValues">
-    <xsl:call-template name="indent"/>"EnumValues":[<xsl:apply-templates/>]<xsl:if test="not(following-sibling::*)">}</xsl:if>
+    <xsl:call-template name="indent"/>"EnumValues":[<xsl:apply-templates/>]<xsl:if
+    test="not(following-sibling::*)">}</xsl:if>
   </xsl:template>
 
   <xsl:template match="EnumBitValues">
@@ -358,6 +359,9 @@
     <xsl:call-template name="indent"/>{"<xsl:value-of select="@Bit"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
+  <xsl:template match="MissingAttribute">["<xsl:value-of select="node()"/>"]<xsl:if test="not(position() = last())">,</xsl:if>
+  </xsl:template>
+
     <xsl:template match="PGNInfo">
     <xsl:call-template name="indent"/><xsl:apply-templates/><xsl:if test="not(position() = last())">,</xsl:if>
     </xsl:template>
@@ -368,5 +372,5 @@
     ]
     }
     </xsl:template>
-    
+
 </xsl:stylesheet>

@@ -461,7 +461,7 @@ static void fillFieldCounts(void)
       logError("Internal error: PGN %d '%s' does not have correct fieldlist.\n", pgnList[i].pgn, pgnList[i].description);
       exit(2);
     }
-    if (j == 0 && pgnList[i].known)
+    if (j == 0 && pgnList[i].complete == PACKET_COMPLETE)
     {
       logError("Internal error: PGN %d '%s' does not have fields.\n", pgnList[i].pgn, pgnList[i].description);
       exit(2);
@@ -1551,7 +1551,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
     memcpy(packet->data, msg->data, msg->len);
     packet->size = msg->len;
   }
-  else if (pgn->size > 0x8)
+  else if (pgn->type == PACKET_FAST)
   {
     fastPacketIndex = msg->data[FASTPACKET_INDEX];
     bucket          = fastPacketIndex & FASTPACKET_MAX_INDEX;
@@ -1601,7 +1601,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
       return;
     }
   }
-  else /* msg->len <= 8 && pgn->size <= 0x8 */
+  else
   {
     packet->size = msg->len;
     memcpy(packet->data, msg->data, msg->len);
@@ -1808,10 +1808,38 @@ static void explainPGNXML(Pgn pgn)
          pgn.pgn);
   printXML(6, "Id", pgn.camelDescription);
   printXML(6, "Description", pgn.description);
-  printf("      <Complete>%s</Complete>\n"
-         "      <Length>%u</Length>\n",
-         (pgn.known ? "true" : "false"),
-         pgn.size);
+  printXML(6, "Type", (pgn.type == PACKET_ISO11783 ? "ISO" : (pgn.type == PACKET_FAST ? "Fast" : "Single")));
+  printf("      <Complete>%s</Complete>\n", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));
+
+  if (pgn.complete != PACKET_COMPLETE)
+  {
+    printf("      <Missing>\n");
+
+    if ((pgn.complete & PACKET_FIELDS_UNKNOWN) != 0)
+    {
+      printXML(8, "MissingAttribute", "Fields");
+    }
+    if ((pgn.complete & PACKET_FIELD_LENGTHS_UNKNOWN) != 0)
+    {
+      printXML(8, "MissingAttribute", "FieldLengths");
+    }
+    if ((pgn.complete & PACKET_PRECISION_UNKNOWN) != 0)
+    {
+      printXML(8, "MissingAttribute", "Precision");
+    }
+    if ((pgn.complete & PACKET_LOOKUPS_UNKNOWN) != 0)
+    {
+      printXML(8, "MissingAttribute", "Lookups");
+    }
+    if ((pgn.complete & PACKET_NOT_SEEN) != 0)
+    {
+      printXML(8, "MissingAttribute", "SampleData");
+    }
+
+    printf("      </Missing>\n");
+  }
+
+  printf("      <Length>%u</Length>\n", pgn.size);
 
   if (pgn.repeatingFields >= 100)
   {
@@ -1961,7 +1989,7 @@ static void explain(void)
   printf("_______ Complete PGNs _________\n\n");
   for (i = 1; i < ARRAY_SIZE(pgnList); i++)
   {
-    if (pgnList[i].known == true && pgnList[i].pgn < ACTISENSE_BEM)
+    if (pgnList[i].complete == PACKET_COMPLETE && pgnList[i].pgn < ACTISENSE_BEM)
     {
       explainPGN(pgnList[i]);
     }
@@ -1969,7 +1997,7 @@ static void explain(void)
   printf("_______ Incomplete PGNs _________\n\n");
   for (i = 1; i < ARRAY_SIZE(pgnList); i++)
   {
-    if (pgnList[i].known == false && pgnList[i].pgn < ACTISENSE_BEM)
+    if (pgnList[i].complete != PACKET_COMPLETE && pgnList[i].pgn < ACTISENSE_BEM)
     {
       explainPGN(pgnList[i]);
     }

@@ -32,6 +32,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>59392</PGN>
       <Id>isoAcknowledgement</Id>
       <Description>ISO Acknowledgement</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -90,6 +91,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>59904</PGN>
       <Id>isoRequest</Id>
       <Description>ISO Request</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -111,7 +113,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>60160</PGN>
       <Id>isoTransportProtocolDataTransfer</Id>
       <Description>ISO Transport Protocol, Data Transfer</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
       <Fields>
@@ -139,7 +142,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>60416</PGN>
       <Id>isoTransportProtocolConnectionManagementRequestToSend</Id>
       <Description>ISO Transport Protocol, Connection Management - Request To Send</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
       <Fields>
@@ -202,7 +206,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>60416</PGN>
       <Id>isoTransportProtocolConnectionManagementClearToSend</Id>
       <Description>ISO Transport Protocol, Connection Management - Clear To Send</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
       <Fields>
@@ -265,7 +270,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>60416</PGN>
       <Id>isoTransportProtocolConnectionManagementEndOfMessage</Id>
       <Description>ISO Transport Protocol, Connection Management - End Of Message</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
       <Fields>
@@ -328,7 +334,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>60416</PGN>
       <Id>isoTransportProtocolConnectionManagementBroadcastAnnounce</Id>
       <Description>ISO Transport Protocol, Connection Management - Broadcast Announce</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
       <Fields>
@@ -391,7 +398,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>60416</PGN>
       <Id>isoTransportProtocolConnectionManagementAbort</Id>
       <Description>ISO Transport Protocol, Connection Management - Abort</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
       <Fields>
@@ -444,6 +452,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>60928</PGN>
       <Id>isoAddressClaim</Id>
       <Description>ISO Address Claim</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -583,7 +592,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>61184</PGN>
       <Id>seatalkWirelessKeypadLightControl</Id>
       <Description>Seatalk: Wireless Keypad Light Control</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -667,7 +682,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>61184</PGN>
       <Id>seatalkWirelessKeypadLightControl</Id>
       <Description>Seatalk: Wireless Keypad Light Control</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -738,7 +759,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>61184</PGN>
       <Id>victronBatteryRegister</Id>
       <Description>Victron Battery Register</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -800,7 +827,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>61184</PGN>
       <Id>manufacturerProprietarySingleFrameAddressed</Id>
       <Description>Manufacturer Proprietary single-frame addressed</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -858,7 +891,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>61440</PGN>
       <Id>unknownSingleFrameNonAddressed</Id>
       <Description>Unknown single-frame non-addressed</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -916,7 +955,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65001</PGN>
       <Id>bus1PhaseCBasicAcQuantities</Id>
       <Description>Bus #1 Phase C Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -957,7 +997,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65002</PGN>
       <Id>bus1PhaseBBasicAcQuantities</Id>
       <Description>Bus #1 Phase B Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -998,7 +1039,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65003</PGN>
       <Id>bus1PhaseABasicAcQuantities</Id>
       <Description>Bus #1 Phase A Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1039,7 +1081,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65004</PGN>
       <Id>bus1AverageBasicAcQuantities</Id>
       <Description>Bus #1 Average Basic AC Quantities</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1080,7 +1128,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65005</PGN>
       <Id>utilityTotalAcEnergy</Id>
       <Description>Utility Total AC Energy</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1110,7 +1162,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65006</PGN>
       <Id>utilityPhaseCAcReactivePower</Id>
       <Description>Utility Phase C AC Reactive Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1155,7 +1208,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65007</PGN>
       <Id>utilityPhaseCAcPower</Id>
       <Description>Utility Phase C AC Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1187,7 +1241,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65008</PGN>
       <Id>utilityPhaseCBasicAcQuantities</Id>
       <Description>Utility Phase C Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1238,7 +1293,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65009</PGN>
       <Id>utilityPhaseBAcReactivePower</Id>
       <Description>Utility Phase B AC Reactive Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1283,7 +1339,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65010</PGN>
       <Id>utilityPhaseBAcPower</Id>
       <Description>Utility Phase B AC Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1315,7 +1372,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65011</PGN>
       <Id>utilityPhaseBBasicAcQuantities</Id>
       <Description>Utility Phase B Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1366,7 +1424,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65012</PGN>
       <Id>utilityPhaseAAcReactivePower</Id>
       <Description>Utility Phase A AC Reactive Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1412,7 +1471,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65013</PGN>
       <Id>utilityPhaseAAcPower</Id>
       <Description>Utility Phase A AC Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1444,7 +1504,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65014</PGN>
       <Id>utilityPhaseABasicAcQuantities</Id>
       <Description>Utility Phase A Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1495,7 +1556,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65015</PGN>
       <Id>utilityTotalAcReactivePower</Id>
       <Description>Utility Total AC Reactive Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1541,7 +1603,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65016</PGN>
       <Id>utilityTotalAcPower</Id>
       <Description>Utility Total AC Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1573,7 +1636,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65017</PGN>
       <Id>utilityAverageBasicAcQuantities</Id>
       <Description>Utility Average Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1624,7 +1688,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65018</PGN>
       <Id>generatorTotalAcEnergy</Id>
       <Description>Generator Total AC Energy</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1654,7 +1722,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65019</PGN>
       <Id>generatorPhaseCAcReactivePower</Id>
       <Description>Generator Phase C AC Reactive Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1700,7 +1769,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65020</PGN>
       <Id>generatorPhaseCAcPower</Id>
       <Description>Generator Phase C AC Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1732,7 +1802,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65021</PGN>
       <Id>generatorPhaseCBasicAcQuantities</Id>
       <Description>Generator Phase C Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1783,7 +1854,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65022</PGN>
       <Id>generatorPhaseBAcReactivePower</Id>
       <Description>Generator Phase B AC Reactive Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1829,7 +1901,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65023</PGN>
       <Id>generatorPhaseBAcPower</Id>
       <Description>Generator Phase B AC Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1861,7 +1934,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65024</PGN>
       <Id>generatorPhaseBBasicAcQuantities</Id>
       <Description>Generator Phase B Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1912,7 +1986,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65025</PGN>
       <Id>generatorPhaseAAcReactivePower</Id>
       <Description>Generator Phase A AC Reactive Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1958,7 +2033,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65026</PGN>
       <Id>generatorPhaseAAcPower</Id>
       <Description>Generator Phase A AC Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1990,7 +2066,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65027</PGN>
       <Id>generatorPhaseABasicAcQuantities</Id>
       <Description>Generator Phase A Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2041,7 +2118,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65028</PGN>
       <Id>generatorTotalAcReactivePower</Id>
       <Description>Generator Total AC Reactive Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2087,7 +2165,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65029</PGN>
       <Id>generatorTotalAcPower</Id>
       <Description>Generator Total AC Power</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2119,7 +2198,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65030</PGN>
       <Id>generatorAverageBasicAcQuantities</Id>
       <Description>Generator Average Basic AC Quantities</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2170,7 +2250,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65240</PGN>
       <Id>isoCommandedAddress</Id>
       <Description>ISO Commanded Address</Description>
-      <Complete>false</Complete>
+      <Type>ISO</Type>
+      <Complete>true</Complete>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2317,7 +2398,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65280</PGN>
       <Id>manufacturerProprietarySingleFrameNonAddressed</Id>
       <Description>Manufacturer Proprietary single-frame non-addressed</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2375,6 +2462,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65285</PGN>
       <Id>airmarBootStateAcknowledgment</Id>
       <Description>Airmar: Boot State Acknowledgment</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -2434,7 +2522,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65285</PGN>
       <Id>lowranceTemperature</Id>
       <Description>Lowrance: Temperature</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2517,7 +2606,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65286</PGN>
       <Id>chetcoDimmer</Id>
       <Description>Chetco: Dimmer</Description>
-      <Complete>true</Complete>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2612,6 +2708,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65286</PGN>
       <Id>airmarBootStateRequest</Id>
       <Description>Airmar: Boot State Request</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -2656,6 +2753,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65287</PGN>
       <Id>airmarAccessLevel</Id>
       <Description>Airmar: Access Level</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -2750,7 +2848,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65287</PGN>
       <Id>simnetConfigureTemperatureSensor</Id>
       <Description>Simnet: Configure Temperature Sensor</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2794,7 +2898,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65288</PGN>
       <Id>seatalkAlarm</Id>
       <Description>Seatalk: Alarm</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3011,7 +3121,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65289</PGN>
       <Id>simnetTrimTabSensorCalibration</Id>
       <Description>Simnet: Trim Tab Sensor Calibration</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3055,7 +3171,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65290</PGN>
       <Id>simnetPaddleWheelSpeedConfiguration</Id>
       <Description>Simnet: Paddle Wheel Speed Configuration</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3099,7 +3221,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65292</PGN>
       <Id>simnetClearFluidLevelWarnings</Id>
       <Description>Simnet: Clear Fluid Level Warnings</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3143,7 +3271,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65293</PGN>
       <Id>simnetLgc2000Configuration</Id>
       <Description>Simnet: LGC-2000 Configuration</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3187,7 +3321,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65309</PGN>
       <Id>navicoWirelessBatteryStatus</Id>
       <Description>Navico: Wireless Battery Status</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3269,7 +3409,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65312</PGN>
       <Id>navicoWirelessSignalStatus</Id>
       <Description>Navico: Wireless Signal Status</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3341,7 +3485,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65325</PGN>
       <Id>simnetReprogramStatus</Id>
       <Description>Simnet: Reprogram Status</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3385,7 +3535,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65341</PGN>
       <Id>simnetAutopilotMode</Id>
       <Description>Simnet: Autopilot Mode</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3429,7 +3585,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65345</PGN>
       <Id>seatalkPilotWindDatum</Id>
       <Description>Seatalk: Pilot Wind Datum</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3504,7 +3666,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65359</PGN>
       <Id>seatalkPilotHeading</Id>
       <Description>Seatalk: Pilot Heading</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3589,7 +3757,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65360</PGN>
       <Id>seatalkPilotLockedHeading</Id>
       <Description>Seatalk: Pilot Locked Heading</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3675,7 +3844,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65361</PGN>
       <Id>seatalkSilenceAlarm</Id>
       <Description>Seatalk: Silence Alarm</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3867,7 +4037,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65371</PGN>
       <Id>seatalkKeypadMessage</Id>
       <Description>Seatalk: Keypad Message</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3975,7 +4151,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65374</PGN>
       <Id>seatalkKeypadHeartbeat</Id>
       <Description>SeaTalk: Keypad Heartbeat</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4046,7 +4228,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65379</PGN>
       <Id>seatalkPilotMode</Id>
       <Description>Seatalk: Pilot Mode</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4130,7 +4318,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65408</PGN>
       <Id>airmarDepthQualityFactor</Id>
       <Description>Airmar: Depth Quality Factor</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4196,6 +4390,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65409</PGN>
       <Id>airmarSpeedPulseCount</Id>
       <Description>Airmar: Speed Pulse Count</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4279,7 +4474,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65410</PGN>
       <Id>airmarDeviceInformation</Id>
       <Description>Airmar: Device Information</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4365,7 +4566,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65480</PGN>
       <Id>simnetAutopilotMode</Id>
       <Description>Simnet: Autopilot Mode</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4409,7 +4616,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>65536</PGN>
       <Id>unknownFastPacketAddressed</Id>
       <Description>Unknown fast-packet addressed</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
+      </Missing>
       <Length>255</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4429,6 +4643,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126208</PGN>
       <Id>nmeaRequestGroupFunction</Id>
       <Description>NMEA - Request group function</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>12</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -4520,6 +4735,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126208</PGN>
       <Id>nmeaCommandGroupFunction</Id>
       <Description>NMEA - Command group function</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -4608,6 +4824,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126208</PGN>
       <Id>nmeaAcknowledgeGroupFunction</Id>
       <Description>NMEA - Acknowledge group function</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
@@ -4707,7 +4924,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126208</PGN>
       <Id>nmeaReadFieldsGroupFunction</Id>
       <Description>NMEA - Read Fields group function</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFieldSet1>2</RepeatingFieldSet1>
       <RepeatingFieldSet2>1</RepeatingFieldSet2>
@@ -4843,6 +5066,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126208</PGN>
       <Id>nmeaReadFieldsReplyGroupFunction</Id>
       <Description>NMEA - Read Fields reply group function</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFieldSet1>2</RepeatingFieldSet1>
@@ -4993,6 +5217,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126208</PGN>
       <Id>nmeaWriteFieldsGroupFunction</Id>
       <Description>NMEA - Write Fields group function</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFieldSet1>2</RepeatingFieldSet1>
@@ -5143,6 +5368,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126208</PGN>
       <Id>nmeaWriteFieldsReplyGroupFunction</Id>
       <Description>NMEA - Write Fields reply group function</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFieldSet1>2</RepeatingFieldSet1>
@@ -5293,7 +5519,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126464</PGN>
       <Id>pgnListTransmitAndReceive</Id>
       <Description>PGN List (Transmit and Receive)</Description>
-      <Complete>false</Complete>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
       <Fields>
@@ -5329,7 +5556,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>seatalk1PilotMode</Id>
       <Description>Seatalk1: Pilot Mode</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>21</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5451,8 +5684,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>fusionMediaControl</Id>
       <Description>Fusion: Media Control</Description>
-      <Complete>true</Complete>
-      <Length>3</Length>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -5546,8 +5785,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>fusionSiriusControl</Id>
       <Description>Fusion: Sirius Control</Description>
-      <Complete>true</Complete>
-      <Length>3</Length>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>7</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -5639,7 +5884,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>fusionRequestStatus</Id>
       <Description>Fusion: Request Status</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5707,7 +5958,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>fusionSetSource</Id>
       <Description>Fusion: Set Source</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5786,7 +6043,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>fusionMute</Id>
       <Description>Fusion: Mute</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5857,7 +6120,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>fusionSetZoneVolume</Id>
       <Description>Fusion: Set Zone Volume</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5947,7 +6216,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>fusionSetAllVolumes</Id>
       <Description>Fusion: Set All Volumes</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -6059,7 +6334,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>seatalk1Keystroke</Id>
       <Description>Seatalk1: Keystroke</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>21</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -6173,7 +6454,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>seatalk1DeviceIndentification</Id>
       <Description>Seatalk1: Device Indentification</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -6266,6 +6553,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarAttitudeOffset</Id>
       <Description>Airmar: Attitude Offset</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6359,7 +6647,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarCalibrateCompass</Id>
       <Description>Airmar: Calibrate Compass</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+      </Missing>
       <Length>24</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -6569,7 +6861,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarTrueWindOptions</Id>
       <Description>Airmar: True Wind Options</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -6776,6 +7074,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarSimulateMode</Id>
       <Description>Airmar: Simulate Mode</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6858,6 +7157,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarCalibrateDepth</Id>
       <Description>Airmar: Calibrate Depth</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6938,6 +7238,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarCalibrateSpeed</Id>
       <Description>Airmar: Calibrate Speed</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>12</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -7029,6 +7330,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarCalibrateTemperature</Id>
       <Description>Airmar: Calibrate Temperature</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>6</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -7135,6 +7437,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarSpeedFilter</Id>
       <Description>Airmar: Speed Filter</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -7239,6 +7542,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarTemperatureFilter</Id>
       <Description>Airmar: Temperature Filter</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -7344,6 +7648,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarNmea2000Options</Id>
       <Description>Airmar: NMEA 2000 options</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>6</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -7428,7 +7733,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>airmarAddressableMultiFrame</Id>
       <Description>Airmar: Addressable Multi-Frame</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>4</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -7483,7 +7794,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>maretronSlaveResponse</Id>
       <Description>Maretron: Slave Response</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Lookups</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -7565,7 +7880,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126720</PGN>
       <Id>manufacturerProprietaryFastPacketAddressed</Id>
       <Description>Manufacturer Proprietary fast-packet addressed</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -7623,7 +7944,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126976</PGN>
       <Id>unknownFastPacketNonAddressed</Id>
       <Description>Unknown fast-packet non-addressed</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>255</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -7643,6 +7970,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126983</PGN>
       <Id>alert</Id>
       <Description>Alert</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>28</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7930,6 +8258,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126984</PGN>
       <Id>alertResponse</Id>
       <Description>Alert Response</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>25</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8079,6 +8408,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126985</PGN>
       <Id>alertText</Id>
       <Description>Alert Text</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>49</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8244,7 +8574,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126986</PGN>
       <Id>alertConfiguration</Id>
       <Description>Alert Configuration</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
     </PGNInfo>
@@ -8252,7 +8588,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126987</PGN>
       <Id>alertThreshold</Id>
       <Description>Alert Threshold</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
     </PGNInfo>
@@ -8260,7 +8602,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126988</PGN>
       <Id>alertValue</Id>
       <Description>Alert Value</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
     </PGNInfo>
@@ -8268,6 +8616,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126992</PGN>
       <Id>systemTime</Id>
       <Description>System Time</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8342,6 +8691,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126993</PGN>
       <Id>heartbeat</Id>
       <Description>Heartbeat</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8386,7 +8736,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126996</PGN>
       <Id>productInformation</Id>
       <Description>Product Information</Description>
-      <Complete>false</Complete>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
       <Length>134</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -8472,6 +8823,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>126998</PGN>
       <Id>configurationInformation</Id>
       <Description>Configuration Information</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>42</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8519,6 +8871,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127233</PGN>
       <Id>manOverboardNotification</Id>
       <Description>Man Overboard Notification</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>35</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8747,7 +9100,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127237</PGN>
       <Id>headingTrackControl</Id>
       <Description>Heading/Track control</Description>
-      <Complete>false</Complete>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
       <Length>21</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -8993,7 +9347,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127245</PGN>
       <Id>rudder</Id>
       <Description>Rudder</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -9054,6 +9409,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127250</PGN>
       <Id>vesselHeading</Id>
       <Description>Vessel Heading</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9133,6 +9489,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127251</PGN>
       <Id>rateOfTurn</Id>
       <Description>Rate of Turn</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>5</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9163,6 +9520,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127257</PGN>
       <Id>attitude</Id>
       <Description>Attitude</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>7</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9215,6 +9573,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127258</PGN>
       <Id>magneticVariation</Id>
       <Description>Magnetic Variation</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9290,6 +9649,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127488</PGN>
       <Id>engineParametersRapidUpdate</Id>
       <Description>Engine Parameters, Rapid Update</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9356,6 +9716,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127489</PGN>
       <Id>engineParametersDynamic</Id>
       <Description>Engine Parameters, Dynamic</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9550,6 +9911,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127493</PGN>
       <Id>transmissionParametersDynamic</Id>
       <Description>Transmission Parameters, Dynamic</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9643,6 +10005,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127496</PGN>
       <Id>tripParametersVessel</Id>
       <Description>Trip Parameters, Vessel</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9696,6 +10059,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127497</PGN>
       <Id>tripParametersEngine</Id>
       <Description>Trip Parameters, Engine</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9763,7 +10127,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127498</PGN>
       <Id>engineParametersStatic</Id>
       <Description>Engine Parameters, Static</Description>
-      <Complete>false</Complete>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
       <Length>52</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -9818,7 +10183,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127500</PGN>
       <Id>loadControllerConnectionStateControl</Id>
       <Description>Load Controller Connection State/Control</Description>
-      <Complete>false</Complete>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -9916,7 +10282,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127501</PGN>
       <Id>binarySwitchBankStatus</Id>
       <Description>Binary Switch Bank Status</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -10355,7 +10722,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127502</PGN>
       <Id>switchBankControl</Id>
       <Description>Switch Bank Control</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -10766,8 +11134,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127503</PGN>
       <Id>acInputStatus</Id>
       <Description>AC Input Status</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>8</Length>
+      <Length>56</Length>
       <RepeatingFields>10</RepeatingFields>
       <Fields>
         <Field>
@@ -10915,8 +11284,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127504</PGN>
       <Id>acOutputStatus</Id>
       <Description>AC Output Status</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
-      <Length>8</Length>
+      <Length>56</Length>
       <RepeatingFields>10</RepeatingFields>
       <Fields>
         <Field>
@@ -10964,8 +11334,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Sine Wave' />
             <EnumPair Value='1' Name='Modified Sine Wave' />
-            <EnumPair Value='6' Name='Error' />
-            <EnumPair Value='7' Name='Data Not Available' />
           </EnumValues>
         </Field>
         <Field>
@@ -11063,6 +11431,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127505</PGN>
       <Id>fluidLevel</Id>
       <Description>Fluid Level</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -11133,7 +11502,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127506</PGN>
       <Id>dcDetailedStatus</Id>
       <Description>DC Detailed Status</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11216,7 +11586,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127507</PGN>
       <Id>chargerStatus</Id>
       <Description>Charger Status</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11329,6 +11700,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127508</PGN>
       <Id>batteryStatus</Id>
       <Description>Battery Status</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -11391,7 +11763,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127509</PGN>
       <Id>inverterStatus</Id>
       <Description>Inverter Status</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>4</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11456,8 +11829,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127510</PGN>
       <Id>chargerConfigurationStatus</Id>
       <Description>Charger Configuration Status</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
-      <Length>8</Length>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -11571,7 +11950,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127511</PGN>
       <Id>inverterConfigurationStatus</Id>
       <Description>Inverter Configuration Status</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11653,7 +12038,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127512</PGN>
       <Id>agsConfigurationStatus</Id>
       <Description>AGS Configuration Status</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11690,7 +12081,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127513</PGN>
       <Id>batteryConfigurationStatus</Id>
       <Description>Battery Configuration Status</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11804,7 +12201,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127514</PGN>
       <Id>agsStatus</Id>
       <Description>AGS Status</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11868,6 +12271,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>128000</PGN>
       <Id>leewayAngle</Id>
       <Description>Leeway Angle</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -11908,8 +12312,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>128259</PGN>
       <Id>speed</Id>
       <Description>Speed</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
-      <Length>6</Length>
+      <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -11969,14 +12374,25 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>12</BitLength>
+          <BitOffset>52</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>128267</PGN>
       <Id>waterDepth</Id>
       <Description>Water Depth</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
-      <Length>5</Length>
+      <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -12030,6 +12446,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>128275</PGN>
       <Id>distanceLog</Id>
       <Description>Distance Log</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -12088,7 +12505,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>128520</PGN>
       <Id>trackedTargetData</Id>
       <Description>Tracked Target Data</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>27</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -12279,6 +12700,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129025</PGN>
       <Id>positionRapidUpdate</Id>
       <Description>Position, Rapid Update</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -12313,6 +12735,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129026</PGN>
       <Id>cogSogRapidUpdate</Id>
       <Description>COG &amp; SOG, Rapid Update</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -12392,7 +12815,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129027</PGN>
       <Id>positionDeltaRapidUpdate</Id>
       <Description>Position Delta, Rapid Update</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -12438,7 +12865,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129028</PGN>
       <Id>altitudeDeltaRapidUpdate</Id>
       <Description>Altitude Delta, Rapid Update</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -12515,6 +12946,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129029</PGN>
       <Id>gnssPositionData</Id>
       <Description>GNSS Position Data</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>51</Length>
       <RepeatingFields>3</RepeatingFields>
@@ -12760,6 +13192,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129033</PGN>
       <Id>timeDate</Id>
       <Description>Time &amp; Date</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -12809,6 +13242,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129038</PGN>
       <Id>aisClassAPositionReport</Id>
       <Description>AIS Class A Position Report</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>28</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -13082,6 +13516,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129039</PGN>
       <Id>aisClassBPositionReport</Id>
       <Description>AIS Class B Position Report</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -13385,6 +13820,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129040</PGN>
       <Id>aisClassBExtendedPositionReport</Id>
       <Description>AIS Class B Extended Position Report</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>33</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -13758,6 +14194,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129041</PGN>
       <Id>aisAidsToNavigationAtonReport</Id>
       <Description>AIS Aids to Navigation (AtoN) Report</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>60</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -14099,6 +14536,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129044</PGN>
       <Id>datum</Id>
       <Description>Datum</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>24</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -14166,6 +14604,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129045</PGN>
       <Id>userDatum</Id>
       <Description>User Datum</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>37</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -14291,8 +14730,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129283</PGN>
       <Id>crossTrackError</Id>
       <Description>Cross Track Error</Description>
-      <Complete>false</Complete>
-      <Length>6</Length>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -14359,12 +14799,24 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
         </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>Reserved</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>129284</PGN>
       <Id>navigationData</Id>
       <Description>Navigation Data</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>34</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -14558,8 +15010,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129285</PGN>
       <Id>navigationRouteWpInformation</Id>
       <Description>Navigation - Route/WP Information</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>8</Length>
+      <Length>233</Length>
       <RepeatingFields>4</RepeatingFields>
       <Fields>
         <Field>
@@ -14697,7 +15150,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129291</PGN>
       <Id>setDriftRapidUpdate</Id>
       <Description>Set &amp; Drift, Rapid Update</Description>
-      <Complete>true</Complete>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14765,7 +15222,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129301</PGN>
       <Id>navigationRouteTimeToFromMark</Id>
       <Description>Navigation - Route / Time to+from Mark</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14833,7 +15297,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129302</PGN>
       <Id>bearingAndDistanceBetweenTwoMarks</Id>
       <Description>Bearing and Distance between two Marks</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14943,8 +15414,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129538</PGN>
       <Id>gnssControlStatus</Id>
       <Description>GNSS Control Status</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
-      <Length>0</Length>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -15073,6 +15551,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129539</PGN>
       <Id>gnssDops</Id>
       <Description>GNSS DOPs</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -15100,9 +15579,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='1' Name='2D' />
             <EnumPair Value='2' Name='3D' />
             <EnumPair Value='3' Name='Auto' />
-            <EnumPair Value='4' Name='Reserved' />
-            <EnumPair Value='5' Name='Reserved' />
-            <EnumPair Value='6' Name='Error' />
           </EnumValues>
         </Field>
         <Field>
@@ -15119,9 +15595,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='1' Name='2D' />
             <EnumPair Value='2' Name='3D' />
             <EnumPair Value='3' Name='Auto' />
-            <EnumPair Value='4' Name='Reserved' />
-            <EnumPair Value='5' Name='Reserved' />
-            <EnumPair Value='6' Name='Error' />
           </EnumValues>
         </Field>
         <Field>
@@ -15174,8 +15647,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129540</PGN>
       <Id>gnssSatsInView</Id>
       <Description>GNSS Sats in View</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>255</Length>
+      <Length>233</Length>
       <RepeatingFields>7</RepeatingFields>
       <Fields>
         <Field>
@@ -15306,7 +15780,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129541</PGN>
       <Id>gpsAlmanacData</Id>
       <Description>GPS Almanac Data</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15433,8 +15913,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129542</PGN>
       <Id>gnssPseudorangeNoiseStatistics</Id>
       <Description>GNSS Pseudorange Noise Statistics</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
-      <Length>8</Length>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -15515,8 +16002,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129545</PGN>
       <Id>gnssRaimOutput</Id>
       <Description>GNSS RAIM Output</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
-      <Length>8</Length>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -15617,7 +16110,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129546</PGN>
       <Id>gnssRaimSettings</Id>
       <Description>GNSS RAIM Settings</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15663,8 +16162,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129547</PGN>
       <Id>gnssPseudorangeErrorStatistics</Id>
       <Description>GNSS Pseudorange Error Statistics</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
-      <Length>8</Length>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -15745,8 +16251,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129549</PGN>
       <Id>dgnssCorrections</Id>
       <Description>DGNSS Corrections</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
-      <Length>8</Length>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -15855,7 +16368,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129550</PGN>
       <Id>gnssDifferentialCorrectionReceiverInterface</Id>
       <Description>GNSS Differential Correction Receiver Interface</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15919,7 +16439,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129551</PGN>
       <Id>gnssDifferentialCorrectionReceiverSignal</Id>
       <Description>GNSS Differential Correction Receiver Signal</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -16057,7 +16584,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129556</PGN>
       <Id>glonassAlmanacData</Id>
       <Description>GLONASS Almanac Data</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -16184,7 +16718,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129792</PGN>
       <Id>aisDgnssBroadcastBinaryMessage</Id>
       <Description>AIS DGNSS Broadcast Binary Message</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -16192,7 +16733,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>1</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
@@ -16201,18 +16742,19 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>2</Order>
           <Id>repeatIndicator</Id>
           <Name>Repeat Indicator</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>2</BitLength>
+          <BitOffset>6</BitOffset>
+          <BitStart>6</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+          <Units>MMSI</Units>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -16220,7 +16762,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>nmea2000Reserved</Id>
           <Name>NMEA 2000 Reserved</Name>
           <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
@@ -16230,7 +16772,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>aisTranceiverInformation</Id>
           <Name>AIS Tranceiver Information</Name>
           <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
@@ -16239,7 +16781,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>spare</Id>
           <Name>Spare</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
@@ -16247,8 +16789,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>7</Order>
           <Id>longitude</Id>
           <Name>Longitude</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
@@ -16256,8 +16798,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>8</Order>
           <Id>latitude</Id>
           <Name>Latitude</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
@@ -16266,7 +16808,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>nmea2000Reserved</Id>
           <Name>NMEA 2000 Reserved</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
@@ -16276,7 +16818,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>spare</Id>
           <Name>Spare</Name>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
@@ -16285,7 +16827,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>numberOfBitsInBinaryDataField</Id>
           <Name>Number of Bits in Binary Data Field</Name>
           <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
+          <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
@@ -16294,7 +16836,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
           <BitLength>64</BitLength>
-          <BitOffset>88</BitOffset>
+          <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
@@ -16305,7 +16847,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129793</PGN>
       <Id>aisUtcAndDateReport</Id>
       <Description>AIS UTC and Date Report</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -16512,6 +17060,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129794</PGN>
       <Id>aisClassAStaticAndVoyageRelatedData</Id>
       <Description>AIS Class A Static and Voyage Related Data</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>24</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -16818,6 +17367,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129795</PGN>
       <Id>aisAddressedBinaryMessage</Id>
       <Description>AIS Addressed Binary Message</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -16967,6 +17517,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129796</PGN>
       <Id>aisAcknowledge</Id>
       <Description>AIS Acknowledge</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -17094,8 +17645,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129797</PGN>
       <Id>aisBinaryBroadcastMessage</Id>
       <Description>AIS Binary Broadcast Message</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>8</Length>
+      <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -17197,7 +17749,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129798</PGN>
       <Id>aisSarAircraftPositionReport</Id>
       <Description>AIS SAR Aircraft Position Report</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -17410,7 +17969,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129799</PGN>
       <Id>radioFrequencyModePower</Id>
       <Description>Radio Frequency/Mode/Power</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -17478,7 +18043,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129800</PGN>
       <Id>aisUtcDateInquiry</Id>
       <Description>AIS UTC/Date Inquiry</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -17582,7 +18153,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129801</PGN>
       <Id>aisAddressedSafetyRelatedMessage</Id>
       <Description>AIS Addressed Safety Related Message</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -17615,7 +18192,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>3</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
-          <BitLength>32</BitLength>
+          <BitLength>30</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>MMSI</Units>
@@ -17626,9 +18203,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <Description>reserved</Description>
-          <BitLength>1</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>2</BitLength>
+          <BitOffset>38</BitOffset>
+          <BitStart>6</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -17637,8 +18214,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>aisTransceiverInformation</Id>
           <Name>AIS Transceiver information</Name>
           <BitLength>5</BitLength>
-          <BitOffset>41</BitOffset>
-          <BitStart>1</BitStart>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues>
@@ -17655,17 +18232,17 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>sequenceNumber</Id>
           <Name>Sequence Number</Name>
           <BitLength>2</BitLength>
-          <BitOffset>46</BitOffset>
-          <BitStart>6</BitStart>
+          <BitOffset>45</BitOffset>
+          <BitStart>5</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>destinationId</Id>
           <Name>Destination ID</Name>
-          <BitLength>32</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>30</BitLength>
+          <BitOffset>47</BitOffset>
+          <BitStart>7</BitStart>
           <Units>MMSI</Units>
           <Signed>false</Signed>
         </Field>
@@ -17674,9 +18251,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <Description>reserved</Description>
-          <BitLength>6</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>2</BitLength>
+          <BitOffset>77</BitOffset>
+          <BitStart>5</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -17685,8 +18262,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>retransmitFlag</Id>
           <Name>Retransmit flag</Name>
           <BitLength>1</BitLength>
-          <BitOffset>86</BitOffset>
-          <BitStart>6</BitStart>
+          <BitOffset>79</BitOffset>
+          <BitStart>7</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -17694,9 +18271,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <Description>reserved</Description>
-          <BitLength>1</BitLength>
-          <BitOffset>87</BitOffset>
-          <BitStart>7</BitStart>
+          <BitLength>7</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -17705,8 +18282,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>safetyRelatedText</Id>
           <Name>Safety Related Text</Name>
           <BitLength>2040</BitLength>
-          <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>87</BitOffset>
+          <BitStart>7</BitStart>
                  <Type>ASCII text</Type>
           <Signed>false</Signed>
         </Field>
@@ -17716,7 +18293,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129802</PGN>
       <Id>aisSafetyRelatedBroadcastMessage</Id>
       <Description>AIS Safety Related Broadcast Message</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -17812,7 +18395,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129803</PGN>
       <Id>aisInterrogation</Id>
       <Description>AIS Interrogation</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>8</RepeatingFields>
       <Fields>
@@ -17986,7 +18575,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129804</PGN>
       <Id>aisAssignmentModeCommand</Id>
       <Description>AIS Assignment Mode Command</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>23</Length>
       <RepeatingFields>3</RepeatingFields>
       <Fields>
@@ -18019,7 +18615,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>3</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
-          <BitLength>32</BitLength>
+          <BitLength>30</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>MMSI</Units>
@@ -18032,9 +18628,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <Description>reserved</Description>
-          <BitLength>1</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>2</BitLength>
+          <BitOffset>38</BitOffset>
+          <BitStart>6</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -18043,8 +18639,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>aisTransceiverInformation</Id>
           <Name>AIS Transceiver information</Name>
           <BitLength>5</BitLength>
-          <BitOffset>41</BitOffset>
-          <BitStart>1</BitStart>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues>
@@ -18061,9 +18657,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <Description>reserved</Description>
-          <BitLength>2</BitLength>
-          <BitOffset>46</BitOffset>
-          <BitStart>6</BitStart>
+          <BitLength>3</BitLength>
+          <BitOffset>45</BitOffset>
+          <BitStart>5</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -18107,7 +18703,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129805</PGN>
       <Id>aisDataLinkManagementMessage</Id>
       <Description>AIS Data Link Management Message</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>4</RepeatingFields>
       <Fields>
@@ -18237,7 +18839,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129806</PGN>
       <Id>aisChannelManagement</Id>
       <Description>AIS Channel Management</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -18483,7 +19091,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129807</PGN>
       <Id>aisClassBGroupAssignment</Id>
       <Description>AIS Class B Group Assignment</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -18608,7 +19222,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>11</Order>
           <Id>stationType</Id>
           <Name>Station Type</Name>
-          <BitLength>8</BitLength>
+          <BitLength>6</BitLength>
           <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
@@ -18619,8 +19233,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Name>Reserved</Name>
           <Description>reserved</Description>
           <BitLength>2</BitLength>
-          <BitOffset>184</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>182</BitOffset>
+          <BitStart>6</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -18629,8 +19243,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>shipAndCargoFilter</Id>
           <Name>Ship and Cargo Filter</Name>
           <BitLength>6</BitLength>
-          <BitOffset>186</BitOffset>
-          <BitStart>2</BitStart>
+          <BitOffset>184</BitOffset>
+          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -18639,8 +19253,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Name>Reserved</Name>
           <Description>reserved</Description>
           <BitLength>2</BitLength>
-          <BitOffset>192</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>190</BitOffset>
+          <BitStart>6</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -18649,8 +19263,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>reportingInterval</Id>
           <Name>Reporting Interval</Name>
           <BitLength>16</BitLength>
-          <BitOffset>194</BitOffset>
-          <BitStart>2</BitStart>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -18658,8 +19272,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Id>quietTime</Id>
           <Name>Quiet Time</Name>
           <BitLength>16</BitLength>
-          <BitOffset>210</BitOffset>
-          <BitStart>2</BitStart>
+          <BitOffset>208</BitOffset>
+          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -18668,7 +19282,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129808</PGN>
       <Id>dscDistressCallInformation</Id>
       <Description>DSC Distress Call Information</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -18956,7 +19577,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129808</PGN>
       <Id>dscCallInformation</Id>
       <Description>DSC Call Information</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -19250,6 +19878,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129809</PGN>
       <Id>aisClassBStaticDataMsg24PartA</Id>
       <Description>AIS Class B static data (msg 24 Part A)</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>27</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -19347,6 +19976,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>129810</PGN>
       <Id>aisClassBStaticDataMsg24PartB</Id>
       <Description>AIS Class B static data (msg 24 Part B)</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>34</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -19592,7 +20222,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130060</PGN>
       <Id>label</Id>
       <Description>Label</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
     </PGNInfo>
@@ -19600,7 +20237,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130061</PGN>
       <Id>channelSourceConfiguration</Id>
       <Description>Channel Source Configuration</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
     </PGNInfo>
@@ -19608,7 +20252,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130064</PGN>
       <Id>routeAndWpServiceDatabaseList</Id>
       <Description>Route and WP Service - Database List</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>9</RepeatingFields>
       <Fields>
@@ -19737,7 +20388,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130065</PGN>
       <Id>routeAndWpServiceRouteList</Id>
       <Description>Route and WP Service - Route List</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>6</RepeatingFields>
       <Fields>
@@ -19831,7 +20489,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130066</PGN>
       <Id>routeAndWpServiceRouteWpListAttributes</Id>
       <Description>Route and WP Service - Route/WP-List Attributes</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -19958,7 +20623,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130067</PGN>
       <Id>routeAndWpServiceRouteWpNamePosition</Id>
       <Description>Route and WP Service - Route - WP Name &amp; Position</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>4</RepeatingFields>
       <Fields>
@@ -20056,7 +20728,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130068</PGN>
       <Id>routeAndWpServiceRouteWpName</Id>
       <Description>Route and WP Service - Route - WP Name</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -20130,7 +20809,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130069</PGN>
       <Id>routeAndWpServiceXteLimitNavigationMethod</Id>
       <Description>Route and WP Service - XTE Limit &amp; Navigation Method</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>6</RepeatingFields>
       <Fields>
@@ -20222,7 +20908,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130070</PGN>
       <Id>routeAndWpServiceWpComment</Id>
       <Description>Route and WP Service - WP Comment</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -20296,7 +20989,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130071</PGN>
       <Id>routeAndWpServiceRouteComment</Id>
       <Description>Route and WP Service - Route Comment</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -20361,7 +21061,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130072</PGN>
       <Id>routeAndWpServiceDatabaseComment</Id>
       <Description>Route and WP Service - Database Comment</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -20417,7 +21124,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130073</PGN>
       <Id>routeAndWpServiceRadiusOfTurn</Id>
       <Description>Route and WP Service - Radius of Turn</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -20490,7 +21204,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130074</PGN>
       <Id>routeAndWpServiceWpListWpNamePosition</Id>
       <Description>Route and WP Service - WP List - WP Name &amp; Position</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>4</RepeatingFields>
       <Fields>
@@ -20590,6 +21311,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130306</PGN>
       <Id>windData</Id>
       <Description>Wind Data</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -20658,6 +21380,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130310</PGN>
       <Id>environmentalParameters</Id>
       <Description>Environmental Parameters</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -20722,6 +21445,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130311</PGN>
       <Id>environmentalParameters</Id>
       <Description>Environmental Parameters</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -20816,6 +21540,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130312</PGN>
       <Id>temperature</Id>
       <Description>Temperature</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -20895,6 +21620,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130313</PGN>
       <Id>humidity</Id>
       <Description>Humidity</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -20959,7 +21685,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130314</PGN>
       <Id>actualPressure</Id>
       <Description>Actual Pressure</Description>
-      <Complete>false</Complete>
+      <Type>Single</Type>
+      <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -21016,6 +21743,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130315</PGN>
       <Id>setPressure</Id>
       <Description>Set Pressure</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -21073,6 +21801,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130316</PGN>
       <Id>temperatureExtendedRange</Id>
       <Description>Temperature Extended Range</Description>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -21152,6 +21881,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130320</PGN>
       <Id>tideStationData</Id>
       <Description>Tide Station Data</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>20</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -21296,7 +22026,11 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130321</PGN>
       <Id>salinityStationData</Id>
       <Description>Salinity Station Data</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>22</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -21427,7 +22161,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130322</PGN>
       <Id>currentStationData</Id>
       <Description>Current Station Data</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -21572,7 +22313,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130323</PGN>
       <Id>meteorologicalStationData</Id>
       <Description>Meteorological Station Data</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>30</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -21756,7 +22504,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130324</PGN>
       <Id>mooredBuoyStationData</Id>
       <Description>Moored Buoy Station Data</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -21970,7 +22725,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130560</PGN>
       <Id>payloadMass</Id>
       <Description>Payload Mass</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
     </PGNInfo>
@@ -21978,6 +22740,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130567</PGN>
       <Id>watermakerInputSettingAndStatus</Id>
       <Description>Watermaker Input Setting and Status</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>24</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -22303,7 +23066,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130569</PGN>
       <Id>currentStatusAndFile</Id>
       <Description>Current Status and File</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -22576,7 +23346,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130570</PGN>
       <Id>libraryDataFile</Id>
       <Description>Library Data File</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -22812,7 +23589,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130571</PGN>
       <Id>libraryDataGroup</Id>
       <Description>Library Data Group</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>233</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -22973,7 +23757,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130572</PGN>
       <Id>libraryDataSearch</Id>
       <Description>Library Data Search</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -23139,7 +23930,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130573</PGN>
       <Id>supportedSourceData</Id>
       <Description>Supported Source Data</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>233</Length>
       <RepeatingFields>10</RepeatingFields>
       <Fields>
@@ -23371,7 +24169,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130574</PGN>
       <Id>supportedZoneData</Id>
       <Description>Supported Zone Data</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>233</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -23444,7 +24249,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130576</PGN>
       <Id>smallCraftStatus</Id>
       <Description>Small Craft Status</Description>
-      <Complete>true</Complete>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>2</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -23472,7 +24284,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130577</PGN>
       <Id>directionData</Id>
       <Description>Direction Data</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -23601,6 +24420,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130578</PGN>
       <Id>vesselSpeedComponents</Id>
       <Description>Vessel Speed Components</Description>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -23677,7 +24497,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130579</PGN>
       <Id>systemConfiguration</Id>
       <Description>System Configuration</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -23774,7 +24599,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130580</PGN>
       <Id>systemConfigurationDeprecated</Id>
       <Description>System Configuration (deprecated)</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>2</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -23846,7 +24676,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130581</PGN>
       <Id>zoneConfigurationDeprecated</Id>
       <Description>Zone Configuration (deprecated)</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>14</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -23919,7 +24754,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130582</PGN>
       <Id>zoneVolume</Id>
       <Description>Zone Volume</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>4</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -24025,7 +24865,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130583</PGN>
       <Id>availableAudioEqPresets</Id>
       <Description>Available Audio EQ presets</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>233</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -24102,7 +24947,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130584</PGN>
       <Id>availableBluetoothAddresses</Id>
       <Description>Available Bluetooth addresses</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>233</Length>
       <RepeatingFields>3</RepeatingFields>
       <Fields>
@@ -24193,7 +25043,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130585</PGN>
       <Id>bluetoothSourceStatus</Id>
       <Description>Bluetooth source status</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -24273,7 +25128,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130586</PGN>
       <Id>zoneConfiguration</Id>
       <Description>Zone Configuration</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>14</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -24473,7 +25333,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubInit2</Id>
       <Description>SonicHub: Init #2</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -24575,7 +25442,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubAmRadio</Id>
       <Description>SonicHub: AM Radio</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -24719,7 +25593,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubZoneInfo</Id>
       <Description>SonicHub: Zone info</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -24810,7 +25690,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubSource</Id>
       <Description>SonicHub: Source</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -24909,7 +25795,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubSourceList</Id>
       <Description>SonicHub: Source List</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -25021,7 +25913,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubControl</Id>
       <Description>SonicHub: Control</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -25115,7 +26013,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubUnknown</Id>
       <Description>SonicHub: Unknown</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -25217,7 +26121,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubFmRadio</Id>
       <Description>SonicHub: FM Radio</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -25361,7 +26271,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubPlaylist</Id>
       <Description>SonicHub: Playlist</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -25511,7 +26427,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubTrack</Id>
       <Description>SonicHub: Track</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -25612,7 +26534,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubArtist</Id>
       <Description>SonicHub: Artist</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -25713,7 +26641,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubAlbum</Id>
       <Description>SonicHub: Album</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -25814,7 +26748,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubMenuItem</Id>
       <Description>SonicHub: Menu Item</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -25942,7 +26882,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubZones</Id>
       <Description>SonicHub: Zones</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26033,7 +26979,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubMaxVolume</Id>
       <Description>SonicHub: Max Volume</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26139,8 +27091,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubVolume</Id>
       <Description>SonicHub: Volume</Description>
-      <Complete>false</Complete>
-      <Length>64</Length>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -26245,7 +27198,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubInit1</Id>
       <Description>SonicHub: Init #1</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26325,7 +27284,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubPosition</Id>
       <Description>SonicHub: Position</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26416,7 +27381,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>sonichubInit3</Id>
       <Description>SonicHub: Init #3</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26518,7 +27490,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>simradTextMessage</Id>
       <Description>Simrad: Text Message</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26639,7 +27617,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130816</PGN>
       <Id>manufacturerProprietaryFastPacketNonAddressed</Id>
       <Description>Manufacturer Proprietary fast-packet non-addressed</Description>
-      <Complete>true</Complete>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26697,7 +27681,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130817</PGN>
       <Id>navicoProductInformation</Id>
       <Description>Navico: Product Information</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26819,7 +27809,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130818</PGN>
       <Id>simnetReprogramData</Id>
       <Description>Simnet: Reprogram Data</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26883,7 +27879,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>6</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>1992</BitLength>
+          <BitLength>1736</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
                  <Type>Binary data</Type>
@@ -26895,7 +27891,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130819</PGN>
       <Id>simnetRequestReprogram</Id>
       <Description>Simnet: Request Reprogram</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26939,7 +27940,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>simnetReprogramStatus</Id>
       <Description>Simnet: Reprogram Status</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27012,7 +28018,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>furunoUnknown</Id>
       <Description>Furuno: Unknown</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27101,7 +28113,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionSourceName</Id>
       <Description>Fusion: Source Name</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27211,7 +28229,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionTrackInfo</Id>
       <Description>Fusion: Track Info</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27372,7 +28396,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionTrack</Id>
       <Description>Fusion: Track</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27455,7 +28485,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionArtist</Id>
       <Description>Fusion: Artist</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27538,7 +28574,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionAlbum</Id>
       <Description>Fusion: Album</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27621,7 +28663,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionUnitName</Id>
       <Description>Fusion: Unit Name</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27695,7 +28743,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionZoneName</Id>
       <Description>Fusion: Zone Name</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27778,7 +28832,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionPlayProgress</Id>
       <Description>Fusion: Play Progress</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27862,7 +28922,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionAmFmStation</Id>
       <Description>Fusion: AM/FM Station</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -27979,7 +29045,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionVhf</Id>
       <Description>Fusion: VHF</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28070,7 +29142,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionSquelch</Id>
       <Description>Fusion: Squelch</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28152,7 +29230,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionScan</Id>
       <Description>Fusion: Scan</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28239,7 +29323,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionMenuItem</Id>
       <Description>Fusion: Menu Item</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28376,7 +29466,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionReplay</Id>
       <Description>Fusion: Replay</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28525,7 +29621,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionMute</Id>
       <Description>Fusion: Mute</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>5</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28603,7 +29705,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionSubVolume</Id>
       <Description>Fusion: Sub Volume</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28707,7 +29815,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionTone</Id>
       <Description>Fusion: Tone</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28810,7 +29925,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionVolume</Id>
       <Description>Fusion: Volume</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28914,7 +30036,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionTransport</Id>
       <Description>Fusion: Transport</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>5</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28992,7 +30121,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionSiriusxmChannel</Id>
       <Description>Fusion: SiriusXM Channel</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29066,7 +30202,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionSiriusxmTitle</Id>
       <Description>Fusion: SiriusXM Title</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29140,7 +30283,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionSiriusxmArtist</Id>
       <Description>Fusion: SiriusXM Artist</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29214,7 +30364,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130820</PGN>
       <Id>fusionSiriusxmGenre</Id>
       <Description>Fusion: SiriusXM Genre</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29288,7 +30445,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130821</PGN>
       <Id>furunoUnknown</Id>
       <Description>Furuno: Unknown</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29422,7 +30585,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130824</PGN>
       <Id>bGWindData</Id>
       <Description>B&amp;G: Wind data</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29494,7 +30663,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130824</PGN>
       <Id>maretronAnnunciator</Id>
       <Description>Maretron: Annunciator</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29583,7 +30758,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130827</PGN>
       <Id>lowranceUnknown</Id>
       <Description>Lowrance: unknown</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29681,7 +30863,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130828</PGN>
       <Id>simnetSetSerialNumber</Id>
       <Description>Simnet: Set Serial Number</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29725,7 +30914,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130831</PGN>
       <Id>suzukiEngineAndStorageDeviceConfig</Id>
       <Description>Suzuki: Engine and Storage Device Config</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29767,7 +30962,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130832</PGN>
       <Id>simnetFuelUsedHighResolution</Id>
       <Description>Simnet: Fuel Used - High Resolution</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29811,7 +31013,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130834</PGN>
       <Id>simnetEngineAndTankConfiguration</Id>
       <Description>Simnet: Engine and Tank Configuration</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29855,7 +31064,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130835</PGN>
       <Id>simnetSetEngineAndTankConfiguration</Id>
       <Description>Simnet: Set Engine and Tank Configuration</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -29899,7 +31115,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130836</PGN>
       <Id>simnetFluidLevelSensorConfiguration</Id>
       <Description>Simnet: Fluid Level Sensor Configuration</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30036,7 +31258,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130837</PGN>
       <Id>simnetFuelFlowTurbineConfiguration</Id>
       <Description>Simnet: Fuel Flow Turbine Configuration</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30080,7 +31309,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130838</PGN>
       <Id>simnetFluidLevelWarning</Id>
       <Description>Simnet: Fluid Level Warning</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30124,7 +31360,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130839</PGN>
       <Id>simnetPressureSensorConfiguration</Id>
       <Description>Simnet: Pressure Sensor Configuration</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30168,7 +31411,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130840</PGN>
       <Id>simnetDataUserGroupConfiguration</Id>
       <Description>Simnet: Data User Group Configuration</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30212,7 +31462,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130842</PGN>
       <Id>simnetAisClassBStaticDataMsg24PartA</Id>
       <Description>Simnet: AIS Class B static data (msg 24 Part A)</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>29</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30323,7 +31580,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130842</PGN>
       <Id>simnetAisClassBStaticDataMsg24PartB</Id>
       <Description>Simnet: AIS Class B static data (msg 24 Part B)</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>37</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30582,7 +31845,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130843</PGN>
       <Id>simnetSonarStatusFrequencyAndDspVoltage</Id>
       <Description>Simnet: Sonar Status, Frequency and DSP Voltage</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30626,7 +31896,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130845</PGN>
       <Id>simnetCompassHeadingOffset</Id>
       <Description>Simnet: Compass Heading Offset</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30746,7 +32022,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130845</PGN>
       <Id>simnetCompassLocalField</Id>
       <Description>Simnet: Compass Local Field</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30866,7 +32149,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130845</PGN>
       <Id>simnetCompassFieldAngle</Id>
       <Description>Simnet: Compass Field Angle</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -30985,7 +32275,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130845</PGN>
       <Id>simnetParameterHandle</Id>
       <Description>Simnet: Parameter Handle</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -31149,7 +32446,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130847</PGN>
       <Id>seatalkNodeStatistics</Id>
       <Description>SeaTalk: Node Statistics</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -31236,7 +32540,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130850</PGN>
       <Id>simnetEventCommandApCommand</Id>
       <Description>Simnet: Event Command: AP command</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -31374,7 +32684,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130850</PGN>
       <Id>simnetEventCommandAlarm</Id>
       <Description>Simnet: Event Command: Alarm?</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -31491,7 +32807,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130850</PGN>
       <Id>simnetEventCommandUnknown</Id>
       <Description>Simnet: Event Command: Unknown</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -31592,7 +32914,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130851</PGN>
       <Id>simnetEventReplyApCommand</Id>
       <Description>Simnet: Event Reply: AP command</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -31727,7 +33055,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130856</PGN>
       <Id>simnetAlarmMessage</Id>
       <Description>Simnet: Alarm Message</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -31808,7 +33143,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130880</PGN>
       <Id>airmarAdditionalWeatherData</Id>
       <Description>Airmar: Additional Weather Data</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>30</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -31897,7 +33239,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130881</PGN>
       <Id>airmarHeaterControl</Id>
       <Description>Airmar: Heater Control</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -31986,7 +33335,14 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>130944</PGN>
       <Id>airmarPost</Id>
       <Description>Airmar: POST</Description>
+      <Type>Fast</Type>
       <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>

@@ -9,6 +9,7 @@
         "PGN":59392,
         "Id":"isoAcknowledgement",
         "Description":"ISO Acknowledgement",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -60,6 +61,7 @@
         "PGN":59904,
         "Id":"isoRequest",
         "Description":"ISO Request",
+        "Type":"Single",
         "Complete":true,
         "Length":3,
         "RepeatingFields":0,
@@ -78,7 +80,8 @@
         "PGN":60160,
         "Id":"isoTransportProtocolDataTransfer",
         "Description":"ISO Transport Protocol, Data Transfer",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":1,
         "Fields":[
@@ -102,7 +105,8 @@
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementRequestToSend",
         "Description":"ISO Transport Protocol, Connection Management - Request To Send",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":1,
         "Fields":[
@@ -158,7 +162,8 @@
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementClearToSend",
         "Description":"ISO Transport Protocol, Connection Management - Clear To Send",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":1,
         "Fields":[
@@ -214,7 +219,8 @@
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementEndOfMessage",
         "Description":"ISO Transport Protocol, Connection Management - End Of Message",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":1,
         "Fields":[
@@ -270,7 +276,8 @@
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementBroadcastAnnounce",
         "Description":"ISO Transport Protocol, Connection Management - Broadcast Announce",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":1,
         "Fields":[
@@ -326,7 +333,8 @@
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementAbort",
         "Description":"ISO Transport Protocol, Connection Management - Abort",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":1,
         "Fields":[
@@ -373,6 +381,7 @@
         "PGN":60928,
         "Id":"isoAddressClaim",
         "Description":"ISO Address Claim",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -498,7 +507,12 @@
         "PGN":61184,
         "Id":"seatalkWirelessKeypadLightControl",
         "Description":"Seatalk: Wireless Keypad Light Control",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -573,7 +587,12 @@
         "PGN":61184,
         "Id":"seatalkWirelessKeypadLightControl",
         "Description":"Seatalk: Wireless Keypad Light Control",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -636,7 +655,12 @@
         "PGN":61184,
         "Id":"victronBatteryRegister",
         "Description":"Victron Battery Register",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -691,7 +715,12 @@
         "PGN":61184,
         "Id":"manufacturerProprietarySingleFrameAddressed",
         "Description":"Manufacturer Proprietary single-frame addressed",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -742,7 +771,12 @@
         "PGN":61440,
         "Id":"unknownSingleFrameNonAddressed",
         "Description":"Unknown single-frame non-addressed",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -793,7 +827,8 @@
         "PGN":65001,
         "Id":"bus1PhaseCBasicAcQuantities",
         "Description":"Bus #1 Phase C Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -829,7 +864,8 @@
         "PGN":65002,
         "Id":"bus1PhaseBBasicAcQuantities",
         "Description":"Bus #1 Phase B Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -865,7 +901,8 @@
         "PGN":65003,
         "Id":"bus1PhaseABasicAcQuantities",
         "Description":"Bus #1 Phase A Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -901,7 +938,12 @@
         "PGN":65004,
         "Id":"bus1AverageBasicAcQuantities",
         "Description":"Bus #1 Average Basic AC Quantities",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -937,7 +979,9 @@
         "PGN":65005,
         "Id":"utilityTotalAcEnergy",
         "Description":"Utility Total AC Energy",
+        "Type":"Single",
         "Complete":false,
+        "Missing":["Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -963,7 +1007,8 @@
         "PGN":65006,
         "Id":"utilityPhaseCAcReactivePower",
         "Description":"Utility Phase C AC Reactive Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1002,7 +1047,8 @@
         "PGN":65007,
         "Id":"utilityPhaseCAcPower",
         "Description":"Utility Phase C AC Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1030,7 +1076,8 @@
         "PGN":65008,
         "Id":"utilityPhaseCBasicAcQuantities",
         "Description":"Utility Phase C Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1075,7 +1122,8 @@
         "PGN":65009,
         "Id":"utilityPhaseBAcReactivePower",
         "Description":"Utility Phase B AC Reactive Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1114,7 +1162,8 @@
         "PGN":65010,
         "Id":"utilityPhaseBAcPower",
         "Description":"Utility Phase B AC Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1142,7 +1191,8 @@
         "PGN":65011,
         "Id":"utilityPhaseBBasicAcQuantities",
         "Description":"Utility Phase B Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1187,7 +1237,8 @@
         "PGN":65012,
         "Id":"utilityPhaseAAcReactivePower",
         "Description":"Utility Phase A AC Reactive Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1227,7 +1278,8 @@
         "PGN":65013,
         "Id":"utilityPhaseAAcPower",
         "Description":"Utility Phase A AC Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1255,7 +1307,8 @@
         "PGN":65014,
         "Id":"utilityPhaseABasicAcQuantities",
         "Description":"Utility Phase A Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1300,7 +1353,8 @@
         "PGN":65015,
         "Id":"utilityTotalAcReactivePower",
         "Description":"Utility Total AC Reactive Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1340,7 +1394,8 @@
         "PGN":65016,
         "Id":"utilityTotalAcPower",
         "Description":"Utility Total AC Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1368,7 +1423,8 @@
         "PGN":65017,
         "Id":"utilityAverageBasicAcQuantities",
         "Description":"Utility Average Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1413,7 +1469,9 @@
         "PGN":65018,
         "Id":"generatorTotalAcEnergy",
         "Description":"Generator Total AC Energy",
+        "Type":"Single",
         "Complete":false,
+        "Missing":["Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1439,7 +1497,8 @@
         "PGN":65019,
         "Id":"generatorPhaseCAcReactivePower",
         "Description":"Generator Phase C AC Reactive Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1479,7 +1538,8 @@
         "PGN":65020,
         "Id":"generatorPhaseCAcPower",
         "Description":"Generator Phase C AC Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1507,7 +1567,8 @@
         "PGN":65021,
         "Id":"generatorPhaseCBasicAcQuantities",
         "Description":"Generator Phase C Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1552,7 +1613,8 @@
         "PGN":65022,
         "Id":"generatorPhaseBAcReactivePower",
         "Description":"Generator Phase B AC Reactive Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1592,7 +1654,8 @@
         "PGN":65023,
         "Id":"generatorPhaseBAcPower",
         "Description":"Generator Phase B AC Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1620,7 +1683,8 @@
         "PGN":65024,
         "Id":"generatorPhaseBBasicAcQuantities",
         "Description":"Generator Phase B Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1665,7 +1729,8 @@
         "PGN":65025,
         "Id":"generatorPhaseAAcReactivePower",
         "Description":"Generator Phase A AC Reactive Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1705,7 +1770,8 @@
         "PGN":65026,
         "Id":"generatorPhaseAAcPower",
         "Description":"Generator Phase A AC Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1733,7 +1799,8 @@
         "PGN":65027,
         "Id":"generatorPhaseABasicAcQuantities",
         "Description":"Generator Phase A Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1778,7 +1845,8 @@
         "PGN":65028,
         "Id":"generatorTotalAcReactivePower",
         "Description":"Generator Total AC Reactive Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1818,7 +1886,8 @@
         "PGN":65029,
         "Id":"generatorTotalAcPower",
         "Description":"Generator Total AC Power",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1846,7 +1915,8 @@
         "PGN":65030,
         "Id":"generatorAverageBasicAcQuantities",
         "Description":"Generator Average Basic AC Quantities",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1891,7 +1961,8 @@
         "PGN":65240,
         "Id":"isoCommandedAddress",
         "Description":"ISO Commanded Address",
-        "Complete":false,
+        "Type":"ISO",
+        "Complete":true,
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -2023,7 +2094,12 @@
         "PGN":65280,
         "Id":"manufacturerProprietarySingleFrameNonAddressed",
         "Description":"Manufacturer Proprietary single-frame non-addressed",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2074,6 +2150,7 @@
         "PGN":65285,
         "Id":"airmarBootStateAcknowledgment",
         "Description":"Airmar: Boot State Acknowledgment",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -2126,7 +2203,8 @@
         "PGN":65285,
         "Id":"lowranceTemperature",
         "Description":"Lowrance: Temperature",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2201,7 +2279,13 @@
         "PGN":65286,
         "Id":"chetcoDimmer",
         "Description":"Chetco: Dimmer",
-        "Complete":true,
+        "Type":"Single",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "Lookups"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2285,6 +2369,7 @@
         "PGN":65286,
         "Id":"airmarBootStateRequest",
         "Description":"Airmar: Boot State Request",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -2324,6 +2409,7 @@
         "PGN":65287,
         "Id":"airmarAccessLevel",
         "Description":"Airmar: Access Level",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -2407,7 +2493,12 @@
         "PGN":65287,
         "Id":"simnetConfigureTemperatureSensor",
         "Description":"Simnet: Configure Temperature Sensor",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2446,7 +2537,12 @@
         "PGN":65288,
         "Id":"seatalkAlarm",
         "Description":"Seatalk: Alarm",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2650,7 +2746,12 @@
         "PGN":65289,
         "Id":"simnetTrimTabSensorCalibration",
         "Description":"Simnet: Trim Tab Sensor Calibration",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2689,7 +2790,12 @@
         "PGN":65290,
         "Id":"simnetPaddleWheelSpeedConfiguration",
         "Description":"Simnet: Paddle Wheel Speed Configuration",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2728,7 +2834,12 @@
         "PGN":65292,
         "Id":"simnetClearFluidLevelWarnings",
         "Description":"Simnet: Clear Fluid Level Warnings",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2767,7 +2878,12 @@
         "PGN":65293,
         "Id":"simnetLgc2000Configuration",
         "Description":"Simnet: LGC-2000 Configuration",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2806,7 +2922,12 @@
         "PGN":65309,
         "Id":"navicoWirelessBatteryStatus",
         "Description":"Navico: Wireless Battery Status",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2879,7 +3000,9 @@
         "PGN":65312,
         "Id":"navicoWirelessSignalStatus",
         "Description":"Navico: Wireless Signal Status",
+        "Type":"Single",
         "Complete":false,
+        "Missing":["Fields"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2943,7 +3066,12 @@
         "PGN":65325,
         "Id":"simnetReprogramStatus",
         "Description":"Simnet: Reprogram Status",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2982,7 +3110,12 @@
         "PGN":65341,
         "Id":"simnetAutopilotMode",
         "Description":"Simnet: Autopilot Mode",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3021,7 +3154,12 @@
         "PGN":65345,
         "Id":"seatalkPilotWindDatum",
         "Description":"Seatalk: Pilot Wind Datum",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3088,7 +3226,12 @@
         "PGN":65359,
         "Id":"seatalkPilotHeading",
         "Description":"Seatalk: Pilot Heading",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3164,7 +3307,8 @@
         "PGN":65360,
         "Id":"seatalkPilotLockedHeading",
         "Description":"Seatalk: Pilot Locked Heading",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3241,7 +3385,8 @@
         "PGN":65361,
         "Id":"seatalkSilenceAlarm",
         "Description":"Seatalk: Silence Alarm",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3423,7 +3568,12 @@
         "PGN":65371,
         "Id":"seatalkKeypadMessage",
         "Description":"Seatalk: Keypad Message",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3519,7 +3669,12 @@
         "PGN":65374,
         "Id":"seatalkKeypadHeartbeat",
         "Description":"SeaTalk: Keypad Heartbeat",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3582,7 +3737,12 @@
         "PGN":65379,
         "Id":"seatalkPilotMode",
         "Description":"Seatalk: Pilot Mode",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3657,7 +3817,12 @@
         "PGN":65408,
         "Id":"airmarDepthQualityFactor",
         "Description":"Airmar: Depth Quality Factor",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3715,6 +3880,7 @@
         "PGN":65409,
         "Id":"airmarSpeedPulseCount",
         "Description":"Airmar: Speed Pulse Count",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -3789,7 +3955,12 @@
         "PGN":65410,
         "Id":"airmarDeviceInformation",
         "Description":"Airmar: Device Information",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3866,7 +4037,12 @@
         "PGN":65480,
         "Id":"simnetAutopilotMode",
         "Description":"Simnet: Autopilot Mode",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3905,7 +4081,13 @@
         "PGN":65536,
         "Id":"unknownFastPacketAddressed",
         "Description":"Unknown fast-packet addressed",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "Lookups"],
         "Length":255,
         "RepeatingFields":0,
         "Fields":{
@@ -3922,6 +4104,7 @@
         "PGN":126208,
         "Id":"nmeaRequestGroupFunction",
         "Description":"NMEA - Request group function",
+        "Type":"Fast",
         "Complete":true,
         "Length":12,
         "RepeatingFields":2,
@@ -4004,6 +4187,7 @@
         "PGN":126208,
         "Id":"nmeaCommandGroupFunction",
         "Description":"NMEA - Command group function",
+        "Type":"Fast",
         "Complete":true,
         "Length":8,
         "RepeatingFields":2,
@@ -4083,6 +4267,7 @@
         "PGN":126208,
         "Id":"nmeaAcknowledgeGroupFunction",
         "Description":"NMEA - Acknowledge group function",
+        "Type":"Fast",
         "Complete":true,
         "Length":8,
         "RepeatingFields":1,
@@ -4171,7 +4356,12 @@
         "PGN":126208,
         "Id":"nmeaReadFieldsGroupFunction",
         "Description":"NMEA - Read Fields group function",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFieldSet1":2,
         "RepeatingFieldSet2":1,
@@ -4293,6 +4483,7 @@
         "PGN":126208,
         "Id":"nmeaReadFieldsReplyGroupFunction",
         "Description":"NMEA - Read Fields reply group function",
+        "Type":"Fast",
         "Complete":true,
         "Length":8,
         "RepeatingFieldSet1":2,
@@ -4428,6 +4619,7 @@
         "PGN":126208,
         "Id":"nmeaWriteFieldsGroupFunction",
         "Description":"NMEA - Write Fields group function",
+        "Type":"Fast",
         "Complete":true,
         "Length":8,
         "RepeatingFieldSet1":2,
@@ -4563,6 +4755,7 @@
         "PGN":126208,
         "Id":"nmeaWriteFieldsReplyGroupFunction",
         "Description":"NMEA - Write Fields reply group function",
+        "Type":"Fast",
         "Complete":true,
         "Length":8,
         "RepeatingFieldSet1":2,
@@ -4698,7 +4891,8 @@
         "PGN":126464,
         "Id":"pgnListTransmitAndReceive",
         "Description":"PGN List (Transmit and Receive)",
-        "Complete":false,
+        "Type":"Fast",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":1,
         "Fields":[
@@ -4729,7 +4923,12 @@
         "PGN":126720,
         "Id":"seatalk1PilotMode",
         "Description":"Seatalk1: Pilot Mode",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":21,
         "RepeatingFields":0,
         "Fields":[
@@ -4839,8 +5038,13 @@
         "PGN":126720,
         "Id":"fusionMediaControl",
         "Description":"Fusion: Media Control",
-        "Complete":true,
-        "Length":3,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
+        "Length":6,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -4924,8 +5128,13 @@
         "PGN":126720,
         "Id":"fusionSiriusControl",
         "Description":"Fusion: Sirius Control",
-        "Complete":true,
-        "Length":3,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
+        "Length":7,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -5007,7 +5216,12 @@
         "PGN":126720,
         "Id":"fusionRequestStatus",
         "Description":"Fusion: Request Status",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":3,
         "RepeatingFields":0,
         "Fields":[
@@ -5068,7 +5282,12 @@
         "PGN":126720,
         "Id":"fusionSetSource",
         "Description":"Fusion: Set Source",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":3,
         "RepeatingFields":0,
         "Fields":[
@@ -5139,7 +5358,12 @@
         "PGN":126720,
         "Id":"fusionMute",
         "Description":"Fusion: Mute",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":3,
         "RepeatingFields":0,
         "Fields":[
@@ -5202,7 +5426,12 @@
         "PGN":126720,
         "Id":"fusionSetZoneVolume",
         "Description":"Fusion: Set Zone Volume",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -5283,7 +5512,12 @@
         "PGN":126720,
         "Id":"fusionSetAllVolumes",
         "Description":"Fusion: Set All Volumes",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -5384,7 +5618,12 @@
         "PGN":126720,
         "Id":"seatalk1Keystroke",
         "Description":"Seatalk1: Keystroke",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":21,
         "RepeatingFields":0,
         "Fields":[
@@ -5486,7 +5725,12 @@
         "PGN":126720,
         "Id":"seatalk1DeviceIndentification",
         "Description":"Seatalk1: Device Indentification",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -5569,6 +5813,7 @@
         "PGN":126720,
         "Id":"airmarAttitudeOffset",
         "Description":"Airmar: Attitude Offset",
+        "Type":"Fast",
         "Complete":true,
         "Length":9,
         "RepeatingFields":0,
@@ -5653,7 +5898,9 @@
         "PGN":126720,
         "Id":"airmarCalibrateCompass",
         "Description":"Airmar: Calibrate Compass",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields"],
         "Length":24,
         "RepeatingFields":0,
         "Fields":[
@@ -5843,7 +6090,12 @@
         "PGN":126720,
         "Id":"airmarTrueWindOptions",
         "Description":"Airmar: True Wind Options",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -6030,6 +6282,7 @@
         "PGN":126720,
         "Id":"airmarSimulateMode",
         "Description":"Airmar: Simulate Mode",
+        "Type":"Fast",
         "Complete":true,
         "Length":6,
         "RepeatingFields":0,
@@ -6103,6 +6356,7 @@
         "PGN":126720,
         "Id":"airmarCalibrateDepth",
         "Description":"Airmar: Calibrate Depth",
+        "Type":"Fast",
         "Complete":true,
         "Length":6,
         "RepeatingFields":0,
@@ -6175,6 +6429,7 @@
         "PGN":126720,
         "Id":"airmarCalibrateSpeed",
         "Description":"Airmar: Calibrate Speed",
+        "Type":"Fast",
         "Complete":true,
         "Length":12,
         "RepeatingFields":2,
@@ -6257,6 +6512,7 @@
         "PGN":126720,
         "Id":"airmarCalibrateTemperature",
         "Description":"Airmar: Calibrate Temperature",
+        "Type":"Fast",
         "Complete":true,
         "Length":6,
         "RepeatingFields":2,
@@ -6352,6 +6608,7 @@
         "PGN":126720,
         "Id":"airmarSpeedFilter",
         "Description":"Airmar: Speed Filter",
+        "Type":"Fast",
         "Complete":true,
         "Length":8,
         "RepeatingFields":2,
@@ -6445,6 +6702,7 @@
         "PGN":126720,
         "Id":"airmarTemperatureFilter",
         "Description":"Airmar: Temperature Filter",
+        "Type":"Fast",
         "Complete":true,
         "Length":8,
         "RepeatingFields":2,
@@ -6539,6 +6797,7 @@
         "PGN":126720,
         "Id":"airmarNmea2000Options",
         "Description":"Airmar: NMEA 2000 options",
+        "Type":"Fast",
         "Complete":true,
         "Length":6,
         "RepeatingFields":2,
@@ -6614,7 +6873,12 @@
         "PGN":126720,
         "Id":"airmarAddressableMultiFrame",
         "Description":"Airmar: Addressable Multi-Frame",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":4,
         "RepeatingFields":0,
         "Fields":[
@@ -6663,7 +6927,9 @@
         "PGN":126720,
         "Id":"maretronSlaveResponse",
         "Description":"Maretron: Slave Response",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":["Lookups"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6736,7 +7002,12 @@
         "PGN":126720,
         "Id":"manufacturerProprietaryFastPacketAddressed",
         "Description":"Manufacturer Proprietary fast-packet addressed",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":223,
         "RepeatingFields":0,
         "Fields":[
@@ -6787,7 +7058,12 @@
         "PGN":126976,
         "Id":"unknownFastPacketNonAddressed",
         "Description":"Unknown fast-packet non-addressed",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":255,
         "RepeatingFields":0,
         "Fields":{
@@ -6804,6 +7080,7 @@
         "PGN":126983,
         "Id":"alert",
         "Description":"Alert",
+        "Type":"Fast",
         "Complete":true,
         "Length":28,
         "RepeatingFields":0,
@@ -7057,6 +7334,7 @@
         "PGN":126984,
         "Id":"alertResponse",
         "Description":"Alert Response",
+        "Type":"Fast",
         "Complete":true,
         "Length":25,
         "RepeatingFields":0,
@@ -7189,6 +7467,7 @@
         "PGN":126985,
         "Id":"alertText",
         "Description":"Alert Text",
+        "Type":"Fast",
         "Complete":true,
         "Length":49,
         "RepeatingFields":0,
@@ -7337,27 +7616,43 @@
         "PGN":126986,
         "Id":"alertConfiguration",
         "Description":"Alert Configuration",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0},
       {
         "PGN":126987,
         "Id":"alertThreshold",
         "Description":"Alert Threshold",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0},
       {
         "PGN":126988,
         "Id":"alertValue",
         "Description":"Alert Value",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0},
       {
         "PGN":126992,
         "Id":"systemTime",
         "Description":"System Time",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -7424,6 +7719,7 @@
         "PGN":126993,
         "Id":"heartbeat",
         "Description":"Heartbeat",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -7463,7 +7759,8 @@
         "PGN":126996,
         "Id":"productInformation",
         "Description":"Product Information",
-        "Complete":false,
+        "Type":"Fast",
+        "Complete":true,
         "Length":134,
         "RepeatingFields":0,
         "Fields":[
@@ -7539,6 +7836,7 @@
         "PGN":126998,
         "Id":"configurationInformation",
         "Description":"Configuration Information",
+        "Type":"Fast",
         "Complete":true,
         "Length":42,
         "RepeatingFields":0,
@@ -7580,6 +7878,7 @@
         "PGN":127233,
         "Id":"manOverboardNotification",
         "Description":"Man Overboard Notification",
+        "Type":"Fast",
         "Complete":true,
         "Length":35,
         "RepeatingFields":0,
@@ -7784,7 +8083,8 @@
         "PGN":127237,
         "Id":"headingTrackControl",
         "Description":"Heading/Track control",
-        "Complete":false,
+        "Type":"Fast",
+        "Complete":true,
         "Length":21,
         "RepeatingFields":0,
         "Fields":[
@@ -8002,7 +8302,8 @@
         "PGN":127245,
         "Id":"rudder",
         "Description":"Rudder",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -8056,6 +8357,7 @@
         "PGN":127250,
         "Id":"vesselHeading",
         "Description":"Vessel Heading",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -8126,6 +8428,7 @@
         "PGN":127251,
         "Id":"rateOfTurn",
         "Description":"Rate of Turn",
+        "Type":"Single",
         "Complete":true,
         "Length":5,
         "RepeatingFields":0,
@@ -8152,6 +8455,7 @@
         "PGN":127257,
         "Id":"attitude",
         "Description":"Attitude",
+        "Type":"Single",
         "Complete":true,
         "Length":7,
         "RepeatingFields":0,
@@ -8198,6 +8502,7 @@
         "PGN":127258,
         "Id":"magneticVariation",
         "Description":"Magnetic Variation",
+        "Type":"Single",
         "Complete":true,
         "Length":6,
         "RepeatingFields":0,
@@ -8265,6 +8570,7 @@
         "PGN":127488,
         "Id":"engineParametersRapidUpdate",
         "Description":"Engine Parameters, Rapid Update",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -8323,6 +8629,7 @@
         "PGN":127489,
         "Id":"engineParametersDynamic",
         "Description":"Engine Parameters, Dynamic",
+        "Type":"Fast",
         "Complete":true,
         "Length":26,
         "RepeatingFields":0,
@@ -8498,6 +8805,7 @@
         "PGN":127493,
         "Id":"transmissionParametersDynamic",
         "Description":"Transmission Parameters, Dynamic",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -8580,6 +8888,7 @@
         "PGN":127496,
         "Id":"tripParametersVessel",
         "Description":"Trip Parameters, Vessel",
+        "Type":"Fast",
         "Complete":true,
         "Length":10,
         "RepeatingFields":0,
@@ -8627,6 +8936,7 @@
         "PGN":127497,
         "Id":"tripParametersEngine",
         "Description":"Trip Parameters, Engine",
+        "Type":"Fast",
         "Complete":true,
         "Length":9,
         "RepeatingFields":0,
@@ -8686,7 +8996,8 @@
         "PGN":127498,
         "Id":"engineParametersStatic",
         "Description":"Engine Parameters, Static",
-        "Complete":false,
+        "Type":"Fast",
+        "Complete":true,
         "Length":52,
         "RepeatingFields":0,
         "Fields":[
@@ -8734,7 +9045,8 @@
         "PGN":127500,
         "Id":"loadControllerConnectionStateControl",
         "Description":"Load Controller Connection State/Control",
-        "Complete":false,
+        "Type":"Fast",
+        "Complete":true,
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -8822,7 +9134,8 @@
         "PGN":127501,
         "Id":"binarySwitchBankStatus",
         "Description":"Binary Switch Bank Status",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -9202,7 +9515,8 @@
         "PGN":127502,
         "Id":"switchBankControl",
         "Description":"Switch Bank Control",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -9554,8 +9868,9 @@
         "PGN":127503,
         "Id":"acInputStatus",
         "Description":"AC Input Status",
+        "Type":"Fast",
         "Complete":true,
-        "Length":8,
+        "Length":56,
         "RepeatingFields":10,
         "Fields":[
           {
@@ -9687,8 +10002,9 @@
         "PGN":127504,
         "Id":"acOutputStatus",
         "Description":"AC Output Status",
+        "Type":"Single",
         "Complete":true,
-        "Length":8,
+        "Length":56,
         "RepeatingFields":10,
         "Fields":[
           {
@@ -9731,9 +10047,7 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Sine Wave","value":"0"},
-              {"name":"Modified Sine Wave","value":"1"},
-              {"name":"Error","value":"6"},
-              {"name":"Data Not Available","value":"7"}]},
+              {"name":"Modified Sine Wave","value":"1"}]},
           {
             "Order":5,
             "Id":"reserved",
@@ -9819,6 +10133,7 @@
         "PGN":127505,
         "Id":"fluidLevel",
         "Description":"Fluid Level",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -9881,7 +10196,8 @@
         "PGN":127506,
         "Id":"dcDetailedStatus",
         "Description":"DC Detailed Status",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -9954,7 +10270,8 @@
         "PGN":127507,
         "Id":"chargerStatus",
         "Description":"Charger Status",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -10053,6 +10370,7 @@
         "PGN":127508,
         "Id":"batteryStatus",
         "Description":"Battery Status",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -10108,7 +10426,8 @@
         "PGN":127509,
         "Id":"inverterStatus",
         "Description":"Inverter Status",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":4,
         "RepeatingFields":0,
         "Fields":[
@@ -10164,8 +10483,13 @@
         "PGN":127510,
         "Id":"chargerConfigurationStatus",
         "Description":"Charger Configuration Status",
+        "Type":"Fast",
         "Complete":false,
-        "Length":8,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
+        "Length":13,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -10266,7 +10590,12 @@
         "PGN":127511,
         "Id":"inverterConfigurationStatus",
         "Description":"Inverter Configuration Status",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -10338,7 +10667,12 @@
         "PGN":127512,
         "Id":"agsConfigurationStatus",
         "Description":"AGS Configuration Status",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -10370,7 +10704,12 @@
         "PGN":127513,
         "Id":"batteryConfigurationStatus",
         "Description":"Battery Configuration Status",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -10472,7 +10811,12 @@
         "PGN":127514,
         "Id":"agsStatus",
         "Description":"AGS Status",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -10528,6 +10872,7 @@
         "PGN":128000,
         "Id":"leewayAngle",
         "Description":"Leeway Angle",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -10563,8 +10908,9 @@
         "PGN":128259,
         "Id":"speed",
         "Description":"Speed",
+        "Type":"Single",
         "Complete":true,
-        "Length":6,
+        "Length":8,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -10617,13 +10963,23 @@
             "BitLength":4,
             "BitOffset":48,
             "BitStart":0,
+            "Signed":false},
+          {
+            "Order":6,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":12,
+            "BitOffset":52,
+            "BitStart":4,
+            "Type":"Binary data",
             "Signed":false}]},
       {
         "PGN":128267,
         "Id":"waterDepth",
         "Description":"Water Depth",
+        "Type":"Single",
         "Complete":true,
-        "Length":5,
+        "Length":8,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -10671,6 +11027,7 @@
         "PGN":128275,
         "Id":"distanceLog",
         "Description":"Distance Log",
+        "Type":"Fast",
         "Complete":true,
         "Length":14,
         "RepeatingFields":0,
@@ -10723,7 +11080,9 @@
         "PGN":128520,
         "Id":"trackedTargetData",
         "Description":"Tracked Target Data",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["SampleData"],
         "Length":27,
         "RepeatingFields":0,
         "Fields":[
@@ -10893,6 +11252,7 @@
         "PGN":129025,
         "Id":"positionRapidUpdate",
         "Description":"Position, Rapid Update",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -10923,6 +11283,7 @@
         "PGN":129026,
         "Id":"cogSogRapidUpdate",
         "Description":"COG & SOG, Rapid Update",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -10993,7 +11354,9 @@
         "PGN":129027,
         "Id":"positionDeltaRapidUpdate",
         "Description":"Position Delta, Rapid Update",
+        "Type":"Single",
         "Complete":false,
+        "Missing":["SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -11033,7 +11396,9 @@
         "PGN":129028,
         "Id":"altitudeDeltaRapidUpdate",
         "Description":"Altitude Delta, Rapid Update",
+        "Type":"Single",
         "Complete":false,
+        "Missing":["SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -11101,6 +11466,7 @@
         "PGN":129029,
         "Id":"gnssPositionData",
         "Description":"GNSS Position Data",
+        "Type":"Fast",
         "Complete":true,
         "Length":51,
         "RepeatingFields":3,
@@ -11322,6 +11688,7 @@
         "PGN":129033,
         "Id":"timeDate",
         "Description":"Time & Date",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -11366,6 +11733,7 @@
         "PGN":129038,
         "Id":"aisClassAPositionReport",
         "Description":"AIS Class A Position Report",
+        "Type":"Fast",
         "Complete":true,
         "Length":28,
         "RepeatingFields":0,
@@ -11610,6 +11978,7 @@
         "PGN":129039,
         "Id":"aisClassBPositionReport",
         "Description":"AIS Class B Position Report",
+        "Type":"Fast",
         "Complete":true,
         "Length":26,
         "RepeatingFields":0,
@@ -11877,6 +12246,7 @@
         "PGN":129040,
         "Id":"aisClassBExtendedPositionReport",
         "Description":"AIS Class B Extended Position Report",
+        "Type":"Fast",
         "Complete":true,
         "Length":33,
         "RepeatingFields":0,
@@ -12214,6 +12584,7 @@
         "PGN":129041,
         "Id":"aisAidsToNavigationAtonReport",
         "Description":"AIS Aids to Navigation (AtoN) Report",
+        "Type":"Fast",
         "Complete":true,
         "Length":60,
         "RepeatingFields":0,
@@ -12520,6 +12891,7 @@
         "PGN":129044,
         "Id":"datum",
         "Description":"Datum",
+        "Type":"Fast",
         "Complete":true,
         "Length":24,
         "RepeatingFields":0,
@@ -12580,6 +12952,7 @@
         "PGN":129045,
         "Id":"userDatum",
         "Description":"User Datum",
+        "Type":"Fast",
         "Complete":true,
         "Length":37,
         "RepeatingFields":0,
@@ -12693,8 +13066,9 @@
         "PGN":129283,
         "Id":"crossTrackError",
         "Description":"Cross Track Error",
-        "Complete":false,
-        "Length":6,
+        "Type":"Single",
+        "Complete":true,
+        "Length":8,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -12753,11 +13127,22 @@
             "BitStart":0,
             "Units":"m",
             "Resolution":"0.01",
-            "Signed":true}]},
+            "Signed":true},
+          {
+            "Order":6,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "Description":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Type":"Binary data",
+            "Signed":false}]},
       {
         "PGN":129284,
         "Id":"navigationData",
         "Description":"Navigation Data",
+        "Type":"Fast",
         "Complete":true,
         "Length":34,
         "RepeatingFields":0,
@@ -12930,8 +13315,9 @@
         "PGN":129285,
         "Id":"navigationRouteWpInformation",
         "Description":"Navigation - Route/WP Information",
+        "Type":"Fast",
         "Complete":true,
-        "Length":8,
+        "Length":233,
         "RepeatingFields":4,
         "Fields":[
           {
@@ -13054,7 +13440,9 @@
         "PGN":129291,
         "Id":"setDriftRapidUpdate",
         "Description":"Set & Drift, Rapid Update",
-        "Complete":true,
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -13114,7 +13502,13 @@
         "PGN":129301,
         "Id":"navigationRouteTimeToFromMark",
         "Description":"Navigation - Route / Time to+from Mark",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -13174,7 +13568,13 @@
         "PGN":129302,
         "Id":"bearingAndDistanceBetweenTwoMarks",
         "Description":"Bearing and Distance between two Marks",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -13272,8 +13672,14 @@
         "PGN":129538,
         "Id":"gnssControlStatus",
         "Description":"GNSS Control Status",
+        "Type":"Fast",
         "Complete":false,
-        "Length":0,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
+        "Length":13,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -13387,6 +13793,7 @@
         "PGN":129539,
         "Id":"gnssDops",
         "Description":"GNSS DOPs",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -13412,10 +13819,7 @@
               {"name":"1D","value":"0"},
               {"name":"2D","value":"1"},
               {"name":"3D","value":"2"},
-              {"name":"Auto","value":"3"},
-              {"name":"Reserved","value":"4"},
-              {"name":"Reserved","value":"5"},
-              {"name":"Error","value":"6"}]},
+              {"name":"Auto","value":"3"}]},
           {
             "Order":3,
             "Id":"actualMode",
@@ -13429,10 +13833,7 @@
               {"name":"1D","value":"0"},
               {"name":"2D","value":"1"},
               {"name":"3D","value":"2"},
-              {"name":"Auto","value":"3"},
-              {"name":"Reserved","value":"4"},
-              {"name":"Reserved","value":"5"},
-              {"name":"Error","value":"6"}]},
+              {"name":"Auto","value":"3"}]},
           {
             "Order":4,
             "Id":"reserved",
@@ -13477,8 +13878,9 @@
         "PGN":129540,
         "Id":"gnssSatsInView",
         "Description":"GNSS Sats in View",
+        "Type":"Fast",
         "Complete":true,
-        "Length":255,
+        "Length":233,
         "RepeatingFields":7,
         "Fields":[
           {
@@ -13594,7 +13996,12 @@
         "PGN":129541,
         "Id":"gpsAlmanacData",
         "Description":"GPS Almanac Data",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -13706,8 +14113,14 @@
         "PGN":129542,
         "Id":"gnssPseudorangeNoiseStatistics",
         "Description":"GNSS Pseudorange Noise Statistics",
+        "Type":"Fast",
         "Complete":false,
-        "Length":8,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
+        "Length":9,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -13778,8 +14191,13 @@
         "PGN":129545,
         "Id":"gnssRaimOutput",
         "Description":"GNSS RAIM Output",
+        "Type":"Fast",
         "Complete":false,
-        "Length":8,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
+        "Length":9,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -13868,7 +14286,12 @@
         "PGN":129546,
         "Id":"gnssRaimSettings",
         "Description":"GNSS RAIM Settings",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -13908,8 +14331,14 @@
         "PGN":129547,
         "Id":"gnssPseudorangeErrorStatistics",
         "Description":"GNSS Pseudorange Error Statistics",
+        "Type":"Fast",
         "Complete":false,
-        "Length":8,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
+        "Length":9,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -13980,8 +14409,14 @@
         "PGN":129549,
         "Id":"dgnssCorrections",
         "Description":"DGNSS Corrections",
+        "Type":"Fast",
         "Complete":false,
-        "Length":8,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
+        "Length":13,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -14077,7 +14512,13 @@
         "PGN":129550,
         "Id":"gnssDifferentialCorrectionReceiverInterface",
         "Description":"GNSS Differential Correction Receiver Interface",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -14133,7 +14574,13 @@
         "PGN":129551,
         "Id":"gnssDifferentialCorrectionReceiverSignal",
         "Description":"GNSS Differential Correction Receiver Signal",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -14255,7 +14702,13 @@
         "PGN":129556,
         "Id":"glonassAlmanacData",
         "Description":"GLONASS Almanac Data",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -14367,7 +14820,13 @@
         "PGN":129792,
         "Id":"aisDgnssBroadcastBinaryMessage",
         "Description":"AIS DGNSS Broadcast Binary Message",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -14375,7 +14834,7 @@
             "Order":1,
             "Id":"messageId",
             "Name":"Message ID",
-            "BitLength":8,
+            "BitLength":6,
             "BitOffset":0,
             "BitStart":0,
             "Signed":false},
@@ -14383,24 +14842,25 @@
             "Order":2,
             "Id":"repeatIndicator",
             "Name":"Repeat Indicator",
-            "BitLength":8,
-            "BitOffset":8,
-            "BitStart":0,
+            "BitLength":2,
+            "BitOffset":6,
+            "BitStart":6,
             "Signed":false},
           {
             "Order":3,
             "Id":"sourceId",
             "Name":"Source ID",
-            "BitLength":8,
-            "BitOffset":16,
+            "BitLength":32,
+            "BitOffset":8,
             "BitStart":0,
+            "Units":"MMSI",
             "Signed":false},
           {
             "Order":4,
             "Id":"nmea2000Reserved",
             "Name":"NMEA 2000 Reserved",
             "BitLength":8,
-            "BitOffset":24,
+            "BitOffset":40,
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false},
@@ -14409,7 +14869,7 @@
             "Id":"aisTranceiverInformation",
             "Name":"AIS Tranceiver Information",
             "BitLength":8,
-            "BitOffset":32,
+            "BitOffset":48,
             "BitStart":0,
             "Signed":false},
           {
@@ -14417,23 +14877,23 @@
             "Id":"spare",
             "Name":"Spare",
             "BitLength":8,
-            "BitOffset":40,
+            "BitOffset":56,
             "BitStart":0,
             "Signed":false},
           {
             "Order":7,
             "Id":"longitude",
             "Name":"Longitude",
-            "BitLength":8,
-            "BitOffset":48,
+            "BitLength":32,
+            "BitOffset":64,
             "BitStart":0,
             "Signed":false},
           {
             "Order":8,
             "Id":"latitude",
             "Name":"Latitude",
-            "BitLength":8,
-            "BitOffset":56,
+            "BitLength":32,
+            "BitOffset":96,
             "BitStart":0,
             "Signed":false},
           {
@@ -14441,7 +14901,7 @@
             "Id":"nmea2000Reserved",
             "Name":"NMEA 2000 Reserved",
             "BitLength":8,
-            "BitOffset":64,
+            "BitOffset":128,
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false},
@@ -14450,7 +14910,7 @@
             "Id":"spare",
             "Name":"Spare",
             "BitLength":8,
-            "BitOffset":72,
+            "BitOffset":136,
             "BitStart":0,
             "Signed":false},
           {
@@ -14458,7 +14918,7 @@
             "Id":"numberOfBitsInBinaryDataField",
             "Name":"Number of Bits in Binary Data Field",
             "BitLength":8,
-            "BitOffset":80,
+            "BitOffset":144,
             "BitStart":0,
             "Signed":false},
           {
@@ -14466,7 +14926,7 @@
             "Id":"binaryData",
             "Name":"Binary Data",
             "BitLength":64,
-            "BitOffset":88,
+            "BitOffset":152,
             "BitStart":0,
             "Type":"Binary data",
             "Signed":false}]},
@@ -14474,7 +14934,12 @@
         "PGN":129793,
         "Id":"aisUtcAndDateReport",
         "Description":"AIS UTC and Date Report",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":26,
         "RepeatingFields":0,
         "Fields":[
@@ -14659,6 +15124,7 @@
         "PGN":129794,
         "Id":"aisClassAStaticAndVoyageRelatedData",
         "Description":"AIS Class A Static and Voyage Related Data",
+        "Type":"Fast",
         "Complete":true,
         "Length":24,
         "RepeatingFields":0,
@@ -14937,6 +15403,7 @@
         "PGN":129795,
         "Id":"aisAddressedBinaryMessage",
         "Description":"AIS Addressed Binary Message",
+        "Type":"Fast",
         "Complete":true,
         "Length":13,
         "RepeatingFields":0,
@@ -15070,6 +15537,7 @@
         "PGN":129796,
         "Id":"aisAcknowledge",
         "Description":"AIS Acknowledge",
+        "Type":"Fast",
         "Complete":true,
         "Length":12,
         "RepeatingFields":0,
@@ -15183,8 +15651,9 @@
         "PGN":129797,
         "Id":"aisBinaryBroadcastMessage",
         "Description":"AIS Binary Broadcast Message",
+        "Type":"Fast",
         "Complete":true,
-        "Length":8,
+        "Length":233,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -15274,7 +15743,13 @@
         "PGN":129798,
         "Id":"aisSarAircraftPositionReport",
         "Description":"AIS SAR Aircraft Position Report",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -15463,7 +15938,12 @@
         "PGN":129799,
         "Id":"radioFrequencyModePower",
         "Description":"Radio Frequency/Mode/Power",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -15523,7 +16003,12 @@
         "PGN":129800,
         "Id":"aisUtcDateInquiry",
         "Description":"AIS UTC/Date Inquiry",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -15615,7 +16100,12 @@
         "PGN":129801,
         "Id":"aisAddressedSafetyRelatedMessage",
         "Description":"AIS Addressed Safety Related Message",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -15645,7 +16135,7 @@
             "Order":3,
             "Id":"sourceId",
             "Name":"Source ID",
-            "BitLength":32,
+            "BitLength":30,
             "BitOffset":8,
             "BitStart":0,
             "Units":"MMSI",
@@ -15655,9 +16145,9 @@
             "Id":"reserved",
             "Name":"Reserved",
             "Description":"reserved",
-            "BitLength":1,
-            "BitOffset":40,
-            "BitStart":0,
+            "BitLength":2,
+            "BitOffset":38,
+            "BitStart":6,
             "Type":"Binary data",
             "Signed":false},
           {
@@ -15665,8 +16155,8 @@
             "Id":"aisTransceiverInformation",
             "Name":"AIS Transceiver information",
             "BitLength":5,
-            "BitOffset":41,
-            "BitStart":1,
+            "BitOffset":40,
+            "BitStart":0,
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
@@ -15681,16 +16171,16 @@
             "Id":"sequenceNumber",
             "Name":"Sequence Number",
             "BitLength":2,
-            "BitOffset":46,
-            "BitStart":6,
+            "BitOffset":45,
+            "BitStart":5,
             "Signed":false},
           {
             "Order":7,
             "Id":"destinationId",
             "Name":"Destination ID",
-            "BitLength":32,
-            "BitOffset":48,
-            "BitStart":0,
+            "BitLength":30,
+            "BitOffset":47,
+            "BitStart":7,
             "Units":"MMSI",
             "Signed":false},
           {
@@ -15698,9 +16188,9 @@
             "Id":"reserved",
             "Name":"Reserved",
             "Description":"reserved",
-            "BitLength":6,
-            "BitOffset":80,
-            "BitStart":0,
+            "BitLength":2,
+            "BitOffset":77,
+            "BitStart":5,
             "Type":"Binary data",
             "Signed":false},
           {
@@ -15708,17 +16198,17 @@
             "Id":"retransmitFlag",
             "Name":"Retransmit flag",
             "BitLength":1,
-            "BitOffset":86,
-            "BitStart":6,
+            "BitOffset":79,
+            "BitStart":7,
             "Signed":false},
           {
             "Order":10,
             "Id":"reserved",
             "Name":"Reserved",
             "Description":"reserved",
-            "BitLength":1,
-            "BitOffset":87,
-            "BitStart":7,
+            "BitLength":7,
+            "BitOffset":80,
+            "BitStart":0,
             "Type":"Binary data",
             "Signed":false},
           {
@@ -15726,15 +16216,20 @@
             "Id":"safetyRelatedText",
             "Name":"Safety Related Text",
             "BitLength":2040,
-            "BitOffset":88,
-            "BitStart":0,
+            "BitOffset":87,
+            "BitStart":7,
             "Type":"ASCII text",
             "Signed":false}]},
       {
         "PGN":129802,
         "Id":"aisSafetyRelatedBroadcastMessage",
         "Description":"AIS Safety Related Broadcast Message",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -15819,7 +16314,12 @@
         "PGN":129803,
         "Id":"aisInterrogation",
         "Description":"AIS Interrogation",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":8,
         "Fields":[
@@ -15975,7 +16475,13 @@
         "PGN":129804,
         "Id":"aisAssignmentModeCommand",
         "Description":"AIS Assignment Mode Command",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":23,
         "RepeatingFields":3,
         "Fields":[
@@ -16005,7 +16511,7 @@
             "Order":3,
             "Id":"sourceId",
             "Name":"Source ID",
-            "BitLength":32,
+            "BitLength":30,
             "BitOffset":8,
             "BitStart":0,
             "Units":"MMSI",
@@ -16017,9 +16523,9 @@
             "Id":"reserved",
             "Name":"Reserved",
             "Description":"reserved",
-            "BitLength":1,
-            "BitOffset":40,
-            "BitStart":0,
+            "BitLength":2,
+            "BitOffset":38,
+            "BitStart":6,
             "Type":"Binary data",
             "Signed":false},
           {
@@ -16027,8 +16533,8 @@
             "Id":"aisTransceiverInformation",
             "Name":"AIS Transceiver information",
             "BitLength":5,
-            "BitOffset":41,
-            "BitStart":1,
+            "BitOffset":40,
+            "BitStart":0,
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
@@ -16043,9 +16549,9 @@
             "Id":"reserved",
             "Name":"Reserved",
             "Description":"reserved",
-            "BitLength":2,
-            "BitOffset":46,
-            "BitStart":6,
+            "BitLength":3,
+            "BitOffset":45,
+            "BitStart":5,
             "Type":"Binary data",
             "Signed":false},
           {
@@ -16083,7 +16589,12 @@
         "PGN":129805,
         "Id":"aisDataLinkManagementMessage",
         "Description":"AIS Data Link Management Message",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":4,
         "Fields":[
@@ -16199,7 +16710,12 @@
         "PGN":129806,
         "Id":"aisChannelManagement",
         "Description":"AIS Channel Management",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -16420,7 +16936,12 @@
         "PGN":129807,
         "Id":"aisClassBGroupAssignment",
         "Description":"AIS Class B Group Assignment",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -16534,7 +17055,7 @@
             "Order":11,
             "Id":"stationType",
             "Name":"Station Type",
-            "BitLength":8,
+            "BitLength":6,
             "BitOffset":176,
             "BitStart":0,
             "Signed":false},
@@ -16544,8 +17065,8 @@
             "Name":"Reserved",
             "Description":"reserved",
             "BitLength":2,
-            "BitOffset":184,
-            "BitStart":0,
+            "BitOffset":182,
+            "BitStart":6,
             "Type":"Binary data",
             "Signed":false},
           {
@@ -16553,8 +17074,8 @@
             "Id":"shipAndCargoFilter",
             "Name":"Ship and Cargo Filter",
             "BitLength":6,
-            "BitOffset":186,
-            "BitStart":2,
+            "BitOffset":184,
+            "BitStart":0,
             "Signed":false},
           {
             "Order":14,
@@ -16562,8 +17083,8 @@
             "Name":"Reserved",
             "Description":"reserved",
             "BitLength":2,
-            "BitOffset":192,
-            "BitStart":0,
+            "BitOffset":190,
+            "BitStart":6,
             "Type":"Binary data",
             "Signed":false},
           {
@@ -16571,22 +17092,28 @@
             "Id":"reportingInterval",
             "Name":"Reporting Interval",
             "BitLength":16,
-            "BitOffset":194,
-            "BitStart":2,
+            "BitOffset":192,
+            "BitStart":0,
             "Signed":false},
           {
             "Order":16,
             "Id":"quietTime",
             "Name":"Quiet Time",
             "BitLength":16,
-            "BitOffset":210,
-            "BitStart":2,
+            "BitOffset":208,
+            "BitStart":0,
             "Signed":false}]},
       {
         "PGN":129808,
         "Id":"dscDistressCallInformation",
         "Description":"DSC Distress Call Information",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":2,
         "Fields":[
@@ -16845,7 +17372,13 @@
         "PGN":129808,
         "Id":"dscCallInformation",
         "Description":"DSC Call Information",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":2,
         "Fields":[
@@ -17109,6 +17642,7 @@
         "PGN":129809,
         "Id":"aisClassBStaticDataMsg24PartA",
         "Description":"AIS Class B static data (msg 24 Part A)",
+        "Type":"Fast",
         "Complete":true,
         "Length":27,
         "RepeatingFields":0,
@@ -17195,6 +17729,7 @@
         "PGN":129810,
         "Id":"aisClassBStaticDataMsg24PartB",
         "Description":"AIS Class B static data (msg 24 Part B)",
+        "Type":"Fast",
         "Complete":true,
         "Length":34,
         "RepeatingFields":0,
@@ -17419,21 +17954,39 @@
         "PGN":130060,
         "Id":"label",
         "Description":"Label",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":0,
         "RepeatingFields":0},
       {
         "PGN":130061,
         "Id":"channelSourceConfiguration",
         "Description":"Channel Source Configuration",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":0,
         "RepeatingFields":0},
       {
         "PGN":130064,
         "Id":"routeAndWpServiceDatabaseList",
         "Description":"Route and WP Service - Database List",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":9,
         "Fields":[
@@ -17548,7 +18101,13 @@
         "PGN":130065,
         "Id":"routeAndWpServiceRouteList",
         "Description":"Route and WP Service - Route List",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":6,
         "Fields":[
@@ -17631,7 +18190,13 @@
         "PGN":130066,
         "Id":"routeAndWpServiceRouteWpListAttributes",
         "Description":"Route and WP Service - Route/WP-List Attributes",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -17744,7 +18309,13 @@
         "PGN":130067,
         "Id":"routeAndWpServiceRouteWpNamePosition",
         "Description":"Route and WP Service - Route - WP Name & Position",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":4,
         "Fields":[
@@ -17831,7 +18402,13 @@
         "PGN":130068,
         "Id":"routeAndWpServiceRouteWpName",
         "Description":"Route and WP Service - Route - WP Name",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":2,
         "Fields":[
@@ -17896,7 +18473,13 @@
         "PGN":130069,
         "Id":"routeAndWpServiceXteLimitNavigationMethod",
         "Description":"Route and WP Service - XTE Limit & Navigation Method",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":6,
         "Fields":[
@@ -17977,7 +18560,13 @@
         "PGN":130070,
         "Id":"routeAndWpServiceWpComment",
         "Description":"Route and WP Service - WP Comment",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":2,
         "Fields":[
@@ -18042,7 +18631,13 @@
         "PGN":130071,
         "Id":"routeAndWpServiceRouteComment",
         "Description":"Route and WP Service - Route Comment",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":2,
         "Fields":[
@@ -18099,7 +18694,13 @@
         "PGN":130072,
         "Id":"routeAndWpServiceDatabaseComment",
         "Description":"Route and WP Service - Database Comment",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":2,
         "Fields":[
@@ -18148,7 +18749,13 @@
         "PGN":130073,
         "Id":"routeAndWpServiceRadiusOfTurn",
         "Description":"Route and WP Service - Radius of Turn",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":2,
         "Fields":[
@@ -18212,7 +18819,13 @@
         "PGN":130074,
         "Id":"routeAndWpServiceWpListWpNamePosition",
         "Description":"Route and WP Service - WP List - WP Name & Position",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":4,
         "Fields":[
@@ -18301,6 +18914,7 @@
         "PGN":130306,
         "Id":"windData",
         "Description":"Wind Data",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -18361,6 +18975,7 @@
         "PGN":130310,
         "Id":"environmentalParameters",
         "Description":"Environmental Parameters",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -18418,6 +19033,7 @@
         "PGN":130311,
         "Id":"environmentalParameters",
         "Description":"Environmental Parameters",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -18502,6 +19118,7 @@
         "PGN":130312,
         "Id":"temperature",
         "Description":"Temperature",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -18573,6 +19190,7 @@
         "PGN":130313,
         "Id":"humidity",
         "Description":"Humidity",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -18629,7 +19247,8 @@
         "PGN":130314,
         "Id":"actualPressure",
         "Description":"Actual Pressure",
-        "Complete":false,
+        "Type":"Single",
+        "Complete":true,
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -18679,6 +19298,7 @@
         "PGN":130315,
         "Id":"setPressure",
         "Description":"Set Pressure",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -18729,6 +19349,7 @@
         "PGN":130316,
         "Id":"temperatureExtendedRange",
         "Description":"Temperature Extended Range",
+        "Type":"Single",
         "Complete":true,
         "Length":8,
         "RepeatingFields":0,
@@ -18800,6 +19421,7 @@
         "PGN":130320,
         "Id":"tideStationData",
         "Description":"Tide Station Data",
+        "Type":"Fast",
         "Complete":true,
         "Length":20,
         "RepeatingFields":0,
@@ -18929,7 +19551,9 @@
         "PGN":130321,
         "Id":"salinityStationData",
         "Description":"Salinity Station Data",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["SampleData"],
         "Length":22,
         "RepeatingFields":0,
         "Fields":[
@@ -19047,7 +19671,13 @@
         "PGN":130322,
         "Id":"currentStationData",
         "Description":"Current Station Data",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -19178,7 +19808,13 @@
         "PGN":130323,
         "Id":"meteorologicalStationData",
         "Description":"Meteorological Station Data",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":30,
         "RepeatingFields":0,
         "Fields":[
@@ -19344,7 +19980,13 @@
         "PGN":130324,
         "Id":"mooredBuoyStationData",
         "Description":"Moored Buoy Station Data",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -19537,13 +20179,20 @@
         "PGN":130560,
         "Id":"payloadMass",
         "Description":"Payload Mass",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":0,
         "RepeatingFields":0},
       {
         "PGN":130567,
         "Id":"watermakerInputSettingAndStatus",
         "Description":"Watermaker Input Setting and Status",
+        "Type":"Fast",
         "Complete":true,
         "Length":24,
         "RepeatingFields":0,
@@ -19831,7 +20480,13 @@
         "PGN":130569,
         "Id":"currentStatusAndFile",
         "Description":"Current Status and File",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":233,
         "RepeatingFields":0,
         "Fields":[
@@ -20080,7 +20735,13 @@
         "PGN":130570,
         "Id":"libraryDataFile",
         "Description":"Library Data File",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":233,
         "RepeatingFields":0,
         "Fields":[
@@ -20292,7 +20953,13 @@
         "PGN":130571,
         "Id":"libraryDataGroup",
         "Description":"Library Data Group",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":233,
         "RepeatingFields":2,
         "Fields":[
@@ -20438,7 +21105,13 @@
         "PGN":130572,
         "Id":"libraryDataSearch",
         "Description":"Library Data Search",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":233,
         "RepeatingFields":0,
         "Fields":[
@@ -20589,7 +21262,13 @@
         "PGN":130573,
         "Id":"supportedSourceData",
         "Description":"Supported Source Data",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":233,
         "RepeatingFields":10,
         "Fields":[
@@ -20799,7 +21478,13 @@
         "PGN":130574,
         "Id":"supportedZoneData",
         "Description":"Supported Zone Data",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":233,
         "RepeatingFields":2,
         "Fields":[
@@ -20864,7 +21549,13 @@
         "PGN":130576,
         "Id":"smallCraftStatus",
         "Description":"Small Craft Status",
-        "Complete":true,
+        "Type":"Single",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":2,
         "RepeatingFields":0,
         "Fields":[
@@ -20888,7 +21579,13 @@
         "PGN":130577,
         "Id":"directionData",
         "Description":"Direction Data",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -21003,6 +21700,7 @@
         "PGN":130578,
         "Id":"vesselSpeedComponents",
         "Description":"Vessel Speed Components",
+        "Type":"Fast",
         "Complete":true,
         "Length":12,
         "RepeatingFields":0,
@@ -21071,7 +21769,11 @@
         "PGN":130579,
         "Id":"systemConfiguration",
         "Description":"System Configuration",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "FieldLengths",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -21156,7 +21858,11 @@
         "PGN":130580,
         "Id":"systemConfigurationDeprecated",
         "Description":"System Configuration (deprecated)",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "FieldLengths",
+          "SampleData"],
         "Length":2,
         "RepeatingFields":0,
         "Fields":[
@@ -21219,7 +21925,11 @@
         "PGN":130581,
         "Id":"zoneConfigurationDeprecated",
         "Description":"Zone Configuration (deprecated)",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "FieldLengths",
+          "SampleData"],
         "Length":14,
         "RepeatingFields":2,
         "Fields":[
@@ -21284,7 +21994,11 @@
         "PGN":130582,
         "Id":"zoneVolume",
         "Description":"Zone Volume",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "FieldLengths",
+          "SampleData"],
         "Length":4,
         "RepeatingFields":0,
         "Fields":[
@@ -21378,7 +22092,11 @@
         "PGN":130583,
         "Id":"availableAudioEqPresets",
         "Description":"Available Audio EQ presets",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "FieldLengths",
+          "SampleData"],
         "Length":233,
         "RepeatingFields":2,
         "Fields":[
@@ -21447,7 +22165,11 @@
         "PGN":130584,
         "Id":"availableBluetoothAddresses",
         "Description":"Available Bluetooth addresses",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "FieldLengths",
+          "SampleData"],
         "Length":233,
         "RepeatingFields":3,
         "Fields":[
@@ -21528,7 +22250,11 @@
         "PGN":130585,
         "Id":"bluetoothSourceStatus",
         "Description":"Bluetooth source status",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "FieldLengths",
+          "SampleData"],
         "Length":233,
         "RepeatingFields":0,
         "Fields":[
@@ -21598,7 +22324,11 @@
         "PGN":130586,
         "Id":"zoneConfiguration",
         "Description":"Zone Configuration",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "FieldLengths",
+          "SampleData"],
         "Length":14,
         "RepeatingFields":2,
         "Fields":[
@@ -21779,7 +22509,13 @@
         "PGN":130816,
         "Id":"sonichubInit2",
         "Description":"SonicHub: Init #2",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -21870,7 +22606,13 @@
         "PGN":130816,
         "Id":"sonichubAmRadio",
         "Description":"SonicHub: AM Radio",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -21998,7 +22740,12 @@
         "PGN":130816,
         "Id":"sonichubZoneInfo",
         "Description":"SonicHub: Zone info",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -22079,7 +22826,12 @@
         "PGN":130816,
         "Id":"sonichubSource",
         "Description":"SonicHub: Source",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -22167,7 +22919,12 @@
         "PGN":130816,
         "Id":"sonichubSourceList",
         "Description":"SonicHub: Source List",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -22267,7 +23024,12 @@
         "PGN":130816,
         "Id":"sonichubControl",
         "Description":"SonicHub: Control",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -22350,7 +23112,12 @@
         "PGN":130816,
         "Id":"sonichubUnknown",
         "Description":"SonicHub: Unknown",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -22441,7 +23208,12 @@
         "PGN":130816,
         "Id":"sonichubFmRadio",
         "Description":"SonicHub: FM Radio",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -22569,7 +23341,12 @@
         "PGN":130816,
         "Id":"sonichubPlaylist",
         "Description":"SonicHub: Playlist",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -22703,7 +23480,12 @@
         "PGN":130816,
         "Id":"sonichubTrack",
         "Description":"SonicHub: Track",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -22793,7 +23575,12 @@
         "PGN":130816,
         "Id":"sonichubArtist",
         "Description":"SonicHub: Artist",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -22883,7 +23670,12 @@
         "PGN":130816,
         "Id":"sonichubAlbum",
         "Description":"SonicHub: Album",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -22973,7 +23765,12 @@
         "PGN":130816,
         "Id":"sonichubMenuItem",
         "Description":"SonicHub: Menu Item",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23087,7 +23884,12 @@
         "PGN":130816,
         "Id":"sonichubZones",
         "Description":"SonicHub: Zones",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23168,7 +23970,12 @@
         "PGN":130816,
         "Id":"sonichubMaxVolume",
         "Description":"SonicHub: Max Volume",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23262,8 +24069,9 @@
         "PGN":130816,
         "Id":"sonichubVolume",
         "Description":"SonicHub: Volume",
-        "Complete":false,
-        "Length":64,
+        "Type":"Fast",
+        "Complete":true,
+        "Length":8,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -23356,7 +24164,12 @@
         "PGN":130816,
         "Id":"sonichubInit1",
         "Description":"SonicHub: Init #1",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23427,7 +24240,12 @@
         "PGN":130816,
         "Id":"sonichubPosition",
         "Description":"SonicHub: Position",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23508,7 +24326,13 @@
         "PGN":130816,
         "Id":"sonichubInit3",
         "Description":"SonicHub: Init #3",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -23599,7 +24423,12 @@
         "PGN":130816,
         "Id":"simradTextMessage",
         "Description":"Simrad: Text Message",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23707,7 +24536,12 @@
         "PGN":130816,
         "Id":"manufacturerProprietaryFastPacketNonAddressed",
         "Description":"Manufacturer Proprietary fast-packet non-addressed",
-        "Complete":true,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":223,
         "RepeatingFields":0,
         "Fields":[
@@ -23758,7 +24592,12 @@
         "PGN":130817,
         "Id":"navicoProductInformation",
         "Description":"Navico: Product Information",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -23867,7 +24706,12 @@
         "PGN":130818,
         "Id":"simnetReprogramData",
         "Description":"Simnet: Reprogram Data",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":223,
         "RepeatingFields":0,
         "Fields":[
@@ -23926,7 +24770,7 @@
             "Order":6,
             "Id":"data",
             "Name":"Data",
-            "BitLength":1992,
+            "BitLength":1736,
             "BitOffset":48,
             "BitStart":0,
             "Type":"Binary data",
@@ -23935,7 +24779,11 @@
         "PGN":130819,
         "Id":"simnetRequestReprogram",
         "Description":"Simnet: Request Reprogram",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "FieldLengths",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -23974,7 +24822,11 @@
         "PGN":130820,
         "Id":"simnetReprogramStatus",
         "Description":"Simnet: Reprogram Status",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "FieldLengths",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -24039,7 +24891,12 @@
         "PGN":130820,
         "Id":"furunoUnknown",
         "Description":"Furuno: Unknown",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -24118,7 +24975,12 @@
         "PGN":130820,
         "Id":"fusionSourceName",
         "Description":"Fusion: Source Name",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":13,
         "RepeatingFields":0,
         "Fields":[
@@ -24216,7 +25078,12 @@
         "PGN":130820,
         "Id":"fusionTrackInfo",
         "Description":"Fusion: Track Info",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":23,
         "RepeatingFields":0,
         "Fields":[
@@ -24359,7 +25226,12 @@
         "PGN":130820,
         "Id":"fusionTrack",
         "Description":"Fusion: Track",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -24433,7 +25305,12 @@
         "PGN":130820,
         "Id":"fusionArtist",
         "Description":"Fusion: Artist",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -24507,7 +25384,12 @@
         "PGN":130820,
         "Id":"fusionAlbum",
         "Description":"Fusion: Album",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -24581,7 +25463,12 @@
         "PGN":130820,
         "Id":"fusionUnitName",
         "Description":"Fusion: Unit Name",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -24647,7 +25534,12 @@
         "PGN":130820,
         "Id":"fusionZoneName",
         "Description":"Fusion: Zone Name",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -24721,7 +25613,12 @@
         "PGN":130820,
         "Id":"fusionPlayProgress",
         "Description":"Fusion: Play Progress",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -24796,7 +25693,12 @@
         "PGN":130820,
         "Id":"fusionAmFmStation",
         "Description":"Fusion: AM/FM Station",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -24900,7 +25802,12 @@
         "PGN":130820,
         "Id":"fusionVhf",
         "Description":"Fusion: VHF",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -24981,7 +25888,12 @@
         "PGN":130820,
         "Id":"fusionSquelch",
         "Description":"Fusion: Squelch",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -25054,7 +25966,12 @@
         "PGN":130820,
         "Id":"fusionScan",
         "Description":"Fusion: Scan",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -25131,7 +26048,12 @@
         "PGN":130820,
         "Id":"fusionMenuItem",
         "Description":"Fusion: Menu Item",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":23,
         "RepeatingFields":0,
         "Fields":[
@@ -25253,7 +26175,12 @@
         "PGN":130820,
         "Id":"fusionReplay",
         "Description":"Fusion: Replay",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":23,
         "RepeatingFields":0,
         "Fields":[
@@ -25385,7 +26312,12 @@
         "PGN":130820,
         "Id":"fusionMute",
         "Description":"Fusion: Mute",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":5,
         "RepeatingFields":0,
         "Fields":[
@@ -25454,7 +26386,12 @@
         "PGN":130820,
         "Id":"fusionSubVolume",
         "Description":"Fusion: Sub Volume",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -25547,7 +26484,13 @@
         "PGN":130820,
         "Id":"fusionTone",
         "Description":"Fusion: Tone",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -25639,7 +26582,13 @@
         "PGN":130820,
         "Id":"fusionVolume",
         "Description":"Fusion: Volume",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -25732,7 +26681,13 @@
         "PGN":130820,
         "Id":"fusionTransport",
         "Description":"Fusion: Transport",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":5,
         "RepeatingFields":0,
         "Fields":[
@@ -25801,7 +26756,13 @@
         "PGN":130820,
         "Id":"fusionSiriusxmChannel",
         "Description":"Fusion: SiriusXM Channel",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -25867,7 +26828,13 @@
         "PGN":130820,
         "Id":"fusionSiriusxmTitle",
         "Description":"Fusion: SiriusXM Title",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -25933,7 +26900,13 @@
         "PGN":130820,
         "Id":"fusionSiriusxmArtist",
         "Description":"Fusion: SiriusXM Artist",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -25999,7 +26972,13 @@
         "PGN":130820,
         "Id":"fusionSiriusxmGenre",
         "Description":"Fusion: SiriusXM Genre",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -26065,7 +27044,12 @@
         "PGN":130821,
         "Id":"furunoUnknown",
         "Description":"Furuno: Unknown",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -26184,7 +27168,12 @@
         "PGN":130824,
         "Id":"bGWindData",
         "Description":"B&G: Wind data",
+        "Type":"Single",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26248,7 +27237,12 @@
         "PGN":130824,
         "Id":"maretronAnnunciator",
         "Description":"Maretron: Annunciator",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -26327,7 +27321,13 @@
         "PGN":130827,
         "Id":"lowranceUnknown",
         "Description":"Lowrance: unknown",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -26414,7 +27414,13 @@
         "PGN":130828,
         "Id":"simnetSetSerialNumber",
         "Description":"Simnet: Set Serial Number",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26453,7 +27459,12 @@
         "PGN":130831,
         "Id":"suzukiEngineAndStorageDeviceConfig",
         "Description":"Suzuki: Engine and Storage Device Config",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26490,7 +27501,13 @@
         "PGN":130832,
         "Id":"simnetFuelUsedHighResolution",
         "Description":"Simnet: Fuel Used - High Resolution",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26529,7 +27546,13 @@
         "PGN":130834,
         "Id":"simnetEngineAndTankConfiguration",
         "Description":"Simnet: Engine and Tank Configuration",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26568,7 +27591,13 @@
         "PGN":130835,
         "Id":"simnetSetEngineAndTankConfiguration",
         "Description":"Simnet: Set Engine and Tank Configuration",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26607,7 +27636,12 @@
         "PGN":130836,
         "Id":"simnetFluidLevelSensorConfiguration",
         "Description":"Simnet: Fluid Level Sensor Configuration",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -26729,7 +27763,13 @@
         "PGN":130837,
         "Id":"simnetFuelFlowTurbineConfiguration",
         "Description":"Simnet: Fuel Flow Turbine Configuration",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26768,7 +27808,13 @@
         "PGN":130838,
         "Id":"simnetFluidLevelWarning",
         "Description":"Simnet: Fluid Level Warning",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26807,7 +27853,13 @@
         "PGN":130839,
         "Id":"simnetPressureSensorConfiguration",
         "Description":"Simnet: Pressure Sensor Configuration",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26846,7 +27898,13 @@
         "PGN":130840,
         "Id":"simnetDataUserGroupConfiguration",
         "Description":"Simnet: Data User Group Configuration",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26885,7 +27943,13 @@
         "PGN":130842,
         "Id":"simnetAisClassBStaticDataMsg24PartA",
         "Description":"Simnet: AIS Class B static data (msg 24 Part A)",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":29,
         "RepeatingFields":0,
         "Fields":[
@@ -26984,7 +28048,12 @@
         "PGN":130842,
         "Id":"simnetAisClassBStaticDataMsg24PartB",
         "Description":"Simnet: AIS Class B static data (msg 24 Part B)",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":37,
         "RepeatingFields":0,
         "Fields":[
@@ -27221,7 +28290,13 @@
         "PGN":130843,
         "Id":"simnetSonarStatusFrequencyAndDspVoltage",
         "Description":"Simnet: Sonar Status, Frequency and DSP Voltage",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -27260,7 +28335,12 @@
         "PGN":130845,
         "Id":"simnetCompassHeadingOffset",
         "Description":"Simnet: Compass Heading Offset",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -27367,7 +28447,13 @@
         "PGN":130845,
         "Id":"simnetCompassLocalField",
         "Description":"Simnet: Compass Local Field",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -27474,7 +28560,13 @@
         "PGN":130845,
         "Id":"simnetCompassFieldAngle",
         "Description":"Simnet: Compass Field Angle",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -27580,7 +28672,13 @@
         "PGN":130845,
         "Id":"simnetParameterHandle",
         "Description":"Simnet: Parameter Handle",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -27726,7 +28824,13 @@
         "PGN":130847,
         "Id":"seatalkNodeStatistics",
         "Description":"SeaTalk: Node Statistics",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":0,
         "RepeatingFields":0,
         "Fields":[
@@ -27803,7 +28907,12 @@
         "PGN":130850,
         "Id":"simnetEventCommandApCommand",
         "Description":"Simnet: Event Command: AP command",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -27926,7 +29035,12 @@
         "PGN":130850,
         "Id":"simnetEventCommandAlarm",
         "Description":"Simnet: Event Command: Alarm?",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -28030,7 +29144,12 @@
         "PGN":130850,
         "Id":"simnetEventCommandUnknown",
         "Description":"Simnet: Event Command: Unknown",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -28120,7 +29239,12 @@
         "PGN":130851,
         "Id":"simnetEventReplyApCommand",
         "Description":"Simnet: Event Reply: AP command",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -28241,7 +29365,13 @@
         "PGN":130856,
         "Id":"simnetAlarmMessage",
         "Description":"Simnet: Alarm Message",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -28313,7 +29443,13 @@
         "PGN":130880,
         "Id":"airmarAdditionalWeatherData",
         "Description":"Airmar: Additional Weather Data",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":30,
         "RepeatingFields":0,
         "Fields":[
@@ -28393,7 +29529,13 @@
         "PGN":130881,
         "Id":"airmarHeaterControl",
         "Description":"Airmar: Heater Control",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -28473,7 +29615,13 @@
         "PGN":130944,
         "Id":"airmarPost",
         "Description":"Airmar: POST",
+        "Type":"Fast",
         "Complete":false,
+        "Missing":[
+          "Fields",
+          "FieldLengths",
+          "Precision",
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
