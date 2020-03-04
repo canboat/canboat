@@ -2161,9 +2161,10 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
     sep = " ";
   }
 
-  g_variableFieldRepeat[0] = 0;
-  g_variableFieldRepeat[1] = 0;
+  g_variableFieldRepeat[0] = 255; // Can be overridden by '# of parameters'
+  g_variableFieldRepeat[1] = 0;   // Can be overridden by '# of parameters'
   g_variableFieldIndex     = 0;
+
   if (pgn->repeatingFields >= 100)
   {
     variableFieldCount[0] = pgn->repeatingFields % 100;
@@ -2174,6 +2175,7 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
     variableFieldCount[0] = pgn->repeatingFields % 100;
     variableFieldCount[1] = 0;
   }
+
   variableFieldStart = pgn->fieldCount - variableFieldCount[0] - variableFieldCount[1];
   logDebug("fieldCount=%d variableFieldStart=%d\n", pgn->fieldCount, variableFieldStart);
 
@@ -2195,7 +2197,7 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
       variableFields[0] = variableFieldCount[0] * g_variableFieldRepeat[0];
       variableFields[1] = variableFieldCount[1] * g_variableFieldRepeat[1];
     }
-    if (repetition)
+    if (repetition > 0)
     {
       if (variableFields[0])
       {
