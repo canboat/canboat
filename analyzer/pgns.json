@@ -26679,8 +26679,8 @@
             "Signed":false}]},
       {
         "PGN":130820,
-        "Id":"fusionTransport",
-        "Description":"Fusion: Transport",
+        "Id":"fusionPowerState",
+        "Description":"Fusion: Power State",
         "Type":"Fast",
         "Complete":false,
         "Missing":[
@@ -26726,7 +26726,7 @@
             "Order":4,
             "Id":"messageId",
             "Name":"Message ID",
-            "Description":"Transport",
+            "Description":"Power",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -26742,16 +26742,16 @@
             "Signed":false},
           {
             "Order":6,
-            "Id":"transport",
-            "Name":"Transport",
+            "Id":"state",
+            "Name":"State",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Paused","value":"1"},
-              {"name":"Play","value":"2"}]}]},
+              {"name":"On","value":"1"},
+              {"name":"Off","value":"2"}]}]},
       {
         "PGN":130820,
         "Id":"fusionSiriusxmChannel",
