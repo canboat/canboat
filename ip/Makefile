@@ -34,3 +34,6 @@ clean:
 
 $(TARGET1):	iptee.c ../common/common.c ../common/common.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(TARGET1) $(CFLAGS) -I../common iptee.c ../common/common.c
+ifeq ($(notdir $(HELP2MAN)),help2man)
+	-$(HELP2MAN) --no-discard-stderr --version-string=Unknown --output=../man/man1/iptee.1 --name='iptee' $@
+endif
