@@ -1540,7 +1540,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
     {
       heapSize += msg->len - packet->allocSize;
       logDebug(
-          "Resizing buffer for PGN %u device %u to accomodate %u bytes (heap %zu bytes)\n", pgn->pgn, msg->src, msg->len, heapSize);
+          "Resizing buffer for PGN %u device %u to accommodate %u bytes (heap %zu bytes)\n", pgn->pgn, msg->src, msg->len, heapSize);
       packet->data = realloc(packet->data, msg->len);
       if (!packet->data)
       {
@@ -1563,7 +1563,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
       if (packet->allocSize < newSize)
       {
         heapSize += newSize - packet->allocSize;
-        logDebug("Resizing buffer for PGN %u device %u to accomodate %zu bytes (heap %zu bytes)\n",
+        logDebug("Resizing buffer for PGN %u device %u to accommodate %zu bytes (heap %zu bytes)\n",
                  pgn->pgn,
                  msg->src,
                  newSize,

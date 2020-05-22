@@ -2156,7 +2156,7 @@ Pgn pgnList[] = {
       {0}}}
 
     ,
-    {"Seatalk1: Device Indentification",
+    {"Seatalk1: Device Identification",
      126720,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -3882,7 +3882,7 @@ Pgn pgnList[] = {
       {"Repeat Indicator", 2, 1, false, 0, ""},
       {"Source ID", BYTES(4), 1, false, "MMSI", ""},
       {"NMEA 2000 Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {"AIS Tranceiver Information", BYTES(1), 1, false, 0, ""},
+      {"AIS Transceiver Information", BYTES(1), 1, false, 0, ""},
       {"Spare", BYTES(1), 1, false, 0, ""},
       {"Longitude", BYTES(4), 1, false, 0, ""},
       {"Latitude", BYTES(4), 1, false, 0, ""},
