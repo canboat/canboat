@@ -3187,14 +3187,14 @@ Pgn pgnList[] = {
     {"DC Voltage/Current",
      127751,
      PACKET_COMPLETE,
-     PACKET_FAST,
-     0x09,
+     PACKET_SINGLE,
+     0x08,
      0,
      {{"SID", BYTES(1), RES_BINARY, false, 0, ""},
       {"Connection Number", BYTES(1), 1, false, 0, ""},
-      {"DC Voltage", BYTES(2), 1, false, "V", ""},
-      {"DC Current", BYTES(3), 0.01, false, "A", ""},
-      {"Reserved", BYTES(2), RES_NOTUSED, false, 0, ""},
+      {"DC Voltage", BYTES(2), 0.1, false, "V", ""},
+      {"DC Current", BYTES(3), 0.01, true, "A", ""},
+      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {0}}}
 
     /* https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf */
