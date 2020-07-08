@@ -2345,7 +2345,6 @@ Pgn pgnList[] = {
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=42", "Calibrate Temperature"},
       {"Temperature instance", 2, RES_LOOKUP, false, ",0=Device Sensor,1=Onboard Water Sensor,2=Optional Water Sensor", ""},
       {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
-      {"Temperature offset", BYTES(2), 0.1, false, "Hz", ""},
       {"Temperature offset", BYTES(2), 0.001, true, "K", "actual range is -9.999 to +9.999 K"},
       {0}}}
 
