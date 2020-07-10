@@ -60,6 +60,7 @@ static void closeStream(int i);
 typedef void (*ReadHandler)(int i);
 /* ... is the prototype for the following types of read-read file descriptors: */
 static void handleClientRequest(int i);
+static void checkEof(int i);
 static void acceptAISClient(int i);
 static void acceptRawInputClient(int i);
 static void acceptJSONClient(int i);
@@ -113,7 +114,7 @@ ReadHandler readHandlers[SOCKET_TYPE_MAX] = {0,
                                              handleClientRequest,
                                              handleClientRequest,
                                              handleClientRequest,
-                                             0,
+                                             checkEof,
                                              acceptAISClient,
                                              acceptRawInputClient,
                                              acceptJSONClient,
@@ -849,6 +850,27 @@ static bool storeMessage(char *line, size_t len)
   m->m_time = now + valid;
   return true;
 }
+void checkEof(int i)
+{
+  ssize_t r;
+  char buf[100];
+  
+  logDebug("checkEof: read i=%d\n", i);
+  logDebug("checkEof %s i=%d fd=%d \n", streamTypeName[stream[i].type], i, stream[i].fd);
+  r = read(stream[i].fd, buf, 99);
+
+  if (r <= 0)
+  {
+    logDebug("checkEof %s i=%d fd=%d r=%d\n", streamTypeName[stream[i].type], i, stream[i].fd, r);
+    if (stream[i].type == DATA_INPUT_STREAM)
+    {
+      logAbort("EOF on reading stdin\n");
+    }
+    closeStream(i);
+    return;
+  }
+}
+
 
 void handleClientRequest(int i)
 {
