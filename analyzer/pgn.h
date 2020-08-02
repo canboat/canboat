@@ -3153,6 +3153,45 @@ Pgn pgnList[] = {
       {"Generator Off Reason", BYTES(1), 1, false, 0, ""},
       {0}}}
 
+    ,
+    {"AC Power / Current - Phase A",
+     127744,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     8,
+     0,
+     {{"SID", BYTES(1), 1, false, 0, ""},
+      {"Connection Number", BYTES(1), 1, false, 0, ""},
+      {"AC RMS Current", BYTES(2), 0.1, false, "A", ""},
+      {"Power", BYTES(4), 1, true, "W", ""},
+      {0}}}
+
+    ,
+    {"AC Power / Current - Phase B",
+     127745,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     8,
+     0,
+     {{"SID", BYTES(1), 1, false, 0, ""},
+      {"Connection Number", BYTES(1), 1, false, 0, ""},
+      {"AC RMS Current", BYTES(2), 0.1, false, "A", ""},
+      {"Power", BYTES(4), 1, true, "W", ""},
+      {0}}}
+
+    ,
+    {"AC Power / Current - Phase C",
+     127746,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     8,
+     0,
+     {{"SID", BYTES(1), 1, false, 0, ""},
+      {"Connection Number", BYTES(1), 1, false, 0, ""},
+      {"AC RMS Current", BYTES(2), 0.1, false, "A", ""},
+      {"Power", BYTES(4), 1, true, "W", ""},
+      {0}}}
+        
     /* https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf */
     ,
     {"Leeway Angle",
