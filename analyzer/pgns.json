@@ -10728,9 +10728,12 @@
             "BitLength":4,
             "BitOffset":8,
             "BitStart":0,
-            "Units":"0=Flooded,1=Gel,2=AGM",
             "Type":"Lookup table",
-            "Signed":false},
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Flooded","value":"0"},
+              {"name":"Gel","value":"1"},
+              {"name":"AGM","value":"2"}]},
           {
             "Order":3,
             "Id":"supportsEqualization",
@@ -10738,7 +10741,11 @@
             "BitLength":2,
             "BitOffset":12,
             "BitStart":4,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Not Supported","value":"0"},
+              {"name":"Supported","value":"1"}]},
           {
             "Order":4,
             "Id":"reserved",
@@ -10755,9 +10762,16 @@
             "BitLength":4,
             "BitOffset":16,
             "BitStart":0,
-            "Units":"0=6V,1=12V,2=24V,3=32V,4=36V,5=42V,6=48V",
             "Type":"Lookup table",
-            "Signed":false},
+            "Signed":false,
+            "EnumValues":[
+              {"name":"6V","value":"0"},
+              {"name":"12V","value":"1"},
+              {"name":"24V","value":"2"},
+              {"name":"32V","value":"3"},
+              {"name":"36V","value":"4"},
+              {"name":"42V","value":"5"},
+              {"name":"48V","value":"6"}]},
           {
             "Order":6,
             "Id":"chemistry",
@@ -10765,9 +10779,14 @@
             "BitLength":4,
             "BitOffset":20,
             "BitStart":4,
-            "Units":"0=LeadAcid,1=Li,2=Nicad,3=Zno,4=NiMH",
             "Type":"Lookup table",
-            "Signed":false},
+            "Signed":false,
+            "EnumValues":[
+              {"name":"LeadAcid","value":"0"},
+              {"name":"Li","value":"1"},
+              {"name":"Nicad","value":"2"},
+              {"name":"Zno","value":"3"},
+              {"name":"NiMH","value":"4"}]},
           {
             "Order":7,
             "Id":"capacity",
