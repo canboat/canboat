@@ -27,9 +27,15 @@ all: $(TARGETS)
 
 $(COMMAND): command.c ../common/common.c ../common/common.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(COMMAND) -I../common command.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+ifeq ($(notdir $(HELP2MAN)),help2man)
+	-$(HELP2MAN) --no-discard-stderr --version-string=Unknown --output=../man/man1/command-group-function.1 --name='command-group-function' $@
+endif
 
 $(REQUEST): request.c ../common/common.c ../common/common.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(REQUEST) -I../common request.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+ifeq ($(notdir $(HELP2MAN)),help2man)
+	-$(HELP2MAN) --no-discard-stderr --version-string=Unknown --output=../man/man1/request-group-function.1 --name='request-group-function' $@
+endif
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
