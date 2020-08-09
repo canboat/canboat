@@ -21,6 +21,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "common.h"
 
+StringBuffer sbNew;
+
 static const char *logLevels[] = {"FATAL", "ERROR", "INFO", "DEBUG"};
 
 static LogLevel logLevel = LOGLEVEL_INFO;
