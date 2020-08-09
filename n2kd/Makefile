@@ -28,6 +28,9 @@ all: $(TARGETS)
 
 $(N2KD): main.c nmea0183.c gps_ais.c gps_ais.h nmea0183.h ../common/common.c ../common/common.h Makefile
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(N2KD) -I../common main.c gps_ais.c nmea0183.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+ifeq ($(notdir $(HELP2MAN)),help2man)
+	-$(HELP2MAN) --no-discard-stderr --version-string=Unknown --output=../man/man1/n2kd.1 --name='n2kd' $@
+endif
 
 $(N2KD_MONITOR): n2kd_monitor
 	cp n2kd_monitor $(N2KD_MONITOR)

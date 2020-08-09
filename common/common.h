@@ -107,7 +107,7 @@ enum Base64Encoding
   BASE64_AIS
 };
 
-StringBuffer sbNew;
+extern StringBuffer sbNew;
 
 void  sbAppendEncodeHex(StringBuffer *sb, const void *data, size_t len, char separator);                     // binary to hex
 void  sbAppendEncodeBase64(StringBuffer *sb, const uint8_t *data, size_t len, enum Base64Encoding encoding); // binary to Base64

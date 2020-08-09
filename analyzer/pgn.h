@@ -718,6 +718,19 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",2=Test Command off"              \
    ",3=Test Command on")
 
+#define LOOKUP_CONVERTER_STATE \
+  (",0=Off"                    \
+   ",1=Low Power Mode"         \
+   ",2=Fault"                  \
+   ",3=Bulk"                   \
+   ",4=Absorption"             \
+   ",5=Float"                  \
+   ",6=Storage"                \
+   ",7=Equalize"               \
+   ",8=Pass thru"              \
+   ",9=Inverting"              \
+   ",10=Assisting")
+
 typedef enum PacketComplete
 {
   PACKET_COMPLETE              = 0,
@@ -1382,6 +1395,22 @@ Pgn pgnList[] = {
      0,
      0,
      true}
+
+    ,
+    {"Maretron: Proprietary DC Breaker Current",
+     65284,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     8,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Bank Instance", BYTES(1), 1, false, 0, ""},
+      {"Indicator Number", BYTES(1), 1, false, 0, ""},
+      {"Breaker Current", BYTES(2), 0.1, true, "A", ""},
+      {"Reserved", BYTES(2), 1, false, 0, ""},
+      {0}}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -2156,7 +2185,7 @@ Pgn pgnList[] = {
       {0}}}
 
     ,
-    {"Seatalk1: Device Indentification",
+    {"Seatalk1: Device Identification",
      126720,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -2345,7 +2374,6 @@ Pgn pgnList[] = {
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=42", "Calibrate Temperature"},
       {"Temperature instance", 2, RES_LOOKUP, false, ",0=Device Sensor,1=Onboard Water Sensor,2=Optional Water Sensor", ""},
       {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
-      {"Temperature offset", BYTES(2), 0.1, false, "Hz", ""},
       {"Temperature offset", BYTES(2), 0.001, true, "K", "actual range is -9.999 to +9.999 K"},
       {0}}}
 
@@ -3192,6 +3220,37 @@ Pgn pgnList[] = {
       {"Power", BYTES(4), 1, true, "W", ""},
       {0}}}
         
+    ,
+    {"Converter Status",
+     127750,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     0x08,
+     0,
+     {{"SID", BYTES(1), RES_BINARY, false, 0, ""},
+      {"Connection Number", BYTES(1), 1, false, 0, ""},
+      {"Operating State", BYTES(1), RES_LOOKUP, false, LOOKUP_CONVERTER_STATE, ""},
+      {"Temperature State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Over Temperature,3=Not Available", ""},
+      {"Overload State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Overload,3=Not Available", ""},
+      {"Low DC Voltage State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=DC voltage too low,3=Not Available", ""},
+      {"Ripple State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Ripple Too High,3=Not Available", ""},
+      {"Reserved", BYTES(4), RES_NOTUSED, false, 0, ""},
+      {0}}}
+
+    ,
+    {"DC Voltage/Current",
+     127751,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     0x08,
+     0,
+     {{"SID", BYTES(1), RES_BINARY, false, 0, ""},
+      {"Connection Number", BYTES(1), 1, false, 0, ""},
+      {"DC Voltage", BYTES(2), 0.1, false, "V", ""},
+      {"DC Current", BYTES(3), 0.01, true, "A", ""},
+      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
+      {0}}}
+
     /* https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf */
     ,
     {"Leeway Angle",
@@ -3921,7 +3980,7 @@ Pgn pgnList[] = {
       {"Repeat Indicator", 2, 1, false, 0, ""},
       {"Source ID", BYTES(4), 1, false, "MMSI", ""},
       {"NMEA 2000 Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {"AIS Tranceiver Information", BYTES(1), 1, false, 0, ""},
+      {"AIS Transceiver Information", BYTES(1), 1, false, 0, ""},
       {"Spare", BYTES(1), 1, false, 0, ""},
       {"Longitude", BYTES(4), 1, false, 0, ""},
       {"Latitude", BYTES(4), 1, false, 0, ""},
@@ -5978,7 +6037,7 @@ Pgn pgnList[] = {
       {0}}}
 
     ,
-    {"Fusion: Transport",
+    {"Fusion: Power State",
      130820,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
@@ -5987,9 +6046,9 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=32", "Transport"},
+      {"Message ID", BYTES(1), 1, false, "=32", "Power"},
       {"A", BYTES(1), 1, false, 0, ""},
-      {"Transport", BYTES(1), RES_LOOKUP, false, ",1=Paused,2=Play", ""},
+      {"State", BYTES(1), RES_LOOKUP, false, ",1=On,2=Off", ""},
       {0}}}
 
     ,
@@ -6211,6 +6270,27 @@ Pgn pgnList[] = {
       {0}}}
 
     ,
+    {"Maretron Proprietary Switch Status Counter",
+     130836,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     16,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Bank Instance", BYTES(1), 1, false, 0, ""},
+      {"Indicator Number", BYTES(1), 1, false, 0, ""},
+      {"Start Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
+      {"Start Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
+      {"OFF Counter", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"ON Counter", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"ERROR Counter", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Switch Status", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
+      {"Reserved", BYTES(2), 1, false, 0, ""},
+      {0}}}
+
+    ,
     {"Simnet: Fuel Flow Turbine Configuration",
      130837,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -6220,6 +6300,27 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {0}}}
+
+    ,
+    {"Maretron Proprietary Switch Status Timer",
+     130837,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     23,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Bank Instance", BYTES(1), 1, false, 0, ""},
+      {"Indicator Number", BYTES(1), 1, false, 0, ""},
+      {"Start Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
+      {"Start Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
+      {"Accumulated OFF Period", BYTES(4),  RES_DECIMAL, false, "seconds", ""},
+      {"Accumulated ON Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
+      {"Accumulated ERROR Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
+      {"Switch Status", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
+      {"Reserved", 6, 1, false, 0, ""},
       {0}}}
 
     ,

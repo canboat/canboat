@@ -2459,6 +2459,89 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>65284</PGN>
+      <Id>maretronProprietaryDcBreakerCurrent</Id>
+      <Description>Maretron: Proprietary DC Breaker Current</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Maretron</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>137</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>bankInstance</Id>
+          <Name>Bank Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>indicatorNumber</Id>
+          <Name>Indicator Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>breakerCurrent</Id>
+          <Name>Breaker Current</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>A</Units>
+          <Resolution>0.1</Resolution>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>65285</PGN>
       <Id>airmarBootStateAcknowledgment</Id>
       <Description>Airmar: Boot State Acknowledgment</Description>
@@ -7412,20 +7495,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>7</Order>
           <Id>temperatureOffset</Id>
           <Name>Temperature offset</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Units>Hz</Units>
-          <Resolution>0.1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>temperatureOffset</Id>
-          <Name>Temperature offset</Name>
           <Description>actual range is -9.999 to +9.999 K</Description>
           <BitLength>16</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>K</Units>
           <Resolution>0.001</Resolution>
@@ -12263,6 +12335,194 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>127750</PGN>
+      <Id>converterStatus</Id>
+      <Description>Converter Status</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>connectionNumber</Id>
+          <Name>Connection Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>operatingState</Id>
+          <Name>Operating State</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='Low Power Mode' />
+            <EnumPair Value='2' Name='Fault' />
+            <EnumPair Value='3' Name='Bulk' />
+            <EnumPair Value='4' Name='Absorption' />
+            <EnumPair Value='5' Name='Float' />
+            <EnumPair Value='6' Name='Storage' />
+            <EnumPair Value='7' Name='Equalize' />
+            <EnumPair Value='8' Name='Pass thru' />
+            <EnumPair Value='9' Name='Inverting' />
+            <EnumPair Value='10' Name='Assisting' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>temperatureState</Id>
+          <Name>Temperature State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Ok' />
+            <EnumPair Value='1' Name='Warning' />
+            <EnumPair Value='2' Name='Over Temperature' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>overloadState</Id>
+          <Name>Overload State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>26</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Ok' />
+            <EnumPair Value='1' Name='Warning' />
+            <EnumPair Value='2' Name='Overload' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>lowDcVoltageState</Id>
+          <Name>Low DC Voltage State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Ok' />
+            <EnumPair Value='1' Name='Warning' />
+            <EnumPair Value='2' Name='DC voltage too low' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>rippleState</Id>
+          <Name>Ripple State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Ok' />
+            <EnumPair Value='1' Name='Warning' />
+            <EnumPair Value='2' Name='Ripple Too High' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>127751</PGN>
+      <Id>dcVoltageCurrent</Id>
+      <Description>DC Voltage/Current</Description>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
+      <Length>9</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>connectionNumber</Id>
+          <Name>Connection Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>dcVoltage</Id>
+          <Name>DC Voltage</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>V</Units>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>dcCurrent</Id>
+          <Name>DC Current</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>A</Units>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -30034,8 +30294,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionTransport</Id>
-      <Description>Fusion: Transport</Description>
+      <Id>fusionPowerState</Id>
+      <Description>Fusion: Power State</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -30085,7 +30345,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Transport</Description>
+          <Description>Power</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -30103,16 +30363,16 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>transport</Id>
-          <Name>Transport</Name>
+          <Id>state</Id>
+          <Name>State</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues>
-            <EnumPair Value='1' Name='Paused' />
-            <EnumPair Value='2' Name='Play' />
+            <EnumPair Value='1' Name='On' />
+            <EnumPair Value='2' Name='Off' />
           </EnumValues>
         </Field>
       </Fields>
@@ -31255,6 +31515,152 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130836</PGN>
+      <Id>maretronProprietarySwitchStatusCounter</Id>
+      <Description>Maretron Proprietary Switch Status Counter</Description>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
+      <Length>16</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Maretron</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>137</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>bankInstance</Id>
+          <Name>Bank Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>indicatorNumber</Id>
+          <Name>Indicator Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>startDate</Id>
+          <Name>Start Date</Name>
+          <Description>Timestamp of last reset in Days since January 1, 1970</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>days</Units>
+                 <Type>Date</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>startTime</Id>
+          <Name>Start Time</Name>
+          <Description>Timestamp of last reset Seconds since midnight</Description>
+          <BitLength>32</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>s</Units>
+                 <Type>Time</Type>
+                 <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>offCounter</Id>
+          <Name>OFF Counter</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>onCounter</Id>
+          <Name>ON Counter</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>errorCounter</Id>
+          <Name>ERROR Counter</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>switchStatus</Id>
+          <Name>Switch Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+            <EnumPair Value='2' Name='Failed' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>106</BitOffset>
+          <BitStart>2</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130837</PGN>
       <Id>simnetFuelFlowTurbineConfiguration</Id>
       <Description>Simnet: Fuel Flow Turbine Configuration</Description>
@@ -31301,6 +31707,152 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitStart>5</BitStart>
           <Match>4</Match>
                  <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130837</PGN>
+      <Id>maretronProprietarySwitchStatusTimer</Id>
+      <Description>Maretron Proprietary Switch Status Timer</Description>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
+      <Length>23</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Maretron</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>137</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>bankInstance</Id>
+          <Name>Bank Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>indicatorNumber</Id>
+          <Name>Indicator Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>startDate</Id>
+          <Name>Start Date</Name>
+          <Description>Timestamp of last reset in Days since January 1, 1970</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>days</Units>
+                 <Type>Date</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>startTime</Id>
+          <Name>Start Time</Name>
+          <Description>Timestamp of last reset Seconds since midnight</Description>
+          <BitLength>32</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>s</Units>
+                 <Type>Time</Type>
+                 <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>accumulatedOffPeriod</Id>
+          <Name>Accumulated OFF Period</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>seconds</Units>
+                 <Type>Decimal encoded number</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>accumulatedOnPeriod</Id>
+          <Name>Accumulated ON Period</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>seconds</Units>
+                 <Type>Decimal encoded number</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>accumulatedErrorPeriod</Id>
+          <Name>Accumulated ERROR Period</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>seconds</Units>
+                 <Type>Decimal encoded number</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>switchStatus</Id>
+          <Name>Switch Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>176</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+            <EnumPair Value='2' Name='Failed' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>178</BitOffset>
+          <BitStart>2</BitStart>
           <Signed>false</Signed>
         </Field>
       </Fields>

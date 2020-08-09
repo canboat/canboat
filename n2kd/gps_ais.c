@@ -1096,7 +1096,7 @@ int aisEnum(const char *msg, const char *fieldName)
                        {h146, 0, "Not available"},
                        {h147, 1, "Not engaged in special maneuver"},
                        {h148, 2, "Engaged in special maneuver"},
-                       {h149, 3, "Reserverd"}};
+                       {h149, 3, "Reserved"}};
 
   // Calculate field offset in eValue list. Dealing with compiled values
   for (i = 0; fieldName[i] != '\0'; i++)
