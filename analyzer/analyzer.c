@@ -23,6 +23,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #define GLOBALS
 #include "analyzer.h"
+
 #include "common.h"
 
 enum RawFormats
@@ -784,8 +785,8 @@ static bool printPressure(char *name, uint32_t v, Field *field)
     }
   }
 
-  bar = pressure / 100000.0; /* 1000 hectopascal = 1 Bar */
-  psi = pressure / 1450.377; /* Silly but still used in some parts of the world */
+  bar = pressure * 1e-5;        /* 1000 hectopascal = 1 Bar */
+  psi = pressure * 1.450377e-4; /* Silly but still used in some parts of the world */
 
   if (showJson)
   {
@@ -1539,8 +1540,11 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
     if (packet->allocSize < msg->len)
     {
       heapSize += msg->len - packet->allocSize;
-      logDebug(
-          "Resizing buffer for PGN %u device %u to accommodate %u bytes (heap %zu bytes)\n", pgn->pgn, msg->src, msg->len, heapSize);
+      logDebug("Resizing buffer for PGN %u device %u to accommodate %u bytes (heap %zu bytes)\n",
+               pgn->pgn,
+               msg->src,
+               msg->len,
+               heapSize);
       packet->data = realloc(packet->data, msg->len);
       if (!packet->data)
       {
