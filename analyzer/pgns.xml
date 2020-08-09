@@ -12179,9 +12179,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>4</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Units>0=Flooded,1=Gel,2=AGM</Units>
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Flooded' />
+            <EnumPair Value='1' Name='Gel' />
+            <EnumPair Value='2' Name='AGM' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>3</Order>
@@ -12190,7 +12194,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>2</BitLength>
           <BitOffset>12</BitOffset>
           <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Not Supported' />
+            <EnumPair Value='1' Name='Supported' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>4</Order>
@@ -12209,9 +12218,17 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>4</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Units>0=6V,1=12V,2=24V,3=32V,4=36V,5=42V,6=48V</Units>
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='6V' />
+            <EnumPair Value='1' Name='12V' />
+            <EnumPair Value='2' Name='24V' />
+            <EnumPair Value='3' Name='32V' />
+            <EnumPair Value='4' Name='36V' />
+            <EnumPair Value='5' Name='42V' />
+            <EnumPair Value='6' Name='48V' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>6</Order>
@@ -12220,9 +12237,15 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>4</BitLength>
           <BitOffset>20</BitOffset>
           <BitStart>4</BitStart>
-          <Units>0=LeadAcid,1=Li,2=Nicad,3=Zno,4=NiMH</Units>
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='LeadAcid' />
+            <EnumPair Value='1' Name='Li' />
+            <EnumPair Value='2' Name='Nicad' />
+            <EnumPair Value='3' Name='Zno' />
+            <EnumPair Value='4' Name='NiMH' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>7</Order>
