@@ -35,6 +35,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <signal.h>
 #include <sys/select.h>
+
 #include "common.h"
 #include "n2kd.h"
 #include "nmea0183.h"
@@ -61,6 +62,7 @@ static void closeStream(int i);
 typedef void (*ReadHandler)(int i);
 /* ... is the prototype for the following types of read-read file descriptors: */
 static void handleClientRequest(int i);
+static void closeClientRequest(int i);
 static void acceptAISClient(int i);
 static void acceptRawInputClient(int i);
 static void acceptJSONClient(int i);
@@ -114,16 +116,16 @@ ReadHandler readHandlers[SOCKET_TYPE_MAX] = {0,
                                              handleClientRequest,
                                              handleClientRequest,
                                              handleClientRequest,
-                                             0,
+                                             closeClientRequest,
                                              acceptAISClient,
                                              acceptRawInputClient,
                                              acceptJSONClient,
                                              acceptJSONStreamClient,
                                              acceptNMEA0183StreamClient,
                                              handleClientRequest,
-                                             0,
-                                             0,
-                                             0};
+                                             closeClientRequest,
+                                             closeClientRequest,
+                                             closeClientRequest};
 
 int    socketIdxMin = 0;
 int    socketIdxMax = 0;
@@ -131,6 +133,7 @@ SOCKET socketFdMax  = 0;
 fd_set activeSet;
 fd_set readSet;
 fd_set writeSet;
+fd_set errorSet;
 
 typedef struct StreamInfo
 {
@@ -253,7 +256,7 @@ int64_t epoch(void)
   return (int64_t) t.tv_sec * 1000 + t.tv_usec / 1000;
 }
 
-int setFdUsed(SOCKET fd, StreamType ct)
+static int setFdUsed(SOCKET fd, StreamType ct)
 {
   int i;
 
@@ -286,6 +289,7 @@ int setFdUsed(SOCKET fd, StreamType ct)
   else
   {
     FD_CLR(fd, &readSet);
+    /* ignore */ shutdown(fd, SHUT_RD);
   }
 
   switch (stream[i].type)
@@ -300,6 +304,16 @@ int setFdUsed(SOCKET fd, StreamType ct)
       break;
     default:
       FD_CLR(fd, &writeSet);
+      /* ignore */ shutdown(fd, SHUT_WR);
+  }
+
+  if (FD_ISSET(fd, &writeSet) || FD_ISSET(fd, &readSet))
+  {
+    FD_SET(fd, &errorSet);
+  }
+  else
+  {
+    FD_CLR(fd, &errorSet);
   }
 
   socketIdxMax = CB_MAX(socketIdxMax, i);
@@ -495,9 +509,10 @@ static void acceptNMEA0183StreamClient(int i)
   acceptClient(stream[i].fd, CLIENT_NMEA0183_STREAM);
 }
 
-void writeAllClients(void)
+static void writeAllClients(void)
 {
   fd_set         ws;
+  fd_set         es;
   struct timeval timeout = {0, 0};
   int            r;
   int            i;
@@ -508,11 +523,13 @@ void writeAllClients(void)
 
   logDebug("writeAllClients tcp.len=%d\n", tcpMessage.len);
   FD_ZERO(&ws);
+  FD_ZERO(&es);
 
   if (socketIdxMax >= 0)
   {
     ws = writeSet;
-    r  = select(socketFdMax + 1, 0, &ws, 0, &timeout);
+    es = errorSet;
+    r  = select(socketFdMax + 1, 0, &ws, &es, &timeout);
     logDebug("write to %d streams (%u..%u fdMax=%d)\n", r, socketIdxMin, socketIdxMax, socketFdMax);
 
     for (i = socketIdxMin; r > 0 && i <= socketIdxMax; i++)
@@ -530,12 +547,19 @@ void writeAllClients(void)
       {
         logAbort("Inconsistent: fd[%u]=%d, fdMax=%d\n", i, fd, socketFdMax);
       }
-      if (FD_ISSET(fd, &ws))
+      if (FD_ISSET(fd, &es))
+      {
+        logDebug("%s i=%u fd=%d error, closing\n", streamTypeName[stream[i].type], i, fd);
+        closeStream(i);
+      }
+      else if (FD_ISSET(fd, &ws))
       {
         logDebug("%s i=%u fd=%d writable=%d\n", streamTypeName[stream[i].type], i, fd, FD_ISSET(fd, &ws));
         r--;
         if (!now)
+        {
           now = epoch();
+        }
 
         switch (stream[i].type)
         {
@@ -568,20 +592,29 @@ void writeAllClients(void)
             logDebug("NMEA-> %d\n", nmeaMessage.len);
             if (nmeaMessage.len)
             {
-              write(fd, nmeaMessage.data, nmeaMessage.len);
+              if (write(fd, nmeaMessage.data, nmeaMessage.len) < nmeaMessage.len)
+              {
+                closeStream(i);
+              }
             }
             break;
           case CLIENT_JSON_STREAM:
             if (tcpMessage.len)
             {
-              write(fd, tcpMessage.data, tcpMessage.len);
+              if (write(fd, tcpMessage.data, tcpMessage.len) < tcpMessage.len)
+              {
+                closeStream(i);
+              }
             }
             break;
           case DATA_OUTPUT_STREAM:
           case DATA_OUTPUT_COPY:
             if (outMessage.len)
             {
-              write(fd, outMessage.data, outMessage.len);
+              if (write(fd, outMessage.data, outMessage.len) < outMessage.len)
+              {
+                closeStream(i);
+              }
             }
             break;
           default:
@@ -851,7 +884,7 @@ static bool storeMessage(char *line, size_t len)
   return true;
 }
 
-void handleClientRequest(int i)
+static void handleClientRequest(int i)
 {
   ssize_t r;
   char *  p;
@@ -917,9 +950,22 @@ void handleClientRequest(int i)
   }
 }
 
-void checkReadEvents(void)
+static void closeClientRequest(int i)
+{
+  ssize_t r;
+  char    buf[4];
+
+  logDebug("closeClientRequest: read i=%d\n", i);
+  r = read(stream[i].fd, buf, sizeof(buf));
+
+  logDebug("close-on-eof %s i=%d fd=%d %s\n", streamTypeName[stream[i].type], i, stream[i].fd, strerror(errno));
+  closeStream(i);
+}
+
+static void checkReadEvents(void)
 {
   fd_set         rs;
+  fd_set         es;
   struct timeval timeout = {1, 0};
   int            r;
   size_t         i;
@@ -928,13 +974,19 @@ void checkReadEvents(void)
   logDebug("checkReadEvents fdMax=%d\n", socketFdMax);
 
   rs = readSet;
+  es = errorSet;
 
-  r = select(socketFdMax + 1, &rs, 0, 0, &timeout);
+  r = select(socketFdMax + 1, &rs, 0, &es, &timeout);
 
   for (i = socketIdxMin; r > 0 && i <= socketIdxMax; i++)
   {
     fd = stream[i].fd;
 
+    if (fd >= 0 && FD_ISSET(fd, &es))
+    {
+      logDebug("%s i=%u fd=%d error, closing\n", streamTypeName[stream[i].type], i, fd);
+      closeStream(i);
+    }
     if (fd >= 0 && FD_ISSET(fd, &rs))
     {
       (stream[i].readHandler)(i);
@@ -943,7 +995,7 @@ void checkReadEvents(void)
   }
 }
 
-void doServerWork(void)
+static void doServerWork(void)
 {
   for (;;)
   {
