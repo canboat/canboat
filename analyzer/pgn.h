@@ -5955,7 +5955,7 @@ Pgn pgnList[] = {
       {0}}}
 
     ,
-    {"Fusion: Transport",
+    {"Fusion: Power State",
      130820,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
@@ -5964,9 +5964,9 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=32", "Transport"},
+      {"Message ID", BYTES(1), 1, false, "=32", "Power"},
       {"A", BYTES(1), 1, false, 0, ""},
-      {"Transport", BYTES(1), RES_LOOKUP, false, ",1=Paused,2=Play", ""},
+      {"State", BYTES(1), RES_LOOKUP, false, ",1=On,2=Off", ""},
       {0}}}
 
     ,

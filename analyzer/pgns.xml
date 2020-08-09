@@ -30117,8 +30117,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionTransport</Id>
-      <Description>Fusion: Transport</Description>
+      <Id>fusionPowerState</Id>
+      <Description>Fusion: Power State</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -30168,7 +30168,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Transport</Description>
+          <Description>Power</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -30186,16 +30186,16 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>transport</Id>
-          <Name>Transport</Name>
+          <Id>state</Id>
+          <Name>State</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues>
-            <EnumPair Value='1' Name='Paused' />
-            <EnumPair Value='2' Name='Play' />
+            <EnumPair Value='1' Name='On' />
+            <EnumPair Value='2' Name='Off' />
           </EnumValues>
         </Field>
       </Fields>
