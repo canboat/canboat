@@ -4,7 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased, will become 1.4.0]
+
+### Changed
+- Updated various PGNs in #205, #206, #200, #197, #191, #190. Affected PGNs:
+  127513, 127744, 127745, 127746, 127551, 127550, 
+- #192: Fixed display of PSI.
+- #202: Fixed close detection of output-only streams.
+- #193: Fixed compiler compatibility.
+- #195: Fixed typos.
+
+### Added
+- #204: JSON output of `analyzer` will now show all not-set fields as `null` (API change).
+- #194: Generate manpages with help2man if available.
+
+## [1.3.0] - 2020-03-04
+
+### Changed
+- Fix printing of PGNs with repeating fields.
+- #181: Fixed determination of whether PGN is 'fast' or 'single'.
+- Updated/added various PGNs:
+  126983, 126984, 126985, 126720, 130569
+
+### Added
 
 ## [1.2.1] - 2019-02-01
 
