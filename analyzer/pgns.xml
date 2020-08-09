@@ -7495,20 +7495,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>7</Order>
           <Id>temperatureOffset</Id>
           <Name>Temperature offset</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Units>Hz</Units>
-          <Resolution>0.1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>temperatureOffset</Id>
-          <Name>Temperature offset</Name>
           <Description>actual range is -9.999 to +9.999 K</Description>
           <BitLength>16</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>K</Units>
           <Resolution>0.001</Resolution>
