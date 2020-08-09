@@ -12351,6 +12351,194 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>127750</PGN>
+      <Id>converterStatus</Id>
+      <Description>Converter Status</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>connectionNumber</Id>
+          <Name>Connection Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>operatingState</Id>
+          <Name>Operating State</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='Low Power Mode' />
+            <EnumPair Value='2' Name='Fault' />
+            <EnumPair Value='3' Name='Bulk' />
+            <EnumPair Value='4' Name='Absorption' />
+            <EnumPair Value='5' Name='Float' />
+            <EnumPair Value='6' Name='Storage' />
+            <EnumPair Value='7' Name='Equalize' />
+            <EnumPair Value='8' Name='Pass thru' />
+            <EnumPair Value='9' Name='Inverting' />
+            <EnumPair Value='10' Name='Assisting' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>temperatureState</Id>
+          <Name>Temperature State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Ok' />
+            <EnumPair Value='1' Name='Warning' />
+            <EnumPair Value='2' Name='Over Temperature' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>overloadState</Id>
+          <Name>Overload State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>26</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Ok' />
+            <EnumPair Value='1' Name='Warning' />
+            <EnumPair Value='2' Name='Overload' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>lowDcVoltageState</Id>
+          <Name>Low DC Voltage State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Ok' />
+            <EnumPair Value='1' Name='Warning' />
+            <EnumPair Value='2' Name='DC voltage too low' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>rippleState</Id>
+          <Name>Ripple State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Ok' />
+            <EnumPair Value='1' Name='Warning' />
+            <EnumPair Value='2' Name='Ripple Too High' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>127751</PGN>
+      <Id>dcVoltageCurrent</Id>
+      <Description>DC Voltage/Current</Description>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
+      <Length>9</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>connectionNumber</Id>
+          <Name>Connection Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>dcVoltage</Id>
+          <Name>DC Voltage</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>V</Units>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>dcCurrent</Id>
+          <Name>DC Current</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>A</Units>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>128000</PGN>
       <Id>leewayAngle</Id>
       <Description>Leeway Angle</Description>

@@ -718,6 +718,19 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",2=Test Command off"              \
    ",3=Test Command on")
 
+#define LOOKUP_CONVERTER_STATE \
+  (",0=Off"                    \
+   ",1=Low Power Mode"         \
+   ",2=Fault"                  \
+   ",3=Bulk"                   \
+   ",4=Absorption"             \
+   ",5=Float"                  \
+   ",6=Storage"                \
+   ",7=Equalize"               \
+   ",8=Pass thru"              \
+   ",9=Inverting"              \
+   ",10=Assisting")
+
 typedef enum PacketComplete
 {
   PACKET_COMPLETE              = 0,
@@ -3167,6 +3180,37 @@ Pgn pgnList[] = {
       {"Generator State", BYTES(1), 1, false, 0, ""},
       {"Generator On Reason", BYTES(1), 1, false, 0, ""},
       {"Generator Off Reason", BYTES(1), 1, false, 0, ""},
+      {0}}}
+
+    ,
+    {"Converter Status",
+     127750,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     0x08,
+     0,
+     {{"SID", BYTES(1), RES_BINARY, false, 0, ""},
+      {"Connection Number", BYTES(1), 1, false, 0, ""},
+      {"Operating State", BYTES(1), RES_LOOKUP, false, LOOKUP_CONVERTER_STATE, ""},
+      {"Temperature State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Over Temperature,3=Not Available", ""},
+      {"Overload State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Overload,3=Not Available", ""},
+      {"Low DC Voltage State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=DC voltage too low,3=Not Available", ""},
+      {"Ripple State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Ripple Too High,3=Not Available", ""},
+      {"Reserved", BYTES(4), RES_NOTUSED, false, 0, ""},
+      {0}}}
+
+    ,
+    {"DC Voltage/Current",
+     127751,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     0x08,
+     0,
+     {{"SID", BYTES(1), RES_BINARY, false, 0, ""},
+      {"Connection Number", BYTES(1), 1, false, 0, ""},
+      {"DC Voltage", BYTES(2), 0.1, false, "V", ""},
+      {"DC Current", BYTES(3), 0.01, true, "A", ""},
+      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {0}}}
 
     /* https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf */
