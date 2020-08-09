@@ -1326,9 +1326,13 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
   else
   {
     /* For json, which is supposed to be effective for machine operations
-     * we just ignore the special values.
+     * we fold all unknown values to null
      */
-    if (!showJson)
+    if (showJson)
+    {
+      mprintf("%s\"%s\":null", getSep(), fieldName);
+    }
+    else
     {
       switch (value - maxValue)
       {
