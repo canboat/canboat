@@ -11,6 +11,8 @@ if ($ARGC > 1)
   $filterSource = $ARGV[1];
 }
 
+$| = 1;
+
 while (my $line = <STDIN>)
 {
   ($tstamp, $src, $rest) = split(/,/, $line, 3);
