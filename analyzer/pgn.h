@@ -1383,6 +1383,22 @@ Pgn pgnList[] = {
      0,
      true}
 
+    ,
+    {"Maretron: Proprietary DC Breaker Current",
+     65284,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     8,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Bank Instance", BYTES(1), 1, false, 0, ""},
+      {"Indicator Number", BYTES(1), 1, false, 0, ""},
+      {"Breaker Current", BYTES(2), 0.1, true, "A", ""},
+      {"Reserved", BYTES(2), 1, false, 0, ""},
+      {0}}}
+
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Boot State Acknowledgment",
@@ -6172,6 +6188,27 @@ Pgn pgnList[] = {
       {0}}}
 
     ,
+    {"Maretron Proprietary Switch Status Counter",
+     130836,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     16,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Bank Instance", BYTES(1), 1, false, 0, ""},
+      {"Indicator Number", BYTES(1), 1, false, 0, ""},
+      {"Start Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
+      {"Start Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
+      {"OFF Counter", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"ON Counter", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"ERROR Counter", BYTES(1), RES_INTEGER, false, 0, ""},
+      {"Switch Status", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
+      {"Reserved", BYTES(2), 1, false, 0, ""},
+      {0}}}
+
+    ,
     {"Simnet: Fuel Flow Turbine Configuration",
      130837,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -6181,6 +6218,27 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {0}}}
+
+    ,
+    {"Maretron Proprietary Switch Status Timer",
+     130837,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     23,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Bank Instance", BYTES(1), 1, false, 0, ""},
+      {"Indicator Number", BYTES(1), 1, false, 0, ""},
+      {"Start Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
+      {"Start Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
+      {"Accumulated OFF Period", BYTES(4),  RES_DECIMAL, false, "seconds", ""},
+      {"Accumulated ON Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
+      {"Accumulated ERROR Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
+      {"Switch Status", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
+      {"Reserved", 6, 1, false, 0, ""},
       {0}}}
 
     ,
