@@ -49,6 +49,7 @@ bool     rateLimit;
 
 uint32_t protocol = 1;
 int      debug    = 0;
+StringBuffer sbNew;
 
 #define SENSOR_TIMEOUT (120)       /* Timeout when PGN messages expire (no longer retransmitted) */
 #define AIS_TIMEOUT (3600)         /* AIS messages expiration is much longer */
