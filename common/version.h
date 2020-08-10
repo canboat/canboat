@@ -19,4 +19,4 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#define VERSION "1.2.1"
+#define VERSION "1.4.0-beta"
