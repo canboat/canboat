@@ -68,6 +68,15 @@ typedef struct
   Packet packetList[ARRAY_SIZE(pgnList)];
 } DevicePackets;
 
+/* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
+ * but I don't yet know which datafields reserve the reserved values.
+ */
+#define DATAFIELD_UNKNOWN (0)
+#define DATAFIELD_ERROR (-1)
+#define DATAFIELD_RESERVED1 (-2)
+#define DATAFIELD_RESERVED2 (-3)
+#define DATAFIELD_RESERVED3 (-4)
+
 DevicePackets *device[256];
 char *         manufacturer[1 << 12];
 
@@ -75,6 +84,7 @@ bool            showRaw       = false;
 bool            showData      = false;
 bool            showBytes     = false;
 bool            showJson      = false;
+bool            showJsonEmpty = false;
 bool            showJsonValue = false;
 bool            showSI        = false; // Output everything in strict SI units
 char *          sep           = " ";
@@ -101,13 +111,35 @@ static void            printCanRaw(RawMessage *msg);
 void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
-  printf("Usage: %s [[-raw] [-json [-nv] [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] [-src <src> "
-         "| <pgn>]] ["
+  printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
+         "[-src <src> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
          "-explain | -explain-xml [-upper-camel]] | -version\n",
          argv[0]);
+  printf("     -json         Output in json format, for program consumption. Empty values are skipped\n");
+  printf("     -empty        Modified json format where empty values are shown as NULL\n");
+  printf("     -nv           Modified json format where lookup values are shown as name, value pair\n");
+  printf("     -camel        Show fieldnames in normalCamelCase\n");
+  printf("     -upper-camel  Show fieldnames in UpperCamelCase\n");
+  printf("     -d            Print logging from level ERROR, INFO and DEBUG\n");
+  printf("     -q            Print logging from level ERROR\n");
+  printf("     -si           Show values in strict SI units: degrees Kelvin, rotation in radians/sec, etc.\n");
+  printf("     -geo dd       Print geographic format in dd.dddddd format\n");
+  printf("     -geo dm       Print geographic format in dd.mm.mmm format\n");
+  printf("     -geo dms      Print geographic format in dd.mm.sss format\n");
+#ifndef SKIP_SETSYSTEMCLOCK
+  printf("     -clocksrc     Set the systemclock from time info from this NMEA source address\n");
+#endif
+  printf("     -explain      Export the PGN database in JSON format\n");
+  printf("     -explain-xml  Export the PGN database in XML format\n");
+  printf("     -version      Print the version of the program and quit\n");
+  printf("\nThe following options are used to debug the analyzer:\n");
+  printf("     -raw          Print raw bytes (obsolete, use -data)\n");
+  printf("     -data         Print the PGN three times: in hex, ascii and analyzed\n");
+  printf("     -debug        Print raw value per field\n");
+  printf("\n");
   exit(1);
 }
 
@@ -195,9 +227,15 @@ int main(int argc, char **argv)
     {
       showJson = true;
     }
+    else if (strcasecmp(av[1], "-empty") == 0)
+    {
+      showJsonEmpty = true;
+      showJson      = true;
+    }
     else if (strcasecmp(av[1], "-nv") == 0)
     {
       showJsonValue = true;
+      showJson      = true;
     }
     else if (strcasecmp(av[1], "-data") == 0)
     {
@@ -500,6 +538,37 @@ void mwrite(FILE *stream)
   mreset();
 }
 
+static void printEmpty(const char *name, int64_t exceptionValue)
+{
+  if (showJsonEmpty)
+  {
+    mprintf("%s\"%s\":null", getSep(), name);
+  }
+  else if (!showJson)
+  {
+    switch (exceptionValue)
+    {
+      case DATAFIELD_UNKNOWN:
+        mprintf("%s %s = Unknown", getSep(), name);
+        break;
+      case DATAFIELD_ERROR:
+        mprintf("%s %s = ERROR", getSep(), name);
+        break;
+      case DATAFIELD_RESERVED1:
+        mprintf("%s %s = RESERVED1", getSep(), name);
+        break;
+      case DATAFIELD_RESERVED2:
+        mprintf("%s %s = RESERVED2", getSep(), name);
+        break;
+      case DATAFIELD_RESERVED3:
+        mprintf("%s %s = RESERVED3", getSep(), name);
+        break;
+      default:
+        mprintf("%s %s = Unhandled value %ld", getSep(), name, exceptionValue);
+    }
+  }
+}
+
 static void printCanRaw(RawMessage *msg)
 {
   size_t i;
@@ -535,6 +604,7 @@ static bool printLatLon(char *name, double resolution, uint8_t *data, size_t byt
 {
   uint64_t absVal;
   int64_t  value;
+  int64_t  maxValue;
   size_t   i;
 
   value = 0;
@@ -546,8 +616,10 @@ static bool printLatLon(char *name, double resolution, uint8_t *data, size_t byt
   {
     value |= UINT64_C(0xffffffff00000000);
   }
-  if (value > ((bytes == 8) ? INT64_C(0x7ffffffffffffffd) : INT64_C(0x7ffffffd)))
+  maxValue = (bytes == 8) ? INT64_C(0x7fffffffffffffff) : INT64_C(0x7fffffff);
+  if (value > maxValue - 2)
   {
+    printEmpty(name, value - maxValue);
     return false;
   }
 
@@ -626,6 +698,7 @@ static bool printDate(char *name, uint16_t d)
 
   if (d >= 0xfffd)
   {
+    printEmpty(name, d - INT64_C(0xffff));
     return false;
   }
 
@@ -662,6 +735,7 @@ static bool printTime(char *name, uint32_t t)
 
   if (t >= 0xfffffffd)
   {
+    printEmpty(name, t - INT64_C(0xffffffff));
     return false;
   }
 
@@ -704,12 +778,14 @@ static bool printTime(char *name, uint32_t t)
 
 static bool printTemperature(char *name, uint32_t t, uint32_t bits, double resolution)
 {
-  double k = t * resolution;
-  double c = k - 273.15;
-  double f = c * 1.8 + 32;
+  double  k        = t * resolution;
+  double  c        = k - 273.15;
+  double  f        = c * 1.8 + 32;
+  int64_t maxValue = (bits == 16) ? 0xffff : 0xffffff;
 
-  if ((bits == 16 && t >= 0xfffd) || (bits == 24 && t >= 0xfffffd))
+  if (t >= maxValue - 2)
   {
+    printEmpty(name, t - maxValue);
     return false;
   }
 
@@ -717,7 +793,7 @@ static bool printTemperature(char *name, uint32_t t, uint32_t bits, double resol
   {
     if (showJson)
     {
-      mprintf("%s\"%s\":%.2f", getSep(), name, k, f);
+      mprintf("%s\"%s\":%.2f", getSep(), name, k);
     }
     else
     {
@@ -728,7 +804,7 @@ static bool printTemperature(char *name, uint32_t t, uint32_t bits, double resol
 
   if (showJson)
   {
-    mprintf("%s\"%s\":%.2f", getSep(), name, c, f);
+    mprintf("%s\"%s\":%.2f", getSep(), name, c);
   }
   else
   {
@@ -748,11 +824,13 @@ static bool printPressure(char *name, uint32_t v, Field *field)
   {
     if (v >= 0xfffd)
     {
+      printEmpty(name, v - INT64_C(0xffff));
       return false;
     }
   }
   if (v >= 0xfffffffd)
   {
+    printEmpty(name, v - INT64_C(0xffffffff));
     return false;
   }
 
@@ -1032,15 +1110,6 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
   double  a;
 
   extractNumber(field, data, startBit, bits, &value, &maxValue);
-
-  /* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
-   * but I don't yet know which datafields reserve the reserved values.
-   */
-#define DATAFIELD_UNKNOWN (0)
-#define DATAFIELD_ERROR (-1)
-#define DATAFIELD_RESERVED1 (-2)
-#define DATAFIELD_RESERVED2 (-3)
-#define DATAFIELD_RESERVED3 (-4)
 
   if (maxValue >= 15)
   {
@@ -1325,36 +1394,7 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
   }
   else
   {
-    /* For json, which is supposed to be effective for machine operations
-     * we fold all unknown values to null
-     */
-    if (showJson)
-    {
-      mprintf("%s\"%s\":null", getSep(), fieldName);
-    }
-    else
-    {
-      switch (value - maxValue)
-      {
-        case DATAFIELD_UNKNOWN:
-          mprintf("%s %s = Unknown", getSep(), fieldName);
-          break;
-        case DATAFIELD_ERROR:
-          mprintf("%s %s = ERROR", getSep(), fieldName);
-          break;
-        case DATAFIELD_RESERVED1:
-          mprintf("%s %s = RESERVED1", getSep(), fieldName);
-          break;
-        case DATAFIELD_RESERVED2:
-          mprintf("%s %s = RESERVED2", getSep(), fieldName);
-          break;
-        case DATAFIELD_RESERVED3:
-          mprintf("%s %s = RESERVED3", getSep(), fieldName);
-          break;
-        default:
-          mprintf("%s %s = Unhandled value %ld max %ld (%ld)", getSep(), fieldName, value, maxValue, value - maxValue);
-      }
-    }
+    printEmpty(fieldName, value - maxValue);
   }
 
   return true;
@@ -2345,37 +2385,44 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
           }
         }
 
-        if (showJson)
+        if (len > 0)
         {
-          mprintf("%s\"%s\":\"", getSep(), fieldName);
-        }
-        else
-        {
-          mprintf("%s %s = ", getSep(), fieldName);
-        }
-
-        if (showJson)
-        {
-          print_ascii_json_escaped(data, len);
-        }
-        else
-        {
-          for (k = 0; k < len; k++)
+          if (showJson)
           {
-            if (data[k] == 0xff)
+            mprintf("%s\"%s\":\"", getSep(), fieldName);
+          }
+          else
+          {
+            mprintf("%s %s = ", getSep(), fieldName);
+          }
+
+          if (showJson)
+          {
+            print_ascii_json_escaped(data, len);
+          }
+          else
+          {
+            for (k = 0; k < len; k++)
             {
-              break;
-            }
-            if (data[k] >= ' ' && data[k] <= '~')
-            {
-              mprintf("%c", data[k]);
+              if (data[k] == 0xff)
+              {
+                break;
+              }
+              if (data[k] >= ' ' && data[k] <= '~')
+              {
+                mprintf("%c", data[k]);
+              }
             }
           }
-        }
 
-        if (showJson)
+          if (showJson)
+          {
+            mprintf("\"");
+          }
+        }
+        else
         {
-          mprintf("\"");
+          printEmpty(fieldName, DATAFIELD_UNKNOWN);
         }
       }
       else if (field->resolution == RES_STRING)
@@ -2404,7 +2451,7 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
           bytes = 1;
           len   = 0;
         }
-        if (len)
+        if (len > 0)
         {
           if (showJson)
           {
@@ -2414,6 +2461,10 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
           {
             mprintf("%s %s = %.*s", getSep(), fieldName, (int) len, data);
           }
+        }
+        else
+        {
+          printEmpty(fieldName, DATAFIELD_UNKNOWN);
         }
         bits = BYTES(bytes);
       }
