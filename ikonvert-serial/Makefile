@@ -22,6 +22,8 @@ TARGETDIR=../rel/$(PLATFORM)
 IKONVERT=$(TARGETDIR)/ikonvert-serial
 TARGETS=$(IKONVERT)
 
+CFLAGS= -Wall -O2
+
 all: $(TARGETS)
 
 $(IKONVERT): ikonvert-serial.c ikonvert.h ../common/common.c ../common/b64.c ../common/common.h

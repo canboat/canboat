@@ -28,6 +28,8 @@ else
 TARGETS=
 endif
 
+CFLAGS= -Wall -O2
+
 all: $(TARGETS)
 
 $(SOCKETCAN_WRITER): socketcan-writer.c ../analyzer/*.h ../analyzer/*.c ../common/*.h ../common/*.c

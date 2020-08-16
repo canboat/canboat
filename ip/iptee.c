@@ -20,6 +20,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <signal.h>
+
 #include "common.h"
 
 #define LINESIZE 1024
@@ -183,7 +184,6 @@ int main(int argc, char **argv)
   char           msg[LINESIZE];
   int            r;
   int            i;
-  char *         line;
   size_t         len;
 
   setProgName(argv[0]);

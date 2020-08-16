@@ -22,6 +22,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <common.h>
+
 #include "analyzer.h"
 
 Pgn *searchForPgn(int pgn)
@@ -89,7 +90,7 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
 
   prn = pgn->pgn;
 
-  if (pgn == pgnListEnd() - 1 || pgn[1].pgn != prn)
+  if (pgn == pgnList + pgnListSize - 1 || pgn[1].pgn != prn)
   {
     // Don't bother complex search if there is only one PGN with this PRN.
     return pgn;

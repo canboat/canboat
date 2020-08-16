@@ -23,6 +23,8 @@ COMMAND=$(TARGETDIR)/command-group-function
 REQUEST=$(TARGETDIR)/request-group-function
 TARGETS=$(COMMAND) $(REQUEST)
 
+CFLAGS= -Wall -O2
+
 all: $(TARGETS)
 
 $(COMMAND): command.c ../common/common.c ../common/common.h

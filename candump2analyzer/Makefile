@@ -23,6 +23,8 @@ CANDUMP2ANALYZER=$(TARGETDIR)/candump2analyzer
 TARGETS=$(CANDUMP2ANALYZER)
 LDLIBS+=-lm
 
+CFLAGS= -Wall -O2
+
 all: $(TARGETS)
 
 $(CANDUMP2ANALYZER): candump2analyzer.c ../common/common.c ../common/common.h Makefile

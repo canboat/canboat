@@ -55,8 +55,6 @@ int main(int argc, char **argv)
   long                     dest;
   long                     pgn;
   long                     prio;
-  long                     fields[MAX_FIELDS];
-  long                     values[MAX_FIELDS];
   size_t                   cnt = 0;
   command_group_function_t command;
   size_t                   i, bytes;

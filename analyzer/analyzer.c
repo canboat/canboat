@@ -306,10 +306,7 @@ int main(int argc, char **argv)
 
   while (fgets(msg, sizeof(msg) - 1, file))
   {
-    RawMessage   m;
-    unsigned int prio, pgn, dst, src, junk;
-    char *       p;
-    unsigned int i;
+    RawMessage m;
 
     if (*msg == 0 || *msg == '\n')
     {
@@ -1073,7 +1070,6 @@ static bool printDecimal(char *name, uint8_t *data, size_t startBit, size_t bits
 static bool printVarNumber(char *fieldName, Pgn *pgn, uint32_t refPgn, Field *field, uint8_t *data, size_t startBit, size_t *bits)
 {
   Field *refField;
-  size_t size, bytes;
 
   /* PGN 126208 contains variable field length.
    * The field length can be derived from the PGN mentioned earlier in the message,
@@ -1103,7 +1099,6 @@ static bool printVarNumber(char *fieldName, Pgn *pgn, uint32_t refPgn, Field *fi
 
 static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t startBit, size_t bits)
 {
-  bool    ret = false;
   int64_t value;
   int64_t maxValue;
   int64_t reserved;
@@ -1553,7 +1548,6 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
   size_t  bucket;
   Packet *packet;
   Pgn *   pgn = &pgnList[index];
-  size_t  subIndex;
 
   if (!device[msg->src])
   {
@@ -1847,8 +1841,7 @@ static void printXML(int indent, const char *element, const char *p)
 static void explainPGNXML(Pgn pgn)
 {
   int      i;
-  unsigned bitOffset = 0;
-  char *   p;
+  unsigned bitOffset     = 0;
   bool     showBitOffset = true;
 
   printf("    <PGNInfo>\n"
@@ -2131,7 +2124,7 @@ static void explainXML(void)
 
 static void printString(Field *field, const char *fieldName, uint8_t *data, size_t bytes)
 {
-  int     len;
+  uint8_t len;
   int     k;
   uint8_t lastbyte;
 
@@ -2154,9 +2147,9 @@ static void printString(Field *field, const char *fieldName, uint8_t *data, size
       return;
     }
   }
-  else if (field->resolution == RES_ASCII)
+  else // this is when field->resolution == RES_ASCII
   {
-    len = (int) bytes;
+    len = bytes;
   }
 
   // Sanity check
@@ -2221,7 +2214,6 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
 
   uint8_t *dataEnd = dataStart + length;
   size_t   i;
-  Field    field;
   size_t   bits;
   size_t   bytes;
   size_t   startBit;
@@ -2250,7 +2242,6 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
   if (showData)
   {
     FILE *f = stdout;
-    char  c = ' ';
 
     if (showJson)
     {

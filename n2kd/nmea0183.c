@@ -24,12 +24,13 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <math.h>
-#include "common.h"
+#include "nmea0183.h"
 
+#include <math.h>
+
+#include "common.h"
 #include "gps_ais.h"
 #include "n2kd.h"
-#include "nmea0183.h"
 
 extern char *srcFilter;
 extern bool  rateLimit;
@@ -535,11 +536,10 @@ static bool matchFilter(int n, char *filter)
 
 void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
 {
-  char           str[20];
-  int            prn;
-  int            src;
-  struct timeval tv;
-  int            rateType;
+  char str[20];
+  int  prn;
+  int  src;
+  int  rateType;
 
   if (!getJSONValue(msg, "pgn", str, sizeof(str)))
   {

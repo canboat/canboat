@@ -28,12 +28,10 @@ static bool isFile;
 
 int main(int argc, char **argv)
 {
-  int            r;
   int            handle;
   struct termios attr;
   char *         device = 0;
   struct stat    statbuf;
-  int            pid = 0;
 
   setProgName(argv[0]);
 
@@ -79,7 +77,6 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-retry:
   logDebug("Opening %s\n", device);
   handle = open(device, O_RDWR | O_NOCTTY);
   logDebug("fd = %d\n", handle);
@@ -113,7 +110,6 @@ retry:
   for (;;)
   {
     char                 msg[BUFFER_SIZE];
-    size_t               msgLen;
     enum ReadyDescriptor r;
     int                  b;
 

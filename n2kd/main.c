@@ -239,11 +239,6 @@ static int secondaryKeyTimeout[] = {SENSOR_TIMEOUT, SENSOR_TIMEOUT, AIS_TIMEOUT,
 
 /*****************************************************************************************/
 
-static void breakHere(void)
-{
-  abort();
-}
-
 int64_t epoch(void)
 {
   struct timeval t;
@@ -653,7 +648,7 @@ static bool storeMessage(char *line, size_t len)
   char *   s, *e = 0, *e2;
   Message *m;
   int      i, idx, k;
-  int      src, dst, prn = 0;
+  int      src = 0, dst = 255, prn = 0;
   Pgn *    pgn;
   time_t   now;
   char *   key2 = 0;

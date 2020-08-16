@@ -3219,7 +3219,7 @@ Pgn pgnList[] = {
       {"AC RMS Current", BYTES(2), 0.1, false, "A", ""},
       {"Power", BYTES(4), 1, true, "W", ""},
       {0}}}
-        
+
     ,
     {"Converter Status",
      127750,
@@ -6316,7 +6316,7 @@ Pgn pgnList[] = {
       {"Indicator Number", BYTES(1), 1, false, 0, ""},
       {"Start Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
       {"Start Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
-      {"Accumulated OFF Period", BYTES(4),  RES_DECIMAL, false, "seconds", ""},
+      {"Accumulated OFF Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
       {"Accumulated ON Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
       {"Accumulated ERROR Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
       {"Switch Status", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
@@ -6801,15 +6801,6 @@ size_t pgnListSize = ARRAY_SIZE(pgnList);
 extern Pgn    pgnList[];
 extern size_t pgnListSize;
 #endif
-
-static Pgn *pgnListFirst()
-{
-  return pgnList + 0;
-}
-static Pgn *pgnListEnd()
-{
-  return pgnList + pgnListSize;
-}
 
 typedef struct
 {

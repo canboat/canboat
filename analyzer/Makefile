@@ -24,6 +24,8 @@ TARGETS=$(ANALYZER)
 XMLFILE=pgns.xml
 JSONFILE=pgns.json
 
+CFLAGS=-Wall -O2
+
 all: $(TARGETS)
 
 $(ANALYZER): analyzer.c pgn.c analyzer.h pgn.h ../common/common.c ../common/common.h Makefile

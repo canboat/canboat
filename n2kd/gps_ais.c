@@ -1,9 +1,9 @@
-#include "common.h"
+#include "gps_ais.h"
 
 #include <math.h>
 #include <time.h>
 
-#include "gps_ais.h"
+#include "common.h"
 #include "nmea0183.h"
 
 #define MMSI_LENGTH sizeof("244060807")
@@ -235,7 +235,6 @@ Adds ascii strings to the packed 6 bit byte ais vector.
 static int addAisString(char *string, int len, aisVector *payload)
 {
   int           i, k;
-  char *        j;
   unsigned char nextchar;
 
   if (string == NULL)

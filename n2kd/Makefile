@@ -24,6 +24,8 @@ N2KD_MONITOR=$(TARGETDIR)/n2kd_monitor
 TARGETS=$(N2KD) $(N2KD_MONITOR)
 LDLIBS+=-lm
 
+CFLAGS= -Wall -O2
+
 all: $(TARGETS)
 
 $(N2KD): main.c nmea0183.c gps_ais.c gps_ais.h nmea0183.h ../common/common.c ../common/common.h Makefile

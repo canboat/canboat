@@ -22,6 +22,8 @@ TARGETDIR=../rel/$(PLATFORM)
 ACTISENSE=$(TARGETDIR)/actisense-serial
 TARGETS=$(ACTISENSE)
 
+CFLAGS= -Wall -O2
+
 all: $(TARGETS)
 
 $(ACTISENSE): actisense-serial.c actisense.h ../common/common.c ../common/common.h

@@ -22,8 +22,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include "common.h"
-
 #include <fcntl.h>
 #include <math.h>
 #include <stdbool.h>
@@ -37,8 +35,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include <time.h>
 #include <unistd.h>
 
+#include "common.h"
 #include "ikonvert.h"
-
 #include "license.h"
 
 #define SEND_ALL_INIT_MESSAGES (14)
@@ -74,13 +72,11 @@ static void initializeDevice(void);
 
 int main(int argc, char **argv)
 {
-  int            r;
   int            handle;
   struct termios attr;
   char *         name   = argv[0];
   char *         device = 0;
   struct stat    statbuf;
-  int            pid = 0;
 
   setProgName(argv[0]);
   while (argc > 1)
@@ -106,8 +102,7 @@ int main(int argc, char **argv)
     {
       verbose = true;
     }
-    else if (strcasecmp(argv[1], "--rate-limit-off") == 0
-          || strcasecmp(argv[1], "-l") == 0)
+    else if (strcasecmp(argv[1], "--rate-limit-off") == 0 || strcasecmp(argv[1], "-l") == 0)
     {
       rate_limit_off = true;
     }
@@ -225,7 +220,6 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-retry:
   logDebug("Opening %s\n", device);
   if (strncmp(device, "tcp:", STRSIZE("tcp:")) == 0)
   {
@@ -281,7 +275,6 @@ retry:
   for (;;)
   {
     uint8_t data[128];
-    size_t  len;
     ssize_t r;
     int     writeHandle = (sbGetLength(&writeBuffer) > 0) ? handle : INVALID_SOCKET;
     int     inHandle    = (sendInitState == 0 && writeHandle == INVALID_SOCKET) ? STDIN : INVALID_SOCKET;
@@ -621,8 +614,7 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     n2k->dst  = 255;
     storeTimestamp(n2k->timestamp, getNow());
 
-    int    load, errors, count, uptime, addr, rejected;
-    size_t off;
+    int load, errors, count, uptime, addr, rejected;
 
     n2k->len = 15;
     memset(n2k->data, 0xff, n2k->len);

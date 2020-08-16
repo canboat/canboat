@@ -29,6 +29,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 #include <stdio.h>
 #include <time.h>
+
 #include "common.h"
 
 #define MSG_BUF_SIZE 2000
@@ -87,9 +88,9 @@ int main(int argc, char **argv)
 
     // Process the CAN ID
     //
-    unsigned int canid;
-    int          size;
-    double       currentTime;
+    unsigned int canid       = 0;
+    int          size        = 0;
+    double       currentTime = 0.;
 
     // Determine which candump format is being used.
     //
@@ -136,10 +137,10 @@ int main(int argc, char **argv)
       size = size - 8;
     }
 
-    unsigned int pri;
-    unsigned int src;
-    unsigned int dst;
-    unsigned int pgn;
+    unsigned int pri = 0;
+    unsigned int src = 0;
+    unsigned int dst = 255;
+    unsigned int pgn = 0;
 
     getISO11783BitsFromCanId(canid, &pri, &pgn, &src, &dst);
 
