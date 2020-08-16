@@ -2129,6 +2129,90 @@ static void explainXML(void)
          "</PGNDefinitions>\n");
 }
 
+static void printString(Field *field, const char *fieldName, uint8_t *data, size_t bytes)
+{
+  int     len;
+  int     k;
+  uint8_t lastbyte;
+
+  if (field->resolution == RES_STRINGLZ)
+  {
+    len = *data++;
+    bytes--;
+  }
+  else if (field->resolution == RES_STRINGLAU)
+  {
+    int control;
+
+    len = *data++;
+    bytes--;
+    control = *data++;
+    bytes--;
+    if (control == 0)
+    {
+      logError("Unhandled UNICODE string in PGN\n");
+      return;
+    }
+  }
+  else if (field->resolution == RES_ASCII)
+  {
+    len = (int) bytes;
+  }
+
+  // Sanity check
+  if (len > bytes)
+  {
+    len = bytes;
+  }
+
+  if (showBytes)
+  {
+    for (k = 0; k < len; k++)
+    {
+      mprintf("%02x ", data[k]);
+    }
+  }
+
+  if (len > 0)
+  {
+    // rtrim funny stuff from end, we see all sorts
+    lastbyte = data[len - 1];
+    if (lastbyte == 0xff || isspace(lastbyte) || lastbyte == 0 || lastbyte == '@')
+    {
+      while (len > 0 && (data[len - 1] == lastbyte))
+      {
+        len--;
+      }
+    }
+
+    if (showJson)
+    {
+      mprintf("%s\"%s\":\"", getSep(), fieldName);
+      print_ascii_json_escaped(data, len);
+      mprintf("\"");
+    }
+    else
+    {
+      mprintf("%s %s = ", getSep(), fieldName);
+      for (k = 0; k < len; k++)
+      {
+        if (data[k] == 0xff)
+        {
+          break;
+        }
+        if (data[k] >= ' ' && data[k] <= '~')
+        {
+          mprintf("%c", data[k]);
+        }
+      }
+    }
+  }
+  else
+  {
+    printEmpty(fieldName, DATAFIELD_UNKNOWN);
+  }
+}
+
 bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bool showJson)
 {
   Pgn *pgn;
@@ -2335,95 +2419,12 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
     }
     else if (field->resolution < 0.0)
     {
-      int len;
-      int k;
-
       /* These fields have only been found to start on byte boundaries,
        * making their location easier
        */
-      if (field->resolution == RES_STRINGLZ)
+      if (field->resolution == RES_STRINGLZ || field->resolution == RES_STRINGLAU || field->resolution == RES_ASCII)
       {
-        len = *data++;
-        bytes--;
-        goto ascii_string;
-      }
-
-      if (field->resolution == RES_STRINGLAU)
-      {
-        int control;
-
-        len = *data++;
-        bytes--;
-        control = *data++;
-        bytes--;
-        if (control == 0)
-        {
-          logError("Unhandled UNICODE string in PGN\n");
-        }
-        goto ascii_string;
-      }
-
-      if (field->resolution == RES_ASCII)
-      {
-        len                    = (int) bytes;
-        unsigned char lastbyte = data[len - 1];
-
-        if (lastbyte == 0xff || lastbyte == ' ' || lastbyte == 0 || lastbyte == '@')
-        {
-          while (len > 0 && (data[len - 1] == lastbyte))
-          {
-            len--;
-          }
-        }
-
-      ascii_string:
-        if (showBytes)
-        {
-          for (k = 0; k < len; k++)
-          {
-            mprintf("%02x ", data[k]);
-          }
-        }
-
-        if (len > 0)
-        {
-          if (showJson)
-          {
-            mprintf("%s\"%s\":\"", getSep(), fieldName);
-          }
-          else
-          {
-            mprintf("%s %s = ", getSep(), fieldName);
-          }
-
-          if (showJson)
-          {
-            print_ascii_json_escaped(data, len);
-          }
-          else
-          {
-            for (k = 0; k < len; k++)
-            {
-              if (data[k] == 0xff)
-              {
-                break;
-              }
-              if (data[k] >= ' ' && data[k] <= '~')
-              {
-                mprintf("%c", data[k]);
-              }
-            }
-          }
-
-          if (showJson)
-          {
-            mprintf("\"");
-          }
-        }
-        else
-        {
-          printEmpty(fieldName, DATAFIELD_UNKNOWN);
-        }
+        printString(field, fieldName, data, bytes);
       }
       else if (field->resolution == RES_STRING)
       {
