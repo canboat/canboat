@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+CANboat version v1.4.0-beta
+
+(C) 2009-2018 Keversoft B.V., Harlingen, The Netherlands
+For more information see https://github.com/canboat/canboat
+
+This file is part of CANboat.
+
+CANboat is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CANboat is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+
+
+-->
+<PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1">
+  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
+  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
+  <License>GPL v3</License>
+  <Version>1.4.0-beta</Version>
+  <PGNs>
+    <PGNInfo>
+      <PGN>262400</PGN>
+      <Id>ikonvertNetworkStatus</Id>
+      <Description>iKonvert: Network status</Description>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
+      <Length>15</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>canNetworkLoad</Id>
+          <Name>CAN network load</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>errors</Id>
+          <Name>Errors</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>deviceCount</Id>
+          <Name>Device count</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>uptime</Id>
+          <Name>Uptime</Name>
+          <Description>s</Description>
+          <BitLength>32</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>gatewayAddress</Id>
+          <Name>Gateway address</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>rejectedTxRequests</Id>
+          <Name>Rejected TX requests</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+  </PGNs>
+</PGNDefinitions>

@@ -103,7 +103,7 @@ static bool            printCanFormat(RawMessage *msg);
 static bool            printNumber(char *fieldName, Field *field, uint8_t *data, size_t startBit, size_t bits);
 static void            camelCase(bool upperCamelCase);
 static void            explain(void);
-static void            explainXML(void);
+static void            explainXML(bool, bool, bool);
 static void            fillFieldCounts(void);
 static void            fillManufacturers(void);
 static void            printCanRaw(RawMessage *msg);
@@ -118,27 +118,29 @@ void usage(char **argv, char **av)
 #endif
          "-explain | -explain-xml [-upper-camel]] | -version\n",
          argv[0]);
-  printf("     -json         Output in json format, for program consumption. Empty values are skipped\n");
-  printf("     -empty        Modified json format where empty values are shown as NULL\n");
-  printf("     -nv           Modified json format where lookup values are shown as name, value pair\n");
-  printf("     -camel        Show fieldnames in normalCamelCase\n");
-  printf("     -upper-camel  Show fieldnames in UpperCamelCase\n");
-  printf("     -d            Print logging from level ERROR, INFO and DEBUG\n");
-  printf("     -q            Print logging from level ERROR\n");
-  printf("     -si           Show values in strict SI units: degrees Kelvin, rotation in radians/sec, etc.\n");
-  printf("     -geo dd       Print geographic format in dd.dddddd format\n");
-  printf("     -geo dm       Print geographic format in dd.mm.mmm format\n");
-  printf("     -geo dms      Print geographic format in dd.mm.sss format\n");
+  printf("     -json             Output in json format, for program consumption. Empty values are skipped\n");
+  printf("     -empty            Modified json format where empty values are shown as NULL\n");
+  printf("     -nv               Modified json format where lookup values are shown as name, value pair\n");
+  printf("     -camel            Show fieldnames in normalCamelCase\n");
+  printf("     -upper-camel      Show fieldnames in UpperCamelCase\n");
+  printf("     -d                Print logging from level ERROR, INFO and DEBUG\n");
+  printf("     -q                Print logging from level ERROR\n");
+  printf("     -si               Show values in strict SI units: degrees Kelvin, rotation in radians/sec, etc.\n");
+  printf("     -geo dd           Print geographic format in dd.dddddd format\n");
+  printf("     -geo dm           Print geographic format in dd.mm.mmm format\n");
+  printf("     -geo dms          Print geographic format in dd.mm.sss format\n");
 #ifndef SKIP_SETSYSTEMCLOCK
-  printf("     -clocksrc     Set the systemclock from time info from this NMEA source address\n");
+  printf("     -clocksrc         Set the systemclock from time info from this NMEA source address\n");
 #endif
-  printf("     -explain      Export the PGN database in JSON format\n");
-  printf("     -explain-xml  Export the PGN database in XML format\n");
-  printf("     -version      Print the version of the program and quit\n");
+  printf("     -explain          Export the PGN database in JSON format\n");
+  printf("     -explain-xml      Export the PGN database in XML format\n");
+  printf("     -explain-ngt-xml  Export the Actisense PGN database in XML format\n");
+  printf("     -explain-ik-xml   Export the iKonvert PGN database in XML format\n");
+  printf("     -version          Print the version of the program and quit\n");
   printf("\nThe following options are used to debug the analyzer:\n");
-  printf("     -raw          Print raw bytes (obsolete, use -data)\n");
-  printf("     -data         Print the PGN three times: in hex, ascii and analyzed\n");
-  printf("     -debug        Print raw value per field\n");
+  printf("     -raw              Print raw bytes (obsolete, use -data)\n");
+  printf("     -data             Print the PGN three times: in hex, ascii and analyzed\n");
+  printf("     -debug            Print raw value per field\n");
   printf("\n");
   exit(1);
 }
@@ -151,6 +153,8 @@ int main(int argc, char **argv)
   int    ac           = argc;
   char **av           = argv;
   bool   doExplainXML = false;
+  bool   doExplainNGTXML = false;
+  bool   doExplainIKXML = false;
   bool   doExplain    = false;
 
   setProgName(argv[0]);
@@ -165,6 +169,14 @@ int main(int argc, char **argv)
     else if (strcasecmp(av[1], "-explain-xml") == 0)
     {
       doExplainXML = true;
+    }
+    else if (strcasecmp(av[1], "-explain-ngt-xml") == 0)
+    {
+      doExplainNGTXML = true;
+    }
+    else if (strcasecmp(av[1], "-explain-ik-xml") == 0)
+    {
+      doExplainIKXML = true;
     }
     else if (strcasecmp(av[1], "-explain") == 0)
     {
@@ -285,13 +297,13 @@ int main(int argc, char **argv)
     explain();
     exit(0);
   }
-  if (doExplainXML)
+  if (doExplainXML || doExplainIKXML || doExplainNGTXML)
   {
     if (!pgnList[0].camelDescription)
     {
       camelCase(false);
     }
-    explainXML();
+    explainXML(doExplainXML, doExplainNGTXML, doExplainIKXML);
     exit(0);
   }
 
@@ -2096,7 +2108,7 @@ static void camelCase(bool upperCamelCase)
   }
 }
 
-static void explainXML(void)
+static void explainXML(bool normal, bool actisense, bool ikonvert)
 {
   int i;
 
@@ -2112,7 +2124,10 @@ static void explainXML(void)
 
   for (i = 1; i < ARRAY_SIZE(pgnList); i++)
   {
-    if (pgnList[i].pgn < ACTISENSE_BEM)
+    int pgn = pgnList[i].pgn;
+    if ((normal && pgn < ACTISENSE_BEM)
+        || (actisense && pgn >= ACTISENSE_BEM && pgn < IKONVERT_BEM)
+        || (ikonvert && pgn >= IKONVERT_BEM))
     {
       explainPGNXML(pgnList[i]);
     }

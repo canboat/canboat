@@ -23,6 +23,10 @@ ANALYZER=$(TARGETDIR)/analyzer
 TARGETS=$(ANALYZER)
 XMLFILE=pgns.xml
 JSONFILE=pgns.json
+NGTXMLFILE=pgns-ngt.xml
+NGTJSONFILE=pgns-ngt.json
+IKXMLFILE=pgns-ik.xml
+IKJSONFILE=pgns-ik.json
 
 CFLAGS=-Wall -O2
 
@@ -33,6 +37,8 @@ $(ANALYZER): analyzer.c pgn.c analyzer.h pgn.h ../common/common.c ../common/comm
 
 json: $(ANALYZER) pgns2json.xslt
 	$(ANALYZER) -explain-xml >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
+	$(ANALYZER) -explain-ngt-xml >$(NGTXMLFILE) && xsltproc pgns2json.xslt $(NGTXMLFILE) >$(NGTJSONFILE)
+	$(ANALYZER) -explain-ik-xml >$(IKXMLFILE) && xsltproc pgns2json.xslt $(IKXMLFILE) >$(IKJSONFILE)
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
