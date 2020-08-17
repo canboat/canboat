@@ -1,0 +1,80 @@
+{
+    "Comment":"See https://github.com/canboat/canboat for the full source code",
+    "CreatorCode":"Canboat NMEA2000 Analyzer",
+    "License":"GPL v3",
+    "Version":"1.4.0-beta",
+    "PGNs": [
+    
+      {
+        "PGN":262400,
+        "Id":"ikonvertNetworkStatus",
+        "Description":"iKonvert: Network status",
+        "Type":"Fast",
+        "Complete":true,
+        "Length":15,
+        "RepeatingFields":0,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"canNetworkLoad",
+            "Name":"CAN network load",
+            "BitLength":8,
+            "BitOffset":0,
+            "BitStart":0,
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
+          {
+            "Order":2,
+            "Id":"errors",
+            "Name":"Errors",
+            "BitLength":32,
+            "BitOffset":8,
+            "BitStart":0,
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
+          {
+            "Order":3,
+            "Id":"deviceCount",
+            "Name":"Device count",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
+          {
+            "Order":4,
+            "Id":"uptime",
+            "Name":"Uptime",
+            "Description":"s",
+            "BitLength":32,
+            "BitOffset":48,
+            "BitStart":0,
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
+          {
+            "Order":5,
+            "Id":"gatewayAddress",
+            "Name":"Gateway address",
+            "BitLength":8,
+            "BitOffset":80,
+            "BitStart":0,
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
+          {
+            "Order":6,
+            "Id":"rejectedTxRequests",
+            "Name":"Rejected TX requests",
+            "BitLength":32,
+            "BitOffset":88,
+            "BitStart":0,
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false}]}
+    ]
+    }
+    

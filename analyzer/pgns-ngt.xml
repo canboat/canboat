@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+CANboat version v1.4.0-beta
+
+(C) 2009-2018 Keversoft B.V., Harlingen, The Netherlands
+For more information see https://github.com/canboat/canboat
+
+This file is part of CANboat.
+
+CANboat is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CANboat is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+
+
+-->
+<PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1">
+  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
+  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
+  <License>GPL v3</License>
+  <Version>1.4.0-beta</Version>
+  <PGNs>
+    <PGNInfo>
+      <PGN>262161</PGN>
+      <Id>actisenseOperatingMode</Id>
+      <Description>Actisense: Operating mode</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>14</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>modelId</Id>
+          <Name>Model ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>serialId</Id>
+          <Name>Serial ID</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>errorId</Id>
+          <Name>Error ID</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>operatingMode</Id>
+          <Name>Operating Mode</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>262384</PGN>
+      <Id>actisenseStartupStatus</Id>
+      <Description>Actisense: Startup status</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>15</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>modelId</Id>
+          <Name>Model ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>serialId</Id>
+          <Name>Serial ID</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>errorId</Id>
+          <Name>Error ID</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>firmwareVersion</Id>
+          <Name>Firmware version</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>0.001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>resetStatus</Id>
+          <Name>Reset status</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>262386</PGN>
+      <Id>actisenseSystemStatus</Id>
+      <Description>Actisense: System status</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>34</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>modelId</Id>
+          <Name>Model ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>serialId</Id>
+          <Name>Serial ID</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>errorId</Id>
+          <Name>Error ID</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>indiChannelCount</Id>
+          <Name>Indi channel count</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>ch1RxBandwidth</Id>
+          <Name>Ch1 Rx Bandwidth</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>ch1RxLoad</Id>
+          <Name>Ch1 Rx Load</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>ch1RxFiltered</Id>
+          <Name>Ch1 Rx Filtered</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>ch1RxDropped</Id>
+          <Name>Ch1 Rx Dropped</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>ch1TxBandwidth</Id>
+          <Name>Ch1 Tx Bandwidth</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>ch1TxLoad</Id>
+          <Name>Ch1 Tx Load</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>136</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>ch2RxBandwidth</Id>
+          <Name>Ch2 Rx Bandwidth</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>ch2RxLoad</Id>
+          <Name>Ch2 Rx Load</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>152</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>ch2RxFiltered</Id>
+          <Name>Ch2 Rx Filtered</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>160</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>ch2RxDropped</Id>
+          <Name>Ch2 Rx Dropped</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>168</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>ch2TxBandwidth</Id>
+          <Name>Ch2 Tx Bandwidth</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>176</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>ch2TxLoad</Id>
+          <Name>Ch2 Tx Load</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>184</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>uniChannelCount</Id>
+          <Name>Uni channel count</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>19</Order>
+          <Id>ch1Bandwidth</Id>
+          <Name>Ch1 Bandwidth</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>200</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>20</Order>
+          <Id>ch1Deleted</Id>
+          <Name>Ch1 Deleted</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>208</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>21</Order>
+          <Id>ch1Bufferloading</Id>
+          <Name>Ch1 BufferLoading</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>216</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>22</Order>
+          <Id>ch1Pointerloading</Id>
+          <Name>Ch1 PointerLoading</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>224</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>23</Order>
+          <Id>ch2Bandwidth</Id>
+          <Name>Ch2 Bandwidth</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>232</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>24</Order>
+          <Id>ch2Deleted</Id>
+          <Name>Ch2 Deleted</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>240</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>25</Order>
+          <Id>ch2Bufferloading</Id>
+          <Name>Ch2 BufferLoading</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>248</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>26</Order>
+          <Id>ch2Pointerloading</Id>
+          <Name>Ch2 PointerLoading</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>256</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>262388</PGN>
+      <Id>actisense</Id>
+      <Description>Actisense: ?</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>17</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>modelId</Id>
+          <Name>Model ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>serialId</Id>
+          <Name>Serial ID</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+  </PGNs>
+</PGNDefinitions>
