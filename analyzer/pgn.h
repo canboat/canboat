@@ -4748,7 +4748,7 @@ Pgn pgnList[] = {
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
       {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, ""},
-      {"Pressure", BYTES(4), RES_PRESSURE_HIRES, false, "dPa", ""},
+      {"Pressure", BYTES(4), RES_PRESSURE_HIRES, true, "dPa", ""},
       {0}}}
 
     ,
