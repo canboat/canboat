@@ -2795,7 +2795,7 @@ Pgn pgnList[] = {
      0,
      {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
       {"Speed", BYTES(2), 0.25, false, "rpm", ""},
-      {"Boost Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
+      {"Boost Pressure", BYTES(2), RES_PRESSURE, false, "Pa", ""},
       {"Tilt/Trim", BYTES(1), 1, true, "", ""},
       {"Reserved", BYTES(2), RES_BINARY, false, 0, ""},
       {0}}}
