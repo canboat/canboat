@@ -4254,8 +4254,6 @@
             "BitLength":0,
             "BitOffset":96,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false}]},
       {
         "PGN":126208,
@@ -4296,7 +4294,11 @@
             "BitLength":4,
             "BitOffset":32,
             "BitStart":0,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Leave priority unchanged","value":"8"},
+              {"name":"Reset to default","value":"9"}]},
           {
             "Order":4,
             "Id":"reserved",
@@ -4334,8 +4336,6 @@
             "BitLength":0,
             "BitOffset":56,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false}]},
       {
         "PGN":126208,
@@ -4540,8 +4540,6 @@
             "BitLength":0,
             "BitOffset":80,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":11,
@@ -4666,8 +4664,6 @@
             "BitLength":0,
             "BitOffset":80,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":11,
@@ -4686,8 +4682,6 @@
             "BitLength":0,
             "BitOffset":88,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false}]},
       {
         "PGN":126208,
@@ -4802,8 +4796,6 @@
             "BitLength":0,
             "BitOffset":80,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":11,
@@ -4822,8 +4814,6 @@
             "BitLength":0,
             "BitOffset":88,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false}]},
       {
         "PGN":126208,
@@ -4938,8 +4928,6 @@
             "BitLength":0,
             "BitOffset":80,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":11,
@@ -4958,8 +4946,6 @@
             "BitLength":0,
             "BitOffset":88,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false}]},
       {
         "PGN":126464,
@@ -20344,7 +20330,7 @@
             "Order":14,
             "Id":"stationId",
             "Name":"Station ID",
-            "BitLength":16,
+            "BitLength":2056,
             "BitOffset":208,
             "BitStart":0,
             "Type":"String with start/stop byte",
@@ -20353,8 +20339,8 @@
             "Order":15,
             "Id":"stationName",
             "Name":"Station Name",
-            "BitLength":16,
-            "BitOffset":224,
+            "BitLength":2056,
+            "BitOffset":2264,
             "BitStart":0,
             "Type":"String with start/stop byte",
             "Signed":false}]},

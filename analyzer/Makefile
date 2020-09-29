@@ -28,7 +28,7 @@ NGTJSONFILE=pgns-ngt.json
 IKXMLFILE=pgns-ik.xml
 IKJSONFILE=pgns-ik.json
 
-CFLAGS=-Wall -O2
+CFLAGS?=-Wall -O2
 
 all: $(TARGETS)
 

@@ -59,7 +59,8 @@ typedef struct
 #define RES_TEMPERATURE_HIGH (-19.0)
 #define RES_TEMPERATURE_HIRES (-20.0)
 #define RES_PRESSURE_HIRES (-21.0)
-#define MAX_RESOLUTION_LOOKUP 21
+#define RES_VARIABLE (-22.0)
+#define MAX_RESOLUTION_LOOKUP 22
 
   bool  hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   char *units;   /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
@@ -1821,7 +1822,7 @@ Pgn pgnList[] = {
       {"Transmission interval offset", BYTES(2), 0.01, false, "s", ""},
       {"# of Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow"},
       {"Parameter", BYTES(1), RES_INTEGER, false, 0, "Parameter index"},
-      {"Value", LEN_VARIABLE, RES_INTEGER, false, 0, "Parameter value, variable length"},
+      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, "Parameter value, variable length"},
       {0}}}
 
     ,
@@ -1833,11 +1834,11 @@ Pgn pgnList[] = {
      2,
      {{"Function Code", BYTES(1), RES_INTEGER, false, "=1", "Command"},
       {"PGN", BYTES(3), RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Priority", 4, 1, false, 0, ",8=Leave priority unchanged,9=Reset to default"},
+      {"Priority", 4, RES_LOOKUP, 0, ",8=Leave priority unchanged,9=Reset to default"},
       {"Reserved", 4, RES_BINARY, false, 0, ""},
       {"# of Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow"},
       {"Parameter", BYTES(1), RES_INTEGER, false, 0, "Parameter index"},
-      {"Value", LEN_VARIABLE, RES_INTEGER, false, 0, "Parameter value, variable length"},
+      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, "Parameter value, variable length"},
       {0}}}
 
     ,
@@ -1891,7 +1892,7 @@ Pgn pgnList[] = {
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
       {"Selection Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Selection Value", LEN_VARIABLE, RES_INTEGER, false, 0, ""},
+      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
       {"Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
@@ -1925,9 +1926,9 @@ Pgn pgnList[] = {
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
       {"Selection Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Selection Value", LEN_VARIABLE, RES_INTEGER, false, 0, ""},
+      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
       {"Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Value", LEN_VARIABLE, RES_INTEGER, false, 0, ""},
+      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
       {0}}}
 
     /* The following won't work when analyzing non-proprietary PGNs */
@@ -1960,9 +1961,9 @@ Pgn pgnList[] = {
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
       {"Selection Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Selection Value", LEN_VARIABLE, RES_INTEGER, false, 0, ""},
+      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
       {"Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Value", LEN_VARIABLE, RES_INTEGER, false, 0, ""},
+      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
       {0}}}
 
     /* The following won't work when analyzing non-proprietary PGNs */
@@ -1995,9 +1996,9 @@ Pgn pgnList[] = {
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
       {"Selection Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Selection Value", LEN_VARIABLE, RES_INTEGER, false, 0, ""},
+      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
       {"Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Value", LEN_VARIABLE, RES_INTEGER, false, 0, ""},
+      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
       {0}}}
 
     /************ RESPONSE TO REQUEST PGNS **************/
@@ -4864,8 +4865,8 @@ Pgn pgnList[] = {
       {"Wind Gusts", BYTES(2), 0.01, false, "m/s", ""},
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Ambient Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
-      {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
+      {"Station ID", BYTES(257), RES_STRING, false, 0, ""},
+      {"Station Name", BYTES(257), RES_STRING, false, 0, ""},
       {0}}}
 
     ,

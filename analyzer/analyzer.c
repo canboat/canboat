@@ -98,9 +98,13 @@ size_t          heapSize = 0;
 int g_variableFieldRepeat[2]; // Actual number of repetitions
 int g_variableFieldIndex;
 
+static uint16_t currentDate = UINT16_MAX;
+static uint32_t currentTime = UINT32_MAX;
+
 static enum RawFormats detectFormat(const char *msg);
 static bool            printCanFormat(RawMessage *msg);
 static bool            printNumber(char *fieldName, Field *field, uint8_t *data, size_t startBit, size_t bits);
+static bool            printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 static void            camelCase(bool upperCamelCase);
 static void            explain(void);
 static void            explainXML(bool, bool, bool);
@@ -320,7 +324,7 @@ int main(int argc, char **argv)
   {
     RawMessage m;
 
-    if (*msg == 0 || *msg == '\n')
+    if (*msg == 0 || *msg == '\n' || *msg == '#')
     {
       continue;
     }
@@ -629,7 +633,7 @@ static bool printLatLon(char *name, double resolution, uint8_t *data, size_t byt
   if (value > maxValue - 2)
   {
     printEmpty(name, value - maxValue);
-    return false;
+    return true;
   }
 
   if (bytes == 8)
@@ -708,7 +712,7 @@ static bool printDate(char *name, uint16_t d)
   if (d >= 0xfffd)
   {
     printEmpty(name, d - INT64_C(0xffff));
-    return false;
+    return true;
   }
 
   if (showBytes)
@@ -745,7 +749,7 @@ static bool printTime(char *name, uint32_t t)
   if (t >= 0xfffffffd)
   {
     printEmpty(name, t - INT64_C(0xffffffff));
-    return false;
+    return true;
   }
 
   if (showBytes)
@@ -795,7 +799,7 @@ static bool printTemperature(char *name, uint32_t t, uint32_t bits, double resol
   if (t >= maxValue - 2)
   {
     printEmpty(name, t - maxValue);
-    return false;
+    return true;
   }
 
   if (showSI)
@@ -834,13 +838,13 @@ static bool printPressure(char *name, uint32_t v, Field *field)
     if (v >= 0xfffd)
     {
       printEmpty(name, v - INT64_C(0xffff));
-      return false;
+      return true;
     }
   }
   if (v >= 0xfffffffd)
   {
     printEmpty(name, v - INT64_C(0xffffffff));
-    return false;
+    return true;
   }
 
   // There are four types of known pressure: unsigned hectopascal, signed kpa, unsigned kpa, unsigned four bytes in pascal.
@@ -967,6 +971,8 @@ static bool printHex(char *name, uint8_t *data, size_t startBit, size_t bits)
   size_t   bit;
   char     buf[128];
 
+  logDebug("printHex(\"%s\", %p, %zu, %zu)\n", name, data, startBit, bits);
+
   if (showBytes)
   {
     mprintf("(%s,%p,%zu,%zu) ", name, data, startBit, bits);
@@ -1079,9 +1085,12 @@ static bool printDecimal(char *name, uint8_t *data, size_t startBit, size_t bits
   return true;
 }
 
-static bool printVarNumber(char *fieldName, Pgn *pgn, uint32_t refPgn, Field *field, uint8_t *data, size_t startBit, size_t *bits)
+static bool
+printVarField(Field *field, char *fieldName, uint32_t refPgn, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
   Field *refField;
+
+  logDebug("printVarField(<%s>,\"%s\",%u, ..., %zu, %zu, %zu)\n", field->name, fieldName, refPgn, dataLen, startBit, *bits);
 
   /* PGN 126208 contains variable field length.
    * The field length can be derived from the PGN mentioned earlier in the message,
@@ -1096,15 +1105,10 @@ static bool printVarNumber(char *fieldName, Pgn *pgn, uint32_t refPgn, Field *fi
   refField = getField(refPgn, data[-1] - 1);
   if (refField)
   {
-    *bits = (refField->size + 7) & ~7; // Round # of bits in field refField up to complete bytes: 1->8, 7->8, 8->8 etc.
-    if (showBytes)
-    {
-      mprintf("(refField %s size = %u in %zu bytes)", refField->name, refField->size, *bits / 8);
-    }
-    return printNumber(fieldName, field, data, startBit, refField->size);
+    return printField(refField, fieldName, data, dataLen, startBit, bits);
   }
 
-  logError("Pgn %d Field %s: cannot derive variable length from PGN %d field # %d\n", pgn->pgn, field->name, refPgn, data[-1]);
+  logError("Field %s: cannot derive variable length for PGN %d field # %d\n", fieldName, refPgn, data[-1]);
   *bits = 8; /* Gotta assume something */
   return false;
 }
@@ -1170,6 +1174,8 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
     {
       char  lookfor[20];
       char *s, *e;
+
+      logDebug("RES_LOOKUP of value %" PRId64 " in '%s'\n", value, field->units);
 
       sprintf(lookfor, ",%" PRId64 "=", value);
       s = strstr(field->units, lookfor);
@@ -1407,7 +1413,7 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
   return true;
 }
 
-void setSystemClock(uint16_t currentDate, uint32_t currentTime)
+void setSystemClock(void)
 {
 #ifndef SKIP_SETSYSTEMCLOCK
   static uint16_t prevDate        = UINT16_MAX;
@@ -1661,6 +1667,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
     memcpy(packet->data, msg->data, msg->len);
   }
 
+  logDebug("printPacket size=%zu len=%zu\n", packet->size, msg->len);
   printPgn(msg, packet->data, packet->size, showData, showJson);
 }
 
@@ -2137,35 +2144,83 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
          "</PGNDefinitions>\n");
 }
 
-static void printString(Field *field, const char *fieldName, uint8_t *data, size_t bytes)
+static bool printString(Field *field, const char *fieldName, uint8_t *data, size_t bytes, size_t *bits)
 {
   uint8_t len;
   int     k;
   uint8_t lastbyte;
 
+  logDebug("printString(<%s>,\"%s\",[%x,%x],%zu)\n", field->name, fieldName, data[0], data[1], bytes);
+
   if (field->resolution == RES_STRINGLZ)
   {
-    len = *data++;
-    bytes--;
+    // STRINGLZ format is <len> [ <data> ... ]
+    len   = *data++;
+    bytes = len + 1;
   }
   else if (field->resolution == RES_STRINGLAU)
   {
+    // STRINGLAU format is <len> <control> [ <data> ... ]
+    // where <control> == 0 = UNICODE, but we don't know whether it is UTF16, UTF8, etc. Not seen in the wild yet!
+    //       <control> == 1 = ASCII(?) or maybe UTF8?
     int control;
 
-    len = *data++;
-    bytes--;
+    bytes   = *data++;
     control = *data++;
-    bytes--;
+    len     = bytes - 2;
     if (control == 0)
     {
       logError("Unhandled UNICODE string in PGN\n");
-      return;
+      return false;
+    }
+    if (control > 1)
+    {
+      logError("Unhandled string type %d in PGN\n");
+      return false;
     }
   }
-  else // this is when field->resolution == RES_ASCII
+  else if (field->resolution == RES_STRING)
   {
-    len = bytes;
+    // STRING format is <start> [ <data> ... ] <stop>
+    //                  <len> [ <data> ... ] (with len > 2)
+    //                  <stop>                                 zero length data
+    //                  <#00>  ???
+    if (*data == 0x02)
+    {
+      data++;
+      for (len = 0; len < bytes && data[len] != 0x01; len++)
+        ;
+      bytes = len + 2;
+    }
+    else if (*data > 0x02)
+    {
+      bytes = *data++;
+      len   = bytes - 1;
+
+      // This is actually more like a STRINGLAU control byte, not sure
+      // whether these fields are actually just STRINGLAU?
+      if (*data == 0x01)
+      {
+        data++;
+        len--;
+      }
+    }
+    else
+    {
+      bytes = 1;
+      len   = 0;
+    }
   }
+  else
+  {
+    // ASCII format is a fixed length string
+    len   = BITS_TO_BYTES(field->size);
+    bytes = len;
+  }
+
+  *bits = BYTES(bytes);
+
+  logDebug("printString res=%f len=%zu bytes=%zu\n", field->resolution, len, bytes);
 
   // Sanity check
   if (len > bytes)
@@ -2219,6 +2274,119 @@ static void printString(Field *field, const char *fieldName, uint8_t *data, size
   {
     printEmpty(fieldName, DATAFIELD_UNKNOWN);
   }
+
+  return true;
+}
+
+static bool printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+{
+  static uint32_t refPgn = 0; // Remember this over the entire set of fields
+
+  size_t   bytes;
+  uint16_t valueu16;
+  uint32_t valueu32;
+
+  if (fieldName == NULL)
+  {
+    fieldName = field->camelName ? field->camelName : field->name;
+  }
+
+  logDebug("printField(<%s>, \"%s\", ..., %zu, %zu) res=%f\n", field->name, fieldName, dataLen, startBit, field->resolution);
+
+  *bits = field->size;
+  bytes = (*bits + 7) / 8;
+  bytes = min(bytes, dataLen);
+  *bits = min(bytes * 8, *bits);
+
+  if (strcmp(fieldName, "PGN") == 0)
+  {
+    refPgn = data[0] + (data[1] << 8) + (data[2] << 16);
+  }
+
+  if (strcmp(fieldName, "Reserved") == 0)
+  {
+    // Skipping reserved fields. Unfortunately we have some cases now
+    // where they are zero. Some AIS devices (SRT) produce an 8 bit long
+    // nav status, others just a four bit one.
+    return true;
+  }
+  if (field->resolution < 0.0)
+  {
+    /* These fields have only been found to start on byte boundaries,
+     * making their location easier
+     */
+    if (field->resolution == RES_STRINGLZ || field->resolution == RES_STRINGLAU || field->resolution == RES_ASCII
+        || field->resolution == RES_STRING)
+    {
+      return printString(field, fieldName, data, dataLen, bits);
+    }
+
+    if (field->resolution == RES_LONGITUDE || field->resolution == RES_LATITUDE)
+    {
+      return printLatLon(fieldName, field->resolution, data, bytes);
+    }
+    if (field->resolution == RES_DATE)
+    {
+      valueu16    = data[0] + (data[1] << 8);
+      currentDate = valueu16;
+      return printDate(fieldName, valueu16);
+    }
+    if (field->resolution == RES_TIME)
+    {
+      valueu32    = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
+      currentTime = valueu32;
+      return printTime(fieldName, valueu32);
+    }
+    if (field->resolution == RES_PRESSURE)
+    {
+      valueu32 = data[0] + (data[1] << 8);
+      return printPressure(fieldName, valueu32, field);
+    }
+    if (field->resolution == RES_PRESSURE_HIRES)
+    {
+      valueu32 = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
+      return printPressure(fieldName, valueu32, field);
+    }
+    if (field->resolution == RES_TEMPERATURE)
+    {
+      valueu32 = data[0] + (data[1] << 8);
+      return printTemperature(fieldName, valueu32, 16, 0.01);
+    }
+    if (field->resolution == RES_TEMPERATURE_HIGH)
+    {
+      valueu32 = data[0] + (data[1] << 8);
+      return printTemperature(fieldName, valueu32, 16, 0.1);
+    }
+    if (field->resolution == RES_TEMPERATURE_HIRES)
+    {
+      valueu32 = data[0] + (data[1] << 8) + (data[2] << 16);
+      return printTemperature(fieldName, valueu32, 24, 0.001);
+    }
+    if (field->resolution == RES_6BITASCII)
+    {
+      return print6BitASCIIText(fieldName, data, startBit, *bits);
+    }
+    if (field->resolution == RES_DECIMAL)
+    {
+      return printDecimal(fieldName, data, startBit, *bits);
+    }
+    if (field->resolution == RES_VARIABLE)
+    {
+      return printVarField(field, fieldName, refPgn, data, dataLen, startBit, bits);
+    }
+    if (*bits > BYTES(8))
+    {
+      return printHex(fieldName, data, startBit, *bits);
+    }
+    if (field->resolution == RES_INTEGER || field->resolution == RES_LOOKUP || field->resolution == RES_BITFIELD
+        || field->resolution == RES_BINARY || field->resolution == RES_MANUFACTURER)
+    {
+      return printNumber(fieldName, field, data, startBit, *bits);
+    }
+    logError("Unknown resolution %f for %s\n", field->resolution, fieldName);
+    return false;
+  }
+  return printNumber(fieldName, field, data, startBit, *bits);
 }
 
 bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bool showJson)
@@ -2230,16 +2398,10 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
   uint8_t *dataEnd = dataStart + length;
   size_t   i;
   size_t   bits;
-  size_t   bytes;
   size_t   startBit;
   int      repetition = 0;
-  uint16_t valueu16;
-  uint32_t valueu32;
-  uint16_t currentDate = UINT16_MAX;
-  uint32_t currentTime = UINT32_MAX;
   char     fieldName[60];
   bool     r;
-  uint32_t refPgn = 0;
   uint32_t variableFieldCount[2]; // How many variable fields over all repetitions, indexed by group
   uint32_t variableFields[2];     // How many variable fields per repetition, indexed by group
   size_t   variableFieldStart;
@@ -2317,12 +2479,12 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
   variableFieldStart = pgn->fieldCount - variableFieldCount[0] - variableFieldCount[1];
   logDebug("fieldCount=%d variableFieldStart=%d\n", pgn->fieldCount, variableFieldStart);
 
+  r = true;
   for (i = 0, startBit = 0, data = dataStart; data < dataEnd; i++)
   {
     Field *field;
-    r = true;
 
-    if (variableFieldCount[0] && i == variableFieldStart && repetition == 0)
+    if (variableFieldCount[0] > 0 && i == variableFieldStart && repetition == 0)
     {
       repetition = 1;
       if (showJson)
@@ -2339,10 +2501,7 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
     {
       if (variableFields[0])
       {
-        if (showBytes)
-        {
-          mprintf("\ni=%d fs=%d vf=%d", i, variableFieldStart, variableFields[0]);
-        }
+        logDebug("variableFields: field=%d variableFieldStart=%d variableFields[0]=%d\n", i, variableFieldStart, variableFields[0]);
         if (i == variableFieldStart + variableFieldCount[0])
         {
           i = variableFieldStart;
@@ -2398,157 +2557,11 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
       sprintf(fieldName + strlen(fieldName), "%u", repetition);
     }
 
-    bits  = field->size;
-    bytes = (bits + 7) / 8;
-    bytes = min(bytes, (size_t)(dataEnd - data));
-    bits  = min(bytes * 8, bits);
-
-    if (showBytes)
+    if (!printField(field, fieldName, data, dataEnd - data, startBit, &bits))
     {
-      mprintf("\ndecode %s offset=%u startBit=%u bits=%u bytes=%u:", field->name, data - dataStart, startBit, bits, bytes);
-    }
-
-    if (strcmp(fieldName, "PGN") == 0)
-    {
-      refPgn = data[0] + (data[1] << 8) + (data[2] << 16);
-      if (showBytes)
-      {
-        mprintf("refPgn=%u ", refPgn);
-      }
-    }
-
-    if (strcmp(fieldName, "Reserved") == 0)
-    {
-      // Skipping reserved fields. Unfortunately we have some cases now
-      // where they are zero. Some AIS devices (SRT) produce an 8 bit long
-      // nav status, others just a four bit one.
-    }
-    else if (field->resolution < 0.0)
-    {
-      /* These fields have only been found to start on byte boundaries,
-       * making their location easier
-       */
-      if (field->resolution == RES_STRINGLZ || field->resolution == RES_STRINGLAU || field->resolution == RES_ASCII)
-      {
-        printString(field, fieldName, data, bytes);
-      }
-      else if (field->resolution == RES_STRING)
-      {
-        int len;
-        if (*data == 0x02)
-        {
-          data++;
-          for (len = 0; data + len < dataEnd && data[len] != 0x01; len++)
-            ;
-          bytes = len + 1;
-        }
-        else if (*data > 0x02)
-        {
-          bytes = *data++;
-          bytes--; /* Compensate for that we've already increased data by 1 */
-          if (*data == 0x01)
-          {
-            data++;
-            bytes--;
-          }
-          len = bytes - 1;
-        }
-        else
-        {
-          bytes = 1;
-          len   = 0;
-        }
-        if (len > 0)
-        {
-          if (showJson)
-          {
-            mprintf("%s\"%s\":\"%.*s\"", getSep(), fieldName, (int) len, data);
-          }
-          else
-          {
-            mprintf("%s %s = %.*s", getSep(), fieldName, (int) len, data);
-          }
-        }
-        else
-        {
-          printEmpty(fieldName, DATAFIELD_UNKNOWN);
-        }
-        bits = BYTES(bytes);
-      }
-      else if (field->resolution == RES_LONGITUDE || field->resolution == RES_LATITUDE)
-      {
-        printLatLon(fieldName, field->resolution, data, bytes);
-      }
-      else if (field->resolution == RES_DATE)
-      {
-        valueu16 = data[0] + (data[1] << 8);
-        printDate(fieldName, valueu16);
-        currentDate = valueu16;
-      }
-      else if (field->resolution == RES_TIME)
-      {
-        valueu32 = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
-        printTime(fieldName, valueu32);
-        currentTime = valueu32;
-      }
-      else if (field->resolution == RES_PRESSURE)
-      {
-        valueu32 = data[0] + (data[1] << 8);
-        printPressure(fieldName, valueu32, field);
-      }
-      else if (field->resolution == RES_PRESSURE_HIRES)
-      {
-        valueu32 = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
-        printPressure(fieldName, valueu32, field);
-      }
-      else if (field->resolution == RES_TEMPERATURE)
-      {
-        valueu32 = data[0] + (data[1] << 8);
-        printTemperature(fieldName, valueu32, 16, 0.01);
-      }
-      else if (field->resolution == RES_TEMPERATURE_HIGH)
-      {
-        valueu32 = data[0] + (data[1] << 8);
-        printTemperature(fieldName, valueu32, 16, 0.1);
-      }
-      else if (field->resolution == RES_TEMPERATURE_HIRES)
-      {
-        valueu32 = data[0] + (data[1] << 8) + (data[2] << 16);
-        printTemperature(fieldName, valueu32, 24, 0.001);
-      }
-      else if (field->resolution == RES_6BITASCII)
-      {
-        print6BitASCIIText(fieldName, data, startBit, bits);
-      }
-      else if (field->resolution == RES_DECIMAL)
-      {
-        printDecimal(fieldName, data, startBit, bits);
-      }
-      else if (bits == LEN_VARIABLE)
-      {
-        printVarNumber(fieldName, pgn, refPgn, field, data, startBit, &bits);
-      }
-      else if (bits > BYTES(8))
-      {
-        printHex(fieldName, data, startBit, bits);
-      }
-      else if (field->resolution == RES_INTEGER || field->resolution == RES_LOOKUP || field->resolution == RES_BITFIELD
-               || field->resolution == RES_BINARY || field->resolution == RES_MANUFACTURER)
-      {
-        printNumber(fieldName, field, data, startBit, bits);
-      }
-      else
-      {
-        logError("Unknown resolution %f for %s\n", field->resolution, fieldName);
-      }
-    }
-    else if (field->resolution > 0.0)
-    {
-      printNumber(fieldName, field, data, startBit, bits);
-    }
-    if (!r)
-    {
-      return false;
+      logError("PGN %u field %s error\n", msg->pgn, fieldName);
+      r = false;
+      break;
     }
 
     startBit += bits;
@@ -2572,11 +2585,12 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
   else
   {
     mreset();
+    logError("PGN %u analysis error\n", msg->pgn);
   }
 
   if (msg->pgn == 126992 && currentDate < UINT16_MAX && currentTime < UINT32_MAX && clockSrc == msg->src)
   {
-    setSystemClock(currentDate, currentTime);
+    setSystemClock();
   }
   return r;
 }

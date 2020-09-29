@@ -56,6 +56,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 typedef int SOCKET;
 #else
 #include <winsock2.h>
+
 #include "winport.h"
 #endif
 
@@ -246,6 +247,7 @@ bool parseConst(const char **msg, const char *str);
 #define Pi (3.141592654)
 #define RadianToDegree (360.0 / 2 / Pi)
 #define BYTES(x) ((x) * (8))
+#define BITS_TO_BYTES(x) ((x) >> 3)
 
 int  logInfo(const char *format, ...);
 int  logDebug(const char *format, ...);

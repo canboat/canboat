@@ -188,6 +188,7 @@ Field *getField(uint32_t pgnId, uint32_t field)
 
   if (!pgn)
   {
+    logDebug("PGN %u is unknown\n", pgnId);
     return 0;
   }
   if (field < pgn->fieldCount)
@@ -201,6 +202,7 @@ Field *getField(uint32_t pgnId, uint32_t field)
 
     return pgn->fieldList + index;
   }
+  logDebug("PGN %u does not have field %u\n", pgnId, field);
   return 0;
 }
 
@@ -314,6 +316,8 @@ void extractNumber(const Field *field, uint8_t *data, size_t startBit, size_t bi
   }
 
   *maxValue = (int64_t) maxv;
+
+  logDebug("extractNumber(<%s>,%p,%zu,%zu,%" PRId64 ",%" PRId64 ")\n", field->name, data, startBit, bits, *value, *maxValue);
 }
 
 static char *findOccurrence(char *msg, char c, int count)

@@ -4808,8 +4808,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>0</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -4855,7 +4853,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>4</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='8' Name='Leave priority unchanged' />
+            <EnumPair Value='9' Name='Reset to default' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>4</Order>
@@ -4897,8 +4900,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>0</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5128,8 +5129,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>0</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5268,8 +5267,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>0</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5290,8 +5287,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>0</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5419,8 +5414,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>0</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5441,8 +5434,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>0</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5570,8 +5561,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>0</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5592,8 +5581,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>0</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -22916,7 +22903,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>14</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
-          <BitLength>16</BitLength>
+          <BitLength>2056</BitLength>
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
                  <Type>String with start/stop byte</Type>
@@ -22926,8 +22913,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>15</Order>
           <Id>stationName</Id>
           <Name>Station Name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>224</BitOffset>
+          <BitLength>2056</BitLength>
+          <BitOffset>2264</BitOffset>
           <BitStart>0</BitStart>
                  <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
