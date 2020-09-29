@@ -153,13 +153,13 @@ int main(int argc, char **argv)
 {
   int    r;
   char   msg[2000];
-  FILE * file         = stdin;
-  int    ac           = argc;
-  char **av           = argv;
-  bool   doExplainXML = false;
+  FILE * file            = stdin;
+  int    ac              = argc;
+  char **av              = argv;
+  bool   doExplainXML    = false;
   bool   doExplainNGTXML = false;
-  bool   doExplainIKXML = false;
-  bool   doExplain    = false;
+  bool   doExplainIKXML  = false;
+  bool   doExplain       = false;
 
   setProgName(argv[0]);
 
@@ -829,10 +829,12 @@ static bool printTemperature(char *name, uint32_t t, uint32_t bits, double resol
 
 static bool printPressure(char *name, uint32_t v, Field *field)
 {
-  int32_t pressure;
-  double  bar;
-  double  psi;
+  double pressure;
+  double bar;
+  double psi;
+  int    precision = 5;
 
+  pressure = v;
   if (field->size <= 16)
   {
     if (v >= 0xfffd)
@@ -840,23 +842,26 @@ static bool printPressure(char *name, uint32_t v, Field *field)
       printEmpty(name, v - INT64_C(0xffff));
       return true;
     }
+    if (field->hasSign)
+    {
+      pressure = (int16_t) v;
+    }
   }
-  if (v >= 0xfffffffd)
+  else
   {
-    printEmpty(name, v - INT64_C(0xffffffff));
-    return true;
+    if (v >= 0xfffffffd)
+    {
+      printEmpty(name, v - INT64_C(0xffffffff));
+      return true;
+    }
+    if (field->hasSign)
+    {
+      pressure = (int32_t) v;
+    }
   }
 
   // There are four types of known pressure: unsigned hectopascal, signed kpa, unsigned kpa, unsigned four bytes in pascal.
 
-  if (field->hasSign)
-  {
-    pressure = (int16_t) v;
-  }
-  else
-  {
-    pressure = v;
-  }
   // Now scale pascal properly, it is in hPa or kPa.
   if (field->units)
   {
@@ -864,14 +869,17 @@ static bool printPressure(char *name, uint32_t v, Field *field)
     {
       case 'h':
       case 'H':
-        pressure *= 100;
+        pressure *= 100.0;
+        precision -= 2;
         break;
       case 'k':
       case 'K':
-        pressure *= 1000;
+        pressure *= 1000.0;
+        precision -= 3;
         break;
       case 'd':
-        pressure /= 10;
+        pressure /= 10.0;
+        precision += 1;
         break;
     }
   }
@@ -881,11 +889,18 @@ static bool printPressure(char *name, uint32_t v, Field *field)
 
   if (showJson)
   {
-    mprintf("%s\"%s\":%" PRId32 "", getSep(), name, pressure);
+    if (precision <= 3)
+    {
+      mprintf("%s\"%s\":%.0f", getSep(), name, pressure);
+    }
+    else
+    {
+      mprintf("%s\"%s\":%.*f", getSep(), name, precision - 3, pressure);
+    }
   }
   else
   {
-    mprintf("%s %s = %.3f bar (%.1f PSI)", getSep(), name, bar, psi);
+    mprintf("%s %s = %.*f bar (%.*f PSI)", getSep(), name, precision, bar, precision - 1, psi);
   }
   return true;
 }
@@ -2132,8 +2147,7 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
   for (i = 1; i < ARRAY_SIZE(pgnList); i++)
   {
     int pgn = pgnList[i].pgn;
-    if ((normal && pgn < ACTISENSE_BEM)
-        || (actisense && pgn >= ACTISENSE_BEM && pgn < IKONVERT_BEM)
+    if ((normal && pgn < ACTISENSE_BEM) || (actisense && pgn >= ACTISENSE_BEM && pgn < IKONVERT_BEM)
         || (ikonvert && pgn >= IKONVERT_BEM))
     {
       explainPGNXML(pgnList[i]);
