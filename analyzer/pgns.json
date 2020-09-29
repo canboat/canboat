@@ -19661,7 +19661,7 @@
             "Units":"dPa",
             "Type":"Pressure (hires)",
             "Resolution":"0.1",
-            "Signed":false}]},
+            "Signed":true}]},
       {
         "PGN":130315,
         "Id":"setPressure",

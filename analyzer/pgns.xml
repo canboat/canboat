@@ -22156,7 +22156,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Units>dPa</Units>
                  <Type>Pressure (hires)</Type>
                  <Resolution>0.1</Resolution>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
         </Field>
       </Fields>
     </PGNInfo>
