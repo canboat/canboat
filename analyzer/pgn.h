@@ -2632,7 +2632,6 @@ Pgn pgnList[] = {
      0,
      {{"Installation Description #1", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {"Installation Description #2", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Installation Description #3", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {"Manufacturer Information", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
 
