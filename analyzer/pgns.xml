@@ -8908,15 +8908,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
         </Field>
         <Field>
           <Order>3</Order>
-          <Id>installationDescription3</Id>
-          <Name>Installation Description #3</Name>
-          <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
-                 <Type>ASCII or UNICODE string starting with length and control byte</Type>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>4</Order>
           <Id>manufacturerInformation</Id>
           <Name>Manufacturer Information</Name>
           <BitLength>16</BitLength>
@@ -14665,7 +14656,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>deg</Units>
-                 <Type>Latitude</Type>
+                 <Type>Longitude</Type>
                  <Resolution>0.0000001</Resolution>
           <Signed>true</Signed>
         </Field>
@@ -14677,7 +14668,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>deg</Units>
-                 <Type>Longitude</Type>
+                 <Type>Latitude</Type>
                  <Resolution>0.0000001</Resolution>
           <Signed>true</Signed>
         </Field>
