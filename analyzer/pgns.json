@@ -7910,14 +7910,6 @@
             "Signed":false},
           {
             "Order":3,
-            "Id":"installationDescription3",
-            "Name":"Installation Description #3",
-            "BitLength":16,
-            "BitStart":0,
-            "Type":"ASCII or UNICODE string starting with length and control byte",
-            "Signed":false},
-          {
-            "Order":4,
             "Id":"manufacturerInformation",
             "Name":"Manufacturer Information",
             "BitLength":16,
@@ -12998,7 +12990,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"deg",
-            "Type":"Latitude",
+            "Type":"Longitude",
             "Resolution":"0.0000001",
             "Signed":true},
           {
@@ -13009,7 +13001,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Units":"deg",
-            "Type":"Longitude",
+            "Type":"Latitude",
             "Resolution":"0.0000001",
             "Signed":true},
           {
