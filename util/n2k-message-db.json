@@ -37,7 +37,7 @@
 , "engine_update":
   { "args": "instance,rpm"
   , "pgn": 127488
-  , "data": "pack('C', $instance) . pack('S', $rpm * 4.0) . str_repeat(pack('C', 255), 6)"
+  , "data": "pack('C', $instance) . pack('S', $rpm * 4.0) . str_repeat(pack('C', 255), 5)"
   }
 , "engine_dynamic":
   { "args": "instance,temperature,voltage_alt,fuel_rate,hours"
