@@ -349,6 +349,7 @@ static void closeStream(int i)
   FD_CLR(stream[i].fd, &activeSet);
   FD_CLR(stream[i].fd, &readSet);
   FD_CLR(stream[i].fd, &writeSet);
+  FD_CLR(stream[i].fd, &errorSet);
   sbClean(&stream[i].writeBuffer);
 
   stream[i].fd = INVALID_SOCKET; /* Free for re-use */
