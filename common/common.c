@@ -280,6 +280,28 @@ void sbAppendEncodeHex(StringBuffer *sb, const void *data, size_t len, char sepa
   }
 }
 
+void sbAppendDecodeHex(StringBuffer *sb, const char *data, size_t len)
+{
+  uint8_t  nibble1;
+  uint8_t  nibble2;
+  uint8_t *d;
+
+  sbEnsureCapacity(sb, len / 2 + 1 + sbGetLength(sb));
+  d = (uint8_t *) sbGet(sb) + sbGetLength(sb);
+
+  while (len >= 2)
+  {
+    nibble1 = (*data >= 'a') ? (*data - 'a' + 10) : (*data >= 'A' ? (*data - 'A' + 10) : (*data - '0'));
+    data++;
+    nibble2 = (*data >= 'a') ? (*data - 'a' + 10) : (*data >= 'A' ? (*data - 'A' + 10) : (*data - '0'));
+    data++;
+    *d++ = nibble1 << 4 | nibble2;
+    len -= 2;
+  }
+
+  sb->len = d - (uint8_t *) sbGet(sb);
+}
+
 void sbAppendString(StringBuffer *sb, const char *string)
 {
   size_t len = strlen(string);

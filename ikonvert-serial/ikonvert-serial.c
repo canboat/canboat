@@ -49,6 +49,7 @@ static bool rate_limit_off;
 static long timeout;
 static bool isFile;
 static bool isSerialDevice;
+static bool hexMode;
 static int  sendInitState;
 static int  sequentialStatusMessages;
 
@@ -101,6 +102,10 @@ int main(int argc, char **argv)
     else if (strcasecmp(argv[1], "-v") == 0)
     {
       verbose = true;
+    }
+    else if (strcasecmp(argv[1], "-x") == 0)
+    {
+      hexMode = true;
     }
     else if (strcasecmp(argv[1], "--rate-limit-off") == 0 || strcasecmp(argv[1], "-l") == 0)
     {
@@ -208,6 +213,7 @@ int main(int argc, char **argv)
 #endif
             " (default 230400)\n"
             "  -t <n>                timeout, if no message is received after <n> seconds the program quits\n"
+            "  -x                    hex instead of base64 mode"
             "  <device> can be a serial device, a normal file containing a raw log,\n"
             "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
             "\n"
@@ -366,7 +372,15 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
     {
       // Format msg as iKonvert message
       sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
-      sbAppendEncodeBase64(out, msg.data, msg.len, 0);
+      /*if (hexMode)
+      {
+        sbAppendEncodeHex(out, msg.data, msg.len, 0);
+      }
+      else
+      */
+      {
+        sbAppendEncodeBase64(out, msg.data, msg.len, 0);
+      }
       sbAppendFormat(out, "\r\n");
       logDebug("SendBuffer [%s]\n", sbGet(out));
     }
@@ -438,7 +452,14 @@ static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
   msg->dst  = dst;
 
   p += i;
-  sbAppendDecodeBase64(&dataBuffer, p, end - p, BASE64_RFC);
+  if (hexMode)
+  {
+    sbAppendDecodeHex(&dataBuffer, p, end - p);
+  }
+  else
+  {
+    sbAppendDecodeBase64(&dataBuffer, p, end - p, BASE64_RFC);
+  }
   msg->len = CB_MIN(sbGetLength(&dataBuffer), FASTPACKET_MAX_SIZE);
   memcpy(msg->data, sbGet(&dataBuffer), msg->len);
   sbEmpty(&dataBuffer);
