@@ -28,6 +28,83 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## [1.3.0] - 2020-03-04
+
+### Added
+
+analyzer:
+
+- Support for alert PGNs 126983, 126984, 126985.
+- Support for Seatalk1 Smart Remote.
+- Add type 19 in AtoN type in PGN 129041 (Issue 159.)
+- Add rudimentary PGN 127500 data (Issue 175.)
+- Add PGN 130569
+- Add Chetco dimmer control (PR 178.)
+- Add Fusion audio control PGNS (PR 177.)
+
+format-message:
+
+- Add support for PGNs 127506, 127508, 127509, 127488, 127489.
+- Add support for writing to YDWG-02.
+- Add support for SonicHub audio level PGN 130816.
+
+### Changed
+
+- Restore compatibility with old C compilers.
+- Fix makefile for Ubuntu/Debian packaging
+
+analyzer:
+
+- Fix analysis of PGNs with repeating fields but no "# of fields" field.
+- PGN fast/single determination is no longer made by number of bytes in PGN (Issue 181.)
+  This is also reflected in the XML and JSON files with a new Type attribute.
+- Fix transposed Maretron PGN 126270 -> 126720.
+- Improve analysis of PGN 127513. Hopefully correct now, but there are still
+  conflicting sources (Issue 143.)
+- Fix YDWG-02 raw format analysis.
+- Improve PGN 127506 lookups.
+- Fix incorrect heading/track control fields (PR 179.)
+- Fix PGN 126998 (PR 174.)
+- Add support for "Special Manoeuver Indicator" in AIS PGNs.
+- Fix PGN 127488 (PR 171.)
+- Add missing Sequence ID field to PGN 129810 (PR 168.)
+- Add missing Reserved field to to PGN 127250 (PR 169.)
+- Improve AIS PGNs.
+- Fix PGN 127502 to have no repeating fields.
+
+n2kd:
+
+- Add explicit separate server port (2600) for writing to the N2K interface.
+- Add explicit separate server port (2601) for AIS data from N2K bus.
+- Send both 129026 and 129029 to both normal and AIS clients.
+- Fix default parameters in default n2kd config (PR 150.)
+- Fix n2kd_monitor forking bug (PR 152.)
+- Write AIS data to NMEA0183 format.
+- Write NMEA0183 GLL data if position data is only in PGN 129025.
+
+socketcan-writer:
+
+- Write correct can id for both PDU1 and PDU2 messages.
+- Replay the frames with original timeframe interval (PR 170.)
+
+ikonvert-serial:
+
+- Fix writing to bus when load is high.
+- Allow unlimited rate transmission mode.
+
+actisense-serial:
+
+- Improve writing to bus when load is medium. NGT-1 seems to be unable
+  to handle full bandwidth writes.
+- Fix writing of messages, in particular those with 10 bytes.
+
+iptee:
+
+- Make it quit again when stdout is not writable
+- Fix `iptee -u` for non-listening UDP connections
+- Make `iptee -s` operational
+
+
 ## [1.2.1] - 2019-02-01
 
 ### Changed
