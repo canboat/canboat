@@ -76,11 +76,12 @@ void sbAppendEncodeBase64(StringBuffer *sb, const uint8_t *data, size_t len, enu
 
   switch (encoding)
   {
-    case BASE64_RFC:
-      encodeTable = B64EncodeTable;
-      break;
     case BASE64_AIS:
       encodeTable = AISEncodeTable;
+      break;
+    case BASE64_RFC:
+    default:
+      encodeTable = B64EncodeTable;
       break;
   }
 
@@ -148,11 +149,12 @@ void sbAppendDecodeBase64(StringBuffer *sb, const char *data, size_t len, enum B
 
   switch (encoding)
   {
-    case BASE64_RFC:
-      decodeTable = B64DecodeTable;
-      break;
     case BASE64_AIS:
       decodeTable = AISDecodeTable;
+      break;
+    case BASE64_RFC:
+    default:
+      decodeTable = B64DecodeTable;
       break;
   }
 

@@ -686,7 +686,6 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
   char *       nexttoken;
   time_t       tiden;
   struct tm    tm;
-  char         D;
   unsigned int msgid;
   unsigned int prio, pgn, src, dst;
   int          i;
@@ -708,7 +707,6 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
   {
     return -1;
   }
-  D = token[0];
 
   // parse msgid
   token = strtok_r(NULL, " ", &nexttoken);

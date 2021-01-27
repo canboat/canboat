@@ -86,7 +86,7 @@ int main(int argc, char **argv)
   char *         name   = argv[0];
   char *         device = 0;
   struct stat    statbuf;
-  int            speed;
+  int            speed = 115200;
   int            i;
   int            wait;
   time_t         lastPing = time(0);

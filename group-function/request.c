@@ -69,7 +69,6 @@ int main(int argc, char **argv)
   char **                  av = argv;
   long                     dest;
   long                     pgn;
-  long                     prio;
   size_t                   cnt = 0;
   command_group_function_t command;
   size_t                   i, bytes;
@@ -86,7 +85,7 @@ int main(int argc, char **argv)
   ac--, av++; /* lose the command name */
   dest = strtol(av[0], 0, 10);
   ac--, av++; /* lose the dest */
-  prio = strtol(av[0], 0, 10);
+  /* ignore */ strtol(av[0], 0, 10);
   ac--, av++; /* lose the prio */
   pgn = strtol(av[0], 0, 10);
   ac--, av++; /* lose the pgn */

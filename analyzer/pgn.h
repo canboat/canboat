@@ -6808,6 +6808,7 @@ typedef struct
   int   id;
 } Company;
 
+#ifdef GLOBAL_COMPANYLIST
 /* http://www.nmea.org/Assets/20140409%20nmea%202000%20registration%20list.pdf */
 static Company companyList[] = {{"Volvo Penta", 174},
                                 {"Actia Corporation", 199},
@@ -6917,3 +6918,4 @@ static Company companyList[] = {{"Volvo Penta", 174},
                                 {"Yacht Monitoring Solutions", 233},
                                 {"Yanmar", 172},
                                 {"ZF", 228}};
+#endif

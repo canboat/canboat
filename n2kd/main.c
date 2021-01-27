@@ -376,9 +376,8 @@ static char *getFullStateJSON(StreamType stream)
 
   int    i, s;
   Pgn *  pgn;
-  size_t l;
 
-  for (l = 0, i = 0; i < maxPgnList; i++)
+  for (i = 0; i < maxPgnList; i++)
   {
     pgn = *pgnList[i];
 
@@ -538,7 +537,7 @@ static void writeAndClose(int idx, char *data, size_t len)
   closeStream(idx);
 }
 
-static bool safeWriteBuffer(int idx, StringBuffer *sb)
+static void safeWriteBuffer(int idx, StringBuffer *sb)
 {
   int r;
 
@@ -1039,7 +1038,7 @@ static void closeClientRequest(int i)
   logDebug("closeClientRequest: read i=%d\n", i);
   r = read(stream[i].fd, buf, sizeof(buf));
 
-  logDebug("close-on-eof %s i=%d fd=%d %s\n", streamTypeName[stream[i].type], i, stream[i].fd, strerror(errno));
+  logDebug("close-on-eof %s r=%d i=%d fd=%d %s\n", streamTypeName[stream[i].type], (int) r, i, stream[i].fd, strerror(errno));
   closeStream(i);
 }
 

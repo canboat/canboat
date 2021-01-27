@@ -57,7 +57,7 @@ int    clients;
 
 int ipConnect(const char *host, const char *service, ConnectionType ct, struct sockaddr *sockaddr, socklen_t *socklen)
 {
-  int             sockfd;
+  int             sockfd = -1;
   int             n;
   struct addrinfo hints, *res, *addr;
 
