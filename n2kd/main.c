@@ -88,6 +88,7 @@ typedef enum StreamType
   SERVER_JSON,
   SERVER_JSON_STREAM,
   SERVER_NMEA0183_STREAM,
+  SERVER_NMEA0183_DATAGRAM,
   DATA_INPUT_STREAM,
   DATA_OUTPUT_SINK,
   DATA_OUTPUT_COPY,
@@ -106,6 +107,7 @@ const char *streamTypeName[] = {"Any",
                                 "JSON server",
                                 "JSON stream server",
                                 "NMEA0183 stream server",
+                                "NMEA0183 datagram server",
                                 "Data input stream",
                                 "Data output sink",
                                 "Data output copy",
@@ -123,6 +125,7 @@ ReadHandler readHandlers[SOCKET_TYPE_MAX] = {0,
                                              acceptJSONClient,
                                              acceptJSONStreamClient,
                                              acceptNMEA0183StreamClient,
+                                             0,
                                              handleClientRequest,
                                              closeClientRequest,
                                              closeClientRequest,
@@ -138,12 +141,13 @@ fd_set errorSet;
 
 typedef struct StreamInfo
 {
-  SOCKET      fd;
-  StreamType  type;
-  int64_t     timeout;
-  ReadHandler readHandler;
-  char        buffer[32768]; /* Lines longer than this might get into trouble */
-  size_t      len;
+  SOCKET       fd;
+  StreamType   type;
+  int64_t      timeout;
+  ReadHandler  readHandler;
+  char         buffer[32768]; /* Lines longer than this might get into trouble */
+  StringBuffer writeBuffer;
+  size_t       len;
 } StreamInfo;
 
 StreamInfo stream[FD_SETSIZE];
@@ -276,6 +280,7 @@ static int setFdUsed(SOCKET fd, StreamType ct)
   stream[i].timeout     = epoch() + UPDATE_INTERVAL;
   stream[i].type        = ct;
   stream[i].readHandler = readHandlers[ct];
+  stream[i].writeBuffer = sbNew;
 
   FD_SET(fd, &activeSet);
   if (stream[i].readHandler)
@@ -296,6 +301,7 @@ static int setFdUsed(SOCKET fd, StreamType ct)
     case CLIENT_NMEA0183_STREAM:
     case DATA_OUTPUT_STREAM:
     case DATA_OUTPUT_COPY:
+    case SERVER_NMEA0183_DATAGRAM:
       FD_SET(fd, &writeSet);
       break;
     default:
@@ -312,6 +318,19 @@ static int setFdUsed(SOCKET fd, StreamType ct)
     FD_CLR(fd, &errorSet);
   }
 
+#ifdef O_NONBLOCK
+  {
+    int flags = fcntl(fd, F_GETFL, 0);
+    fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+  }
+#else
+  {
+    int ioctlOptionValue = 1;
+
+    ioctl(fd, FIONBIO, &ioctlOptionValue);
+  }
+#endif
+
   socketIdxMax = CB_MAX(socketIdxMax, i);
   socketFdMax  = CB_MAX(socketFdMax, fd);
   logDebug("New %s %u (%u..%u fd=%d fdMax=%d)\n", streamTypeName[stream[i].type], i, socketIdxMin, socketIdxMax, fd, socketFdMax);
@@ -327,6 +346,7 @@ static void closeStream(int i)
   FD_CLR(stream[i].fd, &activeSet);
   FD_CLR(stream[i].fd, &readSet);
   FD_CLR(stream[i].fd, &writeSet);
+  sbClean(&stream[i].writeBuffer);
 
   stream[i].fd = INVALID_SOCKET; /* Free for re-use */
   if (i == socketIdxMax)
@@ -505,6 +525,68 @@ static void acceptNMEA0183StreamClient(int i)
   acceptClient(stream[i].fd, CLIENT_NMEA0183_STREAM);
 }
 
+static void writeAndClose(int idx, char *data, size_t len)
+{
+  write(stream[idx].fd, data, len);
+  closeStream(idx);
+}
+
+static bool safeWriteBuffer(int idx, StringBuffer *sb)
+{
+  int r;
+
+  if (stream[idx].writeBuffer.len > 0)
+  {
+    // Awww shit, last time we did not write everything, append the
+    // new bits to the old unwritten data and try to write the buffered
+    // data
+    sbAppendData(&stream[idx].writeBuffer, sb->data, sb->len);
+    sb = &stream[idx].writeBuffer;
+  }
+
+  // We are told the stream is ready to write, but it is in non-blocked
+  // mode so it can write less than the buffer.
+
+  r = write(stream[idx].fd, sb->data, sb->len);
+  if (r < sb->len)
+  {
+    if (r <= 0)
+    {
+      if (errno != EAGAIN)
+      {
+        if (stream[idx].type == DATA_OUTPUT_COPY || stream[idx].type == DATA_OUTPUT_STREAM)
+        {
+          logError("Cannot write to stdout: %s\n", strerror(errno));
+          exit(3);
+        }
+        logError("Closing %s stream %d: %s\n", streamTypeName[stream[idx].type], stream[idx].fd, strerror(errno));
+        closeStream(idx);
+      }
+    }
+    else
+    {
+      if (sb == &stream[idx].writeBuffer)
+      {
+        // Remove the part of the buffer we did write
+        sbDelete(sb, 0, (size_t) r);
+      }
+      else
+      {
+        // Store the remaining part in the per-fd writebuffer
+        // and write it on the next attempt
+        sbAppendData(&stream[idx].writeBuffer, sb->data + r, sb->len - r);
+      }
+    }
+  }
+  else
+  {
+    if (sb == &stream[idx].writeBuffer)
+    {
+      sbEmpty(sb);
+    }
+  }
+}
+
 static void writeAllClients(void)
 {
   fd_set         ws;
@@ -517,15 +599,16 @@ static void writeAllClients(void)
   char *         aisState = 0;
   char *         state    = 0;
 
-  logDebug("writeAllClients tcp.len=%d\n", tcpMessage.len);
+  logDebug("writeAllClients tcp=%d out=%d nmea=%d\n", tcpMessage.len, outMessage.len, nmeaMessage.len);
   FD_ZERO(&ws);
   FD_ZERO(&es);
 
   if (socketIdxMax >= 0)
   {
-    ws = writeSet;
-    es = errorSet;
-    r  = select(socketFdMax + 1, 0, &ws, &es, &timeout);
+    ws  = writeSet;
+    es  = errorSet;
+    r   = select(socketFdMax + 1, 0, &ws, &es, &timeout);
+    now = epoch();
     logDebug("write to %d streams (%u..%u fdMax=%d)\n", r, socketIdxMin, socketIdxMax, socketFdMax);
 
     for (i = socketIdxMin; r > 0 && i <= socketIdxMax; i++)
@@ -550,12 +633,13 @@ static void writeAllClients(void)
       }
       else if (FD_ISSET(fd, &ws))
       {
-        logDebug("%s i=%u fd=%d writable=%d\n", streamTypeName[stream[i].type], i, fd, FD_ISSET(fd, &ws));
+        logDebug("%s i=%u fd=%d writable=%d timeout=%lld\n",
+                 streamTypeName[stream[i].type],
+                 i,
+                 fd,
+                 FD_ISSET(fd, &ws),
+                 stream[i].timeout);
         r--;
-        if (!now)
-        {
-          now = epoch();
-        }
 
         switch (stream[i].type)
         {
@@ -566,9 +650,7 @@ static void writeAllClients(void)
               {
                 aisState = getFullStateJSON(CLIENT_AIS);
               }
-              write(fd, aisState, strlen(aisState));
-              logDebug("JSON: wrote %u to %d, closing\n", strlen(aisState), fd);
-              closeStream(i);
+              writeAndClose(i, aisState, strlen(aisState));
             }
             break;
           case CLIENT_JSON:
@@ -579,38 +661,27 @@ static void writeAllClients(void)
                 state = getFullStateJSON(CLIENT_JSON);
                 logDebug("json=%s", state);
               }
-              write(fd, state, strlen(state));
-              logDebug("JSON: wrote %u to %d, closing\n", strlen(state), fd);
-              closeStream(i);
+              writeAndClose(i, state, strlen(state));
             }
             break;
           case CLIENT_NMEA0183_STREAM:
             logDebug("NMEA-> %d\n", nmeaMessage.len);
             if (nmeaMessage.len)
             {
-              if (write(fd, nmeaMessage.data, nmeaMessage.len) < nmeaMessage.len)
-              {
-                closeStream(i);
-              }
+              safeWriteBuffer(i, &nmeaMessage);
             }
             break;
           case CLIENT_JSON_STREAM:
             if (tcpMessage.len)
             {
-              if (write(fd, tcpMessage.data, tcpMessage.len) < tcpMessage.len)
-              {
-                closeStream(i);
-              }
+              safeWriteBuffer(i, &tcpMessage);
             }
             break;
           case DATA_OUTPUT_STREAM:
           case DATA_OUTPUT_COPY:
             if (outMessage.len)
             {
-              if (write(fd, outMessage.data, outMessage.len) < outMessage.len)
-              {
-                closeStream(i);
-              }
+              safeWriteBuffer(i, &outMessage);
             }
             break;
           default:
@@ -630,9 +701,9 @@ static void writeAllClients(void)
     free(state);
   }
 
-  outMessage.len  = 0;
-  tcpMessage.len  = 0;
-  nmeaMessage.len = 0;
+  sbEmpty(&tcpMessage);
+  sbEmpty(&nmeaMessage);
+  sbEmpty(&outMessage);
 
 #ifdef NEVER
   {
