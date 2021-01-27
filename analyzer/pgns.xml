@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v1.4.0-beta
+CANboat version v1.4.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -26,7 +26,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>GPL v3</License>
-  <Version>1.4.0-beta</Version>
+  <Version>1.4.0</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -2390,6 +2390,77 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>8</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65280</PGN>
+      <Id>furunoHeave</Id>
+      <Description>Furuno: Heave</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>heave</Id>
+          <Name>Heave</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>m</Units>
+          <Resolution>0.001</Resolution>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -9563,6 +9634,52 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Units>rad/s</Units>
           <Resolution>3.125e-08</Resolution>
           <Signed>true</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>127252</PGN>
+      <Id>heave</Id>
+      <Description>Heave</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>heave</Id>
+          <Name>Heave</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>m</Units>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>40</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>
@@ -32282,6 +32399,137 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
       <PGN>130842</PGN>
+      <Id>furunoSixDegreesOfFreedomMovement</Id>
+      <Description>Furuno: Six Degrees Of Freedom Movement</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>29</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>c</Id>
+          <Name>C</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>e</Id>
+          <Name>E</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>f</Id>
+          <Name>F</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>152</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>g</Id>
+          <Name>G</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>184</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>h</Id>
+          <Name>H</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>200</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>i</Id>
+          <Name>I</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>216</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>true</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130842</PGN>
       <Id>simnetAisClassBStaticDataMsg24PartB</Id>
       <Description>Simnet: AIS Class B static data (msg 24 Part B)</Description>
       <Type>Fast</Type>
@@ -32547,6 +32795,107 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
     </PGNInfo>
     <PGNInfo>
       <PGN>130843</PGN>
+      <Id>furunoHeelAngleRollInformation</Id>
+      <Description>Furuno: Heel Angle, Roll Information</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>yaw</Id>
+          <Name>Yaw</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>pitch</Id>
+          <Name>Pitch</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>roll</Id>
+          <Name>Roll</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130843</PGN>
       <Id>simnetSonarStatusFrequencyAndDspVoltage</Id>
       <Description>Simnet: Sonar Status, Frequency and DSP Voltage</Description>
       <Type>Fast</Type>
@@ -32718,6 +33067,56 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130845</PGN>
+      <Id>furunoMultiSatsInViewExtended</Id>
+      <Description>Furuno: Multi Sats In View Extended</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -33142,6 +33541,56 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitLength>16</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130846</PGN>
+      <Id>furunoMotionSensorStatusExtended</Id>
+      <Description>Furuno: Motion Sensor Status Extended</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>

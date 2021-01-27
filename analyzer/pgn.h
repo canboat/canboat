@@ -1382,6 +1382,20 @@ Pgn pgnList[] = {
     /* proprietary PDU2 (non addressed) single-frame range 0xFF00 to 0xFFFF (65280 - 65535) */
 
     ,
+    {"Furuno: Heave",
+     65280,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     0x08,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Heave", BYTES(4), 0.001, true, "m", ""},
+      {"Reserved", BYTES(2), RES_NOTUSED, false, 0, ""},
+      {0}}}
+
+    ,
     {"Manufacturer Proprietary single-frame non-addressed",
      65280,
      PACKET_INCOMPLETE,
@@ -2752,6 +2766,18 @@ Pgn pgnList[] = {
      5,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""}, {"Rate", BYTES(4), RES_HIRES_ROTATION, true, "rad/s", ""}, {0}}}
+
+    ,
+    {"Heave",
+     127252,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     0x08,
+     0,
+     {{"SID", BYTES(1), 1, false, 0, ""},
+      {"Heave", BYTES(2), 0.01, true, "m", ""},
+      {"Reserved", BYTES(5), RES_NOTUSED, false, 0, ""},
+      {0}}}
 
     ,
     {"Attitude",
@@ -6391,6 +6417,27 @@ Pgn pgnList[] = {
       {0}}}
 
     ,
+    {"Furuno: Six Degrees Of Freedom Movement",
+     130842,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     29,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"A", BYTES(4), 1, true, 0, ""},
+      {"B", BYTES(4), 1, true, 0, ""},
+      {"C", BYTES(4), 1, true, 0, ""},
+      {"D", BYTES(1), 1, true, 0, ""},
+      {"E", BYTES(4), 1, true, 0, ""},
+      {"F", BYTES(4), 1, true, 0, ""},
+      {"G", BYTES(2), 1, true, 0, ""},
+      {"H", BYTES(2), 1, true, 0, ""},
+      {"I", BYTES(2), 1, true, 0, ""},
+      {0}}}
+
+    ,
     {"Simnet: AIS Class B static data (msg 24 Part B)",
      130842,
      PACKET_INCOMPLETE,
@@ -6415,6 +6462,23 @@ Pgn pgnList[] = {
       {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "Id of mother ship sent by daughter vessels"},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
       {"Spare", 6, RES_INTEGER, false, 0, ",0=unavailable"},
+      {0}}}
+
+    ,
+    {"Furuno: Heel Angle, Roll Information",
+     130843,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     0x08,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"A", BYTES(1), 1, false, 0, ""},
+      {"B", BYTES(1), 1, false, 0, ""},
+      {"Yaw", BYTES(2), RES_RADIANS, true, "rad", ""},
+      {"Pitch", BYTES(2), RES_RADIANS, true, "rad", ""},
+      {"Roll", BYTES(2), RES_RADIANS, true, "rad", ""},
       {0}}}
 
     ,
@@ -6446,6 +6510,18 @@ Pgn pgnList[] = {
       {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
       {"Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
+      {0}}}
+
+    ,
+    {"Furuno: Multi Sats In View Extended",
+     130845,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     0x08,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {0}}}
 
     ,
@@ -6513,6 +6589,18 @@ Pgn pgnList[] = {
        "9",
        ""},
       {"L", BYTES(2), 1, false, 0, ""},
+      {0}}}
+
+    ,
+    {"Furuno: Motion Sensor Status Extended",
+     130846,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     0x08,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {0}}}
 
     ,
