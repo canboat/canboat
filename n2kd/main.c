@@ -4,14 +4,16 @@
 Runs a TCP server, single threaded. It reads JSON styled NMEA 2000 records (lines)
 from stdin, collects this data and sends this out on three types of TCP clients:
 
-- Non stream JSON type get all accumulated data.
+- Non stream JSON type get all accumulated data except for AIS.
 - Stream JSON type just receive exactly the same messages as this program
   receives.
 - NMEA0183 stream type get those messages which this program knows how to translate
   into NMEA0183. The two letter talkers is the hexadecimal code for the NMEA2000
   sender.
+- Non stream JSON type gets all AIS data.
+- Write-only port to write to serial device (NGT-1, iKonvert, YDWG, etc.)
 
-(C) 2009-2013, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 

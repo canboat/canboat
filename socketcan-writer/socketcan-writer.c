@@ -2,7 +2,7 @@
 
 Reads raw n2k ASCII data from stdin and writes it to a Linux SocketCAN device (e.g. can0).
 
-(C) 2009-2015, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
