@@ -49,9 +49,12 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 uint16_t port      = PORT;
 char *   srcFilter = 0;
 bool     rateLimit;
+bool     udp183;
 
 uint32_t protocol = 1;
 int      debug    = 0;
+
+struct sockaddr_in udpWildcardAddress;
 
 #define SENSOR_TIMEOUT (120)       /* Timeout when PGN messages expire (no longer retransmitted) */
 #define AIS_TIMEOUT (3600)         /* AIS messages expiration is much longer */
@@ -419,8 +422,9 @@ static void tcpServer(uint16_t port, StreamType st)
   int                r;
   int                on = 1;
   SOCKET             s;
+  bool               udp = (st == SERVER_NMEA0183_DATAGRAM);
 
-  s = socket(PF_INET, SOCK_STREAM, 0);
+  s = socket(PF_INET, udp ? SOCK_DGRAM : SOCK_STREAM, 0);
   if (s == INVALID_SOCKET)
   {
     die("Unable to open server socket");
@@ -438,26 +442,19 @@ static void tcpServer(uint16_t port, StreamType st)
     die("Unable to bind server socket");
   }
 
-  r = listen(s, 10);
-  if (r == INVALID_SOCKET)
+  if (!udp)
   {
-    die("Unable to listen to server socket");
+    r = listen(s, 10);
+    if (r == INVALID_SOCKET)
+    {
+      die("Unable to listen to server socket");
+    }
+  }
+  else
+  {
+    setsockopt(s, SOL_SOCKET, SO_BROADCAST, (char *) &on, (socklen_t) sizeof(on));
   }
 
-#ifdef O_NONBLOCK
-  {
-    int flags = fcntl(s, F_GETFL, 0);
-    fcntl(s, F_SETFL, flags | O_NONBLOCK);
-  }
-#else
-  {
-    int ioctlOptionValue = 1;
-
-    ioctl(s, FIONBIO, &ioctlOptionValue);
-  }
-#endif
-
-  logDebug("TCP server fd=%d\n", s);
   setFdUsed(s, st);
 }
 
@@ -467,10 +464,20 @@ static void startTcpServers(void)
   logInfo("TCP JSON server listening on port %d\n", port);
   tcpServer(port + 1, SERVER_JSON_STREAM);
   logInfo("TCP JSON stream server listening on port %d\n", port + 1);
-  tcpServer(port + 2, SERVER_NMEA0183_STREAM);
-  logInfo("TCP NMEA0183 server listening on port %d\n", port + 2);
+  if (udp183)
+  {
+    tcpServer(port + 2, SERVER_NMEA0183_DATAGRAM);
+    logInfo("UDP NMEA0183 datagram server sending on port %d\n", port + 2);
+  }
+  else
+  {
+    tcpServer(port + 2, SERVER_NMEA0183_STREAM);
+    logInfo("TCP NMEA0183 server listening on port %d\n", port + 2);
+  }
+
   tcpServer(port + 3, SERVER_INPUT_STREAM);
   logInfo("TCP input stream server listening on port %d\n", port + 3);
+
   tcpServer(port + 4, SERVER_AIS);
   logInfo("TCP AIS server listening on port %d\n", port + 4);
 }
@@ -669,6 +676,13 @@ static void writeAllClients(void)
             if (nmeaMessage.len)
             {
               safeWriteBuffer(i, &nmeaMessage);
+            }
+            break;
+          case SERVER_NMEA0183_DATAGRAM:
+            logDebug("udp NMEA-> %d\n", nmeaMessage.len);
+            if (nmeaMessage.len)
+            {
+              sendto(fd, nmeaMessage.data, nmeaMessage.len, 0, (struct sockaddr *) &udpWildcardAddress, sizeof(udpWildcardAddress));
             }
             break;
           case CLIENT_JSON_STREAM:
@@ -1072,6 +1086,34 @@ static void doServerWork(void)
   }
 }
 
+bool parseUDPAddress(char *target, char *port)
+{
+  int              r;
+  struct addrinfo  hints;
+  struct addrinfo *res, *res0;
+
+  hints.ai_flags    = 0;
+  hints.ai_family   = PF_INET;
+  hints.ai_socktype = SOCK_DGRAM;
+  hints.ai_protocol = IPPROTO_UDP;
+  hints.ai_flags    = AI_NUMERICHOST;
+
+  r = getaddrinfo(target, port, &hints, &res0);
+  if (r)
+  {
+    return false;
+  }
+  for (res = res0; res; res = res->ai_next)
+  {
+    if (res->ai_addrlen == sizeof udpWildcardAddress)
+    {
+      memcpy(&udpWildcardAddress, res->ai_addr, sizeof udpWildcardAddress);
+      return true;
+    }
+  }
+  return false;
+}
+
 int main(int argc, char **argv)
 {
   struct sigaction sa;
@@ -1109,6 +1151,17 @@ int main(int argc, char **argv)
     {
       outputIdx = setFdUsed(stdoutfd, DATA_OUTPUT_SINK);
     }
+    else if (strcasecmp(argv[1], "-u") == 0 && argc > 3)
+    {
+      if (!parseUDPAddress(argv[2], argv[3]))
+      {
+        logError("Invalid UDP address + port\n");
+        exit(1);
+      }
+      udp183 = true;
+      argc -= 2;
+      argv += 2;
+    }
     else if (strcasecmp(argv[1], "--src-filter") == 0 && argc > 2)
     {
       srcFilter = argv[2];
@@ -1139,6 +1192,7 @@ int main(int argc, char **argv)
               "  --src-filter <srclist>  restrict NMEA0183 stream to particular N2K sources\n"
               "  --rate-limit            restrict NMEA0183 stream to one message per source per second\n"
               "  -p <port>               Start servers at <port> instead of 2597\n"
+              "  -u <target-addr> <port> Send UDP datagrams to UDP address indicated, can be wildcard address\n"
               "  -version                Show version number on stdout\n\n" COPYRIGHT);
       exit(1);
     }
