@@ -288,7 +288,7 @@ int main(int argc, char **argv)
       onlyPgn = strtol(av[1], 0, 10);
       if (onlyPgn > 0)
       {
-        printf("Only logging PGN %d\n", onlyPgn);
+        logInfo("Only logging PGN %d\n", onlyPgn);
       }
       else
       {
