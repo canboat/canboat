@@ -48,6 +48,7 @@ extern bool  rateLimit;
  * PGN 127245 "Rudder"         -> $xxRSA
  * PGN 130311 "Environmental Parameters - water temperature" -> $xxMTW
  * PGN 128275 "Distance Log"   -> $xxVLW
+ * PGN 126992 "System Time"    -> $xxZDA
 
  * Some others are in gps_ais.c file
  * PGN 129026 "Track made good and Ground speed"           -> $xxVTG
@@ -85,6 +86,7 @@ extern bool  rateLimit;
  Update","fields":{"Latitude":37.8670000,"Longitude":-122.3150000}}
  */
 
+#define PGN_SYSTEM_TIME (126992)
 #define PGN_VESSEL_HEADING (127250)
 #define PGN_WIND_DATA (130306)
 #define PGN_WATER_DEPTH (128267)
@@ -121,6 +123,7 @@ enum
   RATE_GPS_POSITION,
   RATE_ENVIRONMENTAL,
   RATE_DISTANCE_LOG,
+  RATE_SYSTEM_TIME,
   RATE_COUNT
 };
 
@@ -498,6 +501,47 @@ static void nmea0183Rudder(StringBuffer *msg183, int src, const char *msg)
   }
 }
 
+/*
+=== ZDA - Time & Date - UTC, day, month, year and local time zone ===
+
+This is one of the sentences commonly emitted by GPS units.
+
+        1         2  3  4    5  6  7
+        |         |  |  |    |  |  |
+ $--ZDA,hhmmss.ss,xx,xx,xxxx,xx,xx*hh<CR><LF>
+
+Field Number:
+
+    UTC time (hours, minutes, seconds, may have fractional subseconds)
+
+    Day, 01 to 31
+
+    Month, 01 to 12
+
+    Year (4 digits)
+
+    Local zone description, 00 to +- 13 hours
+
+    Local zone minutes description, 00 to 59, apply same sign as local hours
+
+    Checksum
+
+Example: $GPZDA,160012.71,11,03,2004,-1,00*7D
+*/
+static void nmea0183SystemTime(StringBuffer *msg183, int src, const char *msg)
+{
+  char         dateString[20];
+  char         timeString[20];
+  char         second[10];
+  unsigned int year, month, day, hour, minute;
+
+  if (getJSONValue(msg, "Date", dateString, sizeof(dateString)) && getJSONValue(msg, "Time", timeString, sizeof(timeString))
+      && sscanf(dateString, "%u.%u.%u", &year, &month, &day) == 3 && sscanf(timeString, "%u:%u:%9s", &hour, &minute, second) == 3)
+  {
+    nmea0183CreateMessage(msg183, src, "ZDA,%02u%02u%s,%u,%u,%04u,,", hour, minute, second, day, month, year);
+  }
+}
+
 static bool matchFilter(int n, char *filter)
 {
   bool negativeMatch = false;
@@ -576,6 +620,9 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
     case PGN_GPS_DOP:
       rateType = RATE_GPS_DOP;
       break;
+    case PGN_SYSTEM_TIME:
+      rateType = RATE_SYSTEM_TIME;
+      break;
     case PGN_POSITION:
     case PGN_POSITION_RAPID:
       rateType = RATE_GPS_POSITION;
@@ -644,6 +691,9 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
       break;
     case PGN_RUDDER:
       nmea0183Rudder(msg183, src, msg);
+      break;
+    case PGN_SYSTEM_TIME:
+      nmea0183SystemTime(msg183, src, msg);
       break;
     case PGN_SOG_COG:
       nmea0183VTG(msg183, src, msg);
