@@ -28,6 +28,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## [1.3.1] - 2021-01-27
+
+### Added
+
+format-message:
+
+- Fix length of PGN 127488 (Issue 220.)
+
+n2kd:
+
+- New UDP mode (Issue 219.)
+
+### Changed
+
+n2kd:
+
+- Improve write reliability and avoid hangs (Issue 218.)
+
+all:
+
+- Change copyright to 2021.
+- Fix compiler warnings (Issue 217.)
+
 ## [1.3.0] - 2020-03-04
 
 ### Added

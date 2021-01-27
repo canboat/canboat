@@ -32,7 +32,7 @@ CFLAGS?=-Wall -O2
 
 all: $(TARGETS)
 
-$(ANALYZER): analyzer.c pgn.c analyzer.h pgn.h ../common/common.c ../common/common.h Makefile
+$(ANALYZER): analyzer.c pgn.c analyzer.h pgn.h ../common/common.c ../common/common.h ../common/license.h Makefile
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I../common pgn.c analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 json: $(ANALYZER) pgns2json.xslt

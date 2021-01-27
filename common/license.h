@@ -39,6 +39,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
 
 #define COPYRIGHT                                                 \
   "CANboat version v" VERSION "\n\n"                              \
-  "(C) 2009-2018 Keversoft B.V., Harlingen, The Netherlands\n"    \
+  "(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\n"   \
   "For more information see https://github.com/canboat/canboat\n" \
   "\n" LICENSE "\n"
