@@ -151,7 +151,7 @@ char *sbSearchChar(const StringBuffer *const sb, char c);
     (sb)->len   = 0;    \
   }
 
-int          getJSONValue(const char *message, const char *fieldName, char *value, size_t len);
+bool         getJSONValue(const char *message, const char *fieldName, char *value, size_t len);
 void         getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int *pgn, unsigned int *src, unsigned int *dst);
 unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst);
 

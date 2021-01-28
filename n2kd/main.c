@@ -53,6 +53,7 @@ bool     udp183;
 
 uint32_t protocol = 1;
 int      debug    = 0;
+bool unitSI = false;
 
 struct sockaddr_in udpWildcardAddress;
 
@@ -746,9 +747,22 @@ static bool storeMessage(char *line, size_t len)
 
   logDebug("storeMessage(\"%s\",%u)\n", line, len);
 
-  if (!strstr(line, "\"fields\":"))
+  if (!strstr(line, "\"fields\":") || memcmp(line, "{\"timestamp", 11) != 0)
   {
-    logDebug("Ignore: pgn %u without fields\n", prn);
+    if (getJSONValue(line, "version", value, sizeof(value)))
+    {
+      logInfo("Found datastream from analyzer version %s\n", value);
+      if (getJSONValue(line, "units", value, sizeof(value)))
+      {
+        if (strcmp(value, "si") == 0)
+        {
+          logInfo("Datastream uses SI units\n");
+          unitSI = true;
+        }
+      }
+      return true;
+    }
+    logDebug("Ignore: no fields and timestamp\n");
     return false;
   }
   if (memcmp(line, "{\"timestamp", 11) != 0)

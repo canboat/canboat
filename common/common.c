@@ -363,7 +363,7 @@ void sbAppendFormat(StringBuffer *const sb, const char *const format, ...)
 /*
  * Retrieve a value out of a JSON styled message.
  */
-int getJSONValue(const char *message, const char *fieldName, char *value, size_t len)
+bool getJSONValue(const char *message, const char *fieldName, char *value, size_t len)
 {
   const char *loc      = message + 1;
   size_t      fieldLen = strlen(fieldName);
@@ -373,7 +373,7 @@ int getJSONValue(const char *message, const char *fieldName, char *value, size_t
     loc = strstr(loc, fieldName);
     if (!loc)
     {
-      return 0;
+      return false;
     }
     if (loc[-1] == '"' && loc[fieldLen] == '"' && loc[fieldLen + 1] == ':')
     {
@@ -398,7 +398,7 @@ int getJSONValue(const char *message, const char *fieldName, char *value, size_t
       len--;
     }
     *value = 0;
-    return 1;
+    return true;
   }
 
   /* field is string */
@@ -456,8 +456,9 @@ int getJSONValue(const char *message, const char *fieldName, char *value, size_t
     len--;
   }
   *value = 0;
-  return 1;
+  return true;
 }
+
 
 char *sbSearchChar(const StringBuffer *const in, char c)
 {

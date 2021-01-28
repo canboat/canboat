@@ -316,6 +316,11 @@ int main(int argc, char **argv)
   {
     logInfo("N2K packet analyzer\n" COPYRIGHT);
   }
+  else
+  {
+    printf("{\"version\":\"%s\",\"units\":\"%s\"}\n", VERSION, showSI ? "si" : "std");
+  }
+
 
   fillManufacturers();
   fillFieldCounts();

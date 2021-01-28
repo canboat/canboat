@@ -28,5 +28,20 @@ extern char *   srcFilter;
 extern bool     rateLimit;
 extern uint32_t protocol;
 extern int      debug;
+extern bool     unitSI;
 
 extern int64_t epoch(void);
+
+typedef enum
+{
+  U_ANGLE,
+  U_ANGULAR_VELOCITY,
+  U_VELOCITY,
+  U_DISTANCE,
+  U_TEMPERATURE,
+  U_GEO,
+  U_MAX
+} Unit;
+
+bool         getJSONNumber(const char *message, const char *fieldName, double *value, Unit unit);
+bool         getJSONInteger(const char *message, const char *fieldName, int *value);
