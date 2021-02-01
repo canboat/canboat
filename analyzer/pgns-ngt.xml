@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v1.4.0
+CANboat version v1.4.1
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -26,7 +26,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>GPL v3</License>
-  <Version>1.4.0</Version>
+  <Version>1.4.1</Version>
   <PGNs>
     <PGNInfo>
       <PGN>262161</PGN>
