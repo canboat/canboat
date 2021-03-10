@@ -1,8 +1,8 @@
 {
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
-    "License":"GPL v3",
-    "Version":"1.4.1",
+    "License":"Apache License Version 2.0",
+    "Version":"2.0.0",
     "PGNs": [
     
       {
@@ -1895,7 +1895,7 @@
             "Order":1,
             "Id":"realPower",
             "Name":"Real Power",
-            "BitLength":16,
+            "BitLength":32,
             "BitOffset":0,
             "BitStart":0,
             "Units":"W",
@@ -1905,8 +1905,8 @@
             "Order":2,
             "Id":"apparentPower",
             "Name":"Apparent Power",
-            "BitLength":16,
-            "BitOffset":16,
+            "BitLength":32,
+            "BitOffset":32,
             "BitStart":0,
             "Units":"VA",
             "Signed":false,
