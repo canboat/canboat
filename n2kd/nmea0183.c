@@ -82,8 +82,6 @@ extern bool  rateLimit;
  Parameters","fields":{"SID":222,"Temperature Source":"Sea Temperature","Temperature":17.16}}
  * {"timestamp":"2016-04-20T21:03:57.631Z","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance
  Log","fields":{"Log":57688,"Trip Log":57688}}
- * {"timestamp":"2019-02-02T19:45:02.051Z","prio":2,"src":43,"dst":255,"pgn":129025,"description":"Position, Rapid
- Update","fields":{"Latitude":37.8670000,"Longitude":-122.3150000}}
  */
 
 #define PGN_SYSTEM_TIME (126992)
@@ -97,7 +95,6 @@ extern bool  rateLimit;
 #define PGN_SOG_COG (129026)
 #define PGN_GPS_DOP (129539)
 #define PGN_POSITION (129029)
-#define PGN_POSITION_RAPID (129025)
 #define PGN_AIS_A (129038)
 #define PGN_AIS_B (129039)
 #define PGN_AIS_4 (129793)
@@ -612,7 +609,6 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
       rateType = RATE_SYSTEM_TIME;
       break;
     case PGN_POSITION:
-    case PGN_POSITION_RAPID:
       rateType = RATE_GPS_POSITION;
       break;
     case PGN_AIS_A:
@@ -689,7 +685,6 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
       nmea0183GSA(msg183, src, msg);
       break;
     case PGN_POSITION:
-    case PGN_POSITION_RAPID:
       nmea0183GLL(msg183, src, msg);
       break;
     case PGN_AIS_A:
