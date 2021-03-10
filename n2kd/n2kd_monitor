@@ -96,16 +96,11 @@ my $monitor;
 my $child;
 my $stop = 0;
 my $last_monitor = 0;
-my $do_monitor;
 
 if ($MONITOR ne "true" && $MONITOR ne "yes")
 {
   # Disable the monitoring part. This is not open source yet, so disable it by default.
-  $do_monitor = 0;
-}
-else
-{
-  $do_monitor = 1;
+  $last_monitor = LONG_MAX;
 }
 
 use POSIX();
@@ -248,7 +243,7 @@ for (;;)
       }
       sleep(5);
     }
-    if ($do_monitor && !$monitor && (time > $last_monitor + 30))
+    if (!$monitor && (time > $last_monitor + 30))
     {
       $last_monitor = time;
       if (($monitor = fork()) == 0)
