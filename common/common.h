@@ -262,7 +262,7 @@ void logAbort(const char *format, ...);
 #define CANBOAT_PGN_START 0x40000
 #define CANBOAT_PGN_END 0x401FF
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
-#define IKONVERT_BEM 0x40100  /* iKonvert specific fake PGNs */
+#define IKONVERT_BEM 0x40100 /* iKonvert specific fake PGNs */
 
 #define CANBOAT_COMMON
 #endif

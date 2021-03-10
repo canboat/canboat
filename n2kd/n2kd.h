@@ -20,6 +20,7 @@ limitations under the License.
 
 #include <signal.h>
 #include <sys/select.h>
+
 #include "common.h"
 #include "nmea0183.h"
 
@@ -43,5 +44,5 @@ typedef enum
   U_MAX
 } Unit;
 
-bool         getJSONNumber(const char *message, const char *fieldName, double *value, Unit unit);
-bool         getJSONInteger(const char *message, const char *fieldName, int *value);
+bool getJSONNumber(const char *message, const char *fieldName, double *value, Unit unit);
+bool getJSONInteger(const char *message, const char *fieldName, int *value);

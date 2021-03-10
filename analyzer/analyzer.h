@@ -23,6 +23,7 @@ limitations under the License.
 #ifdef WIN32
 #include <stdio.h>
 #include <windows.h>
+
 #include "nonstdbool.h"
 #else
 #include <stdbool.h>

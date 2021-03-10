@@ -24,8 +24,8 @@ limitations under the License.
 #include <time.h>
 
 #include "common.h"
-#include "nmea0183.h"
 #include "n2kd.h"
+#include "nmea0183.h"
 
 #define MMSI_LENGTH sizeof("244060807")
 #define LAT_LENGTH sizeof("-123.1234567890")
@@ -101,8 +101,7 @@ void nmea0183VTG(StringBuffer *msg183, int src, const char *msg)
 
   if (getJSONNumber(msg, "SOG", &sog, U_VELOCITY) && getJSONNumber(msg, "COG", &cog, U_ANGLE))
   {
-    nmea0183CreateMessage(
-        msg183, src, "VTG,%.1f,T,,M,%.2f,N,%.2f,K", cog, SPEED_M_S_TO_KNOTS(sog), SPEED_M_S_TO_KMH(sog));
+    nmea0183CreateMessage(msg183, src, "VTG,%.1f,T,,M,%.2f,N,%.2f,K", cog, SPEED_M_S_TO_KNOTS(sog), SPEED_M_S_TO_KMH(sog));
   }
 }
 
@@ -563,7 +562,7 @@ long int aisFloat(const char *msg, const char *fieldName)
     return paramRange[i].defValue;
   }
   value *= paramRange[i].multiplier;
-  sign  = (value >= 0) - (value < 0);
+  sign = (value >= 0) - (value < 0);
   value *= sign;
   if (paramRange[i].defValue == -128)
   {

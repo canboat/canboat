@@ -51,7 +51,7 @@ typedef struct
 #define RES_STRING (-12.0)
 #define RES_FLOAT (-13.0)
 #define RES_PRESSURE (-14.0)
-#define RES_STRINGLZ (-15.0)  /* ASCII string starting with length byte and terminated by zero byte */
+#define RES_STRINGLZ (-15.0) /* ASCII string starting with length byte and terminated by zero byte */
 #define RES_STRINGLAU (-16.0) /* ASCII or UNICODE string starting with length byte and ASCII/Unicode byte */
 #define RES_DECIMAL (-17.0)
 #define RES_BITFIELD (-18.0)
@@ -3371,12 +3371,22 @@ Pgn pgnList[] = {
       {"Anchor Docking Control", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
       {"Speed Control Type", 2, RES_LOOKUP, false, ",0=Single Speed,1=Dual Speed,2=Proportional Speed", ""},
       {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
-      {"Speed Control", BYTES(1), RES_BINARY, false, 0, "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100"},
+      {"Speed Control",
+       BYTES(1),
+       RES_BINARY,
+       false,
+       0,
+       "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100"},
       {"Power Enable", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
       {"Mechanical Lock", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
       {"Deck and Anchor Wash", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
       {"Anchor Light", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Command Timeout", BYTES(1), 0.005, false, "s", "If timeout elapses the thruster stops operating and reverts to static mode"},
+      {"Command Timeout",
+       BYTES(1),
+       0.005,
+       false,
+       "s",
+       "If timeout elapses the thruster stops operating and reverts to static mode"},
       {"Windlass Control Events", 4, RES_BITFIELD, false, "0=Another device controlling windlass", ""},
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {0}}}
@@ -3398,7 +3408,12 @@ Pgn pgnList[] = {
       {"Rode Counter Value", BYTES(2), 0.1, false, "m", ""},
       {"Windlass Line Speed", BYTES(2), 0.01, false, "m/s", ""},
       {"Anchor Docking Status", 2, RES_LOOKUP, false, ",0=Not docked,1=Fully docked,2=Error", ""},
-      {"Windlass Operating Events", 6, RES_BITFIELD, false, "0=System error,1=Sensor error,2=No windlass motion detected,3=Retrieval docking distance reached,4=End or rode reached", "" },
+      {"Windlass Operating Events",
+       6,
+       RES_BITFIELD,
+       false,
+       "0=System error,1=Sensor error,2=No windlass motion detected,3=Retrieval docking distance reached,4=End or rode reached",
+       ""},
       {0}}}
 
     ,
@@ -3411,7 +3426,13 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Windlass ID", BYTES(1), 1, false, 0, ""},
-      {"Windlass Monitoring Events", 8, RES_BITFIELD, false, "0=Controller under voltage cut-out,1=Controller over current cut-out,2=Controller over temperature cut-out,3=Manufacturer defined", "" },
+      {"Windlass Monitoring Events",
+       8,
+       RES_BITFIELD,
+       false,
+       "0=Controller under voltage cut-out,1=Controller over current cut-out,2=Controller over temperature cut-out,3=Manufacturer "
+       "defined",
+       ""},
       {"Controller voltage", BYTES(1), 0.2, false, "V", ""},
       {"Motor current", BYTES(1), 1, false, "A", ""},
       {"Total Motor Time", BYTES(2), 60, false, "s", ""},

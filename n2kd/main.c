@@ -53,14 +53,14 @@ bool     udp183;
 
 uint32_t protocol = 1;
 int      debug    = 0;
-bool unitSI = false;
+bool     unitSI   = false;
 
 struct sockaddr_in udpWildcardAddress;
 
-#define SENSOR_TIMEOUT (120)       /* Timeout when PGN messages expire (no longer retransmitted) */
-#define AIS_TIMEOUT (3600)         /* AIS messages expiration is much longer */
+#define SENSOR_TIMEOUT (120) /* Timeout when PGN messages expire (no longer retransmitted) */
+#define AIS_TIMEOUT (3600) /* AIS messages expiration is much longer */
 #define SONICHUB_TIMEOUT (8640000) /* SonicHub messages expiration is basically indefinite */
-#define CLAIM_TIMEOUT (8640000)    /* .. as are address claims and device names */
+#define CLAIM_TIMEOUT (8640000) /* .. as are address claims and device names */
 
 static void closeStream(int i);
 
@@ -376,8 +376,8 @@ static char *getFullStateJSON(StreamType stream)
   char         separator = '{';
   time_t       now       = time(0);
 
-  int    i, s;
-  Pgn *  pgn;
+  int  i, s;
+  Pgn *pgn;
 
   for (i = 0; i < maxPgnList; i++)
   {

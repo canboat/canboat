@@ -229,13 +229,12 @@ static void nmea0183VesselHeading(StringBuffer *msg183, int src, const char *msg
   double heading;
   double deviation;
   double variation;
-  char referenceString[30];
+  char   referenceString[30];
 
-  if (getJSONNumber(msg, "Heading", &heading, U_ANGLE)
-      && getJSONValue(msg, "Reference", referenceString, sizeof(referenceString)))
+  if (getJSONNumber(msg, "Heading", &heading, U_ANGLE) && getJSONValue(msg, "Reference", referenceString, sizeof(referenceString)))
   {
-    if (getJSONNumber(msg, "Deviation", &deviation, U_ANGLE)
-        && getJSONNumber(msg, "Variation", &variation, U_ANGLE) && strcmp(referenceString, "Magnetic") == 0)
+    if (getJSONNumber(msg, "Deviation", &deviation, U_ANGLE) && getJSONNumber(msg, "Variation", &variation, U_ANGLE)
+        && strcmp(referenceString, "Magnetic") == 0)
     {
       /* Enough info for HDG message */
 
@@ -282,10 +281,9 @@ static void nmea0183WindData(StringBuffer *msg183, int src, const char *msg)
 {
   double speed;
   double angle;
-  char referenceString[30];
+  char   referenceString[30];
 
-  if (getJSONNumber(msg, "Wind Speed", &speed, U_VELOCITY)
-      && getJSONNumber(msg, "Wind Angle", &angle, U_ANGLE)
+  if (getJSONNumber(msg, "Wind Speed", &speed, U_VELOCITY) && getJSONNumber(msg, "Wind Angle", &angle, U_ANGLE)
       && getJSONValue(msg, "Reference", referenceString, sizeof(referenceString)))
   {
     if (strcmp(referenceString, "True") == 0)
@@ -366,13 +364,13 @@ static void nmea0183WaterDepth(StringBuffer *msg183, int src, const char *msg)
   if (getJSONNumber(msg, "Depth", &depth, U_DISTANCE))
   {
     if (getJSONNumber(msg, "Offset", &offset, U_DISTANCE))
-  {
-    nmea0183CreateMessage(msg183, src, "DPT,%.1f,%.1f", depth, offset);
-  }
-  else
-  {
-    nmea0183CreateMessage(msg183, src, "DPT,%.1f,", depth);
-  }
+    {
+      nmea0183CreateMessage(msg183, src, "DPT,%.1f,%.1f", depth, offset);
+    }
+    else
+    {
+      nmea0183CreateMessage(msg183, src, "DPT,%.1f,", depth);
+    }
   }
 }
 
@@ -424,7 +422,7 @@ Field Number:
 static void nmea0183WaterTemperature(StringBuffer *msg183, int src, const char *msg)
 {
   double temp;
-  char sourceString[30];
+  char   sourceString[30];
 
   if (getJSONValue(msg, "Temperature Source", sourceString, sizeof(sourceString)) && (strcmp(sourceString, "Sea Temperature") == 0)
       && getJSONNumber(msg, "Temperature", &temp, U_TEMPERATURE))
@@ -566,9 +564,9 @@ static bool matchFilter(int n, char *filter)
 
 void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
 {
-  int  prn;
-  int  src;
-  int  rateType;
+  int prn;
+  int src;
+  int rateType;
 
   if (!getJSONInteger(msg, "pgn", &prn))
   {
@@ -720,7 +718,6 @@ bool getJSONNumber(const char *message, const char *fieldName, double *value, Un
   *value = nan("");
   return false;
 }
-
 
 /**
  * Extract an integer value out of a JSON message,

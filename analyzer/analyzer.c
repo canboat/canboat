@@ -1,7 +1,7 @@
 /*
 
 Analyzes NMEA 2000 PGNs.
- 
+
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
@@ -319,7 +319,6 @@ int main(int argc, char **argv)
   {
     printf("{\"version\":\"%s\",\"units\":\"%s\"}\n", VERSION, showSI ? "si" : "std");
   }
-
 
   fillManufacturers();
   fillFieldCounts();

@@ -1,5 +1,5 @@
 /*
- 
+
 Defines to interface with an Actisense NGT-1
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
@@ -17,7 +17,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- 
+
  */
 
 /* ASCII characters used to mark packet start/stop */

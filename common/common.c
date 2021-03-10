@@ -431,8 +431,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
           *value++ = '\t';
           loc++;
           break;
-        case 'u':
-        {
+        case 'u': {
           unsigned int n;
           sscanf(loc, "%4x", &n);
           loc += 4;
@@ -457,7 +456,6 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
   *value = 0;
   return true;
 }
-
 
 char *sbSearchChar(const StringBuffer *const in, char c)
 {
