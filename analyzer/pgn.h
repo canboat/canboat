@@ -304,8 +304,11 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",1=Water"                  \
    ",2=Steam"                  \
    ",3=Compressed Air"         \
-   ",4=Hydraulic")
-
+   ",4=Hydraulic"              \
+   ",5=Filter"                 \
+   ",6=AltimeterSetting"       \
+   ",7=Oil"                    \
+   ",8=Fuel")
 #define LOOKUP_DSC_FORMAT     \
   (",102=Geographical area"   \
    ",112=Distress"            \
