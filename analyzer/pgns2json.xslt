@@ -199,8 +199,7 @@
   </xsl:template>
 
   <!-- number (no support for javascript mantissa) -->
-  <xsl:template match="text()[not(string(number())='NaN' or
-                       (starts-with(.,'0' ) and . != '0'))]">
+  <xsl:template match="text()[string(number())!='NaN']">
     <xsl:value-of select="."/>
   </xsl:template>
 
