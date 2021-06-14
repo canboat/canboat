@@ -734,43 +734,6 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",9=Inverting"              \
    ",10=Assisting")
 
-#define LOOKUP_THRUSTER_DIRECTION_CONTROL \
-  (",0=Off"                               \
-   ",1=Ready"                             \
-   ",2=To Port"                           \
-   ",3=To Starboard")
-
-#define LOOKUP_THRUSTER_POWER_ENABLE \
-  (",0=Off"                          \
-   ",1=On"                           \
-   ",2=Error"                        \
-   ",3=Unknown")
-
-#define LOOKUP_THRUSTER_RETRACT_CONTROL \
-  (",0=Off"                             \
-   ",1=Extend"                          \
-   ",2=Retract"                         \
-   ",3=Reserved")
-
-#define LOOKUP_THRUSTER_CONTROL_EVENTS       \
-  (",0=Another device controlling thruster"  \
-   ",1=Boat speed too fast to safely use thruster")
-
-#define LOOKUP_THRUSTER_MOTOR_TYPE \
-  (",0=12VDC"                      \
-   ",1=24VDC"                      \
-   ",2=48VDC"                      \
-   ",3=24VAC"                      \
-   ",4=Hydraulic")
-
-#define LOOKUP_THRUSTER_MOTOR_EVENTS       \
-  (",0=Motor over temperature cutout"  \
-   ",1=Motor over current cutout"  \
-   ",2=Low oil level warning"  \
-   ",3=Oil over temperature warning"  \
-   ",4=Controller under voltage cutout"  \
-   ",5=Manufacturer defined")
-
 typedef enum PacketComplete
 {
   PACKET_COMPLETE              = 0,
@@ -3329,54 +3292,6 @@ Pgn pgnList[] = {
       {"Reserved", BYTES(5), RES_BINARY, false, 0, ""},
       {0}}}
 
-    ,
-    {"Thruster Control Status",
-     128006,
-     PACKET_COMPLETE,
-     PACKET_SINGLE,
-     8,
-     0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Identifier", BYTES(1), 1, false, 0, ""},
-      {"Direction Control", 4, RES_LOOKUP, false, LOOKUP_THRUSTER_DIRECTION_CONTROL, ""},
-      {"Power Enabled", 2, RES_LOOKUP, false, LOOKUP_THRUSTER_POWER_ENABLE, ""},
-      {"Retract Control", 2, RES_LOOKUP, false, LOOKUP_THRUSTER_RETRACT_CONTROL, ""},
-      {"Speed Control", BYTES(1), RES_PERCENTAGE, false, "%", ""},
-      {"Control Events", BYTES(1), RES_BITFIELD, false, LOOKUP_THRUSTER_CONTROL_EVENTS, ""},
-      {"Command Timeout", BYTES(1), 1e-3, false, 0, ""},
-      {"Azimuth Control", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {0}}}
-
-    ,
-    {"Thruster Information",
-     128007,
-     PACKET_COMPLETE,
-     PACKET_SINGLE,
-     8,
-     0,
-     {{"Identifier", BYTES(1), 1, false, 0, ""},
-      {"Motor Type", 4, RES_LOOKUP, false, LOOKUP_THRUSTER_MOTOR_TYPE, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"Power Rating", BYTES(2), 1, false, "W", ""},
-      {"Maximum Temperature Rating", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Maximum Rotational Speed", BYTES(2), 0.25, false, "rpm", ""},
-      {0}}}
-
-    ,
-    {"Thruster Motor Status",
-     128008,
-     PACKET_COMPLETE,
-     PACKET_SINGLE,
-     8,
-     0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Identifier", BYTES(1), 1, false, 0, ""},
-      {"Motor Events", BYTES(1), RES_BITFIELD, false, LOOKUP_THRUSTER_MOTOR_EVENTS, ""},
-      {"Current", BYTES(1), 1, false, "A", ""},
-      {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Operating Time", BYTES(2), 1, false, "minutes", ""},
-      {0}}}
-    
     /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
     ,
     {"Speed",
