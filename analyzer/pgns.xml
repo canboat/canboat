@@ -12837,6 +12837,288 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>128006</PGN>
+      <Id>thrusterControlStatus</Id>
+      <Description>Thruster Control Status</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>identifier</Id>
+          <Name>Identifier</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>directionControl</Id>
+          <Name>Direction Control</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='Ready' />
+            <EnumPair Value='2' Name='To Port' />
+            <EnumPair Value='3' Name='To Starboard' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>powerEnabled</Id>
+          <Name>Power Enabled</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+            <EnumPair Value='2' Name='Error' />
+            <EnumPair Value='3' Name='Unknown' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>retractControl</Id>
+          <Name>Retract Control</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='Extend' />
+            <EnumPair Value='2' Name='Retract' />
+            <EnumPair Value='3' Name='Reserved' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>speedControl</Id>
+          <Name>Speed Control</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>%</Units>
+          <Resolution>0.004</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>controlEvents</Id>
+          <Name>Control Events</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Bitfield</Type>
+          <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='Another device controlling thruster' />
+            <EnumPair Bit='1' Name='Boat speed too fast to safely use thruster' />
+          </EnumBitValues>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>commandTimeout</Id>
+          <Name>Command Timeout</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>0.001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>azimuthControl</Id>
+          <Name>Azimuth Control</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>128007</PGN>
+      <Id>thrusterInformation</Id>
+      <Description>Thruster Information</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>identifier</Id>
+          <Name>Identifier</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>motorType</Id>
+          <Name>Motor Type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='12VDC' />
+            <EnumPair Value='1' Name='24VDC' />
+            <EnumPair Value='2' Name='48VDC' />
+            <EnumPair Value='3' Name='24VAC' />
+            <EnumPair Value='4' Name='Hydraulic' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>12</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>powerRating</Id>
+          <Name>Power Rating</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>W</Units>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>maximumTemperatureRating</Id>
+          <Name>Maximum Temperature Rating</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>K</Units>
+                 <Type>Temperature</Type>
+                 <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>maximumRotationalSpeed</Id>
+          <Name>Maximum Rotational Speed</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rpm</Units>
+          <Resolution>0.25</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>128008</PGN>
+      <Id>thrusterMotorStatus</Id>
+      <Description>Thruster Motor Status</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>identifier</Id>
+          <Name>Identifier</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>motorEvents</Id>
+          <Name>Motor Events</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Bitfield</Type>
+          <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='Motor over temperature cutout' />
+            <EnumPair Bit='1' Name='Motor over current cutout' />
+            <EnumPair Bit='2' Name='Low oil level warning' />
+            <EnumPair Bit='3' Name='Oil over temperature warning' />
+            <EnumPair Bit='4' Name='Controller under voltage cutout' />
+            <EnumPair Bit='5' Name='Manufacturer defined' />
+          </EnumBitValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>current</Id>
+          <Name>Current</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>A</Units>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>temperature</Id>
+          <Name>Temperature</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>K</Units>
+                 <Type>Temperature</Type>
+                 <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>operatingTime</Id>
+          <Name>Operating Time</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>minutes</Units>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>128259</PGN>
       <Id>speed</Id>
       <Description>Speed</Description>
@@ -22662,6 +22944,10 @@ limitations under the License.
             <EnumPair Value='2' Name='Steam' />
             <EnumPair Value='3' Name='Compressed Air' />
             <EnumPair Value='4' Name='Hydraulic' />
+            <EnumPair Value='5' Name='Filter' />
+            <EnumPair Value='6' Name='AltimeterSetting' />
+            <EnumPair Value='7' Name='Oil' />
+            <EnumPair Value='8' Name='Fuel' />
           </EnumValues>
         </Field>
         <Field>
@@ -22720,6 +23006,10 @@ limitations under the License.
             <EnumPair Value='2' Name='Steam' />
             <EnumPair Value='3' Name='Compressed Air' />
             <EnumPair Value='4' Name='Hydraulic' />
+            <EnumPair Value='5' Name='Filter' />
+            <EnumPair Value='6' Name='AltimeterSetting' />
+            <EnumPair Value='7' Name='Oil' />
+            <EnumPair Value='8' Name='Fuel' />
           </EnumValues>
         </Field>
         <Field>
