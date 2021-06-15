@@ -257,8 +257,13 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
 
 #define LOOKUP_WATER_REFERENCE (",0=Paddle wheel,1=Pitot tube,2=Doppler,3=Correlation (ultra sound),4=Electro Magnetic")
 
-#define LOOKUP_YES_NO (",0=No,1=Yes,10=Error,11=Unavailable")
+#define LOOKUP_YES_NO \
+  (",0=No" \
+   ",1=Yes") /* Note that Error and Unknown are automatically decoded */
 #define LOOKUP_OK_WARNING (",0=OK,1=Warning")
+#define LOOKUP_OFF_ON \
+  (",0=Off"           \
+   ",1=On") /* Note that Error and Unknown are automatically decoded */
 
 #define LOOKUP_DIRECTION_REFERENCE (",0=True,1=Magnetic,2=Error,3=Null")
 
@@ -739,12 +744,6 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",1=Ready"                             \
    ",2=To Port"                           \
    ",3=To Starboard")
-
-#define LOOKUP_THRUSTER_POWER_ENABLE \
-  (",0=Off"                          \
-   ",1=On"                           \
-   ",2=Error"                        \
-   ",3=Unknown")
 
 #define LOOKUP_THRUSTER_RETRACT_CONTROL \
   (",0=Off"                             \
@@ -2372,7 +2371,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=35", "Simulate Mode"},
-      {"Simulate Mode", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Simulate Mode", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
       {"Reserved", 22, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -2970,34 +2969,34 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Indicator1", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator2", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator3", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator4", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator5", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator6", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator7", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator8", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator9", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator10", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator11", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator12", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator13", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator14", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator15", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator16", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator17", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator18", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator19", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator20", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator21", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator22", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator23", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator24", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator25", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator26", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator27", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
-      {"Indicator28", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
+      {"Indicator1", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator2", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator3", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator4", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator5", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator6", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator7", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator8", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator9", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator10", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator11", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator12", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator13", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator14", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator15", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator16", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator17", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator18", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator19", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator20", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator21", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator22", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator23", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator24", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator25", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator26", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator27", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Indicator28", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
       {0}}},
     {"Switch Bank Control",
      127502,
@@ -3005,21 +3004,21 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Switch Bank Instance", BYTES(1), 1, false, 0, ""},   {"Switch1", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch2", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},  {"Switch3", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch4", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},  {"Switch5", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch6", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},  {"Switch7", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch8", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},  {"Switch9", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch10", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch11", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch12", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch13", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch14", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch15", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch16", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch17", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch18", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch19", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch20", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch21", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch22", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch23", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch24", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch25", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch26", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {"Switch27", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Switch28", 2, RES_LOOKUP, false, ",0=Off,1=On", ""}, {0}}}
+     {{"Switch Bank Instance", BYTES(1), 1, false, 0, ""},   {"Switch1", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch2", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch3", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch4", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch5", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch6", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch7", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch8", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch9", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch10", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch11", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch12", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch13", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch14", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch15", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch16", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch17", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch18", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch19", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch20", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch21", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch22", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch23", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch24", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch25", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch26", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch27", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch28", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {0}}}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
@@ -3118,8 +3117,8 @@ Pgn pgnList[] = {
        ",0=Not charging,1=Bulk,2=Absorption,3=Overcharge,4=Equalise,5=Float,6=No Float,7=Constant VI,8=Disabled,9=Fault",
        ""},
       {"Charge Mode", 4, RES_LOOKUP, false, ",0=Standalone mode,1=Primary mode,2=Secondary mode,3=Echo mode", ""},
-      {"Operating State", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
-      {"Equalization Pending", 2, RES_LOOKUP, false, ",0=Off,1=On", ""},
+      {"Operating State", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Equalization Pending", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
       {"Reserved", 4, RES_BINARY, false, 0, ""},
       {"Equalization Time Remaining", BYTES(2), 1, false, 0, ""},
       {0}}}
@@ -3339,7 +3338,7 @@ Pgn pgnList[] = {
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Identifier", BYTES(1), 1, false, 0, ""},
       {"Direction Control", 4, RES_LOOKUP, false, LOOKUP_THRUSTER_DIRECTION_CONTROL, ""},
-      {"Power Enabled", 2, RES_LOOKUP, false, LOOKUP_THRUSTER_POWER_ENABLE, ""},
+      {"Power Enabled", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
       {"Retract Control", 2, RES_LOOKUP, false, LOOKUP_THRUSTER_RETRACT_CONTROL, ""},
       {"Speed Control", BYTES(1), RES_PERCENTAGE, false, "%", ""},
       {"Control Events", BYTES(1), RES_BITFIELD, false, LOOKUP_THRUSTER_CONTROL_EVENTS, ""},
@@ -3456,7 +3455,7 @@ Pgn pgnList[] = {
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Windlass ID", BYTES(1), 1, false, 0, ""},
       {"Windlass Direction Control", 2, RES_LOOKUP, false, ",0=Off,1=Down,2=Up", ""},
-      {"Anchor Docking Control", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      {"Anchor Docking Control", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
       {"Speed Control Type", 2, RES_LOOKUP, false, ",0=Single Speed,1=Dual Speed,2=Proportional Speed", ""},
       {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
       {"Speed Control",
@@ -3465,10 +3464,10 @@ Pgn pgnList[] = {
        false,
        0,
        "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100"},
-      {"Power Enable", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Mechanical Lock", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Deck and Anchor Wash", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Anchor Light", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      {"Power Enable", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Mechanical Lock", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Deck and Anchor Wash", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Anchor Light", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
       {"Command Timeout",
        BYTES(1),
        0.005,
@@ -6481,7 +6480,7 @@ Pgn pgnList[] = {
       {"OFF Counter", BYTES(1), RES_INTEGER, false, 0, ""},
       {"ON Counter", BYTES(1), RES_INTEGER, false, 0, ""},
       {"ERROR Counter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Switch Status", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
+      {"Switch Status", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
       {"Reserved", BYTES(2), 1, false, 0, ""},
       {0}}}
 
@@ -6514,7 +6513,7 @@ Pgn pgnList[] = {
       {"Accumulated OFF Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
       {"Accumulated ON Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
       {"Accumulated ERROR Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
-      {"Switch Status", 2, RES_LOOKUP, false, ",0=Off,1=On,2=Failed", ""},
+      {"Switch Status", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
       {"Reserved", 6, 1, false, 0, ""},
       {0}}}
 
