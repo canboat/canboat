@@ -118,7 +118,7 @@
             "BitLength":16,
             "BitOffset":88,
             "BitStart":0,
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":6,

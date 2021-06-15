@@ -858,7 +858,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false}]},
       {
         "PGN":65002,
@@ -895,7 +895,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false}]},
       {
         "PGN":65003,
@@ -932,7 +932,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false}]},
       {
         "PGN":65004,
@@ -973,7 +973,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false}]},
       {
         "PGN":65005,
@@ -1107,7 +1107,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false},
           {
             "Order":4,
@@ -1222,7 +1222,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false},
           {
             "Order":4,
@@ -1338,7 +1338,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false},
           {
             "Order":4,
@@ -1454,7 +1454,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false},
           {
             "Order":4,
@@ -1598,7 +1598,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false},
           {
             "Order":4,
@@ -1714,7 +1714,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false},
           {
             "Order":4,
@@ -1830,7 +1830,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false},
           {
             "Order":4,
@@ -1946,7 +1946,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.0078125",
+            "Resolution":0.0078125,
             "Signed":false},
           {
             "Order":4,
@@ -2142,7 +2142,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true},
           {
             "Order":5,
@@ -2273,7 +2273,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true},
           {
             "Order":7,
@@ -2410,7 +2410,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":65286,
@@ -3339,7 +3339,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":5,
@@ -3349,7 +3349,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":6,
@@ -3420,7 +3420,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":6,
@@ -3430,7 +3430,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":7,
@@ -3497,7 +3497,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":6,
@@ -3507,7 +3507,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":7,
@@ -4069,7 +4069,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":6,
@@ -4149,7 +4149,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":6,
@@ -4159,7 +4159,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"V",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":7,
@@ -4277,7 +4277,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":4,
@@ -4287,7 +4287,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":5,
@@ -5993,7 +5993,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":6,
@@ -6004,7 +6004,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":7,
@@ -6015,7 +6015,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true}]},
       {
         "PGN":126720,
@@ -6121,7 +6121,7 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":9,
@@ -6131,7 +6131,7 @@
             "BitLength":16,
             "BitOffset":64,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":10,
@@ -6141,7 +6141,7 @@
             "BitLength":16,
             "BitOffset":80,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":11,
@@ -6152,7 +6152,7 @@
             "BitOffset":96,
             "BitStart":0,
             "Units":"Tesla",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":12,
@@ -6163,7 +6163,7 @@
             "BitOffset":112,
             "BitStart":0,
             "Units":"Tesla",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":13,
@@ -6174,7 +6174,7 @@
             "BitOffset":128,
             "BitStart":0,
             "Units":"Tesla",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":14,
@@ -6185,7 +6185,7 @@
             "BitOffset":144,
             "BitStart":0,
             "Units":"deg",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true},
           {
             "Order":15,
@@ -6196,7 +6196,7 @@
             "BitOffset":160,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.05",
+            "Resolution":0.05,
             "Signed":true},
           {
             "Order":16,
@@ -6207,7 +6207,7 @@
             "BitOffset":176,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.05",
+            "Resolution":0.05,
             "Signed":true}]},
       {
         "PGN":126720,
@@ -6313,7 +6313,7 @@
             "BitLength":16,
             "BitOffset":42,
             "BitStart":2,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":9,
@@ -6323,7 +6323,7 @@
             "BitLength":16,
             "BitOffset":58,
             "BitStart":2,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":10,
@@ -6333,7 +6333,7 @@
             "BitLength":16,
             "BitOffset":74,
             "BitStart":2,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":11,
@@ -6344,7 +6344,7 @@
             "BitOffset":90,
             "BitStart":2,
             "Units":"Tesla",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":12,
@@ -6355,7 +6355,7 @@
             "BitOffset":106,
             "BitStart":2,
             "Units":"Tesla",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":13,
@@ -6366,7 +6366,7 @@
             "BitOffset":122,
             "BitStart":2,
             "Units":"Tesla",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":14,
@@ -6377,7 +6377,7 @@
             "BitOffset":138,
             "BitStart":2,
             "Units":"deg",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true},
           {
             "Order":15,
@@ -6388,7 +6388,7 @@
             "BitOffset":154,
             "BitStart":2,
             "Units":"s",
-            "Resolution":"0.05",
+            "Resolution":0.05,
             "Signed":true},
           {
             "Order":16,
@@ -6399,7 +6399,7 @@
             "BitOffset":170,
             "BitStart":2,
             "Units":"s",
-            "Resolution":"0.05",
+            "Resolution":0.05,
             "Signed":true}]},
       {
         "PGN":126720,
@@ -6536,7 +6536,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":6,
@@ -6619,7 +6619,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":7,
@@ -6629,7 +6629,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":126720,
@@ -6715,7 +6715,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"K",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true}]},
       {
         "PGN":126720,
@@ -6799,7 +6799,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":8,
@@ -6809,7 +6809,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":126720,
@@ -6894,7 +6894,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":8,
@@ -6904,7 +6904,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":126720,
@@ -7826,7 +7826,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false}]},
       {
         "PGN":126993,
@@ -7846,7 +7846,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":2,
@@ -8040,7 +8040,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":6,
@@ -8085,7 +8085,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -8096,7 +8096,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":11,
@@ -8107,7 +8107,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":12,
@@ -8140,7 +8140,7 @@
             "BitOffset":208,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":15,
@@ -8150,7 +8150,7 @@
             "BitOffset":224,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":16,
@@ -8322,7 +8322,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":11,
@@ -8332,7 +8332,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":12,
@@ -8342,7 +8342,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":13,
@@ -8352,7 +8352,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":14,
@@ -8362,7 +8362,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":15,
@@ -8372,7 +8372,7 @@
             "BitOffset":104,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":16,
@@ -8401,7 +8401,7 @@
             "BitOffset":152,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false}]},
       {
         "PGN":127245,
@@ -8446,7 +8446,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":5,
@@ -8456,7 +8456,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true}]},
       {
         "PGN":127250,
@@ -8483,7 +8483,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":3,
@@ -8493,7 +8493,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":4,
@@ -8503,7 +8503,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":5,
@@ -8585,7 +8585,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":3,
@@ -8621,7 +8621,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":3,
@@ -8631,7 +8631,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":4,
@@ -8641,7 +8641,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true}]},
       {
         "PGN":127258,
@@ -8709,7 +8709,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true}]},
       {
         "PGN":127488,
@@ -8740,7 +8740,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"rpm",
-            "Resolution":"0.25",
+            "Resolution":0.25,
             "Signed":false},
           {
             "Order":3,
@@ -8810,7 +8810,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":4,
@@ -8821,7 +8821,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":5,
@@ -8831,7 +8831,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Units":"V",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":6,
@@ -8841,7 +8841,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Units":"L/h",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true},
           {
             "Order":7,
@@ -9008,7 +9008,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":6,
@@ -9046,7 +9046,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":2,
@@ -9056,7 +9056,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":3,
@@ -9075,7 +9075,7 @@
             "BitOffset":80,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false}]},
       {
         "PGN":127497,
@@ -9115,7 +9115,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"L/h",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true},
           {
             "Order":4,
@@ -9125,7 +9125,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"L/h",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true},
           {
             "Order":5,
@@ -9135,7 +9135,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Units":"L/h",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true}]},
       {
         "PGN":127498,
@@ -9166,7 +9166,7 @@
             "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
-            "Resolution":"0.25",
+            "Resolution":0.25,
             "Signed":false},
           {
             "Order":3,
@@ -10079,7 +10079,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"V",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":7,
@@ -10089,7 +10089,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":8,
@@ -10099,7 +10099,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":9,
@@ -10109,7 +10109,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":10,
@@ -10141,7 +10141,7 @@
             "BitOffset":152,
             "BitStart":0,
             "Units":"Cos Phi",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":127504,
@@ -10210,7 +10210,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"V",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":7,
@@ -10220,7 +10220,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":8,
@@ -10230,7 +10230,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":9,
@@ -10240,7 +10240,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":10,
@@ -10272,7 +10272,7 @@
             "BitOffset":152,
             "BitStart":0,
             "Units":"Cos Phi",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":127505,
@@ -10315,7 +10315,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"%",
-            "Resolution":"0.004",
+            "Resolution":0.004,
             "Signed":false},
           {
             "Order":4,
@@ -10325,7 +10325,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"L",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":5,
@@ -10409,7 +10409,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Units":"V",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":127507,
@@ -10536,7 +10536,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"V",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":3,
@@ -10546,7 +10546,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true},
           {
             "Order":4,
@@ -10557,7 +10557,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":5,
@@ -10678,7 +10678,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":6,
@@ -10705,7 +10705,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":9,
@@ -10960,7 +10960,7 @@
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
-            "Resolution":"0.002",
+            "Resolution":0.002,
             "Signed":false},
           {
             "Order":10,
@@ -11065,7 +11065,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":4,
@@ -11109,7 +11109,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":4,
@@ -11153,7 +11153,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":4,
@@ -11310,7 +11310,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"V",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":4,
@@ -11320,7 +11320,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"A",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":5,
@@ -11356,7 +11356,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":3,
@@ -11392,7 +11392,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":3,
@@ -11402,7 +11402,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":4,
@@ -11462,7 +11462,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":3,
@@ -11473,7 +11473,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true},
           {
             "Order":4,
@@ -11517,7 +11517,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":3,
@@ -11637,7 +11637,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":9,
@@ -11647,7 +11647,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":10,
@@ -11657,7 +11657,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":11,
@@ -11667,7 +11667,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":12,
@@ -11677,7 +11677,7 @@
             "BitOffset":104,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":13,
@@ -11688,7 +11688,7 @@
             "BitOffset":136,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":14,
@@ -11700,7 +11700,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":15,
@@ -11861,7 +11861,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.005",
+            "Resolution":0.005,
             "Signed":false},
           {
             "Order":13,
@@ -11965,7 +11965,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":8,
@@ -11975,7 +11975,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":9,
@@ -12043,7 +12043,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"V",
-            "Resolution":"0.2",
+            "Resolution":0.2,
             "Signed":false},
           {
             "Order":5,
@@ -12092,7 +12092,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":2,
@@ -12103,7 +12103,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true}]},
       {
         "PGN":129026,
@@ -12154,7 +12154,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":5,
@@ -12164,7 +12164,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":6,
@@ -12278,7 +12278,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":7,
@@ -12327,7 +12327,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":4,
@@ -12338,7 +12338,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000000000000001",
+            "Resolution":0.0000000000000001,
             "Signed":true},
           {
             "Order":5,
@@ -12349,7 +12349,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000000000000001",
+            "Resolution":0.0000000000000001,
             "Signed":true},
           {
             "Order":6,
@@ -12440,7 +12440,7 @@
             "BitLength":16,
             "BitOffset":272,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":13,
@@ -12450,7 +12450,7 @@
             "BitLength":16,
             "BitOffset":288,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":14,
@@ -12461,7 +12461,7 @@
             "BitOffset":304,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":15,
@@ -12508,7 +12508,7 @@
             "BitOffset":360,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":129033,
@@ -12541,7 +12541,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":3,
@@ -12606,7 +12606,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":5,
@@ -12617,7 +12617,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":6,
@@ -12666,7 +12666,7 @@
             "BitOffset":112,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -12676,7 +12676,7 @@
             "BitOffset":128,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":11,
@@ -12713,7 +12713,7 @@
             "BitOffset":168,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":14,
@@ -12851,7 +12851,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":5,
@@ -12862,7 +12862,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":6,
@@ -12911,7 +12911,7 @@
             "BitOffset":112,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -12921,7 +12921,7 @@
             "BitOffset":128,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":11,
@@ -12958,7 +12958,7 @@
             "BitOffset":168,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":14,
@@ -13119,7 +13119,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":5,
@@ -13130,7 +13130,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":6,
@@ -13179,7 +13179,7 @@
             "BitOffset":112,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -13189,7 +13189,7 @@
             "BitOffset":128,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":11,
@@ -13282,7 +13282,7 @@
             "BitOffset":168,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":16,
@@ -13320,7 +13320,7 @@
             "BitOffset":192,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":19,
@@ -13330,7 +13330,7 @@
             "BitOffset":208,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":20,
@@ -13340,7 +13340,7 @@
             "BitOffset":224,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":21,
@@ -13350,7 +13350,7 @@
             "BitOffset":240,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":22,
@@ -13457,7 +13457,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":5,
@@ -13468,7 +13468,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":6,
@@ -13517,7 +13517,7 @@
             "BitOffset":112,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":10,
@@ -13527,7 +13527,7 @@
             "BitOffset":128,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":11,
@@ -13537,7 +13537,7 @@
             "BitOffset":144,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":12,
@@ -13547,7 +13547,7 @@
             "BitOffset":160,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":13,
@@ -13741,7 +13741,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":3,
@@ -13752,7 +13752,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":4,
@@ -13792,7 +13792,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":2,
@@ -13803,7 +13803,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":3,
@@ -13814,7 +13814,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":4,
@@ -13866,7 +13866,7 @@
             "BitOffset":224,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":9,
@@ -13952,7 +13952,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":6,
@@ -13989,7 +13989,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":3,
@@ -14055,7 +14055,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":8,
@@ -14077,7 +14077,7 @@
             "BitOffset":96,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -14087,7 +14087,7 @@
             "BitOffset":112,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":11,
@@ -14114,7 +14114,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":14,
@@ -14125,7 +14125,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":15,
@@ -14135,7 +14135,7 @@
             "BitOffset":256,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true}]},
       {
         "PGN":129285,
@@ -14249,7 +14249,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":13,
@@ -14260,7 +14260,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true}]},
       {
         "PGN":129291,
@@ -14312,7 +14312,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":5,
@@ -14322,7 +14322,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":129301,
@@ -14355,7 +14355,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true},
           {
             "Order":3,
@@ -14448,7 +14448,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":6,
@@ -14458,7 +14458,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":7,
@@ -14525,7 +14525,7 @@
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":3,
@@ -14535,7 +14535,7 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":4,
@@ -14545,7 +14545,7 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":5,
@@ -14601,7 +14601,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":10,
@@ -14678,7 +14678,7 @@
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":6,
@@ -14688,7 +14688,7 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true},
           {
             "Order":7,
@@ -14698,7 +14698,7 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":true}]},
       {
         "PGN":129540,
@@ -14762,7 +14762,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":7,
@@ -14772,7 +14772,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":8,
@@ -14782,7 +14782,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Units":"dB",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":9,
@@ -15811,7 +15811,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":5,
@@ -15822,7 +15822,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":6,
@@ -15868,7 +15868,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -16081,7 +16081,7 @@
             "BitOffset":296,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":9,
@@ -16091,7 +16091,7 @@
             "BitOffset":312,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":10,
@@ -16101,7 +16101,7 @@
             "BitOffset":328,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":11,
@@ -16111,7 +16111,7 @@
             "BitOffset":344,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":12,
@@ -16135,7 +16135,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":14,
@@ -16145,7 +16145,7 @@
             "BitOffset":408,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":15,
@@ -16621,7 +16621,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":5,
@@ -16632,7 +16632,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":6,
@@ -16681,7 +16681,7 @@
             "BitOffset":112,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -16691,7 +16691,7 @@
             "BitOffset":128,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":11,
@@ -17667,7 +17667,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":13,
@@ -17678,7 +17678,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":14,
@@ -17689,7 +17689,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":15,
@@ -17700,7 +17700,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":16,
@@ -17842,7 +17842,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":8,
@@ -17853,7 +17853,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":9,
@@ -17864,7 +17864,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":10,
@@ -17875,7 +17875,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":11,
@@ -18064,7 +18064,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":10,
@@ -18074,7 +18074,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":11,
@@ -18085,7 +18085,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":12,
@@ -18150,7 +18150,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":19,
@@ -18334,7 +18334,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":10,
@@ -18344,7 +18344,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":11,
@@ -18355,7 +18355,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":12,
@@ -18420,7 +18420,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":19,
@@ -18676,7 +18676,7 @@
             "BitOffset":160,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":8,
@@ -18686,7 +18686,7 @@
             "BitOffset":176,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":9,
@@ -18696,7 +18696,7 @@
             "BitOffset":192,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":10,
@@ -18706,7 +18706,7 @@
             "BitOffset":208,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":11,
@@ -18867,7 +18867,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":7,
@@ -19061,7 +19061,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":5,
@@ -19211,7 +19211,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":9,
@@ -19222,7 +19222,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true}]},
       {
         "PGN":130068,
@@ -19723,7 +19723,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":9,
@@ -19734,7 +19734,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true}]},
       {
         "PGN":130306,
@@ -19761,7 +19761,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":3,
@@ -19771,7 +19771,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":4,
@@ -19823,7 +19823,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":3,
@@ -19834,7 +19834,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":4,
@@ -19918,7 +19918,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":5,
@@ -19928,7 +19928,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"%",
-            "Resolution":"0.004",
+            "Resolution":0.004,
             "Signed":true},
           {
             "Order":6,
@@ -19999,7 +19999,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":5,
@@ -20010,7 +20010,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":130313,
@@ -20057,7 +20057,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Units":"%",
-            "Resolution":"0.004",
+            "Resolution":0.004,
             "Signed":true},
           {
             "Order":5,
@@ -20067,7 +20067,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"%",
-            "Resolution":"0.004",
+            "Resolution":0.004,
             "Signed":true}]},
       {
         "PGN":130314,
@@ -20108,7 +20108,11 @@
               {"name":"Water","value":"1"},
               {"name":"Steam","value":"2"},
               {"name":"Compressed Air","value":"3"},
-              {"name":"Hydraulic","value":"4"}]},
+              {"name":"Hydraulic","value":"4"},
+              {"name":"Filter","value":"5"},
+              {"name":"AltimeterSetting","value":"6"},
+              {"name":"Oil","value":"7"},
+              {"name":"Fuel","value":"8"}]},
           {
             "Order":4,
             "Id":"pressure",
@@ -20118,7 +20122,7 @@
             "BitStart":0,
             "Units":"dPa",
             "Type":"Pressure (hires)",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true}]},
       {
         "PGN":130315,
@@ -20159,7 +20163,11 @@
               {"name":"Water","value":"1"},
               {"name":"Steam","value":"2"},
               {"name":"Compressed Air","value":"3"},
-              {"name":"Hydraulic","value":"4"}]},
+              {"name":"Hydraulic","value":"4"},
+              {"name":"Filter","value":"5"},
+              {"name":"AltimeterSetting","value":"6"},
+              {"name":"Oil","value":"7"},
+              {"name":"Fuel","value":"8"}]},
           {
             "Order":4,
             "Id":"pressure",
@@ -20169,7 +20177,7 @@
             "BitStart":0,
             "Units":"dPa",
             "Type":"Pressure (hires)",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false}]},
       {
         "PGN":130316,
@@ -20230,7 +20238,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature (hires)",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":5,
@@ -20241,7 +20249,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false}]},
       {
         "PGN":130320,
@@ -20310,7 +20318,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":6,
@@ -20321,7 +20329,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":7,
@@ -20332,7 +20340,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":8,
@@ -20343,7 +20351,7 @@
             "BitOffset":120,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true},
           {
             "Order":9,
@@ -20353,7 +20361,7 @@
             "BitOffset":136,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":10,
@@ -20429,7 +20437,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":5,
@@ -20440,7 +20448,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":6,
@@ -20451,7 +20459,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":7,
@@ -20473,7 +20481,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":9,
@@ -20546,7 +20554,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":5,
@@ -20557,7 +20565,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":6,
@@ -20568,7 +20576,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":7,
@@ -20579,7 +20587,7 @@
             "BitOffset":120,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":8,
@@ -20589,7 +20597,7 @@
             "BitOffset":152,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":9,
@@ -20599,7 +20607,7 @@
             "BitOffset":168,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -20610,7 +20618,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":11,
@@ -20683,7 +20691,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":5,
@@ -20694,7 +20702,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":6,
@@ -20705,7 +20713,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":7,
@@ -20715,7 +20723,7 @@
             "BitOffset":120,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":8,
@@ -20725,7 +20733,7 @@
             "BitOffset":136,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":9,
@@ -20761,7 +20769,7 @@
             "BitOffset":160,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":12,
@@ -20782,7 +20790,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":14,
@@ -20855,7 +20863,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":5,
@@ -20866,7 +20874,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Latitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":6,
@@ -20877,7 +20885,7 @@
             "BitStart":0,
             "Units":"deg",
             "Type":"Longitude",
-            "Resolution":"0.0000001",
+            "Resolution":0.0000001,
             "Signed":true},
           {
             "Order":7,
@@ -20887,7 +20895,7 @@
             "BitOffset":120,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":8,
@@ -20897,7 +20905,7 @@
             "BitOffset":136,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":9,
@@ -20933,7 +20941,7 @@
             "BitOffset":160,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":12,
@@ -20979,7 +20987,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":17,
@@ -20990,7 +20998,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":18,
@@ -21229,7 +21237,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":17,
@@ -21279,7 +21287,7 @@
             "BitOffset":128,
             "BitStart":0,
             "Units":"L/h",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true},
           {
             "Order":22,
@@ -21289,7 +21297,7 @@
             "BitOffset":144,
             "BitStart":0,
             "Units":"L/h",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":true},
           {
             "Order":23,
@@ -21433,7 +21441,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":7,
@@ -21444,7 +21452,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":8,
@@ -22470,7 +22478,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":6,
@@ -22480,7 +22488,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":7,
@@ -22490,7 +22498,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":8,
@@ -22500,7 +22508,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":9,
@@ -22510,7 +22518,7 @@
             "BitOffset":80,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -22520,7 +22528,7 @@
             "BitOffset":96,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":130578,
@@ -22539,7 +22547,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true},
           {
             "Order":2,
@@ -22549,7 +22557,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true},
           {
             "Order":3,
@@ -22559,7 +22567,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true},
           {
             "Order":4,
@@ -22569,7 +22577,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true},
           {
             "Order":5,
@@ -22579,7 +22587,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true},
           {
             "Order":6,
@@ -22589,7 +22597,7 @@
             "BitOffset":80,
             "BitStart":0,
             "Units":"m/s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":true}]},
       {
         "PGN":130579,
@@ -23526,7 +23534,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"kHz",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":9,
@@ -24127,7 +24135,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"kHz",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":9,
@@ -24290,7 +24298,7 @@
             "BitOffset":120,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":12,
@@ -24300,7 +24308,7 @@
             "BitOffset":152,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false}]},
       {
         "PGN":130816,
@@ -25146,7 +25154,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false}]},
       {
         "PGN":130816,
@@ -26029,7 +26037,7 @@
             "BitLength":24,
             "BitOffset":120,
             "BitStart":0,
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":14,
@@ -26038,7 +26046,7 @@
             "BitLength":24,
             "BitOffset":144,
             "BitStart":0,
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false},
           {
             "Order":15,
@@ -26513,7 +26521,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Units":"s",
-            "Resolution":"0.001",
+            "Resolution":0.001,
             "Signed":false}]},
       {
         "PGN":130820,
@@ -28559,7 +28567,7 @@
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":10,
@@ -28663,7 +28671,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":8,
@@ -28839,7 +28847,7 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":8,
@@ -29426,7 +29434,7 @@
             "BitOffset":192,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":13,
@@ -29436,7 +29444,7 @@
             "BitOffset":208,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":14,
@@ -29446,7 +29454,7 @@
             "BitOffset":224,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":15,
@@ -29456,7 +29464,7 @@
             "BitOffset":240,
             "BitStart":0,
             "Units":"m",
-            "Resolution":"0.1",
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":16,
@@ -29558,7 +29566,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":7,
@@ -29568,7 +29576,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":8,
@@ -29578,7 +29586,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true}]},
       {
         "PGN":130843,
@@ -29726,7 +29734,7 @@
             "BitOffset":80,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":10,
@@ -29883,7 +29891,7 @@
             "BitOffset":80,
             "BitStart":0,
             "Units":"%",
-            "Resolution":"0.004",
+            "Resolution":0.004,
             "Signed":false},
           {
             "Order":10,
@@ -29995,7 +30003,7 @@
             "BitOffset":80,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":true},
           {
             "Order":10,
@@ -30283,7 +30291,7 @@
             "BitOffset":83,
             "BitStart":3,
             "Units":"V",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":130850,
@@ -30402,7 +30410,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -30733,7 +30741,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Units":"rad",
-            "Resolution":"0.0001",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":10,
@@ -30883,7 +30891,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":6,
@@ -30894,7 +30902,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":7,
@@ -30905,7 +30913,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":130881,
@@ -30969,7 +30977,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":6,
@@ -30980,7 +30988,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false},
           {
             "Order":7,
@@ -30991,7 +30999,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":"0.01",
+            "Resolution":0.01,
             "Signed":false}]},
       {
         "PGN":130944,
