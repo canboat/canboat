@@ -3324,7 +3324,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Leeway Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
+      {"Leeway Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Reserved", BYTES(5), RES_BINARY, false, 0, ""},
       {0}}}
 

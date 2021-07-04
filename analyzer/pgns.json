@@ -11321,7 +11321,7 @@
             "BitStart":0,
             "Units":"rad",
             "Resolution":0.0001,
-            "Signed":false},
+            "Signed":true},
           {
             "Order":3,
             "Id":"reserved",

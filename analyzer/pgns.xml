@@ -12786,7 +12786,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>rad</Units>
           <Resolution>0.0001</Resolution>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
         </Field>
         <Field>
           <Order>3</Order>
