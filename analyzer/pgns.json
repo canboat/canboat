@@ -65,8 +65,8 @@
         "Complete":true,
         "Length":3,
         "RepeatingFields":0,
-        "Fields":{
-          "Field":{
+        "Fields":[
+          {
             "Order":1,
             "Id":"pgn",
             "Name":"PGN",
@@ -75,7 +75,7 @@
             "BitStart":0,
             "Type":"Integer",
             "Resolution":1,
-            "Signed":false}}},
+            "Signed":false}]},
       {
         "PGN":60160,
         "Id":"isoTransportProtocolDataTransfer",
@@ -981,7 +981,8 @@
         "Description":"Utility Total AC Energy",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Precision"],
+        "Missing":[
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1471,7 +1472,8 @@
         "Description":"Generator Total AC Energy",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Precision"],
+        "Missing":[
+          "Precision"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3139,7 +3141,8 @@
         "Description":"Navico: Wireless Signal Status",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields"],
+        "Missing":[
+          "Fields"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4227,8 +4230,8 @@
           "Lookups"],
         "Length":255,
         "RepeatingFields":0,
-        "Fields":{
-          "Field":{
+        "Fields":[
+          {
             "Order":1,
             "Id":"data",
             "Name":"Data",
@@ -4236,7 +4239,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Type":"Binary data",
-            "Signed":false}}},
+            "Signed":false}]},
       {
         "PGN":126208,
         "Id":"nmeaRequestGroupFunction",
@@ -6023,7 +6026,8 @@
         "Description":"Airmar: Calibrate Compass",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields"],
+        "Missing":[
+          "Fields"],
         "Length":24,
         "RepeatingFields":0,
         "Fields":[
@@ -7042,7 +7046,8 @@
         "Description":"Maretron: Slave Response",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Lookups"],
+        "Missing":[
+          "Lookups"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -7179,8 +7184,8 @@
           "Precision"],
         "Length":255,
         "RepeatingFields":0,
-        "Fields":{
-          "Field":{
+        "Fields":[
+          {
             "Order":1,
             "Id":"data",
             "Name":"Data",
@@ -7188,7 +7193,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Type":"Binary data",
-            "Signed":false}}},
+            "Signed":false}]},
       {
         "PGN":126983,
         "Id":"alert",
@@ -11756,7 +11761,8 @@
         "Description":"Tracked Target Data",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["SampleData"],
+        "Missing":[
+          "SampleData"],
         "Length":27,
         "RepeatingFields":0,
         "Fields":[
@@ -12069,9 +12075,10 @@
             "BitLength":4,
             "BitOffset":48,
             "BitStart":0,
-            "Units":"0=Another device controlling windlass",
             "Type":"Bitfield",
-            "Signed":false},
+            "Signed":false,
+            "EnumBitValues":[
+              {"0": "Another device controlling windlass"}]},
           {
             "Order":14,
             "Id":"reserved",
@@ -12196,9 +12203,14 @@
             "BitLength":6,
             "BitOffset":58,
             "BitStart":2,
-            "Units":"0=System error,1=Sensor error,2=No windlass motion detected,3=Retrieval docking distance reached,4=End or rode reached",
             "Type":"Bitfield",
-            "Signed":false}]},
+            "Signed":false,
+            "EnumBitValues":[
+              {"0": "System error"},
+              {"1": "Sensor error"},
+              {"2": "No windlass motion detected"},
+              {"3": "Retrieval docking distance reached"},
+              {"4": "End or rode reached"}]}]},
       {
         "PGN":128778,
         "Id":"anchorWindlassMonitoringStatus",
@@ -12231,9 +12243,13 @@
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
-            "Units":"0=Controller under voltage cut-out,1=Controller over current cut-out,2=Controller over temperature cut-out,3=Manufacturer defined",
             "Type":"Bitfield",
-            "Signed":false},
+            "Signed":false,
+            "EnumBitValues":[
+              {"0": "Controller under voltage cut-out"},
+              {"1": "Controller over current cut-out"},
+              {"2": "Controller over temperature cut-out"},
+              {"3": "Manufacturer defined"}]},
           {
             "Order":4,
             "Id":"controllerVoltage",
@@ -12381,7 +12397,8 @@
         "Description":"Position Delta, Rapid Update",
         "Type":"Single",
         "Complete":false,
-        "Missing":["SampleData"],
+        "Missing":[
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -12423,7 +12440,8 @@
         "Description":"Altitude Delta, Rapid Update",
         "Type":"Single",
         "Complete":false,
-        "Missing":["SampleData"],
+        "Missing":[
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -14451,7 +14469,8 @@
         "Description":"Set & Drift, Rapid Update",
         "Type":"Single",
         "Complete":false,
-        "Missing":["SampleData"],
+        "Missing":[
+          "SampleData"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -20566,7 +20585,8 @@
         "Description":"Salinity Station Data",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["SampleData"],
+        "Missing":[
+          "SampleData"],
         "Length":22,
         "RepeatingFields":0,
         "Fields":[
