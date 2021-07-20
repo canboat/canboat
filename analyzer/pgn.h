@@ -3141,6 +3141,7 @@ Pgn pgnList[] = {
       {"SID", BYTES(1), 1, false, 0, ""},
       {0}}}
 
+    /* https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf */
     ,
     {"Inverter Status",
      127509,
@@ -3148,11 +3149,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      4,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
+     {{"Inverter Instance", BYTES(1), 1, false, 0, ""},
       {"AC Instance", BYTES(1), 1, false, 0, ""},
       {"DC Instance", BYTES(1), 1, false, 0, ""},
-      {"Operating State", 4, RES_LOOKUP, false, ",0=Standby,1=On", ""},
-      {"Inverter", 2, RES_LOOKUP, false, ",0=Standby,1=On", ""},
+      {"Operating State", 4, RES_LOOKUP, false, ",0=Invert,1=AC Passthru,2=Load Sense,3=Fault,4=Disabled,14=Error,15=Data Not Available", ""},
+      {"Inverter Enable/Disable", 2, RES_LOOKUP, false, "0=Disabled,1=Enabled,2=Error,3=Unknown", ""},
+      {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
     ,
