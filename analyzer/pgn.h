@@ -2641,7 +2641,8 @@ Pgn pgnList[] = {
       {"Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {0}}}
 
-    /* http://www.nmea.org/Assets/20130905%20nmea%202000%20heartbeat%20amendment%20final.pdf */
+    /* http://www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf */
+    /* http://www.nmea.org/Assets/20190624%20NMEA%20Heartbeat%20Information%20Amendment%20AT%2020190623HB.pdf */
     ,
     {"Heartbeat",
      126993,
@@ -2651,12 +2652,15 @@ Pgn pgnList[] = {
      0,
      {{"Data transmit offset",
        BYTES(2),
-       0.01,
+       0.001,
        false,
        "s",
        "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset."},
       {"Sequence Counter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Reserved", BYTES(3), RES_BINARY, false, 0, "Reserved"},
+      {"Controller 1 State", 2, RES_LOOKUP, false, ",0=Error Active,1=Error Passive,2=Bus Off,3=Not Available", ""},
+      {"Controller 2 State", 2, RES_LOOKUP, false, ",0=Error Active,1=Error Passive,2=Bus Off,3=Not Available", ""},
+      {"Equipment Status", 2, RES_LOOKUP, false, ",0=Operational,3=Not Available", ""},
+      {"Reserved", 34, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
     ,
