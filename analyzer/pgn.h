@@ -3480,7 +3480,7 @@ Pgn pgnList[] = {
        false,
        "s",
        "If timeout elapses the thruster stops operating and reverts to static mode"},
-      {"Windlass Control Events", 4, RES_BITFIELD, false, "0=Another device controlling windlass", ""},
+      {"Windlass Control Events", 4, RES_BITFIELD, false, ",0=Another device controlling windlass", ""},
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -3505,7 +3505,7 @@ Pgn pgnList[] = {
        6,
        RES_BITFIELD,
        false,
-       "0=System error,1=Sensor error,2=No windlass motion detected,3=Retrieval docking distance reached,4=End or rode reached",
+       ",0=System error,1=Sensor error,2=No windlass motion detected,3=Retrieval docking distance reached,4=End or rode reached",
        ""},
       {0}}}
 
@@ -3523,7 +3523,7 @@ Pgn pgnList[] = {
        8,
        RES_BITFIELD,
        false,
-       "0=Controller under voltage cut-out,1=Controller over current cut-out,2=Controller over temperature cut-out,3=Manufacturer "
+       ",0=Controller under voltage cut-out,1=Controller over current cut-out,2=Controller over temperature cut-out,3=Manufacturer "
        "defined",
        ""},
       {"Controller voltage", BYTES(1), 0.2, false, "V", ""},

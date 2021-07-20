@@ -13634,9 +13634,11 @@ limitations under the License.
           <BitLength>4</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>0=Another device controlling windlass</Units>
                  <Type>Bitfield</Type>
           <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='Another device controlling windlass' />
+          </EnumBitValues>
         </Field>
         <Field>
           <Order>14</Order>
@@ -13778,9 +13780,15 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>58</BitOffset>
           <BitStart>2</BitStart>
-          <Units>0=System error,1=Sensor error,2=No windlass motion detected,3=Retrieval docking distance reached,4=End or rode reached</Units>
                  <Type>Bitfield</Type>
           <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='System error' />
+            <EnumPair Bit='1' Name='Sensor error' />
+            <EnumPair Bit='2' Name='No windlass motion detected' />
+            <EnumPair Bit='3' Name='Retrieval docking distance reached' />
+            <EnumPair Bit='4' Name='End or rode reached' />
+          </EnumBitValues>
         </Field>
       </Fields>
     </PGNInfo>
@@ -13818,9 +13826,14 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Units>0=Controller under voltage cut-out,1=Controller over current cut-out,2=Controller over temperature cut-out,3=Manufacturer defined</Units>
                  <Type>Bitfield</Type>
           <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='Controller under voltage cut-out' />
+            <EnumPair Bit='1' Name='Controller over current cut-out' />
+            <EnumPair Bit='2' Name='Controller over temperature cut-out' />
+            <EnumPair Bit='3' Name='Manufacturer defined' />
+          </EnumBitValues>
         </Field>
         <Field>
           <Order>4</Order>
