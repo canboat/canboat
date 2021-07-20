@@ -6336,6 +6336,23 @@ Pgn pgnList[] = {
       {0}}}
 
     ,
+    {"Maretron: Proprietary Temperature High Range",
+     130823,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     9,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"SID", BYTES(1), 1, false, 0, ""},
+      {"Instance", BYTES(1), 1, false, 0, ""},
+      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
+      {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      {"Set Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      {0}}}
+
+    ,
     {"B&G: Wind data",
      130824,
      PACKET_INCOMPLETE,
