@@ -2731,7 +2731,7 @@ limitations under the License.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
@@ -22651,7 +22651,7 @@ limitations under the License.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
@@ -22755,7 +22755,7 @@ limitations under the License.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
@@ -23024,7 +23024,7 @@ limitations under the License.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
