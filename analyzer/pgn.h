@@ -3092,8 +3092,8 @@ Pgn pgnList[] = {
     {"DC Detailed Status",
      127506,
      PACKET_COMPLETE,
-     PACKET_SINGLE,
-     9,
+     PACKET_FAST,
+     11,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
@@ -3102,6 +3102,7 @@ Pgn pgnList[] = {
       {"State of Health", BYTES(1), 1, false, 0, ""},
       {"Time Remaining", BYTES(2), 1, false, 0, ""},
       {"Ripple Voltage", BYTES(2), 0.01, false, "V", ""},
+      {"Amp Hours", BYTES(2), 3600, false, "C", ""},
       {0}}}
 
     // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf

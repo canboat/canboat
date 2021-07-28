@@ -8,11 +8,12 @@
 
 # s. https://www.gnu.org/prep/standards/html_node/Directory-Variables.html#Directory-Variables
 DESTDIR ?= ""
-PREFIX ?= /usr
+PREFIX ?= /usr/local
 EXEC_PREFIX ?= $(PREFIX)
 BINDIR=$(EXEC_PREFIX)/bin
 SYSCONFDIR= /etc
-MANDIR= /usr/share/man
+DATAROOTDIR ?= $(PREFIX)/share
+MANDIR= $(DATAROOTDIR)/man
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 OS=$(shell uname -o 2>&1)

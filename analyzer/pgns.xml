@@ -2731,7 +2731,7 @@ limitations under the License.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
@@ -11632,9 +11632,9 @@ limitations under the License.
       <PGN>127506</PGN>
       <Id>dcDetailedStatus</Id>
       <Description>DC Detailed Status</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>9</Length>
+      <Length>11</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -11708,6 +11708,17 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>V</Units>
           <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>ampHours</Id>
+          <Name>Amp Hours</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>C</Units>
+          <Resolution>3600</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -22640,7 +22651,7 @@ limitations under the License.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
@@ -22744,7 +22755,7 @@ limitations under the License.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
@@ -23013,7 +23024,7 @@ limitations under the License.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
