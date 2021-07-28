@@ -4,38 +4,36 @@
 
 This file is part of CANboat.
 
-CANboat is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-CANboat is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-You should have received a copy of the GNU General Public License
-along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 */
 
 #include "version.h"
 
-#define LICENSE                                                            \
-  "This file is part of CANboat.\n"                                        \
-  "\n"                                                                     \
-  "CANboat is free software: you can redistribute it and/or modify\n"      \
-  "it under the terms of the GNU General Public License as published by\n" \
-  "the Free Software Foundation, either version 3 of the License, or\n"    \
-  "(at your option) any later version.\n"                                  \
-  "\n"                                                                     \
-  "CANboat is distributed in the hope that it will be useful,\n"           \
-  "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"       \
-  "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"        \
-  "GNU General Public License for more details.\n"                         \
-  "\n"                                                                     \
-  "You should have received a copy of the GNU General Public License\n"    \
-  "along with CANboat.  If not, see <http://www.gnu.org/licenses/>.\n"
+#define LICENSE                                                                \
+  "This file is part of CANboat.\n"                                            \
+  "\n"                                                                         \
+  "Licensed under the Apache License, Version 2.0 (the \"License\");\n"        \
+  "you may not use this file except in compliance with the License.\n"         \
+  "You may obtain a copy of the License at\n"                                  \
+  "\n"                                                                         \
+  "    http://www.apache.org/licenses/LICENSE-2.0\n"                           \
+  "\n"                                                                         \
+  "Unless required by applicable law or agreed to in writing, software\n"      \
+  "distributed under the License is distributed on an \"AS IS\" BASIS,\n"      \
+  "WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" \
+  "See the License for the specific language governing permissions and\n"      \
+  "limitations under the License.\n"
 
 #define COPYRIGHT                                                 \
   "CANboat version v" VERSION "\n\n"                              \

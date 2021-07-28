@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v1.4.0
+CANboat version v2.0.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
 
 This file is part of CANboat.
 
-CANboat is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-CANboat is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-You should have received a copy of the GNU General Public License
-along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 
 -->
 <PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1">
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
-  <License>GPL v3</License>
-  <Version>1.4.0</Version>
+  <License>Apache License Version 2.0</License>
+  <Version>2.0.0</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -2174,7 +2173,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>1</Order>
           <Id>realPower</Id>
           <Name>Real Power</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
@@ -2185,8 +2184,8 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <Order>2</Order>
           <Id>apparentPower</Id>
           <Name>Apparent Power</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
           <Signed>false</Signed>
@@ -2732,7 +2731,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
@@ -9238,8 +9237,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -9254,8 +9251,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -9270,8 +9265,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -9286,8 +9279,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -10475,7 +10466,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10490,7 +10480,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10505,7 +10494,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10520,7 +10508,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10535,7 +10522,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10550,7 +10536,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10565,7 +10550,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10580,7 +10564,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10595,7 +10578,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10610,7 +10592,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10625,7 +10606,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10640,7 +10620,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10655,7 +10634,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10670,7 +10648,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10685,7 +10662,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10700,7 +10676,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10715,7 +10690,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10730,7 +10704,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10745,7 +10718,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10760,7 +10732,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10775,7 +10746,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10790,7 +10760,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10805,7 +10774,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10820,7 +10788,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10835,7 +10802,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10850,7 +10816,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10865,7 +10830,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -10880,7 +10844,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
       </Fields>
@@ -11669,9 +11632,9 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
       <PGN>127506</PGN>
       <Id>dcDetailedStatus</Id>
       <Description>DC Detailed Status</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>9</Length>
+      <Length>11</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -11745,6 +11708,17 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitStart>0</BitStart>
           <Units>V</Units>
           <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>ampHours</Id>
+          <Name>Amp Hours</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>C</Units>
+          <Resolution>3600</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -12823,7 +12797,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitStart>0</BitStart>
           <Units>rad</Units>
           <Resolution>0.0001</Resolution>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
         </Field>
         <Field>
           <Order>3</Order>
@@ -12833,6 +12807,286 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
                  <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>128006</PGN>
+      <Id>thrusterControlStatus</Id>
+      <Description>Thruster Control Status</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>identifier</Id>
+          <Name>Identifier</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>directionControl</Id>
+          <Name>Direction Control</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='Ready' />
+            <EnumPair Value='2' Name='To Port' />
+            <EnumPair Value='3' Name='To Starboard' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>powerEnabled</Id>
+          <Name>Power Enabled</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>retractControl</Id>
+          <Name>Retract Control</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='Extend' />
+            <EnumPair Value='2' Name='Retract' />
+            <EnumPair Value='3' Name='Reserved' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>speedControl</Id>
+          <Name>Speed Control</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>%</Units>
+          <Resolution>0.004</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>controlEvents</Id>
+          <Name>Control Events</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Bitfield</Type>
+          <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='Another device controlling thruster' />
+            <EnumPair Bit='1' Name='Boat speed too fast to safely use thruster' />
+          </EnumBitValues>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>commandTimeout</Id>
+          <Name>Command Timeout</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>0.001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>azimuthControl</Id>
+          <Name>Azimuth Control</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>128007</PGN>
+      <Id>thrusterInformation</Id>
+      <Description>Thruster Information</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>identifier</Id>
+          <Name>Identifier</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>motorType</Id>
+          <Name>Motor Type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='12VDC' />
+            <EnumPair Value='1' Name='24VDC' />
+            <EnumPair Value='2' Name='48VDC' />
+            <EnumPair Value='3' Name='24VAC' />
+            <EnumPair Value='4' Name='Hydraulic' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>12</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>powerRating</Id>
+          <Name>Power Rating</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>W</Units>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>maximumTemperatureRating</Id>
+          <Name>Maximum Temperature Rating</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>K</Units>
+                 <Type>Temperature</Type>
+                 <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>maximumRotationalSpeed</Id>
+          <Name>Maximum Rotational Speed</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rpm</Units>
+          <Resolution>0.25</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>128008</PGN>
+      <Id>thrusterMotorStatus</Id>
+      <Description>Thruster Motor Status</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>identifier</Id>
+          <Name>Identifier</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>motorEvents</Id>
+          <Name>Motor Events</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Bitfield</Type>
+          <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='Motor over temperature cutout' />
+            <EnumPair Bit='1' Name='Motor over current cutout' />
+            <EnumPair Bit='2' Name='Low oil level warning' />
+            <EnumPair Bit='3' Name='Oil over temperature warning' />
+            <EnumPair Bit='4' Name='Controller under voltage cutout' />
+            <EnumPair Bit='5' Name='Manufacturer defined' />
+          </EnumBitValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>current</Id>
+          <Name>Current</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>A</Units>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>temperature</Id>
+          <Name>Temperature</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>K</Units>
+                 <Type>Temperature</Type>
+                 <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>operatingTime</Id>
+          <Name>Operating Time</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>minutes</Units>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -13089,8 +13343,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -13221,6 +13473,420 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
                  <Type>ASCII text</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>128776</PGN>
+      <Id>windlassControlStatus</Id>
+      <Description>Windlass Control Status</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>7</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>windlassId</Id>
+          <Name>Windlass ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>windlassDirectionControl</Id>
+          <Name>Windlass Direction Control</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='Down' />
+            <EnumPair Value='2' Name='Up' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>anchorDockingControl</Id>
+          <Name>Anchor Docking Control</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>18</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>speedControlType</Id>
+          <Name>Speed Control Type</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Single Speed' />
+            <EnumPair Value='1' Name='Dual Speed' />
+            <EnumPair Value='2' Name='Proportional Speed' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>Reserved</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>speedControl</Id>
+          <Name>Speed Control</Name>
+          <Description>0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>powerEnable</Id>
+          <Name>Power Enable</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>mechanicalLock</Id>
+          <Name>Mechanical Lock</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>34</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>deckAndAnchorWash</Id>
+          <Name>Deck and Anchor Wash</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>36</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>anchorLight</Id>
+          <Name>Anchor Light</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>38</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>commandTimeout</Id>
+          <Name>Command Timeout</Name>
+          <Description>If timeout elapses the thruster stops operating and reverts to static mode</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>s</Units>
+          <Resolution>0.005</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>windlassControlEvents</Id>
+          <Name>Windlass Control Events</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Bitfield</Type>
+          <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='Another device controlling windlass' />
+          </EnumBitValues>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>Reserved</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>52</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>128777</PGN>
+      <Id>anchorWindlassOperatingStatus</Id>
+      <Description>Anchor Windlass Operating Status</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>windlassId</Id>
+          <Name>Windlass ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>windlassDirectionControl</Id>
+          <Name>Windlass Direction Control</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='Down' />
+            <EnumPair Value='2' Name='Up' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>windlassMotionStatus</Id>
+          <Name>Windlass Motion Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>18</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Windlass stopped' />
+            <EnumPair Value='1' Name='Deployment occurring' />
+            <EnumPair Value='2' Name='Retrieval occurring' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>rodeTypeStatus</Id>
+          <Name>Rode Type Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Chain presently detected' />
+            <EnumPair Value='1' Name='Rope presently detected' />
+            <EnumPair Value='2' Name='Error' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>Reserved</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>rodeCounterValue</Id>
+          <Name>Rode Counter Value</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>m</Units>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>windlassLineSpeed</Id>
+          <Name>Windlass Line Speed</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>m/s</Units>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>anchorDockingStatus</Id>
+          <Name>Anchor Docking Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Not docked' />
+            <EnumPair Value='1' Name='Fully docked' />
+            <EnumPair Value='2' Name='Error' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>windlassOperatingEvents</Id>
+          <Name>Windlass Operating Events</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>58</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Bitfield</Type>
+          <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='System error' />
+            <EnumPair Bit='1' Name='Sensor error' />
+            <EnumPair Bit='2' Name='No windlass motion detected' />
+            <EnumPair Bit='3' Name='Retrieval docking distance reached' />
+            <EnumPair Bit='4' Name='End or rode reached' />
+          </EnumBitValues>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>128778</PGN>
+      <Id>anchorWindlassMonitoringStatus</Id>
+      <Description>Anchor Windlass Monitoring Status</Description>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>windlassId</Id>
+          <Name>Windlass ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>windlassMonitoringEvents</Id>
+          <Name>Windlass Monitoring Events</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Bitfield</Type>
+          <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='Controller under voltage cut-out' />
+            <EnumPair Bit='1' Name='Controller over current cut-out' />
+            <EnumPair Bit='2' Name='Controller over temperature cut-out' />
+            <EnumPair Bit='3' Name='Manufacturer defined' />
+          </EnumBitValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>controllerVoltage</Id>
+          <Name>Controller voltage</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>V</Units>
+          <Resolution>0.2</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>motorCurrent</Id>
+          <Name>Motor current</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>A</Units>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>totalMotorTime</Id>
+          <Name>Total Motor Time</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>s</Units>
+          <Resolution>60</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>Reserved</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -14264,8 +14930,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -14280,8 +14944,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -14311,8 +14973,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -14934,8 +15594,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -14950,8 +15608,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -15313,8 +15969,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -15398,8 +16052,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -15414,8 +16066,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -20009,8 +20659,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -20310,8 +20958,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -22005,7 +22651,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
@@ -22109,7 +22755,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
@@ -22252,6 +22898,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='2' Name='Steam' />
             <EnumPair Value='3' Name='Compressed Air' />
             <EnumPair Value='4' Name='Hydraulic' />
+            <EnumPair Value='5' Name='Filter' />
+            <EnumPair Value='6' Name='AltimeterSetting' />
+            <EnumPair Value='7' Name='Oil' />
+            <EnumPair Value='8' Name='Fuel' />
           </EnumValues>
         </Field>
         <Field>
@@ -22310,6 +22960,10 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='2' Name='Steam' />
             <EnumPair Value='3' Name='Compressed Air' />
             <EnumPair Value='4' Name='Hydraulic' />
+            <EnumPair Value='5' Name='Filter' />
+            <EnumPair Value='6' Name='AltimeterSetting' />
+            <EnumPair Value='7' Name='Oil' />
+            <EnumPair Value='8' Name='Fuel' />
           </EnumValues>
         </Field>
         <Field>
@@ -22370,7 +23024,7 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
             <EnumPair Value='4' Name='Main Cabin Temperature' />
             <EnumPair Value='5' Name='Live Well Temperature' />
             <EnumPair Value='6' Name='Bait Well Temperature' />
-            <EnumPair Value='7' Name='Refridgeration Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
             <EnumPair Value='8' Name='Heating System Temperature' />
             <EnumPair Value='9' Name='Dew Point Temperature' />
             <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
@@ -23308,8 +23962,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -23324,8 +23976,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -23340,8 +23990,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -23356,8 +24004,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -23372,8 +24018,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -23402,8 +24046,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -24057,8 +24699,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -24647,8 +25287,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -24662,8 +25300,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -25047,8 +25683,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -25149,8 +25783,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -25348,8 +25980,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -25620,8 +26250,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -25636,8 +26264,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
-            <EnumPair Value='10' Name='Error' />
-            <EnumPair Value='11' Name='Unavailable' />
           </EnumValues>
         </Field>
         <Field>
@@ -31915,7 +32541,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>
@@ -32112,7 +32737,6 @@ along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
-            <EnumPair Value='2' Name='Failed' />
           </EnumValues>
         </Field>
         <Field>

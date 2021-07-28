@@ -4,18 +4,17 @@
 
 This file is part of CANboat.
 
-CANboat is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-CANboat is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-You should have received a copy of the GNU General Public License
-along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 */
 
@@ -151,7 +150,7 @@ char *sbSearchChar(const StringBuffer *const sb, char c);
     (sb)->len   = 0;    \
   }
 
-int          getJSONValue(const char *message, const char *fieldName, char *value, size_t len);
+bool         getJSONValue(const char *message, const char *fieldName, char *value, size_t len);
 void         getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int *pgn, unsigned int *src, unsigned int *dst);
 unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst);
 
@@ -263,7 +262,7 @@ void logAbort(const char *format, ...);
 #define CANBOAT_PGN_START 0x40000
 #define CANBOAT_PGN_END 0x401FF
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
-#define IKONVERT_BEM 0x40100  /* iKonvert specific fake PGNs */
+#define IKONVERT_BEM 0x40100 /* iKonvert specific fake PGNs */
 
 #define CANBOAT_COMMON
 #endif

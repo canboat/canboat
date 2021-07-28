@@ -199,8 +199,7 @@
   </xsl:template>
 
   <!-- number (no support for javascript mantissa) -->
-  <xsl:template match="text()[not(string(number())='NaN' or
-                       (starts-with(.,'0' ) and . != '0'))]">
+  <xsl:template match="text()[string(number())!='NaN']">
     <xsl:value-of select="."/>
   </xsl:template>
 
@@ -311,7 +310,7 @@
   </xsl:template>
 
   <!-- array -->
-  <xsl:template match="PGNInfo//*[count(../*[name(../*)=name(.)])=count(../*) and count(../*)&gt;1]">
+  <xsl:template match="PGNInfo//*[count(../*[name(../*)=name(.)])=count(../*) and count(../*)&gt;0]">
     <xsl:if test="not(preceding-sibling::*)">[</xsl:if>
     <xsl:call-template name="indent"/>
     <xsl:choose>

@@ -1,9 +1,30 @@
+/*
+
+(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+
+This file is part of CANboat.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
+
 #include "gps_ais.h"
 
 #include <math.h>
 #include <time.h>
 
 #include "common.h"
+#include "n2kd.h"
 #include "nmea0183.h"
 
 #define MMSI_LENGTH sizeof("244060807")
@@ -75,15 +96,12 @@ Update","fields":{"SID":9,"COG Reference":"True","COG":0.0,"SOG":0.00}} $GPVTG,,
 
 void nmea0183VTG(StringBuffer *msg183, int src, const char *msg)
 {
-  char sogString[SPEED_LENGTH];
-  char cogString[ANGLE_LENGTH];
+  double sog;
+  double cog;
 
-  if (getJSONValue(msg, "SOG", sogString, sizeof(sogString)) && getJSONValue(msg, "COG", cogString, sizeof(cogString)))
+  if (getJSONNumber(msg, "SOG", &sog, U_VELOCITY) && getJSONNumber(msg, "COG", &cog, U_ANGLE))
   {
-    double speed = strtod(sogString, 0);
-
-    nmea0183CreateMessage(
-        msg183, src, "VTG,%s,T,,M,%04.3f,N,%04.3f,K", cogString, SPEED_M_S_TO_KNOTS(speed), SPEED_M_S_TO_KMH(speed));
+    nmea0183CreateMessage(msg183, src, "VTG,%.1f,T,,M,%.2f,N,%.2f,K", cog, SPEED_M_S_TO_KNOTS(sog), SPEED_M_S_TO_KMH(sog));
   }
 }
 
@@ -485,46 +503,17 @@ long int aisFloat(const char *msg, const char *fieldName)
 #define DRAUGHT_MULTIPLICATOR (10.0)
 #define ALTITUDE_MULTIPLICATOR (1.0)
 
-  char jsonString[40];
-
   typedef struct
   {
-    int         hash;
     const char *value;
     double      min;
     double      max;
     double      defValue;
     double      multiplier;
+    Unit        unit;
   } floatParam;
 
-  // Beware, these constants unfortunately have file scope? Forced by the switch statement
-  enum
-  {
-    p0 = 'R' + 'a' + 't' + 'e' + ' ' + 'o' + 'f' + ' ' + 'T' + 'u' + 'r' + 'n',
-    p1 = 'S' + 'O' + 'G',
-    p2 = 'C' + 'O' + 'G',
-    p3 = 'H' + 'e' + 'a' + 'd' + 'i' + 'n' + 'g',
-    p4 = 'L' + 'o' + 'n' + 'g' + 'i' + 't' + 'u' + 'd' + 'e',
-    p5 = 'L' + 'a' + 't' + 'i' + 't' + 'u' + 'd' + 'e',
-    p6 = 'L' + 'e' + 'n' + 'g' + 't' + 'h',
-    p7 = 'B' + 'e' + 'a' + 'm',
-    p8 = 'P' + 'o' + 's' + 'i' + 't' + 'i' + 'o' + 'n' + ' ' + 'r' + 'e' + 'f' + 'e' + 'r' + 'e' + 'n' + 'c' + 'e' + ' ' + 'f' + 'r'
-         + 'o' + 'm' + ' ' + 'S' + 't' + 'a' + 'r' + 'b' + 'o' + 'a' + 'r' + 'd',
-    p9 = 'P' + 'o' + 's' + 'i' + 't' + 'i' + 'o' + 'n' + ' ' + 'r' + 'e' + 'f' + 'e' + 'r' + 'e' + 'n' + 'c' + 'e' + ' ' + 'f' + 'r'
-         + 'o' + 'm' + ' ' + 'B' + 'o' + 'w',
-    p10 = 'D' + 'r' + 'a' + 'f' + 't',
-    p11 = 'T' + 'r' + 'u' + 'e' + ' ' + 'H' + 'e' + 'a' + 'd' + 'i' + 'n' + 'g',
-    p12 = 'L' + 'e' + 'n' + 'g' + 't' + 'h' + '/' + 'D' + 'i' + 'a' + 'm' + 'e' + 't' + 'e' + 'r',
-    p13 = 'B' + 'e' + 'a' + 'm' + '/' + 'D' + 'i' + 'a' + 'm' + 'e' + 't' + 'e' + 'r',
-    p14 = 'P' + 'o' + 's' + 'i' + 't' + 'i' + 'o' + 'n' + ' ' + 'R' + 'e' + 'f' + 'e' + 'r' + 'e' + 'n' + 'c' + 'e' + ' ' + 'f'
-          + 'r' + 'o' + 'm' + ' ' + 'S' + 't' + 'a' + 'r' + 'b' + 'o' + 'a' + 'r' + 'd' + ' ' + 'E' + 'd' + 'g' + 'e',
-    p15 = 'P' + 'o' + 's' + 'i' + 't' + 'i' + 'o' + 'n' + ' ' + 'R' + 'e' + 'f' + 'e' + 'r' + 'e' + 'n' + 'c' + 'e' + ' ' + 'f'
-          + 'r' + 'o' + 'm' + ' ' + 'T' + 'r' + 'u' + 'e' + ' ' + 'N' + 'o' + 'r' + 't' + 'h' + ' ' + 'F' + 'a' + 'c' + 'i' + 'n'
-          + 'g' + ' ' + 'E' + 'd' + 'g' + 'e',
-    p16 = 'A' + 'l' + 't' + 'i' + 't' + 'u' + 'd' + 'e'
-  };
-
-  int      i, h = 0;
+  int      i;
   double   value;
   int      sign;
   long int result;
@@ -534,62 +523,63 @@ long int aisFloat(const char *msg, const char *fieldName)
                                  definition of the parameter. We therefore defaults if we
                                  get values with magnitude above 126.
                               */
-                              p0,
                               "Rate of Turn",
                               -126,
                               126,
                               -128,
                               SECONDS_PER_MINUTE},
-                             {p1, "SOG", 0, 1022, 1023, KNOTS_IN_MS * SOG_MULTIPLICATOR},
-                             {p2, "COG", 0, 3599, 3600, COG_MULTIPLICATOR},
-                             {p3, "Heading", 0, 359, 511, NO_MULTIPLICATOR},
-                             {p4, "Longitude", -108000000, 108000000, 0x6791AC0, LON_MULTIPLICATOR},
-                             {p5, "Latitude", -54000000, 54000000, 0x3412140, LAT_MULTIPLICATOR},
-                             {p6, "Length", 0, 10220, 0, SIZE_MULTIPLICATOR},
-                             {p7, "Beam", 0, 1260, 0, SIZE_MULTIPLICATOR},
-                             {p8, "Position reference from Starboard", 0, 630, 0, SIZE_MULTIPLICATOR},
-                             {p9, "Position reference from Bow", 0, 5110, 0, SIZE_MULTIPLICATOR},
-                             {p10, "Draft", 0, 255, 0, DRAUGHT_MULTIPLICATOR},
-                             {p11, "True Heading", 0, 359, 511, NO_MULTIPLICATOR},
-                             {p12, "Length/Diameter", 0, 10220, 0, SIZE_MULTIPLICATOR},
-                             {p13, "Beam/Diameter", 0, 1260, 0, SIZE_MULTIPLICATOR},
-                             {p14, "Position Reference from Starboard Edge", 0, 630, 0, SIZE_MULTIPLICATOR},
-                             {p15, "Position Reference from True North Facing Edge", 0, 5110, 0, SIZE_MULTIPLICATOR},
-                             {p16, "Altitude", 0, 4094, 4095, ALTITUDE_MULTIPLICATOR}};
+                             {"SOG", 0, 1022, 1023, KNOTS_IN_MS * SOG_MULTIPLICATOR, U_VELOCITY},
+                             {"COG", 0, 3599, 3600, COG_MULTIPLICATOR, U_ANGLE},
+                             {"Heading", 0, 359, 511, NO_MULTIPLICATOR, U_ANGLE},
+                             {"Longitude", -108000000, 108000000, 0x6791AC0, LON_MULTIPLICATOR, U_GEO},
+                             {"Latitude", -54000000, 54000000, 0x3412140, LAT_MULTIPLICATOR, U_GEO},
+                             {"Length", 0, 10220, 0, SIZE_MULTIPLICATOR, U_DISTANCE},
+                             {"Beam", 0, 1260, 0, SIZE_MULTIPLICATOR, U_DISTANCE},
+                             {"Position reference from Starboard", 0, 630, 0, SIZE_MULTIPLICATOR, U_DISTANCE},
+                             {"Position reference from Bow", 0, 5110, 0, SIZE_MULTIPLICATOR, U_DISTANCE},
+                             {"Draft", 0, 255, 0, DRAUGHT_MULTIPLICATOR, U_DISTANCE},
+                             {"True Heading", 0, 359, 511, NO_MULTIPLICATOR},
+                             {"Length/Diameter", 0, 10220, 0, SIZE_MULTIPLICATOR, U_DISTANCE},
+                             {"Beam/Diameter", 0, 1260, 0, SIZE_MULTIPLICATOR, U_DISTANCE},
+                             {"Position Reference from Starboard Edge", 0, 630, 0, SIZE_MULTIPLICATOR, U_DISTANCE},
+                             {"Position Reference from True North Facing Edge", 0, 5110, 0, SIZE_MULTIPLICATOR, U_DISTANCE},
+                             {"Altitude", 0, 4094, 4095, ALTITUDE_MULTIPLICATOR, U_DISTANCE}};
 
-  // Calculate index
-  for (i = 0; fieldName[i] != '\0'; i++)
-    h += fieldName[i];
-  for (i = 0; i < sizeof(paramRange) / sizeof(floatParam); i++)
+  for (i = 0; i < ARRAY_SIZE(paramRange); i++)
   {
-    if (paramRange[i].hash == h && !strcmp(fieldName, paramRange[i].value))
+    if (!strcmp(fieldName, paramRange[i].value))
+    {
       break;
+    }
+  }
+  if (i == ARRAY_SIZE(paramRange))
+  {
+    logAbort("Unhandled AIS number field '%s'; please report this bug\n", fieldName);
   }
 
-  if (!getJSONValue(msg, fieldName, jsonString, sizeof(jsonString)))
-    return paramRange[i].defValue;
-  if (jsonString[0] == '\0')
-    return paramRange[i].defValue;
-  value = atof(jsonString) * paramRange[i].multiplier;
-  sign  = (value >= 0) - (value < 0);
-  value *= sign;
-  switch (paramRange[i].hash)
+  if (!getJSONNumber(msg, fieldName, &value, paramRange[i].unit))
   {
-    case p0:
-      result = (long int) (ROT_MULTIPLICATOR * sqrt(value) + 0.5);
-      break;
-    case p10:
-      result = (long int) (value + 0.9);
-      break;
-    default:
-      result = (long int) (value + 0.5);
-      break;
+    return paramRange[i].defValue;
+  }
+  value *= paramRange[i].multiplier;
+  sign = (value >= 0) - (value < 0);
+  value *= sign;
+  if (paramRange[i].defValue == -128)
+  {
+    result = (long int) (ROT_MULTIPLICATOR * sqrt(value) + 0.5);
+  }
+  else
+  {
+    result = (long int) (value + 0.5);
   }
   result *= sign;
-  // Make shure values are valid
-  if (result != paramRange[i].defValue)
-    if (result < paramRange[i].min || result > paramRange[i].max)
-      result = paramRange[i].defValue;
+  // Make sure values are valid
+  if (result != paramRange[i].defValue && (result < paramRange[i].min || result > paramRange[i].max))
+  {
+    result = paramRange[i].defValue;
+  }
+
+  logDebug("aisFloat %s = %f = %d\n", fieldName, value, result);
   return result;
 }
 

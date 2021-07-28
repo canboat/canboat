@@ -4,18 +4,17 @@
 
 This file is part of CANboat.
 
-CANboat is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-CANboat is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-You should have received a copy of the GNU General Public License
-along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 */
 
@@ -363,7 +362,7 @@ void sbAppendFormat(StringBuffer *const sb, const char *const format, ...)
 /*
  * Retrieve a value out of a JSON styled message.
  */
-int getJSONValue(const char *message, const char *fieldName, char *value, size_t len)
+bool getJSONValue(const char *message, const char *fieldName, char *value, size_t len)
 {
   const char *loc      = message + 1;
   size_t      fieldLen = strlen(fieldName);
@@ -373,7 +372,7 @@ int getJSONValue(const char *message, const char *fieldName, char *value, size_t
     loc = strstr(loc, fieldName);
     if (!loc)
     {
-      return 0;
+      return false;
     }
     if (loc[-1] == '"' && loc[fieldLen] == '"' && loc[fieldLen + 1] == ':')
     {
@@ -398,7 +397,7 @@ int getJSONValue(const char *message, const char *fieldName, char *value, size_t
       len--;
     }
     *value = 0;
-    return 1;
+    return true;
   }
 
   /* field is string */
@@ -432,8 +431,7 @@ int getJSONValue(const char *message, const char *fieldName, char *value, size_t
           *value++ = '\t';
           loc++;
           break;
-        case 'u':
-        {
+        case 'u': {
           unsigned int n;
           sscanf(loc, "%4x", &n);
           loc += 4;
@@ -456,7 +454,7 @@ int getJSONValue(const char *message, const char *fieldName, char *value, size_t
     len--;
   }
   *value = 0;
-  return 1;
+  return true;
 }
 
 char *sbSearchChar(const StringBuffer *const in, char c)

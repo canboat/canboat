@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Wip
+
+analyzer:
+
+- #229: Default install prefix should be /usr/local
+- #234: Spelling refrigeration
+- #244: Add AmpHours field to 127506
+- #235: Incorrectly generated schema in pgns.json for Fields.Field values,  Windlass enum values
+- #241: Leeway PGN 12800 should contain signed value for leeway
+
+## [2.0.0] - 2021-03-10
+
+### Changed
+
+All software is now licensed via Apache License Version 2.0. Since this 
+is a potentially breaking issue for users that can only distribute GPL v3
+this is a major version change.
+
+Changes from a contributor that objected to the change have been reverted
+(Pull requests #149, #150 and #152) and have been partly rebuilt.
+
+## [1.4.2] - 2021-02-01
+
+### Added
+
+analyzer:
+
+- #223: New windlass and anchor PGNs 128776, 128777, 128778.
+
+## [1.4.1] - 2021-01-28
+
+### Changed
+
+n2kd:
+
+- #157: NMEA0183 output is independent on whether `analyzer` is in `-si` mode.
+
 ## [1.4.0] - 2021-01-27
 
 ### Added

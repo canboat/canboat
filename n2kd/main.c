@@ -13,22 +13,22 @@ from stdin, collects this data and sends this out on three types of TCP clients:
 - Non stream JSON type gets all AIS data.
 - Write-only port to write to serial device (NGT-1, iKonvert, YDWG, etc.)
 
+
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
-CANboat is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-CANboat is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-You should have received a copy of the GNU General Public License
-along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 */
 
@@ -53,13 +53,14 @@ bool     udp183;
 
 uint32_t protocol = 1;
 int      debug    = 0;
+bool     unitSI   = false;
 
 struct sockaddr_in udpWildcardAddress;
 
-#define SENSOR_TIMEOUT (120)       /* Timeout when PGN messages expire (no longer retransmitted) */
-#define AIS_TIMEOUT (3600)         /* AIS messages expiration is much longer */
+#define SENSOR_TIMEOUT (120) /* Timeout when PGN messages expire (no longer retransmitted) */
+#define AIS_TIMEOUT (3600) /* AIS messages expiration is much longer */
 #define SONICHUB_TIMEOUT (8640000) /* SonicHub messages expiration is basically indefinite */
-#define CLAIM_TIMEOUT (8640000)    /* .. as are address claims and device names */
+#define CLAIM_TIMEOUT (8640000) /* .. as are address claims and device names */
 
 static void closeStream(int i);
 
@@ -375,8 +376,8 @@ static char *getFullStateJSON(StreamType stream)
   char         separator = '{';
   time_t       now       = time(0);
 
-  int    i, s;
-  Pgn *  pgn;
+  int  i, s;
+  Pgn *pgn;
 
   for (i = 0; i < maxPgnList; i++)
   {
@@ -746,9 +747,22 @@ static bool storeMessage(char *line, size_t len)
 
   logDebug("storeMessage(\"%s\",%u)\n", line, len);
 
-  if (!strstr(line, "\"fields\":"))
+  if (!strstr(line, "\"fields\":") || memcmp(line, "{\"timestamp", 11) != 0)
   {
-    logDebug("Ignore: pgn %u without fields\n", prn);
+    if (getJSONValue(line, "version", value, sizeof(value)))
+    {
+      logInfo("Found datastream from analyzer version %s\n", value);
+      if (getJSONValue(line, "units", value, sizeof(value)))
+      {
+        if (strcmp(value, "si") == 0)
+        {
+          logInfo("Datastream uses SI units\n");
+          unitSI = true;
+        }
+      }
+      return true;
+    }
+    logDebug("Ignore: no fields and timestamp\n");
     return false;
   }
   if (memcmp(line, "{\"timestamp", 11) != 0)

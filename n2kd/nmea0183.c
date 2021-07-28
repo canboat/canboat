@@ -9,18 +9,17 @@ other than GPS and AIS: depth, heading, wind.
 
 This file is part of CANboat.
 
-CANboat is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-CANboat is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-You should have received a copy of the GNU General Public License
-along with CANboat.  If not, see <http://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 */
 
@@ -82,8 +81,6 @@ extern bool  rateLimit;
  Parameters","fields":{"SID":222,"Temperature Source":"Sea Temperature","Temperature":17.16}}
  * {"timestamp":"2016-04-20T21:03:57.631Z","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance
  Log","fields":{"Log":57688,"Trip Log":57688}}
- * {"timestamp":"2019-02-02T19:45:02.051Z","prio":2,"src":43,"dst":255,"pgn":129025,"description":"Position, Rapid
- Update","fields":{"Latitude":37.8670000,"Longitude":-122.3150000}}
  */
 
 #define PGN_SYSTEM_TIME (126992)
@@ -97,7 +94,6 @@ extern bool  rateLimit;
 #define PGN_SOG_COG (129026)
 #define PGN_GPS_DOP (129539)
 #define PGN_POSITION (129029)
-#define PGN_POSITION_RAPID (129025)
 #define PGN_AIS_A (129038)
 #define PGN_AIS_B (129039)
 #define PGN_AIS_4 (129793)
@@ -230,37 +226,34 @@ Field Number:
 */
 static void nmea0183VesselHeading(StringBuffer *msg183, int src, const char *msg)
 {
-  char headingString[30];
-  char deviationString[30];
-  char variationString[30];
-  char referenceString[30];
+  double heading;
+  double deviation;
+  double variation;
+  char   referenceString[30];
 
-  if (getJSONValue(msg, "Heading", headingString, sizeof(headingString))
-      && getJSONValue(msg, "Reference", referenceString, sizeof(referenceString)))
+  if (getJSONNumber(msg, "Heading", &heading, U_ANGLE) && getJSONValue(msg, "Reference", referenceString, sizeof(referenceString)))
   {
-    if (getJSONValue(msg, "Deviation", deviationString, sizeof(deviationString))
-        && getJSONValue(msg, "Variation", variationString, sizeof(variationString)) && strcmp(referenceString, "Magnetic") == 0)
+    if (getJSONNumber(msg, "Deviation", &deviation, U_ANGLE) && getJSONNumber(msg, "Variation", &variation, U_ANGLE)
+        && strcmp(referenceString, "Magnetic") == 0)
     {
       /* Enough info for HDG message */
-      double dev = strtod(deviationString, 0);
-      double var = strtod(variationString, 0);
 
       nmea0183CreateMessage(msg183,
                             src,
-                            "HDG,%s,%04.1f,%c,%04.1f,%c",
-                            headingString,
-                            fabs(dev),
-                            ((dev < 0.0) ? 'W' : 'E'),
-                            fabs(var),
-                            ((var < 0.0) ? 'W' : 'E'));
+                            "HDG,%.1f,%.1f,%c,%.1f,%c",
+                            heading,
+                            fabs(deviation),
+                            ((deviation < 0.0) ? 'W' : 'E'),
+                            fabs(variation),
+                            ((variation < 0.0) ? 'W' : 'E'));
     }
     else if (strcmp(referenceString, "True") == 0)
     {
-      nmea0183CreateMessage(msg183, src, "HDT,%s,T", headingString);
+      nmea0183CreateMessage(msg183, src, "HDT,%.1f,T", heading);
     }
     else if (strcmp(referenceString, "Magnetic") == 0)
     {
-      nmea0183CreateMessage(msg183, src, "HDM,%s,M", headingString);
+      nmea0183CreateMessage(msg183, src, "HDM,%.1f,M", heading);
     }
   }
 }
@@ -286,24 +279,21 @@ Field Number:
 
 static void nmea0183WindData(StringBuffer *msg183, int src, const char *msg)
 {
-  char speedString[30];
-  char angleString[30];
-  char referenceString[30];
+  double speed;
+  double angle;
+  char   referenceString[30];
 
-  if (getJSONValue(msg, "Wind Speed", speedString, sizeof(speedString))
-      && getJSONValue(msg, "Wind Angle", angleString, sizeof(angleString))
+  if (getJSONNumber(msg, "Wind Speed", &speed, U_VELOCITY) && getJSONNumber(msg, "Wind Angle", &angle, U_ANGLE)
       && getJSONValue(msg, "Reference", referenceString, sizeof(referenceString)))
   {
-    double speed = strtod(speedString, 0);
-
     if (strcmp(referenceString, "True") == 0)
     {
-      nmea0183CreateMessage(msg183, src, "MWV,%s,T,%.1f,K,A", angleString, SPEED_M_S_TO_KMH(speed));
-      nmea0183CreateMessage(msg183, src, "MWD,,T,%s,M,%.1f,N,%.1f,M", angleString, SPEED_M_S_TO_KNOTS(speed), speed);
+      nmea0183CreateMessage(msg183, src, "MWV,%.1f,T,%.1f,K,A", angle, SPEED_M_S_TO_KMH(speed));
+      nmea0183CreateMessage(msg183, src, "MWD,,T,%.1f,M,%.1f,N,%.1f,M", angle, SPEED_M_S_TO_KNOTS(speed), speed);
     }
     else if (strcmp(referenceString, "Apparent") == 0)
     {
-      nmea0183CreateMessage(msg183, src, "MWV,%s,R,%.1f,K,A", angleString, SPEED_M_S_TO_KMH(speed));
+      nmea0183CreateMessage(msg183, src, "MWV,%.1f,R,%.1f,K,A", angle, SPEED_M_S_TO_KMH(speed));
     }
   }
 }
@@ -368,16 +358,19 @@ Depth","fields":{"SID":"70","Depth":"0.63","Offset":"0.500"}}
  */
 static void nmea0183WaterDepth(StringBuffer *msg183, int src, const char *msg)
 {
-  char depthString[30];
-  char offsetString[30];
+  double depth;
+  double offset;
 
-  if (getJSONValue(msg, "Depth", depthString, sizeof(depthString))
-      && getJSONValue(msg, "Offset", offsetString, sizeof(offsetString)))
+  if (getJSONNumber(msg, "Depth", &depth, U_DISTANCE))
   {
-    double off = strtod(offsetString, 0);
-    double dep = strtod(depthString, 0);
-
-    nmea0183CreateMessage(msg183, src, "DPT,%04.1f,%04.1f", dep, off);
+    if (getJSONNumber(msg, "Offset", &offset, U_DISTANCE))
+    {
+      nmea0183CreateMessage(msg183, src, "DPT,%.1f,%.1f", depth, offset);
+    }
+    else
+    {
+      nmea0183CreateMessage(msg183, src, "DPT,%.1f,", depth);
+    }
   }
 }
 
@@ -405,13 +398,11 @@ Field Number:
 
 static void nmea0183WaterSpeed(StringBuffer *msg183, int src, const char *msg)
 {
-  char speedString[30];
+  double speed;
 
-  if (getJSONValue(msg, "Speed Water Referenced", speedString, sizeof(speedString)))
+  if (getJSONNumber(msg, "Speed Water Referenced", &speed, U_VELOCITY))
   {
-    double speed = strtod(speedString, 0);
-
-    nmea0183CreateMessage(msg183, src, "VHW,,T,,M,%04.1f,N,%04.1f,K", SPEED_M_S_TO_KNOTS(speed), SPEED_M_S_TO_KMH(speed));
+    nmea0183CreateMessage(msg183, src, "VHW,,T,,M,%1f,N,%.1f,K", SPEED_M_S_TO_KNOTS(speed), SPEED_M_S_TO_KMH(speed));
   }
 }
 
@@ -430,15 +421,13 @@ Field Number:
 
 static void nmea0183WaterTemperature(StringBuffer *msg183, int src, const char *msg)
 {
-  char temperatureString[30];
-  char sourceString[30];
+  double temp;
+  char   sourceString[30];
 
   if (getJSONValue(msg, "Temperature Source", sourceString, sizeof(sourceString)) && (strcmp(sourceString, "Sea Temperature") == 0)
-      && getJSONValue(msg, "Temperature", temperatureString, sizeof(temperatureString)))
+      && getJSONNumber(msg, "Temperature", &temp, U_TEMPERATURE))
   {
-    double temp = strtod(temperatureString, 0);
-
-    nmea0183CreateMessage(msg183, src, "MTW,%04.1f,C", TEMP_K_TO_C(temp));
+    nmea0183CreateMessage(msg183, src, "MTW,%.1f,C", TEMP_K_TO_C(temp));
   }
 }
 
@@ -460,15 +449,12 @@ Field Number:
 
 static void nmea0183DistanceTraveled(StringBuffer *msg183, int src, const char *msg)
 {
-  char logString[30];
-  char tripString[30];
+  double log;
+  double trip;
 
-  if (getJSONValue(msg, "Log", logString, sizeof(logString)) && getJSONValue(msg, "Trip Log", tripString, sizeof(tripString)))
+  if (getJSONNumber(msg, "Log", &log, U_DISTANCE) && getJSONNumber(msg, "Trip Log", &trip, U_DISTANCE))
   {
-    double total = strtod(logString, 0);
-    double trip  = strtod(tripString, 0);
-
-    nmea0183CreateMessage(msg183, src, "VLW,%.1f,N,%.1f,N", DIST_M_TO_NM(total), DIST_M_TO_NM(trip));
+    nmea0183CreateMessage(msg183, src, "VLW,%.1f,N,%.1f,N", DIST_M_TO_NM(log), DIST_M_TO_NM(trip));
   }
 }
 
@@ -491,13 +477,11 @@ Field Number:
 
 static void nmea0183Rudder(StringBuffer *msg183, int src, const char *msg)
 {
-  char positionString[30];
+  double pos;
 
-  if (getJSONValue(msg, "Position", positionString, sizeof(positionString)))
+  if (getJSONNumber(msg, "Position", &pos, U_ANGLE))
   {
-    double pos = strtod(positionString, 0);
-
-    nmea0183CreateMessage(msg183, src, "RSA,%04.1f,A,,F", -pos);
+    nmea0183CreateMessage(msg183, src, "RSA,%.1f,A,,F", -pos);
   }
 }
 
@@ -580,16 +564,14 @@ static bool matchFilter(int n, char *filter)
 
 void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
 {
-  char str[20];
-  int  prn;
-  int  src;
-  int  rateType;
+  int prn;
+  int src;
+  int rateType;
 
-  if (!getJSONValue(msg, "pgn", str, sizeof(str)))
+  if (!getJSONInteger(msg, "pgn", &prn))
   {
     return;
   }
-  prn = atoi(str);
 
   switch (prn)
   {
@@ -624,7 +606,6 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
       rateType = RATE_SYSTEM_TIME;
       break;
     case PGN_POSITION:
-    case PGN_POSITION_RAPID:
       rateType = RATE_GPS_POSITION;
       break;
     case PGN_AIS_A:
@@ -644,11 +625,10 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
       return;
   }
 
-  if (!getJSONValue(msg, "src", str, sizeof(str)))
+  if (!getJSONInteger(msg, "src", &src))
   {
     return;
   }
-  src = atoi(str);
   if (srcFilter && !matchFilter(src, srcFilter))
   {
     return;
@@ -702,7 +682,6 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
       nmea0183GSA(msg183, src, msg);
       break;
     case PGN_POSITION:
-    case PGN_POSITION_RAPID:
       nmea0183GLL(msg183, src, msg);
       break;
     case PGN_AIS_A:
@@ -721,4 +700,31 @@ void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
     default:
       return;
   }
+}
+
+bool getJSONNumber(const char *message, const char *fieldName, double *value, Unit unit)
+{
+  char valueStr[16];
+
+  // List of conversion values for each unit. When analyser produces SI convert it to 'human standard'.
+  static const double UNIT_CONVERSION[U_MAX][2] = {{1, RadianToDegree}, {1, RadianToDegree}, {1, 1}, {1, 1}, {1, 1}, {1, 1}};
+  static const double UNIT_OFFSET[U_MAX][2]     = {{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, -273.15}, {0, 0}};
+
+  if (getJSONValue(message, fieldName, valueStr, sizeof valueStr))
+  {
+    *value = strtod(valueStr, 0) * UNIT_CONVERSION[unit][unitSI] + UNIT_OFFSET[unit][unitSI];
+    return true;
+  }
+  *value = nan("");
+  return false;
+}
+
+/**
+ * Extract an integer value out of a JSON message,
+ */
+bool getJSONInteger(const char *message, const char *fieldName, int *value)
+{
+  char valueStr[16];
+
+  return getJSONValue(message, fieldName, valueStr, sizeof valueStr) && sscanf(valueStr, "%d", value) == 1;
 }
