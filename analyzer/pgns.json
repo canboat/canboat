@@ -10305,9 +10305,9 @@
         "PGN":127506,
         "Id":"dcDetailedStatus",
         "Description":"DC Detailed Status",
-        "Type":"Single",
+        "Type":"Fast",
         "Complete":true,
-        "Length":9,
+        "Length":11,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -10374,6 +10374,16 @@
             "BitStart":0,
             "Units":"V",
             "Resolution":0.01,
+            "Signed":false},
+          {
+            "Order":8,
+            "Id":"ampHours",
+            "Name":"Amp Hours",
+            "BitLength":16,
+            "BitOffset":72,
+            "BitStart":0,
+            "Units":"C",
+            "Resolution":3600,
             "Signed":false}]},
       {
         "PGN":127507,
