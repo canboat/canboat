@@ -4015,7 +4015,7 @@ Pgn pgnList[] = {
       {"Eccentricity", BYTES(2), 1e-21, false, "m/m", ""},
       {"Almanac Reference Time", BYTES(1), 1e12, false, "s", ""},
       {"Inclination Angle", BYTES(2), 1e-19, true, "semi-circle", ""},
-      {"Right of Right Ascension", BYTES(2), 1e-38, true, "semi-circle/s", ""},
+      {"Rate of Right Ascension", BYTES(2), 1e-38, true, "semi-circle/s", ""},
       {"Root of Semi-major Axis", BYTES(3), 1e-11, false, "sqrt(m)", ""},
       {"Argument of Perigee", BYTES(3), 1e-23, true, "semi-circle", ""},
       {"Longitude of Ascension Node", BYTES(3), 1e-23, true, "semi-circle", ""},
