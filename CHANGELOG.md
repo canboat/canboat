@@ -6,7 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Wip
 
-### Changed
+analyzer:
+
+- #229: Default install prefix should be /usr/local
+- #234: Spelling refrigeration
+- #244: Add AmpHours field to 127506
+- #235: Incorrectly generated schema in pgns.json for Fields.Field values,  Windlass enum values
 - #241: Leeway PGN 12800 should contain signed value for leeway
 
 ## [2.0.0] - 2021-03-10
