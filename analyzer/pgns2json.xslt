@@ -310,7 +310,7 @@
   </xsl:template>
 
   <!-- array -->
-  <xsl:template match="PGNInfo//*[count(../*[name(../*)=name(.)])=count(../*) and count(../*)&gt;1]">
+  <xsl:template match="PGNInfo//*[count(../*[name(../*)=name(.)])=count(../*) and count(../*)&gt;0]">
     <xsl:if test="not(preceding-sibling::*)">[</xsl:if>
     <xsl:call-template name="indent"/>
     <xsl:choose>
