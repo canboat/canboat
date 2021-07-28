@@ -569,6 +569,12 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     }
     return true;
   }
+  if (sendInitState == 13)
+  {
+    sendInitState++;
+    // Send message again on next loop
+    return true;
+  }
 
   if (parseConst(&msg, RX_SHOW_RX_LIST_MSG))
   {
