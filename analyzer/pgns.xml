@@ -8834,7 +8834,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>s</Units>
-          <Resolution>0.01</Resolution>
+          <Resolution>0.001</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8850,12 +8850,58 @@ limitations under the License.
         </Field>
         <Field>
           <Order>3</Order>
+          <Id>controller1State</Id>
+          <Name>Controller 1 State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Error Active' />
+            <EnumPair Value='1' Name='Error Passive' />
+            <EnumPair Value='2' Name='Bus Off' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>controller2State</Id>
+          <Name>Controller 2 State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>26</BitOffset>
+          <BitStart>2</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Error Active' />
+            <EnumPair Value='1' Name='Error Passive' />
+            <EnumPair Value='2' Name='Bus Off' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>equipmentStatus</Id>
+          <Name>Equipment Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Operational' />
+            <EnumPair Value='3' Name='Not Available' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <Description>Reserved</Description>
-          <BitLength>24</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>34</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -11911,8 +11957,8 @@ limitations under the License.
       <Fields>
         <Field>
           <Order>1</Order>
-          <Id>instance</Id>
-          <Name>Instance</Name>
+          <Id>inverterInstance</Id>
+          <Name>Inverter Instance</Name>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -11946,23 +11992,36 @@ limitations under the License.
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues>
-            <EnumPair Value='0' Name='Standby' />
-            <EnumPair Value='1' Name='On' />
+            <EnumPair Value='0' Name='Invert' />
+            <EnumPair Value='1' Name='AC Passthru' />
+            <EnumPair Value='2' Name='Load Sense' />
+            <EnumPair Value='3' Name='Fault' />
+            <EnumPair Value='4' Name='Disabled' />
+            <EnumPair Value='14' Name='Error' />
+            <EnumPair Value='15' Name='Data Not Available' />
           </EnumValues>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>inverter</Id>
-          <Name>Inverter</Name>
+          <Id>inverterEnableDisable</Id>
+          <Name>Inverter Enable/Disable</Name>
           <BitLength>2</BitLength>
           <BitOffset>28</BitOffset>
           <BitStart>4</BitStart>
+          <Units>0=Disabled,1=Enabled,2=Error,3=Unknown</Units>
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues>
-            <EnumPair Value='0' Name='Standby' />
-            <EnumPair Value='1' Name='On' />
-          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>Reserved</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>
@@ -16966,7 +17025,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Precision</MissingAttribute>
       </Missing>
-      <Length>8</Length>
+      <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -16976,15 +17035,19 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>gpsWeekNumber</Id>
           <Name>GPS Week number</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Integer</Type>
+                 <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -16992,17 +17055,20 @@ limitations under the License.
           <Id>svHealthBits</Id>
           <Name>SV Health Bits</Name>
           <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>eccentricity</Id>
           <Name>Eccentricity</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Units>m/m</Units>
+          <Resolution>1e-21</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -17010,80 +17076,109 @@ limitations under the License.
           <Id>almanacReferenceTime</Id>
           <Name>Almanac Reference Time</Name>
           <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
+          <Units>s</Units>
+          <Resolution>1e+12</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>inclinationAngle</Id>
           <Name>Inclination Angle</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Signed>false</Signed>
+          <Units>semi-circle</Units>
+          <Resolution>1e-19</Resolution>
+          <Signed>true</Signed>
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>rightOfRightAscension</Id>
-          <Name>Right of Right Ascension</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <Id>rateOfRightAscension</Id>
+          <Name>Rate of Right Ascension</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Signed>false</Signed>
+          <Units>semi-circle/s</Units>
+          <Resolution>1e-38</Resolution>
+          <Signed>true</Signed>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>rootOfSemiMajorAxis</Id>
           <Name>Root of Semi-major Axis</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitLength>24</BitLength>
+          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
+          <Units>sqrt(m)</Units>
+          <Resolution>1e-11</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>argumentOfPerigee</Id>
           <Name>Argument of Perigee</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitLength>24</BitLength>
+          <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Signed>false</Signed>
+          <Units>semi-circle</Units>
+          <Resolution>1e-23</Resolution>
+          <Signed>true</Signed>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>longitudeOfAscensionNode</Id>
           <Name>Longitude of Ascension Node</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitLength>24</BitLength>
+          <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Signed>false</Signed>
+          <Units>semi-circle</Units>
+          <Resolution>1e-23</Resolution>
+          <Signed>true</Signed>
         </Field>
         <Field>
           <Order>11</Order>
           <Id>meanAnomaly</Id>
           <Name>Mean Anomaly</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
+          <BitLength>24</BitLength>
+          <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
-          <Signed>false</Signed>
+          <Units>semi-circle</Units>
+          <Resolution>1e-23</Resolution>
+          <Signed>true</Signed>
         </Field>
         <Field>
           <Order>12</Order>
           <Id>clockParameter1</Id>
           <Name>Clock Parameter 1</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
+          <BitLength>11</BitLength>
+          <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Signed>false</Signed>
+          <Units>s</Units>
+          <Resolution>1e-20</Resolution>
+          <Signed>true</Signed>
         </Field>
         <Field>
           <Order>13</Order>
           <Id>clockParameter2</Id>
           <Name>Clock Parameter 2</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>96</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>11</BitLength>
+          <BitOffset>195</BitOffset>
+          <BitStart>3</BitStart>
+          <Units>s/s</Units>
+          <Resolution>1e-38</Resolution>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>Reserved</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>206</BitOffset>
+          <BitStart>6</BitStart>
+                 <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -31732,6 +31827,120 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130823</PGN>
+      <Id>maretronProprietaryTemperatureHighRange</Id>
+      <Description>Maretron: Proprietary Temperature High Range</Description>
+      <Type>Fast</Type>
+      <Complete>true</Complete>
+      <Length>9</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Maretron</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>137</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>instance</Id>
+          <Name>Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>source</Id>
+          <Name>Source</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Sea Temperature' />
+            <EnumPair Value='1' Name='Outside Temperature' />
+            <EnumPair Value='2' Name='Inside Temperature' />
+            <EnumPair Value='3' Name='Engine Room Temperature' />
+            <EnumPair Value='4' Name='Main Cabin Temperature' />
+            <EnumPair Value='5' Name='Live Well Temperature' />
+            <EnumPair Value='6' Name='Bait Well Temperature' />
+            <EnumPair Value='7' Name='Refrigeration Temperature' />
+            <EnumPair Value='8' Name='Heating System Temperature' />
+            <EnumPair Value='9' Name='Dew Point Temperature' />
+            <EnumPair Value='10' Name='Apparent Wind Chill Temperature' />
+            <EnumPair Value='11' Name='Theoretical Wind Chill Temperature' />
+            <EnumPair Value='12' Name='Heat Index Temperature' />
+            <EnumPair Value='13' Name='Freezer Temperature' />
+            <EnumPair Value='14' Name='Exhaust Gas Temperature' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>actualTemperature</Id>
+          <Name>Actual Temperature</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>K</Units>
+                 <Type>Temperature</Type>
+                 <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>setTemperature</Id>
+          <Name>Set Temperature</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>K</Units>
+                 <Type>Temperature</Type>
+                 <Resolution>0.01</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
