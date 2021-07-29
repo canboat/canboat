@@ -267,6 +267,8 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
 
 #define LOOKUP_DIRECTION_REFERENCE (",0=True,1=Magnetic,2=Error,3=Null")
 
+#define LOOKUP_DIRECTION_RUDDER (",0=No Order,1=Move to starboard,2=Move to port")
+
 #define LOOKUP_NAV_STATUS                    \
   (",0=Under way using engine"               \
    ",1=At anchor"                            \
@@ -2752,7 +2754,7 @@ Pgn pgnList[] = {
       {"Turn Mode", 3, RES_LOOKUP, false, ",0=Rudder Limit controlled,1=turn rate controlled,10=radius controlled", ""},
       {"Heading Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
       {"Reserved", 5, RES_BINARY, false, 0, ""},
-      {"Commanded Rudder Direction", 3, RES_LOOKUP, false, ",0=No Order,1=Move to starboard,10=Move to port", ""},
+      {"Commanded Rudder Direction", 3, RES_LOOKUP, false, LOOKUP_DIRECTION_RUDDER, ""},
       {"Commanded Rudder Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Heading-To-Steer (Course)", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Track", BYTES(2), RES_RADIANS, false, "rad", ""},
@@ -2765,7 +2767,6 @@ Pgn pgnList[] = {
       {0}}}
 
     /* http://www.maretron.com/support/manuals/RAA100UM_1.0.pdf */
-    /* Haven't actually seen this value yet, lengths are guesses */
     ,
     {"Rudder",
      127245,
@@ -2774,10 +2775,11 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Direction Order", 2, 1, false, 0, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
+      {"Direction Order", 3, RES_LOOKUP, false, LOOKUP_DIRECTION_RUDDER, ""},
+      {"Reserved", 5, RES_BINARY, false, 0, "Reserved"},
       {"Angle Order", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Position", BYTES(2), RES_RADIANS, true, "rad", ""},
+      {"Reserved", BYTES(2), RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
     /* NMEA + Simrad AT10 */
