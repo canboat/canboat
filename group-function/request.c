@@ -52,11 +52,11 @@ void usage(char **argv, char **av)
   {
     fprintf(stderr, "Unknown or invalid argument %s\n", av[0]);
   }
-  fprintf(stderr, "Usage: %s <dest> <prio> <pgn> <field>=<value> ...\n\n", argv[0]);
+  fprintf(stderr, "Usage: %s <dest> <prio> <pgn> <interval> <field>=<value> ...\n\n", argv[0]);
   fprintf(stderr, "       <field> is a decimal value\n");
   fprintf(stderr, "       <value> is a hexadecimal value; the length of the value defines how many bytes are encoded\n");
   fprintf(stderr, "       Maximum # of fields: %d\n\n", MAX_FIELDS);
-  fprintf(stderr, "This program uses PGN 126208 to request a device to report a PGN for certain values.\n");
+  fprintf(stderr, "This program uses PGN 126208 to request a device to start reporting a PGN at the given interval.\n");
   fprintf(stderr, "The use of this is thus completely dependent on what the device allows.\n\n" COPYRIGHT);
   exit(1);
 }
@@ -67,6 +67,7 @@ int main(int argc, char **argv)
   char **                  av = argv;
   long                     dest;
   long                     pgn;
+  long                     interval;
   size_t                   cnt = 0;
   command_group_function_t command;
   size_t                   i, bytes;
@@ -75,7 +76,7 @@ int main(int argc, char **argv)
   uint32_t                 v;
   char                     dateStr[DATE_LENGTH];
 
-  if (ac < 5 || ac > 4 + MAX_FIELDS)
+  if (ac < 6 || ac > 5 + MAX_FIELDS)
   {
     usage(argv, 0);
   }
@@ -87,6 +88,8 @@ int main(int argc, char **argv)
   ac--, av++; /* lose the prio */
   pgn = strtol(av[0], 0, 10);
   ac--, av++; /* lose the pgn */
+  interval = strtol(av[0], 0, 10);
+  ac--, av++; /* lose the interval */
   b = &command.parameters[0];
 
   for (; ac; ac--, av++)
@@ -116,6 +119,8 @@ int main(int argc, char **argv)
   command.pgn[0]       = (pgn) &0xff;
   command.pgn[1]       = (pgn >> 8) & 0xff;
   command.pgn[2]       = (pgn >> 16);
+  command.interval     = interval;
+  command.offset       = 0;
   command.count        = cnt;
 
   bytes = b - (uint8_t *) &command;
