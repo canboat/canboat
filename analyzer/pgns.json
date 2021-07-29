@@ -10394,9 +10394,9 @@
         "PGN":127507,
         "Id":"chargerStatus",
         "Description":"Charger Status",
-        "Type":"Single",
+        "Type":"Fast",
         "Complete":true,
-        "Length":8,
+        "Length":6,
         "RepeatingFields":0,
         "Fields":[
           {

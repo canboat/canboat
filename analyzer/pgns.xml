@@ -11727,9 +11727,9 @@ limitations under the License.
       <PGN>127507</PGN>
       <Id>chargerStatus</Id>
       <Description>Charger Status</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>8</Length>
+      <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
