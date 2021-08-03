@@ -2661,7 +2661,7 @@ Pgn pgnList[] = {
       {"Sequence Counter", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Controller 1 State", 2, RES_LOOKUP, false, ",0=Error Active,1=Error Passive,2=Bus Off,3=Not Available", ""},
       {"Controller 2 State", 2, RES_LOOKUP, false, ",0=Error Active,1=Error Passive,2=Bus Off,3=Not Available", ""},
-      {"Equipment Status", 2, RES_LOOKUP, false, ",0=Operational,3=Not Available", ""},
+      {"Equipment Status", 2, RES_LOOKUP, false, ",0=Operational,1=Fault,2=Reserved,3=Not Available", ""},
       {"Reserved", 34, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
