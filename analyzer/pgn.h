@@ -157,7 +157,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
 
 #define LOOKUP_ATON_TYPE                                 \
   (",0=Default: Type of AtoN not specified"              \
-   ",1=Referece point"                                   \
+   ",1=Reference point"                                   \
    ",2=RACON"                                            \
    ",3=Fixed structure off-shore"                        \
    ",4=Reserved for future use"                          \
@@ -193,7 +193,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
   (",0=Not available"                   \
    ",1=Not engaged in special maneuver" \
    ",2=Engaged in special maneuver"     \
-   ",3=Reserverd")
+   ",3=Reserved")
 
 #define LOOKUP_POSITION_FIX_DEVICE   \
   (",0=Default: undefined"           \
@@ -273,7 +273,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
   (",0=Under way using engine"               \
    ",1=At anchor"                            \
    ",2=Not under command"                    \
-   ",3=Restricted manoeuverability"          \
+   ",3=Restricted maneuverability"           \
    ",4=Constrained by her draught"           \
    ",5=Moored"                               \
    ",6=Aground"                              \
@@ -720,7 +720,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",16=Portuguese"              \
    ",17=Russian"                 \
    ",18=Spanish"                 \
-   ",19=Sweedish")
+   ",19=Swedish")
 
 #define LOOKUP_ALERT_RESPONSE_COMMAND \
   (",0=Acknowledge"                   \
@@ -809,7 +809,7 @@ typedef struct
 // Returns the first pgn that matches the given id, or 0 if not found.
 Pgn *searchForPgn(int pgn);
 
-// Returns a pointer (potentially invalid) to the first png that does not match "first".
+// Returns a pointer (potentially invalid) to the first pgn that does not match "first".
 Pgn *endPgn(Pgn *first);
 
 Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length);
@@ -2332,7 +2332,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=34", "True Wind Options"},
-      {"COG substition for HDG",
+      {"COG substitution for HDG",
        2,
        RES_LOOKUP,
        false,
