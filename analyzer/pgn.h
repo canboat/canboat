@@ -6351,8 +6351,8 @@ Pgn pgnList[] = {
       {"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
       {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
-      {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Set Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      {"Actual Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
+      {"Set Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
       {0}}}
 
     ,
