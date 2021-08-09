@@ -3771,7 +3771,7 @@ Pgn pgnList[] = {
      129044,
      PACKET_COMPLETE,
      PACKET_FAST,
-     24,
+     20,
      0,
      {{"Local Datum",
        BYTES(4),
