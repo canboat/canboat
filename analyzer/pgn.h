@@ -157,7 +157,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
 
 #define LOOKUP_ATON_TYPE                                 \
   (",0=Default: Type of AtoN not specified"              \
-   ",1=Referece point"                                   \
+   ",1=Reference point"                                   \
    ",2=RACON"                                            \
    ",3=Fixed structure off-shore"                        \
    ",4=Reserved for future use"                          \
@@ -193,7 +193,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
   (",0=Not available"                   \
    ",1=Not engaged in special maneuver" \
    ",2=Engaged in special maneuver"     \
-   ",3=Reserverd")
+   ",3=Reserved")
 
 #define LOOKUP_POSITION_FIX_DEVICE   \
   (",0=Default: undefined"           \
@@ -267,11 +267,13 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
 
 #define LOOKUP_DIRECTION_REFERENCE (",0=True,1=Magnetic,2=Error,3=Null")
 
+#define LOOKUP_DIRECTION_RUDDER (",0=No Order,1=Move to starboard,2=Move to port")
+
 #define LOOKUP_NAV_STATUS                    \
   (",0=Under way using engine"               \
    ",1=At anchor"                            \
    ",2=Not under command"                    \
-   ",3=Restricted manoeuverability"          \
+   ",3=Restricted maneuverability"           \
    ",4=Constrained by her draught"           \
    ",5=Moored"                               \
    ",6=Aground"                              \
@@ -718,7 +720,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",16=Portuguese"              \
    ",17=Russian"                 \
    ",18=Spanish"                 \
-   ",19=Sweedish")
+   ",19=Swedish")
 
 #define LOOKUP_ALERT_RESPONSE_COMMAND \
   (",0=Acknowledge"                   \
@@ -807,7 +809,7 @@ typedef struct
 // Returns the first pgn that matches the given id, or 0 if not found.
 Pgn *searchForPgn(int pgn);
 
-// Returns a pointer (potentially invalid) to the first png that does not match "first".
+// Returns a pointer (potentially invalid) to the first pgn that does not match "first".
 Pgn *endPgn(Pgn *first);
 
 Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length);
@@ -2330,7 +2332,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=34", "True Wind Options"},
-      {"COG substition for HDG",
+      {"COG substitution for HDG",
        2,
        RES_LOOKUP,
        false,
@@ -2659,7 +2661,7 @@ Pgn pgnList[] = {
       {"Sequence Counter", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Controller 1 State", 2, RES_LOOKUP, false, ",0=Error Active,1=Error Passive,2=Bus Off,3=Not Available", ""},
       {"Controller 2 State", 2, RES_LOOKUP, false, ",0=Error Active,1=Error Passive,2=Bus Off,3=Not Available", ""},
-      {"Equipment Status", 2, RES_LOOKUP, false, ",0=Operational,3=Not Available", ""},
+      {"Equipment Status", 2, RES_LOOKUP, false, ",0=Operational,1=Fault,2=Reserved,3=Not Available", ""},
       {"Reserved", 34, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -2752,7 +2754,7 @@ Pgn pgnList[] = {
       {"Turn Mode", 3, RES_LOOKUP, false, ",0=Rudder Limit controlled,1=turn rate controlled,10=radius controlled", ""},
       {"Heading Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
       {"Reserved", 5, RES_BINARY, false, 0, ""},
-      {"Commanded Rudder Direction", 3, RES_LOOKUP, false, ",0=No Order,1=Move to starboard,10=Move to port", ""},
+      {"Commanded Rudder Direction", 3, RES_LOOKUP, false, LOOKUP_DIRECTION_RUDDER, ""},
       {"Commanded Rudder Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Heading-To-Steer (Course)", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Track", BYTES(2), RES_RADIANS, false, "rad", ""},
@@ -2765,7 +2767,6 @@ Pgn pgnList[] = {
       {0}}}
 
     /* http://www.maretron.com/support/manuals/RAA100UM_1.0.pdf */
-    /* Haven't actually seen this value yet, lengths are guesses */
     ,
     {"Rudder",
      127245,
@@ -2774,10 +2775,11 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Direction Order", 2, 1, false, 0, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
+      {"Direction Order", 3, RES_LOOKUP, false, LOOKUP_DIRECTION_RUDDER, ""},
+      {"Reserved", 5, RES_BINARY, false, 0, "Reserved"},
       {"Angle Order", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Position", BYTES(2), RES_RADIANS, true, "rad", ""},
+      {"Reserved", BYTES(2), RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
     /* NMEA + Simrad AT10 */
@@ -3593,7 +3595,7 @@ Pgn pgnList[] = {
      129029,
      PACKET_COMPLETE,
      PACKET_FAST,
-     51,
+     43,
      3,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
@@ -3607,7 +3609,7 @@ Pgn pgnList[] = {
       {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
       {"Number of SVs", BYTES(1), 1, false, 0, "Number of satellites used in solution"},
       {"HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision"},
-      {"PDOP", BYTES(2), 0.01, true, 0, "Probable dilution of precision"},
+      {"PDOP", BYTES(2), 0.01, true, 0, "Positional dilution of precision"},
       {"Geoidal Separation", BYTES(4), 0.01, true, "m", "Geoidal Separation"},
       {"Reference Stations", BYTES(1), 1, false, 0, "Number of reference stations"},
       {"Reference Station Type", 4, RES_LOOKUP, false, LOOKUP_GNS, ""},
@@ -3769,7 +3771,7 @@ Pgn pgnList[] = {
      129044,
      PACKET_COMPLETE,
      PACKET_FAST,
-     24,
+     20,
      0,
      {{"Local Datum",
        BYTES(4),
@@ -6349,8 +6351,8 @@ Pgn pgnList[] = {
       {"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
       {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
-      {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Set Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      {"Actual Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
+      {"Set Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
       {0}}}
 
     ,
