@@ -525,13 +525,16 @@ r# - CAN Reserved Bit #n PS# - ISO 11783 PDU Specific Bit #n
 DLC# - Data Length Code Bit #n *CAN Defined Bit, Unchanged in ISO 11783
 (d) - dominant bit 1 Required format of proprietary 11 bit identifiers
 (r) - recessive bit
+
+For NMEA2000 the R bit is always 0, but SAE J1939 it is not. J1939 calls
+this the "Extended Data Page" (EDP).
 */
 
 void getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int *pgn, unsigned int *src, unsigned int *dst)
 {
   unsigned char PF = (unsigned char) (id >> 16);
   unsigned char PS = (unsigned char) (id >> 8);
-  unsigned char DP = (unsigned char) (id >> 24) & 1;
+  unsigned char RDP = (unsigned char) (id >> 24) & 3; // Use R + DP bits
 
   if (src)
   {
@@ -551,7 +554,7 @@ void getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int 
     }
     if (pgn)
     {
-      *pgn = (DP << 16) + (PF << 8);
+      *pgn = (RDP << 16) + (PF << 8);
     }
   }
   else
@@ -563,7 +566,7 @@ void getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int 
     }
     if (pgn)
     {
-      *pgn = (DP << 16) + (PF << 8) + PS;
+      *pgn = (RDP << 16) + (PF << 8) + PS;
     }
   }
 }
