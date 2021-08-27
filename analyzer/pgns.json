@@ -6271,8 +6271,8 @@
             "Signed":false},
           {
             "Order":5,
-            "Id":"cogSubstitionForHdg",
-            "Name":"COG substition for HDG",
+            "Id":"cogSubstitutionForHdg",
+            "Name":"COG substitution for HDG",
             "Description":"Allow use of COG when HDG not available?",
             "BitLength":2,
             "BitOffset":24,
@@ -7712,7 +7712,7 @@
               {"name":"Portuguese","value":"16"},
               {"name":"Russian","value":"17"},
               {"name":"Spanish","value":"18"},
-              {"name":"Sweedish","value":"19"}]},
+              {"name":"Swedish","value":"19"}]},
           {
             "Order":11,
             "Id":"alertTextDescription",
@@ -7902,6 +7902,8 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Operational","value":"0"},
+              {"name":"Fault","value":"1"},
+              {"name":"Reserved","value":"2"},
               {"name":"Not Available","value":"3"}]},
           {
             "Order":6,
@@ -8350,7 +8352,7 @@
             "EnumValues":[
               {"name":"No Order","value":"0"},
               {"name":"Move to starboard","value":"1"},
-              {"name":"Move to port","value":"10"}]},
+              {"name":"Move to port","value":"2"}]},
           {
             "Order":10,
             "Id":"commandedRudderAngle",
@@ -8461,18 +8463,23 @@
             "Order":2,
             "Id":"directionOrder",
             "Name":"Direction Order",
-            "BitLength":2,
+            "BitLength":3,
             "BitOffset":8,
             "BitStart":0,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"No Order","value":"0"},
+              {"name":"Move to starboard","value":"1"},
+              {"name":"Move to port","value":"2"}]},
           {
             "Order":3,
             "Id":"reserved",
             "Name":"Reserved",
             "Description":"Reserved",
-            "BitLength":6,
-            "BitOffset":10,
-            "BitStart":2,
+            "BitLength":5,
+            "BitOffset":11,
+            "BitStart":3,
             "Type":"Binary data",
             "Signed":false},
           {
@@ -8494,7 +8501,17 @@
             "BitStart":0,
             "Units":"rad",
             "Resolution":0.0001,
-            "Signed":true}]},
+            "Signed":true},
+          {
+            "Order":6,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "Description":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Type":"Binary data",
+            "Signed":false}]},
       {
         "PGN":127250,
         "Id":"vesselHeading",
@@ -10485,14 +10502,14 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Standalone mode","value":"0"},
-              {"name":"Primary mode","value":"1"},
-              {"name":"Secondary mode","value":"2"},
-              {"name":"Echo mode","value":"3"}]},
+              {"name":"Standalone","value":"0"},
+              {"name":"Primary","value":"1"},
+              {"name":"Secondary","value":"2"},
+              {"name":"Echo","value":"3"}]},
           {
             "Order":5,
-            "Id":"operatingState",
-            "Name":"Operating State",
+            "Id":"enabled",
+            "Name":"Enabled",
             "BitLength":2,
             "BitOffset":24,
             "BitStart":0,
@@ -12574,7 +12591,7 @@
         "Description":"GNSS Position Data",
         "Type":"Fast",
         "Complete":true,
-        "Length":51,
+        "Length":43,
         "RepeatingFields":3,
         "Fields":[
           {
@@ -12726,7 +12743,7 @@
             "Order":13,
             "Id":"pdop",
             "Name":"PDOP",
-            "Description":"Probable dilution of precision",
+            "Description":"Positional dilution of precision",
             "BitLength":16,
             "BitOffset":288,
             "BitStart":0,
@@ -13018,7 +13035,7 @@
               {"name":"Under way using engine","value":"0"},
               {"name":"At anchor","value":"1"},
               {"name":"Not under command","value":"2"},
-              {"name":"Restricted manoeuverability","value":"3"},
+              {"name":"Restricted maneuverability","value":"3"},
               {"name":"Constrained by her draught","value":"4"},
               {"name":"Moored","value":"5"},
               {"name":"Aground","value":"6"},
@@ -13040,7 +13057,7 @@
               {"name":"Not available","value":"0"},
               {"name":"Not engaged in special maneuver","value":"1"},
               {"name":"Engaged in special maneuver","value":"2"},
-              {"name":"Reserverd","value":"3"}]},
+              {"name":"Reserved","value":"3"}]},
           {
             "Order":17,
             "Id":"reserved",
@@ -13834,7 +13851,7 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Default: Type of AtoN not specified","value":"0"},
-              {"name":"Referece point","value":"1"},
+              {"name":"Reference point","value":"1"},
               {"name":"RACON","value":"2"},
               {"name":"Fixed structure off-shore","value":"3"},
               {"name":"Reserved for future use","value":"4"},
@@ -13989,7 +14006,7 @@
         "Description":"Datum",
         "Type":"Fast",
         "Complete":true,
-        "Length":24,
+        "Length":20,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -28357,7 +28374,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":0.01,
+            "Resolution":0.1,
             "Signed":false},
           {
             "Order":8,
@@ -28368,7 +28385,7 @@
             "BitStart":0,
             "Units":"K",
             "Type":"Temperature",
-            "Resolution":0.01,
+            "Resolution":0.1,
             "Signed":false}]},
       {
         "PGN":130824,

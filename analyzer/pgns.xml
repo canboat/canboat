@@ -7060,8 +7060,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>cogSubstitionForHdg</Id>
-          <Name>COG substition for HDG</Name>
+          <Id>cogSubstitutionForHdg</Id>
+          <Name>COG substitution for HDG</Name>
           <Description>Allow use of COG when HDG not available?</Description>
           <BitLength>2</BitLength>
           <BitOffset>24</BitOffset>
@@ -8675,7 +8675,7 @@ limitations under the License.
             <EnumPair Value='16' Name='Portuguese' />
             <EnumPair Value='17' Name='Russian' />
             <EnumPair Value='18' Name='Spanish' />
-            <EnumPair Value='19' Name='Sweedish' />
+            <EnumPair Value='19' Name='Swedish' />
           </EnumValues>
         </Field>
         <Field>
@@ -8891,6 +8891,8 @@ limitations under the License.
           <Signed>false</Signed>
           <EnumValues>
             <EnumPair Value='0' Name='Operational' />
+            <EnumPair Value='1' Name='Fault' />
+            <EnumPair Value='2' Name='Reserved' />
             <EnumPair Value='3' Name='Not Available' />
           </EnumValues>
         </Field>
@@ -9398,7 +9400,7 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='No Order' />
             <EnumPair Value='1' Name='Move to starboard' />
-            <EnumPair Value='10' Name='Move to port' />
+            <EnumPair Value='2' Name='Move to port' />
           </EnumValues>
         </Field>
         <Field>
@@ -9523,19 +9525,25 @@ limitations under the License.
           <Order>2</Order>
           <Id>directionOrder</Id>
           <Name>Direction Order</Name>
-          <BitLength>2</BitLength>
+          <BitLength>3</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+                 <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='No Order' />
+            <EnumPair Value='1' Name='Move to starboard' />
+            <EnumPair Value='2' Name='Move to port' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <Description>Reserved</Description>
-          <BitLength>6</BitLength>
-          <BitOffset>10</BitOffset>
-          <BitStart>2</BitStart>
+          <BitLength>5</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
                  <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -9560,6 +9568,17 @@ limitations under the License.
           <Units>rad</Units>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>Reserved</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+                 <Type>Binary data</Type>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>
@@ -11828,16 +11847,16 @@ limitations under the License.
                  <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues>
-            <EnumPair Value='0' Name='Standalone mode' />
-            <EnumPair Value='1' Name='Primary mode' />
-            <EnumPair Value='2' Name='Secondary mode' />
-            <EnumPair Value='3' Name='Echo mode' />
+            <EnumPair Value='0' Name='Standalone' />
+            <EnumPair Value='1' Name='Primary' />
+            <EnumPair Value='2' Name='Secondary' />
+            <EnumPair Value='3' Name='Echo' />
           </EnumValues>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>operatingState</Id>
-          <Name>Operating State</Name>
+          <Id>enabled</Id>
+          <Name>Enabled</Name>
           <BitLength>2</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -14202,7 +14221,7 @@ limitations under the License.
       <Description>GNSS Position Data</Description>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>51</Length>
+      <Length>43</Length>
       <RepeatingFields>3</RepeatingFields>
       <Fields>
         <Field>
@@ -14369,7 +14388,7 @@ limitations under the License.
           <Order>13</Order>
           <Id>pdop</Id>
           <Name>PDOP</Name>
-          <Description>Probable dilution of precision</Description>
+          <Description>Positional dilution of precision</Description>
           <BitLength>16</BitLength>
           <BitOffset>288</BitOffset>
           <BitStart>0</BitStart>
@@ -14694,7 +14713,7 @@ limitations under the License.
             <EnumPair Value='0' Name='Under way using engine' />
             <EnumPair Value='1' Name='At anchor' />
             <EnumPair Value='2' Name='Not under command' />
-            <EnumPair Value='3' Name='Restricted manoeuverability' />
+            <EnumPair Value='3' Name='Restricted maneuverability' />
             <EnumPair Value='4' Name='Constrained by her draught' />
             <EnumPair Value='5' Name='Moored' />
             <EnumPair Value='6' Name='Aground' />
@@ -14718,7 +14737,7 @@ limitations under the License.
             <EnumPair Value='0' Name='Not available' />
             <EnumPair Value='1' Name='Not engaged in special maneuver' />
             <EnumPair Value='2' Name='Engaged in special maneuver' />
-            <EnumPair Value='3' Name='Reserverd' />
+            <EnumPair Value='3' Name='Reserved' />
           </EnumValues>
         </Field>
         <Field>
@@ -15608,7 +15627,7 @@ limitations under the License.
           <Signed>false</Signed>
           <EnumValues>
             <EnumPair Value='0' Name='Default: Type of AtoN not specified' />
-            <EnumPair Value='1' Name='Referece point' />
+            <EnumPair Value='1' Name='Reference point' />
             <EnumPair Value='2' Name='RACON' />
             <EnumPair Value='3' Name='Fixed structure off-shore' />
             <EnumPair Value='4' Name='Reserved for future use' />
@@ -15782,7 +15801,7 @@ limitations under the License.
       <Description>Datum</Description>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>24</Length>
+      <Length>20</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -31928,7 +31947,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>K</Units>
                  <Type>Temperature</Type>
-                 <Resolution>0.01</Resolution>
+                 <Resolution>0.1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31940,7 +31959,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>K</Units>
                  <Type>Temperature</Type>
-                 <Resolution>0.01</Resolution>
+                 <Resolution>0.1</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>

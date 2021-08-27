@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 analyzer:
 
+- #252: Further fixes for PGN 127507
 - #245: Updates for PGNs 126993, 127509, 129541, companylist. Added PGN 130823 Maretron.
 - #243: PGN 127507 is fast packet
 - #229: Default install prefix should be /usr/local
