@@ -33,6 +33,7 @@ all:	bin man1 compile
 compile:
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
 	$(MAKE) -C analyzer json
+	$(MAKE) -C dbc-exporter
 
 bin:	rel/$(PLATFORM)
 
@@ -46,6 +47,7 @@ man/man1:
 
 clean:
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
+	$(MAKE) -C dbc-exporter clean
 	-rm -R -f man
 
 install: rel/$(PLATFORM)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(CONFDIR) $(DESTDIR)$(MANDIR)/man1

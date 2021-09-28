@@ -1,2 +1,25 @@
 rel/
 .*.swp
+
+# Python specific files (related to dbc-exporter)
+venv/
+*.py[cod]
+__pycache__
+*.egg
+*.egg-info
+dist
+build
+eggs
+.eggs
+parts
+bin
+var
+sdist
+wheelhouse
+develop-eggs
+.installed.cfg
+lib
+lib64
+venv*/
+pyvenv*/
+pip-wheel-metadata/
