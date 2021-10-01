@@ -5789,33 +5789,68 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>subMode</Id>
-          <Name>Sub Mode</Name>
-          <BitLength>8</BitLength>
+          <Id>field0</Id>
+          <Name>Field 0</Name>
+          <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>pilotModeData</Id>
-          <Name>Pilot Mode Data</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
+          <Id>field1</Id>
+          <Name>Field 1</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Binary data</Type>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>unknown2</Id>
-          <Name>Unknown 2</Name>
-          <BitLength>80</BitLength>
-          <BitOffset>88</BitOffset>
+          <Id>field2</Id>
+          <Name>Field 2</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Binary data</Type>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>field3</Id>
+          <Name>Field 3</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>field4</Id>
+          <Name>Field 4</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>136</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>field5</Id>
+          <Name>Field 5</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>152</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -31966,10 +32001,387 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130824</PGN>
-      <Id>bGH5000CpuPerformanceInfo</Id>
-      <Description>B&amp;G: H5000 CPU Performance info</Description>
+      <Id>bGH5000CpuPerformance</Id>
+      <Description>B&amp;G: H5000 CPU Performance</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>100</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>B&amp;G</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>381</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id></Id>
+          <Name></Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>8292</Match>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>course</Id>
+          <Name>Course</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>drBearing</Id>
+          <Name>DR Bearing</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>drDistance</Id>
+          <Name>DR Distance</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>160</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>m</Units>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>headingOnOppositeTackTrue</Id>
+          <Name>Heading on opposite Tack (True)</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>208</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>224</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>leewayAngle</Id>
+          <Name>Leeway Angle</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>240</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>256</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>optimumWindAngle</Id>
+          <Name>Optimum Wind Angle</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>272</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>288</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>raceTimer</Id>
+          <Name>Race timer</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>304</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>s</Units>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>19</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>336</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>20</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>352</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>21</Order>
+          <Id>latitude</Id>
+          <Name>Latitude</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>368</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>deg</Units>
+                 <Type>Latitude</Type>
+                 <Resolution>0.0000001</Resolution>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>22</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>400</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>23</Order>
+          <Id>longitude</Id>
+          <Name>Longitude</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>416</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>deg</Units>
+                 <Type>Longitude</Type>
+                 <Resolution>0.0000001</Resolution>
+          <Signed>true</Signed>
+        </Field>
+        <Field>
+          <Order>24</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>448</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>25</Order>
+          <Id>polarBoatSpeed</Id>
+          <Name>Polar boat speed</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>464</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>m/s</Units>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>26</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>480</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>27</Order>
+          <Id>targetTwa</Id>
+          <Name>Target TWA</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>496</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>28</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>512</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>29</Order>
+          <Id>tripTime</Id>
+          <Name>Trip time</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>528</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>s</Units>
+                 <Type>Time</Type>
+                 <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>30</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>160</BitLength>
+          <BitOffset>560</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>31</Order>
+          <Id>vmgPerformance</Id>
+          <Name>VMG performance</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>720</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>%</Units>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>32</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>736</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>33</Order>
+          <Id>velocityMadeGood</Id>
+          <Name>Velocity Made Good</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>752</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>m/s</Units>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>34</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>768</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>35</Order>
+          <Id>windAngleToMast</Id>
+          <Name>Wind Angle to mast</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>784</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130824</PGN>
+      <Id>bGH5000CpuPerformance</Id>
+      <Description>B&amp;G: H5000 CPU Performance</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
       <Length>34</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -32120,7 +32532,7 @@ limitations under the License.
         <Field>
           <Order>15</Order>
           <Id>averageTrueWindDirection</Id>
-          <Name>Average True Wind  Direction</Name>
+          <Name>Average True Wind Direction</Name>
           <BitLength>16</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
