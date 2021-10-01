@@ -32119,11 +32119,13 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id></Id>
-          <Name></Name>
+          <Id>averageTrueWindDirection</Id>
+          <Name>Average True Wind  Direction</Name>
           <BitLength>16</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32137,11 +32139,13 @@ limitations under the License.
         </Field>
         <Field>
           <Order>17</Order>
-          <Id></Id>
-          <Name></Name>
+          <Id>windPhase</Id>
+          <Name>Wind Phase</Name>
           <BitLength>16</BitLength>
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32155,11 +32159,13 @@ limitations under the License.
         </Field>
         <Field>
           <Order>19</Order>
-          <Id></Id>
-          <Name></Name>
+          <Id>windLift</Id>
+          <Name>Wind lift</Name>
           <BitLength>16</BitLength>
           <BitOffset>256</BitOffset>
           <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -32237,6 +32243,230 @@ limitations under the License.
           <Description>Increasing field, what else can it be?</Description>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130824</PGN>
+      <Id>bGH5000CpuPerformanceInfo</Id>
+      <Description>B&amp;G: H5000 CPU Performance info</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Precision</MissingAttribute>
+      </Missing>
+      <Length>34</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>B&amp;G</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>381</Match>
+                 <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>0</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+                 <Type>Lookup table</Type>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>field4</Id>
+          <Name>Field 4</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>field5</Id>
+          <Name>Field 5</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>polarBoatSpeed</Id>
+          <Name>Polar boat speed</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>m/s</Units>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>headingToSteerCourse</Id>
+          <Name>Heading-To-Steer (Course)</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>field7</Id>
+          <Name>Field 7</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>polarPerformance</Id>
+          <Name>Polar performance</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>%</Units>
+          <Resolution>0.004</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>field9</Id>
+          <Name>Field 9</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>oppositeTackCog</Id>
+          <Name>Opposite tack COG</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>field11</Id>
+          <Name>Field 11</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>oppositeTackTargetHeading</Id>
+          <Name>Opposite tack target heading</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>160</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>field13</Id>
+          <Name>Field 13</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>176</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>vmgPerformance</Id>
+          <Name>VMG performance</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>%</Units>
+          <Resolution>0.004</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>field15</Id>
+          <Name>Field 15</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>208</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>field16</Id>
+          <Name>Field 16</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>224</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>field17</Id>
+          <Name>Field 17</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>240</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>19</Order>
+          <Id>field18</Id>
+          <Name>Field 18</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>256</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>20</Order>
+          <Id>field19</Id>
+          <Name>Field 19</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>272</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>21</Order>
+          <Id>field20</Id>
+          <Name>Field 20</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>288</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>

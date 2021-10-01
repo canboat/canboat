@@ -6376,11 +6376,11 @@ Pgn pgnList[] = {
       {"", BYTES(2), 1, false, 0, ""},
       {"VMG performance", BYTES(2), 0.1, false, "%", ""},
       {"", BYTES(2), 1, false, 0, ""},
+      {"Average True Wind  Direction", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"", BYTES(2), 1, false, 0, ""},
+      {"Wind Phase", BYTES(2), RES_RADIANS, false, "rad", ""}, // Seems like an angle compared to something as it's not a straight translation to displayed angle
       {"", BYTES(2), 1, false, 0, ""},
-      {"", BYTES(2), 1, false, 0, ""},
-      {"", BYTES(2), 1, false, 0, ""},
-      {"", BYTES(2), 1, false, 0, ""},
+      {"Wind lift", BYTES(2), RES_RADIANS, false, "rad", ""}, // Seems like an angle compared to something as it's not a straight translation to displayed angle
       {0}}}
 
     ,
