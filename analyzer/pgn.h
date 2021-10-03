@@ -800,7 +800,7 @@ typedef struct
   PacketType type;            /* Single, Fast or ISO11783 */
   uint32_t   size;            /* (Minimal) size of this PGN. Helps to determine initial malloc */
   uint32_t   repeatingFields; /* How many fields at the end repeat until the PGN is exhausted? */
-  Field      fieldList[36]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
+  Field      fieldList[40]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t   fieldCount;    /* Filled by C, no need to set in initializers. */
   char *     camelDescription; /* Filled by C, no need to set in initializers. */
   bool       unknownPgn;       /* true = this is a catch-all for unknown PGNs */
@@ -6359,7 +6359,33 @@ Pgn pgnList[] = {
       {0}}}
 
     ,
-    {"B&G: H5000 CPU Performance",
+    {"B&G: H5000 CPU Performance generated",
+     130824,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     0x1e,
+     0,
+     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=381", "B&G"},
+      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
+      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
+      {"Key 30", BYTES(2), 1, false, "=8318", ""},
+      {"Opposite Tack Target Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
+      {"Key 31", BYTES(2), 1, false, 0, ""},
+      {"Polar boat speed", BYTES(2), 0.01, false, "m/s"},
+      {"Key 32", BYTES(2), 1, false, 0, ""},
+      {"Polar performance", BYTES(2), 0.1, false, "%", ""},
+      {"Key 33", BYTES(2), 1, false, 0, ""},
+      {"VMG performance", BYTES(2), 0.1, false, "%", ""},
+      {"Key 34", BYTES(2), 1, false, 0, ""},
+      {"Velocity Made Good", BYTES(2), 0.01, false, "m/s"},
+      {"Key 35", BYTES(2), 1, false, 0, ""},
+      {"Leeway Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
+      {"Key 36", BYTES(2), 1, false, 0, ""},
+      {"Optimum Wind Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
+      {0}}}
+
+    ,
+    {"B&G: H5000 CPU Performance long",
      130824,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -6368,40 +6394,44 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=381", "B&G"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"", BYTES(2), 1, false, "=8292", ""},
-      {"Reserved", BYTES(8), 1, false, 0, ""},  // Key
+      {"Key 0", BYTES(2), 1, false, "=8292", ""}, // Key
+      {"Unknown 1", BYTES(6), 1, false, 0, ""},  
+      {"Key 1", BYTES(2), 1, false, 0, ""},  // Key
       {"Course", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 2", BYTES(2), 1, false, 0, ""},  // Key
       {"DR Bearing", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 3", BYTES(2), 1, false, 0, ""},  // Key
       {"DR Distance", BYTES(4), 0.01, false, "m"},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 4", BYTES(2), 1, false, 0, ""},  // Key
       {"Heading on opposite Tack (True)", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 5", BYTES(2), 1, false, 0, ""},  // Key
       {"Leeway Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 6", BYTES(2), 1, false, 0, ""},  // Key
       {"Optimum Wind Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reserved", BYTES(8), 1, false, 0, ""},  // Has some racetimer info - unsure how to read
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 7", BYTES(2), 1, false, 0, ""},  // 
+      {"Racetimer", BYTES(6), 1, false, 0, ""},  // Has some racetimer info - unsure how to read
+      {"Key 8", BYTES(2), 1, false, 0, ""},  // Key
       {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 9", BYTES(2), 1, false, 0, ""},  // Key
       {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 10", BYTES(2), 1, false, 0, ""},  // Key
       {"Polar boat speed", BYTES(2), 0.01, false, "m/s"},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 11", BYTES(2), 1, false, 0, ""},  // Key
       {"Target TWA", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 12", BYTES(2), 1, false, 0, ""},  // Key
       {"Trip time", BYTES(4), RES_TIME, false, "s", ""},
-      {"Reserved", BYTES(20), 1, false, 0, ""}, // Key
+      {"Key 13", BYTES(2), 1, false, 0, ""}, // Key
+      {"Unknown 2", BYTES(16), 1, false, 0, ""},
+      {"Key 14", BYTES(2), 1, false, 0, ""}, // Key
       {"VMG performance", BYTES(2), 0.1, false, "%", ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 15", BYTES(2), 1, false, 0, ""},  // Key
       {"Velocity Made Good", BYTES(2), 0.01, false, "m/s"},
-      {"Reserved", BYTES(2), 1, false, 0, ""},  // Key
+      {"Key 16", BYTES(2), 1, false, 0, ""},  // Key
       {"Wind Angle to mast", BYTES(2), RES_RADIANS, false, "rad", ""},
       {0}}}
 
     ,
-    {"B&G: H5000 CPU Performance",
+    {"B&G: H5000 CPU Performance short",
      130824,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -6410,21 +6440,21 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=381", "B&G"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"", BYTES(2), 1, false, "=8318", ""},
+      {"Key 20", BYTES(2), 1, false, "=8318", ""},
       {"Polar boat speed", BYTES(2), 0.01, false, "m/s"},
-      {"", BYTES(2), 1, false, 0, ""},
+      {"Key 21", BYTES(2), 1, false, 0, ""},
       {"Polar performance", BYTES(2), 0.1, false, "%", ""},
-      {"", BYTES(2), 1, false, 0, ""},
+      {"Key 22", BYTES(2), 1, false, 0, ""},
       {"Opposite tack COG", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"", BYTES(2), 1, false, 0, ""},
+      {"Key 23", BYTES(2), 1, false, 0, ""},
       {"Opposite tack target heading", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"", BYTES(2), 1, false, 0, ""},
+      {"Key 24", BYTES(2), 1, false, 0, ""},
       {"VMG performance", BYTES(2), 0.1, false, "%", ""},
-      {"", BYTES(2), 1, false, 0, ""},
+      {"Key 25", BYTES(2), 1, false, 0, ""},
       {"Average True Wind Direction", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"", BYTES(2), 1, false, 0, ""},
+      {"Key 26", BYTES(2), 1, false, 0, ""},
       {"Wind Phase", BYTES(2), RES_RADIANS, false, "rad", ""}, // Seems like an angle compared to something as it's not a straight translation to displayed angle
-      {"", BYTES(2), 1, false, 0, ""},
+      {"Key 27", BYTES(2), 1, false, 0, ""},
       {"Wind lift", BYTES(2), RES_RADIANS, false, "rad", ""}, // Seems like an angle compared to something as it's not a straight translation to displayed angle
       {0}}}
 
@@ -6441,35 +6471,6 @@ Pgn pgnList[] = {
       {"Field 4", BYTES(1), 1, false, 0, ""},
       {"Field 5", BYTES(1), 1, false, 0, ""},
       {"Timestamp", BYTES(4), 1, false, 0, "Increasing field, what else can it be?"},
-      {0}}}
-    ,
-    {"B&G: H5000 CPU Performance info",
-     130824,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     0x22,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=381", "B&G"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Field 4", BYTES(2), 1, false, 0, ""},
-      {"Field 5", BYTES(2), 1, false, 0, ""},
-      {"Polar boat speed", BYTES(2), 0.01, false, "m/s"},
-      {"Heading-To-Steer (Course)", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Field 7", BYTES(2), 1, false, 0, ""},
-      {"Polar performance", BYTES(2), RES_PERCENTAGE, false, "%", ""},
-      {"Field 9", BYTES(2), 1, false, 0, ""},
-      {"Opposite tack COG", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Field 11", BYTES(2), 1, false, 0, ""},
-      {"Opposite tack target heading", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Field 13", BYTES(2), 1, false, 0, ""},
-      {"VMG performance", BYTES(2), RES_PERCENTAGE, false, "%", ""},
-      {"Field 15", BYTES(2), 1, false, 0, ""},
-      {"Field 16", BYTES(2), 1, false, 0, ""},
-      {"Field 17", BYTES(2), 1, false, 0, ""},
-      {"Field 18", BYTES(2), 1, false, 0, ""},
-      {"Field 19", BYTES(2), 1, false, 0, ""},
-      {"Field 20", BYTES(2), 1, false, 0, ""},
       {0}}}
 
     /* M/V Dirona */
