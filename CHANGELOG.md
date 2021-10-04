@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Wip
 
+### Added
+
+- A `dbc-exporter` was added.
+
+### Changed
+
 common:
 - #248: Use R bit for PGN number calculation for use with J1939.
 
