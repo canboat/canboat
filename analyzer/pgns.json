@@ -12569,9 +12569,9 @@
             "Signed":false},
           {
             "Order":6,
-            "Id":"courseOverGround",
-            "Name":"Course Over Ground",
-            "BitLength":32,
+            "Id":"cog",
+            "Name":"COG",
+            "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
             "Units":"rad",
@@ -12582,7 +12582,7 @@
             "Id":"altitudeDelta",
             "Name":"Altitude Delta",
             "BitLength":16,
-            "BitOffset":64,
+            "BitOffset":48,
             "BitStart":0,
             "Signed":true}]},
       {

@@ -3585,7 +3585,7 @@ Pgn pgnList[] = {
       {"GNSS Quality", 2, 1, false, 0, ""},
       {"Direction", 2, 1, false, 0, ""},
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Course Over Ground", BYTES(4), RES_RADIANS, false, "rad", ""},
+      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Altitude Delta", BYTES(2), 1, true, 0, ""},
       {0}}}
 

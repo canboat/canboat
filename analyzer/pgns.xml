@@ -14195,9 +14195,9 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>courseOverGround</Id>
-          <Name>Course Over Ground</Name>
-          <BitLength>32</BitLength>
+          <Id>cog</Id>
+          <Name>COG</Name>
+          <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
@@ -14209,7 +14209,7 @@ limitations under the License.
           <Id>altitudeDelta</Id>
           <Name>Altitude Delta</Name>
           <BitLength>16</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Signed>true</Signed>
         </Field>

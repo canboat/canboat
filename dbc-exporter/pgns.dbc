@@ -1,4 +1,4 @@
-VERSION "Canboat export 2021-09-28T18:16:05.405006"
+VERSION "Canboat export 2021-10-04T15:46:17.426732"
 
 
 NS_ : 
@@ -853,6 +853,15 @@ BO_ 2583167998 PGN_129027_positionDeltaRapidUpd: 8 Vector__XXX
  SG_ timeDelta : 8|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2583168254 PGN_129028_altitudeDeltaRapidUpd: 8 Vector__XXX
+ SG_ altitudeDelta : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ cog : 32|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ reserved : 28|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ direction : 26|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ gnssQuality : 24|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ timeDelta : 8|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2583168510 PGN_129029_gnssPositionData: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1563,6 +1572,8 @@ CM_ BO_ 2583167742 "COG & SOG, Rapid Update";
 CM_ SG_ 2583167742 reserved_1 "Reserved";
 CM_ SG_ 2583167742 reserved "Reserved";
 CM_ BO_ 2583167998 "Position Delta, Rapid Update";
+CM_ BO_ 2583168254 "Altitude Delta, Rapid Update";
+CM_ SG_ 2583168254 reserved "Reserved";
 CM_ BO_ 2583168510 "GNSS Position Data";
 CM_ BO_ 2583169534 "Time & Date";
 CM_ SG_ 2583169534 localOffset "Minutes";
@@ -1740,6 +1751,7 @@ BA_ "SystemMessageLongSymbol" BO_ 2582780414 "PGN_127513_batteryConfigurationSta
 BA_ "SystemMessageLongSymbol" BO_ 2583103998 "PGN_128777_anchorWindlassOperatingStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2583104254 "PGN_128778_anchorWindlassMonitoringStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2583167998 "PGN_129027_positionDeltaRapidUpdate";
+BA_ "SystemMessageLongSymbol" BO_ 2583168254 "PGN_129028_altitudeDeltaRapidUpdate";
 BA_ "SystemMessageLongSymbol" BO_ 2583170814 "PGN_129038_aisClassAPositionReport";
 BA_ "SystemMessageLongSymbol" BO_ 2583171070 "PGN_129039_aisClassBPositionReport";
 BA_ "SystemMessageLongSymbol" BO_ 2583171326 "PGN_129040_aisClassBExtendedPositionReport";
