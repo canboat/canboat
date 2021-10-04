@@ -9693,8 +9693,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"switchBankInstance",
-            "Name":"Switch Bank Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -10614,8 +10614,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"inverterInstance",
-            "Name":"Inverter Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -29024,8 +29024,8 @@
             "Signed":false},
           {
             "Order":4,
-            "Id":"bankInstance",
-            "Name":"Bank Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -29199,8 +29199,8 @@
             "Signed":false},
           {
             "Order":4,
-            "Id":"bankInstance",
-            "Name":"Bank Instance",
+            "Id":"instance",
+            "Name":"Instance",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,

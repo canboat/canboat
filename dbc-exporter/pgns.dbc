@@ -1,4 +1,4 @@
-VERSION "Canboat export 2021-10-04T15:46:17.426732"
+VERSION "Canboat export 2021-10-04T15:49:07.384295"
 
 
 NS_ : 
@@ -638,7 +638,7 @@ BO_ 2582777598 PGN_127502_switchBankControl: 8 Vector__XXX
  SG_ switch3 : 12|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ switch2 : 10|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ switch1 : 8|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ switchBankInstance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582777854 PGN_127503_acInputStatus: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
@@ -676,7 +676,7 @@ BO_ 2582779390 PGN_127509_inverterStatus: 8 Vector__XXX
  SG_ operatingState : 24|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ dcInstance : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ acInstance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ inverterInstance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582779646 PGN_127510_chargerConfigurationS: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX

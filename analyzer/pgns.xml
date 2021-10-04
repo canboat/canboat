@@ -10924,8 +10924,8 @@ limitations under the License.
       <Fields>
         <Field>
           <Order>1</Order>
-          <Id>switchBankInstance</Id>
-          <Name>Switch Bank Instance</Name>
+          <Id>instance</Id>
+          <Name>Instance</Name>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -11976,8 +11976,8 @@ limitations under the License.
       <Fields>
         <Field>
           <Order>1</Order>
-          <Id>inverterInstance</Id>
-          <Name>Inverter Instance</Name>
+          <Id>instance</Id>
+          <Name>Instance</Name>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32682,8 +32682,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>bankInstance</Id>
-          <Name>Bank Instance</Name>
+          <Id>instance</Id>
+          <Name>Instance</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -32878,8 +32878,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>bankInstance</Id>
-          <Name>Bank Instance</Name>
+          <Id>instance</Id>
+          <Name>Instance</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>

@@ -17,6 +17,7 @@ common:
 
 analyzer:
 
+- #245: Instance field doesn't need to be qualified with Bank or Inverter, which is implicit.
 - #256: Fix length of COG in PGN 129028
 - #252: Further fixes for PGN 127507
 - #245: Updates for PGNs 126993, 127509, 129541, companylist. Added PGN 130823 Maretron.
