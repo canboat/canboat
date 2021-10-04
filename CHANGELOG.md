@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+actisense-serial:
+- #255: Fix handling of timeout argument
+
 common:
 - #248: Use R bit for PGN number calculation for use with J1939.
 

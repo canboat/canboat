@@ -279,7 +279,7 @@ int main(int argc, char **argv)
     }
   }
 
-  for (wait = 1;;)
+  for (wait = timeout;;)
   {
     unsigned char msg[BUFFER_SIZE];
     int           r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, wait);
@@ -314,7 +314,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      wait = 1;
+      wait = timeout;
       if (writeonly)
       {
         break;
