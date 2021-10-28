@@ -23,7 +23,7 @@ def read(*names, **kwargs):
 
 setup(
     name='canboat-dbc-exporter',
-    version='0.1.0',
+    version='0.1.1',
     description='Canboat DBC database export tool',
     author='Matti Airas',
     author_email='mairas@iki.fi',
