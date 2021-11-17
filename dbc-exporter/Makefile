@@ -13,7 +13,7 @@ dbc-exporter: venv
 venv:
 	python3 -m venv venv
 
-.PHONY: all venv dbc-exporter
+.PHONY: all dbc-exporter
 
 clean:
 	-venv/bin/python3 setup.py clean

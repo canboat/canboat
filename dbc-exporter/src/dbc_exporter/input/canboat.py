@@ -237,9 +237,11 @@ class CanboatReader:
         pgn_description = "Multiplexed message"
         pgn_length = max([v["Length"] for v in variants])
 
-        if pgn_length > 8:
+        valid_variants = [v for v in variants if v["Length"] < 8 and v["Type"] != "Fast"]
+
+        if len(valid_variants) < len(variants):
             logging.warning(
-                "PGN %d: Multiplexed fast packets not yet supported", pgn_number
+                "PGN %d: Ignoring fast packet variants", pgn_number
             )
             return None
 
@@ -247,9 +249,9 @@ class CanboatReader:
         reserved_field_ids = set()
 
         # get the multiplexing signal
-        multiplex_field = Field(variants[0]["Fields"][0], reserved_field_ids)
+        multiplex_field = Field(valid_variants[0]["Fields"][0], reserved_field_ids)
         multiplex_choices = {
-            variant["Fields"][0]["Match"]: variant["Id"] for variant in variants if "Match" in variant["Fields"][0]
+            variant["Fields"][0]["Match"]: variant["Id"] for variant in valid_variants if "Match" in variant["Fields"][0]
         }
         multiplex_field.enum_values = multiplex_choices
         multiplex_field.multiplexer = True
@@ -258,7 +260,7 @@ class CanboatReader:
 
         # get the signals for each variant
 
-        for variant in variants:
+        for variant in valid_variants:
             variant_signals = self._get_variant_signals(
                 variant, multiplex_signal, reserved_field_ids
             )
@@ -283,7 +285,7 @@ class CanboatReader:
         for json_field in variant["Fields"][1:]:
             field = Field(json_field, reserved_field_ids)
             # add the message id to the multiplexed field id
-            field.id = f"{variant_match}_{field.id}"
+            field.id = f"m{variant_match}_{field.id}"
             field.multiplexer_ids = [variant_match]
             signal = self._field_to_signal(field, multiplexer_signal)
             variant_signals.append(signal)

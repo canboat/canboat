@@ -1,4 +1,4 @@
-VERSION "Canboat export 2021-10-04T15:49:07.384295"
+VERSION "Canboat export 2021-10-28T18:20:16.718740"
 
 
 NS_ : 
@@ -48,28 +48,6 @@ BO_ 2565472510 PGN_59904_isoRequest: 8 Vector__XXX
 BO_ 2565538046 PGN_60160_isoTransportProtocolDa: 8 Vector__XXX
  SG_ data : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2565603582 PGN_60416_multiplexed: 8 Vector__XXX
- SG_ 32_pgn_3 m32 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 19_pgn_2 m19 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 17_pgn_1 m17 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 16_pgn m16 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 255_pgn_4 m255 : 32|24@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 32_reserved_2 m32 : 32|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 19_reserved_1 m19 : 32|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 16_packetsReply m16 : 32|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 32_packets_1 m32 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 19_totalNumberOfPacketsReceived m19 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 17_reserved m17 : 24|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 16_packets m16 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 255_reserved_3 m255 : 16|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 17_nextSid m17 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 255_reason m255 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 32_messageSize_1 m32 : 8|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 19_totalMessageSize m19 : 8|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 17_maxPackets m17 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 16_messageSize m16 : 8|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ groupFunctionCode M : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2565734654 PGN_60928_isoAddressClaim: 8 Vector__XXX
  SG_ reserved_1 : 63|1@1+ (1,0) [0|0] "" Vector__XXX
@@ -237,13 +215,6 @@ BO_ 2566784766 PGN_65030_generatorAverageBasicA: 8 Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
-BO_ 2566848766 PGN_65280_multiplexed: 8 Vector__XXX
- SG_ 1855_reserved_1 m1855 : 48|16@1+ (0,0) [0|0] "" Vector__XXX
- SG_ 1855_heave m1855 : 16|32@1- (0.001,0) [0|0] "m" Vector__XXX
- SG_ 1855_industryCode m1855 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 1855_reserved m1855 : 11|2@1+ (0,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode M : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2566849790 PGN_65284_maretronProprietaryDcB: 8 Vector__XXX
  SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ breakerCurrent : 32|16@1- (0.1,0) [0|0] "A" Vector__XXX
@@ -252,40 +223,6 @@ BO_ 2566849790 PGN_65284_maretronProprietaryDcB: 8 Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (0,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2566850046 PGN_65285_multiplexed: 8 Vector__XXX
- SG_ 140_actualTemperature m140 : 24|16@1+ (0.01,0) [0|0] "K" Vector__XXX
- SG_ 140_temperatureSource m140 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 135_bootState m135 : 16|4@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 140_industryCode_1 m140 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 135_industryCode m135 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 140_reserved_1 m140 : 11|2@1+ (0,0) [0|0] "" Vector__XXX
- SG_ 135_reserved m135 : 11|2@1+ (0,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode M : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2566850302 PGN_65286_multiplexed: 8 Vector__XXX
- SG_ 409_control m409 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 409_dimmer4 m409 : 48|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 409_dimmer3 m409 : 40|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 409_dimmer2 m409 : 32|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 409_dimmer1 m409 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 409_instance m409 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 135_industryCode_1 m135 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 409_industryCode m409 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 135_reserved_1 m135 : 11|2@1+ (0,0) [0|0] "" Vector__XXX
- SG_ 409_reserved m409 : 11|2@1+ (0,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode M : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2566850558 PGN_65287_multiplexed: 8 Vector__XXX
- SG_ 135_accessSeedKey m135 : 24|32@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 135_reserved_1 m135 : 22|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 135_accessLevel m135 : 19|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 135_formatCode m135 : 16|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 1857_industryCode_1 m1857 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 135_industryCode m135 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 1857_reserved_2 m1857 : 11|2@1+ (0,0) [0|0] "" Vector__XXX
- SG_ 135_reserved m135 : 11|2@1+ (0,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode M : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566850814 PGN_65288_seatalkAlarm: 8 Vector__XXX
  SG_ alarmPriority : 48|16@1+ (1,0) [0|0] "" Vector__XXX
@@ -1308,18 +1245,6 @@ BO_ 2583632126 PGN_130840_simnetDataUserGroupCo: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2583632894 PGN_130843_multiplexed: 8 Vector__XXX
- SG_ 1855_roll m1855 : 64|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
- SG_ 1855_pitch m1855 : 48|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
- SG_ 1855_yaw m1855 : 32|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
- SG_ 1855_b m1855 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 1855_a m1855 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 1857_industryCode_1 m1857 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 1855_industryCode m1855 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ 1857_reserved_1 m1857 : 11|2@1+ (0,0) [0|0] "" Vector__XXX
- SG_ 1855_reserved m1855 : 11|2@1+ (0,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode M : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2583633662 PGN_130846_furunoMotionSensorSta: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1356,22 +1281,6 @@ CM_ SG_ 2565341438 pgn "Parameter Group Number of requested information";
 CM_ SG_ 2565341438 reserved "Reserved";
 CM_ BO_ 2565472510 "ISO Request";
 CM_ BO_ 2565538046 "ISO Transport Protocol, Data Transfer";
-CM_ BO_ 2565603582 "Multiplexed message";
-CM_ SG_ 2565603582 32_pgn_3 "PGN";
-CM_ SG_ 2565603582 19_pgn_2 "PGN";
-CM_ SG_ 2565603582 17_pgn_1 "PGN";
-CM_ SG_ 2565603582 16_pgn "PGN";
-CM_ SG_ 2565603582 255_pgn_4 "PGN";
-CM_ SG_ 2565603582 16_packetsReply "packets sent in response to CTS";
-CM_ SG_ 2565603582 32_packets_1 "frames";
-CM_ SG_ 2565603582 19_totalNumberOfPacketsReceived "packets";
-CM_ SG_ 2565603582 16_packets "packets";
-CM_ SG_ 2565603582 17_nextSid "packet";
-CM_ SG_ 2565603582 32_messageSize_1 "bytes";
-CM_ SG_ 2565603582 19_totalMessageSize "bytes";
-CM_ SG_ 2565603582 17_maxPackets "packets before waiting for next CTS";
-CM_ SG_ 2565603582 16_messageSize "bytes";
-CM_ SG_ 2565603582 groupFunctionCode "RTS";
 CM_ BO_ 2565734654 "ISO Address Claim";
 CM_ SG_ 2565734654 reserved_1 "ISO Self Configurable";
 CM_ SG_ 2565734654 systemInstance "ISO Device Class Instance";
@@ -1410,24 +1319,9 @@ CM_ BO_ 2566783998 "Generator Phase A Basic AC Quantities";
 CM_ BO_ 2566784254 "Generator Total AC Reactive Power";
 CM_ BO_ 2566784510 "Generator Total AC Power";
 CM_ BO_ 2566784766 "Generator Average Basic AC Quantities";
-CM_ BO_ 2566848766 "Multiplexed message";
-CM_ SG_ 2566848766 1855_industryCode "Marine Industry";
-CM_ SG_ 2566848766 manufacturerCode "Furuno";
 CM_ BO_ 2566849790 "Maretron: Proprietary DC Breaker Current";
 CM_ SG_ 2566849790 industryCode "Marine Industry";
 CM_ SG_ 2566849790 manufacturerCode "Maretron";
-CM_ BO_ 2566850046 "Multiplexed message";
-CM_ SG_ 2566850046 140_industryCode_1 "Marine Industry";
-CM_ SG_ 2566850046 135_industryCode "Marine Industry";
-CM_ SG_ 2566850046 manufacturerCode "Airmar";
-CM_ BO_ 2566850302 "Multiplexed message";
-CM_ SG_ 2566850302 135_industryCode_1 "Marine Industry";
-CM_ SG_ 2566850302 manufacturerCode "Chetco";
-CM_ BO_ 2566850558 "Multiplexed message";
-CM_ SG_ 2566850558 135_accessSeedKey "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208.";
-CM_ SG_ 2566850558 1857_industryCode_1 "Marine Industry";
-CM_ SG_ 2566850558 135_industryCode "Marine Industry";
-CM_ SG_ 2566850558 manufacturerCode "Airmar";
 CM_ BO_ 2566850814 "Seatalk: Alarm";
 CM_ SG_ 2566850814 industryCode "Marine Industry";
 CM_ SG_ 2566850814 manufacturerCode "Raymarine";
@@ -1686,10 +1580,6 @@ CM_ BO_ 2583630846 "Simnet: Set Engine and Tank Configuration";
 CM_ BO_ 2583631614 "Simnet: Fluid Level Warning";
 CM_ BO_ 2583631870 "Simnet: Pressure Sensor Configuration";
 CM_ BO_ 2583632126 "Simnet: Data User Group Configuration";
-CM_ BO_ 2583632894 "Multiplexed message";
-CM_ SG_ 2583632894 1857_industryCode_1 "Marine Industry";
-CM_ SG_ 2583632894 1855_industryCode "Marine Industry";
-CM_ SG_ 2583632894 manufacturerCode "Furuno";
 CM_ BO_ 2583633662 "Furuno: Motion Sensor Status Extended";
 CM_ BO_ 2583633918 "SeaTalk: Node Statistics";
 CM_ BO_ 2583634942 "Simnet: Event Reply: AP command";
@@ -1699,8 +1589,10 @@ CM_ BO_ 2583642622 "Airmar: Heater Control";
 CM_ BO_ 2583658750 "Airmar: POST";
 BA_DEF_ BO_  "SystemMessageLongSymbol" STRING ;
 BA_DEF_ SG_  "SystemSignalLongSymbol" STRING ;
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 65535;
 BA_DEF_DEF_  "SystemMessageLongSymbol" "";
 BA_DEF_DEF_  "SystemSignalLongSymbol" "";
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
 BA_ "SystemMessageLongSymbol" BO_ 2565538046 "PGN_60160_isoTransportProtocolDataTransfer";
 BA_ "SystemMessageLongSymbol" BO_ 2565865726 "PGN_61440_unknownSingleFrameNonAddressed";
 BA_ "SystemMessageLongSymbol" BO_ 2566777342 "PGN_65001_bus1PhaseCBasicAcQuantities";
@@ -1813,7 +1705,6 @@ BA_ "SystemMessageLongSymbol" BO_ 2583633662 "PGN_130846_furunoMotionSensorStatu
 BA_ "SystemMessageLongSymbol" BO_ 2583634942 "PGN_130851_simnetEventReplyApCommand";
 BA_ "SystemMessageLongSymbol" BO_ 2583642366 "PGN_130880_airmarAdditionalWeatherData";
 VAL_ 2565341438 control 0 "ACK" 1 "NAK" 2 "Access Denied" 3 "Address Busy" ;
-VAL_ 2565603582 groupFunctionCode 16 "isoTransportProtocolConnectionManagementRequestToSend" 17 "isoTransportProtocolConnectionManagementClearToSend" 19 "isoTransportProtocolConnectionManagementEndOfMessage" 32 "isoTransportProtocolConnectionManagementBroadcastAnnounce" 255 "isoTransportProtocolConnectionManagementAbort" ;
 VAL_ 2565734654 industryGroup 0 "Global" 1 "Highway" 2 "Agriculture" 3 "Construction" 4 "Marine" 5 "Industrial" ;
 VAL_ 2565734654 deviceClass 0 "Reserved for 2000 Use" 10 "System tools" 20 "Safety systems" 25 "Internetwork device" 30 "Electrical Distribution" 35 "Electrical Generation" 40 "Steering and Control surfaces" 50 "Propulsion" 60 "Navigation" 70 "Communication" 75 "Sensor Communication Interface" 80 "Instrumentation/general systems" 85 "External Environment" 90 "Internal Environment" 100 "Deck + cargo + fishing equipment systems" 120 "Display" 125 "Entertainment" ;
 VAL_ 2565865726 industryCode 0 "Global" 1 "Highway" 2 "Agriculture" 3 "Construction" 4 "Marine" 5 "Industrial" ;
@@ -1825,14 +1716,6 @@ VAL_ 2566781950 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566782718 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566783486 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566784254 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
-VAL_ 2566848766 manufacturerCode 1855 "furunoHeave" ;
-VAL_ 2566850046 140_temperatureSource 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" ;
-VAL_ 2566850046 135_bootState 0 "in Startup Monitor" 1 "running Bootloader" 2 "running Application" ;
-VAL_ 2566850046 manufacturerCode 135 "airmarBootStateAcknowledgment" 140 "lowranceTemperature" ;
-VAL_ 2566850302 manufacturerCode 409 "chetcoDimmer" 135 "airmarBootStateRequest" ;
-VAL_ 2566850558 135_accessLevel 0 "Locked" 1 "unlocked level 1" 2 "unlocked level 2" ;
-VAL_ 2566850558 135_formatCode 1 "Format code 1" ;
-VAL_ 2566850558 manufacturerCode 135 "airmarAccessLevel" 1857 "simnetConfigureTemperatureSensor" ;
 VAL_ 2566850814 alarmGroup 0 "Instrument" 1 "Autopilot" 2 "Radar" 3 "Chart Plotter" 4 "AIS" ;
 VAL_ 2566850814 alarmId 0 "No Alarm" 1 "Shallow Depth" 2 "Deep Depth" 3 "Shallow Anchor" 4 "Deep Anchor" 5 "Off Course" 6 "AWA High" 7 "AWA Low" 8 "AWS High" 9 "AWS Low" 10 "TWA High" 11 "TWA Low" 12 "TWS High" 13 "TWS Low" 14 "WP Arrival" 15 "Boat Speed High" 16 "Boat Speed Low" 17 "Sea Temp High" 18 "Sea Temp Low" 19 "Pilot Watch" 20 "Pilot Off Course" 21 "Pilot Wind Shift" 22 "Pilot Low Battery" 23 "Pilot Last Minute Of Watch" 24 "Pilot No NMEA Data" 25 "Pilot Large XTE" 26 "Pilot NMEA DataError" 27 "Pilot CU Disconnected" 28 "Pilot Auto Release" 29 "Pilot Way Point Advance" 30 "Pilot Drive Stopped" 31 "Pilot Type Unspecified" 32 "Pilot Calibration Required" 33 "Pilot Last Heading" 34 "Pilot No Pilot" 35 "Pilot Route Complete" 36 "Pilot Variable Text" 37 "GPS Failure" 38 "MOB" 39 "Seatalk1 Anchor" 40 "Pilot Swapped Motor Power" 41 "Pilot Standby Too Fast To Fish" 42 "Pilot No GPS Fix" 43 "Pilot No GPS COG" 44 "Pilot Start Up" 45 "Pilot Too Slow" 46 "Pilot No Compass" 47 "Pilot Rate Gyro Fault" 48 "Pilot Current Limit" 49 "Pilot Way Point Advance Port" 50 "Pilot Way Point Advance Stbd" 51 "Pilot No Wind Data" 52 "Pilot No Speed Data" 53 "Pilot Seatalk Fail1" 54 "Pilot Seatalk Fail2" 55 "Pilot Warning Too Fast To Fish" 56 "Pilot Auto Dockside Fail" 57 "Pilot Turn Too Fast" 58 "Pilot No Nav Data" 59 "Pilot Lost Waypoint Data" 60 "Pilot EEPROM Corrupt" 61 "Pilot Rudder Feedback Fail" 62 "Pilot Autolearn Fail1" 63 "Pilot Autolearn Fail2" 64 "Pilot Autolearn Fail3" 65 "Pilot Autolearn Fail4" 66 "Pilot Autolearn Fail5" 67 "Pilot Autolearn Fail6" 68 "Pilot Warning Cal Required" 69 "Pilot Warning OffCourse" 70 "Pilot Warning XTE" 71 "Pilot Warning Wind Shift" 72 "Pilot Warning Drive Short" 73 "Pilot Warning Clutch Short" 74 "Pilot Warning Solenoid Short" 75 "Pilot Joystick Fault" 76 "Pilot No Joystick Data" 77 "not assigned" 78 "not assigned" 79 "not assigned" 80 "Pilot Invalid Command" 81 "AIS TX Malfunction" 82 "AIS Antenna VSWR fault" 83 "AIS Rx channel 1 malfunction" 84 "AIS Rx channel 2 malfunction" 85 "AIS No sensor position in use" 86 "AIS No valid SOG information" 87 "AIS No valid COG information" 88 "AIS 12V alarm" 89 "AIS 6V alarm" 90 "AIS Noise threshold exceeded channel A" 91 "AIS Noise threshold exceeded channel B" 92 "AIS Transmitter PA fault" 93 "AIS 3V3 alarm" 94 "AIS Rx channel 70 malfunction" 95 "AIS Heading lost/invalid" 96 "AIS internal GPS lost" 97 "AIS No sensor position" 98 "AIS Lock failure" 99 "AIS Internal GGA timeout" 100 "AIS Protocol stack restart" 101 "Pilot No IPS communications" 102 "Pilot Power-On or Sleep-Switch Reset While Engaged     " 103 "Pilot Unexpected Reset While Engaged" 104 "AIS Dangerous Target" 105 "AIS Lost Target" 106 "AIS Safety Related Message (used to silence)" 107 "AIS Connection Lost" 108 "No Fix" ;
 VAL_ 2566850814 alarmStatus 0 "Alarm condition not met" 1 "Alarm condition met and not silenced" 2 "Alarm condition met and silenced" ;
@@ -1942,7 +1825,6 @@ VAL_ 2583497214 source 0 "Inside" 1 "Outside" ;
 VAL_ 2583497470 source 0 "Atmospheric" 1 "Water" 2 "Steam" 3 "Compressed Air" 4 "Hydraulic" 5 "Filter" 6 "AltimeterSetting" 7 "Oil" 8 "Fuel" ;
 VAL_ 2583497726 source 0 "Atmospheric" 1 "Water" 2 "Steam" 3 "Compressed Air" 4 "Hydraulic" 5 "Filter" 6 "AltimeterSetting" 7 "Oil" 8 "Fuel" ;
 VAL_ 2583497982 source 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" ;
-VAL_ 2583632894 manufacturerCode 1855 "furunoHeelAngleRollInformation" 1857 "simnetSonarStatusFrequencyAndDspVoltage" ;
 
 
 
