@@ -19,6 +19,7 @@
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
+ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
 TARGETS=$(ANALYZER)
 XMLFILE=pgns.xml
 JSONFILE=pgns.json
@@ -26,18 +27,24 @@ NGTXMLFILE=pgns-ngt.xml
 NGTJSONFILE=pgns-ngt.json
 IKXMLFILE=pgns-ik.xml
 IKJSONFILE=pgns-ik.json
+HEADERS=analyzer.h pgn.h company.h
+COMMONDIR=../common
+COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h
 
 CFLAGS?=-Wall -O2
 
 all: $(TARGETS)
 
-$(ANALYZER): analyzer.c pgn.c analyzer.h pgn.h ../common/common.c ../common/common.h ../common/license.h Makefile
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I../common pgn.c analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+$(ANALYZER): analyzer.c pgn.c $(HEADERS) $(COMMON) Makefile
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c $(COMMONDIR)/common.c $(LDLIBS$(LDLIBS-$(@)))
 
-json: $(ANALYZER) pgns2json.xslt
-	$(ANALYZER) -explain-xml >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
-	$(ANALYZER) -explain-ngt-xml >$(NGTXMLFILE) && xsltproc pgns2json.xslt $(NGTXMLFILE) >$(NGTJSONFILE)
-	$(ANALYZER) -explain-ik-xml >$(IKXMLFILE) && xsltproc pgns2json.xslt $(IKXMLFILE) >$(IKJSONFILE)
+$(ANALYZER_EXPLAIN): analyzer-explain.c pgn.c $(HEADERS) $(COMMON) Makefile
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c $(COMMONDIR)/common.c $(LDLIBS$(LDLIBS-$(@)))
+
+json: $(ANALYZER_EXPLAIN) pgns2json.xslt
+	$(ANALYZER_EXPLAIN) -explain-xml >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
+	$(ANALYZER_EXPLAIN) -explain-ngt-xml >$(NGTXMLFILE) && xsltproc pgns2json.xslt $(NGTXMLFILE) >$(NGTJSONFILE)
+	$(ANALYZER_EXPLAIN) -explain-ik-xml >$(IKXMLFILE) && xsltproc pgns2json.xslt $(IKXMLFILE) >$(IKJSONFILE)
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

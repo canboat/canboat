@@ -29,7 +29,7 @@ limitations under the License.
 
 typedef struct
 {
-  char *   name;
+  char    *name;
   uint32_t size; /* Size in bits. All fields are contiguous in message; use 'reserved' fields to fill in empty bits. */
 #define LEN_VARIABLE (0)
   double resolution; /* Either a positive real value or one of the following RES_ special values */
@@ -51,7 +51,7 @@ typedef struct
 #define RES_STRING (-12.0)
 #define RES_FLOAT (-13.0)
 #define RES_PRESSURE (-14.0)
-#define RES_STRINGLZ (-15.0) /* ASCII string starting with length byte and terminated by zero byte */
+#define RES_STRINGLZ (-15.0)  /* ASCII string starting with length byte and terminated by zero byte */
 #define RES_STRINGLAU (-16.0) /* ASCII or UNICODE string starting with length byte and ASCII/Unicode byte */
 #define RES_DECIMAL (-17.0)
 #define RES_BITFIELD (-18.0)
@@ -65,7 +65,7 @@ typedef struct
   char *units;   /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
                   * case it contains a set of lookup values.
                   */
-  char *  description;
+  char   *description;
   int32_t offset;  /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
                     * of two's complement as used by NMEA 2000.
                     * See http://en.wikipedia.org/wiki/Offset_binary
@@ -157,7 +157,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
 
 #define LOOKUP_ATON_TYPE                                 \
   (",0=Default: Type of AtoN not specified"              \
-   ",1=Reference point"                                   \
+   ",1=Reference point"                                  \
    ",2=RACON"                                            \
    ",3=Fixed structure off-shore"                        \
    ",4=Reserved for future use"                          \
@@ -258,7 +258,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
 #define LOOKUP_WATER_REFERENCE (",0=Paddle wheel,1=Pitot tube,2=Doppler,3=Correlation (ultra sound),4=Electro Magnetic")
 
 #define LOOKUP_YES_NO \
-  (",0=No" \
+  (",0=No"            \
    ",1=Yes") /* Note that Error and Unknown are automatically decoded */
 #define LOOKUP_OK_WARNING (",0=OK,1=Warning")
 #define LOOKUP_OFF_ON \
@@ -753,8 +753,8 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",2=Retract"                         \
    ",3=Reserved")
 
-#define LOOKUP_THRUSTER_CONTROL_EVENTS       \
-  (",0=Another device controlling thruster"  \
+#define LOOKUP_THRUSTER_CONTROL_EVENTS      \
+  (",0=Another device controlling thruster" \
    ",1=Boat speed too fast to safely use thruster")
 
 #define LOOKUP_THRUSTER_MOTOR_TYPE \
@@ -764,12 +764,12 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
    ",3=24VAC"                      \
    ",4=Hydraulic")
 
-#define LOOKUP_THRUSTER_MOTOR_EVENTS       \
-  (",0=Motor over temperature cutout"  \
-   ",1=Motor over current cutout"  \
-   ",2=Low oil level warning"  \
-   ",3=Oil over temperature warning"  \
-   ",4=Controller under voltage cutout"  \
+#define LOOKUP_THRUSTER_MOTOR_EVENTS    \
+  (",0=Motor over temperature cutout"   \
+   ",1=Motor over current cutout"       \
+   ",2=Low oil level warning"           \
+   ",3=Oil over temperature warning"    \
+   ",4=Controller under voltage cutout" \
    ",5=Manufacturer defined")
 
 typedef enum PacketComplete
@@ -794,7 +794,7 @@ typedef enum PacketType
 
 typedef struct
 {
-  char *     description;
+  char      *description;
   uint32_t   pgn;
   uint16_t   complete;        /* Either PACKET_COMPLETE or bit values set for various unknown items */
   PacketType type;            /* Single, Fast or ISO11783 */
@@ -802,7 +802,7 @@ typedef struct
   uint32_t   repeatingFields; /* How many fields at the end repeat until the PGN is exhausted? */
   Field      fieldList[30]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t   fieldCount;    /* Filled by C, no need to set in initializers. */
-  char *     camelDescription; /* Filled by C, no need to set in initializers. */
+  char      *camelDescription; /* Filled by C, no need to set in initializers. */
   bool       unknownPgn;       /* true = this is a catch-all for unknown PGNs */
 } Pgn;
 
@@ -826,6 +826,8 @@ int parseRawFormatAirmar(char *msg, RawMessage *m, bool showJson);
 int parseRawFormatChetco(char *msg, RawMessage *m, bool showJson);
 int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolute);
 int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson);
+
+void camelCase(bool upperCamelCase);
 
 #ifdef GLOBALS
 Pgn pgnList[] = {
@@ -3010,21 +3012,36 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},   {"Switch1", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch2", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch3", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch4", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch5", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch6", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch7", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch8", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch9", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch10", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch11", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch12", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch13", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch14", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch15", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch16", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch17", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch18", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch19", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch20", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch21", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch22", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch23", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch24", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch25", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch26", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch27", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch28", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {0}}}
+     {{"Instance", BYTES(1), 1, false, 0, ""},
+      {"Switch1", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch2", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch3", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch4", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch5", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch6", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch7", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch8", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch9", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch10", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch11", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch12", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch13", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch14", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch15", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch16", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch17", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch18", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch19", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch20", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch21", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch22", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch23", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch24", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch25", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch26", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch27", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {"Switch28", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      {0}}}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
@@ -3155,7 +3172,12 @@ Pgn pgnList[] = {
      {{"Instance", BYTES(1), 1, false, 0, ""},
       {"AC Instance", BYTES(1), 1, false, 0, ""},
       {"DC Instance", BYTES(1), 1, false, 0, ""},
-      {"Operating State", 4, RES_LOOKUP, false, ",0=Invert,1=AC Passthru,2=Load Sense,3=Fault,4=Disabled,14=Error,15=Data Not Available", ""},
+      {"Operating State",
+       4,
+       RES_LOOKUP,
+       false,
+       ",0=Invert,1=AC Passthru,2=Load Sense,3=Fault,4=Disabled,14=Error,15=Data Not Available",
+       ""},
       {"Inverter Enable/Disable", 2, RES_LOOKUP, false, "0=Disabled,1=Enabled,2=Error,3=Unknown", ""},
       {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
       {0}}}
@@ -3384,7 +3406,7 @@ Pgn pgnList[] = {
       {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Operating Time", BYTES(2), 1, false, "minutes", ""},
       {0}}}
-    
+
     /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
     ,
     {"Speed",
@@ -7093,7 +7115,7 @@ typedef struct
 
 #ifdef GLOBAL_COMPANYLIST
 static Company companyList[] = {
-#define COMPANY(name,id) { name, id },
+#define COMPANY(name, id) {name, id},
 #include "company.h"
 #undef COMPANY
 };

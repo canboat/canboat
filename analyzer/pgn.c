@@ -354,7 +354,7 @@ static int setParsedValues(RawMessage *m, unsigned int prio, unsigned int pgn, u
 int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, junk, r, i;
-  char *       p;
+  char        *p;
   unsigned int data[8];
 
   p = findOccurrence(msg, ',', 1);
@@ -411,7 +411,7 @@ int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
 int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, r, i;
-  char *       p;
+  char        *p;
 
   p = findOccurrence(msg, ',', 1);
   if (!p)
@@ -469,7 +469,7 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
 int parseRawFormatAirmar(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, i;
-  char *       p;
+  char        *p;
   unsigned int id;
 
   p = findOccurrence(msg, ' ', 1);
@@ -531,7 +531,7 @@ int parseRawFormatChetco(char *msg, RawMessage *m, bool showJson)
   unsigned int tstamp;
   time_t       t;
   struct tm    tm;
-  char *       p;
+  char        *p;
 
   if (*msg == 0 || *msg == '\n')
   {
@@ -578,7 +578,7 @@ int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolu
   unsigned int seq, tstamp, pgn, src, dst, prio, single, count;
   time_t       t;
   struct tm    tm;
-  char *       p;
+  char        *p;
   int          consumed;
   unsigned int i;
 
@@ -681,8 +681,8 @@ Parameters","fields":{"Temperature Source":"Sea Temperature","Temperature":13.39
 */
 int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
 {
-  char *       token;
-  char *       nexttoken;
+  char        *token;
+  char        *nexttoken;
   time_t       tiden;
   struct tm    tm;
   unsigned int msgid;
@@ -729,4 +729,55 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
   }
 
   return setParsedValues(m, prio, pgn, dst, src, i);
+}
+
+static char *camelize(const char *str, bool upperCamelCase)
+{
+  size_t len         = strlen(str);
+  char  *ptr         = malloc(len + 1);
+  char  *s           = ptr;
+  bool   lastIsAlpha = !upperCamelCase;
+
+  if (!s)
+  {
+    return 0;
+  }
+
+  for (s = ptr; *str; str++)
+  {
+    if (isalpha(*str) || isdigit(*str))
+    {
+      if (lastIsAlpha)
+      {
+        *s = tolower(*str);
+      }
+      else
+      {
+        *s          = toupper(*str);
+        lastIsAlpha = true;
+      }
+      s++;
+    }
+    else
+    {
+      lastIsAlpha = false;
+    }
+  }
+
+  *s = 0;
+  return ptr;
+}
+
+void camelCase(bool upperCamelCase)
+{
+  int i, j;
+
+  for (i = 0; i < pgnListSize; i++)
+  {
+    pgnList[i].camelDescription = camelize(pgnList[i].description, upperCamelCase);
+    for (j = 0; j < ARRAY_SIZE(pgnList[i].fieldList) && pgnList[i].fieldList[j].name; j++)
+    {
+      pgnList[i].fieldList[j].camelName = camelize(pgnList[i].fieldList[j].name, upperCamelCase);
+    }
+  }
 }
