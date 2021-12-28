@@ -52,8 +52,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -63,8 +63,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -74,8 +74,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -119,8 +119,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -130,8 +130,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -141,8 +141,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -205,8 +205,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -216,8 +216,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -227,8 +227,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -461,8 +461,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -472,8 +472,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>

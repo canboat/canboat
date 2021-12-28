@@ -1150,7 +1150,7 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
 
     else if (field->resolution == RES_LOOKUP && field->lookupValue)
     {
-      char *s = field->lookupValue[value];
+      const char *s = field->lookupValue[value];
 
       if (s)
       {
@@ -1203,7 +1203,8 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
         logDebug("RES_BITFIELD is bit %u value %" PRIx64 " set %d\n", bit, bitValue, (value & value) >= 0);
         if ((value & bitValue) != 0)
         {
-          char *s = field->lookupValue[value];
+          const char *s = field->lookupValue[value];
+
           if (s)
           {
             if (showJson)

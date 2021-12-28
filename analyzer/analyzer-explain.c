@@ -59,6 +59,23 @@ size_t          heapSize = 0;
 int g_variableFieldRepeat[2]; // Actual number of repetitions
 int g_variableFieldIndex;
 
+typedef struct
+{
+  const char  *name;
+  uint32_t     size;
+  const char **values;
+} Enumeration;
+
+Enumeration lookupEnums[] = {
+#define LOOKUP_TYPE(type, length) {.name = xstr(type), .size = length, .values = lookupValue##type},
+#include "lookup.h"
+};
+
+Enumeration bitfieldEnums[] = {
+#define LOOKUP_TYPE_BITFIELD(type, length) {.name = xstr(type), .size = length, .values = lookupValue##type},
+#include "lookup.h"
+};
+
 static void explain(void);
 static void explainXML(bool, bool, bool);
 
@@ -223,13 +240,25 @@ static void explainPGN(Pgn pgn)
       printf("                  Offset: %d\n", f.offset);
     }
 
+    if (f.lookupName)
+    {
+      if (f.resolution == RES_LOOKUP)
+      {
+        printf("                  Enumeration: %s\n", f.lookupName);
+      }
+      if (f.resolution == RES_BITFIELD)
+      {
+        printf("                  BitEnumeration: %s\n", f.lookupName);
+      }
+    }
+
     if (f.resolution == RES_LOOKUP && f.lookupValue)
     {
       uint32_t maxValue = (1 << f.size) - 1;
       printf("                  Range: 0..%u\n", maxValue);
       for (uint32_t i = 0; i <= maxValue; i++)
       {
-        char *s = f.lookupValue[i];
+        const char *s = f.lookupValue[i];
 
         if (s)
         {
@@ -245,7 +274,7 @@ static void explainPGN(Pgn pgn)
       printf("           BitRange: 0..%u\n", maxValue);
       for (uint32_t i = 0; i < maxValue; i++)
       {
-        char *s = f.lookupValue[i];
+        const char *s = f.lookupValue[i];
 
         if (s)
         {
@@ -394,21 +423,21 @@ static void explainPGNXML(Pgn pgn)
         Resolution t = types[-1 * (int) f.resolution - 1];
         if (t.name)
         {
-          printf("                 <Type>%s</Type>\n", t.name);
+          printf("          <Type>%s</Type>\n", t.name);
         }
         if (t.resolution)
         {
-          printf("                 <Resolution>%s</Resolution>\n", t.resolution);
+          printf("          <Resolution>%s</Resolution>\n", t.resolution);
         }
         else if (f.resolution == RES_LATITUDE || f.resolution == RES_LONGITUDE)
         {
           if (f.size == BYTES(8))
           {
-            printf("                 <Resolution>%.16f</Resolution>\n", 1e-16);
+            printf("          <Resolution>%.16f</Resolution>\n", 1e-16);
           }
           else
           {
-            printf("                 <Resolution>%.7f</Resolution>\n", 1e-7);
+            printf("          <Resolution>%.7f</Resolution>\n", 1e-7);
           }
         }
       }
@@ -426,11 +455,11 @@ static void explainPGNXML(Pgn pgn)
       {
         uint32_t maxValue = (1 << f.size) - 1;
 
-        printf("          <EnumValues>\n");
+        printf("          <EnumValues Name='%s'>\n", f.lookupName);
 
         for (uint32_t i = 0; i <= maxValue; i++)
         {
-          char *s = f.lookupValue[i];
+          const char *s = f.lookupValue[i];
 
           if (s)
           {
@@ -444,11 +473,11 @@ static void explainPGNXML(Pgn pgn)
       {
         uint32_t maxValue = f.size;
 
-        printf("          <EnumBitValues>\n");
+        printf("          <EnumBitValues Name='%s'>\n", f.lookupName);
 
         for (uint32_t i = 0; i < maxValue; i++)
         {
-          char *s = f.lookupValue[i];
+          const char *s = f.lookupValue[i];
 
           if (s)
           {
@@ -507,9 +536,44 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
          "  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
          "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
          "  <License>Apache License Version 2.0</License>\n"
-         "  <Version>" VERSION "</Version>\n"
-         "  <PGNs>\n");
+         "  <Version>" VERSION "</Version>\n");
 
+  if (normal)
+  {
+    printf("  <Enumerations>\n");
+
+    for (i = 0; i < ARRAY_SIZE(lookupEnums); i++)
+    {
+      uint32_t maxValue = (1 << lookupEnums[i].size) - 1;
+      printf("    <Enumeration Name='%s' MaxValue='%u'>\n", lookupEnums[i].name, maxValue);
+      for (int j = 0; j <= maxValue; j++)
+      {
+        if (lookupEnums[i].values[j])
+        {
+          printf("      <EnumPair Value='%u' Name='%s' />\n", j, lookupEnums[i].values[j]);
+        }
+      }
+      printf("    </Enumeration>\n");
+    }
+
+    for (i = 0; i < ARRAY_SIZE(bitfieldEnums); i++)
+    {
+      uint32_t maxValue = bitfieldEnums[i].size - 1;
+      printf("    <BitEnumeration Name='%s' MaxValue='%u'>\n", bitfieldEnums[i].name, maxValue);
+      for (int j = 0; j <= maxValue; j++)
+      {
+        if (bitfieldEnums[i].values[j])
+        {
+          printf("      <EnumPair Bit='%u' Name='%s' />\n", j, bitfieldEnums[i].values[j]);
+        }
+      }
+      printf("    </BitEnumeration>\n");
+    }
+
+    printf("  </Enumerations>\n");
+  }
+
+  printf("  <PGNs>\n");
   for (i = 1; i < ARRAY_SIZE(pgnList); i++)
   {
     int pgn = pgnList[i].pgn;

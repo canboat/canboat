@@ -24,17 +24,14 @@ limitations under the License.
 
 #include "analyzer.h"
 
-#define LOOKUP_TYPE(type, length)            \
-  char    *lookupValue##type[1 << (length)]; \
-  uint32_t lookupLength##type = 1 << (length);
+#define LOOKUP_TYPE(type, length)               \
+  const char *lookupValue##type[1 << (length)]; \
+  uint32_t    lookupLength##type = 1 << (length);
 #define LOOKUP_TYPE_BITFIELD(type, length) \
-  char    *lookupValue##type[length];      \
-  uint32_t lookupLength##type = length;
+  const char *lookupValue##type[length];   \
+  uint32_t    lookupLength##type = length;
 
 #include "lookup.h"
-
-#define xstr(s) str(s)
-#define str(s) #s
 
 #define FILL(a, x, y)                                                 \
   if (a[(x)] != NULL)                                                 \

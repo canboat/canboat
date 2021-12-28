@@ -185,6 +185,10 @@ int writeSerial(int handle, const uint8_t *data, size_t len);
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 #endif
 
+// C stringify operations with macro names
+#define xstr(s) str(s)
+#define str(s) #s
+
 /*
  * Notes on the NMEA 2000 packet structure
  * ---------------------------------------

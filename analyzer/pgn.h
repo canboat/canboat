@@ -73,23 +73,25 @@ typedef struct
                    */
 
   /* The following fields are filled by C, no need to set in initializers */
-  char  *camelName;
-  char **lookupValue;
+  char        *camelName;
+  const char **lookupValue;
+  const char  *lookupName;
 } Field;
 
-#define LOOKUP_FIELD(nam, len, typ)                                                     \
-  {                                                                                     \
-    .name = nam, .size = len, .resolution = RES_LOOKUP, .lookupValue = lookupValue##typ \
+#define LOOKUP_FIELD(nam, len, typ)                                                                              \
+  {                                                                                                              \
+    .name = nam, .size = len, .resolution = RES_LOOKUP, .lookupValue = lookupValue##typ, .lookupName = xstr(typ) \
   }
 
-#define LOOKUP_FIELD_DESC(nam, len, typ, desc)                                                               \
-  {                                                                                                          \
-    .name = nam, .size = len, .resolution = RES_LOOKUP, .lookupValue = lookupValue##typ, .description = desc \
+#define LOOKUP_FIELD_DESC(nam, len, typ, desc)                                                                    \
+  {                                                                                                               \
+    .name = nam, .size = len, .resolution = RES_LOOKUP, .lookupValue = lookupValue##typ, .lookupName = xstr(typ), \
+    .description = desc                                                                                           \
   }
 
-#define LOOKUP_BITFIELD(nam, len, typ)                                                    \
-  {                                                                                       \
-    .name = nam, .size = len, .resolution = RES_BITFIELD, .lookupValue = lookupValue##typ \
+#define LOOKUP_BITFIELD(nam, len, typ)                                                                             \
+  {                                                                                                                \
+    .name = nam, .size = len, .resolution = RES_BITFIELD, .lookupValue = lookupValue##typ, .lookupName = xstr(typ) \
   }
 
 typedef struct
@@ -120,12 +122,12 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
                                                         {"Temperature (hires)", "0.001"},
                                                         {"Pressure (hires)", "0.1"}};
 
-#define LOOKUP_TYPE(type, length)                   \
-  extern char    *lookupValue##type[1 << (length)]; \
-  extern uint32_t lookupLength##type;
-#define LOOKUP_TYPE_BITFIELD(type, length)   \
-  extern char    *lookupValue##type[length]; \
-  extern uint32_t lookupLength##type;
+#define LOOKUP_TYPE(type, length)                      \
+  extern const char *lookupValue##type[1 << (length)]; \
+  extern uint32_t    lookupLength##type;
+#define LOOKUP_TYPE_BITFIELD(type, length)      \
+  extern const char *lookupValue##type[length]; \
+  extern uint32_t    lookupLength##type;
 
 #include "lookup.h"
 
