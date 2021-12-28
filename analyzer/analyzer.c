@@ -280,6 +280,7 @@ int main(int argc, char **argv)
 
   fillManufacturers();
   fillFieldCounts();
+  fillLookups();
   checkPgnList();
 
   while (fgets(msg, sizeof(msg) - 1, file))
@@ -1147,31 +1148,23 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
       }
     }
 
-    else if (field->resolution == RES_LOOKUP && field->units)
+    else if (field->resolution == RES_LOOKUP && field->lookupValue)
     {
-      char  lookfor[20];
-      char *s, *e;
+      char *s = field->lookupValue[value];
 
-      logDebug("RES_LOOKUP of value %" PRId64 " in '%s'\n", value, field->units);
-
-      sprintf(lookfor, ",%" PRId64 "=", value);
-      s = strstr(field->units, lookfor);
       if (s)
       {
-        s += strlen(lookfor);
-        e = strchr(s, ',');
-        e = e ? e : s + strlen(s);
         if (showJsonValue)
         {
-          mprintf("%s\"%s\":{\"value\":%" PRId64 ",\"name\":\"%.*s\"}", getSep(), fieldName, value, (int) (e - s), s);
+          mprintf("%s\"%s\":{\"value\":%" PRId64 ",\"name\":\"%s\"}", getSep(), fieldName, value, s);
         }
         else if (showJson)
         {
-          mprintf("%s\"%s\":\"%.*s\"", getSep(), fieldName, (int) (e - s), s);
+          mprintf("%s\"%s\":\"%s\"", getSep(), fieldName, s);
         }
         else
         {
-          mprintf("%s %s = %.*s", getSep(), fieldName, (int) (e - s), s);
+          mprintf("%s %s = %s", getSep(), fieldName, s);
         }
       }
       else
@@ -1187,10 +1180,8 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
       }
     }
 
-    else if (field->resolution == RES_BITFIELD && field->units)
+    else if (field->resolution == RES_BITFIELD && field->lookupValue)
     {
-      char         lookfor[20];
-      char        *s, *e;
       unsigned int bit;
       uint64_t     bitValue;
       char         sep;
@@ -1212,29 +1203,23 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
         logDebug("RES_BITFIELD is bit %u value %" PRIx64 " set %d\n", bit, bitValue, (value & value) >= 0);
         if ((value & bitValue) != 0)
         {
-          sprintf(lookfor, ",%u=", bit);
-          s = strstr(field->units, lookfor);
+          char *s = field->lookupValue[value];
           if (s)
           {
-            s += strlen(lookfor);
-            e = strchr(s, ',');
-            e = e ? e : s + strlen(s);
             if (showJson)
             {
-              mprintf("%c\"%.*s\"", sep, (int) (e - s), s);
-              sep = ',';
+              mprintf("%c\"%s\"", sep, s);
             }
             else
             {
-              mprintf("%c%.*s", sep, (int) (e - s), s);
-              sep = ',';
+              mprintf("%c%s", sep, s);
             }
           }
           else
           {
             mprintf("%c\"%" PRIu64 "\"", sep, bitValue);
-            sep = ',';
           }
+          sep = ',';
         }
       }
       if (showJson)

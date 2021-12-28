@@ -459,6 +459,7 @@
               {"name":"Electrical Generation","value":"35"},
               {"name":"Steering and Control surfaces","value":"40"},
               {"name":"Propulsion","value":"50"},
+              {"name":"Propulsion","value":"55"},
               {"name":"Navigation","value":"60"},
               {"name":"Communication","value":"70"},
               {"name":"Sensor Communication Interface","value":"75"},
@@ -2040,6 +2041,7 @@
               {"name":"Electrical Generation","value":"35"},
               {"name":"Steering and Control surfaces","value":"40"},
               {"name":"Propulsion","value":"50"},
+              {"name":"Propulsion","value":"55"},
               {"name":"Navigation","value":"60"},
               {"name":"Communication","value":"70"},
               {"name":"Sensor Communication Interface","value":"75"},
@@ -2591,10 +2593,9 @@
             "BitLength":3,
             "BitOffset":16,
             "BitStart":0,
-            "Type":"Lookup table",
-            "Signed":false,
-            "EnumValues":[
-              {"name":"Format code 1","value":"1"}]},
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
           {
             "Order":5,
             "Id":"accessLevel",
@@ -2850,7 +2851,7 @@
               {"name":"AIS Internal GGA timeout","value":"99"},
               {"name":"AIS Protocol stack restart","value":"100"},
               {"name":"Pilot No IPS communications","value":"101"},
-              {"name":"Pilot Power-On or Sleep-Switch Reset While Engaged     ","value":"102"},
+              {"name":"Pilot Power-On or Sleep-Switch Reset While Engaged","value":"102"},
               {"name":"Pilot Unexpected Reset While Engaged","value":"103"},
               {"name":"AIS Dangerous Target","value":"104"},
               {"name":"AIS Lost Target","value":"105"},
@@ -3673,7 +3674,7 @@
               {"name":"AIS Internal GGA timeout","value":"99"},
               {"name":"AIS Protocol stack restart","value":"100"},
               {"name":"Pilot No IPS communications","value":"101"},
-              {"name":"Pilot Power-On or Sleep-Switch Reset While Engaged     ","value":"102"},
+              {"name":"Pilot Power-On or Sleep-Switch Reset While Engaged","value":"102"},
               {"name":"Pilot Unexpected Reset While Engaged","value":"103"},
               {"name":"AIS Dangerous Target","value":"104"},
               {"name":"AIS Lost Target","value":"105"},
@@ -4015,7 +4016,17 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"No Depth Lock","value":"0"}]}]},
+              {"name":"Depth unlocked","value":"0"},
+              {"name":"Quality 10%","value":"1"},
+              {"name":"Quality 20%","value":"2"},
+              {"name":"Quality 30%","value":"3"},
+              {"name":"Quality 40%","value":"4"},
+              {"name":"Quality 50%","value":"5"},
+              {"name":"Quality 60%","value":"6"},
+              {"name":"Quality 70%","value":"7"},
+              {"name":"Quality 80%","value":"8"},
+              {"name":"Quality 90%","value":"9"},
+              {"name":"Quality 100%","value":"10"}]}]},
       {
         "PGN":65409,
         "Id":"airmarSpeedPulseCount",
@@ -4363,7 +4374,15 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Leave priority unchanged","value":"8"},
+              {"name":"0","value":"0"},
+              {"name":"1","value":"1"},
+              {"name":"2","value":"2"},
+              {"name":"3","value":"3"},
+              {"name":"4","value":"4"},
+              {"name":"5","value":"5"},
+              {"name":"6","value":"6"},
+              {"name":"7","value":"7"},
+              {"name":"Leave unchanged","value":"8"},
               {"name":"Reset to default","value":"9"}]},
           {
             "Order":4,
@@ -4464,7 +4483,7 @@
             "EnumValues":[
               {"name":"Acknowledge","value":"0"},
               {"name":"Transmit Interval/Priority not supported","value":"1"},
-              {"name":"Transmit Interval to low","value":"2"},
+              {"name":"Transmit Interval too low","value":"2"},
               {"name":"Access denied","value":"3"},
               {"name":"Not supported","value":"4"}]},
           {
@@ -5026,7 +5045,6 @@
             "Order":1,
             "Id":"functionCode",
             "Name":"Function Code",
-            "Description":"Transmit or receive PGN Group Function Code",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -5129,9 +5147,13 @@
             "BitLength":8,
             "BitOffset":64,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Standby","value":"64"},
+              {"name":"Auto","value":"66"},
+              {"name":"Wind","value":"70"},
+              {"name":"Track","value":"74"}]},
           {
             "Order":8,
             "Id":"subMode",
@@ -5814,32 +5836,42 @@
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
-            "Type":"Lookup table",
-            "Signed":false,
-            "EnumValues":[
-              {"name":"S100","value":"33"}]},
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
           {
             "Order":7,
             "Id":"key",
             "Name":"key",
-            "BitLength":16,
+            "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"-1","value":"64005"},
-              {"name":"+1","value":"63495"},
-              {"name":"Standby","value":"64770"},
-              {"name":"Auto","value":"65025"},
-              {"name":"Wind","value":"64515"},
-              {"name":"Track","value":"56355"},
-              {"name":"+10","value":"63240"},
-              {"name":"-10","value":"63750"},
-              {"name":"-1 and -10","value":"56865"},
-              {"name":"+1 and +10","value":"56610"}]},
+              {"name":"Auto","value":"1"},
+              {"name":"Standby","value":"2"},
+              {"name":"Wind","value":"3"},
+              {"name":"-1","value":"5"},
+              {"name":"-10","value":"6"},
+              {"name":"+1","value":"7"},
+              {"name":"+10","value":"8"},
+              {"name":"-1 and -10","value":"33"},
+              {"name":"+1 and +10","value":"34"},
+              {"name":"Track","value":"35"}]},
           {
             "Order":8,
+            "Id":"keyinverted",
+            "Name":"keyInverted",
+            "Description":"Bit negated version of key",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
+          {
+            "Order":9,
             "Id":"unknownData",
             "Name":"Unknown data",
             "BitLength":112,
@@ -6280,8 +6312,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Use HDG only","value":"0"},
-              {"name":"Allow COG to replace HDG","value":"1"}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]},
           {
             "Order":6,
             "Id":"calibrationStatus",
@@ -6783,8 +6815,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"no filter","value":"0"},
-              {"name":"basic IIR filter","value":"1"}]},
+              {"name":"No filter","value":"0"},
+              {"name":"Basic IIR filter","value":"1"}]},
           {
             "Order":6,
             "Id":"reserved",
@@ -6877,9 +6909,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"no filter","value":"0"},
-              {"name":"basic IIR filter","value":"1"},
-              {"name":"data not available","value":"15"}]},
+              {"name":"No filter","value":"0"},
+              {"name":"Basic IIR filter","value":"1"}]},
           {
             "Order":6,
             "Id":"reserved",
@@ -6972,10 +7003,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Measure Interval","value":"0"},
-              {"name":"Requested by user","value":"1"},
-              {"name":"reserved","value":"2"},
-              {"name":"data not available","value":"3"}]},
+              {"name":"Measure interval","value":"0"},
+              {"name":"Requested by user","value":"1"}]},
           {
             "Order":6,
             "Id":"reserved",
@@ -7213,18 +7242,10 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Reserved","value":"0"},
               {"name":"Emergency Alarm","value":"1"},
               {"name":"Alarm","value":"2"},
-              {"name":"Reserved","value":"3"},
-              {"name":"Reserved","value":"4"},
               {"name":"Warning","value":"5"},
-              {"name":"Reserved","value":"6"},
-              {"name":"Reserved","value":"7"},
-              {"name":"Caution","value":"8"},
-              {"name":"Reserved","value":"13"},
-              {"name":"Data out of range","value":"14"},
-              {"name":"Data not available","value":"15"}]},
+              {"name":"Caution","value":"8"}]},
           {
             "Order":2,
             "Id":"alertCategory",
@@ -7236,10 +7257,7 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Navigational","value":"0"},
-              {"name":"Technical","value":"1"},
-              {"name":"Reserved","value":"13"},
-              {"name":"Data out of range","value":"14"},
-              {"name":"Data not available","value":"15"}]},
+              {"name":"Technical","value":"1"}]},
           {
             "Order":3,
             "Id":"alertSystem",
@@ -7306,8 +7324,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Not Temporary Silence","value":"0"},
-              {"name":"Temporary Silence","value":"1"}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]},
           {
             "Order":11,
             "Id":"acknowledgeStatus",
@@ -7318,8 +7336,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Not Acknowledged","value":"0"},
-              {"name":"Acknowledged","value":"1"}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]},
           {
             "Order":12,
             "Id":"escalationStatus",
@@ -7330,8 +7348,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Not Escalated","value":"0"},
-              {"name":"Escalated","value":"1"}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]},
           {
             "Order":13,
             "Id":"temporarySilenceSupport",
@@ -7342,8 +7360,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Not Supported","value":"0"},
-              {"name":"Supported","value":"1"}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]},
           {
             "Order":14,
             "Id":"acknowledgeSupport",
@@ -7354,8 +7372,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Not Supported","value":"0"},
-              {"name":"Supported","value":"1"}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]},
           {
             "Order":15,
             "Id":"escalationSupport",
@@ -7366,8 +7384,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Not Supported","value":"0"},
-              {"name":"Supported","value":"1"}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]},
           {
             "Order":16,
             "Id":"nmeaReserved",
@@ -7398,10 +7416,7 @@
               {"name":"Manual","value":"0"},
               {"name":"Auto","value":"1"},
               {"name":"Test","value":"2"},
-              {"name":"Disabled","value":"3"},
-              {"name":"Reserved","value":"13"},
-              {"name":"Data out of range","value":"14"},
-              {"name":"Data not available","value":"15"}]},
+              {"name":"Disabled","value":"3"}]},
           {
             "Order":19,
             "Id":"thresholdStatus",
@@ -7417,10 +7432,7 @@
               {"name":"Extreme Threshold Exceeded","value":"2"},
               {"name":"Low Threshold Exceeded","value":"3"},
               {"name":"Acknowledged","value":"4"},
-              {"name":"Awaiting Acknowledge","value":"5"},
-              {"name":"Reserved","value":"253"},
-              {"name":"Data out of range","value":"254"},
-              {"name":"Data not available","value":"255"}]},
+              {"name":"Awaiting Acknowledge","value":"5"}]},
           {
             "Order":20,
             "Id":"alertPriority",
@@ -7444,10 +7456,7 @@
               {"name":"Active","value":"2"},
               {"name":"Silenced","value":"3"},
               {"name":"Acknowledged","value":"4"},
-              {"name":"Awaiting Acknowledge","value":"5"},
-              {"name":"Reserved","value":"253"},
-              {"name":"Data out of range","value":"254"},
-              {"name":"Data not available","value":"255"}]}]},
+              {"name":"Awaiting Acknowledge","value":"5"}]}]},
       {
         "PGN":126984,
         "Id":"alertResponse",
@@ -7467,18 +7476,10 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Reserved","value":"0"},
               {"name":"Emergency Alarm","value":"1"},
               {"name":"Alarm","value":"2"},
-              {"name":"Reserved","value":"3"},
-              {"name":"Reserved","value":"4"},
               {"name":"Warning","value":"5"},
-              {"name":"Reserved","value":"6"},
-              {"name":"Reserved","value":"7"},
-              {"name":"Caution","value":"8"},
-              {"name":"Reserved","value":"13"},
-              {"name":"Data out of range","value":"14"},
-              {"name":"Data not available","value":"15"}]},
+              {"name":"Caution","value":"8"}]},
           {
             "Order":2,
             "Id":"alertCategory",
@@ -7490,10 +7491,7 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Navigational","value":"0"},
-              {"name":"Technical","value":"1"},
-              {"name":"Reserved","value":"13"},
-              {"name":"Data out of range","value":"14"},
-              {"name":"Data not available","value":"15"}]},
+              {"name":"Technical","value":"1"}]},
           {
             "Order":3,
             "Id":"alertSystem",
@@ -7600,18 +7598,10 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Reserved","value":"0"},
               {"name":"Emergency Alarm","value":"1"},
               {"name":"Alarm","value":"2"},
-              {"name":"Reserved","value":"3"},
-              {"name":"Reserved","value":"4"},
               {"name":"Warning","value":"5"},
-              {"name":"Reserved","value":"6"},
-              {"name":"Reserved","value":"7"},
-              {"name":"Caution","value":"8"},
-              {"name":"Reserved","value":"13"},
-              {"name":"Data out of range","value":"14"},
-              {"name":"Data not available","value":"15"}]},
+              {"name":"Caution","value":"8"}]},
           {
             "Order":2,
             "Id":"alertCategory",
@@ -7623,10 +7613,7 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Navigational","value":"0"},
-              {"name":"Technical","value":"1"},
-              {"name":"Reserved","value":"13"},
-              {"name":"Data out of range","value":"14"},
-              {"name":"Data not available","value":"15"}]},
+              {"name":"Technical","value":"1"}]},
           {
             "Order":3,
             "Id":"alertSystem",
@@ -7875,8 +7862,7 @@
             "EnumValues":[
               {"name":"Error Active","value":"0"},
               {"name":"Error Passive","value":"1"},
-              {"name":"Bus Off","value":"2"},
-              {"name":"Not Available","value":"3"}]},
+              {"name":"Bus Off","value":"2"}]},
           {
             "Order":4,
             "Id":"controller2State",
@@ -7889,8 +7875,7 @@
             "EnumValues":[
               {"name":"Error Active","value":"0"},
               {"name":"Error Passive","value":"1"},
-              {"name":"Bus Off","value":"2"},
-              {"name":"Not Available","value":"3"}]},
+              {"name":"Bus Off","value":"2"}]},
           {
             "Order":5,
             "Id":"equipmentStatus",
@@ -7902,9 +7887,7 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Operational","value":"0"},
-              {"name":"Fault","value":"1"},
-              {"name":"Reserved","value":"2"},
-              {"name":"Not Available","value":"3"}]},
+              {"name":"Fault","value":"1"}]},
           {
             "Order":6,
             "Id":"reserved",
@@ -8066,8 +8049,7 @@
             "EnumValues":[
               {"name":"MOB Emitter Activated","value":"0"},
               {"name":"Manual on-board MOB Button Activation","value":"1"},
-              {"name":"Test Mode","value":"2"},
-              {"name":"MOB Not Active","value":"3"}]},
+              {"name":"Test mode","value":"2"}]},
           {
             "Order":4,
             "Id":"reserved",
@@ -8099,7 +8081,7 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Position estimated by the Vessel","value":"0"},
+              {"name":"Position estimated by the vessel","value":"0"},
               {"name":"Position reported by MOB emitter","value":"1"}]},
           {
             "Order":7,
@@ -8168,8 +8150,7 @@
             "EnumValues":[
               {"name":"True","value":"0"},
               {"name":"Magnetic","value":"1"},
-              {"name":"Error","value":"2"},
-              {"name":"Null","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":13,
             "Id":"reserved",
@@ -8212,8 +8193,8 @@
             "Signed":false},
           {
             "Order":17,
-            "Id":"mobEmitterBatteryStatus",
-            "Name":"MOB Emitter Battery Status",
+            "Id":"mobEmitterBatteryLowStatus",
+            "Name":"MOB Emitter Battery Low Status",
             "BitLength":3,
             "BitOffset":272,
             "BitStart":0,
@@ -8299,11 +8280,11 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Main Steering","value":"0"},
-              {"name":"Non-Follow-up Device","value":"1"},
-              {"name":"Follow-up Device","value":"10"},
-              {"name":"Heading Control Standalone","value":"11"},
-              {"name":"Heading Control","value":"100"},
-              {"name":"Track Control","value":"101"}]},
+              {"name":"Non-Follow-Up Device","value":"1"},
+              {"name":"Follow-Up Device","value":"2"},
+              {"name":"Heading Control Standalone","value":"3"},
+              {"name":"Heading Control","value":"4"},
+              {"name":"Track Control","value":"5"}]},
           {
             "Order":6,
             "Id":"turnMode",
@@ -8314,9 +8295,9 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Rudder Limit controlled","value":"0"},
-              {"name":"turn rate controlled","value":"1"},
-              {"name":"radius controlled","value":"10"}]},
+              {"name":"Rudder limit controlled","value":"0"},
+              {"name":"Turn rate controlled","value":"1"},
+              {"name":"Radius controlled","value":"2"}]},
           {
             "Order":7,
             "Id":"headingReference",
@@ -8329,8 +8310,7 @@
             "EnumValues":[
               {"name":"True","value":"0"},
               {"name":"Magnetic","value":"1"},
-              {"name":"Error","value":"2"},
-              {"name":"Null","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":8,
             "Id":"reserved",
@@ -8571,8 +8551,7 @@
             "EnumValues":[
               {"name":"True","value":"0"},
               {"name":"Magnetic","value":"1"},
-              {"name":"Error","value":"2"},
-              {"name":"Null","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":6,
             "Id":"reserved",
@@ -10067,13 +10046,9 @@
             "BitLength":2,
             "BitOffset":16,
             "BitStart":0,
-            "Type":"Lookup table",
-            "Signed":false,
-            "EnumValues":[
-              {"name":"Line 1","value":"0"},
-              {"name":"Line 2","value":"1"},
-              {"name":"Line 3","value":"2"},
-              {"name":"Reserved","value":"3"}]},
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
           {
             "Order":4,
             "Id":"acceptability",
@@ -10084,9 +10059,9 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Bad Level","value":"0"},
-              {"name":"Bad Frequency","value":"1"},
-              {"name":"Being Qualified","value":"2"},
+              {"name":"Bad level","value":"0"},
+              {"name":"Bad frequency","value":"1"},
+              {"name":"Being qualified","value":"2"},
               {"name":"Good","value":"3"}]},
           {
             "Order":5,
@@ -10201,12 +10176,9 @@
             "BitLength":2,
             "BitOffset":16,
             "BitStart":0,
-            "Type":"Lookup table",
-            "Signed":false,
-            "EnumValues":[
-              {"name":"Line 1","value":"0"},
-              {"name":"Line 2","value":"1"},
-              {"name":"Line 3","value":"2"}]},
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
           {
             "Order":4,
             "Id":"waveform",
@@ -10217,8 +10189,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Sine Wave","value":"0"},
-              {"name":"Modified Sine Wave","value":"1"}]},
+              {"name":"Sine wave","value":"0"},
+              {"name":"Modified sine wave","value":"1"}]},
           {
             "Order":5,
             "Id":"reserved",
@@ -10401,8 +10373,8 @@
               {"name":"Battery","value":"0"},
               {"name":"Alternator","value":"1"},
               {"name":"Convertor","value":"2"},
-              {"name":"Solar Cell","value":"3"},
-              {"name":"Wind Generator","value":"4"}]},
+              {"name":"Solar cell","value":"3"},
+              {"name":"Wind generator","value":"4"}]},
           {
             "Order":4,
             "Id":"stateOfCharge",
@@ -10488,7 +10460,7 @@
               {"name":"Overcharge","value":"3"},
               {"name":"Equalise","value":"4"},
               {"name":"Float","value":"5"},
-              {"name":"No Float","value":"6"},
+              {"name":"No float","value":"6"},
               {"name":"Constant VI","value":"7"},
               {"name":"Disabled","value":"8"},
               {"name":"Fault","value":"9"}]},
@@ -10647,22 +10619,22 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Invert","value":"0"},
-              {"name":"AC Passthru","value":"1"},
-              {"name":"Load Sense","value":"2"},
+              {"name":"AC passthru","value":"1"},
+              {"name":"Load sense","value":"2"},
               {"name":"Fault","value":"3"},
-              {"name":"Disabled","value":"4"},
-              {"name":"Error","value":"14"},
-              {"name":"Data Not Available","value":"15"}]},
+              {"name":"Disabled","value":"4"}]},
           {
             "Order":5,
-            "Id":"inverterEnableDisable",
-            "Name":"Inverter Enable/Disable",
+            "Id":"inverterEnable",
+            "Name":"Inverter Enable",
             "BitLength":2,
             "BitOffset":28,
             "BitStart":4,
-            "Units":"0=Disabled,1=Enabled,2=Error,3=Unknown",
             "Type":"Lookup table",
-            "Signed":false},
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Off","value":"0"},
+              {"name":"On","value":"1"}]},
           {
             "Order":6,
             "Id":"reserved",
@@ -10938,8 +10910,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Not Supported","value":"0"},
-              {"name":"Supported","value":"1"}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]},
           {
             "Order":4,
             "Id":"reserved",
@@ -10976,10 +10948,10 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"LeadAcid","value":"0"},
+              {"name":"Pb (Lead)","value":"0"},
               {"name":"Li","value":"1"},
-              {"name":"Nicad","value":"2"},
-              {"name":"Zno","value":"3"},
+              {"name":"NiCd","value":"2"},
+              {"name":"ZnO","value":"3"},
               {"name":"NiMH","value":"4"}]},
           {
             "Order":7,
@@ -11270,10 +11242,9 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Ok","value":"0"},
+              {"name":"Good","value":"0"},
               {"name":"Warning","value":"1"},
-              {"name":"Over Temperature","value":"2"},
-              {"name":"Not Available","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":5,
             "Id":"overloadState",
@@ -11284,10 +11255,9 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Ok","value":"0"},
+              {"name":"Good","value":"0"},
               {"name":"Warning","value":"1"},
-              {"name":"Overload","value":"2"},
-              {"name":"Not Available","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":6,
             "Id":"lowDcVoltageState",
@@ -11298,10 +11268,9 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Ok","value":"0"},
+              {"name":"Good","value":"0"},
               {"name":"Warning","value":"1"},
-              {"name":"DC voltage too low","value":"2"},
-              {"name":"Not Available","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":7,
             "Id":"rippleState",
@@ -11312,10 +11281,9 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Ok","value":"0"},
+              {"name":"Good","value":"0"},
               {"name":"Warning","value":"1"},
-              {"name":"Ripple Too High","value":"2"},
-              {"name":"Not Available","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":8,
             "Id":"reserved",
@@ -11479,8 +11447,7 @@
             "EnumValues":[
               {"name":"Off","value":"0"},
               {"name":"Extend","value":"1"},
-              {"name":"Retract","value":"2"},
-              {"name":"Reserved","value":"3"}]},
+              {"name":"Retract","value":"2"}]},
           {
             "Order":6,
             "Id":"speedControl",
@@ -11913,8 +11880,7 @@
             "EnumValues":[
               {"name":"True","value":"0"},
               {"name":"Magnetic","value":"1"},
-              {"name":"Error","value":"2"},
-              {"name":"Null","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":7,
             "Id":"reserved",
@@ -12066,9 +12032,9 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Single Speed","value":"0"},
-              {"name":"Dual Speed","value":"1"},
-              {"name":"Proportional Speed","value":"2"}]},
+              {"name":"Single speed","value":"0"},
+              {"name":"Dual speed","value":"1"},
+              {"name":"Proportional speed","value":"2"}]},
           {
             "Order":6,
             "Id":"reserved",
@@ -12155,10 +12121,17 @@
             "BitLength":4,
             "BitOffset":48,
             "BitStart":0,
-            "Type":"Bitfield",
+            "Type":"Lookup table",
             "Signed":false,
-            "EnumBitValues":[
-              {"0": "Another device controlling windlass"}]},
+            "EnumValues":[
+              {"name":"Another device controlling windlass","value":"0"},
+              {"name":"Off","value":"4"},
+              {"name":"Down","value":"5"},
+              {"name":"Up","value":"6"},
+              {"name":"Controller under voltage cut-out","value":"8"},
+              {"name":"Controller over current cut-out","value":"9"},
+              {"name":"Controller over temperature cut-out","value":"10"},
+              {"name":"Manufacturer defined","value":"11"}]},
           {
             "Order":14,
             "Id":"reserved",
@@ -12231,8 +12204,7 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Chain presently detected","value":"0"},
-              {"name":"Rope presently detected","value":"1"},
-              {"name":"Error","value":"2"}]},
+              {"name":"Rope presently detected","value":"1"}]},
           {
             "Order":6,
             "Id":"reserved",
@@ -12274,8 +12246,7 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Not docked","value":"0"},
-              {"name":"Fully docked","value":"1"},
-              {"name":"Error","value":"2"}]},
+              {"name":"Fully docked","value":"1"}]},
           {
             "Order":10,
             "Id":"windlassOperatingEvents",
@@ -12290,7 +12261,7 @@
               {"1": "Sensor error"},
               {"2": "No windlass motion detected"},
               {"3": "Retrieval docking distance reached"},
-              {"4": "End or rode reached"}]}]},
+              {"4": "End of rode reached"}]}]},
       {
         "PGN":128778,
         "Id":"anchorWindlassMonitoringStatus",
@@ -12429,8 +12400,7 @@
             "EnumValues":[
               {"name":"True","value":"0"},
               {"name":"Magnetic","value":"1"},
-              {"name":"Error","value":"2"},
-              {"name":"Null","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":3,
             "Id":"reserved",
@@ -13189,7 +13159,6 @@
             "Order":8,
             "Id":"timeStamp",
             "Name":"Time Stamp",
-            "Description":"0-59 = UTC second when the report was generated",
             "BitLength":6,
             "BitOffset":106,
             "BitStart":2,
@@ -13320,13 +13289,12 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"top 525 kHz of marine band","value":"0"},
-              {"name":"entire marine band","value":"1"}]},
+              {"name":"Top 525 kHz of marine band","value":"0"},
+              {"name":"Entire marine band","value":"1"}]},
           {
             "Order":20,
             "Id":"canHandleMsg22",
             "Name":"Can handle Msg 22",
-            "Description":"Whether device supports message 22",
             "BitLength":1,
             "BitOffset":198,
             "BitStart":6,
@@ -13451,7 +13419,6 @@
             "Order":8,
             "Id":"timeStamp",
             "Name":"Time Stamp",
-            "Description":"0-59 = UTC second when the report was generated",
             "BitLength":6,
             "BitOffset":106,
             "BitStart":2,
@@ -13518,7 +13485,7 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"unavailable","value":"0"},
+              {"name":"Unavailable","value":"0"},
               {"name":"Wing In Ground","value":"20"},
               {"name":"Wing In Ground (no other information)","value":"29"},
               {"name":"Fishing","value":"30"},
@@ -13594,15 +13561,16 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"undefined","value":"0"},
+              {"name":"Default: undefined","value":"0"},
               {"name":"GPS","value":"1"},
               {"name":"GLONASS","value":"2"},
-              {"name":"GPS+GLONASS","value":"3"},
+              {"name":"Combined GPS/GLONASS","value":"3"},
               {"name":"Loran-C","value":"4"},
               {"name":"Chayka","value":"5"},
-              {"name":"integrated","value":"6"},
-              {"name":"surveyed","value":"7"},
-              {"name":"Galileo","value":"8"}]},
+              {"name":"Integrated navigation system","value":"6"},
+              {"name":"Surveyed","value":"7"},
+              {"name":"Galileo","value":"8"},
+              {"name":"Internal GNSS","value":"15"}]},
           {
             "Order":18,
             "Id":"length",
@@ -13671,7 +13639,11 @@
             "BitLength":1,
             "BitOffset":417,
             "BitStart":1,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Autonomous","value":"0"},
+              {"name":"Assigned","value":"1"}]},
           {
             "Order":25,
             "Id":"reserved",
@@ -13789,7 +13761,6 @@
             "Order":8,
             "Id":"timeStamp",
             "Name":"Time Stamp",
-            "Description":"0-59 = UTC second when the report was generated",
             "BitLength":6,
             "BitOffset":106,
             "BitStart":2,
@@ -14288,8 +14259,7 @@
             "EnumValues":[
               {"name":"True","value":"0"},
               {"name":"Magnetic","value":"1"},
-              {"name":"Error","value":"2"},
-              {"name":"Null","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":4,
             "Id":"perpendicularCrossed",
@@ -14325,7 +14295,7 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Great Circle","value":"0"},
-              {"name":"Rhumb Line","value":"1"}]},
+              {"name":"Rhumbline","value":"1"}]},
           {
             "Order":7,
             "Id":"etaTime",
@@ -14574,8 +14544,7 @@
             "EnumValues":[
               {"name":"True","value":"0"},
               {"name":"Magnetic","value":"1"},
-              {"name":"Error","value":"2"},
-              {"name":"Null","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":3,
             "Id":"reserved",
@@ -14759,7 +14728,13 @@
             "BitOffset":68,
             "BitStart":4,
             "Type":"Lookup table",
-            "Signed":false},
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Collision","value":"0"},
+              {"name":"Turning point","value":"1"},
+              {"name":"Reference","value":"2"},
+              {"name":"Wheelover","value":"3"},
+              {"name":"Waypoint","value":"4"}]},
           {
             "Order":9,
             "Id":"originMarkId",
@@ -14842,10 +14817,7 @@
               {"name":"1D","value":"0"},
               {"name":"2D","value":"1"},
               {"name":"3D","value":"2"},
-              {"name":"Auto","value":"3"},
-              {"name":"Reserved","value":"4"},
-              {"name":"Reserved","value":"5"},
-              {"name":"Error","value":"6"}]},
+              {"name":"Auto","value":"3"}]},
           {
             "Order":6,
             "Id":"dgnssModeDesired",
@@ -14856,8 +14828,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"no SBAS","value":"0"},
-              {"name":"SBAS","value":"1"},
+              {"name":"None","value":"0"},
+              {"name":"SBAS if available","value":"1"},
               {"name":"SBAS","value":"3"}]},
           {
             "Order":7,
@@ -14895,8 +14867,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"use last 3D height","value":"0"},
-              {"name":"Use antenna altitude","value":"1"}]}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]}]},
       {
         "PGN":129539,
         "Id":"gnssDops",
@@ -15003,13 +14975,13 @@
             "Order":2,
             "Id":"mode",
             "Name":"Mode",
+            "Description":"Unknown lookup values",
             "BitLength":2,
             "BitOffset":8,
             "BitStart":0,
-            "Type":"Lookup table",
-            "Signed":false,
-            "EnumValues":[
-              {"name":"Range residuals used to calculate position","value":"3"}]},
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
           {
             "Order":3,
             "Id":"reserved",
@@ -16245,15 +16217,16 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"undefined","value":"0"},
+              {"name":"Default: undefined","value":"0"},
               {"name":"GPS","value":"1"},
               {"name":"GLONASS","value":"2"},
-              {"name":"GPS+GLONASS","value":"3"},
+              {"name":"Combined GPS/GLONASS","value":"3"},
               {"name":"Loran-C","value":"4"},
               {"name":"Chayka","value":"5"},
-              {"name":"integrated","value":"6"},
-              {"name":"surveyed","value":"7"},
-              {"name":"Galileo","value":"8"}]},
+              {"name":"Integrated navigation system","value":"6"},
+              {"name":"Surveyed","value":"7"},
+              {"name":"Galileo","value":"8"},
+              {"name":"Internal GNSS","value":"15"}]},
           {
             "Order":15,
             "Id":"spare",
@@ -16343,7 +16316,7 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"unavailable","value":"0"},
+              {"name":"Unavailable","value":"0"},
               {"name":"Wing In Ground","value":"20"},
               {"name":"Wing In Ground (no other information)","value":"29"},
               {"name":"Fishing","value":"30"},
@@ -16495,15 +16468,16 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"undefined","value":"0"},
+              {"name":"Default: undefined","value":"0"},
               {"name":"GPS","value":"1"},
               {"name":"GLONASS","value":"2"},
-              {"name":"GPS+GLONASS","value":"3"},
+              {"name":"Combined GPS/GLONASS","value":"3"},
               {"name":"Loran-C","value":"4"},
               {"name":"Chayka","value":"5"},
-              {"name":"integrated","value":"6"},
-              {"name":"surveyed","value":"7"},
-              {"name":"Galileo","value":"8"}]},
+              {"name":"Integrated navigation system","value":"6"},
+              {"name":"Surveyed","value":"7"},
+              {"name":"Galileo","value":"8"},
+              {"name":"Internal GNSS","value":"15"}]},
           {
             "Order":18,
             "Id":"dte",
@@ -16514,8 +16488,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"available","value":"0"},
-              {"name":"not available","value":"1"}]},
+              {"name":"Available","value":"0"},
+              {"name":"Not available","value":"1"}]},
           {
             "Order":19,
             "Id":"reserved",
@@ -16979,7 +16953,6 @@
             "Order":8,
             "Id":"timeStamp",
             "Name":"Time Stamp",
-            "Description":"0-59 = UTC second when the report was generated",
             "BitLength":6,
             "BitOffset":106,
             "BitStart":2,
@@ -18916,7 +18889,7 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"unavailable","value":"0"},
+              {"name":"Unavailable","value":"0"},
               {"name":"Wing In Ground","value":"20"},
               {"name":"Wing In Ground (no other information)","value":"29"},
               {"name":"Fishing","value":"30"},
@@ -20096,7 +20069,7 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"True (ground referenced to North)","value":"0"},
+              {"name":"True (ground referenced to North","value":"0"},
               {"name":"Magnetic (ground referenced to Magnetic North)","value":"1"},
               {"name":"Apparent","value":"2"},
               {"name":"True (boat referenced)","value":"3"},
@@ -21059,7 +21032,7 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"True (ground referenced to North)","value":"0"},
+              {"name":"True (ground referenced to North","value":"0"},
               {"name":"Magnetic (ground referenced to Magnetic North)","value":"1"},
               {"name":"Apparent","value":"2"},
               {"name":"True (boat referenced)","value":"3"},
@@ -21231,7 +21204,7 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"True (ground referenced to North)","value":"0"},
+              {"name":"True (ground referenced to North","value":"0"},
               {"name":"Magnetic (ground referenced to Magnetic North)","value":"1"},
               {"name":"Apparent","value":"2"},
               {"name":"True (boat referenced)","value":"3"},
@@ -21362,9 +21335,7 @@
               {"name":"Flushing","value":"4"},
               {"name":"Rinsing","value":"5"},
               {"name":"Initiating","value":"6"},
-              {"name":"Manual Mode","value":"7"},
-              {"name":"Error","value":"62"},
-              {"name":"Unavailable","value":"63"}]},
+              {"name":"Manual","value":"7"}]},
           {
             "Order":2,
             "Id":"productionStartStop",
@@ -21711,14 +21682,14 @@
               {"name":"Play","value":"0"},
               {"name":"Pause","value":"1"},
               {"name":"Stop","value":"2"},
-              {"name":"FF (1x)","value":"3"},
-              {"name":"FF (2x)","value":"4"},
-              {"name":"FF (3x)","value":"5"},
-              {"name":"FF (4x)","value":"6"},
-              {"name":"RW (1x)","value":"7"},
-              {"name":"RW (2x)","value":"8"},
-              {"name":"RW (3x)","value":"9"},
-              {"name":"RW (4x)","value":"10"},
+              {"name":"FF 1x","value":"3"},
+              {"name":"FF 2x","value":"4"},
+              {"name":"FF 3x","value":"5"},
+              {"name":"FF 4x","value":"6"},
+              {"name":"RW 1x","value":"7"},
+              {"name":"RW 2x","value":"8"},
+              {"name":"RW 3x","value":"9"},
+              {"name":"RW 4x","value":"10"},
               {"name":"Skip ahead","value":"11"},
               {"name":"Skip back","value":"12"},
               {"name":"Jog ahead","value":"13"},
@@ -21729,11 +21700,10 @@
               {"name":"Scan down","value":"18"},
               {"name":"Tune up","value":"19"},
               {"name":"Tune down","value":"20"},
-              {"name":"Slow motion (.75x)","value":"21"},
-              {"name":"Slow motion (.5x)","value":"22"},
-              {"name":"Slow motion (.25x)","value":"23"},
-              {"name":"Slow motion (.125x)","value":"24"},
-              {"name":"Source renaming","value":"25"}]},
+              {"name":"Slow motion .75x","value":"21"},
+              {"name":"Slow motion .5x","value":"22"},
+              {"name":"Slow motion .25x","value":"23"},
+              {"name":"Slow motion .125x","value":"24"}]},
           {
             "Order":6,
             "Id":"elapsedTrackTime",
@@ -21811,9 +21781,12 @@
             "BitLength":8,
             "BitOffset":128,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
-            "Signed":false},
+            "Type":"Lookup table",
+            "Signed":false,
+            "EnumValues":[
+              {"name":"None","value":"0"},
+              {"name":"Thumbs up","value":"1"},
+              {"name":"Thumbs down","value":"2"}]},
           {
             "Order":13,
             "Id":"signalStrength",
@@ -22040,16 +22013,15 @@
               {"name":"Yes","value":"1"}]},
           {
             "Order":13,
-            "Id":"lockStatus",
-            "Name":"Lock status",
-            "Description":"Sirius XM only",
+            "Id":"locked",
+            "Name":"Locked",
             "BitLength":2,
             "BitStart":2,
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Unlocked","value":"0"},
-              {"name":"Locked","value":"1"}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]},
           {
             "Order":14,
             "Id":"reserved",
@@ -22509,7 +22481,7 @@
             "Order":8,
             "Id":"playSupport",
             "Name":"Play support",
-            "BitLength":16,
+            "BitLength":32,
             "BitStart":0,
             "Type":"Bitfield",
             "Signed":false,
@@ -22517,14 +22489,14 @@
               {"0": "Play"},
               {"1": "Pause"},
               {"2": "Stop"},
-              {"3": "FF (1x)"},
-              {"4": "FF (2x)"},
-              {"5": "FF (3x)"},
-              {"6": "FF (4x)"},
-              {"7": "RW (1x)"},
-              {"8": "RW (2x)"},
-              {"9": "RW (3x)"},
-              {"10": "RW (4x)"},
+              {"3": "FF 1x"},
+              {"4": "FF 2x"},
+              {"5": "FF 3x"},
+              {"6": "FF 4x"},
+              {"7": "RW 1x"},
+              {"8": "RW 2x"},
+              {"9": "RW 3x"},
+              {"10": "RW 4x"},
               {"11": "Skip ahead"},
               {"12": "Skip back"},
               {"13": "Jog ahead"},
@@ -22535,10 +22507,10 @@
               {"18": "Scan down"},
               {"19": "Tune up"},
               {"20": "Tune down"},
-              {"21": "Slow motion (.75x)"},
-              {"22": "Slow motion (.5x)"},
-              {"23": "Slow motion (.25x)"},
-              {"24": "Slow motion (.125x)"},
+              {"21": "Slow motion .75x"},
+              {"22": "Slow motion .5x"},
+              {"23": "Slow motion .25x"},
+              {"24": "Slow motion .125x"},
               {"25": "Source renaming"}]},
           {
             "Order":9,
@@ -22591,8 +22563,8 @@
             "Type":"Bitfield",
             "Signed":false,
             "EnumBitValues":[
-              {"1": "Song"},
-              {"2": "Play Queue"}]},
+              {"0": "Song"},
+              {"1": "Play queue"}]},
           {
             "Order":13,
             "Id":"shuffleSupport",
@@ -22602,8 +22574,8 @@
             "Type":"Bitfield",
             "Signed":false,
             "EnumBitValues":[
-              {"1": "Play Queue"},
-              {"2": "All"}]}]},
+              {"0": "Play queue"},
+              {"1": "All"}]}]},
       {
         "PGN":130574,
         "Id":"supportedZoneData",
@@ -22746,8 +22718,7 @@
             "EnumValues":[
               {"name":"True","value":"0"},
               {"name":"Magnetic","value":"1"},
-              {"name":"Error","value":"2"},
-              {"name":"Null","value":"3"}]},
+              {"name":"Error","value":"2"}]},
           {
             "Order":3,
             "Id":"reserved",
@@ -22931,7 +22902,7 @@
             "EnumValues":[
               {"name":"Save current settings as user default","value":"0"},
               {"name":"Load user default","value":"1"},
-              {"name":"Load Manufacturer default","value":"2"}]},
+              {"name":"Load manufacturer default","value":"2"}]},
           {
             "Order":3,
             "Id":"tunerRegions",
@@ -23018,7 +22989,7 @@
             "EnumValues":[
               {"name":"Save current settings as user default","value":"0"},
               {"name":"Load user default","value":"1"},
-              {"name":"Load Manufacturer default","value":"2"}]},
+              {"name":"Load manufacturer default","value":"2"}]},
           {
             "Order":3,
             "Id":"tunerRegions",
@@ -24226,8 +24197,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Mute on","value":"1"},
-              {"name":"Mute off","value":"2"}]}]},
+              {"name":"Mute On","value":"1"},
+              {"name":"Mute Off","value":"2"}]}]},
       {
         "PGN":130816,
         "Id":"sonichubUnknown",
@@ -24544,8 +24515,8 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Report","value":"1"},
-              {"name":"Next Song","value":"4"},
-              {"name":"Previous Song","value":"6"}]},
+              {"name":"Next song","value":"4"},
+              {"name":"Previous song","value":"6"}]},
           {
             "Order":8,
             "Id":"a",
@@ -25169,12 +25140,9 @@
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
-            "Type":"Lookup table",
-            "Signed":false,
-            "EnumValues":[
-              {"name":"Zone 1","value":"0"},
-              {"name":"Zone 2","value":"1"},
-              {"name":"Zone 3","value":"2"}]},
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
           {
             "Order":8,
             "Id":"level",
@@ -25264,12 +25232,9 @@
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
-            "Type":"Lookup table",
-            "Signed":false,
-            "EnumValues":[
-              {"name":"Zone 1","value":"0"},
-              {"name":"Zone 2","value":"1"},
-              {"name":"Zone 3","value":"2"}]},
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
           {
             "Order":8,
             "Id":"level",
@@ -26266,8 +26231,22 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Playing","value":"1"},
-              {"name":"Paused","value":"2"}]},
+              {"name":"Play","value":"0"},
+              {"name":"Pause","value":"1"},
+              {"name":"Stop","value":"2"},
+              {"name":"FF 1x","value":"3"},
+              {"name":"FF 2x","value":"4"},
+              {"name":"FF 3x","value":"5"},
+              {"name":"FF 4x","value":"6"},
+              {"name":"RW 1x","value":"7"},
+              {"name":"RW 2x","value":"8"},
+              {"name":"RW 3x","value":"9"},
+              {"name":"RW 4x","value":"10"},
+              {"name":"Skip ahead","value":"11"},
+              {"name":"Skip back","value":"12"},
+              {"name":"Jog ahead","value":"13"},
+              {"name":"Jog back","value":"14"},
+              {"name":"Seek up","value":"15"}]},
           {
             "Order":7,
             "Id":"x",
@@ -27156,14 +27135,22 @@
             "Order":7,
             "Id":"scan",
             "Name":"Scan",
-            "BitLength":8,
+            "BitLength":2,
             "BitOffset":40,
             "BitStart":0,
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Off","value":"0"},
-              {"name":"Scan","value":"1"}]}]},
+              {"name":"No","value":"0"},
+              {"name":"Yes","value":"1"}]},
+          {
+            "Order":8,
+            "Id":"c",
+            "Name":"C",
+            "BitLength":6,
+            "BitOffset":42,
+            "BitStart":2,
+            "Signed":false}]},
       {
         "PGN":130820,
         "Id":"fusionMenuItem",
@@ -27363,10 +27350,10 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"USB Repeat","value":"9"},
-              {"name":"USB Shuffle","value":"10"},
-              {"name":"iPod Repeat","value":"12"},
-              {"name":"iPod Shuffle","value":"13"}]},
+              {"name":"USB repeat","value":"9"},
+              {"name":"USB shuffle","value":"10"},
+              {"name":"iPod repeat","value":"12"},
+              {"name":"iPod shuffle","value":"13"}]},
           {
             "Order":7,
             "Id":"c",
@@ -27402,8 +27389,8 @@
             "Signed":false,
             "EnumValues":[
               {"name":"Off","value":"0"},
-              {"name":"One/Track","value":"1"},
-              {"name":"All/Album","value":"2"}]},
+              {"name":"One/track","value":"1"},
+              {"name":"All/album","value":"2"}]},
           {
             "Order":11,
             "Id":"h",
@@ -27500,8 +27487,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Muted","value":"1"},
-              {"name":"Not Muted","value":"2"}]}]},
+              {"name":"Mute On","value":"1"},
+              {"name":"Mute Off","value":"2"}]}]},
       {
         "PGN":130820,
         "Id":"fusionSubVolume",
@@ -29748,7 +29735,7 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"unavailable","value":"0"},
+              {"name":"Unavailable","value":"0"},
               {"name":"Wing In Ground","value":"20"},
               {"name":"Wing In Ground (no other information)","value":"29"},
               {"name":"Fishing","value":"30"},
@@ -30534,8 +30521,8 @@
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
-              {"name":"Day Mode","value":"1"},
-              {"name":"Night Mode","value":"4"},
+              {"name":"Day mode","value":"1"},
+              {"name":"Night mode","value":"4"},
               {"name":"Level 1","value":"11"},
               {"name":"Level 2","value":"22"},
               {"name":"Level 3","value":"33"},
@@ -30732,9 +30719,9 @@
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
+            "Match":2,
             "Type":"Lookup table",
-            "Signed":false,
-            "EnumValues":[]},
+            "Signed":false},
           {
             "Order":5,
             "Id":"b",
@@ -30756,7 +30743,7 @@
             "Order":7,
             "Id":"event",
             "Name":"Event",
-            "BitLength":16,
+            "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
             "Type":"Lookup table",
@@ -30774,9 +30761,18 @@
               {"name":"Zig Zag (Turn)","value":"22"},
               {"name":"Lazy-S (Turn)","value":"23"},
               {"name":"Depth (Turn)","value":"24"},
-              {"name":"Change Course","value":"26"}]},
+              {"name":"Change course","value":"26"}]},
           {
             "Order":8,
+            "Id":"c",
+            "Name":"C",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":0,
+            "Signed":false},
+          {
+            "Order":9,
             "Id":"direction",
             "Name":"Direction",
             "BitLength":8,
@@ -30790,7 +30786,7 @@
               {"name":"Left rudder (port)","value":"4"},
               {"name":"Right rudder (starboard)","value":"5"}]},
           {
-            "Order":9,
+            "Order":10,
             "Id":"angle",
             "Name":"Angle",
             "BitLength":16,
@@ -30800,7 +30796,7 @@
             "Resolution":0.0001,
             "Signed":false},
           {
-            "Order":10,
+            "Order":11,
             "Id":"g",
             "Name":"G",
             "BitLength":8,
@@ -30886,11 +30882,9 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Type":"Lookup table",
-            "Signed":false,
-            "EnumValues":[
-              {"name":"Raise","value":"57"},
-              {"name":"Clear","value":"56"}]},
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false},
           {
             "Order":8,
             "Id":"messageId",
@@ -31087,7 +31081,7 @@
             "Order":7,
             "Id":"event",
             "Name":"Event",
-            "BitLength":16,
+            "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
             "Type":"Lookup table",
@@ -31105,9 +31099,18 @@
               {"name":"Zig Zag (Turn)","value":"22"},
               {"name":"Lazy-S (Turn)","value":"23"},
               {"name":"Depth (Turn)","value":"24"},
-              {"name":"Change Course","value":"26"}]},
+              {"name":"Change course","value":"26"}]},
           {
             "Order":8,
+            "Id":"c",
+            "Name":"C",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":0,
+            "Signed":false},
+          {
+            "Order":9,
             "Id":"direction",
             "Name":"Direction",
             "BitLength":8,
@@ -31121,7 +31124,7 @@
               {"name":"Left rudder (port)","value":"4"},
               {"name":"Right rudder (starboard)","value":"5"}]},
           {
-            "Order":9,
+            "Order":10,
             "Id":"angle",
             "Name":"Angle",
             "BitLength":16,
@@ -31131,7 +31134,7 @@
             "Resolution":0.0001,
             "Signed":false},
           {
-            "Order":10,
+            "Order":11,
             "Id":"g",
             "Name":"G",
             "BitLength":8,
@@ -31437,7 +31440,7 @@
             "Order":4,
             "Id":"control",
             "Name":"Control",
-            "BitLength":4,
+            "BitLength":1,
             "BitOffset":16,
             "BitStart":0,
             "Type":"Lookup table",
@@ -31450,8 +31453,8 @@
             "Id":"reserved",
             "Name":"Reserved",
             "BitLength":7,
-            "BitOffset":20,
-            "BitStart":4,
+            "BitOffset":17,
+            "BitStart":1,
             "Type":"Binary data",
             "Signed":false},
           {
@@ -31459,8 +31462,8 @@
             "Id":"numberOfIdTestResultPairsToFollow",
             "Name":"Number of ID/test result pairs to follow",
             "BitLength":8,
-            "BitOffset":27,
-            "BitStart":3,
+            "BitOffset":24,
+            "BitStart":0,
             "Type":"Integer",
             "Resolution":1,
             "Signed":false},
@@ -31470,8 +31473,8 @@
             "Name":"Test ID",
             "Description":"See Airmar docs for table of IDs and failure codes; these lookup values are for DST200",
             "BitLength":8,
-            "BitOffset":35,
-            "BitStart":3,
+            "BitOffset":32,
+            "BitStart":0,
             "Type":"Lookup table",
             "Signed":false,
             "EnumValues":[
@@ -31489,12 +31492,11 @@
             "Name":"Test result",
             "Description":"Values other than 0 are failure codes",
             "BitLength":8,
-            "BitOffset":43,
-            "BitStart":3,
-            "Type":"Lookup table",
-            "Signed":false,
-            "EnumValues":[
-              {"name":"Pass","value":"0"}]}]}
+            "BitOffset":40,
+            "BitStart":0,
+            "Type":"Integer",
+            "Resolution":1,
+            "Signed":false}]}
     ]
     }
     

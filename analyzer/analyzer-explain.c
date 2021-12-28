@@ -95,6 +95,7 @@ int main(int argc, char **argv)
   setProgName(argv[0]);
 
   camelCase(false);
+  fillLookups();
 
   for (; ac > 1; ac--, av++)
   {
@@ -222,18 +223,33 @@ static void explainPGN(Pgn pgn)
       printf("                  Offset: %d\n", f.offset);
     }
 
-    if ((f.resolution == RES_LOOKUP || f.resolution == RES_BITFIELD) && f.units && f.units[0] == ',')
+    if (f.resolution == RES_LOOKUP && f.lookupValue)
     {
-      char *s, *e;
-
-      for (s = f.units + 1;; s = e + 1)
+      uint32_t maxValue = (1 << f.size) - 1;
+      printf("                  Range: 0..%u\n", maxValue);
+      for (uint32_t i = 0; i <= maxValue; i++)
       {
-        e = strchr(s, ',');
-        e = e ? e : s + strlen(s);
-        printf("                  Lookup: %.*s\n", (int) (e - s), s);
-        if (!*e)
+        char *s = f.lookupValue[i];
+
+        if (s)
         {
-          break;
+          printf("                  Lookup: %u=%s\n", i, s);
+        }
+      }
+    }
+
+    if (f.resolution == RES_BITFIELD && f.lookupValue)
+    {
+      uint32_t maxValue = f.size;
+
+      printf("           BitRange: 0..%u\n", maxValue);
+      for (uint32_t i = 0; i < maxValue; i++)
+      {
+        char *s = f.lookupValue[i];
+
+        if (s)
+        {
+          printf("                  Bit: %u=%s\n", i, s);
         }
       }
     }
@@ -406,48 +422,37 @@ static void explainPGNXML(Pgn pgn)
         printf("          <Offset>%d</Offset>\n", f.offset);
       }
 
-      if (f.resolution == RES_LOOKUP && f.units && f.units[0] == ',')
+      if (f.resolution == RES_LOOKUP && f.lookupValue)
       {
-        char *s, *e, *p;
+        uint32_t maxValue = (1 << f.size) - 1;
 
         printf("          <EnumValues>\n");
 
-        for (s = f.units + 1;; s = e + 1)
+        for (uint32_t i = 0; i <= maxValue; i++)
         {
-          e = strchr(s, ',');
-          e = e ? e : s + strlen(s);
-          p = strchr(s, '=');
-          if (p)
+          char *s = f.lookupValue[i];
+
+          if (s)
           {
-            printf("            <EnumPair Value='%.*s' Name='%.*s' />\n", (int) (p - s), s, (int) (e - (p + 1)), p + 1);
-          }
-          if (!*e)
-          {
-            break;
+            printf("            <EnumPair Value='%u' Name='%s' />\n", i, s);
           }
         }
-
         printf("          </EnumValues>\n");
       }
 
-      if (f.resolution == RES_BITFIELD && f.units && f.units[0] == ',')
+      if (f.resolution == RES_BITFIELD && f.lookupValue)
       {
-        char *s, *e, *p;
+        uint32_t maxValue = f.size;
 
         printf("          <EnumBitValues>\n");
 
-        for (s = f.units + 1;; s = e + 1)
+        for (uint32_t i = 0; i < maxValue; i++)
         {
-          e = strchr(s, ',');
-          e = e ? e : s + strlen(s);
-          p = strchr(s, '=');
-          if (p)
+          char *s = f.lookupValue[i];
+
+          if (s)
           {
-            printf("            <EnumPair Bit='%.*s' Name='%.*s' />\n", (int) (p - s), s, (int) (e - (p + 1)), p + 1);
-          }
-          if (!*e)
-          {
-            break;
+            printf("            <EnumPair Bit='%u' Name='%s' />\n", i, s);
           }
         }
 

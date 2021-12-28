@@ -27,7 +27,7 @@ NGTXMLFILE=pgns-ngt.xml
 NGTJSONFILE=pgns-ngt.json
 IKXMLFILE=pgns-ik.xml
 IKJSONFILE=pgns-ik.json
-HEADERS=analyzer.h pgn.h company.h
+HEADERS=analyzer.h pgn.h company.h lookup.h
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h
 
@@ -35,11 +35,11 @@ CFLAGS?=-Wall -O2
 
 all: $(TARGETS)
 
-$(ANALYZER): analyzer.c pgn.c $(HEADERS) $(COMMON) Makefile
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c $(COMMONDIR)/common.c $(LDLIBS$(LDLIBS-$(@)))
+$(ANALYZER): analyzer.c pgn.c lookup.c $(HEADERS) $(COMMON) Makefile
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c $(COMMONDIR)/common.c $(LDLIBS$(LDLIBS-$(@)))
 
-$(ANALYZER_EXPLAIN): analyzer-explain.c pgn.c $(HEADERS) $(COMMON) Makefile
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c $(COMMONDIR)/common.c $(LDLIBS$(LDLIBS-$(@)))
+$(ANALYZER_EXPLAIN): analyzer-explain.c pgn.c lookup.c $(HEADERS) $(COMMON) Makefile
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c $(COMMONDIR)/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 json: $(ANALYZER_EXPLAIN) pgns2json.xslt
 	$(ANALYZER_EXPLAIN) -explain-xml >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)

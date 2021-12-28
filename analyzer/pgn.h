@@ -27,12 +27,6 @@ limitations under the License.
 #define RES_LAT_LONG_64 (1.0e-16)
 #define RES_PERCENTAGE (100.0 / 25000.0)
 
-typedef struct
-{
-  char    *name;
-  uint32_t size; /* Size in bits. All fields are contiguous in message; use 'reserved' fields to fill in empty bits. */
-#define LEN_VARIABLE (0)
-  double resolution; /* Either a positive real value or one of the following RES_ special values */
 #define RES_NOTUSED (0)
 #define RES_RADIANS (1e-4)
 #define RES_ROTATION (1e-3 / 32.0)
@@ -61,17 +55,42 @@ typedef struct
 #define RES_VARIABLE (-22.0)
 #define MAX_RESOLUTION_LOOKUP 22
 
+typedef struct
+{
+  char    *name;
+  uint32_t size; /* Size in bits. All fields are contiguous in message; use 'reserved' fields to fill in empty bits. */
+#define LEN_VARIABLE (0)
+  double resolution; /* Either a positive real value or one of the following RES_ special values */
+
   bool  hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   char *units;   /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
                   * case it contains a set of lookup values.
                   */
   char   *description;
-  int32_t offset;  /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
-                    * of two's complement as used by NMEA 2000.
-                    * See http://en.wikipedia.org/wiki/Offset_binary
-                    */
-  char *camelName; /* Filled by C, no need to set in initializers. */
+  int32_t offset; /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
+                   * of two's complement as used by NMEA 2000.
+                   * See http://en.wikipedia.org/wiki/Offset_binary
+                   */
+
+  /* The following fields are filled by C, no need to set in initializers */
+  char  *camelName;
+  char **lookupValue;
 } Field;
+
+#define LOOKUP_FIELD(nam, len, typ)                                                     \
+  {                                                                                     \
+    .name = nam, .size = len, .resolution = RES_LOOKUP, .lookupValue = lookupValue##typ \
+  }
+
+#define LOOKUP_FIELD_DESC(nam, len, typ, desc)                                                               \
+  {                                                                                                          \
+    .name = nam, .size = len, .resolution = RES_LOOKUP, .lookupValue = lookupValue##typ, .description = desc \
+  }
+
+#define LOOKUP_BITFIELD(nam, len, typ)                                                    \
+  {                                                                                       \
+    .name = nam, .size = len, .resolution = RES_BITFIELD, .lookupValue = lookupValue##typ \
+  }
 
 typedef struct
 {
@@ -101,676 +120,14 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
                                                         {"Temperature (hires)", "0.001"},
                                                         {"Pressure (hires)", "0.1"}};
 
-#define LOOKUP_INDUSTRY_CODE (",0=Global,1=Highway,2=Agriculture,3=Construction,4=Marine,5=Industrial")
+#define LOOKUP_TYPE(type, length)                   \
+  extern char    *lookupValue##type[1 << (length)]; \
+  extern uint32_t lookupLength##type;
+#define LOOKUP_TYPE_BITFIELD(type, length)   \
+  extern char    *lookupValue##type[length]; \
+  extern uint32_t lookupLength##type;
 
-#define LOOKUP_SHIP_TYPE                                                                                                           \
-  (",0=unavailable"                                                                                                                \
-   ",20=Wing In Ground,29=Wing In Ground (no other information)"                                                                   \
-   ",30=Fishing,31=Towing,32=Towing exceeds 200m or wider than 25m,33=Engaged in dredging or underwater operations,34=Engaged in " \
-   "diving operations"                                                                                                             \
-   ",35=Engaged in military operations,36=Sailing,37=Pleasure"                                                                     \
-   ",40=High speed craft,41=High speed craft carrying dangerous goods,42=High speed craft hazard cat B,43=High speed craft "       \
-   "hazard cat C,44=High speed craft hazard cat D,49=High speed craft (no additional information)"                                 \
-   ",50=Pilot vessel,51=SAR,52=Tug,53=Port tender,54=Anti-pollution,55=Law enforcement,56=Spare,57=Spare #2,58=Medical,59=RR "     \
-   "Resolution No.18"                                                                                                              \
-   ",60=Passenger ship,69=Passenger ship (no additional information)"                                                              \
-   ",70=Cargo ship,71=Cargo ship carrying dangerous goods,72=Cargo ship hazard cat B,73=Cargo ship hazard cat C,74=Cargo ship "    \
-   "hazard cat D,79=Cargo ship (no additional information)"                                                                        \
-   ",80=Tanker,81=Tanker carrying dangerous goods,82=Tanker hazard cat B,83=Tanker hazard cat C,84=Tanker hazard cat D,89=Tanker " \
-   "(no additional information)"                                                                                                   \
-   ",90=Other,91=Other carrying dangerous goods,92=Other hazard cat B,93=Other hazard cat C,94=Other hazard cat D,99=Other (no "   \
-   "additional information)")
-
-/* http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf */
-#define LOOKUP_DEVICE_CLASS                        \
-  (",0=Reserved for 2000 Use"                      \
-   ",10=System tools"                              \
-   ",20=Safety systems"                            \
-   ",25=Internetwork device"                       \
-   ",30=Electrical Distribution"                   \
-   ",35=Electrical Generation"                     \
-   ",40=Steering and Control surfaces"             \
-   ",50=Propulsion"                                \
-   ",60=Navigation"                                \
-   ",70=Communication"                             \
-   ",75=Sensor Communication Interface"            \
-   ",80=Instrumentation/general systems"           \
-   ",85=External Environment"                      \
-   ",90=Internal Environment"                      \
-   ",100=Deck + cargo + fishing equipment systems" \
-   ",120=Display"                                  \
-   ",125=Entertainment")
-
-#define LOOKUP_REPEAT_INDICATOR (",0=Initial,1=First retransmission,2=Second retransmission,3=Final retransmission")
-
-#define LOOKUP_AIS_TRANSCEIVER        \
-  (",0=Channel A VDL reception"       \
-   ",1=Channel B VDL reception"       \
-   ",2=Channel A VDL transmission"    \
-   ",3=Channel B VDL transmission"    \
-   ",4=Own information not broadcast" \
-   ",5=Reserved")
-
-#define LOOKUP_AIS_ASSIGNED_MODE  \
-  (",0=Autonomous and continuous" \
-   ",1=Assigned mode")
-
-#define LOOKUP_ATON_TYPE                                 \
-  (",0=Default: Type of AtoN not specified"              \
-   ",1=Reference point"                                  \
-   ",2=RACON"                                            \
-   ",3=Fixed structure off-shore"                        \
-   ",4=Reserved for future use"                          \
-   ",5=Fixed light: without sectors"                     \
-   ",6=Fixed light: with sectors"                        \
-   ",7=Fixed leading light front"                        \
-   ",8=Fixed leading light rear"                         \
-   ",9=Fixed beacon: cardinal N"                         \
-   ",10=Fixed beacon: cardinal E"                        \
-   ",11=Fixed beacon: cardinal S"                        \
-   ",12=Fixed beacon: cardinal W"                        \
-   ",13=Fixed beacon: port hand"                         \
-   ",14=Fixed beacon: starboard hand"                    \
-   ",15=Fixed beacon: preferred channel port hand"       \
-   ",16=Fixed beacon: preferred channel starboard hand"  \
-   ",17=Fixed beacon: isolated danger"                   \
-   ",18=Fixed beacon: safe water"                        \
-   ",19=Fixed beacon: special mark"                      \
-   ",20=Floating AtoN: cardinal N"                       \
-   ",21=Floating AtoN: cardinal E"                       \
-   ",22=Floating AtoN: cardinal S"                       \
-   ",23=Floating AtoN: cardinal W"                       \
-   ",24=Floating AtoN: port hand mark"                   \
-   ",25=Floating AtoN: starboard hand mark"              \
-   ",26=Floating AtoN: preferred channel port hand"      \
-   ",27=Floating AtoN: preferred channel starboard hand" \
-   ",28=Floating AtoN: isolated danger"                  \
-   ",29=Floating AtoN: safe water"                       \
-   ",30=Floating AtoN: special mark"                     \
-   ",31=Floating AtoN: light vessel/LANBY/rigs")
-
-#define LOOKUP_AIS_SPECIAL_MANEUVER     \
-  (",0=Not available"                   \
-   ",1=Not engaged in special maneuver" \
-   ",2=Engaged in special maneuver"     \
-   ",3=Reserved")
-
-#define LOOKUP_POSITION_FIX_DEVICE   \
-  (",0=Default: undefined"           \
-   ",1=GPS"                          \
-   ",2=GLONASS"                      \
-   ",3=Combined GPS/GLONASS"         \
-   ",4=Loran-C"                      \
-   ",5=Chayka"                       \
-   ",6=Integrated navigation system" \
-   ",7=Surveyed"                     \
-   ",8=Galileo"                      \
-   ",15=Internal GNSS")
-
-#define LOOKUP_ENGINE_INSTANCE (",0=Single Engine or Dual Engine Port,1=Dual Engine Starboard")
-
-// http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
-#define LOOKUP_ENGINE_STATUS_1                                                                                                     \
-  (",0=Check Engine,1=Over Temperature,2=Low Oil Pressure,3=Low Oil Level,4=Low Fuel Pressure,5=Low System Voltage,6=Low Coolant " \
-   "Level,7=Water Flow,8=Water In Fuel,9=Charge Indicator,10=Preheat Indicator,11=High Boost Pressure,12=Rev Limit "               \
-   "Exceeded,13=EGR System,14=Throttle Position Sensor,15=Emergency Stop")
-#define LOOKUP_ENGINE_STATUS_2                                                                                           \
-  (",0=Warning Level 1,1=Warning Level 2,2=Power Reduction,3=Maintenance Needed,4=Engine Comm Error,5=Sub or Secondary " \
-   "Throttle,6=Neutral Start Protect,7=Engine Shutting Down")
-
-#define LOOKUP_GEAR_STATUS (",0=Forward,1=Neutral,2=Reverse")
-
-#define LOOKUP_POSITION_ACCURACY (",0=Low,1=High")
-
-#define LOOKUP_RAIM_FLAG (",0=not in use,1=in use")
-
-#define LOOKUP_TIME_STAMP (",60=Not available,61=Manual input mode,62=Dead reckoning mode,63=Positioning system is inoperative")
-
-#define LOOKUP_GNS_AIS (",0=undefined,1=GPS,2=GLONASS,3=GPS+GLONASS,4=Loran-C,5=Chayka,6=integrated,7=surveyed,8=Galileo")
-#define LOOKUP_GNS \
-  (",0=GPS,1=GLONASS,2=GPS+GLONASS,3=GPS+SBAS/WAAS,4=GPS+SBAS/WAAS+GLONASS,5=Chayka,6=integrated,7=surveyed,8=Galileo")
-
-#define LOOKUP_GNS_METHOD                                                                                             \
-  (",0=no GNSS,1=GNSS fix,2=DGNSS fix,3=Precise GNSS,4=RTK Fixed Integer,5=RTK float,6=Estimated (DR) mode,7=Manual " \
-   "Input,8=Simulate mode")
-
-#define LOOKUP_GNS_INTEGRITY (",0=No integrity checking,1=Safe,2=Caution")
-
-#define LOOKUP_SYSTEM_TIME (",0=GPS,1=GLONASS,2=Radio Station,3=Local Cesium clock,4=Local Rubidium clock,5=Local Crystal clock")
-
-#define LOOKUP_MAGNETIC_VARIATION \
-  (",0=Manual"                    \
-   ",1=Automatic Chart"           \
-   ",2=Automatic Table"           \
-   ",3=Automatic Calculation"     \
-   ",4=WMM 2000"                  \
-   ",5=WMM 2005"                  \
-   ",6=WMM 2010"                  \
-   ",7=WMM 2015"                  \
-   ",8=WMM 2020")
-
-#define LOOKUP_RESIDUAL_MODE (",0=Autonomous,1=Differential enhanced,2=Estimated,3=Simulator,4=Manual")
-
-#define LOOKUP_WIND_REFERENCE                                                                                       \
-  (",0=True (ground referenced to North),1=Magnetic (ground referenced to Magnetic North),2=Apparent,3=True (boat " \
-   "referenced),4=True (water referenced)")
-
-#define LOOKUP_WATER_REFERENCE (",0=Paddle wheel,1=Pitot tube,2=Doppler,3=Correlation (ultra sound),4=Electro Magnetic")
-
-#define LOOKUP_YES_NO \
-  (",0=No"            \
-   ",1=Yes") /* Note that Error and Unknown are automatically decoded */
-#define LOOKUP_OK_WARNING (",0=OK,1=Warning")
-#define LOOKUP_OFF_ON \
-  (",0=Off"           \
-   ",1=On") /* Note that Error and Unknown are automatically decoded */
-
-#define LOOKUP_DIRECTION_REFERENCE (",0=True,1=Magnetic,2=Error,3=Null")
-
-#define LOOKUP_DIRECTION_RUDDER (",0=No Order,1=Move to starboard,2=Move to port")
-
-#define LOOKUP_NAV_STATUS                    \
-  (",0=Under way using engine"               \
-   ",1=At anchor"                            \
-   ",2=Not under command"                    \
-   ",3=Restricted maneuverability"           \
-   ",4=Constrained by her draught"           \
-   ",5=Moored"                               \
-   ",6=Aground"                              \
-   ",7=Engaged in Fishing"                   \
-   ",8=Under way sailing"                    \
-   ",9=Hazardous material - High Speed"      \
-   ",10=Hazardous material - Wing in Ground" \
-   ",14=AIS-SART")
-
-#define LOOKUP_POWER_FACTOR (",0=Leading,1=Lagging,2=Error")
-
-#define LOOKUP_TEMPERATURE_SOURCE           \
-  (",0=Sea Temperature"                     \
-   ",1=Outside Temperature"                 \
-   ",2=Inside Temperature"                  \
-   ",3=Engine Room Temperature"             \
-   ",4=Main Cabin Temperature"              \
-   ",5=Live Well Temperature"               \
-   ",6=Bait Well Temperature"               \
-   ",7=Refrigeration Temperature"           \
-   ",8=Heating System Temperature"          \
-   ",9=Dew Point Temperature"               \
-   ",10=Apparent Wind Chill Temperature"    \
-   ",11=Theoretical Wind Chill Temperature" \
-   ",12=Heat Index Temperature"             \
-   ",13=Freezer Temperature"                \
-   ",14=Exhaust Gas Temperature")
-
-#define LOOKUP_HUMIDITY_SOURCE \
-  (",0=Inside"                 \
-   ",1=Outside")
-
-#define LOOKUP_PRESSURE_SOURCE \
-  (",0=Atmospheric"            \
-   ",1=Water"                  \
-   ",2=Steam"                  \
-   ",3=Compressed Air"         \
-   ",4=Hydraulic"              \
-   ",5=Filter"                 \
-   ",6=AltimeterSetting"       \
-   ",7=Oil"                    \
-   ",8=Fuel")
-#define LOOKUP_DSC_FORMAT     \
-  (",102=Geographical area"   \
-   ",112=Distress"            \
-   ",114=Common interest"     \
-   ",116=All ships"           \
-   ",120=Individual stations" \
-   ",121=Non-calling purpose" \
-   ",123=Individual station automatic")
-
-#define LOOKUP_DSC_CATEGORY \
-  (",100=Routine"           \
-   ",108=Safety"            \
-   ",110=Urgency"           \
-   ",112=Distress")
-
-#define LOOKUP_DSC_NATURE     \
-  (",100=Fire"                \
-   ",101=Flooding"            \
-   ",102=Collision"           \
-   ",103=Grounding"           \
-   ",104=Listing"             \
-   ",105=Sinking"             \
-   ",106=Disabled and adrift" \
-   ",107=Undesignated"        \
-   ",108=Abandoning ship"     \
-   ",109=Piracy"              \
-   ",110=Man overboard"       \
-   ",112=EPIRB emission")
-
-#define LOOKUP_DSC_FIRST_TELECOMMAND                      \
-  (",100=F3E/G3E All modes TP"                            \
-   ",101=F3E/G3E duplex TP"                               \
-   ",103=Polling"                                         \
-   ",104=Unable to comply"                                \
-   ",105=End of call"                                     \
-   ",106=Data"                                            \
-   ",109=J3E TP"                                          \
-   ",110=Distress acknowledgement"                        \
-   ",112=Distress relay"                                  \
-   ",113=F1B/J2B TTY-FEC"                                 \
-   ",115=F1B/J2B TTY-ARQ"                                 \
-   ",118=Test"                                            \
-   ",121=Ship position or location registration updating" \
-   ",126=No information")
-
-#define LOOKUP_DSC_SECOND_TELECOMMAND                                   \
-  (",100=No reason given"                                               \
-   ",101=Congestion at MSC"                                             \
-   ",102=Busy"                                                          \
-   ",103=Queue indication"                                              \
-   ",104=Station barred"                                                \
-   ",105=No operator available"                                         \
-   ",106=Operator temporarily unavailable"                              \
-   ",107=Equipment disabled"                                            \
-   ",108=Unable to use proposed channel"                                \
-   ",109=Unable to use proposed mode"                                   \
-   ",110=Ships and aircraft of States not parties to an armed conflict" \
-   ",111=Medical transports"                                            \
-   ",112=Pay phone/public call office"                                  \
-   ",113=Fax/data"                                                      \
-   ",126=No information")
-
-#define LOOKUP_DSC_EXPANSION_DATA           \
-  (",100=Enhanced position"                 \
-   ",101=Source and datum of position"      \
-   ",102=SOG"                               \
-   ",103=COG"                               \
-   ",104=Additional station identification" \
-   ",105=Enhanced geographic area"          \
-   ",106=Number of persons on board")
-
-#define LOOKUP_SEATALK_ALARM_STATUS          \
-  (",0=Alarm condition not met"              \
-   ",1=Alarm condition met and not silenced" \
-   ",2=Alarm condition met and silenced")
-
-#define LOOKUP_SEATALK_ALARM_ID                                   \
-  (",0=No Alarm"                                                  \
-   ",1=Shallow Depth"                                             \
-   ",2=Deep Depth"                                                \
-   ",3=Shallow Anchor"                                            \
-   ",4=Deep Anchor"                                               \
-   ",5=Off Course"                                                \
-   ",6=AWA High"                                                  \
-   ",7=AWA Low"                                                   \
-   ",8=AWS High"                                                  \
-   ",9=AWS Low"                                                   \
-   ",10=TWA High"                                                 \
-   ",11=TWA Low"                                                  \
-   ",12=TWS High"                                                 \
-   ",13=TWS Low"                                                  \
-   ",14=WP Arrival"                                               \
-   ",15=Boat Speed High"                                          \
-   ",16=Boat Speed Low"                                           \
-   ",17=Sea Temp High"                                            \
-   ",18=Sea Temp Low"                                             \
-   ",19=Pilot Watch"                                              \
-   ",20=Pilot Off Course"                                         \
-   ",21=Pilot Wind Shift"                                         \
-   ",22=Pilot Low Battery"                                        \
-   ",23=Pilot Last Minute Of Watch"                               \
-   ",24=Pilot No NMEA Data"                                       \
-   ",25=Pilot Large XTE"                                          \
-   ",26=Pilot NMEA DataError"                                     \
-   ",27=Pilot CU Disconnected"                                    \
-   ",28=Pilot Auto Release"                                       \
-   ",29=Pilot Way Point Advance"                                  \
-   ",30=Pilot Drive Stopped"                                      \
-   ",31=Pilot Type Unspecified"                                   \
-   ",32=Pilot Calibration Required"                               \
-   ",33=Pilot Last Heading"                                       \
-   ",34=Pilot No Pilot"                                           \
-   ",35=Pilot Route Complete"                                     \
-   ",36=Pilot Variable Text"                                      \
-   ",37=GPS Failure"                                              \
-   ",38=MOB"                                                      \
-   ",39=Seatalk1 Anchor"                                          \
-   ",40=Pilot Swapped Motor Power"                                \
-   ",41=Pilot Standby Too Fast To Fish"                           \
-   ",42=Pilot No GPS Fix"                                         \
-   ",43=Pilot No GPS COG"                                         \
-   ",44=Pilot Start Up"                                           \
-   ",45=Pilot Too Slow"                                           \
-   ",46=Pilot No Compass"                                         \
-   ",47=Pilot Rate Gyro Fault"                                    \
-   ",48=Pilot Current Limit"                                      \
-   ",49=Pilot Way Point Advance Port"                             \
-   ",50=Pilot Way Point Advance Stbd"                             \
-   ",51=Pilot No Wind Data"                                       \
-   ",52=Pilot No Speed Data"                                      \
-   ",53=Pilot Seatalk Fail1"                                      \
-   ",54=Pilot Seatalk Fail2"                                      \
-   ",55=Pilot Warning Too Fast To Fish"                           \
-   ",56=Pilot Auto Dockside Fail"                                 \
-   ",57=Pilot Turn Too Fast"                                      \
-   ",58=Pilot No Nav Data"                                        \
-   ",59=Pilot Lost Waypoint Data"                                 \
-   ",60=Pilot EEPROM Corrupt"                                     \
-   ",61=Pilot Rudder Feedback Fail"                               \
-   ",62=Pilot Autolearn Fail1"                                    \
-   ",63=Pilot Autolearn Fail2"                                    \
-   ",64=Pilot Autolearn Fail3"                                    \
-   ",65=Pilot Autolearn Fail4"                                    \
-   ",66=Pilot Autolearn Fail5"                                    \
-   ",67=Pilot Autolearn Fail6"                                    \
-   ",68=Pilot Warning Cal Required"                               \
-   ",69=Pilot Warning OffCourse"                                  \
-   ",70=Pilot Warning XTE"                                        \
-   ",71=Pilot Warning Wind Shift"                                 \
-   ",72=Pilot Warning Drive Short"                                \
-   ",73=Pilot Warning Clutch Short"                               \
-   ",74=Pilot Warning Solenoid Short"                             \
-   ",75=Pilot Joystick Fault"                                     \
-   ",76=Pilot No Joystick Data"                                   \
-   ",77=not assigned"                                             \
-   ",78=not assigned"                                             \
-   ",79=not assigned"                                             \
-   ",80=Pilot Invalid Command"                                    \
-   ",81=AIS TX Malfunction"                                       \
-   ",82=AIS Antenna VSWR fault"                                   \
-   ",83=AIS Rx channel 1 malfunction"                             \
-   ",84=AIS Rx channel 2 malfunction"                             \
-   ",85=AIS No sensor position in use"                            \
-   ",86=AIS No valid SOG information"                             \
-   ",87=AIS No valid COG information"                             \
-   ",88=AIS 12V alarm"                                            \
-   ",89=AIS 6V alarm"                                             \
-   ",90=AIS Noise threshold exceeded channel A"                   \
-   ",91=AIS Noise threshold exceeded channel B"                   \
-   ",92=AIS Transmitter PA fault"                                 \
-   ",93=AIS 3V3 alarm"                                            \
-   ",94=AIS Rx channel 70 malfunction"                            \
-   ",95=AIS Heading lost/invalid"                                 \
-   ",96=AIS internal GPS lost"                                    \
-   ",97=AIS No sensor position"                                   \
-   ",98=AIS Lock failure"                                         \
-   ",99=AIS Internal GGA timeout"                                 \
-   ",100=AIS Protocol stack restart"                              \
-   ",101=Pilot No IPS communications"                             \
-   ",102=Pilot Power-On or Sleep-Switch Reset While Engaged     " \
-   ",103=Pilot Unexpected Reset While Engaged"                    \
-   ",104=AIS Dangerous Target"                                    \
-   ",105=AIS Lost Target"                                         \
-   ",106=AIS Safety Related Message (used to silence)"            \
-   ",107=AIS Connection Lost"                                     \
-   ",108=No Fix")
-
-#define LOOKUP_SEATALK_ALARM_GROUP \
-  (",0=Instrument"                 \
-   ",1=Autopilot"                  \
-   ",2=Radar"                      \
-   ",3=Chart Plotter"              \
-   ",4=AIS")
-
-#define LOOKUP_ENTERTAINMENT_ZONE \
-  (",0=All zones"                 \
-   ",1=Zone 1"                    \
-   ",2=Zone 2"                    \
-   ",3=Zone 3"                    \
-   ",4=Zone 4")
-
-#define LOOKUP_ENTERTAINMENT_SOURCE \
-  (",0=Vessel alarm"                \
-   ",1=AM"                          \
-   ",2=FM"                          \
-   ",3=Weather"                     \
-   ",4=DAB"                         \
-   ",5=Aux"                         \
-   ",6=USB"                         \
-   ",7=CD"                          \
-   ",8=MP3"                         \
-   ",9=Apple iOS"                   \
-   ",10=Android"                    \
-   ",11=Bluetooth"                  \
-   ",12=Sirius XM"                  \
-   ",13=Pandora"                    \
-   ",14=Spotify"                    \
-   ",15=Slacker"                    \
-   ",16=Songza"                     \
-   ",17=Apple Radio"                \
-   ",18=Last FM"                    \
-   ",19=Ethernet"                   \
-   ",20=Video MP4"                  \
-   ",21=Video DVD"                  \
-   ",22=Video BluRay"               \
-   ",23=HDMI"                       \
-   ",24=Video")
-
-#define LOOKUP_ENTERTAINMENT_PLAY_STATUS \
-  (",0=Play"                             \
-   ",1=Pause"                            \
-   ",2=Stop"                             \
-   ",3=FF (1x)"                          \
-   ",4=FF (2x)"                          \
-   ",5=FF (3x)"                          \
-   ",6=FF (4x)"                          \
-   ",7=RW (1x)"                          \
-   ",8=RW (2x)"                          \
-   ",9=RW (3x)"                          \
-   ",10=RW (4x)"                         \
-   ",11=Skip ahead"                      \
-   ",12=Skip back"                       \
-   ",13=Jog ahead"                       \
-   ",14=Jog back"                        \
-   ",15=Seek up"                         \
-   ",16=Seek down"                       \
-   ",17=Scan up"                         \
-   ",18=Scan down"                       \
-   ",19=Tune up"                         \
-   ",20=Tune down"                       \
-   ",21=Slow motion (.75x)"              \
-   ",22=Slow motion (.5x)"               \
-   ",23=Slow motion (.25x)"              \
-   ",24=Slow motion (.125x)"             \
-   ",25=Source renaming")
-
-#define LOOKUP_ENTERTAINMENT_REPEAT_STATUS \
-  (",0=Off"                                \
-   ",1=One"                                \
-   ",2=All")
-
-#define LOOKUP_ENTERTAINMENT_SHUFFLE_STATUS \
-  (",0=Off"                                 \
-   ",1=Play queue"                          \
-   ",2=All")
-
-#define LOOKUP_ENTERTAINMENT_LIKE_STATUS \
-  (",0=None"                             \
-   ",1=Thumbs up"                        \
-   ",2=Thumbs down")
-
-#define LOOKUP_ENTERTAINMENT_TYPE \
-  (",0=File"                      \
-   ",1=Playlist Name"             \
-   ",2=Genre Name"                \
-   ",3=Album Name"                \
-   ",4=Artist Name"               \
-   ",5=Track Name"                \
-   ",6=Station Name"              \
-   ",7=Station Number"            \
-   ",8=Favourite Number"          \
-   ",9=Play Queue"                \
-   ",10=Content Info")
-
-#define LOOKUP_ENTERTAINMENT_GROUP \
-  (",0=File"                       \
-   ",1=Playlist Name"              \
-   ",2=Genre Name"                 \
-   ",3=Album Name"                 \
-   ",4=Artist Name"                \
-   ",5=Track Name"                 \
-   ",6=Station Name"               \
-   ",7=Station Number"             \
-   ",8=Favourite Number"           \
-   ",9=Play Queue"                 \
-   ",10=Content Info")
-
-#define LOOKUP_ENTERTAINMENT_CHANNEL \
-  (",0=All channels"                 \
-   ",1=Stereo full range"            \
-   ",2=Stereo front"                 \
-   ",3=Stereo back"                  \
-   ",4=Stereo surround"              \
-   ",5=Center"                       \
-   ",6=Subwoofer"                    \
-   ",7=Front left"                   \
-   ",8=Front right"                  \
-   ",9=Back left"                    \
-   ",10=Back right"                  \
-   ",11=Surround left"               \
-   ",12=Surround right")
-
-#define LOOKUP_ENTERTAINMENT_EQ \
-  (",0=Flat"                    \
-   ",1=Rock"                    \
-   ",2=Hall"                    \
-   ",3=Jazz"                    \
-   ",4=Pop"                     \
-   ",5=Live"                    \
-   ",6=Classic"                 \
-   ",7=Vocal"                   \
-   ",8=Arena"                   \
-   ",9=Cinema"                  \
-   ",10=Custom")
-
-#define LOOKUP_ENTERTAINMENT_FILTER \
-  (",0=Full range"                  \
-   ",1=High pass"                   \
-   ",2=Low pass"                    \
-   ",3=Band pass"                   \
-   ",4=Notch filter")
-
-#define LOOKUP_ALERT_TYPE  \
-  (",0=Reserved"           \
-   ",1=Emergency Alarm"    \
-   ",2=Alarm"              \
-   ",3=Reserved"           \
-   ",4=Reserved"           \
-   ",5=Warning"            \
-   ",6=Reserved"           \
-   ",7=Reserved"           \
-   ",8=Caution"            \
-   ",13=Reserved"          \
-   ",14=Data out of range" \
-   ",15=Data not available")
-
-#define LOOKUP_ALERT_CATEGORY \
-  (",0=Navigational"          \
-   ",1=Technical"             \
-   ",13=Reserved"             \
-   ",14=Data out of range"    \
-   ",15=Data not available")
-
-#define LOOKUP_ALERT_TRIGGER_CONDITION \
-  (",0=Manual"                         \
-   ",1=Auto"                           \
-   ",2=Test"                           \
-   ",3=Disabled"                       \
-   ",13=Reserved"                      \
-   ",14=Data out of range"             \
-   ",15=Data not available")
-
-#define LOOKUP_ALERT_THRESHOLD_STATUS \
-  (",0=Normal"                        \
-   ",1=Threshold Exceeded"            \
-   ",2=Extreme Threshold Exceeded"    \
-   ",3=Low Threshold Exceeded"        \
-   ",4=Acknowledged"                  \
-   ",5=Awaiting Acknowledge"          \
-   ",253=Reserved"                    \
-   ",254=Data out of range"           \
-   ",255=Data not available")
-
-#define LOOKUP_ALERT_STATE   \
-  (",0=Disabled"             \
-   ",1=Normal"               \
-   ",2=Active"               \
-   ",3=Silenced"             \
-   ",4=Acknowledged"         \
-   ",5=Awaiting Acknowledge" \
-   ",253=Reserved"           \
-   ",254=Data out of range"  \
-   ",255=Data not available")
-
-#define LOOKUP_ALERT_LANGUAGE_ID \
-  (",0=English (US)"             \
-   ",1=English (UK)"             \
-   ",2=Arabic"                   \
-   ",3=Chinese (simplified)"     \
-   ",4=Croatian"                 \
-   ",5=Danish"                   \
-   ",6=Dutch"                    \
-   ",7=Finnish"                  \
-   ",8=French"                   \
-   ",9=German"                   \
-   ",10=Greek"                   \
-   ",11=Italian"                 \
-   ",12=Japanese"                \
-   ",13=Korean"                  \
-   ",14=Norwegian"               \
-   ",15=Polish"                  \
-   ",16=Portuguese"              \
-   ",17=Russian"                 \
-   ",18=Spanish"                 \
-   ",19=Swedish")
-
-#define LOOKUP_ALERT_RESPONSE_COMMAND \
-  (",0=Acknowledge"                   \
-   ",1=Temporary Silence"             \
-   ",2=Test Command off"              \
-   ",3=Test Command on")
-
-#define LOOKUP_CONVERTER_STATE \
-  (",0=Off"                    \
-   ",1=Low Power Mode"         \
-   ",2=Fault"                  \
-   ",3=Bulk"                   \
-   ",4=Absorption"             \
-   ",5=Float"                  \
-   ",6=Storage"                \
-   ",7=Equalize"               \
-   ",8=Pass thru"              \
-   ",9=Inverting"              \
-   ",10=Assisting")
-
-#define LOOKUP_THRUSTER_DIRECTION_CONTROL \
-  (",0=Off"                               \
-   ",1=Ready"                             \
-   ",2=To Port"                           \
-   ",3=To Starboard")
-
-#define LOOKUP_THRUSTER_RETRACT_CONTROL \
-  (",0=Off"                             \
-   ",1=Extend"                          \
-   ",2=Retract"                         \
-   ",3=Reserved")
-
-#define LOOKUP_THRUSTER_CONTROL_EVENTS      \
-  (",0=Another device controlling thruster" \
-   ",1=Boat speed too fast to safely use thruster")
-
-#define LOOKUP_THRUSTER_MOTOR_TYPE \
-  (",0=12VDC"                      \
-   ",1=24VDC"                      \
-   ",2=48VDC"                      \
-   ",3=24VAC"                      \
-   ",4=Hydraulic")
-
-#define LOOKUP_THRUSTER_MOTOR_EVENTS    \
-  (",0=Motor over temperature cutout"   \
-   ",1=Motor over current cutout"       \
-   ",2=Low oil level warning"           \
-   ",3=Oil over temperature warning"    \
-   ",4=Controller under voltage cutout" \
-   ",5=Manufacturer defined")
+#include "lookup.h"
 
 typedef enum PacketComplete
 {
@@ -829,6 +186,9 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson);
 
 void camelCase(bool upperCamelCase);
 
+/* lookup.c */
+extern void fillLookups(void);
+
 #ifdef GLOBALS
 Pgn pgnList[] = {
 
@@ -859,7 +219,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Control", BYTES(1), RES_LOOKUP, false, ",0=ACK,1=NAK,2=Access Denied,3=Address Busy", ""},
+     {LOOKUP_FIELD("Control", BYTES(1), ISO_CONTROL),
       {"Group Function", BYTES(1), 1, false, 0, ""},
       {"Reserved", 24, RES_BINARY, false, 0, "Reserved"},
       {"PGN", 24, RES_INTEGER, false, 0, "Parameter Group Number of requested information"},
@@ -971,9 +331,9 @@ Pgn pgnList[] = {
       {"Device Instance Upper", 5, 1, false, 0, "ISO Function Instance"},
       {"Device Function", 8, 1, false, 0, "ISO Function"},
       {"Reserved", 1, RES_BINARY, false, 0, ""},
-      {"Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, ""},
+      LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
       {"System Instance", 4, 1, false, 0, "ISO Device Class Instance"},
-      {"Industry Group", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
+      LOOKUP_FIELD("Industry Group", 3, INDUSTRY_CODE),
       {"Reserved", 1, RES_BINARY, false, 0, "ISO Self Configurable"},
       {0}}}
 
@@ -1034,7 +394,7 @@ Pgn pgnList[] = {
      0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
+      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
       {"Data", BYTES(6), RES_BINARY, false, 0, ""},
       {0}},
      0,
@@ -1052,7 +412,7 @@ Pgn pgnList[] = {
      0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
+      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
       {"Data", BYTES(6), RES_BINARY, false, 0, ""},
       {0}},
      0,
@@ -1127,7 +487,7 @@ Pgn pgnList[] = {
      0,
      {{"Reactive Power", BYTES(2), 1, false, "var", ""},
       {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
     ,
@@ -1161,7 +521,7 @@ Pgn pgnList[] = {
      0,
      {{"Reactive Power", BYTES(2), 1, false, "var", ""},
       {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
     ,
@@ -1195,7 +555,7 @@ Pgn pgnList[] = {
      0,
      {{"Reactive Power", BYTES(4), 1, true, "var", "", -2000000000},
       {"Power Factor", BYTES(2), 1 / 16384, true, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
     ,
@@ -1229,7 +589,7 @@ Pgn pgnList[] = {
      0,
      {{"Reactive Power", BYTES(4), 1, true, "var", "", -2000000000},
       {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
     ,
@@ -1272,7 +632,7 @@ Pgn pgnList[] = {
      0,
      {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
       {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
     ,
@@ -1306,7 +666,7 @@ Pgn pgnList[] = {
      0,
      {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
       {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
     ,
@@ -1340,7 +700,7 @@ Pgn pgnList[] = {
      0,
      {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
       {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
     ,
@@ -1374,7 +734,7 @@ Pgn pgnList[] = {
      0,
      {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
       {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
     ,
@@ -1414,9 +774,9 @@ Pgn pgnList[] = {
       {"Device Instance Upper", 5, 1, false, 0, "ISO Function Instance"},
       {"Device Function", BYTES(1), 1, false, 0, "ISO Function"},
       {"Reserved", 1, RES_BINARY, false, 0, ""},
-      {"Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, ""},
+      LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
       {"System Instance", 4, 1, false, 0, "ISO Device Class Instance"},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
+      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
       {"Reserved", 1, RES_BINARY, false, 0, "ISO Self Configurable"},
       {"New Source Address", BYTES(1), 1, false, 0, ""},
       {0}}}
@@ -1446,7 +806,7 @@ Pgn pgnList[] = {
      0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
+      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
       {"Data", BYTES(6), RES_BINARY, false, 0, ""},
       {0}},
      0,
@@ -1480,7 +840,7 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Boot State", 4, RES_LOOKUP, false, ",0=in Startup Monitor,1=running Bootloader,2=running Application", ""},
+      LOOKUP_FIELD("Boot State", 4, BOOT_STATE),
       {0}}}
 
     ,
@@ -1493,7 +853,7 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "Lowrance"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Temperature Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
+      LOOKUP_FIELD("Temperature Source", BYTES(1), TEMPERATURE_SOURCE),
       {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {0}}}
 
@@ -1539,8 +899,8 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Format Code", 3, RES_LOOKUP, false, ",1=Format code 1", ""},
-      {"Access Level", 3, RES_LOOKUP, false, ",0=Locked,1=unlocked level 1,2=unlocked level 2", ""},
+      {"Format Code", 3, RES_INTEGER, false, 0, ""},
+      LOOKUP_FIELD("Access Level", 3, ACCESS_LEVEL),
       {"Reserved", 2, RES_BINARY, false, 0, ""},
       {"Access Seed/Key",
        BYTES(4),
@@ -1573,9 +933,9 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"SID", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Alarm Status", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_STATUS, ""},
-      {"Alarm ID", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_ID, ""},
-      {"Alarm Group", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_GROUP, ""},
+      LOOKUP_FIELD("Alarm Status", BYTES(1), SEATALK_ALARM_STATUS),
+      LOOKUP_FIELD("Alarm ID", BYTES(1), SEATALK_ALARM_ID),
+      LOOKUP_FIELD("Alarm Group", BYTES(1), SEATALK_ALARM_GROUP),
       {"Alarm Priority", BYTES(2), RES_BINARY, false, 0, ""},
       {0}}},
     {"Simnet: Trim Tab Sensor Calibration",
@@ -1735,8 +1095,8 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Alarm ID", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_ID, ""},
-      {"Alarm Group", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_GROUP, ""},
+      LOOKUP_FIELD("Alarm ID", BYTES(1), SEATALK_ALARM_ID),
+      LOOKUP_FIELD("Alarm Group", BYTES(1), SEATALK_ALARM_GROUP),
       {"Reserved", 32, RES_BINARY, false, 0, ""},
       {0}}}
 
@@ -1801,7 +1161,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"SID", BYTES(1), 1, false, 0, ""},
-      {"Depth Quality Factor", 4, RES_LOOKUP, false, ",0=No Depth Lock", ""},
+      LOOKUP_FIELD("Depth Quality Factor", 4, AIRMAR_DEPTH_QUALITY_FACTOR),
       {0}}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
@@ -1890,7 +1250,7 @@ Pgn pgnList[] = {
      2,
      {{"Function Code", BYTES(1), RES_INTEGER, false, "=1", "Command"},
       {"PGN", BYTES(3), RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Priority", 4, RES_LOOKUP, 0, ",8=Leave priority unchanged,9=Reset to default"},
+      LOOKUP_FIELD("Priority", 4, PRIORITY),
       {"Reserved", 4, RES_BINARY, false, 0, ""},
       {"# of Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow"},
       {"Parameter", BYTES(1), RES_INTEGER, false, 0, "Parameter index"},
@@ -1906,27 +1266,10 @@ Pgn pgnList[] = {
      1,
      {{"Function Code", BYTES(1), RES_INTEGER, false, "=2", "Acknowledge"},
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      {"PGN error code",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=Acknowledge,1=PGN not supported,2=PGN not available,3=Access denied,4=Not supported,5=Tag not supported,6=Read or Write "
-       "not supported",
-       ""},
-      {"Transmission interval/Priority error code",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=Acknowledge,1=Transmit Interval/Priority not supported,2=Transmit Interval to low,3=Access denied,4=Not supported",
-       ""},
+      LOOKUP_FIELD("PGN error code", 4, PGN_ERROR_CODE),
+      LOOKUP_FIELD("Transmission interval/Priority error code", 4, TRANSMISSION_INTERVAL),
       {"# of Parameters", 8, 1, false, 0, ""},
-      {"Parameter",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=Acknowledge,1=Invalid parameter field,2=Temporary error,3=Parameter out of range,4=Access denied,5=Not supported,6=Read "
-       "or Write not supported",
-       ""},
+      LOOKUP_FIELD("Parameter", 4, PARAMETER_FIELD),
       {0}}}
 
     ,
@@ -1942,7 +1285,7 @@ Pgn pgnList[] = {
       ,
       {"Reserved", 2, RES_NOTUSED, false, 0, ""} // TODO: Only in PGN when field PGN is proprietary. Sigh.
       ,
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""} // TODO: Only in PGN when field PGN is proprietary. Sigh.
+      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE) // TODO: Only in PGN when field PGN is proprietary. Sigh.
       ,
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
       {"# of Selection Pairs", 8, 1, false, 0, ""},
@@ -1962,22 +1305,12 @@ Pgn pgnList[] = {
      202,
      {{"Function Code", BYTES(1), RES_INTEGER, false, "=4", "Read Fields Reply"},
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Manufacturer Code",
-       11,
-       RES_MANUFACTURER,
-       false,
-       0,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Industry Code",
-       3,
-       RES_LOOKUP,
-       false,
-       LOOKUP_INDUSTRY_CODE,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
+      // TODO: Only in PGN when field PGN is proprietary. Sigh.
+      {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "Only for proprietary PGNs"},
+      // TODO: Only in PGN when field PGN is proprietary. Sigh.
+      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"},
+      // TODO: Only in PGN when field PGN is proprietary. Sigh.
+      LOOKUP_FIELD_DESC("Industry Code", 3, INDUSTRY_CODE, "Only for proprietary PGNs"),
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
@@ -1997,22 +1330,12 @@ Pgn pgnList[] = {
      202,
      {{"Function Code", BYTES(1), RES_INTEGER, false, "=5", "Write Fields"},
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Manufacturer Code",
-       11,
-       RES_MANUFACTURER,
-       false,
-       0,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Industry Code",
-       3,
-       RES_LOOKUP,
-       false,
-       LOOKUP_INDUSTRY_CODE,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
+      // TODO: Only in PGN when field PGN is proprietary. Sigh.
+      {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "Only for proprietary PGNs"},
+      // TODO: Only in PGN when field PGN is proprietary. Sigh.
+      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"},
+      // TODO: Only in PGN when field PGN is proprietary. Sigh.
+      LOOKUP_FIELD_DESC("Industry Code", 3, INDUSTRY_CODE, "Only for proprietary PGNs"),
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
@@ -2032,22 +1355,12 @@ Pgn pgnList[] = {
      202,
      {{"Function Code", BYTES(1), RES_INTEGER, false, "=6", "Write Fields Reply"},
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Manufacturer Code",
-       11,
-       RES_MANUFACTURER,
-       false,
-       0,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Industry Code",
-       3,
-       RES_LOOKUP,
-       false,
-       LOOKUP_INDUSTRY_CODE,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
+      // TODO: Only in PGN when field PGN is proprietary. Sigh.
+      {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "Only for proprietary PGNs"},
+      // TODO: Only in PGN when field PGN is proprietary. Sigh.
+      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"},
+      // TODO: Only in PGN when field PGN is proprietary. Sigh.
+      LOOKUP_FIELD_DESC("Industry Code", 3, INDUSTRY_CODE, "Only for proprietary PGNs"),
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
@@ -2066,12 +1379,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      1,
-     {{"Function Code",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",0=Transmit PGN list,1=Receive PGN list",
-       "Transmit or receive PGN Group Function Code"},
+     {LOOKUP_FIELD("Function Code", BYTES(1), PGN_LIST_FUNCTION),
       {
           "PGN",
           24,
@@ -2096,7 +1404,7 @@ Pgn pgnList[] = {
       {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
       {"command", BYTES(1), RES_INTEGER, false, "=132", "0x84"},
       {"Unknown 1", BYTES(3), RES_BINARY, false, 0, ""},
-      {"Pilot Mode", BYTES(1), RES_INTEGER, false, ",64=Standby,66=Auto,70=Wind,74=Track", ""},
+      LOOKUP_FIELD("Pilot Mode", BYTES(1), SEATALK_PILOT_MODE),
       {"Sub Mode", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Pilot Mode Data", BYTES(1), RES_BINARY, false, 0, ""},
       {"Unknown 2", BYTES(10), RES_BINARY, false, 0, ""},
@@ -2115,7 +1423,7 @@ Pgn pgnList[] = {
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=3", "Media Control"},
       {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Play,2=Pause,4=Next,6=Prev", ""},
+      LOOKUP_FIELD("Command", BYTES(1), FUSION_COMMAND),
       {0}}}
 
     ,
@@ -2131,7 +1439,7 @@ Pgn pgnList[] = {
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=30", "Sirius Control"},
       {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Next,2=Prev", ""},
+      LOOKUP_FIELD("Command", BYTES(1), FUSION_SIRIUS_COMMAND),
       {0}}}
 
     ,
@@ -2174,7 +1482,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=17", "Mute"},
-      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Mute On,2=Mute Off", ""},
+      LOOKUP_FIELD("Command", BYTES(1), FUSION_MUTE_COMMAND),
       {0}}}
 
     ,
@@ -2224,13 +1532,9 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
       {"command", BYTES(1), RES_BINARY, false, "=134", "0x86"},
-      {"device", BYTES(1), RES_LOOKUP, false, ",33=S100", ""},
-      {"key",
-       BYTES(2),
-       RES_LOOKUP,
-       false,
-       ",64005=-1,63495=+1,64770=Standby,65025=Auto,64515=Wind,56355=Track,63240=+10,63750=-10,56865=-1 and -10,56610=+1 and +10",
-       ""},
+      {"device", BYTES(1), RES_INTEGER, false, 0, ""},
+      LOOKUP_FIELD("key", BYTES(1), SEATALK_KEYSTROKE),
+      {"keyInverted", BYTES(1), RES_INTEGER, false, 0, "Bit negated version of key"},
       {"Unknown data",
        BYTES(14),
        RES_BINARY,
@@ -2255,7 +1559,7 @@ Pgn pgnList[] = {
       {"command", BYTES(1), RES_BINARY, false, "=144", "0x90"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""} // 0x00
       ,
-      {"device", BYTES(1), RES_LOOKUP, false, ",3=S100,5=Course Computer", ""},
+      LOOKUP_FIELD("device", BYTES(1), SEATALK_DEVICE_ID),
       {0}}}
 
     /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
@@ -2292,19 +1596,8 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=33", "Calibrate Compass"},
-      {"Calibrate Function",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",0=Normal/cancel calibration,1=Enter calibration mode,2=Reset calibration to 0,3=Verify,4=Reset compass to "
-       "defaults,5=Reset damping to defaults",
-       ""},
-      {"Calibration Status",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",0=Queried,1=Passed,2=Failed - timeout,3=Failed - tilt error,4=Failed - other,5=In progress",
-       ""},
+      LOOKUP_FIELD("Calibrate Function", BYTES(1), AIRMAR_CALIBRATE_FUNCTION),
+      LOOKUP_FIELD("Calibration Status", BYTES(1), AIRMAR_CALIBRATE_STATUS),
       {"Verify Score", BYTES(1), RES_INTEGER, false, 0, "TBD"},
       {"X-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
       {"Y-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
@@ -2334,18 +1627,8 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=34", "True Wind Options"},
-      {"COG substitution for HDG",
-       2,
-       RES_LOOKUP,
-       false,
-       ",0=Use HDG only,1=Allow COG to replace HDG",
-       "Allow use of COG when HDG not available?"},
-      {"Calibration Status",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",0=Queried,1=Passed,2=Failed - timeout,3=Failed - tilt error,4=Failed - other,5=In progress",
-       ""},
+      LOOKUP_FIELD_DESC("COG substitution for HDG", 2, YES_NO, "Allow use of COG when HDG not available?"),
+      LOOKUP_FIELD("Calibration Status", BYTES(1), AIRMAR_CALIBRATE_STATUS),
       {"Verify Score", BYTES(1), RES_INTEGER, false, 0, "TBD"},
       {"X-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
       {"Y-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
@@ -2375,7 +1658,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=35", "Simulate Mode"},
-      {"Simulate Mode", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      LOOKUP_FIELD("Simulate Mode", 2, OFF_ON),
       {"Reserved", 22, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -2429,7 +1712,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=42", "Calibrate Temperature"},
-      {"Temperature instance", 2, RES_LOOKUP, false, ",0=Device Sensor,1=Onboard Water Sensor,2=Optional Water Sensor", ""},
+      LOOKUP_FIELD("Temperature instance", 2, AIRMAR_TEMPERATURE_INSTANCE),
       {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
       {"Temperature offset", BYTES(2), 0.001, true, "K", "actual range is -9.999 to +9.999 K"},
       {0}}}
@@ -2446,7 +1729,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=43", "Speed Filter"},
-      {"Filter type", 4, RES_LOOKUP, false, ",0=no filter,1=basic IIR filter", ""},
+      LOOKUP_FIELD("Filter type", 4, AIRMAR_FILTER),
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {"Sample interval", BYTES(2), 0.01, false, "s", ""},
       {"Filter duration", BYTES(2), 0.01, false, "s", ""},
@@ -2464,7 +1747,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=44", "Temperature Filter"},
-      {"Filter type", 4, RES_LOOKUP, false, ",0=no filter,1=basic IIR filter,15=data not available", ""},
+      LOOKUP_FIELD("Filter type", 4, AIRMAR_FILTER),
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {"Sample interval", BYTES(2), 0.01, false, "s", ""},
       {"Filter duration", BYTES(2), 0.01, false, "s", ""},
@@ -2482,12 +1765,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=46", "NMEA 2000 options"},
-      {"Transmission Interval",
-       2,
-       RES_LOOKUP,
-       false,
-       ",0=Measure Interval,1=Requested by user,2=reserved,3=data not available",
-       ""},
+      LOOKUP_FIELD("Transmission Interval", 2, AIRMAR_TRANSMISSION_INTERVAL),
       {"Reserved", 22, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -2529,7 +1807,7 @@ Pgn pgnList[] = {
      0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
+      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
       {"Data", BYTES(221), RES_BINARY, false, 0, ""},
       {0}},
      0,
@@ -2556,8 +1834,8 @@ Pgn pgnList[] = {
      PACKET_FAST,
      28,
      0,
-     {{"Alert Type", 4, RES_LOOKUP, false, LOOKUP_ALERT_TYPE, ""},
-      {"Alert Category", 4, RES_LOOKUP, false, LOOKUP_ALERT_CATEGORY, ""},
+     {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
       {"Alert System", BYTES(1), 1, false, 0, ""},
       {"Alert Sub-System", BYTES(1), 1, false, 0, ""},
       {"Alert ID", BYTES(2), 1, false, 0, ""},
@@ -2565,18 +1843,18 @@ Pgn pgnList[] = {
       {"Data Source Instance", BYTES(1), 1, false, 0, ""},
       {"Data Source Index-Source", BYTES(1), 1, false, 0, ""},
       {"Alert Occurrence Number", BYTES(1), 1, false, 0, ""},
-      {"Temporary Silence Status", 1, RES_LOOKUP, false, ",0=Not Temporary Silence,1=Temporary Silence", ""},
-      {"Acknowledge Status", 1, RES_LOOKUP, false, ",0=Not Acknowledged,1=Acknowledged", ""},
-      {"Escalation Status", 1, RES_LOOKUP, false, ",0=Not Escalated,1=Escalated", ""},
-      {"Temporary Silence Support", 1, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
-      {"Acknowledge Support", 1, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
-      {"Escalation Support", 1, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
+      LOOKUP_FIELD("Temporary Silence Status", 1, YES_NO),
+      LOOKUP_FIELD("Acknowledge Status", 1, YES_NO),
+      LOOKUP_FIELD("Escalation Status", 1, YES_NO),
+      LOOKUP_FIELD("Temporary Silence Support", 1, YES_NO),
+      LOOKUP_FIELD("Acknowledge Support", 1, YES_NO),
+      LOOKUP_FIELD("Escalation Support", 1, YES_NO),
       {"NMEA Reserved", 2, RES_BINARY, false, 0, ""},
       {"Acknowledge Source Network ID NAME", BYTES(8), 1, false, 0, ""},
-      {"Trigger Condition", 4, RES_LOOKUP, false, LOOKUP_ALERT_TRIGGER_CONDITION, ""},
-      {"Threshold Status", 4, RES_LOOKUP, false, LOOKUP_ALERT_THRESHOLD_STATUS, ""},
+      LOOKUP_FIELD("Trigger Condition", 4, ALERT_TRIGGER_CONDITION),
+      LOOKUP_FIELD("Threshold Status", 4, ALERT_THRESHOLD_STATUS),
       {"Alert Priority", BYTES(1), 1, false, 0, ""},
-      {"Alert State", BYTES(1), RES_LOOKUP, false, LOOKUP_ALERT_STATE, ""},
+      LOOKUP_FIELD("Alert State", BYTES(1), ALERT_STATE),
       {0}}}
 
     ,
@@ -2586,8 +1864,8 @@ Pgn pgnList[] = {
      PACKET_FAST,
      25,
      0,
-     {{"Alert Type", 4, RES_LOOKUP, false, LOOKUP_ALERT_TYPE, ""},
-      {"Alert Category", 4, RES_LOOKUP, false, LOOKUP_ALERT_CATEGORY, ""},
+     {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
       {"Alert System", BYTES(1), 1, false, 0, ""},
       {"Alert Sub-System", BYTES(1), 1, false, 0, ""},
       {"Alert ID", BYTES(2), 1, false, 0, ""},
@@ -2596,7 +1874,7 @@ Pgn pgnList[] = {
       {"Data Source Index-Source", BYTES(1), 1, false, 0, ""},
       {"Alert Occurrence Number", BYTES(1), 1, false, 0, ""},
       {"Acknowledge Source Network ID NAME", BYTES(8), 1, false, 0, ""},
-      {"Response Command", 2, RES_LOOKUP, false, LOOKUP_ALERT_RESPONSE_COMMAND, ""},
+      LOOKUP_FIELD("Response Command", 2, ALERT_RESPONSE_COMMAND),
       {"NMEA Reserved", 6, RES_BINARY, false, 0, ""},
       {0}}}
 
@@ -2607,8 +1885,8 @@ Pgn pgnList[] = {
      PACKET_FAST,
      49,
      0,
-     {{"Alert Type", 4, RES_LOOKUP, false, LOOKUP_ALERT_TYPE, ""},
-      {"Alert Category", 4, RES_LOOKUP, false, LOOKUP_ALERT_CATEGORY, ""},
+     {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
       {"Alert System", BYTES(1), 1, false, 0, ""},
       {"Alert Sub-System", BYTES(1), 1, false, 0, ""},
       {"Alert ID", BYTES(2), 1, false, 0, ""},
@@ -2616,7 +1894,7 @@ Pgn pgnList[] = {
       {"Data Source Instance", BYTES(1), 1, false, 0, ""},
       {"Data Source Index-Source", BYTES(1), 1, false, 0, ""},
       {"Alert Occurrence Number", BYTES(1), 1, false, 0, ""},
-      {"Language ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ALERT_LANGUAGE_ID, ""},
+      LOOKUP_FIELD("Language ID", BYTES(1), ALERT_LANGUAGE_ID),
       {"Alert Text Description", BYTES(16), RES_STRINGLAU, false, 0, ""},
       {"Alert Location Text Description", BYTES(16), RES_STRINGLAU, false, 0, ""},
       {0}}}
@@ -2639,7 +1917,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Source", 4, RES_LOOKUP, false, LOOKUP_SYSTEM_TIME, ""},
+      LOOKUP_FIELD("Source", 4, SYSTEM_TIME),
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {"Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       {"Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
@@ -2661,9 +1939,9 @@ Pgn pgnList[] = {
        "s",
        "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset."},
       {"Sequence Counter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Controller 1 State", 2, RES_LOOKUP, false, ",0=Error Active,1=Error Passive,2=Bus Off,3=Not Available", ""},
-      {"Controller 2 State", 2, RES_LOOKUP, false, ",0=Error Active,1=Error Passive,2=Bus Off,3=Not Available", ""},
-      {"Equipment Status", 2, RES_LOOKUP, false, ",0=Operational,1=Fault,2=Reserved,3=Not Available", ""},
+      LOOKUP_FIELD("Controller 1 State", 2, CONTROLLER_STATE),
+      LOOKUP_FIELD("Controller 2 State", 2, CONTROLLER_STATE),
+      LOOKUP_FIELD("Equipment Status", 2, EQUIPMENT_STATUS),
       {"Reserved", 34, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -2712,26 +1990,21 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"MOB Emitter ID", BYTES(4), RES_INTEGER, false, 0, "Identifier for each MOB emitter, unique to the vessel"},
-      {"Man Overboard Status",
-       3,
-       RES_LOOKUP,
-       false,
-       ",0=MOB Emitter Activated,1=Manual on-board MOB Button Activation,2=Test Mode,3=MOB Not Active",
-       ""},
+      LOOKUP_FIELD("Man Overboard Status", 3, MOB_STATUS),
       {"Reserved", 5, RES_BINARY, false, 0, ""},
       {"Activation Time", BYTES(4), RES_TIME, false, "s", "Time of day (UTC) when MOB was activated"},
-      {"Position Source", 3, RES_LOOKUP, false, ",0=Position estimated by the Vessel,1=Position reported by MOB emitter", ""},
+      LOOKUP_FIELD("Position Source", 3, MOB_POSITION_SOURCE),
       {"Reserved", 5, RES_BINARY, false, 0, ""},
       {"Position Date", BYTES(2), RES_DATE, false, "", "Date of MOB position"},
       {"Position Time", BYTES(4), RES_TIME, false, "s", "Time of day of MOB position (UTC)"},
       {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
+      LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
       {"Reserved", 6, RES_BINARY, false, 0, ""},
       {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
       {"MMSI of vessel of origin", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"MOB Emitter Battery Status", 3, RES_LOOKUP, false, ",0=Good,1=Low", ""},
+      LOOKUP_FIELD("MOB Emitter Battery Low Status", 3, LOW_BATTERY),
       {"Reserved", 5, RES_BINARY, false, 0, ""},
       {0}}}
 
@@ -2742,21 +2015,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x15,
      0,
-     {{"Rudder Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Off-Heading Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Off-Track Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Override", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Steering Mode",
-       3,
-       RES_LOOKUP,
-       false,
-       ",0=Main Steering,1=Non-Follow-up Device,10=Follow-up Device,11=Heading Control Standalone,100=Heading Control,101=Track "
-       "Control",
-       ""},
-      {"Turn Mode", 3, RES_LOOKUP, false, ",0=Rudder Limit controlled,1=turn rate controlled,10=radius controlled", ""},
-      {"Heading Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
+     {LOOKUP_FIELD("Rudder Limit Exceeded", 2, YES_NO),
+      LOOKUP_FIELD("Off-Heading Limit Exceeded", 2, YES_NO),
+      LOOKUP_FIELD("Off-Track Limit Exceeded", 2, YES_NO),
+      LOOKUP_FIELD("Override", 2, YES_NO),
+      LOOKUP_FIELD("Steering Mode", 3, STEERING_MODE),
+      LOOKUP_FIELD("Turn Mode", 3, TURN_MODE),
+      LOOKUP_FIELD("Heading Reference", 2, DIRECTION_REFERENCE),
       {"Reserved", 5, RES_BINARY, false, 0, ""},
-      {"Commanded Rudder Direction", 3, RES_LOOKUP, false, LOOKUP_DIRECTION_RUDDER, ""},
+      LOOKUP_FIELD("Commanded Rudder Direction", 3, DIRECTION_RUDDER),
       {"Commanded Rudder Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Heading-To-Steer (Course)", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Track", BYTES(2), RES_RADIANS, false, "rad", ""},
@@ -2777,7 +2044,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Direction Order", 3, RES_LOOKUP, false, LOOKUP_DIRECTION_RUDDER, ""},
+      LOOKUP_FIELD("Direction Order", 3, DIRECTION_RUDDER),
       {"Reserved", 5, RES_BINARY, false, 0, "Reserved"},
       {"Angle Order", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Position", BYTES(2), RES_RADIANS, true, "rad", ""},
@@ -2798,7 +2065,7 @@ Pgn pgnList[] = {
       {"Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Deviation", BYTES(2), RES_RADIANS, true, "rad", ""},
       {"Variation", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
+      LOOKUP_FIELD("Reference", 2, DIRECTION_REFERENCE),
       {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -2848,7 +2115,7 @@ Pgn pgnList[] = {
      6,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Source", 4, RES_LOOKUP, false, LOOKUP_MAGNETIC_VARIATION, ""},
+      LOOKUP_FIELD("Source", 4, MAGNETIC_VARIATION),
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {"Age of service", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       {"Variation", BYTES(2), RES_RADIANS, true, "rad", ""},
@@ -2865,7 +2132,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
+     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       {"Speed", BYTES(2), 0.25, false, "rpm", ""},
       {"Boost Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Tilt/Trim", BYTES(1), 1, true, "", ""},
@@ -2880,7 +2147,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      26,
      0,
-     {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
+     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       {"Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Oil temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
       {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
@@ -2890,8 +2157,8 @@ Pgn pgnList[] = {
       {"Coolant Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Fuel Pressure", BYTES(2), 1, false, "kPa", ""},
       {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Discrete Status 1", BYTES(2), RES_BITFIELD, false, LOOKUP_ENGINE_STATUS_1, ""},
-      {"Discrete Status 2", BYTES(2), RES_BITFIELD, false, LOOKUP_ENGINE_STATUS_2, ""},
+      LOOKUP_BITFIELD("Discrete Status 1", BYTES(2), ENGINE_STATUS_1),
+      LOOKUP_BITFIELD("Discrete Status 2", BYTES(2), ENGINE_STATUS_2),
       {"Percent Engine Load", BYTES(1), RES_INTEGER, true, "%", ""},
       {"Percent Engine Torque", BYTES(1), RES_INTEGER, true, "%", ""},
       {0}}}
@@ -2903,8 +2170,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", 8, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
-      {"Transmission Gear", 2, RES_LOOKUP, false, LOOKUP_GEAR_STATUS, ""},
+     {LOOKUP_FIELD("Instance", 8, ENGINE_INSTANCE),
+      LOOKUP_FIELD("Transmission Gear", 2, GEAR_STATUS),
       {"Reserved", 6, RES_BINARY, false, 0, ""},
       {"Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Oil temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
@@ -2932,7 +2199,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
+     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       {"Trip Fuel Used", BYTES(2), 1, false, "L", ""},
       {"Fuel Rate, Average", BYTES(2), 0.1, true, "L/h", ""},
       {"Fuel Rate, Economy", BYTES(2), 0.1, true, "L/h", ""},
@@ -2946,7 +2213,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      52,
      0,
-     {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
+     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       {"Rated Engine Speed", BYTES(2), 0.25, false, 0, "rpm"},
       {"VIN", BYTES(17), RES_ASCII, false, 0, ""},
       {"Software ID", BYTES(32), RES_ASCII, false, 0, ""},
@@ -2976,72 +2243,32 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Indicator1", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator2", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator3", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator4", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator5", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator6", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator7", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator8", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator9", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator10", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator11", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator12", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator13", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator14", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator15", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator16", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator17", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator18", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator19", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator20", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator21", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator22", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator23", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator24", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator25", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator26", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator27", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator28", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {0}}},
+     {{"Instance", BYTES(1), 1, false, 0, ""}, LOOKUP_FIELD("Indicator1", 2, OFF_ON),  LOOKUP_FIELD("Indicator2", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator3", 2, OFF_ON),   LOOKUP_FIELD("Indicator4", 2, OFF_ON),  LOOKUP_FIELD("Indicator5", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator6", 2, OFF_ON),   LOOKUP_FIELD("Indicator7", 2, OFF_ON),  LOOKUP_FIELD("Indicator8", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator9", 2, OFF_ON),   LOOKUP_FIELD("Indicator10", 2, OFF_ON), LOOKUP_FIELD("Indicator11", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator12", 2, OFF_ON),  LOOKUP_FIELD("Indicator13", 2, OFF_ON), LOOKUP_FIELD("Indicator14", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator15", 2, OFF_ON),  LOOKUP_FIELD("Indicator16", 2, OFF_ON), LOOKUP_FIELD("Indicator17", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator18", 2, OFF_ON),  LOOKUP_FIELD("Indicator19", 2, OFF_ON), LOOKUP_FIELD("Indicator20", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator21", 2, OFF_ON),  LOOKUP_FIELD("Indicator22", 2, OFF_ON), LOOKUP_FIELD("Indicator23", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator24", 2, OFF_ON),  LOOKUP_FIELD("Indicator25", 2, OFF_ON), LOOKUP_FIELD("Indicator26", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator27", 2, OFF_ON),  LOOKUP_FIELD("Indicator28", 2, OFF_ON), {0}}},
     {"Switch Bank Control",
      127502,
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Switch1", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch2", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch3", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch4", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch5", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch6", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch7", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch8", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch9", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch10", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch11", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch12", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch13", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch14", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch15", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch16", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch17", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch18", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch19", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch20", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch21", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch22", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch23", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch24", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch25", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch26", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch27", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch28", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {0}}}
+     {{"Instance", BYTES(1), 1, false, 0, ""}, LOOKUP_FIELD("Switch1", 2, OFF_ON),  LOOKUP_FIELD("Switch2", 2, OFF_ON),
+      LOOKUP_FIELD("Switch3", 2, OFF_ON),      LOOKUP_FIELD("Switch4", 2, OFF_ON),  LOOKUP_FIELD("Switch5", 2, OFF_ON),
+      LOOKUP_FIELD("Switch6", 2, OFF_ON),      LOOKUP_FIELD("Switch7", 2, OFF_ON),  LOOKUP_FIELD("Switch8", 2, OFF_ON),
+      LOOKUP_FIELD("Switch9", 2, OFF_ON),      LOOKUP_FIELD("Switch10", 2, OFF_ON), LOOKUP_FIELD("Switch11", 2, OFF_ON),
+      LOOKUP_FIELD("Switch12", 2, OFF_ON),     LOOKUP_FIELD("Switch13", 2, OFF_ON), LOOKUP_FIELD("Switch14", 2, OFF_ON),
+      LOOKUP_FIELD("Switch15", 2, OFF_ON),     LOOKUP_FIELD("Switch16", 2, OFF_ON), LOOKUP_FIELD("Switch17", 2, OFF_ON),
+      LOOKUP_FIELD("Switch18", 2, OFF_ON),     LOOKUP_FIELD("Switch19", 2, OFF_ON), LOOKUP_FIELD("Switch20", 2, OFF_ON),
+      LOOKUP_FIELD("Switch21", 2, OFF_ON),     LOOKUP_FIELD("Switch22", 2, OFF_ON), LOOKUP_FIELD("Switch23", 2, OFF_ON),
+      LOOKUP_FIELD("Switch24", 2, OFF_ON),     LOOKUP_FIELD("Switch25", 2, OFF_ON), LOOKUP_FIELD("Switch26", 2, OFF_ON),
+      LOOKUP_FIELD("Switch27", 2, OFF_ON),     LOOKUP_FIELD("Switch28", 2, OFF_ON), {0}}}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
@@ -3055,8 +2282,8 @@ Pgn pgnList[] = {
       {"Number of Lines", BYTES(1), 1, false, 0, ""}
 
       ,
-      {"Line", 2, RES_LOOKUP, false, ",0=Line 1,1=Line 2,2=Line 3,3=Reserved", ""},
-      {"Acceptability", 2, RES_LOOKUP, false, ",0=Bad Level,1=Bad Frequency,2=Being Qualified,3=Good", ""},
+      {"Line", 2, RES_INTEGER, false, 0, ""},
+      LOOKUP_FIELD("Acceptability", 2, ACCEPTABILITY),
       {"Reserved", 4, RES_BINARY, false, 0, ""},
       {"Voltage", BYTES(2), 0.01, false, "V", ""},
       {"Current", BYTES(2), 0.1, false, "A", ""},
@@ -3079,8 +2306,8 @@ Pgn pgnList[] = {
       {"Number of Lines", BYTES(1), 1, false, 0, ""}
 
       ,
-      {"Line", 2, RES_LOOKUP, false, ",0=Line 1,1=Line 2,2=Line 3", ""},
-      {"Waveform", 3, RES_LOOKUP, false, ",0=Sine Wave,1=Modified Sine Wave", ""},
+      {"Line", 2, RES_INTEGER, false, 0, ""},
+      LOOKUP_FIELD("Waveform", 3, WAVEFORM),
       {"Reserved", 3, RES_BINARY, false, 0, ""},
       {"Voltage", BYTES(2), 0.01, false, "V", ""},
       {"Current", BYTES(2), 0.1, false, "A", ""},
@@ -3101,7 +2328,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Instance", 4, 1, false, 0, ""},
-      {"Type", 4, RES_LOOKUP, false, ",0=Fuel,1=Water,2=Gray water,3=Live well,4=Oil,5=Black water", ""},
+      LOOKUP_FIELD("Type", 4, TANK_TYPE),
       {"Level", BYTES(2), RES_PERCENTAGE, false, "%", ""},
       {"Capacity", BYTES(4), 0.1, false, "L", ""},
       {"Reserved", BYTES(1), RES_BINARY, false, 0, "Reserved"},
@@ -3116,7 +2343,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
-      {"DC Type", BYTES(1), RES_LOOKUP, false, ",0=Battery,1=Alternator,2=Convertor,3=Solar Cell,4=Wind Generator", ""},
+      LOOKUP_FIELD("DC Type", BYTES(1), DC_SOURCE),
       {"State of Charge", BYTES(1), 1, false, 0, ""},
       {"State of Health", BYTES(1), 1, false, 0, ""},
       {"Time Remaining", BYTES(2), 1, false, 0, ""},
@@ -3134,15 +2361,10 @@ Pgn pgnList[] = {
      0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
       {"Battery Instance", BYTES(1), 1, false, 0, ""},
-      {"Operating State",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=Not charging,1=Bulk,2=Absorption,3=Overcharge,4=Equalise,5=Float,6=No Float,7=Constant VI,8=Disabled,9=Fault",
-       ""},
-      {"Charge Mode", 4, RES_LOOKUP, false, ",0=Standalone,1=Primary,2=Secondary,3=Echo", ""},
-      {"Enabled", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Equalization Pending", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      LOOKUP_FIELD("Operating State", 4, CHARGER_STATE),
+      LOOKUP_FIELD("Charge Mode", 4, CHARGER_MODE),
+      LOOKUP_FIELD("Enabled", 2, OFF_ON),
+      LOOKUP_FIELD("Equalization Pending", 2, OFF_ON),
       {"Reserved", 4, RES_BINARY, false, 0, ""},
       {"Equalization Time Remaining", BYTES(2), 1, false, 0, ""},
       {0}}}
@@ -3172,13 +2394,8 @@ Pgn pgnList[] = {
      {{"Instance", BYTES(1), 1, false, 0, ""},
       {"AC Instance", BYTES(1), 1, false, 0, ""},
       {"DC Instance", BYTES(1), 1, false, 0, ""},
-      {"Operating State",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=Invert,1=AC Passthru,2=Load Sense,3=Fault,4=Disabled,14=Error,15=Data Not Available",
-       ""},
-      {"Inverter Enable/Disable", 2, RES_LOOKUP, false, "0=Disabled,1=Enabled,2=Error,3=Unknown", ""},
+      LOOKUP_FIELD("Operating State", 4, INVERTER_STATE),
+      LOOKUP_FIELD("Inverter Enable", 2, OFF_ON),
       {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -3250,11 +2467,11 @@ Pgn pgnList[] = {
      10,
      0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Battery Type", 4, RES_LOOKUP, false, ",0=Flooded,1=Gel,2=AGM", ""},
-      {"Supports Equalization", 2, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
+      LOOKUP_FIELD("Battery Type", 4, BATTERY_TYPE),
+      LOOKUP_FIELD("Supports Equalization", 2, YES_NO),
       {"Reserved", 2, RES_BINARY, false, 0, ""},
-      {"Nominal Voltage", 4, RES_LOOKUP, false, ",0=6V,1=12V,2=24V,3=32V,4=36V,5=42V,6=48V", ""},
-      {"Chemistry", 4, RES_LOOKUP, false, ",0=LeadAcid,1=Li,2=Nicad,3=Zno,4=NiMH", ""},
+      LOOKUP_FIELD("Nominal Voltage", 4, BATTERY_VOLTAGE),
+      LOOKUP_FIELD("Chemistry", 4, BATTERY_CHEMISTRY),
       {"Capacity", BYTES(2), 1, false, "C", ""},
       {"Temperature Coefficient", BYTES(1), RES_INTEGER, false, "%", ""},
       {"Peukert Exponent", BYTES(1), 0.002, false, 0, "Possibly in Excess-1 notation"},
@@ -3324,11 +2541,11 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), RES_BINARY, false, 0, ""},
       {"Connection Number", BYTES(1), 1, false, 0, ""},
-      {"Operating State", BYTES(1), RES_LOOKUP, false, LOOKUP_CONVERTER_STATE, ""},
-      {"Temperature State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Over Temperature,3=Not Available", ""},
-      {"Overload State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Overload,3=Not Available", ""},
-      {"Low DC Voltage State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=DC voltage too low,3=Not Available", ""},
-      {"Ripple State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Ripple Too High,3=Not Available", ""},
+      LOOKUP_FIELD("Operating State", BYTES(1), CONVERTER_STATE),
+      LOOKUP_FIELD("Temperature State", 2, GOOD_WARNING_ERROR),
+      LOOKUP_FIELD("Overload State", 2, GOOD_WARNING_ERROR),
+      LOOKUP_FIELD("Low DC Voltage State", 2, GOOD_WARNING_ERROR),
+      LOOKUP_FIELD("Ripple State", 2, GOOD_WARNING_ERROR),
       {"Reserved", BYTES(4), RES_NOTUSED, false, 0, ""},
       {0}}}
 
@@ -3368,11 +2585,11 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Identifier", BYTES(1), 1, false, 0, ""},
-      {"Direction Control", 4, RES_LOOKUP, false, LOOKUP_THRUSTER_DIRECTION_CONTROL, ""},
-      {"Power Enabled", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Retract Control", 2, RES_LOOKUP, false, LOOKUP_THRUSTER_RETRACT_CONTROL, ""},
+      LOOKUP_FIELD("Direction Control", 4, THRUSTER_DIRECTION_CONTROL),
+      LOOKUP_FIELD("Power Enabled", 2, OFF_ON),
+      LOOKUP_FIELD("Retract Control", 2, THRUSTER_RETRACT_CONTROL),
       {"Speed Control", BYTES(1), RES_PERCENTAGE, false, "%", ""},
-      {"Control Events", BYTES(1), RES_BITFIELD, false, LOOKUP_THRUSTER_CONTROL_EVENTS, ""},
+      LOOKUP_BITFIELD("Control Events", BYTES(1), THRUSTER_CONTROL_EVENTS),
       {"Command Timeout", BYTES(1), 1e-3, false, 0, ""},
       {"Azimuth Control", BYTES(2), RES_RADIANS, false, "rad", ""},
       {0}}}
@@ -3385,7 +2602,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Identifier", BYTES(1), 1, false, 0, ""},
-      {"Motor Type", 4, RES_LOOKUP, false, LOOKUP_THRUSTER_MOTOR_TYPE, ""},
+      LOOKUP_FIELD("Motor Type", 4, THRUSTER_MOTOR_TYPE),
       {"Reserved", 4, RES_BINARY, false, 0, ""},
       {"Power Rating", BYTES(2), 1, false, "W", ""},
       {"Maximum Temperature Rating", BYTES(2), RES_TEMPERATURE, false, "K", ""},
@@ -3401,7 +2618,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Identifier", BYTES(1), 1, false, 0, ""},
-      {"Motor Events", BYTES(1), RES_BITFIELD, false, LOOKUP_THRUSTER_MOTOR_EVENTS, ""},
+      LOOKUP_BITFIELD("Motor Events", BYTES(1), THRUSTER_MOTOR_EVENTS),
       {"Current", BYTES(1), 1, false, "A", ""},
       {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Operating Time", BYTES(2), 1, false, "minutes", ""},
@@ -3418,7 +2635,7 @@ Pgn pgnList[] = {
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Speed Water Referenced", BYTES(2), 0.01, false, "m/s", ""},
       {"Speed Ground Referenced", BYTES(2), 0.01, false, "m/s", ""},
-      {"Speed Water Referenced Type", BYTES(1), RES_LOOKUP, false, LOOKUP_WATER_REFERENCE, ""},
+      LOOKUP_FIELD("Speed Water Referenced Type", BYTES(1), WATER_REFERENCE),
       {"Speed Direction", 4, 1, false, 0, ""},
       {"Reserved", 12, RES_BINARY, false, 0, ""},
       {0}}}
@@ -3460,10 +2677,10 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Target ID #", BYTES(1), 1, false, 0, "Number of route, waypoint, event, mark, etc."},
-      {"Track Status", 2, RES_LOOKUP, false, ",0=Cancelled,1=Acquiring,2=Tracking,3=Lost", ""},
-      {"Reported Target", 1, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Target Acquisition", 1, RES_LOOKUP, false, ",0=Manual,1=Automatic", ""},
-      {"Bearing Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
+      LOOKUP_FIELD("Track Status", 2, TRACKING),
+      LOOKUP_FIELD("Reported Target", 1, YES_NO),
+      LOOKUP_FIELD("Target Acquisition", 1, TARGET_ACQUISITION),
+      LOOKUP_FIELD("Bearing Reference", 2, DIRECTION_REFERENCE),
       {"Reserved", 2, RES_BINARY, false, 0, ""},
       {"Bearing", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Distance", BYTES(4), 0.001, false, "m", ""},
@@ -3485,9 +2702,9 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Windlass ID", BYTES(1), 1, false, 0, ""},
-      {"Windlass Direction Control", 2, RES_LOOKUP, false, ",0=Off,1=Down,2=Up", ""},
-      {"Anchor Docking Control", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Speed Control Type", 2, RES_LOOKUP, false, ",0=Single Speed,1=Dual Speed,2=Proportional Speed", ""},
+      LOOKUP_FIELD("Windlass Direction Control", 2, WINDLASS_DIRECTION),
+      LOOKUP_FIELD("Anchor Docking Control", 2, OFF_ON),
+      LOOKUP_FIELD("Speed Control Type", 2, SPEED_TYPE),
       {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
       {"Speed Control",
        BYTES(1),
@@ -3495,17 +2712,17 @@ Pgn pgnList[] = {
        false,
        0,
        "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100"},
-      {"Power Enable", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Mechanical Lock", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Deck and Anchor Wash", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Anchor Light", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      LOOKUP_FIELD("Power Enable", 2, OFF_ON),
+      LOOKUP_FIELD("Mechanical Lock", 2, OFF_ON),
+      LOOKUP_FIELD("Deck and Anchor Wash", 2, OFF_ON),
+      LOOKUP_FIELD("Anchor Light", 2, OFF_ON),
       {"Command Timeout",
        BYTES(1),
        0.005,
        false,
        "s",
        "If timeout elapses the thruster stops operating and reverts to static mode"},
-      {"Windlass Control Events", 4, RES_BITFIELD, false, ",0=Another device controlling windlass", ""},
+      LOOKUP_FIELD("Windlass Control Events", 4, WINDLASS_CONTROL),
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -3519,19 +2736,14 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Windlass ID", BYTES(1), 1, false, 0, ""},
-      {"Windlass Direction Control", 2, RES_LOOKUP, false, ",0=Off,1=Down,2=Up", ""},
-      {"Windlass Motion Status", 2, RES_LOOKUP, false, ",0=Windlass stopped,1=Deployment occurring,2=Retrieval occurring", ""},
-      {"Rode Type Status", 2, RES_LOOKUP, false, ",0=Chain presently detected,1=Rope presently detected,2=Error", ""},
+      LOOKUP_FIELD("Windlass Direction Control", 2, WINDLASS_DIRECTION),
+      LOOKUP_FIELD("Windlass Motion Status", 2, WINDLASS_MOTION),
+      LOOKUP_FIELD("Rode Type Status", 2, RODE_TYPE),
       {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
       {"Rode Counter Value", BYTES(2), 0.1, false, "m", ""},
       {"Windlass Line Speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"Anchor Docking Status", 2, RES_LOOKUP, false, ",0=Not docked,1=Fully docked,2=Error", ""},
-      {"Windlass Operating Events",
-       6,
-       RES_BITFIELD,
-       false,
-       ",0=System error,1=Sensor error,2=No windlass motion detected,3=Retrieval docking distance reached,4=End or rode reached",
-       ""},
+      LOOKUP_FIELD("Anchor Docking Status", 2, DOCKING_STATUS),
+      LOOKUP_BITFIELD("Windlass Operating Events", 6, WINDLASS_OPERATION),
       {0}}}
 
     ,
@@ -3544,13 +2756,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Windlass ID", BYTES(1), 1, false, 0, ""},
-      {"Windlass Monitoring Events",
-       8,
-       RES_BITFIELD,
-       false,
-       ",0=Controller under voltage cut-out,1=Controller over current cut-out,2=Controller over temperature cut-out,3=Manufacturer "
-       "defined",
-       ""},
+      LOOKUP_BITFIELD("Windlass Monitoring Events", 8, WINDLASS_MONITORING),
       {"Controller voltage", BYTES(1), 0.2, false, "V", ""},
       {"Motor current", BYTES(1), 1, false, "A", ""},
       {"Total Motor Time", BYTES(2), 60, false, "s", ""},
@@ -3575,7 +2781,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
+      LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
       {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
       {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
@@ -3625,16 +2831,16 @@ Pgn pgnList[] = {
       {"Latitude", BYTES(8), RES_LATITUDE, true, "deg", ""},
       {"Longitude", BYTES(8), RES_LONGITUDE, true, "deg", ""},
       {"Altitude", BYTES(8), 1e-6, true, "m", "Altitude referenced to WGS-84"},
-      {"GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS, ""},
-      {"Method", 4, RES_LOOKUP, false, LOOKUP_GNS_METHOD, ""},
-      {"Integrity", 2, RES_LOOKUP, false, LOOKUP_GNS_INTEGRITY, ""},
+      LOOKUP_FIELD("GNSS type", 4, GNS),
+      LOOKUP_FIELD("Method", 4, GNS_METHOD),
+      LOOKUP_FIELD("Integrity", 2, GNS_INTEGRITY),
       {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
       {"Number of SVs", BYTES(1), 1, false, 0, "Number of satellites used in solution"},
       {"HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision"},
       {"PDOP", BYTES(2), 0.01, true, 0, "Positional dilution of precision"},
       {"Geoidal Separation", BYTES(4), 0.01, true, "m", "Geoidal Separation"},
       {"Reference Stations", BYTES(1), 1, false, 0, "Number of reference stations"},
-      {"Reference Station Type", 4, RES_LOOKUP, false, LOOKUP_GNS, ""},
+      LOOKUP_FIELD("Reference Station Type", 4, GNS),
       {"Reference Station ID", 12, 1, false, ""},
       {"Age of DGNSS Corrections", BYTES(2), 0.01, false, "s", ""},
       {0}}}
@@ -3659,13 +2865,13 @@ Pgn pgnList[] = {
      28,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Longitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Latitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, ""},
-      {"RAIM", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, ""},
-      {"Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated"},
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
+      LOOKUP_FIELD_DESC("Time Stamp", 6, TIME_STAMP, "0-59 = UTC second when the report was generated"),
       {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
       {"Communication State",
@@ -3674,11 +2880,11 @@ Pgn pgnList[] = {
        false,
        0,
        "Information used by the TDMA slot allocation algorithm and synchronization information"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Heading", BYTES(2), RES_RADIANS, false, "rad", "True heading"},
       {"Rate of Turn", BYTES(2), RES_ROTATION, true, "rad/s", ""},
-      {"Nav Status", 4, RES_LOOKUP, false, LOOKUP_NAV_STATUS, ""},
-      {"Special Maneuver Indicator", 2, RES_LOOKUP, false, LOOKUP_AIS_SPECIAL_MANEUVER, ""},
+      LOOKUP_FIELD("Nav Status", 4, NAV_STATUS),
+      LOOKUP_FIELD("Special Maneuver Indicator", 2, AIS_SPECIAL_MANEUVER),
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
       {"AIS Spare", 3, RES_BINARY, false, 0, ""},
       {"Reserved", 5, RES_BINARY, false, 0, "reserved"},
@@ -3693,13 +2899,13 @@ Pgn pgnList[] = {
      0x1a,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Longitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Latitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, ""},
-      {"RAIM", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, ""},
-      {"Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated"},
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
+      LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
       {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
       {"Communication State",
@@ -3708,17 +2914,17 @@ Pgn pgnList[] = {
        false,
        0,
        "Information used by the TDMA slot allocation algorithm and synchronization information"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Heading", BYTES(2), RES_RADIANS, false, "rad", "True heading"},
       {"Regional Application", BYTES(1), 1, false, 0, ""},
       {"Regional Application", 2, 1, false, 0, ""},
-      {"Unit type", 1, RES_LOOKUP, false, ",0=SOTDMA,1=CS", ""},
-      {"Integrated Display", 1, RES_LOOKUP, false, LOOKUP_YES_NO, "Whether the unit can show messages 12 and 14"},
-      {"DSC", 1, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Band", 1, RES_LOOKUP, false, ",0=top 525 kHz of marine band,1=entire marine band", ""},
-      {"Can handle Msg 22", 1, RES_LOOKUP, false, LOOKUP_YES_NO, "Whether device supports message 22"},
-      {"AIS mode", 1, RES_LOOKUP, false, ",0=Autonomous,1=Assigned", ""},
-      {"AIS communication state", 1, RES_LOOKUP, false, ",0=SOTDMA,1=ITDMA", ""},
+      LOOKUP_FIELD("Unit type", 1, AIS_TYPE),
+      LOOKUP_FIELD_DESC("Integrated Display", 1, YES_NO, "Whether the unit can show messages 12 and 14"),
+      LOOKUP_FIELD("DSC", 1, YES_NO),
+      LOOKUP_FIELD("Band", 1, AIS_BAND),
+      LOOKUP_FIELD("Can handle Msg 22", 1, YES_NO),
+      LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
+      LOOKUP_FIELD("AIS communication state", 1, AIS_COMMUNICATION_STATE),
       {0}}}
 
     ,
@@ -3729,31 +2935,31 @@ Pgn pgnList[] = {
      33,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Longitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Latitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, ""},
-      {"AIS RAIM flag", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, ""},
-      {"Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated"},
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("AIS RAIM flag", 1, RAIM_FLAG),
+      LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
       {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
       {"Regional Application", BYTES(1), 1, false, 0, ""},
       {"Regional Application", 4, 1, false, 0, ""},
       {"Reserved", 4, RES_BINARY, false, 0, "reserved"},
-      {"Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, ""},
+      LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
       {"True Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS_AIS, ""},
+      LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
       {"Length", BYTES(2), 0.1, false, "m", ""},
       {"Beam", BYTES(2), 0.1, false, "m", ""},
       {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
       {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
       {"Name", BYTES(20), RES_ASCII, false, 0, ",0=unavailable"},
-      {"DTE", 1, RES_LOOKUP, false, ",0=Available,1=Not available", ""},
-      {"AIS mode", 1, 1, false, ",0=Autonomous,1=Assigned", ""},
+      LOOKUP_FIELD("DTE", 1, AVAILABLE),
+      LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
       {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {0}}}
 
     ,
@@ -3764,26 +2970,26 @@ Pgn pgnList[] = {
      60,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, ""},
-      {"AIS RAIM Flag", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, ""},
-      {"Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated"},
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("AIS RAIM Flag", 1, RAIM_FLAG),
+      LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
       {"Length/Diameter", BYTES(2), 0.1, false, "m", ""},
       {"Beam/Diameter", BYTES(2), 0.1, false, "m", ""},
       {"Position Reference from Starboard Edge", BYTES(2), 0.1, false, "m", ""},
       {"Position Reference from True North Facing Edge", BYTES(2), 0.1, false, "m", ""},
-      {"AtoN Type", 5, RES_LOOKUP, false, LOOKUP_ATON_TYPE, ""},
-      {"Off Position Indicator", 1, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Virtual AtoN Flag", 1, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Assigned Mode Flag", 1, RES_LOOKUP, false, LOOKUP_AIS_ASSIGNED_MODE, ""},
+      LOOKUP_FIELD("AtoN Type", 5, ATON_TYPE),
+      LOOKUP_FIELD("Off Position Indicator", 1, YES_NO),
+      LOOKUP_FIELD("Virtual AtoN Flag", 1, YES_NO),
+      LOOKUP_FIELD("Assigned Mode Flag", 1, AIS_ASSIGNED_MODE),
       {"AIS Spare", 1, RES_BINARY, false, 0, ""},
-      {"Position Fixing Device Type", 4, RES_LOOKUP, false, LOOKUP_POSITION_FIX_DEVICE, ""},
+      LOOKUP_FIELD("Position Fixing Device Type", 4, POSITION_FIX_DEVICE),
       {"Reserved", 3, RES_BINARY, false, 0, ""},
       {"AtoN Status", 8, RES_BINARY, false, 0, "00000000 = default"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 3, RES_BINARY, false, 0, ""},
       {"AtoN Name", BYTES(34), RES_STRINGLAU, false, 0, ""},
       {0}}}
@@ -3868,9 +3074,9 @@ Pgn pgnList[] = {
      8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"XTE mode", 4, RES_LOOKUP, false, LOOKUP_RESIDUAL_MODE, ""},
+      LOOKUP_FIELD("XTE mode", 4, RESIDUAL_MODE),
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Navigation Terminated", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      LOOKUP_FIELD("Navigation Terminated", 2, YES_NO),
       {"XTE", BYTES(4), 0.01, true, "m", ""},
       {"Reserved", BYTES(2), RES_BINARY, false, 0, "Reserved"},
       {0}}}
@@ -3884,10 +3090,10 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Distance to Waypoint", BYTES(4), 0.01, false, "m", ""},
-      {"Course/Bearing reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
-      {"Perpendicular Crossed", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Arrival Circle Entered", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Calculation Type", 2, RES_LOOKUP, false, ",0=Great Circle,1=Rhumb Line", ""},
+      LOOKUP_FIELD("Course/Bearing reference", 2, DIRECTION_REFERENCE),
+      LOOKUP_FIELD("Perpendicular Crossed", 2, YES_NO),
+      LOOKUP_FIELD("Arrival Circle Entered", 2, YES_NO),
+      LOOKUP_FIELD("Calculation Type", 2, BEARING_MODE),
       {"ETA Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"ETA Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       {"Bearing, Origin to Destination Waypoint", BYTES(2), RES_RADIANS, false, "rad", ""},
@@ -3929,7 +3135,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Set Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
+      LOOKUP_FIELD("Set Reference", 2, DIRECTION_REFERENCE),
       {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
       {"Set", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Drift", BYTES(2), 0.01, false, "m/s", ""},
@@ -3944,7 +3150,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Time to mark", BYTES(4), 0.001, true, "s", "negative = elapsed since event, positive = time to go"},
-      {"Mark Type", 4, RES_LOOKUP, false, ",0=Collision,1=Turning point,2=Reference,3=Wheelover,4=Waypoint", ""},
+      LOOKUP_FIELD("Mark Type", 4, MARK_TYPE),
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {"Mark ID", BYTES(4), 1, false, 0, ""},
       {0}}}
@@ -3963,7 +3169,7 @@ Pgn pgnList[] = {
       {"Bearing, Origin to Destination", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Distance", BYTES(4), 0.01, false, "m", ""},
       {"Origin Mark Type", 4, RES_LOOKUP, false, 0, ""},
-      {"Destination Mark Type", 4, RES_LOOKUP, false, 0, ""},
+      LOOKUP_FIELD("Destination Mark Type", 4, MARK_TYPE),
       {"Origin Mark ID", BYTES(4), 1, false, 0, ""},
       {"Destination Mark ID", BYTES(4), 1, false, 0, ""},
       {0}}}
@@ -3981,12 +3187,12 @@ Pgn pgnList[] = {
       {"PDOP Mask", BYTES(2), 0.01, false, 0, "Will not report position above this PDOP"},
       {"PDOP Switch", BYTES(2), 0.01, false, 0, "Will report 2D position above this PDOP"},
       {"SNR Mask", BYTES(2), 0.01, false, 0, "Will not use SV below this SNR"},
-      {"GNSS Mode (desired)", 3, RES_LOOKUP, false, ",0=1D,1=2D,2=3D,3=Auto,4=Reserved,5=Reserved,6=Error", ""},
-      {"DGNSS Mode (desired)", 3, RES_LOOKUP, false, ",0=no SBAS,1=SBAS,3=SBAS", ""},
+      LOOKUP_FIELD("GNSS Mode (desired)", 3, GNSS_MODE),
+      LOOKUP_FIELD("DGNSS Mode (desired)", 3, DGNSS_MODE),
       {"Position/Velocity Filter", 2, 1, false, 0, ""},
       {"Max Correction Age", BYTES(2), 1, false, 0, ""},
       {"Antenna Altitude for 2D Mode", BYTES(2), 0.01, false, "m", ""},
-      {"Use Antenna Altitude for 2D Mode", 2, RES_LOOKUP, false, ",0=use last 3D height,1=Use antenna altitude", ""},
+      LOOKUP_FIELD("Use Antenna Altitude for 2D Mode", 2, YES_NO),
       {0}}}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
@@ -3998,8 +3204,8 @@ Pgn pgnList[] = {
      8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Desired Mode", 3, RES_LOOKUP, false, ",0=1D,1=2D,2=3D,3=Auto", ""},
-      {"Actual Mode", 3, RES_LOOKUP, false, ",0=1D,1=2D,2=3D,3=Auto", ""},
+      LOOKUP_FIELD("Desired Mode", 3, GNSS_MODE),
+      LOOKUP_FIELD("Actual Mode", 3, GNSS_MODE),
       {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
       {"HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision"},
       {"VDOP", BYTES(2), 0.01, true, 0, "Vertical dilution of precision"},
@@ -4014,7 +3220,7 @@ Pgn pgnList[] = {
      233,
      7,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Mode", 2, RES_LOOKUP, false, ",3=Range residuals used to calculate position", ""},
+      {"Mode", 2, RES_INTEGER, false, 0, "Unknown lookup values"},
       {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
       {"Sats in View", BYTES(1), 1, false, 0, ""},
       {"PRN", BYTES(1), 1, false, 0, ""},
@@ -4022,7 +3228,7 @@ Pgn pgnList[] = {
       {"Azimuth", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"SNR", BYTES(2), 0.01, false, "dB", ""},
       {"Range residuals", BYTES(4), 1, true, 0, ""},
-      {"Status", 4, RES_LOOKUP, false, ",0=Not tracked,1=Tracked,2=Used,3=Not tracked+Diff,4=Tracked+Diff,5=Used+Diff", ""},
+      LOOKUP_FIELD("Status", 4, SATELLITE_STATUS),
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -4224,12 +3430,12 @@ Pgn pgnList[] = {
      0x1a,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, ",0=Low,1=High", ""},
-      {"RAIM", 1, RES_LOOKUP, false, ",0=not in use,1=in use", ""},
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
       {"Reserved", 6, RES_BINARY, false, 0, "NMEA reserved to align next data on byte boundary"},
       {"Position Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Communication State",
@@ -4238,10 +3444,10 @@ Pgn pgnList[] = {
        false,
        0,
        "Information used by the TDMA slot allocation algorithm and synchronization information"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Position Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       {"Reserved", 4, RES_BINARY, false, 0, "NMEA reserved to align next data on byte boundary"},
-      {"GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS_AIS, ""},
+      LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
       {"Spare", BYTES(1), RES_BINARY, false, 0, ""},
       {0}}}
 
@@ -4254,12 +3460,12 @@ Pgn pgnList[] = {
      0x18,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"IMO number", BYTES(4), RES_INTEGER, false, 0, ",0=unavailable"},
       {"Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable"},
       {"Name", BYTES(20), RES_ASCII, false, 0, ",0=unavailable"},
-      {"Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, ""},
+      LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
       {"Length", BYTES(2), 0.1, false, "m", ""},
       {"Beam", BYTES(2), 0.1, false, "m", ""},
       {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
@@ -4268,11 +3474,11 @@ Pgn pgnList[] = {
       {"ETA Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Draft", BYTES(2), 0.01, false, "m", ""},
       {"Destination", BYTES(20), RES_ASCII, false, 0, ",0=unavailable"},
-      {"AIS version indicator", 2, RES_LOOKUP, false, ",0=ITU-R M.1371-1,1=ITU-R M.1371-3", ""},
-      {"GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS_AIS, ""},
-      {"DTE", 1, RES_LOOKUP, false, ",0=available,1=not available", ""},
+      LOOKUP_FIELD("AIS version indicator", 2, AIS_VERSION),
+      LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
+      LOOKUP_FIELD("DTE", 1, AVAILABLE),
       {"Reserved", 1, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {0}}}
 
     ,
@@ -4283,10 +3489,10 @@ Pgn pgnList[] = {
      13,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Reserved", 1, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Sequence Number", 2, 1, false, 0, ""},
       {"Destination ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Reserved", 6, RES_BINARY, false, 0, "reserved"},
@@ -4304,10 +3510,10 @@ Pgn pgnList[] = {
      12,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", BYTES(4), 1, false, "MMSI", ""},
       {"Reserved", 1, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
       {"Destination ID #1", BYTES(4), 1, false, 0, ""},
       {"Sequence Number for ID 1", 2, RES_BINARY, false, 0, "reserved"},
@@ -4323,10 +3529,10 @@ Pgn pgnList[] = {
      233,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", BYTES(4), 1, false, 0, ""},
       {"Reserved", 1, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
       {"Number of Bits in Binary Data Field", BYTES(2), 1, false, 0, ""},
       {"Binary Data", BYTES(255), RES_BINARY, false, 0, ""},
@@ -4340,13 +3546,13 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, ""},
-      {"RAIM", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, ""},
-      {"Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated"},
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
+      LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
       {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"SOG", BYTES(2), 0.1, false, "m/s", ""},
       {"Communication State",
@@ -4355,10 +3561,10 @@ Pgn pgnList[] = {
        false,
        0,
        "Information used by the TDMA slot allocation algorithm and synchronization information"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Altitude", BYTES(8), 1e-6, true, "m", ""},
       {"Reserved for Regional Applications", BYTES(1), RES_BINARY, false, 0, ""},
-      {"DTE", 1, RES_LOOKUP, false, ",0=Available,1=Not available", ""},
+      LOOKUP_FIELD("DTE", 1, AVAILABLE),
       {"Reserved", 7, RES_BINARY, false, 0, "reserved"},
       {0}}}
 
@@ -4385,10 +3591,10 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", 30, 1, false, 0, ""},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
       {"Destination ID", 30, 1, false, 0, ""},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
@@ -4402,10 +3608,10 @@ Pgn pgnList[] = {
      12,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", 30, 1, false, "MMSI", ""},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Sequence Number", 2, 1, false, 0, ""},
       {"Destination ID", 30, 1, false, "MMSI", ""},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
@@ -4422,10 +3628,10 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", 30, RES_INTEGER, false, 0, ""},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
       {"Safety Related Text", BYTES(36), RES_ASCII, false, 0, ""},
       {0}}}
@@ -4438,10 +3644,10 @@ Pgn pgnList[] = {
      8,
      8,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", 30, RES_INTEGER, false, 0, ""},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 3, RES_BINARY, false, 0, "reserved"}
 
       ,
@@ -4463,10 +3669,10 @@ Pgn pgnList[] = {
      23,
      3,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", 30, RES_INTEGER, false, "MMSI", ""},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 3, RES_BINARY, false, 0, "reserved"}
 
       ,
@@ -4483,10 +3689,10 @@ Pgn pgnList[] = {
      8,
      4,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", 30, RES_INTEGER, false, 0, ""},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 3, RES_BINARY, false, 0, "reserved"}
 
       ,
@@ -4504,10 +3710,10 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", 30, RES_INTEGER, false, 0, ""},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
       {"Channel A", 7, 1, false, 0, ""},
       {"Channel B", 7, 1, false, 0, ""},
@@ -4534,7 +3740,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       {"Source ID", 30, RES_INTEGER, false, 0, ""},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
       {"Tx/Rx Mode", 2, RES_INTEGER, false, 0, ""},
@@ -4570,11 +3776,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"DSC Format", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FORMAT, ""},
+     {LOOKUP_FIELD("DSC Format", BYTES(1), DSC_FORMAT),
       {"DSC Category", BYTES(1), RES_LOOKUP, false, "=112", "Distress"},
       {"DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank"},
-      {"Nature of Distress", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_NATURE, ""},
-      {"Subsequent Communication Mode or 2nd Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_SECOND_TELECOMMAND, ""},
+      LOOKUP_FIELD("Nature of Distress", BYTES(1), DSC_NATURE),
+      LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
       {"Proposed Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
       {"Proposed Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
       {"Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, ""},
@@ -4588,14 +3794,14 @@ Pgn pgnList[] = {
       {"Time of Position", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"MMSI of Ship In Distress", BYTES(5), RES_DECIMAL, false, "MMSI", ""},
       {"DSC EOS Symbol", BYTES(1), 1, false, 0, ""},
-      {"Expansion Enabled", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      LOOKUP_FIELD("Expansion Enabled", 2, YES_NO),
       {"Reserved", 6, RES_BINARY, false, 0, "reserved"},
       {"Calling Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
       {"Calling Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
       {"Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       {"DSC Equipment Assigned Message ID", BYTES(2), 1, false, 0, ""},
-      {"DSC Expansion Field Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_EXPANSION_DATA, ""},
+      LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
       {"DSC Expansion Field Data", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
 
@@ -4606,11 +3812,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"DSC Format Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FORMAT, ""},
-      {"DSC Category Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_CATEGORY, ""},
+     {LOOKUP_FIELD("DSC Format Symbol", BYTES(1), DSC_FORMAT),
+      LOOKUP_FIELD("DSC Category Symbol", BYTES(1), DSC_CATEGORY),
       {"DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank"},
-      {"1st Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FIRST_TELECOMMAND, ""},
-      {"Subsequent Communication Mode or 2nd Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_SECOND_TELECOMMAND, ""},
+      LOOKUP_FIELD("1st Telecommand", BYTES(1), DSC_FIRST_TELECOMMAND),
+      LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
       {"Proposed Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
       {"Proposed Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
       {"Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, ""},
@@ -4624,14 +3830,14 @@ Pgn pgnList[] = {
       {"Time of Position", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"MMSI of Ship In Distress", BYTES(5), RES_DECIMAL, false, "MMSI", ""},
       {"DSC EOS Symbol", BYTES(1), 1, false, 0, ""},
-      {"Expansion Enabled", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      LOOKUP_FIELD("Expansion Enabled", 2, YES_NO),
       {"Reserved", 6, RES_BINARY, false, 0, "reserved"},
       {"Calling Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
       {"Calling Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
       {"Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       {"DSC Equipment Assigned Message ID", BYTES(2), 1, false, 0, ""},
-      {"DSC Expansion Field Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_EXPANSION_DATA, ""},
+      LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
       {"DSC Expansion Field Data", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
 
@@ -4643,10 +3849,10 @@ Pgn pgnList[] = {
      27,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       {"Name", BYTES(20), RES_ASCII, false, 0, ""},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
       {"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
@@ -4659,9 +3865,9 @@ Pgn pgnList[] = {
      34,
      0,
      {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, ""},
+      LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
       {"Vendor ID", BYTES(7), RES_ASCII, false, 0, ""},
       {"Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable"},
       {"Length", BYTES(2), 0.1, false, "m", ""},
@@ -4671,7 +3877,7 @@ Pgn pgnList[] = {
       {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "MMSI of mother ship sent by daughter vessels"},
       {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
       {"Spare", 6, RES_INTEGER, false, 0, ",0=unavailable"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
       {"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
@@ -4902,7 +4108,7 @@ Pgn pgnList[] = {
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
       {"Wind Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, ""},
+      LOOKUP_FIELD("Reference", 3, WIND_REFERENCE),
       {"Reserved", 5 + BYTES(2), RES_BINARY, false, 0, ""},
       {0}}}
 
@@ -4929,8 +4135,8 @@ Pgn pgnList[] = {
      8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Temperature Source", 6, RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
-      {"Humidity Source", 2, RES_LOOKUP, false, LOOKUP_HUMIDITY_SOURCE, ""},
+      LOOKUP_FIELD("Temperature Source", 6, TEMPERATURE_SOURCE),
+      LOOKUP_FIELD("Humidity Source", 2, HUMIDITY_SOURCE),
       {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Humidity", BYTES(2), RES_PERCENTAGE, true, "%", ""},
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
@@ -4945,7 +4151,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
+      LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
       {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Set Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {0}}}
@@ -4959,7 +4165,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_HUMIDITY_SOURCE, ""},
+      LOOKUP_FIELD("Source", BYTES(1), HUMIDITY_SOURCE),
       {"Actual Humidity", BYTES(2), RES_PERCENTAGE, true, "%", ""},
       {"Set Humidity", BYTES(2), RES_PERCENTAGE, true, "%", ""},
       {0}}}
@@ -4973,7 +4179,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, ""},
+      LOOKUP_FIELD("Source", BYTES(1), PRESSURE_SOURCE),
       {"Pressure", BYTES(4), RES_PRESSURE_HIRES, true, "dPa", ""},
       {0}}}
 
@@ -4986,7 +4192,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, ""},
+      LOOKUP_FIELD("Source", BYTES(1), PRESSURE_SOURCE),
       {"Pressure", BYTES(4), RES_PRESSURE_HIRES, false, "dPa", ""},
       {0}}}
 
@@ -4999,7 +4205,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
+      LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
       {"Temperature", BYTES(3), RES_TEMPERATURE_HIRES, false, "K", ""},
       {"Set Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
       {0}}}
@@ -5011,8 +4217,8 @@ Pgn pgnList[] = {
      PACKET_FAST,
      20,
      0,
-     {{"Mode", 4, RES_LOOKUP, false, LOOKUP_RESIDUAL_MODE, ""},
-      {"Tide Tendency", 2, RES_LOOKUP, false, ",0=Falling,1=Rising", ""},
+     {LOOKUP_FIELD("Mode", 4, RESIDUAL_MODE),
+      LOOKUP_FIELD("Tide Tendency", 2, TIDE),
       {"Reserved", 2, RES_BINARY, false, 0, ""},
       {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
@@ -5031,7 +4237,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      22,
      0,
-     {{"Mode", 4, RES_LOOKUP, false, LOOKUP_RESIDUAL_MODE, ""},
+     {LOOKUP_FIELD("Mode", 4, RESIDUAL_MODE),
       {"Reserved", 4, RES_BINARY, false, 0, ""},
       {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
@@ -5042,7 +4248,8 @@ Pgn pgnList[] = {
        RES_FLOAT,
        true,
        "ppt",
-       "The average Salinity of ocean water is about 35 grams of salts per kilogram of sea water (g/kg), usually written as 35 ppt "
+       "The average Salinity of ocean water is about 35 grams of salts per kilogram of sea water (g/kg), usually written as 35 "
+       "ppt "
        "which is read as 35 parts per thousand."},
       {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
@@ -5085,7 +4292,7 @@ Pgn pgnList[] = {
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
       {"Wind Direction", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Wind Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, ""},
+      LOOKUP_FIELD("Wind Reference", 3, WIND_REFERENCE),
       {"Reserved", 5, RES_BINARY, false, "", "reserved"},
       {"Wind Gusts", BYTES(2), 0.01, false, "m/s", ""},
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
@@ -5109,7 +4316,7 @@ Pgn pgnList[] = {
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
       {"Wind Direction", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Wind Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, ""},
+      LOOKUP_FIELD("Wind Reference", 3, WIND_REFERENCE),
       {"Reserved", 5, RES_BINARY, false, "", "reserved"},
       {"Wind Gusts", BYTES(2), 0.01, false, "m/s", ""},
       {"Wave Height", BYTES(2), 1, false, 0, ""},
@@ -5139,24 +4346,19 @@ Pgn pgnList[] = {
      PACKET_FAST,
      24,
      0,
-     {{"Watermaker Operating State",
-       6,
-       RES_LOOKUP,
-       false,
-       ",0=Stopped,1=Starting,2=Running,3=Stopping,4=Flushing,5=Rinsing,6=Initiating,7=Manual Mode,62=Error,63=Unavailable",
-       ""},
-      {"Production Start/Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Rinse Start/Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Low Pressure Pump Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"High Pressure Pump Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Emergency Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Product Solenoid Valve Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"Flush Mode Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Salinity Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"Sensor Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"Oil Change Indicator Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"Filter Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"System Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
+     {LOOKUP_FIELD("Watermaker Operating State", 6, WATERMAKER_STATE),
+      LOOKUP_FIELD("Production Start/Stop", 2, YES_NO),
+      LOOKUP_FIELD("Rinse Start/Stop", 2, YES_NO),
+      LOOKUP_FIELD("Low Pressure Pump Status", 2, YES_NO),
+      LOOKUP_FIELD("High Pressure Pump Status", 2, YES_NO),
+      LOOKUP_FIELD("Emergency Stop", 2, YES_NO),
+      LOOKUP_FIELD("Product Solenoid Valve Status", 2, OK_WARNING),
+      LOOKUP_FIELD("Flush Mode Status", 2, YES_NO),
+      LOOKUP_FIELD("Salinity Status", 2, OK_WARNING),
+      LOOKUP_FIELD("Sensor Status", 2, OK_WARNING),
+      LOOKUP_FIELD("Oil Change Indicator Status", 2, OK_WARNING),
+      LOOKUP_FIELD("Filter Status", 2, OK_WARNING),
+      LOOKUP_FIELD("System Status", 2, OK_WARNING),
       {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
       {"Salinity", BYTES(2), RES_INTEGER, false, "ppm", ""},
       {"Product Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
@@ -5177,18 +4379,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      0,
-     {{"Zone", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
-      {"Source", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SOURCE, ""},
+     {LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
+      LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
       {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
       {"ID", BYTES(4), RES_INTEGER, false, 0, "Unique file ID"},
-      {"Play status", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_PLAY_STATUS, ""},
+      LOOKUP_FIELD("Play status", BYTES(1), ENTERTAINMENT_PLAY_STATUS),
       {"Elapsed Track Time", BYTES(2), RES_TIME, false, "s", ""},
       {"Track Time", BYTES(2), RES_TIME, false, "s", ""},
-      {"Repeat Status", 4, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_REPEAT_STATUS, ""},
-      {"Shuffle Status", 4, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SHUFFLE_STATUS, ""},
+      LOOKUP_FIELD("Repeat Status", 4, ENTERTAINMENT_REPEAT_STATUS),
+      LOOKUP_FIELD("Shuffle Status", 4, ENTERTAINMENT_SHUFFLE_STATUS),
       {"Save Favorite Number", BYTES(1), RES_INTEGER, false, 0, "Used to command AV to save current station as favorite"},
       {"Play Favorite Number", BYTES(2), RES_INTEGER, false, 0, "Used to command AV to play indicated favorite station"},
-      {"Thumbs Up/Down", BYTES(1), RES_INTEGER, false, LOOKUP_ENTERTAINMENT_LIKE_STATUS, ""},
+      LOOKUP_FIELD("Thumbs Up/Down", BYTES(1), ENTERTAINMENT_LIKE_STATUS),
       {"Signal Strength", BYTES(1), RES_INTEGER, false, "%", ""},
       {"Radio Frequency", BYTES(4), 10, false, "Hz", ""},
       {"HD Frequency Multicast", BYTES(1), RES_INTEGER, false, 0, "Digital sub channel"},
@@ -5205,19 +4407,19 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      0,
-     {{"Source", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SOURCE, ""},
+     {LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
       {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
       {"ID", BYTES(4), RES_INTEGER, false, 0, "Unique file ID"},
-      {"Type", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_TYPE, ""},
+      LOOKUP_FIELD("Type", BYTES(1), ENTERTAINMENT_TYPE),
       {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {"Track", BYTES(2), RES_INTEGER, false, 0, ""},
       {"Station", BYTES(2), RES_INTEGER, false, 0, ""},
       {"Favorite", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Radio frequency", BYTES(4), 10., false, "Hz", ""},
       {"HD Frequency", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Zone", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
-      {"In play queue", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Lock status", 2, RES_LOOKUP, false, ",0=Unlocked,1=Locked", "Sirius XM only"},
+      LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
+      LOOKUP_FIELD("In play queue", 2, YES_NO),
+      LOOKUP_FIELD("Locked", 2, YES_NO),
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {"Artist", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {"Album", BYTES(2), RES_STRINGLAU, false, 0, ""},
@@ -5232,14 +4434,14 @@ Pgn pgnList[] = {
      233,
      2,
      {
-         {"Source", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SOURCE, ""},
+         LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
          {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
-         {"Zone", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
+         LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
          {"Group ID", BYTES(4), RES_INTEGER, false, 0, "Unique group ID"},
          {"ID offset", BYTES(2), RES_INTEGER, false, 0, "First ID in this PGN"},
          {"ID count", BYTES(2), RES_INTEGER, false, 0, "Number of IDs in this PGN"},
          {"Total ID count", BYTES(2), RES_INTEGER, false, 0, "Total IDs in group"},
-         {"ID type", BYTES(1), RES_LOOKUP, false, ",0=Group,1=File,2=Encrypted group,3=Encrypted file", ""},
+         LOOKUP_FIELD("ID type", BYTES(1), ENTERTAINMENT_ID_TYPE),
          {"ID", BYTES(4), RES_INTEGER, false, 0, ""},
          {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""}
          // TODO: Add support for extra fields *after* the repeating fields.
@@ -5254,14 +4456,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      0,
-     {{"Source", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SOURCE, ""},
+     {LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
       {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
       {"Group ID", BYTES(4), RES_INTEGER, false, 0, "Unique group ID"},
-      {"Group type 1", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_GROUP, ""},
+      LOOKUP_FIELD("Group type 1", BYTES(1), ENTERTAINMENT_GROUP),
       {"Group name 1", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Group type 2", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_GROUP, ""},
+      LOOKUP_FIELD("Group type 2", BYTES(1), ENTERTAINMENT_GROUP),
       {"Group name 2", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Group type 3", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_GROUP, ""},
+      LOOKUP_FIELD("Group type 3", BYTES(1), ENTERTAINMENT_GROUP),
       {"Group name 3", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
 
@@ -5276,15 +4478,15 @@ Pgn pgnList[] = {
       {"ID count", BYTES(2), RES_INTEGER, false, 0, "Number of IDs in this PGN"},
       {"Total ID count", BYTES(2), RES_INTEGER, false, 0, "Total IDs in group"},
       {"ID", BYTES(1), RES_INTEGER, false, 0, "Source ID"},
-      {"Source", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SOURCE, ""},
+      LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
       {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
       {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Play support", BYTES(2), RES_BITFIELD, false, LOOKUP_ENTERTAINMENT_PLAY_STATUS, ""},
-      {"Browse support", BYTES(2), RES_BITFIELD, false, LOOKUP_ENTERTAINMENT_GROUP, ""},
-      {"Thumbs support", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Connected", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Repeat support", 2, RES_BITFIELD, false, ",1=Song,2=Play Queue", ""},
-      {"Shuffle support", 2, RES_BITFIELD, false, ",1=Play Queue,2=All", ""},
+      LOOKUP_BITFIELD("Play support", BYTES(4), ENTERTAINMENT_PLAY_STATUS_BITFIELD),
+      LOOKUP_BITFIELD("Browse support", BYTES(2), ENTERTAINMENT_GROUP_BITFIELD),
+      LOOKUP_FIELD("Thumbs support", 2, YES_NO),
+      LOOKUP_FIELD("Connected", 2, YES_NO),
+      LOOKUP_BITFIELD("Repeat support", 2, ENTERTAINMENT_REPEAT_BITFIELD),
+      LOOKUP_BITFIELD("Shuffle support", 2, ENTERTAINMENT_SHUFFLE_BITFIELD),
       {0}}}
 
     ,
@@ -5297,7 +4499,7 @@ Pgn pgnList[] = {
      {{"First zone ID", BYTES(1), RES_INTEGER, false, 0, "First Zone in this PGN"},
       {"Zone count", BYTES(1), RES_INTEGER, false, 0, "Number of Zones in this PGN"},
       {"Total zone count", BYTES(1), RES_INTEGER, false, 0, "Total Zones supported by this device"},
-      {"Zone ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
+      LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
       {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
 
@@ -5317,8 +4519,8 @@ Pgn pgnList[] = {
      PACKET_FAST,
      14,
      0,
-     {{"Data Mode", 4, RES_LOOKUP, false, LOOKUP_RESIDUAL_MODE, ""},
-      {"COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
+     {LOOKUP_FIELD("Data Mode", 4, RESIDUAL_MODE),
+      LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
       {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
       {"SID", BYTES(1), 1, false, 0, ""}
       /* So far, 2 bytes. Very sure of this given molly rose data */
@@ -5353,21 +4555,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      (48 / 8 + 2),
      0,
-     {{"Power", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Default Settings",
-       2,
-       RES_LOOKUP,
-       false,
-       ",0=Save current settings as user default,1=Load user default,2=Load Manufacturer default",
-       ""},
-      {"Tuner regions",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=USA,1=Europe,2=Asia,3=Middle East,4=Latin America,5=Australia,6=Russia,7=Japan",
-       ""},
+     {LOOKUP_FIELD("Power", 2, YES_NO),
+      LOOKUP_FIELD("Default Settings", 2, ENTERTAINMENT_DEFAULT_SETTINGS),
+      LOOKUP_FIELD("Tuner regions", 4, ENTERTAINMENT_REGIONS),
       {"Max favorites", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Video protocols", 4, RES_BITFIELD, false, ",0=PAL,1=NTSC", ""},
+      LOOKUP_BITFIELD("Video protocols", 4, VIDEO_PROTOCOLS),
       {"Reserved", 44, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
@@ -5378,19 +4570,9 @@ Pgn pgnList[] = {
      PACKET_FAST,
      2,
      0,
-     {{"Power", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Default Settings",
-       2,
-       RES_LOOKUP,
-       false,
-       ",0=Save current settings as user default,1=Load user default,2=Load Manufacturer default",
-       ""},
-      {"Tuner regions",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=USA,1=Europe,2=Asia,3=Middle East,4=Latin America,5=Australia,6=Russia,7=Japan",
-       ""},
+     {LOOKUP_FIELD("Power", 2, YES_NO),
+      LOOKUP_FIELD("Default Settings", 2, ENTERTAINMENT_DEFAULT_SETTINGS),
+      LOOKUP_FIELD("Tuner regions", 4, ENTERTAINMENT_REGIONS),
       {"Max favorites", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
@@ -5404,7 +4586,7 @@ Pgn pgnList[] = {
      {{"First zone ID", BYTES(1), RES_INTEGER, false, 0, "First Zone in this PGN"},
       {"Zone count", BYTES(1), RES_INTEGER, false, 0, "Number of Zones in this PGN"},
       {"Total zone count", BYTES(1), RES_INTEGER, false, 0, "Total Zones supported by this device"},
-      {"Zone ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
+      LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
       {"Zone name", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
 
@@ -5415,12 +4597,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      4,
      0,
-     {{"Zone ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
+     {LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
       {"Volume", BYTES(1), RES_INTEGER, false, "%", ""},
-      {"Volume change", 2, RES_LOOKUP, false, ",0=Up,1=Down", "Write only"},
-      {"Mute", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      LOOKUP_FIELD_DESC("Volume change", 2, ENTERTAINMENT_VOLUME_CONTROL, "Write only"),
+      LOOKUP_FIELD("Mute", 2, YES_NO),
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Channel", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_CHANNEL, ""},
+      LOOKUP_FIELD("Channel", 8, ENTERTAINMENT_CHANNEL),
       {0}}}
 
     ,
@@ -5433,7 +4615,7 @@ Pgn pgnList[] = {
      {{"First preset", BYTES(1), RES_INTEGER, false, 0, "First preset in this PGN"},
       {"Preset count", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Total preset count", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Preset type", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_EQ, ""},
+      LOOKUP_FIELD("Preset type", BYTES(1), ENTERTAINMENT_EQ),
       {"Preset name", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
 
@@ -5448,7 +4630,7 @@ Pgn pgnList[] = {
       {"Address count", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Total address count", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Bluetooth address", BYTES(6), RES_INTEGER, false, 0, ""},
-      {"Status", BYTES(1), RES_LOOKUP, false, ",0=Connected,1=Not connected,2=Not paired", ""},
+      LOOKUP_FIELD("Status", BYTES(1), BLUETOOTH_STATUS),
       {"Device name", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {"Signal strength", BYTES(1), RES_INTEGER, false, "%", ""},
       {0}}}
@@ -5461,9 +4643,9 @@ Pgn pgnList[] = {
      233,
      0,
      {{"Source number", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Status", 4, RES_LOOKUP, false, ",0=Reserved,1=Connected,2=Connecting,3=Not connected", ""},
-      {"Forget device", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Discovering", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
+      LOOKUP_FIELD("Status", 4, BLUETOOTH_SOURCE_STATUS),
+      LOOKUP_FIELD("Forget device", 2, YES_NO),
+      LOOKUP_FIELD("Discovering", 2, YES_NO),
       {"Bluetooth address", BYTES(6), RES_INTEGER, false, 0, ""},
       {0}}}
 
@@ -5474,7 +4656,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      14,
      2,
-     {{"Zone ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
+     {LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
       {"Volume limit", BYTES(1), RES_INTEGER, false, "%", ""},
       {"Fade", BYTES(1), RES_INTEGER, true, "%", ""},
       {"Balance", BYTES(1), RES_INTEGER, true, "%", ""},
@@ -5482,11 +4664,11 @@ Pgn pgnList[] = {
       {"EQ - Treble", BYTES(1), RES_INTEGER, true, "%", ""},
       {"EQ - Mid range", BYTES(1), RES_INTEGER, true, "%", ""},
       {"EQ - Bass", BYTES(1), RES_INTEGER, true, "%", ""},
-      {"Preset type", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_EQ, ""},
-      {"Audio filter", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_FILTER, ""},
+      LOOKUP_FIELD("Preset type", BYTES(1), ENTERTAINMENT_EQ),
+      LOOKUP_FIELD("Audio filter", BYTES(1), ENTERTAINMENT_FILTER),
       {"High pass filter frequency", BYTES(2), RES_INTEGER, false, "Hz", ""},
       {"Low pass filter frequency", BYTES(2), RES_INTEGER, false, "Hz", ""},
-      {"Channel", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_CHANNEL, ""},
+      LOOKUP_FIELD("Channel", 8, ENTERTAINMENT_CHANNEL),
       {0}}}
 
     /* proprietary PDU2 (non addressed) fast packet PGN range 0x1FF00 to 0x1FFFF (130816 - 131071) */
@@ -5502,7 +4684,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Init #2"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"A", BYTES(2), RES_INTEGER, false, 0, ""},
       {"B", BYTES(2), RES_INTEGER, false, 0, ""},
       {0}}}
@@ -5519,8 +4701,8 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=4", "AM Radio"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(1), RES_LOOKUP, false, ",1=Seeking up,2=Tuned,3=Seeking down", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      LOOKUP_FIELD("Item", BYTES(1), SONICHUB_TUNING),
       {"Frequency", BYTES(4), 0.001, false, "kHz", ""},
       {"Noise level", 2, 1, false, 0, ""} // Not sure about this
       ,
@@ -5542,7 +4724,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=5", "Zone info"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
@@ -5558,8 +4740,8 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=6", "Source"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, ",0=AM,1=FM,2=iPod,3=USB,4=AUX,5=AUX 2,6=Mic", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      LOOKUP_FIELD("Source", BYTES(1), SONICHUB_SOURCE),
       {0}}}
 
     ,
@@ -5574,7 +4756,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=8", "Source list"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {"A", 8, RES_INTEGER, false, 0, ""},
       {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
@@ -5592,8 +4774,8 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Control"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(1), RES_LOOKUP, false, ",1=Mute on,2=Mute off", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      LOOKUP_FIELD("Item", BYTES(1), FUSION_MUTE_COMMAND),
       {0}}}
 
     ,
@@ -5608,7 +4790,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Unknown"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"A", 8, RES_INTEGER, false, 0, ""},
       {"B", 8, RES_INTEGER, false, 0, ""},
       {0}}}
@@ -5625,8 +4807,8 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=12", "FM Radio"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(1), RES_LOOKUP, false, ",1=Seeking up,2=Tuned,3=Seeking down", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      LOOKUP_FIELD("Item", BYTES(1), SONICHUB_TUNING),
       {"Frequency", BYTES(4), 0.001, false, "kHz", ""},
       {"Noise level", 2, 1, false, 0, ""} // Not sure about this
       ,
@@ -5648,8 +4830,8 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=13", "Playlist"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(1), RES_LOOKUP, false, ",1=Report,4=Next Song,6=Previous Song", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      LOOKUP_FIELD("Item", BYTES(1), SONICHUB_PLAYLIST),
       {"A", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Current Track", BYTES(4), RES_INTEGER, false, 0, ""},
       {"Tracks", BYTES(4), RES_INTEGER, false, 0, ""},
@@ -5669,7 +4851,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=14", "Track"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
       {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
       {0}}}
@@ -5686,7 +4868,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=15", "Artist"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
       {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
       {0}}}
@@ -5703,7 +4885,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=16", "Album"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
       {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
       {0}}}
@@ -5720,7 +4902,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=19", "Menu Item"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
       {"C", BYTES(1), 1, false, 0, ""},
       {"D", BYTES(1), 1, false, 0, ""},
@@ -5740,7 +4922,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=20", "Zones"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Zones", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
@@ -5756,8 +4938,8 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=23", "Max Volume"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Zone", BYTES(1), RES_LOOKUP, false, ",0=Zone 1,1=Zone 2,2=Zone 3", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Level", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
@@ -5773,8 +4955,8 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=24", "Volume"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Zone", BYTES(1), RES_LOOKUP, false, ",0=Zone 1,1=Zone 2,2=Zone 3", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Level", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
@@ -5790,7 +4972,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=25", "Init #1"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {0}}}
 
     ,
@@ -5805,7 +4987,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=48", "Position"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Position", BYTES(4), 0.001, false, "s", ""},
       {0}}}
 
@@ -5821,7 +5003,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"A", BYTES(1), RES_INTEGER, false, 0, ""},
       {"B", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
@@ -5856,7 +5038,7 @@ Pgn pgnList[] = {
      0,
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
+      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
       {"Data", BYTES(221), RES_BINARY, false, 0, ""},
       {0}},
      0,
@@ -5975,7 +5157,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", BYTES(1), 1, false, "=4", "Track Info"},
       {"A", BYTES(2), 1, false, 0, ""},
-      {"Transport", 4, RES_LOOKUP, false, ",1=Playing,2=Paused", ""},
+      LOOKUP_FIELD("Transport", 4, ENTERTAINMENT_PLAY_STATUS),
       {"X", 4, 1, false, 0, ""},
       {"B", BYTES(1), 1, false, 0, ""},
       {"Track #", BYTES(2), 1, false, 0, ""},
@@ -6091,7 +5273,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", BYTES(1), 1, false, "=11", "AM/FM Station"},
       {"A", BYTES(1), 1, false, 0, ""},
-      {"AM/FM", BYTES(1), RES_LOOKUP, false, ",0=AM,1=FM", ""},
+      LOOKUP_FIELD("AM/FM", BYTES(1), FUSION_RADIO_SOURCE),
       {"B", BYTES(1), 1, false, 0, ""},
       {"Frequency", BYTES(4), 0.000001, false, "Hz", ""},
       {"C", BYTES(1), 1, false, 0, ""},
@@ -6144,7 +5326,8 @@ Pgn pgnList[] = {
       {"Message ID", BYTES(1), 1, false, "=14", "Scan"},
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(1), 1, false, 0, ""},
-      {"Scan", BYTES(1), RES_LOOKUP, false, ",0=Off,1=Scan", ""},
+      LOOKUP_FIELD("Scan", BITS(2), YES_NO),
+      {"C", BITS(6), 1, false, 0, ""},
       {0}}}
 
     ,
@@ -6181,11 +5364,11 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", BYTES(1), 1, false, "=20", "Replay"},
       {"A", BYTES(1), 1, false, 0, ""},
-      {"Mode", BYTES(1), RES_LOOKUP, false, ",9=USB Repeat,10=USB Shuffle,12=iPod Repeat,13=iPod Shuffle", ""},
+      LOOKUP_FIELD("Mode", BYTES(1), FUSION_REPLAY_MODE),
       {"C", BYTES(3), 1, false, 0, ""},
       {"D", BYTES(1), 1, false, 0, ""},
       {"E", BYTES(1), 1, false, 0, ""},
-      {"Status", BYTES(1), RES_LOOKUP, false, ",0=Off,1=One/Track,2=All/Album", ""},
+      LOOKUP_FIELD("Status", BYTES(1), FUSION_REPLAY_STATUS),
       {"H", BYTES(1), 1, false, 0, ""},
       {"I", BYTES(1), 1, false, 0, ""},
       {"J", BYTES(1), 1, false, 0, ""},
@@ -6203,7 +5386,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", BYTES(1), 1, false, "=23", "Mute"},
       {"A", BYTES(1), 1, false, 0, ""},
-      {"Mute", BYTES(1), RES_LOOKUP, false, ",1=Muted,2=Not Muted", ""},
+      LOOKUP_FIELD("Mute", BYTES(1), FUSION_MUTE_COMMAND),
       {0}}}
 
     ,
@@ -6274,7 +5457,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", BYTES(1), 1, false, "=32", "Power"},
       {"A", BYTES(1), 1, false, 0, ""},
-      {"State", BYTES(1), RES_LOOKUP, false, ",1=On,2=Off", ""},
+      LOOKUP_FIELD("State", BYTES(1), FUSION_POWER_STATE),
       {0}}}
 
     ,
@@ -6372,7 +5555,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"SID", BYTES(1), 1, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
+      LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
       {"Actual Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
       {"Set Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
       {0}}}
@@ -6505,7 +5688,7 @@ Pgn pgnList[] = {
       {"Device", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Instance", BYTES(1), 1, false, 0, ""},
       {"F", 1 * 4, 1, false, 0, ""},
-      {"Tank type", 1 * 4, RES_LOOKUP, false, ",0=Fuel,1=Water,2=Gray water,3=Live well,4=Oil,5=Black water", ""},
+      LOOKUP_FIELD("Tank type", 1 * 4, TANK_TYPE),
       {"Capacity", BYTES(4), 0.1, false, 0, ""},
       {"G", BYTES(1), 1, false, 0, ""},
       {"H", BYTES(2), 1, true, 0, ""},
@@ -6529,7 +5712,7 @@ Pgn pgnList[] = {
       {"OFF Counter", BYTES(1), RES_INTEGER, false, 0, ""},
       {"ON Counter", BYTES(1), RES_INTEGER, false, 0, ""},
       {"ERROR Counter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Switch Status", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      LOOKUP_FIELD("Switch Status", 2, OFF_ON),
       {"Reserved", BYTES(2), 1, false, 0, ""},
       {0}}}
 
@@ -6562,7 +5745,7 @@ Pgn pgnList[] = {
       {"Accumulated OFF Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
       {"Accumulated ON Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
       {"Accumulated ERROR Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
-      {"Switch Status", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
+      LOOKUP_FIELD("Switch Status", 2, OFF_ON),
       {"Reserved", 6, 1, false, 0, ""},
       {0}}}
 
@@ -6626,7 +5809,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", 6, 1, false, "=0", "Msg 24 Part A"},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"D", BYTES(1), 1, false, 0, ""},
       {"E", BYTES(1), 1, false, 0, ""},
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
@@ -6665,11 +5848,11 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", 6, 1, false, "=1", "Msg 24 Part B"},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"D", BYTES(1), 1, false, 0, ""},
       {"E", BYTES(1), 1, false, 0, ""},
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, ""},
+      LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
       {"Vendor ID", BYTES(7), RES_ASCII, false, 0, ""},
       {"Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable"},
       {"Length", BYTES(2), 0.1, false, "m", ""},
@@ -6721,7 +5904,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"Unused", BYTES(3), 1, false, 0, ""},
       {"Type", BYTES(2), 1, false, "=0", "Heading Offset"},
       {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
@@ -6752,7 +5935,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"Unused", BYTES(3), 1, false, 0, ""},
       {"Type", BYTES(2), 1, false, "=768", "Local field"},
       {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
@@ -6771,7 +5954,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"Unused", BYTES(3), 1, false, 0, ""},
       {"Type", BYTES(2), 1, false, "=1024", "Local field"},
       {"A", BYTES(2), 1, false, 0, ""},
@@ -6790,7 +5973,7 @@ Pgn pgnList[] = {
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"D", BYTES(1), 1, false, 0, ""},
       {"Group", BYTES(1), 1, false, 0, ""},
       {"F", BYTES(1), 1, false, 0, ""},
@@ -6798,13 +5981,7 @@ Pgn pgnList[] = {
       {"H", BYTES(1), 1, false, 0, ""},
       {"I", BYTES(1), 1, false, 0, ""},
       {"J", BYTES(1), 1, false, 0, ""},
-      {"Backlight",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",1=Day Mode,4=Night Mode,11=Level 1,22=Level 2,33=Level 3,44=Level 4,55=Level 5,66=Level 6,77=Level 7,88=Level 8,99=Level "
-       "9",
-       ""},
+      LOOKUP_FIELD("Backlight", BYTES(1), SIMNET_BACKLIGHT_LEVEL),
       {"L", BYTES(2), 1, false, 0, ""},
       {0}}}
 
@@ -6837,27 +6014,6 @@ Pgn pgnList[] = {
       {"Node Voltage", BYTES(2), 0.01, false, "V", ""},
       {0}}}
 
-#define LOOKUP_SIMNET_AP_EVENTS \
-  (",6=Standby"                 \
-   ",9=Auto mode"               \
-   ",10=Nav mode"               \
-   ",13=Non Follow Up mode"     \
-   ",15=Wind mode"              \
-   ",18=Square (Turn)"          \
-   ",19=C-Turn"                 \
-   ",20=U-Turn"                 \
-   ",21=Spiral (Turn)"          \
-   ",22=Zig Zag (Turn)"         \
-   ",23=Lazy-S (Turn)"          \
-   ",24=Depth (Turn)"           \
-   ",26=Change Course")
-
-#define LOOKUP_SIMNET_DIRECTION \
-  (",2=Port"                    \
-   ",3=Starboard"               \
-   ",4=Left rudder (port)"      \
-   ",5=Right rudder (starboard)")
-
     ,
     {"Simnet: Event Command: AP command",
      130850,
@@ -6868,11 +6024,12 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, ",2,4", "AP command"},
+      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command"},
       {"B", BYTES(2), RES_NOTUSED, false, 0, ""},
       {"Controlling Device", BYTES(1), 1, false, 0, ""},
-      {"Event", BYTES(2), RES_LOOKUP, false, LOOKUP_SIMNET_AP_EVENTS, ""},
-      {"Direction", BYTES(1), RES_LOOKUP, false, LOOKUP_SIMNET_DIRECTION, ""},
+      LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
+      {"C", BYTES(1), RES_NOTUSED, false, 0, ""},
+      LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
       {"Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"G", BYTES(1), RES_NOTUSED, false, 0, ""},
       {0}}}
@@ -6890,7 +6047,7 @@ Pgn pgnList[] = {
       {"A", BYTES(2), 1, false, 0, ""},
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command"},
       {"C", BYTES(1), 1, false, 0, ""},
-      {"Alarm", BYTES(2), RES_LOOKUP, false, ",57=Raise,56=Clear", ""},
+      {"Alarm", BYTES(2), RES_INTEGER, false, 0, ""},
       {"Message ID", BYTES(2), RES_INTEGER, false, 0, ""},
       {"F", BYTES(1), 1, false, 0, ""},
       {"G", BYTES(1), 1, false, 0, ""},
@@ -6927,8 +6084,9 @@ Pgn pgnList[] = {
       {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command"},
       {"B", BYTES(2), 1, false, 0, ""},
       {"Controlling Device", BYTES(1), 1, false, 0, ""},
-      {"Event", BYTES(2), RES_LOOKUP, false, LOOKUP_SIMNET_AP_EVENTS, ""},
-      {"Direction", BYTES(1), RES_LOOKUP, false, LOOKUP_SIMNET_DIRECTION, ""},
+      LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
+      {"C", BYTES(1), RES_NOTUSED, false, 0, ""},
+      LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
       {"Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"G", BYTES(1), 1, false, 0, ""},
       {0}}}
@@ -6991,19 +6149,14 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
       {"Reserved", 2, RES_NOTUSED, false, 0, ""},
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Control", 4, RES_LOOKUP, false, ",0=Report previous values,1=Generate new values", ""},
+      LOOKUP_FIELD("Control", 1, AIRMAR_POST_CONTROL),
       {"Reserved", 7, RES_BINARY, false, 0, ""},
-      {"Number of ID/test result pairs to follow", BYTES(1), RES_INTEGER, false, 0, ""}
-
-      ,
-      {"Test ID",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",1=Format Code,2=Factory EEPROM,3=User EEPROM,4=Water Temp Sensor,5=Sonar Transceiver,6=Speed sensor,7=Internal "
-       "temperature sensor,8=Battery voltage sensor",
-       "See Airmar docs for table of IDs and failure codes; these lookup values are for DST200"},
-      {"Test result", BYTES(1), RES_LOOKUP, false, ",0=Pass", "Values other than 0 are failure codes"},
+      {"Number of ID/test result pairs to follow", BYTES(1), RES_INTEGER, false, 0, ""},
+      LOOKUP_FIELD_DESC("Test ID",
+                        BYTES(1),
+                        AIRMAR_POST_ID,
+                        "See Airmar docs for table of IDs and failure codes; these lookup values are for DST200"),
+      {"Test result", BYTES(1), RES_INTEGER, false, 0, "Values other than 0 are failure codes"},
       {0}}}
 
     ,

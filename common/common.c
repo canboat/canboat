@@ -459,7 +459,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
 
 char *sbSearchChar(const StringBuffer *const in, char c)
 {
-  char * p = sbGet(in);
+  char  *p = sbGet(in);
   size_t i;
 
   for (i = 0; i < in->len; i++)
@@ -532,8 +532,8 @@ this the "Extended Data Page" (EDP).
 
 void getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int *pgn, unsigned int *src, unsigned int *dst)
 {
-  unsigned char PF = (unsigned char) (id >> 16);
-  unsigned char PS = (unsigned char) (id >> 8);
+  unsigned char PF  = (unsigned char) (id >> 16);
+  unsigned char PS  = (unsigned char) (id >> 8);
   unsigned char RDP = (unsigned char) (id >> 24) & 3; // Use R + DP bits
 
   if (src)
@@ -644,8 +644,8 @@ SOCKET open_socket_stream(const char *url)
   int             sockfd = INVALID_SOCKET;
   int             n;
   struct addrinfo hints, *res, *addr;
-  char *          host;
-  const char *    service;
+  char           *host;
+  const char     *service;
 
   resolve_address(url, &host, &service);
 
@@ -865,7 +865,7 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
   unsigned int dst;
   unsigned int bytes;
 
-  char *       p;
+  char        *p;
   int          i;
   int          b;
   unsigned int byt;

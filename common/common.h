@@ -96,7 +96,7 @@ void setProgName(char *name);
 
 typedef struct StringBuffer
 {
-  char * data;
+  char  *data;
   size_t len;
   size_t alloc;
 } StringBuffer;
@@ -246,6 +246,7 @@ bool parseConst(const char **msg, const char *str);
 
 #define Pi (3.141592654)
 #define RadianToDegree (360.0 / 2 / Pi)
+#define BITS(x) (x)
 #define BYTES(x) ((x) * (8))
 #define BITS_TO_BYTES(x) ((x) >> 3)
 
@@ -262,7 +263,7 @@ void logAbort(const char *format, ...);
 #define CANBOAT_PGN_START 0x40000
 #define CANBOAT_PGN_END 0x401FF
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
-#define IKONVERT_BEM 0x40100 /* iKonvert specific fake PGNs */
+#define IKONVERT_BEM 0x40100  /* iKonvert specific fake PGNs */
 
 #define CANBOAT_COMMON
 #endif
