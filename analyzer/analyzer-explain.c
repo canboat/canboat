@@ -188,7 +188,7 @@ static void explainPGN(Pgn pgn)
            f.name,
            f.name[0] && (f.description && f.description[0] && f.description[0] != ',') ? " - " : "",
            (!f.description || f.description[0] == ',') ? "" : f.description);
-    if (!f.size)
+    if (f.size == LEN_VARIABLE)
     {
       printf("                  Bits: variable\n");
     }
@@ -402,7 +402,7 @@ static void explainPGNXML(Pgn pgn)
       printXML(10, "Id", f.camelName);
       printXML(10, "Name", f.name);
 
-      if (f.units && strcmp(f.units, PROPRIETARY_PGN_ONLY) == 0)
+      if (f.size == LEN_VARIABLE || (f.units && strcmp(f.units, PROPRIETARY_PGN_ONLY) == 0))
       {
         showBitOffset = false;
       }
@@ -411,7 +411,14 @@ static void explainPGNXML(Pgn pgn)
       {
         printXML(10, "Description", f.description);
       }
-      printf("          <BitLength>%u</BitLength>\n", f.size);
+      if (f.size == LEN_VARIABLE)
+      {
+        printf("          <BitLengthVariable/>\n");
+      }
+      else
+      {
+        printf("          <BitLength>%u</BitLength>\n", f.size);
+      }
       if (showBitOffset)
       {
         printf("          <BitOffset>%u</BitOffset>\n", bitOffset);

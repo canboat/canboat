@@ -6390,9 +6390,7 @@ limitations under the License.
           <Id>value</Id>
           <Name>Value</Name>
           <Description>Parameter value, variable length</Description>
-          <BitLength>0</BitLength>
-          <BitOffset>96</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -6488,9 +6486,7 @@ limitations under the License.
           <Id>value</Id>
           <Name>Value</Name>
           <Description>Parameter value, variable length</Description>
-          <BitLength>0</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -6705,7 +6701,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
-          <BitLength>0</BitLength>
+          <BitLengthVariable/>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6826,7 +6822,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
-          <BitLength>0</BitLength>
+          <BitLengthVariable/>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6842,7 +6838,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <BitLength>0</BitLength>
+          <BitLengthVariable/>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -6954,7 +6950,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
-          <BitLength>0</BitLength>
+          <BitLengthVariable/>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6970,7 +6966,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <BitLength>0</BitLength>
+          <BitLengthVariable/>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -7082,7 +7078,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
-          <BitLength>0</BitLength>
+          <BitLengthVariable/>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7098,7 +7094,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <BitLength>0</BitLength>
+          <BitLengthVariable/>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -17669,9 +17665,7 @@ limitations under the License.
           <Order>8</Order>
           <Id>routeName</Id>
           <Name>Route Name</Name>
-          <BitLength>2040</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -17680,8 +17674,6 @@ limitations under the License.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
-          <BitOffset>2112</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -17690,17 +17682,13 @@ limitations under the License.
           <Id>wpId</Id>
           <Name>WP ID</Name>
           <BitLength>16</BitLength>
-          <BitOffset>2120</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>11</Order>
           <Id>wpName</Id>
           <Name>WP Name</Name>
-          <BitLength>2040</BitLength>
-          <BitOffset>2136</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -17709,8 +17697,6 @@ limitations under the License.
           <Id>wpLatitude</Id>
           <Name>WP Latitude</Name>
           <BitLength>32</BitLength>
-          <BitOffset>4176</BitOffset>
-          <BitStart>0</BitStart>
           <Units>deg</Units>
           <Type>Latitude</Type>
           <Resolution>0.0000001</Resolution>
@@ -17721,8 +17707,6 @@ limitations under the License.
           <Id>wpLongitude</Id>
           <Name>WP Longitude</Name>
           <BitLength>32</BitLength>
-          <BitOffset>4208</BitOffset>
-          <BitStart>0</BitStart>
           <Units>deg</Units>
           <Type>Longitude</Type>
           <Resolution>0.0000001</Resolution>
@@ -24549,9 +24533,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>152</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24559,9 +24541,7 @@ limitations under the License.
           <Order>11</Order>
           <Id>stationName</Id>
           <Name>Station Name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>168</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24684,9 +24664,7 @@ limitations under the License.
           <Order>9</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>168</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24694,9 +24672,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>stationName</Id>
           <Name>Station Name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>184</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24836,9 +24812,7 @@ limitations under the License.
           <Order>11</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>200</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24846,9 +24820,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>stationName</Id>
           <Name>Station Name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>216</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -25025,9 +24997,7 @@ limitations under the License.
           <Order>14</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
-          <BitLength>2056</BitLength>
-          <BitOffset>208</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -25035,9 +25005,7 @@ limitations under the License.
           <Order>15</Order>
           <Id>stationName</Id>
           <Name>Station Name</Name>
-          <BitLength>2056</BitLength>
-          <BitOffset>2264</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>

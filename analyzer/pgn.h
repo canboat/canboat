@@ -25,6 +25,8 @@ limitations under the License.
 
 #define PROPRIETARY_PGN_ONLY "=proprietary pgn only"
 
+#define LEN_VARIABLE (0)
+
 #define RES_LAT_LONG_PRECISION (10000000) /* 1e7 */
 #define RES_LAT_LONG (1.0e-7)
 #define RES_LAT_LONG_64 (1.0e-16)
@@ -61,9 +63,8 @@ limitations under the License.
 typedef struct
 {
   char    *name;
-  uint32_t size; /* Size in bits. All fields are contiguous in message; use 'reserved' fields to fill in empty bits. */
-#define LEN_VARIABLE (0)
-  double resolution; /* Either a positive real value or one of the following RES_ special values */
+  uint32_t size;       /* Size in bits. All fields are contiguous in message; use 'reserved' fields to fill in empty bits. */
+  double   resolution; /* Either a positive real value or one of the following RES_ special values */
 
   bool        hasSign; /* Is the value signed, e.g. has both positive and negative values? */
   const char *units;   /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
@@ -220,6 +221,11 @@ typedef struct
 #define ASCII_DESC_FIELD(nam, len, desc)                                   \
   {                                                                        \
     .name = nam, .size = len, .resolution = RES_ASCII, .description = desc \
+  }
+
+#define STRINGVAR_FIELD(nam)                                                       \
+  {                                                                                \
+    .name = nam, .size = LEN_VARIABLE, .resolution = RES_STRING, .description = "" \
   }
 
 #define ASCII_FIELD(nam, len) ASCII_DESC_FIELD(nam, len, "")
@@ -3087,10 +3093,10 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Navigation direction in route", 2),
       SIMPLE_FIELD("Supplementary Route/WP data available", 2),
       RESERVED_FIELD(4),
-      {"Route Name", BYTES(255), RES_STRING, false, 0, ""},
+      STRINGVAR_FIELD("Route Name"),
       RESERVED_FIELD(BYTES(1)),
       SIMPLE_FIELD("WP ID", BYTES(2)),
-      {"WP Name", BYTES(255), RES_STRING, false, 0, ""},
+      STRINGVAR_FIELD("WP Name"),
       {"WP Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"WP Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {0}}}
@@ -4190,8 +4196,8 @@ Pgn pgnList[] = {
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       DISTANCE_FIELD("Tide Level", BYTES(2), 0.001, "Relative to MLLW"),
       LENGTH_FIELD("Tide Level standard deviation", BYTES(2), 0.01, ""),
-      {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
-      {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
+      STRINGVAR_FIELD("Station ID"),
+      STRINGVAR_FIELD("Station Name"),
       {0}}}
 
     ,
@@ -4216,8 +4222,8 @@ Pgn pgnList[] = {
        "ppt "
        "which is read as 35 parts per thousand."},
       TEMPERATURE_FIELD("Water Temperature"),
-      {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
-      {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
+      STRINGVAR_FIELD("Station ID"),
+      STRINGVAR_FIELD("Station Name"),
       {0}}}
 
     ,
@@ -4237,8 +4243,8 @@ Pgn pgnList[] = {
       SPEED_FIELD("Current speed"),
       ANGLE_POS_FIELD("Current flow direction", ""),
       TEMPERATURE_FIELD("Water Temperature"),
-      {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
-      {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
+      STRINGVAR_FIELD("Station ID"),
+      STRINGVAR_FIELD("Station Name"),
       {0}}}
 
     ,
@@ -4261,8 +4267,8 @@ Pgn pgnList[] = {
       SPEED_FIELD("Wind Gusts"),
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       TEMPERATURE_FIELD("Ambient Temperature"),
-      {"Station ID", BYTES(257), RES_STRING, false, 0, ""},
-      {"Station Name", BYTES(257), RES_STRING, false, 0, ""},
+      STRINGVAR_FIELD("Station ID"),
+      STRINGVAR_FIELD("Station Name"),
       {0}}}
 
     ,
