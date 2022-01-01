@@ -31,8 +31,8 @@ CFLAGS= -Wall -O2
 
 all: $(TARGETS)
 
-$(SOCKETCAN_WRITER): socketcan-writer.c ../analyzer/*.h ../analyzer/*.c ../common/*.h ../common/*.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(SOCKETCAN_WRITER) -I../analyzer -I../common socketcan-writer.c ../analyzer/pgn.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+$(SOCKETCAN_WRITER): socketcan-writer.c ../common/*.h ../common/*.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(SOCKETCAN_WRITER) -I../analyzer -I../common socketcan-writer.c ../common/common.c ../common/parse.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

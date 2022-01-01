@@ -23,7 +23,7 @@ limitations under the License.
 #define GLOBALS
 #include "analyzer.h"
 
-#include "common.h"
+#include "parse.h"
 
 enum RawFormats
 {

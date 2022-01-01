@@ -35,6 +35,184 @@ limitations under the License.
       <EnumPair Value='4' Name='Marine' />
       <EnumPair Value='5' Name='Industrial' />
     </Enumeration>
+    <Enumeration Name='MANUFACTURER_CODE' MaxValue='2047'>
+      <EnumPair Value='69' Name='ARKS Enterprises, Inc.' />
+      <EnumPair Value='78' Name='FW Murphy/Enovation Controls' />
+      <EnumPair Value='80' Name='Twin Disc' />
+      <EnumPair Value='85' Name='Kohler Power Systems' />
+      <EnumPair Value='88' Name='Hemisphere GPS Inc' />
+      <EnumPair Value='116' Name='BEP Marine' />
+      <EnumPair Value='135' Name='Airmar' />
+      <EnumPair Value='137' Name='Maretron' />
+      <EnumPair Value='140' Name='Lowrance' />
+      <EnumPair Value='144' Name='Mercury Marine' />
+      <EnumPair Value='147' Name='Nautibus Electronic GmbH' />
+      <EnumPair Value='148' Name='Blue Water Data' />
+      <EnumPair Value='154' Name='Westerbeke' />
+      <EnumPair Value='161' Name='Offshore Systems (UK) Ltd.' />
+      <EnumPair Value='163' Name='Evinrude/BRP' />
+      <EnumPair Value='165' Name='CPAC Systems AB' />
+      <EnumPair Value='168' Name='Xantrex Technology Inc.' />
+      <EnumPair Value='172' Name='Yanmar Marine' />
+      <EnumPair Value='174' Name='Volvo Penta' />
+      <EnumPair Value='175' Name='Honda Marine' />
+      <EnumPair Value='176' Name='Carling Technologies Inc. (Moritz Aerospace)' />
+      <EnumPair Value='185' Name='Beede Instruments' />
+      <EnumPair Value='192' Name='Floscan Instrument Co. Inc.' />
+      <EnumPair Value='193' Name='Nobletec' />
+      <EnumPair Value='198' Name='Mystic Valley Communications' />
+      <EnumPair Value='199' Name='Actia' />
+      <EnumPair Value='200' Name='Honda Marine' />
+      <EnumPair Value='201' Name='Disenos Y Technologia' />
+      <EnumPair Value='211' Name='Digital Switching Systems' />
+      <EnumPair Value='215' Name='Xintex/Atena' />
+      <EnumPair Value='224' Name='EMMI NETWORK S.L.' />
+      <EnumPair Value='225' Name='Honda Marine' />
+      <EnumPair Value='228' Name='ZF' />
+      <EnumPair Value='229' Name='Garmin' />
+      <EnumPair Value='233' Name='Yacht Monitoring Solutions' />
+      <EnumPair Value='235' Name='Sailormade Marine Telemetry/Tetra Technology LTD' />
+      <EnumPair Value='243' Name='Eride' />
+      <EnumPair Value='250' Name='Honda Marine' />
+      <EnumPair Value='257' Name='Honda Motor Company LTD' />
+      <EnumPair Value='272' Name='Groco' />
+      <EnumPair Value='273' Name='Actisense' />
+      <EnumPair Value='274' Name='Amphenol LTW Technology' />
+      <EnumPair Value='275' Name='Navico' />
+      <EnumPair Value='283' Name='Hamilton Jet' />
+      <EnumPair Value='285' Name='Sea Recovery' />
+      <EnumPair Value='286' Name='Coelmo SRL Italy' />
+      <EnumPair Value='295' Name='BEP Marine' />
+      <EnumPair Value='304' Name='Empir Bus' />
+      <EnumPair Value='305' Name='NovAtel' />
+      <EnumPair Value='306' Name='Sleipner Motor AS' />
+      <EnumPair Value='307' Name='MBW Technologies' />
+      <EnumPair Value='311' Name='Fischer Panda' />
+      <EnumPair Value='315' Name='ICOM' />
+      <EnumPair Value='328' Name='Qwerty' />
+      <EnumPair Value='329' Name='Dief' />
+      <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
+      <EnumPair Value='345' Name='Korean Maritime University' />
+      <EnumPair Value='351' Name='Thrane and Thrane' />
+      <EnumPair Value='355' Name='Mastervolt' />
+      <EnumPair Value='356' Name='Fischer Panda Generators' />
+      <EnumPair Value='358' Name='Victron Energy' />
+      <EnumPair Value='370' Name='Rolls Royce Marine' />
+      <EnumPair Value='373' Name='Electronic Design' />
+      <EnumPair Value='374' Name='Northern Lights' />
+      <EnumPair Value='378' Name='Glendinning' />
+      <EnumPair Value='381' Name='B &amp; G' />
+      <EnumPair Value='384' Name='Rose Point Navigation Systems' />
+      <EnumPair Value='385' Name='Johnson Outdoors Marine Electronics Inc Geonav' />
+      <EnumPair Value='394' Name='Capi 2' />
+      <EnumPair Value='396' Name='Beyond Measure' />
+      <EnumPair Value='400' Name='Livorsi Marine' />
+      <EnumPair Value='404' Name='ComNav' />
+      <EnumPair Value='419' Name='Fusion Electronics' />
+      <EnumPair Value='421' Name='Standard Horizon' />
+      <EnumPair Value='422' Name='True Heading AB' />
+      <EnumPair Value='426' Name='Egersund Marine Electronics AS' />
+      <EnumPair Value='427' Name='em-trak Marine Electronics' />
+      <EnumPair Value='431' Name='Tohatsu Co, JP' />
+      <EnumPair Value='437' Name='Digital Yacht' />
+      <EnumPair Value='438' Name='Comar Systems Limited' />
+      <EnumPair Value='440' Name='Cummins' />
+      <EnumPair Value='443' Name='VDO (aka Continental-Corporation)' />
+      <EnumPair Value='451' Name='Parker Hannifin aka Village Marine Tech' />
+      <EnumPair Value='459' Name='Alltek Marine Electronics Corp' />
+      <EnumPair Value='460' Name='SAN GIORGIO S.E.I.N' />
+      <EnumPair Value='466' Name='Veethree Electronics &amp; Marine' />
+      <EnumPair Value='467' Name='Humminbird Marine Electronics' />
+      <EnumPair Value='470' Name='SI-TEX Marine Electronics' />
+      <EnumPair Value='471' Name='Sea Cross Marine AB' />
+      <EnumPair Value='475' Name='GME aka Standard Communications Pty LTD' />
+      <EnumPair Value='476' Name='Humminbird Marine Electronics' />
+      <EnumPair Value='478' Name='Ocean Sat BV' />
+      <EnumPair Value='481' Name='Chetco Digitial Instruments' />
+      <EnumPair Value='493' Name='Watcheye' />
+      <EnumPair Value='499' Name='Lcj Capteurs' />
+      <EnumPair Value='502' Name='Attwood Marine' />
+      <EnumPair Value='503' Name='Naviop S.R.L.' />
+      <EnumPair Value='504' Name='Vesper Marine Ltd' />
+      <EnumPair Value='510' Name='Marinesoft Co. LTD' />
+      <EnumPair Value='517' Name='NoLand Engineering' />
+      <EnumPair Value='518' Name='Transas USA' />
+      <EnumPair Value='529' Name='National Instruments Korea' />
+      <EnumPair Value='532' Name='Onwa Marine' />
+      <EnumPair Value='571' Name='Marinecraft (South Korea)' />
+      <EnumPair Value='573' Name='McMurdo Group aka Orolia LTD' />
+      <EnumPair Value='578' Name='Advansea' />
+      <EnumPair Value='579' Name='KVH' />
+      <EnumPair Value='580' Name='San Jose Technology' />
+      <EnumPair Value='583' Name='Yacht Control' />
+      <EnumPair Value='586' Name='Suzuki Motor Corporation' />
+      <EnumPair Value='591' Name='US Coast Guard' />
+      <EnumPair Value='595' Name='Ship Module aka Customware' />
+      <EnumPair Value='600' Name='Aquatic AV' />
+      <EnumPair Value='605' Name='Aventics GmbH' />
+      <EnumPair Value='606' Name='Intellian' />
+      <EnumPair Value='612' Name='SamwonIT' />
+      <EnumPair Value='614' Name='Arlt Tecnologies' />
+      <EnumPair Value='637' Name='Bavaria Yacts' />
+      <EnumPair Value='641' Name='Diverse Yacht Services' />
+      <EnumPair Value='644' Name='Wema U.S.A dba KUS' />
+      <EnumPair Value='645' Name='Garmin' />
+      <EnumPair Value='658' Name='Shenzhen Jiuzhou Himunication' />
+      <EnumPair Value='688' Name='Rockford Corp' />
+      <EnumPair Value='704' Name='JL Audio' />
+      <EnumPair Value='715' Name='Autonnic' />
+      <EnumPair Value='717' Name='Yacht Devices' />
+      <EnumPair Value='734' Name='REAP Systems' />
+      <EnumPair Value='735' Name='Au Electronics Group' />
+      <EnumPair Value='739' Name='LxNav' />
+      <EnumPair Value='743' Name='DaeMyung' />
+      <EnumPair Value='744' Name='Woosung' />
+      <EnumPair Value='773' Name='Clarion US' />
+      <EnumPair Value='776' Name='HMI Systems' />
+      <EnumPair Value='777' Name='Ocean Signal' />
+      <EnumPair Value='778' Name='Seekeeper' />
+      <EnumPair Value='781' Name='Poly Planar' />
+      <EnumPair Value='785' Name='Fischer Panda DE' />
+      <EnumPair Value='795' Name='Broyda Industries' />
+      <EnumPair Value='796' Name='Canadian Automotive' />
+      <EnumPair Value='797' Name='Tides Marine' />
+      <EnumPair Value='798' Name='Lumishore' />
+      <EnumPair Value='799' Name='Still Water Designs and Audio' />
+      <EnumPair Value='802' Name='BJ Technologies (Beneteau)' />
+      <EnumPair Value='803' Name='Gill Sensors' />
+      <EnumPair Value='811' Name='Blue Water Desalination' />
+      <EnumPair Value='815' Name='FLIR' />
+      <EnumPair Value='824' Name='Undheim Systems' />
+      <EnumPair Value='838' Name='TeamSurv' />
+      <EnumPair Value='844' Name='Fell Marine' />
+      <EnumPair Value='847' Name='Oceanvolt' />
+      <EnumPair Value='862' Name='Prospec' />
+      <EnumPair Value='868' Name='Data Panel Corp' />
+      <EnumPair Value='890' Name='L3 Technologies' />
+      <EnumPair Value='894' Name='Rhodan Marine Systems' />
+      <EnumPair Value='896' Name='Nexfour Solutions' />
+      <EnumPair Value='905' Name='ASA Electronics' />
+      <EnumPair Value='909' Name='Marines Co (South Korea)' />
+      <EnumPair Value='911' Name='Nautic-on' />
+      <EnumPair Value='930' Name='Ecotronix' />
+      <EnumPair Value='962' Name='Timbolier Industries' />
+      <EnumPair Value='968' Name='Cox Powertrain' />
+      <EnumPair Value='969' Name='Blue Seas' />
+      <EnumPair Value='1850' Name='Teleflex Marine (SeaStar Solutions)' />
+      <EnumPair Value='1851' Name='Raymarine' />
+      <EnumPair Value='1852' Name='Navionics' />
+      <EnumPair Value='1853' Name='Japan Radio Co' />
+      <EnumPair Value='1854' Name='Northstar Technologies' />
+      <EnumPair Value='1855' Name='Furuno' />
+      <EnumPair Value='1856' Name='Trimble' />
+      <EnumPair Value='1857' Name='Simrad' />
+      <EnumPair Value='1858' Name='Litton' />
+      <EnumPair Value='1859' Name='Kvasar AB' />
+      <EnumPair Value='1860' Name='MMP' />
+      <EnumPair Value='1861' Name='Vector Cantech' />
+      <EnumPair Value='1862' Name='Yamaha Marine' />
+      <EnumPair Value='1863' Name='Faria Instruments' />
+    </Enumeration>
     <Enumeration Name='SHIP_TYPE' MaxValue='255'>
       <EnumPair Value='0' Name='Unavailable' />
       <EnumPair Value='20' Name='Wing In Ground' />
@@ -1380,7 +1558,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>24</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -1893,7 +2070,6 @@ limitations under the License.
           <Order>10</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>ISO Self Configurable</Description>
           <BitLength>1</BitLength>
           <BitOffset>63</BitOffset>
           <BitStart>7</BitStart>
@@ -1935,7 +2111,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2025,7 +2201,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2087,7 +2263,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Victron</Description>
+          <Description>Victron Energy</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -2102,7 +2278,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2168,7 +2344,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2232,7 +2408,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3690,7 +3866,6 @@ limitations under the License.
           <Order>10</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>ISO Self Configurable</Description>
           <BitLength>1</BitLength>
           <BitOffset>63</BitOffset>
           <BitStart>7</BitStart>
@@ -3741,7 +3916,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3774,7 +3949,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -3810,7 +3985,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3871,7 +4046,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3922,6 +4097,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -3954,7 +4130,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4014,7 +4190,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4089,7 +4265,6 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Chetco</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -4104,16 +4279,19 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>industryCode</Id>
           <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
           <BitLength>3</BitLength>
           <BitOffset>13</BitOffset>
           <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4200,7 +4378,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4245,7 +4423,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4343,7 +4521,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4393,7 +4571,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4616,7 +4794,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4666,7 +4844,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4716,7 +4894,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4766,7 +4944,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4816,7 +4994,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4867,6 +5045,7 @@ limitations under the License.
           <BitLength>24</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -4902,7 +5081,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4943,6 +5122,7 @@ limitations under the License.
           <BitLength>24</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -4980,7 +5160,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5030,7 +5210,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5080,7 +5260,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5124,6 +5304,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5161,7 +5342,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5215,6 +5396,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5247,7 +5429,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5334,7 +5516,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5532,7 +5714,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5646,7 +5828,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5723,7 +5905,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5813,7 +5995,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5890,7 +6072,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5941,7 +6123,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5979,7 +6161,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6071,7 +6253,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6462,7 +6644,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>43</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7055,7 +7237,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7173,7 +7355,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -7188,7 +7370,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7274,7 +7456,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -7289,7 +7471,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7373,7 +7555,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -7388,7 +7570,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7447,7 +7629,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -7462,7 +7644,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7532,7 +7714,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -7547,7 +7729,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7609,7 +7791,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -7624,7 +7806,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7705,7 +7887,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -7720,7 +7902,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7838,7 +8020,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7968,7 +8150,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8015,7 +8197,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8062,7 +8244,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8159,7 +8341,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8375,7 +8557,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8583,7 +8765,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8629,7 +8811,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>22</BitLength>
           <BitOffset>26</BitOffset>
           <BitStart>2</BitStart>
@@ -8666,7 +8847,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8710,7 +8891,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -8747,7 +8927,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8839,7 +9019,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8886,7 +9066,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>6</BitLength>
           <BitOffset>26</BitOffset>
           <BitStart>2</BitStart>
@@ -8935,7 +9114,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8981,7 +9160,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
           <BitStart>4</BitStart>
@@ -9040,7 +9218,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -9086,7 +9264,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
           <BitStart>4</BitStart>
@@ -9145,7 +9322,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -9191,7 +9368,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>22</BitLength>
           <BitOffset>26</BitOffset>
           <BitStart>2</BitStart>
@@ -9233,7 +9409,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -9292,7 +9468,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -9378,7 +9554,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -10081,7 +10257,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>12</BitOffset>
           <BitStart>4</BitStart>
@@ -10196,7 +10371,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>34</BitLength>
           <BitOffset>30</BitOffset>
           <BitStart>6</BitStart>
@@ -10833,7 +11007,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>5</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
@@ -10866,7 +11039,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -10945,7 +11117,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>6</BitLength>
           <BitOffset>58</BitOffset>
           <BitStart>2</BitStart>
@@ -11026,7 +11197,7 @@ limitations under the License.
           <BitLength>40</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -11127,7 +11298,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>12</BitOffset>
           <BitStart>4</BitStart>
@@ -12967,7 +13137,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -13319,7 +13488,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>30</BitOffset>
           <BitStart>6</BitStart>
@@ -14061,7 +14229,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -14123,7 +14291,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -14908,7 +15076,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -15018,7 +15185,6 @@ limitations under the License.
           <Order>14</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>52</BitOffset>
           <BitStart>4</BitStart>
@@ -15102,7 +15268,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -15243,7 +15408,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -15324,7 +15488,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>6</BitLength>
           <BitOffset>10</BitOffset>
           <BitStart>2</BitStart>
@@ -15357,7 +15520,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -15468,7 +15630,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
           <BitStart>4</BitStart>
@@ -15638,7 +15799,6 @@ limitations under the License.
           <Order>10</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>6</BitLength>
           <BitOffset>258</BitOffset>
           <BitStart>2</BitStart>
@@ -16026,7 +16186,6 @@ limitations under the License.
           <Order>17</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>206</BitOffset>
           <BitStart>6</BitStart>
@@ -16047,7 +16206,6 @@ limitations under the License.
           <Order>19</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>5</BitLength>
           <BitOffset>211</BitOffset>
           <BitStart>3</BitStart>
@@ -16521,7 +16679,6 @@ limitations under the License.
           <Order>13</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>156</BitOffset>
           <BitStart>4</BitStart>
@@ -17312,7 +17469,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>12</BitOffset>
           <BitStart>4</BitStart>
@@ -17348,7 +17504,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -17613,7 +17768,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>68</BitOffset>
           <BitStart>4</BitStart>
@@ -17634,7 +17788,6 @@ limitations under the License.
           <Order>9</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>8</BitLength>
           <BitOffset>2112</BitOffset>
           <BitStart>0</BitStart>
@@ -17726,7 +17879,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>6</BitLength>
           <BitOffset>10</BitOffset>
           <BitStart>2</BitStart>
@@ -17814,7 +17966,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>44</BitOffset>
           <BitStart>4</BitStart>
@@ -17880,7 +18031,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>14</BitOffset>
           <BitStart>6</BitStart>
@@ -18144,7 +18294,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>14</BitOffset>
           <BitStart>6</BitStart>
@@ -18220,7 +18369,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>6</BitLength>
           <BitOffset>10</BitOffset>
           <BitStart>2</BitStart>
@@ -18309,7 +18457,6 @@ limitations under the License.
           <Order>11</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>116</BitOffset>
           <BitStart>4</BitStart>
@@ -18478,7 +18625,6 @@ limitations under the License.
           <Order>14</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>206</BitOffset>
           <BitStart>6</BitStart>
@@ -18612,7 +18758,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>12</BitOffset>
           <BitStart>4</BitStart>
@@ -19122,7 +19267,6 @@ limitations under the License.
           <Order>11</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>8</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
@@ -19916,7 +20060,6 @@ limitations under the License.
           <Order>19</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>1</BitLength>
           <BitOffset>591</BitOffset>
           <BitStart>7</BitStart>
@@ -19993,7 +20136,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>1</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20043,7 +20185,6 @@ limitations under the License.
           <Order>8</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>6</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
@@ -20063,7 +20204,6 @@ limitations under the License.
           <Order>10</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>1</BitLength>
           <BitOffset>87</BitOffset>
           <BitStart>7</BitStart>
@@ -20141,7 +20281,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>1</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20170,7 +20309,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
           <BitStart>6</BitStart>
@@ -20201,7 +20339,6 @@ limitations under the License.
           <Order>9</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>6</BitLength>
           <BitOffset>82</BitOffset>
           <BitStart>2</BitStart>
@@ -20268,7 +20405,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>1</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20297,7 +20433,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
           <BitStart>6</BitStart>
@@ -20535,7 +20670,6 @@ limitations under the License.
           <Order>16</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>7</BitLength>
           <BitOffset>241</BitOffset>
           <BitStart>1</BitStart>
@@ -20670,7 +20804,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>38</BitOffset>
           <BitStart>6</BitStart>
@@ -20699,7 +20832,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>3</BitLength>
           <BitOffset>45</BitOffset>
           <BitStart>5</BitStart>
@@ -20719,7 +20851,6 @@ limitations under the License.
           <Order>8</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>78</BitOffset>
           <BitStart>6</BitStart>
@@ -20781,7 +20912,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>38</BitOffset>
           <BitStart>6</BitStart>
@@ -20829,7 +20959,6 @@ limitations under the License.
           <Order>8</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>77</BitOffset>
           <BitStart>5</BitStart>
@@ -20849,7 +20978,6 @@ limitations under the License.
           <Order>10</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>7</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
@@ -20922,7 +21050,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>38</BitOffset>
           <BitStart>6</BitStart>
@@ -20951,7 +21078,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>3</BitLength>
           <BitOffset>45</BitOffset>
           <BitStart>5</BitStart>
@@ -21024,7 +21150,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>38</BitOffset>
           <BitStart>6</BitStart>
@@ -21053,7 +21178,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>3</BitLength>
           <BitOffset>45</BitOffset>
           <BitStart>5</BitStart>
@@ -21075,7 +21199,6 @@ limitations under the License.
           <Order>8</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>78</BitOffset>
           <BitStart>6</BitStart>
@@ -21108,7 +21231,6 @@ limitations under the License.
           <Order>11</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>102</BitOffset>
           <BitStart>6</BitStart>
@@ -21141,7 +21263,6 @@ limitations under the License.
           <Order>14</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>126</BitOffset>
           <BitStart>6</BitStart>
@@ -21206,7 +21327,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>38</BitOffset>
           <BitStart>6</BitStart>
@@ -21235,7 +21355,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>3</BitLength>
           <BitOffset>45</BitOffset>
           <BitStart>5</BitStart>
@@ -21332,7 +21451,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>38</BitOffset>
           <BitStart>6</BitStart>
@@ -21361,7 +21479,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>3</BitLength>
           <BitOffset>45</BitOffset>
           <BitStart>5</BitStart>
@@ -21468,7 +21585,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>38</BitOffset>
           <BitStart>6</BitStart>
@@ -21497,7 +21613,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>3</BitLength>
           <BitOffset>45</BitOffset>
           <BitStart>5</BitStart>
@@ -21526,7 +21641,6 @@ limitations under the License.
           <Order>9</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>62</BitOffset>
           <BitStart>6</BitStart>
@@ -21606,7 +21720,6 @@ limitations under the License.
           <Order>16</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>6</BitLength>
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
@@ -21648,7 +21761,6 @@ limitations under the License.
           <Order>20</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>230</BitOffset>
           <BitStart>6</BitStart>
@@ -21720,7 +21832,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>38</BitOffset>
           <BitStart>6</BitStart>
@@ -21742,7 +21853,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>6</BitLength>
           <BitOffset>42</BitOffset>
           <BitStart>2</BitStart>
@@ -21810,7 +21920,6 @@ limitations under the License.
           <Order>12</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>182</BitOffset>
           <BitStart>6</BitStart>
@@ -21830,7 +21939,6 @@ limitations under the License.
           <Order>14</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>190</BitOffset>
           <BitStart>6</BitStart>
@@ -22065,7 +22173,6 @@ limitations under the License.
           <Order>15</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>6</BitLength>
           <BitStart>2</BitStart>
           <Type>Binary data</Type>
@@ -22364,7 +22471,6 @@ limitations under the License.
           <Order>15</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>6</BitLength>
           <BitStart>2</BitStart>
           <Type>Binary data</Type>
@@ -22527,7 +22633,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>3</BitLength>
           <BitOffset>205</BitOffset>
           <BitStart>5</BitStart>
@@ -22733,7 +22838,6 @@ limitations under the License.
           <Order>12</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>256</BitOffset>
           <BitStart>0</BitStart>
@@ -22773,7 +22877,6 @@ limitations under the License.
           <Order>15</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>3</BitLength>
           <BitOffset>269</BitOffset>
           <BitStart>5</BitStart>
@@ -22923,7 +23026,6 @@ limitations under the License.
           <Order>9</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>150</BitOffset>
           <BitStart>6</BitStart>
@@ -23033,7 +23135,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
@@ -23830,7 +23931,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -25019,11 +25119,9 @@ limitations under the License.
           <Order>10</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>5</BitLength>
           <BitOffset>155</BitOffset>
           <BitStart>3</BitStart>
-          <Units></Units>
           <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -25210,11 +25308,9 @@ limitations under the License.
           <Order>10</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>5</BitLength>
           <BitOffset>155</BitOffset>
           <BitStart>3</BitStart>
-          <Units></Units>
           <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -25520,7 +25616,6 @@ limitations under the License.
           <Order>14</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>30</BitOffset>
           <BitStart>6</BitStart>
@@ -26119,7 +26214,6 @@ limitations under the License.
           <Order>14</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitStart>4</BitStart>
           <Type>Binary data</Type>
@@ -26896,7 +26990,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
@@ -27148,7 +27241,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>44</BitLength>
           <BitOffset>20</BitOffset>
           <BitStart>4</BitStart>
@@ -27385,7 +27477,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Reserved</Description>
           <BitLength>4</BitLength>
           <BitOffset>20</BitOffset>
           <BitStart>4</BitStart>
@@ -27917,7 +28008,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -27939,7 +28030,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28026,7 +28117,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28048,7 +28139,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28176,7 +28267,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28198,7 +28289,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28273,7 +28364,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28295,7 +28386,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28378,7 +28469,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28400,7 +28491,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28496,7 +28587,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28518,7 +28609,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28596,7 +28687,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28618,7 +28709,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28704,7 +28795,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28726,7 +28817,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28854,7 +28945,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28876,7 +28967,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29010,7 +29101,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29032,7 +29123,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29117,7 +29208,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29139,7 +29230,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29224,7 +29315,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29246,7 +29337,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29331,7 +29422,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29353,7 +29444,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29465,7 +29556,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29487,7 +29578,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29562,7 +29653,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29584,7 +29675,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29665,7 +29756,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29687,7 +29778,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29773,7 +29864,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29795,7 +29886,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29859,7 +29950,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29881,7 +29972,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29957,7 +30048,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29979,7 +30070,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30065,7 +30156,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30087,7 +30178,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30190,7 +30281,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30256,7 +30347,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30384,7 +30475,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30465,7 +30556,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30514,7 +30605,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30593,7 +30684,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30673,7 +30764,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -30688,7 +30779,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30789,7 +30880,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -30804,7 +30895,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30970,7 +31061,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -30985,7 +31076,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31059,7 +31150,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -31074,7 +31165,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31148,7 +31239,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -31163,7 +31254,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31237,7 +31328,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -31252,7 +31343,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31317,7 +31408,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -31332,7 +31423,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31406,7 +31497,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -31421,7 +31512,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31496,7 +31587,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -31511,7 +31602,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31619,7 +31710,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -31634,7 +31725,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31716,7 +31807,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -31731,7 +31822,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31804,7 +31895,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -31819,7 +31910,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31906,7 +31997,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -31921,7 +32012,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32049,7 +32140,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32064,7 +32155,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32204,7 +32295,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32219,7 +32310,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32288,7 +32379,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32303,7 +32394,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32399,7 +32490,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32414,7 +32505,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32509,7 +32600,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32524,7 +32615,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32620,7 +32711,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32635,7 +32726,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32705,7 +32796,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32720,7 +32811,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32786,7 +32877,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32801,7 +32892,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32867,7 +32958,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32882,7 +32973,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32948,7 +33039,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Fusion</Description>
+          <Description>Fusion Electronics</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -32963,7 +33054,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33043,7 +33134,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33178,7 +33269,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33282,7 +33373,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>B&amp;G</Description>
+          <Description>B &amp; G</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -33297,7 +33388,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33375,7 +33466,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33471,7 +33562,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33576,7 +33667,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33603,6 +33694,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33611,9 +33703,11 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
+          <Description>Suzuki Motor Corporation</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+          <Match>586</Match>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
         </Field>
@@ -33624,7 +33718,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33675,7 +33769,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33726,7 +33820,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33777,7 +33871,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33827,7 +33921,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33965,7 +34059,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34078,6 +34172,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>106</BitOffset>
           <BitStart>2</BitStart>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -34116,7 +34211,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34161,7 +34256,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34274,6 +34369,7 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>178</BitOffset>
           <BitStart>2</BitStart>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -34312,7 +34408,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34363,7 +34459,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34414,7 +34510,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34465,7 +34561,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34582,7 +34678,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34713,7 +34809,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34925,7 +35021,6 @@ limitations under the License.
           <Order>17</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>reserved</Description>
           <BitLength>2</BitLength>
           <BitOffset>288</BitOffset>
           <BitStart>0</BitStart>
@@ -34978,7 +35073,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35080,7 +35175,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35130,7 +35225,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35256,7 +35351,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35307,7 +35402,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35434,7 +35529,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35560,7 +35655,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35730,7 +35825,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35776,20 +35871,24 @@ limitations under the License.
         </Field>
         <Field>
           <Order>2</Order>
-          <Id>softwareRelease</Id>
-          <Name>Software Release</Name>
-          <BitLength>16</BitLength>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>3</Order>
-          <Id>developmentVersion</Id>
-          <Name>Development Version</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>27</BitOffset>
-          <BitStart>3</BitStart>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35797,8 +35896,8 @@ limitations under the License.
           <Id>productCode</Id>
           <Name>Product Code</Name>
           <BitLength>16</BitLength>
-          <BitOffset>35</BitOffset>
-          <BitStart>3</BitStart>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35806,8 +35905,8 @@ limitations under the License.
           <Id>year</Id>
           <Name>Year</Name>
           <BitLength>8</BitLength>
-          <BitOffset>51</BitOffset>
-          <BitStart>3</BitStart>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35815,8 +35914,8 @@ limitations under the License.
           <Id>month</Id>
           <Name>Month</Name>
           <BitLength>8</BitLength>
-          <BitOffset>59</BitOffset>
-          <BitStart>3</BitStart>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35824,8 +35923,8 @@ limitations under the License.
           <Id>deviceNumber</Id>
           <Name>Device Number</Name>
           <BitLength>16</BitLength>
-          <BitOffset>67</BitOffset>
-          <BitStart>3</BitStart>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35833,8 +35932,8 @@ limitations under the License.
           <Id>nodeVoltage</Id>
           <Name>Node Voltage</Name>
           <BitLength>16</BitLength>
-          <BitOffset>83</BitOffset>
-          <BitStart>3</BitStart>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
           <Units>V</Units>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -35874,7 +35973,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -36027,7 +36126,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -36147,7 +36246,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -36254,7 +36353,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -36406,7 +36505,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -36494,7 +36593,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -36590,7 +36689,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -36686,7 +36785,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>11</BitOffset>
           <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>

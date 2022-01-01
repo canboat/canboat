@@ -37,6 +37,7 @@ limitations under the License.
 #include "common.h"
 #include "ikonvert.h"
 #include "license.h"
+#include "parse.h"
 
 #define SEND_ALL_INIT_MESSAGES (14)
 
@@ -74,8 +75,8 @@ int main(int argc, char **argv)
 {
   int            handle;
   struct termios attr;
-  char *         name   = argv[0];
-  char *         device = 0;
+  char          *name   = argv[0];
+  char          *device = 0;
   struct stat    statbuf;
 
   setProgName(argv[0]);
@@ -363,7 +364,7 @@ int main(int argc, char **argv)
 static void processInBuffer(StringBuffer *in, StringBuffer *out)
 {
   RawMessage msg;
-  char *     p;
+  char      *p;
 
   while ((p = strchr(sbGet(in), '\n')) != 0)
   {
@@ -428,8 +429,8 @@ static void computeIKonvertTime(RawMessage *msg, unsigned int t1, unsigned int t
 
 static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
 {
-  char *       end = sbGet(in) + strlen(sbGet(in)); // not sbGetLength as 'in' has been truncated
-  char *       p   = sbGet(in);
+  char        *end = sbGet(in) + strlen(sbGet(in)); // not sbGetLength as 'in' has been truncated
+  char        *p   = sbGet(in);
   int          r;
   unsigned int pgn;
   unsigned int prio;
@@ -717,7 +718,7 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
 static void processReadBuffer(StringBuffer *in, int out)
 {
   RawMessage  msg;
-  char *      p;
+  char       *p;
   const char *w;
   bool        allowInit = true;
 

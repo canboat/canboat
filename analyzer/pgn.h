@@ -21,6 +21,7 @@ limitations under the License.
 */
 
 #include "common.h"
+#include "parse.h"
 
 #define RES_LAT_LONG_PRECISION (10000000) /* 1e7 */
 #define RES_LAT_LONG (1.0e-7)
@@ -104,14 +105,14 @@ typedef struct
     .name = nam, .size = (len), .resolution = RES_BINARY, .description = desc \
   }
 
-#define ANGLE_POS_FIELD(nam, desc)                                                                  \
-  {                                                                                                 \
-    .name = nam, .size = BYTES(2), .resolution = RES_RADIANS, .hasSign = false, .description = desc \
+#define ANGLE_POS_FIELD(nam, desc)                                                                                  \
+  {                                                                                                                 \
+    .name = nam, .size = BYTES(2), .resolution = RES_RADIANS, .hasSign = false, .units = "rad", .description = desc \
   }
 
-#define ANGLE_REL_FIELD(nam, desc)                                                                 \
-  {                                                                                                \
-    .name = nam, .size = BYTES(2), .resolution = RES_RADIANS, .hasSign = true, .description = desc \
+#define ANGLE_REL_FIELD(nam, desc)                                                                                 \
+  {                                                                                                                \
+    .name = nam, .size = BYTES(2), .resolution = RES_RADIANS, .hasSign = true, .units = "rad", .description = desc \
   }
 
 #define COMPANY(id)                                                                                               \
@@ -210,13 +211,6 @@ void checkPgnList(void);
 
 Field *getField(uint32_t pgn, uint32_t field);
 void   extractNumber(const Field *field, uint8_t *data, size_t startBit, size_t bits, int64_t *value, int64_t *maxValue);
-
-int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson);
-int parseRawFormatFast(char *msg, RawMessage *m, bool showJson);
-int parseRawFormatAirmar(char *msg, RawMessage *m, bool showJson);
-int parseRawFormatChetco(char *msg, RawMessage *m, bool showJson);
-int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolute);
-int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson);
 
 void camelCase(bool upperCamelCase);
 

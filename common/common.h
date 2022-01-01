@@ -18,7 +18,8 @@ limitations under the License.
 
 */
 
-#ifndef CANBOAT_COMMON
+#ifndef COMMON_H_INCLUDED
+#define COMMON_H_INCLUDED
 
 #include "license.h"
 
@@ -159,7 +160,7 @@ SOCKET open_socket_stream(const char *url);
 #define DATE_LENGTH 60
 const char *now(char str[DATE_LENGTH]);
 uint64_t    getNow(void);
-void        storeTimestamp(char *buf, uint64_t when);
+void        storeTimestamp(char str[DATE_LENGTH], uint64_t when);
 
 uint8_t scanNibble(char c);
 int     scanHex(char **p, uint8_t *m);
@@ -232,22 +233,6 @@ int writeSerial(int handle, const uint8_t *data, size_t len);
 #define FASTPACKET_MAX_INDEX (0x1f)
 #define FASTPACKET_MAX_SIZE (FASTPACKET_BUCKET_0_SIZE + FASTPACKET_BUCKET_N_SIZE * (FASTPACKET_MAX_INDEX - 1))
 
-typedef struct
-{
-  char     timestamp[DATE_LENGTH];
-  uint8_t  prio;
-  uint32_t pgn;
-  uint8_t  dst;
-  uint8_t  src;
-  uint8_t  len;
-  uint8_t  data[FASTPACKET_MAX_SIZE];
-} RawMessage;
-
-bool parseFastFormat(StringBuffer *src, RawMessage *msg);
-
-bool parseInt(const char **msg, int *value, int defValue);
-bool parseConst(const char **msg, const char *str);
-
 #define Pi (3.141592654)
 #define RadianToDegree (360.0 / 2 / Pi)
 #define BITS(x) (x)
@@ -269,5 +254,4 @@ void logAbort(const char *format, ...);
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
 #define IKONVERT_BEM 0x40100  /* iKonvert specific fake PGNs */
 
-#define CANBOAT_COMMON
 #endif
