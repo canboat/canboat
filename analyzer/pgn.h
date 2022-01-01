@@ -104,6 +104,16 @@ typedef struct
     .name = nam, .size = (len), .resolution = RES_BINARY, .description = desc \
   }
 
+#define ANGLE_POS_FIELD(nam, desc)                                                                  \
+  {                                                                                                 \
+    .name = nam, .size = BYTES(2), .resolution = RES_RADIANS, .hasSign = false, .description = desc \
+  }
+
+#define ANGLE_REL_FIELD(nam, desc)                                                                 \
+  {                                                                                                \
+    .name = nam, .size = BYTES(2), .resolution = RES_RADIANS, .hasSign = true, .description = desc \
+  }
+
 typedef struct
 {
   const char *name;
@@ -1062,8 +1072,8 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
       RESERVED_FIELD(2),
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Wind Datum", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Rolling Average Wind Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Wind Datum", ""),
+      ANGLE_POS_FIELD("Rolling Average Wind Angle", ""),
       RESERVED_FIELD(BYTES(2)),
       {0}}},
     {"Seatalk: Pilot Heading",
@@ -1076,8 +1086,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(2),
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       BINARY_FIELD("SID", BYTES(1), ""),
-      {"Heading True", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Heading Magnetic", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Heading True", ""),
+      ANGLE_POS_FIELD("Heading Magnetic", ""),
       RESERVED_FIELD(BYTES(1)),
       {0}}}
 
@@ -1092,8 +1102,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(2),
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       BINARY_FIELD("SID", BYTES(1), ""),
-      {"Target Heading True", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Target Heading Magnetic", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Target Heading True", ""),
+      ANGLE_POS_FIELD("Target Heading Magnetic", ""),
       RESERVED_FIELD(BYTES(1)),
       {0}}}
 
@@ -1587,8 +1597,8 @@ Pgn pgnList[] = {
        true,
        "rad",
        "Positive: sensor rotated to port, negative: sensor rotated to starboard"},
-      {"Pitch offset", BYTES(2), RES_RADIANS, true, "rad", "Positive: sensor tilted to bow, negative: sensor tilted to stern"},
-      {"Roll offset", BYTES(2), RES_RADIANS, true, "rad", "Positive: sensor tilted to port, negative: sensor tilted to starboard"},
+      ANGLE_REL_FIELD("Pitch offset", "Positive: sensor tilted to bow, negative: sensor tilted to stern"),
+      ANGLE_REL_FIELD("Roll offset", "Positive: sensor tilted to port, negative: sensor tilted to starboard"),
       {0}}}
 
     /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
@@ -2008,7 +2018,7 @@ Pgn pgnList[] = {
       {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(6),
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("COG", ""),
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
       {"MMSI of vessel of origin", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       LOOKUP_FIELD("MOB Emitter Battery Low Status", 3, LOW_BATTERY),
@@ -2031,15 +2041,15 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Heading Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(5),
       LOOKUP_FIELD("Commanded Rudder Direction", 3, DIRECTION_RUDDER),
-      {"Commanded Rudder Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Heading-To-Steer (Course)", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Track", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Rudder Limit", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Off-Heading Limit", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Radius of Turn Order", BYTES(2), RES_RADIANS, true, "rad", ""},
+      ANGLE_REL_FIELD("Commanded Rudder Angle", ""),
+      ANGLE_POS_FIELD("Heading-To-Steer (Course)", ""),
+      ANGLE_POS_FIELD("Track", ""),
+      ANGLE_POS_FIELD("Rudder Limit", ""),
+      ANGLE_POS_FIELD("Off-Heading Limit", ""),
+      ANGLE_REL_FIELD("Radius of Turn Order", ""),
       {"Rate of Turn Order", BYTES(2), RES_ROTATION, true, "rad/s", ""},
       {"Off-Track Limit", BYTES(2), 1, true, "m", ""},
-      {"Vessel Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Vessel Heading", ""),
       {0}}}
 
     /* http://www.maretron.com/support/manuals/RAA100UM_1.0.pdf */
@@ -2053,8 +2063,8 @@ Pgn pgnList[] = {
      {{"Instance", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("Direction Order", 3, DIRECTION_RUDDER),
       RESERVED_FIELD(5),
-      {"Angle Order", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Position", BYTES(2), RES_RADIANS, true, "rad", ""},
+      ANGLE_REL_FIELD("Angle Order", ""),
+      ANGLE_REL_FIELD("Position", ""),
       RESERVED_FIELD(BYTES(2)),
       {0}}}
 
@@ -2069,9 +2079,9 @@ Pgn pgnList[] = {
      8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Deviation", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Variation", BYTES(2), RES_RADIANS, true, "rad", ""},
+      ANGLE_POS_FIELD("Heading", ""),
+      ANGLE_REL_FIELD("Deviation", ""),
+      ANGLE_REL_FIELD("Variation", ""),
       LOOKUP_FIELD("Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(6),
       {0}}}
@@ -2104,9 +2114,9 @@ Pgn pgnList[] = {
      7,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Yaw", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Pitch", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Roll", BYTES(2), RES_RADIANS, true, "rad", ""},
+      ANGLE_REL_FIELD("Yaw", ""),
+      ANGLE_REL_FIELD("Pitch", ""),
+      ANGLE_REL_FIELD("Roll", ""),
       {0}}}
 
     /* NMEA + Simrad AT10 */
@@ -2122,7 +2132,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Source", 4, MAGNETIC_VARIATION),
       RESERVED_FIELD(4),
       {"Age of service", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Variation", BYTES(2), RES_RADIANS, true, "rad", ""},
+      ANGLE_REL_FIELD("Variation", ""),
       {0}}}
 
     /* Engine group PGNs all derived PGN Numbers from              */
@@ -2575,7 +2585,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""}, {"Leeway Angle", BYTES(2), RES_RADIANS, true, "rad", ""}, RESERVED_FIELD(BYTES(5)), {0}}}
+     {{"SID", BYTES(1), 1, false, 0, ""}, ANGLE_REL_FIELD("Leeway Angle", ""), RESERVED_FIELD(BYTES(5)), {0}}}
 
     ,
     {"Thruster Control Status",
@@ -2592,7 +2602,7 @@ Pgn pgnList[] = {
       {"Speed Control", BYTES(1), RES_PERCENTAGE, false, "%", ""},
       LOOKUP_BITFIELD("Control Events", BYTES(1), THRUSTER_CONTROL_EVENTS),
       {"Command Timeout", BYTES(1), 1e-3, false, 0, ""},
-      {"Azimuth Control", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Azimuth Control", ""),
       {0}}}
 
     ,
@@ -2683,9 +2693,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Target Acquisition", 1, TARGET_ACQUISITION),
       LOOKUP_FIELD("Bearing Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(2),
-      {"Bearing", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Bearing", ""),
       {"Distance", BYTES(4), 0.001, false, "m", ""},
-      {"Course", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Course", ""),
       {"Speed", BYTES(2), 0.01, false, "m/s", ""},
       {"CPA", BYTES(4), 0.01, false, "m", ""},
       {"TCPA", BYTES(4), 0.001, false, "s", "negative = time elapsed since event, positive = time to go"},
@@ -2779,7 +2789,7 @@ Pgn pgnList[] = {
      {{"SID", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(6),
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("COG", ""),
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
       RESERVED_FIELD(BYTES(2)),
       {0}}}
@@ -2809,7 +2819,7 @@ Pgn pgnList[] = {
       {"GNSS Quality", 2, 1, false, 0, ""},
       {"Direction", 2, 1, false, 0, ""},
       RESERVED_FIELD(4),
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("COG", ""),
       {"Altitude Delta", BYTES(2), 1, true, 0, ""},
       {0}}}
 
@@ -2868,7 +2878,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
       LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
       LOOKUP_FIELD_DESC("Time Stamp", 6, TIME_STAMP, "0-59 = UTC second when the report was generated"),
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("COG", ""),
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
       {"Communication State",
        19,
@@ -2877,7 +2887,7 @@ Pgn pgnList[] = {
        0,
        "Information used by the TDMA slot allocation algorithm and synchronization information"},
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
-      {"Heading", BYTES(2), RES_RADIANS, false, "rad", "True heading"},
+      ANGLE_POS_FIELD("Heading", "True heading"),
       {"Rate of Turn", BYTES(2), RES_ROTATION, true, "rad/s", ""},
       LOOKUP_FIELD("Nav Status", 4, NAV_STATUS),
       LOOKUP_FIELD("Special Maneuver Indicator", 2, AIS_SPECIAL_MANEUVER),
@@ -2902,7 +2912,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
       LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
       LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("COG", ""),
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
       {"Communication State",
        19,
@@ -2911,7 +2921,7 @@ Pgn pgnList[] = {
        0,
        "Information used by the TDMA slot allocation algorithm and synchronization information"},
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
-      {"Heading", BYTES(2), RES_RADIANS, false, "rad", "True heading"},
+      ANGLE_POS_FIELD("Heading", "True heading"),
       {"Regional Application", BYTES(1), 1, false, 0, ""},
       {"Regional Application", 2, 1, false, 0, ""},
       LOOKUP_FIELD("Unit type", 1, AIS_TYPE),
@@ -2938,13 +2948,13 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
       LOOKUP_FIELD("AIS RAIM flag", 1, RAIM_FLAG),
       LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("COG", ""),
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
       {"Regional Application", BYTES(1), 1, false, 0, ""},
       {"Regional Application", 4, 1, false, 0, ""},
       RESERVED_FIELD(4),
       LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
-      {"True Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("True Heading", ""),
       RESERVED_FIELD(4),
       LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
       {"Length", BYTES(2), 0.1, false, "m", ""},
@@ -3092,8 +3102,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Calculation Type", 2, BEARING_MODE),
       {"ETA Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"ETA Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Bearing, Origin to Destination Waypoint", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Bearing, Position to Destination Waypoint", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Bearing, Origin to Destination Waypoint", ""),
+      ANGLE_POS_FIELD("Bearing, Position to Destination Waypoint", ""),
       {"Origin Waypoint Number", BYTES(4), 1, false, 0, ""},
       {"Destination Waypoint Number", BYTES(4), 1, false, 0, ""},
       {"Destination Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
@@ -3133,7 +3143,7 @@ Pgn pgnList[] = {
      {{"SID", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("Set Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(6),
-      {"Set", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Set", ""),
       {"Drift", BYTES(2), 0.01, false, "m/s", ""},
       {0}}}
 
@@ -3162,7 +3172,7 @@ Pgn pgnList[] = {
       {"Bearing Reference", 4, RES_LOOKUP, false, 0, ""},
       {"Calculation Type", 2, RES_LOOKUP, false, 0, ""},
       RESERVED_FIELD(2),
-      {"Bearing, Origin to Destination", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Bearing, Origin to Destination", ""),
       {"Distance", BYTES(4), 0.01, false, "m", ""},
       {"Origin Mark Type", 4, RES_LOOKUP, false, 0, ""},
       LOOKUP_FIELD("Destination Mark Type", 4, MARK_TYPE),
@@ -3220,8 +3230,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(6),
       {"Sats in View", BYTES(1), 1, false, 0, ""},
       {"PRN", BYTES(1), 1, false, 0, ""},
-      {"Elevation", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Azimuth", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Elevation", ""),
+      ANGLE_POS_FIELD("Azimuth", ""),
       {"SNR", BYTES(2), 0.01, false, "dB", ""},
       {"Range residuals", BYTES(4), 1, true, 0, ""},
       LOOKUP_FIELD("Status", 4, SATELLITE_STATUS),
@@ -3549,7 +3559,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
       LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
       LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("COG", ""),
       {"SOG", BYTES(2), 0.1, false, "m/s", ""},
       {"Communication State",
        19,
@@ -4099,7 +4109,7 @@ Pgn pgnList[] = {
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"Wind Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Wind Angle", ""),
       LOOKUP_FIELD("Reference", 3, WIND_REFERENCE),
       RESERVED_FIELD(5 + BYTES(2)),
       {0}}}
@@ -4263,7 +4273,7 @@ Pgn pgnList[] = {
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"Measurement Depth", BYTES(4), 0.01, false, "m", "Depth below transducer"},
       {"Current speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"Current flow direction", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Current flow direction", ""),
       {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
       {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
@@ -4283,7 +4293,7 @@ Pgn pgnList[] = {
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"Wind Direction", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Wind Direction", ""),
       LOOKUP_FIELD("Wind Reference", 3, WIND_REFERENCE),
       RESERVED_FIELD(5),
       {"Wind Gusts", BYTES(2), 0.01, false, "m/s", ""},
@@ -4307,7 +4317,7 @@ Pgn pgnList[] = {
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"Wind Direction", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Wind Direction", ""),
       LOOKUP_FIELD("Wind Reference", 3, WIND_REFERENCE),
       RESERVED_FIELD(5),
       {"Wind Gusts", BYTES(2), 0.01, false, "m/s", ""},
@@ -4517,11 +4527,11 @@ Pgn pgnList[] = {
       {"SID", BYTES(1), 1, false, 0, ""}
       /* So far, 2 bytes. Very sure of this given molly rose data */
       ,
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("COG", ""),
       {"SOG", BYTES(2), 0.01, false, "m/s", ""},
-      {"Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Heading", ""),
       {"Speed through Water", BYTES(2), 0.01, false, "m/s", ""},
-      {"Set", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Set", ""),
       {"Drift", BYTES(2), 0.01, false, "m/s", ""},
       {0}}}
 
@@ -5868,9 +5878,9 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(1), 1, false, 0, ""},
-      {"Yaw", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Pitch", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Roll", BYTES(2), RES_RADIANS, true, "rad", ""},
+      ANGLE_REL_FIELD("Yaw", ""),
+      ANGLE_REL_FIELD("Pitch", ""),
+      ANGLE_REL_FIELD("Roll", ""),
       {0}}}
 
     ,
@@ -5900,7 +5910,7 @@ Pgn pgnList[] = {
       {"Unused", BYTES(3), 1, false, 0, ""},
       {"Type", BYTES(2), 1, false, "=0", "Heading Offset"},
       {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
-      {"Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
+      ANGLE_REL_FIELD("Angle", ""),
       {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
       {0}}}
 
@@ -5950,7 +5960,7 @@ Pgn pgnList[] = {
       {"Unused", BYTES(3), 1, false, 0, ""},
       {"Type", BYTES(2), 1, false, "=1024", "Local field"},
       {"A", BYTES(2), 1, false, 0, ""},
-      {"Field angle", BYTES(2), RES_RADIANS, true, "rad", ""},
+      ANGLE_REL_FIELD("Field angle", ""),
       {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
       {0}}}
 
@@ -6022,7 +6032,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
       {"C", BYTES(1), RES_NOTUSED, false, 0, ""},
       LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
-      {"Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Angle", ""),
       {"G", BYTES(1), RES_NOTUSED, false, 0, ""},
       {0}}}
 
@@ -6079,7 +6089,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
       {"C", BYTES(1), RES_NOTUSED, false, 0, ""},
       LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
-      {"Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
+      ANGLE_POS_FIELD("Angle", ""),
       {"G", BYTES(1), 1, false, 0, ""},
       {0}}}
 
