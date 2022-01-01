@@ -117,6 +117,16 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = RES_RADIANS, .hasSign = true, .units = "rad", .description = desc \
   }
 
+#define VOLTAGE_FIELD(nam, res)                                                                         \
+  {                                                                                                     \
+    .name = nam, .size = BYTES(2), .resolution = res, .hasSign = false, .units = "V", .description = "" \
+  }
+
+#define VOLTAGE_MEDIUM_FIELD(nam, res)                                                                  \
+  {                                                                                                     \
+    .name = nam, .size = BYTES(2), .resolution = res, .hasSign = false, .units = "V", .description = "" \
+  }
+
 #define COMPANY(id)                                                                                               \
   {                                                                                                               \
       .name       = "Manufacturer Code",                                                                          \
@@ -133,22 +143,16 @@ typedef struct
   {.name = "Manufacturer Code", .size = 11, .resolution = RES_MANUFACTURER, .description = ""}, RESERVED_FIELD(2), \
       LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE)
 
-#define MANUFACTURER_PROPRIETARY_FIELDS                                                                                          \
-  {.name        = "Manufacturer Code",                                                                                           \
-   .size        = 11,                                                                                                            \
-   .resolution  = RES_MANUFACTURER,                                                                                              \
-   .units       = PROPRIETARY_PGN_ONLY,                                                                                          \
-   .description = "Only in PGN when PRN is proprietary",                                                                         \
-   .lookupValue = lookupValueMANUFACTURER_CODE,                                                                                  \
-   .lookupName  = "MANUFACTURER_CODE"},                                                                                           \
-      {.name        = "Reserved",                                                                                                \
-       .size        = 2,                                                                                                         \
-       .resolution  = RES_BINARY,                                                                                                \
-       .units       = PROPRIETARY_PGN_ONLY,                                                                                      \
-       .description = "Only in PGN when PRN is proprietary"},                                                                    \
-  {                                                                                                                              \
-    .name = "Industry code", .size = 3, .resolution = RES_LOOKUP, .units = PROPRIETARY_PGN_ONLY,                                 \
-    .description = "Only in PGN when PRN is proprietary", .lookupValue = lookupValueINDUSTRY_CODE, .lookupName = "INDUSTRY_CODE" \
+#define MANUFACTURER_PROPRIETARY_FIELDS                                                                                                                                                                                                                                                                                              \
+  {.name = "Manufacturer Code", .size = 11, .resolution = RES_MANUFACTURER, .units = PROPRIETARY_PGN_ONLY, .description = "Only in PGN when PRN is proprietary", .lookupValue = lookupValueMANUFACTURER_CODE,                                                                                  \ .lookupName = "MANUFACTURER_CODE"}, \
+      {.name        = "Reserved",                                                                                                                                                                                                                                                                                                    \
+       .size        = 2,                                                                                                                                                                                                                                                                                                             \
+       .resolution  = RES_BINARY,                                                                                                                                                                                                                                                                                                    \
+       .units       = PROPRIETARY_PGN_ONLY,                                                                                                                                                                                                                                                                                          \
+       .description = "Only in PGN when PRN is proprietary"},                                                                                                                                                                                                                                                                        \
+  {                                                                                                                                                                                                                                                                                                                                  \
+    .name = "Industry code", .size = 3, .resolution = RES_LOOKUP, .units = PROPRIETARY_PGN_ONLY,                                                                                                                                                                                                                                     \
+    .description = "Only in PGN when PRN is proprietary", .lookupValue = lookupValueINDUSTRY_CODE, .lookupName = "INDUSTRY_CODE"                                                                                                                                                                                                     \
   }
 
 typedef struct
@@ -463,8 +467,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {0}}}
 
@@ -475,8 +479,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {0}}}
 
@@ -487,8 +491,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {0}}}
 
@@ -499,8 +503,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {0}}}
 
@@ -541,8 +545,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
@@ -575,8 +579,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
@@ -609,8 +613,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
@@ -643,8 +647,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
@@ -686,8 +690,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
@@ -720,8 +724,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
@@ -754,8 +758,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
@@ -788,8 +792,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
       {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
@@ -1107,7 +1111,7 @@ Pgn pgnList[] = {
      {COMPANY(135),
       {"SID", BYTES(1), 1, false, 0, ""},
       {"Internal Device Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Supply Voltage", BYTES(2), 0.01, false, "V", ""},
+      VOLTAGE_FIELD("Supply Voltage", 0.01),
       RESERVED_FIELD(BYTES(1)),
       {0}}}
 
@@ -1974,7 +1978,7 @@ Pgn pgnList[] = {
       {"Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Oil temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
       {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Alternator Potential", BYTES(2), 0.01, true, "V", ""},
+      VOLTAGE_FIELD("Alternator Potential", 0.01),
       {"Fuel Rate", BYTES(2), 0.1, true, "L/h", ""},
       {"Total Engine hours", BYTES(4), 1.0, false, "s", ""},
       {"Coolant Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
@@ -2108,7 +2112,7 @@ Pgn pgnList[] = {
       {"Line", 2, RES_INTEGER, false, 0, ""},
       LOOKUP_FIELD("Acceptability", 2, ACCEPTABILITY),
       RESERVED_FIELD(4),
-      {"Voltage", BYTES(2), 0.01, false, "V", ""},
+      VOLTAGE_FIELD("Voltage", 0.01),
       {"Current", BYTES(2), 0.1, false, "A", ""},
       {"Frequency", BYTES(2), 0.01, false, "Hz", ""},
       {"Breaker Size", BYTES(2), 0.1, false, "A", ""},
@@ -2132,7 +2136,7 @@ Pgn pgnList[] = {
       {"Line", 2, RES_INTEGER, false, 0, ""},
       LOOKUP_FIELD("Waveform", 3, WAVEFORM),
       RESERVED_FIELD(3),
-      {"Voltage", BYTES(2), 0.01, false, "V", ""},
+      VOLTAGE_FIELD("Voltage", 0.01),
       {"Current", BYTES(2), 0.1, false, "A", ""},
       {"Frequency", BYTES(2), 0.01, false, "Hz", ""},
       {"Breaker Size", BYTES(2), 0.1, false, "A", ""},
@@ -2170,7 +2174,7 @@ Pgn pgnList[] = {
       {"State of Charge", BYTES(1), 1, false, 0, ""},
       {"State of Health", BYTES(1), 1, false, 0, ""},
       {"Time Remaining", BYTES(2), 1, false, 0, ""},
-      {"Ripple Voltage", BYTES(2), 0.01, false, "V", ""},
+      VOLTAGE_FIELD("Ripple Voltage", 0.01),
       {"Amp Hours", BYTES(2), 3600, false, "C", ""},
       {0}}}
 
@@ -2200,7 +2204,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Voltage", BYTES(2), 0.01, true, "V", ""},
+      VOLTAGE_FIELD("Voltage", 0.01),
       {"Current", BYTES(2), 0.1, true, "A", ""},
       {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"SID", BYTES(1), 1, false, 0, ""},
@@ -2381,7 +2385,7 @@ Pgn pgnList[] = {
      0,
      {BINARY_FIELD("SID", BYTES(1), ""),
       {"Connection Number", BYTES(1), 1, false, 0, ""},
-      {"DC Voltage", BYTES(2), 0.1, false, "V", ""},
+      VOLTAGE_FIELD("DC Voltage", 0.1),
       {"DC Current", BYTES(3), 0.01, true, "A", ""},
       RESERVED_FIELD(BYTES(1)),
       {0}}}
@@ -2572,7 +2576,7 @@ Pgn pgnList[] = {
      {{"SID", BYTES(1), 1, false, 0, ""},
       {"Windlass ID", BYTES(1), 1, false, 0, ""},
       LOOKUP_BITFIELD("Windlass Monitoring Events", 8, WINDLASS_MONITORING),
-      {"Controller voltage", BYTES(1), 0.2, false, "V", ""},
+      VOLTAGE_MEDIUM_FIELD("Controller voltage", 0.2),
       {"Motor current", BYTES(1), 1, false, "A", ""},
       {"Total Motor Time", BYTES(2), 60, false, "s", ""},
       RESERVED_FIELD(BYTES(1)),
@@ -5603,7 +5607,7 @@ Pgn pgnList[] = {
       {"Year", BYTES(1), 1, false, 0, ""},
       {"Month", BYTES(1), 1, false, 0, ""},
       {"Device Number", BYTES(2), 1, false, 0, ""},
-      {"Node Voltage", BYTES(2), 0.01, false, "V", ""},
+      VOLTAGE_FIELD("Node Voltage", 0.01),
       {0}}}
 
     ,
