@@ -2135,8 +2135,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6315,8 +6313,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>0</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6405,8 +6401,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6505,8 +6499,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>2</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6611,8 +6603,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>3</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6734,8 +6724,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>4</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6864,8 +6852,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>5</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6994,8 +6980,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>6</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7198,8 +7182,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>33264</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7211,8 +7193,6 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>132</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7331,8 +7311,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>3</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7432,8 +7410,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>30</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7531,8 +7507,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7605,8 +7579,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>2</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7690,8 +7662,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>17</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7767,8 +7737,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>24</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7863,8 +7831,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>25</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7981,8 +7947,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>33264</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7994,7 +7958,6 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>134</Match>
-          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8111,8 +8074,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>33264</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8124,7 +8085,6 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>144</Match>
-          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8205,8 +8165,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>32</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8302,8 +8260,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>33</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8518,8 +8474,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>34</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8726,8 +8680,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>35</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8808,8 +8760,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>40</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8888,8 +8838,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>41</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8980,8 +8928,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>42</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -9075,8 +9021,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>43</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -9179,8 +9123,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>44</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -9283,8 +9225,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>46</Match>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -21942,7 +21882,6 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Match>112</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -26054,7 +25993,7 @@ limitations under the License.
         <Field>
           <Order>9</Order>
           <Id>radioFrequency</Id>
-          <Name>Radio frequency</Name>
+          <Name>Radio Frequency</Name>
           <BitLength>32</BitLength>
           <Units>Hz</Units>
           <Resolution>10</Resolution>
@@ -27925,7 +27864,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28034,7 +27972,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>4</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28073,8 +28010,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>kHz</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Hz</Units>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28184,7 +28120,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>5</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28281,7 +28216,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>6</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28386,7 +28320,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>8</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28504,7 +28437,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>9</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28604,7 +28536,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>9</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28712,7 +28643,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>12</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28751,8 +28681,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>kHz</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Hz</Units>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28862,7 +28791,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>13</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29018,7 +28946,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>14</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29125,7 +29052,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>15</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29232,7 +29158,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>16</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29339,7 +29264,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>19</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29473,7 +29397,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>20</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29570,7 +29493,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>23</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29673,7 +29595,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>24</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29781,7 +29702,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>25</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29867,7 +29787,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>48</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29965,7 +29884,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>50</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30073,7 +29991,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>50</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31551,7 +31468,6 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
-          <Resolution>1e-06</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35880,7 +35796,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>2</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -36042,7 +35957,6 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -36162,7 +36076,6 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -36260,7 +36173,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>2</Match>
-          <Type>Lookup table</Type>
           <Signed>false</Signed>
         </Field>
         <Field>

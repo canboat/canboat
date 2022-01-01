@@ -117,14 +117,44 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = RES_RADIANS, .hasSign = true, .units = "rad", .description = desc \
   }
 
-#define VOLTAGE_FIELD(nam, res)                                                                         \
-  {                                                                                                     \
-    .name = nam, .size = BYTES(2), .resolution = res, .hasSign = false, .units = "V", .description = "" \
+#define VOLTAGE_FIELD(nam, res)                                                       \
+  {                                                                                   \
+    .name = nam, .size = BYTES(2), .resolution = res, .units = "V", .description = "" \
   }
 
-#define VOLTAGE_MEDIUM_FIELD(nam, res)                                                                  \
-  {                                                                                                     \
-    .name = nam, .size = BYTES(2), .resolution = res, .hasSign = false, .units = "V", .description = "" \
+#define VOLTAGE_MEDIUM_FIELD(nam, res)                                                \
+  {                                                                                   \
+    .name = nam, .size = BYTES(2), .resolution = res, .units = "V", .description = "" \
+  }
+
+#define RADIO_FREQUENCY_FIELD(nam, res)                                                \
+  {                                                                                    \
+    .name = nam, .size = BYTES(4), .resolution = res, .units = "Hz", .description = "" \
+  }
+
+#define FREQUENCY_FIELD(nam, res)                                                      \
+  {                                                                                    \
+    .name = nam, .size = BYTES(2), .resolution = res, .units = "Hz", .description = "" \
+  }
+
+#define MILLIMETER_SPEED_FIELD(nam)                                                                        \
+  {                                                                                                        \
+    .name = nam, .size = BYTES(2), .resolution = 0.001, .hasSign = true, .units = "m/s", .description = "" \
+  }
+
+#define SPEED_FIELD(nam)                                                                                   \
+  {                                                                                                        \
+    .name = nam, .size = BYTES(2), .resolution = 0.01, .hasSign = false, .units = "m/s", .description = "" \
+  }
+
+#define SPEED_REL_FIELD(nam)                                                                              \
+  {                                                                                                       \
+    .name = nam, .size = BYTES(2), .resolution = 0.01, .hasSign = true, .units = "m/s", .description = "" \
+  }
+
+#define MATCH_FIELD(nam, len, id, desc)                                                   \
+  {                                                                                       \
+    .name = nam, .size = len, .resolution = 1, .units = "=" xstr(id), .description = desc \
   }
 
 #define COMPANY(id)                                                                                               \
@@ -325,7 +355,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      1,
-     {{"Group Function Code", BYTES(1), 1, false, "=16", "RTS"},
+     {MATCH_FIELD("Group Function Code", BYTES(1), 16, "RTS"),
       {"Message size", BYTES(2), 1, false, 0, "bytes"},
       {"Packets", BYTES(1), 1, false, 0, "packets"},
       {"Packets reply", BYTES(1), 1, false, 0, "packets sent in response to CTS"} // This one is still mysterious to me...
@@ -338,7 +368,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      1,
-     {{"Group Function Code", BYTES(1), 1, false, "=17", "CTS"},
+     {MATCH_FIELD("Group Function Code", BYTES(1), 17, "CTS"),
       {"Max packets", BYTES(1), 1, false, 0, "packets before waiting for next CTS"},
       {"Next SID", BYTES(1), 1, false, 0, "packet"},
       RESERVED_FIELD(BYTES(2)),
@@ -350,7 +380,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      1,
-     {{"Group Function Code", BYTES(1), 1, false, "=19", "EOM"},
+     {MATCH_FIELD("Group Function Code", BYTES(1), 19, "EOM"),
       {"Total message size", BYTES(2), 1, false, 0, "bytes"},
       {"Total number of packets received", BYTES(1), 1, false, 0, "packets"},
       RESERVED_FIELD(BYTES(1)),
@@ -362,7 +392,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      1,
-     {{"Group Function Code", BYTES(1), 1, false, "=32", "BAM"},
+     {MATCH_FIELD("Group Function Code", BYTES(1), 32, "BAM"),
       {"Message size", BYTES(2), 1, false, 0, "bytes"},
       {"Packets", BYTES(1), 1, false, 0, "frames"},
       RESERVED_FIELD(BYTES(1)),
@@ -374,7 +404,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      1,
-     {{"Group Function Code", BYTES(1), 1, false, "=255", "Abort"},
+     {MATCH_FIELD("Group Function Code", BYTES(1), 255, "Abort"),
       BINARY_FIELD("Reason", BYTES(1), ""),
       RESERVED_FIELD(BYTES(2)),
       {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
@@ -410,7 +440,7 @@ Pgn pgnList[] = {
      0x08,
      0,
      {COMPANY(1851),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=1", "Wireless Keypad Light Control"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Wireless Keypad Light Control"),
       {"Variant", BYTES(1), 1, false, 0, ""},
       {"Wireless Setting", BYTES(1), 1, false, 0, ""},
       {"Wired Setting", BYTES(1), 1, false, 0, ""},
@@ -475,7 +505,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {0}}}
 
     ,
@@ -487,7 +517,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {0}}}
 
     ,
@@ -499,7 +529,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {0}}}
 
     ,
@@ -511,7 +541,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {0}}}
 
     ,
@@ -553,7 +583,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
 
@@ -587,7 +617,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
 
@@ -621,7 +651,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
 
@@ -655,7 +685,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
 
@@ -698,7 +728,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
 
@@ -732,7 +762,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
 
@@ -766,7 +796,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
 
@@ -800,7 +830,7 @@ Pgn pgnList[] = {
      0,
      {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
       VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       {"AC RMS Current", BYTES(2), 1, false, "A", ""},
       {0}}}
 
@@ -1146,7 +1176,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      12,
      2,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=0", "Request"},
+     {MATCH_FIELD("Function Code", BYTES(1), 0, "Request"),
       {"PGN", BYTES(3), RES_INTEGER, false, 0, "Requested PGN"},
       {"Transmission interval", BYTES(4), 0.001, false, "s", ""},
       {"Transmission interval offset", BYTES(2), 0.01, false, "s", ""},
@@ -1162,7 +1192,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=1", "Command"},
+     {MATCH_FIELD("Function Code", BYTES(1), 1, "Command"),
       {"PGN", BYTES(3), RES_INTEGER, false, 0, "Commanded PGN"},
       LOOKUP_FIELD("Priority", 4, PRIORITY),
       RESERVED_FIELD(4),
@@ -1178,7 +1208,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      1,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=2", "Acknowledge"},
+     {MATCH_FIELD("Function Code", BYTES(1), 2, "Acknowledge"),
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
       LOOKUP_FIELD("PGN error code", 4, PGN_ERROR_CODE),
       LOOKUP_FIELD("Transmission interval/Priority error code", 4, TRANSMISSION_INTERVAL),
@@ -1193,7 +1223,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      102,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=3", "Read Fields"},
+     {MATCH_FIELD("Function Code", BYTES(1), 3, "Read Fields"),
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
       MANUFACTURER_PROPRIETARY_FIELDS,
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
@@ -1211,7 +1241,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      202,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=4", "Read Fields Reply"},
+     {MATCH_FIELD("Function Code", BYTES(1), 4, "Read Fields Reply"),
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
       MANUFACTURER_PROPRIETARY_FIELDS,
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
@@ -1230,7 +1260,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      202,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=5", "Write Fields"},
+     {MATCH_FIELD("Function Code", BYTES(1), 5, "Write Fields"),
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
       MANUFACTURER_PROPRIETARY_FIELDS,
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
@@ -1249,7 +1279,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      202,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=6", "Write Fields Reply"},
+     {MATCH_FIELD("Function Code", BYTES(1), 6, "Write Fields Reply"),
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
       MANUFACTURER_PROPRIETARY_FIELDS,
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
@@ -1290,8 +1320,8 @@ Pgn pgnList[] = {
      21,
      0,
      {COMPANY(1851),
-      {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
-      {"command", BYTES(1), RES_INTEGER, false, "=132", "0x84"},
+      MATCH_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
+      MATCH_FIELD("command", BYTES(1), 132, "0x84"),
       BINARY_FIELD("Unknown 1", BYTES(3), ""),
       LOOKUP_FIELD("Pilot Mode", BYTES(1), SEATALK_PILOT_MODE),
       {"Sub Mode", BYTES(1), RES_INTEGER, false, 0, ""},
@@ -1307,7 +1337,7 @@ Pgn pgnList[] = {
      6,
      0,
      {COMPANY(419),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=3", "Media Control"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 3, "Media Control"),
       {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
       LOOKUP_FIELD("Command", BYTES(1), FUSION_COMMAND),
@@ -1321,7 +1351,7 @@ Pgn pgnList[] = {
      7,
      0,
      {COMPANY(419),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=30", "Sirius Control"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 30, "Sirius Control"),
       {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
       LOOKUP_FIELD("Command", BYTES(1), FUSION_SIRIUS_COMMAND),
@@ -1335,7 +1365,7 @@ Pgn pgnList[] = {
      3,
      0,
      {COMPANY(419),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=1", "Request Status"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Request Status"),
       {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
@@ -1347,7 +1377,7 @@ Pgn pgnList[] = {
      3,
      0,
      {COMPANY(419),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=2", "Set Source"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 2, "Set Source"),
       {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
@@ -1360,7 +1390,7 @@ Pgn pgnList[] = {
      3,
      0,
      {COMPANY(419),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=17", "Mute"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 17, "Mute"),
       LOOKUP_FIELD("Command", BYTES(1), FUSION_MUTE_COMMAND),
       {0}}}
 
@@ -1372,7 +1402,7 @@ Pgn pgnList[] = {
      6,
      0,
      {COMPANY(419),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=24", "Set Zone Volume"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 24, "Set Zone Volume"),
       {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Volume", BYTES(1), RES_INTEGER, false, 0, ""},
@@ -1386,7 +1416,7 @@ Pgn pgnList[] = {
      9,
      0,
      {COMPANY(419),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=25", "Set All Volumes"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 25, "Set All Volumes"),
       {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Zone1", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Zone2", BYTES(1), RES_INTEGER, false, 0, ""},
@@ -1403,8 +1433,8 @@ Pgn pgnList[] = {
      21,
      0,
      {COMPANY(1851),
-      {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
-      {"command", BYTES(1), RES_BINARY, false, "=134", "0x86"},
+      MATCH_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
+      MATCH_FIELD("command", BYTES(1), 134, "0x86"),
       {"device", BYTES(1), RES_INTEGER, false, 0, ""},
       LOOKUP_FIELD("key", BYTES(1), SEATALK_KEYSTROKE),
       {"keyInverted", BYTES(1), RES_INTEGER, false, 0, "Bit negated version of key"},
@@ -1421,10 +1451,9 @@ Pgn pgnList[] = {
      8,
      0,
      {COMPANY(1851),
-      {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
-      {"command", BYTES(1), RES_BINARY, false, "=144", "0x90"},
-      RESERVED_FIELD(BYTES(1)) // 0x00
-      ,
+      MATCH_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
+      MATCH_FIELD("command", BYTES(1), 144, "0x90"),
+      RESERVED_FIELD(BYTES(1)),
       LOOKUP_FIELD("device", BYTES(1), SEATALK_DEVICE_ID),
       {0}}}
 
@@ -1437,7 +1466,7 @@ Pgn pgnList[] = {
      9,
      0,
      {COMPANY(135),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=32", "Attitude Offsets"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 32, "Attitude Offsets"),
       {"Azimuth offset",
        BYTES(2),
        RES_RADIANS,
@@ -1457,7 +1486,7 @@ Pgn pgnList[] = {
      24,
      0,
      {COMPANY(135),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=33", "Calibrate Compass"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 33, "Calibrate Compass"),
       LOOKUP_FIELD("Calibrate Function", BYTES(1), AIRMAR_CALIBRATE_FUNCTION),
       LOOKUP_FIELD("Calibration Status", BYTES(1), AIRMAR_CALIBRATE_STATUS),
       {"Verify Score", BYTES(1), RES_INTEGER, false, 0, "TBD"},
@@ -1486,7 +1515,7 @@ Pgn pgnList[] = {
      6,
      0,
      {COMPANY(135),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=34", "True Wind Options"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 34, "True Wind Options"),
       LOOKUP_FIELD_DESC("COG substitution for HDG", 2, YES_NO, "Allow use of COG when HDG not available?"),
       LOOKUP_FIELD("Calibration Status", BYTES(1), AIRMAR_CALIBRATE_STATUS),
       {"Verify Score", BYTES(1), RES_INTEGER, false, 0, "TBD"},
@@ -1515,7 +1544,7 @@ Pgn pgnList[] = {
      6,
      0,
      {COMPANY(135),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=35", "Simulate Mode"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 35, "Simulate Mode"),
       LOOKUP_FIELD("Simulate Mode", 2, OFF_ON),
       RESERVED_FIELD(22),
       {0}}}
@@ -1529,7 +1558,7 @@ Pgn pgnList[] = {
      6,
      0,
      {COMPANY(135),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=40", "Calibrate Depth"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 40, "Calibrate Depth"),
       {"Speed of Sound Mode", BYTES(2), 0.1, false, "m/s", "actual allowed range is 1350.0 to 1650.0 m/s"},
       RESERVED_FIELD(8),
       {0}}}
@@ -1543,15 +1572,15 @@ Pgn pgnList[] = {
      12,
      2,
      {COMPANY(135),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=41", "Calibrate Speed"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 41, "Calibrate Speed"),
       {"Number of pairs of data points",
        BYTES(1),
        RES_INTEGER,
        false,
        0,
        "actual range is 0 to 25. 254=restore default speed curve"},
-      {"Input frequency", BYTES(2), 0.1, false, "Hz", ""},
-      {"Output speed", BYTES(2), 0.01, false, "m/s", ""},
+      FREQUENCY_FIELD("Input frequency", 0.1),
+      SPEED_FIELD("Output speed"),
       {0}}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
@@ -1563,7 +1592,7 @@ Pgn pgnList[] = {
      6,
      2,
      {COMPANY(135),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=42", "Calibrate Temperature"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 42, "Calibrate Temperature"),
       LOOKUP_FIELD("Temperature instance", 2, AIRMAR_TEMPERATURE_INSTANCE),
       RESERVED_FIELD(6),
       {"Temperature offset", BYTES(2), 0.001, true, "K", "actual range is -9.999 to +9.999 K"},
@@ -1578,7 +1607,7 @@ Pgn pgnList[] = {
      8,
      2,
      {COMPANY(135),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=43", "Speed Filter"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 43, "Speed Filter"),
       LOOKUP_FIELD("Filter type", 4, AIRMAR_FILTER),
       RESERVED_FIELD(4),
       {"Sample interval", BYTES(2), 0.01, false, "s", ""},
@@ -1594,7 +1623,7 @@ Pgn pgnList[] = {
      8,
      2,
      {COMPANY(135),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=44", "Temperature Filter"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 44, "Temperature Filter"),
       LOOKUP_FIELD("Filter type", 4, AIRMAR_FILTER),
       RESERVED_FIELD(4),
       {"Sample interval", BYTES(2), 0.01, false, "s", ""},
@@ -1610,7 +1639,7 @@ Pgn pgnList[] = {
      6,
      2,
      {COMPANY(135),
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=46", "NMEA 2000 options"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 46, "NMEA 2000 options"),
       LOOKUP_FIELD("Transmission Interval", 2, AIRMAR_TRANSMISSION_INTERVAL),
       RESERVED_FIELD(22),
       {0}}}
@@ -1838,7 +1867,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(6),
       ANGLE_POS_FIELD("COG", ""),
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("SOG"),
       {"MMSI of vessel of origin", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       LOOKUP_FIELD("MOB Emitter Battery Low Status", 3, LOW_BATTERY),
       RESERVED_FIELD(5),
@@ -2120,7 +2149,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       VOLTAGE_FIELD("Voltage", 0.01),
       {"Current", BYTES(2), 0.1, false, "A", ""},
-      {"Frequency", BYTES(2), 0.01, false, "Hz", ""},
+      FREQUENCY_FIELD("Frequency", 0.01),
       {"Breaker Size", BYTES(2), 0.1, false, "A", ""},
       {"Real Power", BYTES(4), RES_INTEGER, false, "W", ""},
       {"Reactive Power", BYTES(4), RES_INTEGER, false, "VAR", ""},
@@ -2144,7 +2173,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(3),
       VOLTAGE_FIELD("Voltage", 0.01),
       {"Current", BYTES(2), 0.1, false, "A", ""},
-      {"Frequency", BYTES(2), 0.01, false, "Hz", ""},
+      FREQUENCY_FIELD("Frequency", 0.01),
       {"Breaker Size", BYTES(2), 0.1, false, "A", ""},
       {"Real Power", BYTES(4), RES_INTEGER, false, "W", ""},
       {"Reactive Power", BYTES(4), RES_INTEGER, false, "VAR", ""},
@@ -2463,8 +2492,8 @@ Pgn pgnList[] = {
      8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Speed Water Referenced", BYTES(2), 0.01, false, "m/s", ""},
-      {"Speed Ground Referenced", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Speed Water Referenced"),
+      SPEED_FIELD("Speed Ground Referenced"),
       LOOKUP_FIELD("Speed Water Referenced Type", BYTES(1), WATER_REFERENCE),
       {"Speed Direction", 4, 1, false, 0, ""},
       RESERVED_FIELD(12),
@@ -2515,7 +2544,7 @@ Pgn pgnList[] = {
       ANGLE_POS_FIELD("Bearing", ""),
       {"Distance", BYTES(4), 0.001, false, "m", ""},
       ANGLE_POS_FIELD("Course", ""),
-      {"Speed", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Speed"),
       {"CPA", BYTES(4), 0.01, false, "m", ""},
       {"TCPA", BYTES(4), 0.001, false, "s", "negative = time elapsed since event, positive = time to go"},
       {"UTC of Fix", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
@@ -2566,7 +2595,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Rode Type Status", 2, RODE_TYPE),
       RESERVED_FIELD(2),
       {"Rode Counter Value", BYTES(2), 0.1, false, "m", ""},
-      {"Windlass Line Speed", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Windlass Line Speed"),
       LOOKUP_FIELD("Anchor Docking Status", 2, DOCKING_STATUS),
       LOOKUP_BITFIELD("Windlass Operating Events", 6, WINDLASS_OPERATION),
       {0}}}
@@ -2609,7 +2638,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(6),
       ANGLE_POS_FIELD("COG", ""),
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("SOG"),
       RESERVED_FIELD(BYTES(2)),
       {0}}}
 
@@ -2698,7 +2727,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
       LOOKUP_FIELD_DESC("Time Stamp", 6, TIME_STAMP, "0-59 = UTC second when the report was generated"),
       ANGLE_POS_FIELD("COG", ""),
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("SOG"),
       {"Communication State",
        19,
        RES_BINARY,
@@ -2732,7 +2761,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
       LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
       ANGLE_POS_FIELD("COG", ""),
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("SOG"),
       {"Communication State",
        19,
        RES_BINARY,
@@ -2768,7 +2797,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS RAIM flag", 1, RAIM_FLAG),
       LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
       ANGLE_POS_FIELD("COG", ""),
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("SOG"),
       {"Regional Application", BYTES(1), 1, false, 0, ""},
       {"Regional Application", 4, 1, false, 0, ""},
       RESERVED_FIELD(4),
@@ -2927,7 +2956,7 @@ Pgn pgnList[] = {
       {"Destination Waypoint Number", BYTES(4), 1, false, 0, ""},
       {"Destination Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Destination Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Waypoint Closing Velocity", BYTES(2), 0.01, true, "m/s", ""},
+      SPEED_REL_FIELD("Waypoint Closing Velocity"),
       {0}}}
 
     ,
@@ -2963,7 +2992,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Set Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(6),
       ANGLE_POS_FIELD("Set", ""),
-      {"Drift", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Drift"),
       {0}}}
 
     ,
@@ -3400,8 +3429,8 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Rx Frequency", BYTES(4), 10, false, "Hz", ""},
-      {"Tx Frequency", BYTES(4), 10, false, "Hz", ""},
+     {RADIO_FREQUENCY_FIELD("Rx Frequency", 10),
+      RADIO_FREQUENCY_FIELD("Tx Frequency", 10),
       {"Radio Channel", BYTES(1), 1, false, 0, ""},
       {"Tx Power", BYTES(1), 1, false, 0, ""},
       {"Mode", BYTES(1), 1, false, 0, ""},
@@ -3600,7 +3629,7 @@ Pgn pgnList[] = {
      8,
      2,
      {LOOKUP_FIELD("DSC Format", BYTES(1), DSC_FORMAT),
-      {"DSC Category", BYTES(1), RES_LOOKUP, false, "=112", "Distress"},
+      MATCH_FIELD("DSC Category", BYTES(1), 112, "Distress"),
       {"DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank"},
       LOOKUP_FIELD("Nature of Distress", BYTES(1), DSC_NATURE),
       LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
@@ -3927,7 +3956,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Wind Speed"),
       ANGLE_POS_FIELD("Wind Angle", ""),
       LOOKUP_FIELD("Reference", 3, WIND_REFERENCE),
       RESERVED_FIELD(5 + BYTES(2)),
@@ -4091,7 +4120,7 @@ Pgn pgnList[] = {
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"Measurement Depth", BYTES(4), 0.01, false, "m", "Depth below transducer"},
-      {"Current speed", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Current speed"),
       ANGLE_POS_FIELD("Current flow direction", ""),
       {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
@@ -4111,11 +4140,11 @@ Pgn pgnList[] = {
       {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Wind Speed"),
       ANGLE_POS_FIELD("Wind Direction", ""),
       LOOKUP_FIELD("Wind Reference", 3, WIND_REFERENCE),
       RESERVED_FIELD(5),
-      {"Wind Gusts", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Wind Gusts"),
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Ambient Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Station ID", BYTES(257), RES_STRING, false, 0, ""},
@@ -4135,11 +4164,11 @@ Pgn pgnList[] = {
       {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Wind Speed"),
       ANGLE_POS_FIELD("Wind Direction", ""),
       LOOKUP_FIELD("Wind Reference", 3, WIND_REFERENCE),
       RESERVED_FIELD(5),
-      {"Wind Gusts", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Wind Gusts"),
       {"Wave Height", BYTES(2), 1, false, 0, ""},
       {"Dominant Wave Period", BYTES(2), 1, false, 0, ""},
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
@@ -4213,7 +4242,7 @@ Pgn pgnList[] = {
       {"Play Favorite Number", BYTES(2), RES_INTEGER, false, 0, "Used to command AV to play indicated favorite station"},
       LOOKUP_FIELD("Thumbs Up/Down", BYTES(1), ENTERTAINMENT_LIKE_STATUS),
       {"Signal Strength", BYTES(1), RES_INTEGER, false, "%", ""},
-      {"Radio Frequency", BYTES(4), 10, false, "Hz", ""},
+      RADIO_FREQUENCY_FIELD("Radio Frequency", 10),
       {"HD Frequency Multicast", BYTES(1), RES_INTEGER, false, 0, "Digital sub channel"},
       {"Delete Favorite Number", BYTES(1), RES_INTEGER, false, 0, "Used to command AV to delete current station as favorite"},
       {"Total Number of Tracks", BYTES(2), RES_INTEGER, false, 0, ""},
@@ -4236,7 +4265,7 @@ Pgn pgnList[] = {
       {"Track", BYTES(2), RES_INTEGER, false, 0, ""},
       {"Station", BYTES(2), RES_INTEGER, false, 0, ""},
       {"Favorite", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Radio frequency", BYTES(4), 10., false, "Hz", ""},
+      RADIO_FREQUENCY_FIELD("Radio Frequency", 10.),
       {"HD Frequency", BYTES(1), RES_INTEGER, false, 0, ""},
       LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
       LOOKUP_FIELD("In play queue", 2, YES_NO),
@@ -4347,11 +4376,11 @@ Pgn pgnList[] = {
       /* So far, 2 bytes. Very sure of this given molly rose data */
       ,
       ANGLE_POS_FIELD("COG", ""),
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("SOG"),
       ANGLE_POS_FIELD("Heading", ""),
-      {"Speed through Water", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Speed through Water"),
       ANGLE_POS_FIELD("Set", ""),
-      {"Drift", BYTES(2), 0.01, false, "m/s", ""},
+      SPEED_FIELD("Drift"),
       {0}}}
 
     ,
@@ -4361,12 +4390,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      12,
      0,
-     {{"Longitudinal Speed, Water-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {"Transverse Speed, Water-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {"Longitudinal Speed, Ground-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {"Transverse Speed, Ground-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {"Stern Speed, Water-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {"Stern Speed, Ground-referenced", BYTES(2), 0.001, true, "m/s", ""},
+     {MILLIMETER_SPEED_FIELD("Longitudinal Speed, Water-referenced"),
+      MILLIMETER_SPEED_FIELD("Transverse Speed, Water-referenced"),
+      MILLIMETER_SPEED_FIELD("Longitudinal Speed, Ground-referenced"),
+      MILLIMETER_SPEED_FIELD("Transverse Speed, Ground-referenced"),
+      MILLIMETER_SPEED_FIELD("Stern Speed, Water-referenced"),
+      MILLIMETER_SPEED_FIELD("Stern Speed, Ground-referenced"),
       {0}}}
 
     ,
@@ -4487,8 +4516,8 @@ Pgn pgnList[] = {
       {"EQ - Bass", BYTES(1), RES_INTEGER, true, "%", ""},
       LOOKUP_FIELD("Preset type", BYTES(1), ENTERTAINMENT_EQ),
       LOOKUP_FIELD("Audio filter", BYTES(1), ENTERTAINMENT_FILTER),
-      {"High pass filter frequency", BYTES(2), RES_INTEGER, false, "Hz", ""},
-      {"Low pass filter frequency", BYTES(2), RES_INTEGER, false, "Hz", ""},
+      FREQUENCY_FIELD("High pass filter frequency", RES_INTEGER),
+      FREQUENCY_FIELD("Low pass filter frequency", RES_INTEGER),
       LOOKUP_FIELD("Channel", 8, ENTERTAINMENT_CHANNEL),
       {0}}}
 
@@ -4502,7 +4531,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Init #2"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Init #2"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"A", BYTES(2), RES_INTEGER, false, 0, ""},
       {"B", BYTES(2), RES_INTEGER, false, 0, ""},
@@ -4517,10 +4546,10 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=4", "AM Radio"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 4, "AM Radio"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Item", BYTES(1), SONICHUB_TUNING),
-      {"Frequency", BYTES(4), 0.001, false, "kHz", ""},
+      RADIO_FREQUENCY_FIELD("Frequency", 1),
       {"Noise level", 2, 1, false, 0, ""} // Not sure about this
       ,
       {"Signal level", 4, 1, false, 0, ""} // ... and this, doesn't make complete sense compared to display
@@ -4538,7 +4567,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=5", "Zone info"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 5, "Zone info"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
@@ -4552,7 +4581,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=6", "Source"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 6, "Source"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Source", BYTES(1), SONICHUB_SOURCE),
       {0}}}
@@ -4566,7 +4595,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=8", "Source list"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 8, "Source list"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {"A", 8, RES_INTEGER, false, 0, ""},
@@ -4582,7 +4611,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Control"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 9, "Control"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Item", BYTES(1), FUSION_MUTE_COMMAND),
       {0}}}
@@ -4596,7 +4625,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Unknown"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 9, "Unknown"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"A", 8, RES_INTEGER, false, 0, ""},
       {"B", 8, RES_INTEGER, false, 0, ""},
@@ -4611,10 +4640,10 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=12", "FM Radio"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 12, "FM Radio"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Item", BYTES(1), SONICHUB_TUNING),
-      {"Frequency", BYTES(4), 0.001, false, "kHz", ""},
+      RADIO_FREQUENCY_FIELD("Frequency", 1),
       {"Noise level", 2, 1, false, 0, ""} // Not sure about this
       ,
       {"Signal level", 4, 1, false, 0, ""} // ... and this, doesn't make complete sense compared to display
@@ -4632,7 +4661,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=13", "Playlist"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 13, "Playlist"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Item", BYTES(1), SONICHUB_PLAYLIST),
       {"A", BYTES(1), RES_INTEGER, false, 0, ""},
@@ -4651,7 +4680,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=14", "Track"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 14, "Track"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
       {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
@@ -4666,7 +4695,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=15", "Artist"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 15, "Artist"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
       {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
@@ -4681,7 +4710,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=16", "Album"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 16, "Album"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
       {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
@@ -4696,7 +4725,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=19", "Menu Item"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 19, "Menu Item"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
       {"C", BYTES(1), 1, false, 0, ""},
@@ -4714,7 +4743,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=20", "Zones"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 20, "Zones"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Zones", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
@@ -4728,7 +4757,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=23", "Max Volume"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 23, "Max Volume"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Level", BYTES(1), RES_INTEGER, false, 0, ""},
@@ -4743,7 +4772,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=24", "Volume"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 24, "Volume"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
       {"Level", BYTES(1), RES_INTEGER, false, 0, ""},
@@ -4758,7 +4787,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=25", "Init #1"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 25, "Init #1"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {0}}}
 
@@ -4771,7 +4800,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=48", "Position"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 48, "Position"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"Position", BYTES(4), 0.001, false, "s", ""},
       {0}}}
@@ -4785,7 +4814,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 50, "Init #3"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       {"A", BYTES(1), RES_INTEGER, false, 0, ""},
       {"B", BYTES(1), RES_INTEGER, false, 0, ""},
@@ -4800,7 +4829,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(1)),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3"} // FIXME
+      MATCH_FIELD("Proprietary ID", BYTES(1), 50, "Init #3") // FIXME
       ,
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(1), 1, false, 0, ""},
@@ -4896,7 +4925,7 @@ Pgn pgnList[] = {
      13,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=2", "Source"},
+      MATCH_FIELD("Message ID", BYTES(1), 2, "Source"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"Source ID", BYTES(1), 1, false, 0, ""},
       {"Current Source ID", BYTES(1), 1, false, 0, ""},
@@ -4913,7 +4942,7 @@ Pgn pgnList[] = {
      23,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=4", "Track Info"},
+      MATCH_FIELD("Message ID", BYTES(1), 4, "Track Info"),
       {"A", BYTES(2), 1, false, 0, ""},
       LOOKUP_FIELD("Transport", 4, ENTERTAINMENT_PLAY_STATUS),
       {"X", 4, 1, false, 0, ""},
@@ -4932,7 +4961,7 @@ Pgn pgnList[] = {
      0x20,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=5", "Track Title"},
+      MATCH_FIELD("Message ID", BYTES(1), 5, "Track Title"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(5), 1, false, 0, ""},
       {"Track", BYTES(10), RES_STRINGLZ, false, 0, ""},
@@ -4946,7 +4975,7 @@ Pgn pgnList[] = {
      0x20,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=6", "Track Artist"},
+      MATCH_FIELD("Message ID", BYTES(1), 6, "Track Artist"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(5), 1, false, 0, ""},
       {"Artist", BYTES(10), RES_STRINGLZ, false, 0, ""},
@@ -4960,7 +4989,7 @@ Pgn pgnList[] = {
      0x20,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=7", "Track Album"},
+      MATCH_FIELD("Message ID", BYTES(1), 7, "Track Album"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(5), 1, false, 0, ""},
       {"Album", BYTES(10), RES_STRINGLZ, false, 0, ""},
@@ -4974,7 +5003,7 @@ Pgn pgnList[] = {
      0x20,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=33", "Unit Name"},
+      MATCH_FIELD("Message ID", BYTES(1), 33, "Unit Name"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"Name", BYTES(14), RES_STRINGLZ, false, 0, ""},
       {0}}}
@@ -4987,7 +5016,7 @@ Pgn pgnList[] = {
      0x20,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=45", "Zone Name"},
+      MATCH_FIELD("Message ID", BYTES(1), 45, "Zone Name"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"Number", BYTES(1), 1, false, 0, ""},
       {"Name", BYTES(13), RES_STRINGLZ, false, 0, ""},
@@ -5001,7 +5030,7 @@ Pgn pgnList[] = {
      9,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=9", "Track Progress"},
+      MATCH_FIELD("Message ID", BYTES(1), 9, "Track Progress"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(1), 1, false, 0, ""},
       {"Progress", BYTES(3), 0.001, false, "s", ""},
@@ -5015,11 +5044,11 @@ Pgn pgnList[] = {
      0x0A,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=11", "AM/FM Station"},
+      MATCH_FIELD("Message ID", BYTES(1), 11, "AM/FM Station"),
       {"A", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("AM/FM", BYTES(1), FUSION_RADIO_SOURCE),
       {"B", BYTES(1), 1, false, 0, ""},
-      {"Frequency", BYTES(4), 0.000001, false, "Hz", ""},
+      RADIO_FREQUENCY_FIELD("Frequency", 1),
       {"C", BYTES(1), 1, false, 0, ""},
       {"Track", BYTES(10), RES_STRINGLZ, false, 0, ""},
       {0}}}
@@ -5032,7 +5061,7 @@ Pgn pgnList[] = {
      9,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=12", "VHF"},
+      MATCH_FIELD("Message ID", BYTES(1), 12, "VHF"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(1), 1, false, 0, ""},
       {"Channel", BYTES(1), 1, false, 0, ""},
@@ -5047,7 +5076,7 @@ Pgn pgnList[] = {
      6,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=13", "Squelch"},
+      MATCH_FIELD("Message ID", BYTES(1), 13, "Squelch"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(1), 1, false, 0, ""},
       {"Squelch", BYTES(1), 1, false, 0, ""},
@@ -5061,7 +5090,7 @@ Pgn pgnList[] = {
      6,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=14", "Scan"},
+      MATCH_FIELD("Message ID", BYTES(1), 14, "Scan"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("Scan", BITS(2), YES_NO),
@@ -5076,7 +5105,7 @@ Pgn pgnList[] = {
      23,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=17", "Menu Item"},
+      MATCH_FIELD("Message ID", BYTES(1), 17, "Menu Item"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(1), 1, false, 0, ""},
       {"Line", BYTES(1), 1, false, 0, ""},
@@ -5096,7 +5125,7 @@ Pgn pgnList[] = {
      23,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=20", "Replay"},
+      MATCH_FIELD("Message ID", BYTES(1), 20, "Replay"),
       {"A", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("Mode", BYTES(1), FUSION_REPLAY_MODE),
       {"C", BYTES(3), 1, false, 0, ""},
@@ -5116,7 +5145,7 @@ Pgn pgnList[] = {
      5,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=23", "Mute"},
+      MATCH_FIELD("Message ID", BYTES(1), 23, "Mute"),
       {"A", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("Mute", BYTES(1), FUSION_MUTE_COMMAND),
       {0}}}
@@ -5130,7 +5159,7 @@ Pgn pgnList[] = {
      8,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=26", "Sub Volume"},
+      MATCH_FIELD("Message ID", BYTES(1), 26, "Sub Volume"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"Zone 1", BYTES(1), 1, false, "vol", ""},
       {"Zone 2", BYTES(1), 1, false, "vol", ""},
@@ -5147,7 +5176,7 @@ Pgn pgnList[] = {
      8,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=27", "Tone"},
+      MATCH_FIELD("Message ID", BYTES(1), 27, "Tone"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"B", BYTES(1), 1, false, 0, ""},
       {"Bass", BYTES(1), 1, true, "vol", ""},
@@ -5163,7 +5192,7 @@ Pgn pgnList[] = {
      0x0A,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=29", "Volume"},
+      MATCH_FIELD("Message ID", BYTES(1), 29, "Volume"),
       {"A", BYTES(1), 1, false, 0, ""},
       {"Zone 1", BYTES(1), 1, false, "vol", ""},
       {"Zone 2", BYTES(1), 1, false, "vol", ""},
@@ -5179,7 +5208,7 @@ Pgn pgnList[] = {
      5,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=32", "Power"},
+      MATCH_FIELD("Message ID", BYTES(1), 32, "Power"),
       {"A", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("State", BYTES(1), FUSION_POWER_STATE),
       {0}}}
@@ -5192,7 +5221,7 @@ Pgn pgnList[] = {
      0x20,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=36", "SiriusXM Channel"},
+      MATCH_FIELD("Message ID", BYTES(1), 36, "SiriusXM Channel"),
       {"A", BYTES(4), 1, false, 0, ""},
       {"Channel", BYTES(12), RES_STRINGLZ, false, 0, ""},
       {0}}}
@@ -5205,7 +5234,7 @@ Pgn pgnList[] = {
      0x20,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=37", "SiriusXM Title"},
+      MATCH_FIELD("Message ID", BYTES(1), 37, "SiriusXM Title"),
       {"A", BYTES(4), 1, false, 0, ""},
       {"Title", BYTES(12), RES_STRINGLZ, false, 0, ""},
       {0}}}
@@ -5218,7 +5247,7 @@ Pgn pgnList[] = {
      0x20,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=38", "SiriusXM Artist"},
+      MATCH_FIELD("Message ID", BYTES(1), 38, "SiriusXM Artist"),
       {"A", BYTES(4), 1, false, 0, ""},
       {"Artist", BYTES(12), RES_STRINGLZ, false, 0, ""},
       {0}}}
@@ -5231,7 +5260,7 @@ Pgn pgnList[] = {
      0x20,
      0,
      {COMPANY(419),
-      {"Message ID", BYTES(1), 1, false, "=40", "SiriusXM Genre"},
+      MATCH_FIELD("Message ID", BYTES(1), 40, "SiriusXM Genre"),
       {"A", BYTES(4), 1, false, 0, ""},
       {"Genre", BYTES(12), RES_STRINGLZ, false, 0, ""},
       {0}}}
@@ -5447,7 +5476,7 @@ Pgn pgnList[] = {
      0x1d,
      0,
      {COMPANY(1857),
-      {"Message ID", 6, 1, false, "=0", "Msg 24 Part A"},
+      MATCH_FIELD("Message ID", 6, 0, "Msg 24 Part A"),
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"D", BYTES(1), 1, false, 0, ""},
       {"E", BYTES(1), 1, false, 0, ""},
@@ -5482,7 +5511,7 @@ Pgn pgnList[] = {
      0x25,
      0,
      {COMPANY(1857),
-      {"Message ID", 6, 1, false, "=1", "Msg 24 Part B"},
+      MATCH_FIELD("Message ID", 6, 1, "Msg 24 Part B"),
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"D", BYTES(1), 1, false, 0, ""},
       {"E", BYTES(1), 1, false, 0, ""},
@@ -5534,7 +5563,7 @@ Pgn pgnList[] = {
       {"Message ID", 6, 1, false, 0, ""},
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"Unused", BYTES(3), 1, false, 0, ""},
-      {"Type", BYTES(2), 1, false, "=0", "Heading Offset"},
+      MATCH_FIELD("Type", BYTES(2), 0, "Heading Offset"),
       {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
       ANGLE_REL_FIELD("Angle", ""),
       {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
@@ -5554,7 +5583,7 @@ Pgn pgnList[] = {
       {"Message ID", 6, 1, false, 0, ""},
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"Unused", BYTES(3), 1, false, 0, ""},
-      {"Type", BYTES(2), 1, false, "=768", "Local field"},
+      MATCH_FIELD("Type", BYTES(2), 768, "Local field"),
       {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
       {"Local field", BYTES(2), RES_PERCENTAGE, false, "%", ""},
       {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
@@ -5571,7 +5600,7 @@ Pgn pgnList[] = {
       {"Message ID", 6, 1, false, 0, ""},
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"Unused", BYTES(3), 1, false, 0, ""},
-      {"Type", BYTES(2), 1, false, "=1024", "Local field"},
+      MATCH_FIELD("Type", BYTES(2), 1024, "Local field"),
       {"A", BYTES(2), 1, false, 0, ""},
       ANGLE_REL_FIELD("Field angle", ""),
       {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
@@ -5624,7 +5653,7 @@ Pgn pgnList[] = {
      12,
      0,
      {COMPANY(1857),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 2, "AP command"),
       {"B", BYTES(2), RES_NOTUSED, false, 0, ""},
       {"Controlling Device", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
@@ -5643,7 +5672,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(1857),
       {"A", BYTES(2), 1, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Alarm command"),
       {"C", BYTES(1), 1, false, 0, ""},
       {"Alarm", BYTES(2), RES_INTEGER, false, 0, ""},
       {"Message ID", BYTES(2), RES_INTEGER, false, 0, ""},
@@ -5660,7 +5689,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(1857),
       {"A", BYTES(2), 1, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Alarm command"),
       {"B", BYTES(1), 1, false, 0, ""},
       {"C", BYTES(2), 1, false, 0, ""},
       {"D", BYTES(2), 1, false, 0, ""},
@@ -5675,7 +5704,7 @@ Pgn pgnList[] = {
      12,
      0,
      {COMPANY(1857),
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command"},
+      MATCH_FIELD("Proprietary ID", BYTES(1), 2, "AP command"),
       {"B", BYTES(2), 1, false, 0, ""},
       {"Controlling Device", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),

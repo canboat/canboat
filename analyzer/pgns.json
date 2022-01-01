@@ -2019,8 +2019,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":1,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -5408,8 +5406,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":0,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":2,
@@ -5489,8 +5485,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":2,
@@ -5569,8 +5563,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":2,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":2,
@@ -5644,8 +5636,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":3,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":2,
@@ -5747,8 +5737,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":4,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":2,
@@ -5856,8 +5844,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":5,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":2,
@@ -5965,8 +5951,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":6,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":2,
@@ -6137,8 +6121,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":33264,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -6149,8 +6131,6 @@
             "BitOffset":32,
             "BitStart":0,
             "Match":132,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":6,
@@ -6252,8 +6232,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":3,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -6338,8 +6316,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":30,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -6424,8 +6400,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":1,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -6490,8 +6464,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":2,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -6566,8 +6538,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":17,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -6632,8 +6602,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":24,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -6718,8 +6686,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":25,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -6824,8 +6790,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":33264,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -6836,7 +6800,6 @@
             "BitOffset":32,
             "BitStart":0,
             "Match":134,
-            "Type":"Binary data",
             "Signed":false},
           {
             "Order":6,
@@ -6931,8 +6894,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":33264,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -6943,7 +6904,6 @@
             "BitOffset":32,
             "BitStart":0,
             "Match":144,
-            "Type":"Binary data",
             "Signed":false},
           {
             "Order":6,
@@ -7013,8 +6973,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":32,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -7100,8 +7058,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":33,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -7283,8 +7239,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":34,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -7463,8 +7417,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":35,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -7534,8 +7486,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":40,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -7606,8 +7556,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":41,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -7689,8 +7637,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":42,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -7771,8 +7717,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":43,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -7862,8 +7806,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":44,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -7953,8 +7895,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":46,
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false},
           {
             "Order":5,
@@ -18182,7 +18122,6 @@
             "BitOffset":8,
             "BitStart":0,
             "Match":112,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":3,
@@ -21472,7 +21411,7 @@
           {
             "Order":9,
             "Id":"radioFrequency",
-            "Name":"Radio frequency",
+            "Name":"Radio Frequency",
             "BitLength":32,
             "Units":"Hz",
             "Resolution":10,
@@ -22846,7 +22785,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":1,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -22941,7 +22879,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":4,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -22970,8 +22907,7 @@
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
-            "Units":"kHz",
-            "Resolution":0.001,
+            "Units":"Hz",
             "Signed":false},
           {
             "Order":9,
@@ -23069,7 +23005,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":5,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -23153,7 +23088,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":6,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -23237,7 +23171,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":8,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -23340,7 +23273,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":9,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -23424,7 +23356,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":9,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -23518,7 +23449,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":12,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -23547,8 +23477,7 @@
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
-            "Units":"kHz",
-            "Resolution":0.001,
+            "Units":"Hz",
             "Signed":false},
           {
             "Order":9,
@@ -23646,7 +23575,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":13,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -23780,7 +23708,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":14,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -23873,7 +23800,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":15,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -23966,7 +23892,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":16,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -24059,7 +23984,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":19,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -24176,7 +24100,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":20,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -24260,7 +24183,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":23,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -24350,7 +24272,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":24,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -24444,7 +24365,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":25,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -24518,7 +24438,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":48,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -24603,7 +24522,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":50,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -24697,7 +24615,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Match":50,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -25985,7 +25902,6 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"Hz",
-            "Resolution":1e-06,
             "Signed":false},
           {
             "Order":9,
@@ -29715,7 +29631,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":2,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":5,
@@ -29843,7 +29758,6 @@
             "BitOffset":32,
             "BitStart":0,
             "Match":1,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -29950,7 +29864,6 @@
             "BitOffset":32,
             "BitStart":0,
             "Match":1,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":6,
@@ -30037,7 +29950,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Match":2,
-            "Type":"Lookup table",
             "Signed":false},
           {
             "Order":5,
