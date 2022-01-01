@@ -212,6 +212,11 @@ typedef struct
 
 #define ONE_BYTE_FIELD(nam) SIMPLE_FIELD(nam, BYTES(1))
 
+#define STRINGLZ_FIELD(nam, len)                                            \
+  {                                                                         \
+    .name = nam, .size = len, .resolution = RES_STRINGLZ, .description = "" \
+  }
+
 typedef struct
 {
   const char *name;
@@ -4599,7 +4604,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Signal level", 4) // ... and this, doesn't make complete sense compared to display
       ,
       RESERVED_FIELD(2),
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Text", BYTES(32)),
       {0}}}
 
     ,
@@ -4643,7 +4648,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       INTEGER_FIELD("Source ID", BYTES(1)),
       INTEGER_FIELD("A", 8),
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Text", BYTES(32)),
       {0}}}
 
     ,
@@ -4693,7 +4698,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Signal level", 4) // ... and this, doesn't make complete sense compared to display
       ,
       RESERVED_FIELD(2),
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Text", BYTES(32)),
       {0}}}
 
     ,
@@ -4727,7 +4732,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("Proprietary ID", BYTES(1), 14, "Track"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       INTEGER_FIELD("Item", BYTES(4)),
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Text", BYTES(32)),
       {0}}}
 
     ,
@@ -4742,7 +4747,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("Proprietary ID", BYTES(1), 15, "Artist"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       INTEGER_FIELD("Item", BYTES(4)),
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Text", BYTES(32)),
       {0}}}
 
     ,
@@ -4757,7 +4762,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("Proprietary ID", BYTES(1), 16, "Album"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       INTEGER_FIELD("Item", BYTES(4)),
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Text", BYTES(32)),
       {0}}}
 
     ,
@@ -4775,7 +4780,7 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("C"),
       ONE_BYTE_FIELD("D"),
       ONE_BYTE_FIELD("E"),
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Text", BYTES(32)),
       {0}}}
 
     ,
@@ -4969,7 +4974,7 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("Current Source ID"),
       ONE_BYTE_FIELD("D"),
       ONE_BYTE_FIELD("E"),
-      {"Source", BYTES(5), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Source", BYTES(5)),
       {0}}}
 
     ,
@@ -5002,7 +5007,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("Message ID", BYTES(1), 5, "Track Title"),
       ONE_BYTE_FIELD("A"),
       SIMPLE_FIELD("B", BYTES(5)),
-      {"Track", BYTES(10), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Track", BYTES(10)),
       {0}}}
 
     ,
@@ -5016,7 +5021,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("Message ID", BYTES(1), 6, "Track Artist"),
       ONE_BYTE_FIELD("A"),
       SIMPLE_FIELD("B", BYTES(5)),
-      {"Artist", BYTES(10), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Artist", BYTES(10)),
       {0}}}
 
     ,
@@ -5030,7 +5035,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("Message ID", BYTES(1), 7, "Track Album"),
       ONE_BYTE_FIELD("A"),
       SIMPLE_FIELD("B", BYTES(5)),
-      {"Album", BYTES(10), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Album", BYTES(10)),
       {0}}}
 
     ,
@@ -5043,7 +5048,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_FIELD("Message ID", BYTES(1), 33, "Unit Name"),
       ONE_BYTE_FIELD("A"),
-      {"Name", BYTES(14), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Name", BYTES(14)),
       {0}}}
 
     ,
@@ -5057,7 +5062,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("Message ID", BYTES(1), 45, "Zone Name"),
       ONE_BYTE_FIELD("A"),
       ONE_BYTE_FIELD("Number"),
-      {"Name", BYTES(13), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Name", BYTES(13)),
       {0}}}
 
     ,
@@ -5088,7 +5093,7 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("B"),
       RADIO_FREQUENCY_FIELD("Frequency", 1),
       ONE_BYTE_FIELD("C"),
-      {"Track", BYTES(10), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Track", BYTES(10)),
       {0}}}
 
     ,
@@ -5152,7 +5157,7 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("G"),
       ONE_BYTE_FIELD("H"),
       ONE_BYTE_FIELD("I"),
-      {"Text", BYTES(5), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Text", BYTES(5)),
       {0}}}
 
     ,
@@ -5261,7 +5266,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_FIELD("Message ID", BYTES(1), 36, "SiriusXM Channel"),
       SIMPLE_FIELD("A", BYTES(4)),
-      {"Channel", BYTES(12), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Channel", BYTES(12)),
       {0}}}
 
     ,
@@ -5274,7 +5279,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_FIELD("Message ID", BYTES(1), 37, "SiriusXM Title"),
       SIMPLE_FIELD("A", BYTES(4)),
-      {"Title", BYTES(12), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Title", BYTES(12)),
       {0}}}
 
     ,
@@ -5287,7 +5292,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_FIELD("Message ID", BYTES(1), 38, "SiriusXM Artist"),
       SIMPLE_FIELD("A", BYTES(4)),
-      {"Artist", BYTES(12), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Artist", BYTES(12)),
       {0}}}
 
     ,
@@ -5300,7 +5305,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_FIELD("Message ID", BYTES(1), 40, "SiriusXM Genre"),
       SIMPLE_FIELD("A", BYTES(4)),
-      {"Genre", BYTES(12), RES_STRINGLZ, false, 0, ""},
+      STRINGLZ_FIELD("Genre", BYTES(12)),
       {0}}}
 
     /* M/V Dirona */
