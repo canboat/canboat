@@ -23,6 +23,8 @@ limitations under the License.
 #include "common.h"
 #include "parse.h"
 
+#define PROPRIETARY_PGN_ONLY "=proprietary pgn only"
+
 #define RES_LAT_LONG_PRECISION (10000000) /* 1e7 */
 #define RES_LAT_LONG (1.0e-7)
 #define RES_LAT_LONG_64 (1.0e-16)
@@ -125,6 +127,28 @@ typedef struct
       RESERVED_FIELD(2),                                                                                          \
   {                                                                                                               \
     .name = "Industry Code", .size = 3, .resolution = RES_LOOKUP, .units = "=4", .description = "Marine Industry" \
+  }
+
+#define MANUFACTURER_FIELDS                                                                                        \
+  {.name = "Manufacturer Code", .size = 11, .resolution = RES_MANUFACTURER, .description = ""}, RESERVED_FIELD(2), \
+      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE)
+
+#define MANUFACTURER_PROPRIETARY_FIELDS                                                                                          \
+  {.name        = "Manufacturer Code",                                                                                           \
+   .size        = 11,                                                                                                            \
+   .resolution  = RES_MANUFACTURER,                                                                                              \
+   .units       = PROPRIETARY_PGN_ONLY,                                                                                          \
+   .description = "Only in PGN when PRN is proprietary",                                                                         \
+   .lookupValue = lookupValueMANUFACTURER_CODE,                                                                                  \
+   .lookupName  = "MANUFACTURER_CODE"},                                                                                           \
+      {.name        = "Reserved",                                                                                                \
+       .size        = 2,                                                                                                         \
+       .resolution  = RES_BINARY,                                                                                                \
+       .units       = PROPRIETARY_PGN_ONLY,                                                                                      \
+       .description = "Only in PGN when PRN is proprietary"},                                                                    \
+  {                                                                                                                              \
+    .name = "Industry code", .size = 3, .resolution = RES_LOOKUP, .units = PROPRIETARY_PGN_ONLY,                                 \
+    .description = "Only in PGN when PRN is proprietary", .lookupValue = lookupValueINDUSTRY_CODE, .lookupName = "INDUSTRY_CODE" \
   }
 
 typedef struct
@@ -411,11 +435,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      RESERVED_FIELD(2),
-      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
-      BINARY_FIELD("Data", BYTES(6), ""),
-      {0}},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), ""), {0}},
      0,
      0,
      true}
@@ -429,11 +449,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      RESERVED_FIELD(2),
-      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
-      BINARY_FIELD("Data", BYTES(6), ""),
-      {0}},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), ""), {0}},
      0,
      0,
      true}
@@ -818,11 +834,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      RESERVED_FIELD(2),
-      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
-      BINARY_FIELD("Data", BYTES(6), ""),
-      {0}},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), ""), {0}},
      0,
      0,
      true}
@@ -1173,12 +1185,7 @@ Pgn pgnList[] = {
      102,
      {{"Function Code", BYTES(1), RES_INTEGER, false, "=3", "Read Fields"},
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      RESERVED_FIELD(2) // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE) // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
+      MANUFACTURER_PROPRIETARY_FIELDS,
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
@@ -1187,7 +1194,6 @@ Pgn pgnList[] = {
       {"Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
 
-    /* The following won't work when analyzing non-proprietary PGNs */
     ,
     {"NMEA - Read Fields reply group function",
      126208,
@@ -1197,12 +1203,7 @@ Pgn pgnList[] = {
      202,
      {{"Function Code", BYTES(1), RES_INTEGER, false, "=4", "Read Fields Reply"},
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "Only for proprietary PGNs"},
-      // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"},
-      // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      LOOKUP_FIELD_DESC("Industry Code", 3, INDUSTRY_CODE, "Only for proprietary PGNs"),
+      MANUFACTURER_PROPRIETARY_FIELDS,
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
@@ -1212,7 +1213,6 @@ Pgn pgnList[] = {
       {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
       {0}}}
 
-    /* The following won't work when analyzing non-proprietary PGNs */
     ,
     {"NMEA - Write Fields group function",
      126208,
@@ -1222,12 +1222,7 @@ Pgn pgnList[] = {
      202,
      {{"Function Code", BYTES(1), RES_INTEGER, false, "=5", "Write Fields"},
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "Only for proprietary PGNs"},
-      // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"},
-      // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      LOOKUP_FIELD_DESC("Industry Code", 3, INDUSTRY_CODE, "Only for proprietary PGNs"),
+      MANUFACTURER_PROPRIETARY_FIELDS,
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
@@ -1237,7 +1232,6 @@ Pgn pgnList[] = {
       {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
       {0}}}
 
-    /* The following won't work when analyzing non-proprietary PGNs */
     ,
     {"NMEA - Write Fields reply group function",
      126208,
@@ -1247,12 +1241,7 @@ Pgn pgnList[] = {
      202,
      {{"Function Code", BYTES(1), RES_INTEGER, false, "=6", "Write Fields Reply"},
       {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, "Only for proprietary PGNs"},
-      // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"},
-      // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      LOOKUP_FIELD_DESC("Industry Code", 3, INDUSTRY_CODE, "Only for proprietary PGNs"),
+      MANUFACTURER_PROPRIETARY_FIELDS,
       {"Unique ID", 8, RES_INTEGER, false, 0, ""},
       {"# of Selection Pairs", 8, 1, false, 0, ""},
       {"# of Parameters", 8, 1, false, 0, ""},
@@ -1646,11 +1635,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      223,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      RESERVED_FIELD(2),
-      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
-      BINARY_FIELD("Data", BYTES(221), ""),
-      {0}},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), ""), {0}},
      0,
      0,
      true}
@@ -4822,11 +4807,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      223,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      RESERVED_FIELD(2),
-      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
-      BINARY_FIELD("Data", BYTES(221), ""),
-      {0}},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), ""), {0}},
      0,
      0,
      true}

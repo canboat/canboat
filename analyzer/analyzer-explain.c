@@ -402,6 +402,11 @@ static void explainPGNXML(Pgn pgn)
       printXML(10, "Id", f.camelName);
       printXML(10, "Name", f.name);
 
+      if (f.units && strcmp(f.units, PROPRIETARY_PGN_ONLY) == 0)
+      {
+        showBitOffset = false;
+      }
+
       if (f.description && f.description[0] && f.description[0] != ',')
       {
         printXML(10, "Description", f.description);
@@ -410,8 +415,8 @@ static void explainPGNXML(Pgn pgn)
       if (showBitOffset)
       {
         printf("          <BitOffset>%u</BitOffset>\n", bitOffset);
+        printf("          <BitStart>%u</BitStart>\n", bitOffset % 8);
       }
-      printf("          <BitStart>%u</BitStart>\n", bitOffset % 8);
       bitOffset = bitOffset + f.size;
 
       if (f.units && f.units[0] == '=')
@@ -497,7 +502,7 @@ static void explainPGNXML(Pgn pgn)
         printf("          </EnumBitValues>\n");
       }
 
-      if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU)
+      if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU || f.resolution == RES_VARIABLE)
       {
         showBitOffset = false; // From here on there is no good bitoffset to be printed
       }

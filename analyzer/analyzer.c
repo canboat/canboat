@@ -1103,7 +1103,7 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
 
   if (value <= maxValue - reserved)
   {
-    if (field->units && field->units[0] == '=')
+    if (field->units && field->units[0] == '=' && isdigit(field->units[2]))
     {
       char        lookfor[20];
       const char *s;
@@ -1306,7 +1306,7 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
         {
           mprintf("%s %s = %.*f km", getSep(), fieldName, precision + 3, a / 1000);
         }
-        else
+        else if (units && units[0] != '=')
         {
           mprintf("%s %s = %.*f", getSep(), fieldName, precision, a);
           if (units)
@@ -1797,6 +1797,20 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     // where they are zero. Some AIS devices (SRT) produce an 8 bit long
     // nav status, others just a four bit one.
     return true;
+  }
+
+  if (field->units && strcmp(field->units, PROPRIETARY_PGN_ONLY) == 0)
+  {
+    if ((refPgn >= 65280 && refPgn <= 65535) || (refPgn >= 126720 && refPgn <= 126975) || (refPgn >= 130816 && refPgn <= 131071))
+    {
+      // proprietary, allow field
+    }
+    else
+    {
+      // standard PGN, skip field
+      *bits = 0;
+      return true;
+    }
   }
   if (field->resolution < 0.0)
   {

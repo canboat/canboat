@@ -6631,9 +6631,11 @@ limitations under the License.
           <Order>3</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>11</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Match>proprietary pgn only</Match>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
         </Field>
@@ -6641,19 +6643,19 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>2</BitLength>
-          <BitOffset>43</BitOffset>
-          <BitStart>3</BitStart>
+          <Match>proprietary pgn only</Match>
           <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>industryCode</Id>
-          <Name>Industry Code</Name>
+          <Name>Industry code</Name>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>3</BitLength>
-          <BitOffset>45</BitOffset>
-          <BitStart>5</BitStart>
+          <Match>proprietary pgn only</Match>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='INDUSTRY_CODE'>
@@ -6670,8 +6672,6 @@ limitations under the License.
           <Id>uniqueId</Id>
           <Name>Unique ID</Name>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -6681,8 +6681,6 @@ limitations under the License.
           <Id>OfSelectionPairs</Id>
           <Name># of Selection Pairs</Name>
           <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6690,8 +6688,6 @@ limitations under the License.
           <Id>OfParameters</Id>
           <Name># of Parameters</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6699,8 +6695,6 @@ limitations under the License.
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -6710,8 +6704,6 @@ limitations under the License.
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
           <BitLength>0</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6719,8 +6711,6 @@ limitations under the License.
           <Id>parameter</Id>
           <Name>Parameter</Name>
           <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -6766,10 +6756,11 @@ limitations under the License.
           <Order>3</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Only for proprietary PGNs</Description>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>11</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Match>proprietary pgn only</Match>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
         </Field>
@@ -6777,21 +6768,19 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Only for proprietary PGNs</Description>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>2</BitLength>
-          <BitOffset>43</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Match>proprietary pgn only</Match>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Only for proprietary PGNs</Description>
+          <Name>Industry code</Name>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>3</BitLength>
-          <BitOffset>45</BitOffset>
-          <BitStart>5</BitStart>
+          <Match>proprietary pgn only</Match>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='INDUSTRY_CODE'>
@@ -6808,8 +6797,6 @@ limitations under the License.
           <Id>uniqueId</Id>
           <Name>Unique ID</Name>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -6819,8 +6806,6 @@ limitations under the License.
           <Id>OfSelectionPairs</Id>
           <Name># of Selection Pairs</Name>
           <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6828,8 +6813,6 @@ limitations under the License.
           <Id>OfParameters</Id>
           <Name># of Parameters</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6837,8 +6820,6 @@ limitations under the License.
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -6848,8 +6829,6 @@ limitations under the License.
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
           <BitLength>0</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6857,8 +6836,6 @@ limitations under the License.
           <Id>parameter</Id>
           <Name>Parameter</Name>
           <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -6868,8 +6845,6 @@ limitations under the License.
           <Id>value</Id>
           <Name>Value</Name>
           <BitLength>0</BitLength>
-          <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -6913,10 +6888,11 @@ limitations under the License.
           <Order>3</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Only for proprietary PGNs</Description>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>11</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Match>proprietary pgn only</Match>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
         </Field>
@@ -6924,21 +6900,19 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Only for proprietary PGNs</Description>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>2</BitLength>
-          <BitOffset>43</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Match>proprietary pgn only</Match>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Only for proprietary PGNs</Description>
+          <Name>Industry code</Name>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>3</BitLength>
-          <BitOffset>45</BitOffset>
-          <BitStart>5</BitStart>
+          <Match>proprietary pgn only</Match>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='INDUSTRY_CODE'>
@@ -6955,8 +6929,6 @@ limitations under the License.
           <Id>uniqueId</Id>
           <Name>Unique ID</Name>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -6966,8 +6938,6 @@ limitations under the License.
           <Id>OfSelectionPairs</Id>
           <Name># of Selection Pairs</Name>
           <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6975,8 +6945,6 @@ limitations under the License.
           <Id>OfParameters</Id>
           <Name># of Parameters</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6984,8 +6952,6 @@ limitations under the License.
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -6995,8 +6961,6 @@ limitations under the License.
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
           <BitLength>0</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7004,8 +6968,6 @@ limitations under the License.
           <Id>parameter</Id>
           <Name>Parameter</Name>
           <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -7015,8 +6977,6 @@ limitations under the License.
           <Id>value</Id>
           <Name>Value</Name>
           <BitLength>0</BitLength>
-          <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -7060,10 +7020,11 @@ limitations under the License.
           <Order>3</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Only for proprietary PGNs</Description>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>11</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Match>proprietary pgn only</Match>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
         </Field>
@@ -7071,21 +7032,19 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>Only for proprietary PGNs</Description>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>2</BitLength>
-          <BitOffset>43</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>0</Resolution>
+          <Match>proprietary pgn only</Match>
+          <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Only for proprietary PGNs</Description>
+          <Name>Industry code</Name>
+          <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>3</BitLength>
-          <BitOffset>45</BitOffset>
-          <BitStart>5</BitStart>
+          <Match>proprietary pgn only</Match>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='INDUSTRY_CODE'>
@@ -7102,8 +7061,6 @@ limitations under the License.
           <Id>uniqueId</Id>
           <Name>Unique ID</Name>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -7113,8 +7070,6 @@ limitations under the License.
           <Id>OfSelectionPairs</Id>
           <Name># of Selection Pairs</Name>
           <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7122,8 +7077,6 @@ limitations under the License.
           <Id>OfParameters</Id>
           <Name># of Parameters</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7131,8 +7084,6 @@ limitations under the License.
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -7142,8 +7093,6 @@ limitations under the License.
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
           <BitLength>0</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7151,8 +7100,6 @@ limitations under the License.
           <Id>parameter</Id>
           <Name>Parameter</Name>
           <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -7162,8 +7109,6 @@ limitations under the License.
           <Id>value</Id>
           <Name>Value</Name>
           <BitLength>0</BitLength>
-          <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -10169,7 +10114,6 @@ limitations under the License.
           <Id>alertLocationTextDescription</Id>
           <Name>Alert Location Text Description</Name>
           <BitLength>128</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -10490,7 +10434,6 @@ limitations under the License.
           <Id>installationDescription2</Id>
           <Name>Installation Description #2</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -10499,7 +10442,6 @@ limitations under the License.
           <Id>manufacturerInformation</Id>
           <Name>Manufacturer Information</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -22109,7 +22051,6 @@ limitations under the License.
           <Name>Latitude of Vessel Reported</Name>
           <Description>offset depends on previous field, as do all following fields</Description>
           <BitLength>32</BitLength>
-          <BitStart>0</BitStart>
           <Units>deg</Units>
           <Type>Latitude</Type>
           <Resolution>0.0000001</Resolution>
@@ -22120,7 +22061,6 @@ limitations under the License.
           <Id>longitudeOfVesselReported</Id>
           <Name>Longitude of Vessel Reported</Name>
           <BitLength>32</BitLength>
-          <BitStart>0</BitStart>
           <Units>deg</Units>
           <Type>Longitude</Type>
           <Resolution>0.0000001</Resolution>
@@ -22132,7 +22072,6 @@ limitations under the License.
           <Name>Time of Position</Name>
           <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
-          <BitStart>0</BitStart>
           <Units>s</Units>
           <Type>Time</Type>
           <Resolution>0.0001</Resolution>
@@ -22143,7 +22082,6 @@ limitations under the License.
           <Id>mmsiOfShipInDistress</Id>
           <Name>MMSI of Ship In Distress</Name>
           <BitLength>40</BitLength>
-          <BitStart>0</BitStart>
           <Units>MMSI</Units>
           <Type>Decimal encoded number</Type>
           <Signed>false</Signed>
@@ -22153,7 +22091,6 @@ limitations under the License.
           <Id>dscEosSymbol</Id>
           <Name>DSC EOS Symbol</Name>
           <BitLength>8</BitLength>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -22161,7 +22098,6 @@ limitations under the License.
           <Id>expansionEnabled</Id>
           <Name>Expansion Enabled</Name>
           <BitLength>2</BitLength>
-          <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='YES_NO'>
@@ -22174,7 +22110,6 @@ limitations under the License.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
-          <BitStart>2</BitStart>
           <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -22183,7 +22118,6 @@ limitations under the License.
           <Id>callingRxFrequencyChannel</Id>
           <Name>Calling Rx Frequency/Channel</Name>
           <BitLength>48</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII text</Type>
           <Signed>false</Signed>
         </Field>
@@ -22192,7 +22126,6 @@ limitations under the License.
           <Id>callingTxFrequencyChannel</Id>
           <Name>Calling Tx Frequency/Channel</Name>
           <BitLength>48</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII text</Type>
           <Signed>false</Signed>
         </Field>
@@ -22202,7 +22135,6 @@ limitations under the License.
           <Name>Time of Receipt</Name>
           <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
-          <BitStart>0</BitStart>
           <Units>s</Units>
           <Type>Time</Type>
           <Resolution>0.0001</Resolution>
@@ -22214,7 +22146,6 @@ limitations under the License.
           <Name>Date of Receipt</Name>
           <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Units>days</Units>
           <Type>Date</Type>
           <Resolution>1</Resolution>
@@ -22225,7 +22156,6 @@ limitations under the License.
           <Id>dscEquipmentAssignedMessageId</Id>
           <Name>DSC Equipment Assigned Message ID</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -22233,7 +22163,6 @@ limitations under the License.
           <Id>dscExpansionFieldSymbol</Id>
           <Name>DSC Expansion Field Symbol</Name>
           <BitLength>8</BitLength>
-          <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='DSC_EXPANSION_DATA'>
@@ -22251,7 +22180,6 @@ limitations under the License.
           <Id>dscExpansionFieldData</Id>
           <Name>DSC Expansion Field Data</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -22407,7 +22335,6 @@ limitations under the License.
           <Name>Latitude of Vessel Reported</Name>
           <Description>offset depends on previous field, as do all following fields</Description>
           <BitLength>32</BitLength>
-          <BitStart>0</BitStart>
           <Units>deg</Units>
           <Type>Latitude</Type>
           <Resolution>0.0000001</Resolution>
@@ -22418,7 +22345,6 @@ limitations under the License.
           <Id>longitudeOfVesselReported</Id>
           <Name>Longitude of Vessel Reported</Name>
           <BitLength>32</BitLength>
-          <BitStart>0</BitStart>
           <Units>deg</Units>
           <Type>Longitude</Type>
           <Resolution>0.0000001</Resolution>
@@ -22430,7 +22356,6 @@ limitations under the License.
           <Name>Time of Position</Name>
           <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
-          <BitStart>0</BitStart>
           <Units>s</Units>
           <Type>Time</Type>
           <Resolution>0.0001</Resolution>
@@ -22441,7 +22366,6 @@ limitations under the License.
           <Id>mmsiOfShipInDistress</Id>
           <Name>MMSI of Ship In Distress</Name>
           <BitLength>40</BitLength>
-          <BitStart>0</BitStart>
           <Units>MMSI</Units>
           <Type>Decimal encoded number</Type>
           <Signed>false</Signed>
@@ -22451,7 +22375,6 @@ limitations under the License.
           <Id>dscEosSymbol</Id>
           <Name>DSC EOS Symbol</Name>
           <BitLength>8</BitLength>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -22459,7 +22382,6 @@ limitations under the License.
           <Id>expansionEnabled</Id>
           <Name>Expansion Enabled</Name>
           <BitLength>2</BitLength>
-          <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='YES_NO'>
@@ -22472,7 +22394,6 @@ limitations under the License.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
-          <BitStart>2</BitStart>
           <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -22481,7 +22402,6 @@ limitations under the License.
           <Id>callingRxFrequencyChannel</Id>
           <Name>Calling Rx Frequency/Channel</Name>
           <BitLength>48</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII text</Type>
           <Signed>false</Signed>
         </Field>
@@ -22490,7 +22410,6 @@ limitations under the License.
           <Id>callingTxFrequencyChannel</Id>
           <Name>Calling Tx Frequency/Channel</Name>
           <BitLength>48</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII text</Type>
           <Signed>false</Signed>
         </Field>
@@ -22500,7 +22419,6 @@ limitations under the License.
           <Name>Time of Receipt</Name>
           <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
-          <BitStart>0</BitStart>
           <Units>s</Units>
           <Type>Time</Type>
           <Resolution>0.0001</Resolution>
@@ -22512,7 +22430,6 @@ limitations under the License.
           <Name>Date of Receipt</Name>
           <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Units>days</Units>
           <Type>Date</Type>
           <Resolution>1</Resolution>
@@ -22523,7 +22440,6 @@ limitations under the License.
           <Id>dscEquipmentAssignedMessageId</Id>
           <Name>DSC Equipment Assigned Message ID</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -22531,7 +22447,6 @@ limitations under the License.
           <Id>dscExpansionFieldSymbol</Id>
           <Name>DSC Expansion Field Symbol</Name>
           <BitLength>8</BitLength>
-          <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='DSC_EXPANSION_DATA'>
@@ -22549,7 +22464,6 @@ limitations under the License.
           <Id>dscExpansionFieldData</Id>
           <Name>DSC Expansion Field Data</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26123,7 +26037,6 @@ limitations under the License.
           <Id>track</Id>
           <Name>Track</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -26133,7 +26046,6 @@ limitations under the License.
           <Id>station</Id>
           <Name>Station</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -26143,7 +26055,6 @@ limitations under the License.
           <Id>favorite</Id>
           <Name>Favorite</Name>
           <BitLength>8</BitLength>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -26153,7 +26064,6 @@ limitations under the License.
           <Id>radioFrequency</Id>
           <Name>Radio frequency</Name>
           <BitLength>32</BitLength>
-          <BitStart>0</BitStart>
           <Units>Hz</Units>
           <Resolution>10</Resolution>
           <Signed>false</Signed>
@@ -26163,7 +26073,6 @@ limitations under the License.
           <Id>hdFrequency</Id>
           <Name>HD Frequency</Name>
           <BitLength>8</BitLength>
-          <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -26173,7 +26082,6 @@ limitations under the License.
           <Id>zone</Id>
           <Name>Zone</Name>
           <BitLength>8</BitLength>
-          <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='ENTERTAINMENT_ZONE'>
@@ -26189,7 +26097,6 @@ limitations under the License.
           <Id>inPlayQueue</Id>
           <Name>In play queue</Name>
           <BitLength>2</BitLength>
-          <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='YES_NO'>
@@ -26202,7 +26109,6 @@ limitations under the License.
           <Id>locked</Id>
           <Name>Locked</Name>
           <BitLength>2</BitLength>
-          <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='YES_NO'>
@@ -26215,7 +26121,6 @@ limitations under the License.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
-          <BitStart>4</BitStart>
           <Type>Binary data</Type>
           <Signed>false</Signed>
         </Field>
@@ -26224,7 +26129,6 @@ limitations under the License.
           <Id>artist</Id>
           <Name>Artist</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26233,7 +26137,6 @@ limitations under the License.
           <Id>album</Id>
           <Name>Album</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26242,7 +26145,6 @@ limitations under the License.
           <Id>station</Id>
           <Name>Station</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26530,7 +26432,6 @@ limitations under the License.
           <Id>groupType2</Id>
           <Name>Group type 2</Name>
           <BitLength>8</BitLength>
-          <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='ENTERTAINMENT_GROUP'>
@@ -26552,7 +26453,6 @@ limitations under the License.
           <Id>groupName2</Id>
           <Name>Group name 2</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26561,7 +26461,6 @@ limitations under the License.
           <Id>groupType3</Id>
           <Name>Group type 3</Name>
           <BitLength>8</BitLength>
-          <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='ENTERTAINMENT_GROUP'>
@@ -26583,7 +26482,6 @@ limitations under the License.
           <Id>groupName3</Id>
           <Name>Group name 3</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26716,7 +26614,6 @@ limitations under the License.
           <Id>playSupport</Id>
           <Name>Play support</Name>
           <BitLength>32</BitLength>
-          <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
           <EnumBitValues Name='ENTERTAINMENT_PLAY_STATUS_BITFIELD'>
@@ -26753,7 +26650,6 @@ limitations under the License.
           <Id>browseSupport</Id>
           <Name>Browse support</Name>
           <BitLength>16</BitLength>
-          <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
           <EnumBitValues Name='ENTERTAINMENT_GROUP_BITFIELD'>
@@ -26775,7 +26671,6 @@ limitations under the License.
           <Id>thumbsSupport</Id>
           <Name>Thumbs support</Name>
           <BitLength>2</BitLength>
-          <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='YES_NO'>
@@ -26788,7 +26683,6 @@ limitations under the License.
           <Id>connected</Id>
           <Name>Connected</Name>
           <BitLength>2</BitLength>
-          <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <EnumValues Name='YES_NO'>
@@ -26801,7 +26695,6 @@ limitations under the License.
           <Id>repeatSupport</Id>
           <Name>Repeat support</Name>
           <BitLength>2</BitLength>
-          <BitStart>4</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
           <EnumBitValues Name='ENTERTAINMENT_REPEAT_BITFIELD'>
@@ -26814,7 +26707,6 @@ limitations under the License.
           <Id>shuffleSupport</Id>
           <Name>Shuffle support</Name>
           <BitLength>2</BitLength>
-          <BitStart>6</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
           <EnumBitValues Name='ENTERTAINMENT_SHUFFLE_BITFIELD'>
@@ -27680,7 +27572,6 @@ limitations under the License.
           <Id>signalStrength</Id>
           <Name>Signal strength</Name>
           <BitLength>8</BitLength>
-          <BitStart>0</BitStart>
           <Units>%</Units>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
