@@ -217,10 +217,36 @@ typedef struct
     .name = nam, .size = len, .resolution = RES_STRINGLZ, .description = "" \
   }
 
+#define ASCII_DESC_FIELD(nam, len, desc)                                   \
+  {                                                                        \
+    .name = nam, .size = len, .resolution = RES_ASCII, .description = desc \
+  }
+
+#define ASCII_FIELD(nam, len) ASCII_DESC_FIELD(nam, len, "")
+
 #define TEMPERATURE_HIGH_FIELD(nam)                                                                    \
   {                                                                                                    \
     .name = nam, .size = BYTES(2), .resolution = RES_TEMPERATURE_HIGH, .units = "K", .description = "" \
   }
+
+#define VARIABLE_FIELD(nam, desc)                                                      \
+  {                                                                                    \
+    .name = nam, .size = LEN_VARIABLE, .resolution = RES_VARIABLE, .description = desc \
+  }
+
+#define DISTANCE_FIELD(nam, len, res, desc)                                                         \
+  {                                                                                                 \
+    .name = nam, .size = len, .resolution = res, .hasSign = true, .units = "m", .description = desc \
+  }
+
+#define LENGTH_FIELD(nam, len, res, desc)                                          \
+  {                                                                                \
+    .name = nam, .size = len, .resolution = res, .units = "m", .description = desc \
+  }
+
+#define DECIMETERS_FIELD(nam) LENGTH_FIELD(nam, BYTES(2), 0.1, "")
+
+#define HIRES_LENGTH_FIELD(nam, res) LENGTH_FIELD(nam, BYTES(4), res, "")
 
 typedef struct
 {
@@ -897,7 +923,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {COMPANY(1855), {"Heave", BYTES(4), 0.001, true, "m", ""}, RESERVED_FIELD(BYTES(2)), {0}}}
+     {COMPANY(1855), DISTANCE_FIELD("Heave", BYTES(4), 0.001, ""), RESERVED_FIELD(BYTES(2)), {0}}}
 
     ,
     {"Manufacturer Proprietary single-frame non-addressed",
@@ -979,12 +1005,10 @@ Pgn pgnList[] = {
       INTEGER_FIELD("Format Code", 3),
       LOOKUP_FIELD("Access Level", 3, ACCESS_LEVEL),
       RESERVED_FIELD(2),
-      {"Access Seed/Key",
-       BYTES(4),
-       RES_INTEGER,
-       false,
-       0,
-       "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208."},
+      INTEGER_DESC_FIELD(
+          "Access Seed/Key",
+          BYTES(4),
+          "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208."),
       {0}}}
 
     ,
@@ -1206,7 +1230,7 @@ Pgn pgnList[] = {
       {"Transmission interval offset", BYTES(2), 0.01, false, "s", ""},
       SIMPLE_DESC_FIELD("# of Parameters", BYTES(1), "How many parameter pairs will follow"),
       INTEGER_DESC_FIELD("Parameter", BYTES(1), "Parameter index"),
-      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, "Parameter value, variable length"},
+      VARIABLE_FIELD("Value", "Parameter value, variable length"),
       {0}}}
 
     ,
@@ -1222,7 +1246,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       SIMPLE_DESC_FIELD("# of Parameters", BYTES(1), "How many parameter pairs will follow"),
       INTEGER_DESC_FIELD("Parameter", BYTES(1), "Parameter index"),
-      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, "Parameter value, variable length"},
+      VARIABLE_FIELD("Value", "Parameter value, variable length"),
       {0}}}
 
     ,
@@ -1254,7 +1278,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("# of Selection Pairs", 8),
       SIMPLE_FIELD("# of Parameters", 8),
       INTEGER_FIELD("Selection Parameter", BYTES(1)),
-      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
+      VARIABLE_FIELD("Selection Value", ""),
       INTEGER_FIELD("Parameter", BYTES(1)),
       {0}}}
 
@@ -1272,9 +1296,9 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("# of Selection Pairs", 8),
       SIMPLE_FIELD("# of Parameters", 8),
       INTEGER_FIELD("Selection Parameter", BYTES(1)),
-      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
+      VARIABLE_FIELD("Selection Value", ""),
       INTEGER_FIELD("Parameter", BYTES(1)),
-      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
+      VARIABLE_FIELD("Value", ""),
       {0}}}
 
     ,
@@ -1291,9 +1315,9 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("# of Selection Pairs", 8),
       SIMPLE_FIELD("# of Parameters", 8),
       INTEGER_FIELD("Selection Parameter", BYTES(1)),
-      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
+      VARIABLE_FIELD("Selection Value", ""),
       INTEGER_FIELD("Parameter", BYTES(1)),
-      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
+      VARIABLE_FIELD("Value", ""),
       {0}}}
 
     ,
@@ -1310,9 +1334,9 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("# of Selection Pairs", 8),
       SIMPLE_FIELD("# of Parameters", 8),
       INTEGER_FIELD("Selection Parameter", BYTES(1)),
-      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
+      VARIABLE_FIELD("Selection Value", ""),
       INTEGER_FIELD("Parameter", BYTES(1)),
-      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
+      VARIABLE_FIELD("Value", ""),
       {0}}}
 
     /************ RESPONSE TO REQUEST PGNS **************/
@@ -1840,10 +1864,10 @@ Pgn pgnList[] = {
      0,
      {SIMPLE_FIELD("NMEA 2000 Version", BYTES(2)),
       SIMPLE_FIELD("Product Code", BYTES(2)),
-      {"Model ID", BYTES(32), RES_ASCII, false, 0, ""},
-      {"Software Version Code", BYTES(32), RES_ASCII, false, 0, ""},
-      {"Model Version", BYTES(32), RES_ASCII, false, 0, ""},
-      {"Model Serial Code", BYTES(32), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Model ID", BYTES(32)),
+      ASCII_FIELD("Software Version Code", BYTES(32)),
+      ASCII_FIELD("Model Version", BYTES(32)),
+      ASCII_FIELD("Model Serial Code", BYTES(32)),
       ONE_BYTE_FIELD("Certification Level"),
       ONE_BYTE_FIELD("Load Equivalency"),
       {0}}}
@@ -1917,7 +1941,7 @@ Pgn pgnList[] = {
       ANGLE_POS_FIELD("Off-Heading Limit", ""),
       ANGLE_REL_FIELD("Radius of Turn Order", ""),
       {"Rate of Turn Order", BYTES(2), RES_ROTATION, true, "rad/s", ""},
-      {"Off-Track Limit", BYTES(2), 1, true, "m", ""},
+      DISTANCE_FIELD("Off-Track Limit", BYTES(2), 1, ""),
       ANGLE_POS_FIELD("Vessel Heading", ""),
       {0}}}
 
@@ -1973,7 +1997,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {ONE_BYTE_FIELD("SID"), {"Heave", BYTES(2), 0.01, true, "m", ""}, RESERVED_FIELD(BYTES(5)), {0}}}
+     {ONE_BYTE_FIELD("SID"), DISTANCE_FIELD("Heave", BYTES(2), 0.01, ""), RESERVED_FIELD(BYTES(5)), {0}}}
 
     ,
     {"Attitude",
@@ -2066,7 +2090,7 @@ Pgn pgnList[] = {
      10,
      0,
      {{"Time to Empty", BYTES(4), 0.001, false, "s", ""},
-      {"Distance to Empty", BYTES(4), 0.01, false, "m", ""},
+      HIRES_LENGTH_FIELD("Distance to Empty", 0.01),
       {"Estimated Fuel Remaining", BYTES(2), 1, false, "L", ""},
       {"Trip Run Time", BYTES(4), 0.001, false, "s", ""},
       {0}}}
@@ -2094,8 +2118,8 @@ Pgn pgnList[] = {
      0,
      {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       {"Rated Engine Speed", BYTES(2), 0.25, false, 0, "rpm"},
-      {"VIN", BYTES(17), RES_ASCII, false, 0, ""},
-      {"Software ID", BYTES(32), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("VIN", BYTES(17)),
+      ASCII_FIELD("Software ID", BYTES(32)),
       {0}}}
 
     ,
@@ -2562,9 +2586,9 @@ Pgn pgnList[] = {
      8,
      0,
      {ONE_BYTE_FIELD("SID"),
-      {"Depth", BYTES(4), 0.01, false, "m", "Depth below transducer"},
-      {"Offset", BYTES(2), 0.001, true, "m", "Distance between transducer and surface (positive) or keel (negative)"},
-      {"Range", BYTES(1), 10, false, "m", "Max measurement range"},
+      LENGTH_FIELD("Depth", BYTES(4), 0.01, "Depth below transducer"),
+      DISTANCE_FIELD("Offset", BYTES(2), 0.001, "Distance between transducer and surface (positive) or keel (negative)"),
+      LENGTH_FIELD("Range", BYTES(1), 10, "Max measurement range"),
       {0}}}
 
     /* http://www.nmea.org/Assets/nmea-2000-digital-interface-white-paper.pdf */
@@ -2577,8 +2601,8 @@ Pgn pgnList[] = {
      0,
      {{"Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
       {"Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
-      {"Log", BYTES(4), 1, false, "m", "Total cumulative distance"},
-      {"Trip Log", BYTES(4), 1, false, "m", "Distance since last reset"},
+      LENGTH_FIELD("Log", BYTES(4), 1, "Total cumulative distance"),
+      LENGTH_FIELD("Trip Log", BYTES(4), 1, "Distance since last reset"),
       {0}}}
 
     ,
@@ -2596,13 +2620,13 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Bearing Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(2),
       ANGLE_POS_FIELD("Bearing", ""),
-      {"Distance", BYTES(4), 0.001, false, "m", ""},
+      HIRES_LENGTH_FIELD("Distance", 0.001),
       ANGLE_POS_FIELD("Course", ""),
       SPEED_FIELD("Speed"),
-      {"CPA", BYTES(4), 0.01, false, "m", ""},
+      HIRES_LENGTH_FIELD("CPA", 0.01),
       {"TCPA", BYTES(4), 0.001, false, "s", "negative = time elapsed since event, positive = time to go"},
       {"UTC of Fix", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Name", BYTES(255), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Name", BYTES(255)),
       {0}}}
 
     ,
@@ -2648,7 +2672,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Windlass Motion Status", 2, WINDLASS_MOTION),
       LOOKUP_FIELD("Rode Type Status", 2, RODE_TYPE),
       RESERVED_FIELD(2),
-      {"Rode Counter Value", BYTES(2), 0.1, false, "m", ""},
+      DECIMETERS_FIELD("Rode Counter Value"),
       SPEED_FIELD("Windlass Line Speed"),
       LOOKUP_FIELD("Anchor Docking Status", 2, DOCKING_STATUS),
       LOOKUP_BITFIELD("Windlass Operating Events", 6, WINDLASS_OPERATION),
@@ -2738,7 +2762,7 @@ Pgn pgnList[] = {
       {"Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Latitude", BYTES(8), RES_LATITUDE, true, "deg", ""},
       {"Longitude", BYTES(8), RES_LONGITUDE, true, "deg", ""},
-      {"Altitude", BYTES(8), 1e-6, true, "m", "Altitude referenced to WGS-84"},
+      DISTANCE_FIELD("Altitude", BYTES(8), 1e-6, "Altitude referenced to WGS-84"),
       LOOKUP_FIELD("GNSS type", 4, GNS),
       LOOKUP_FIELD("Method", 4, GNS_METHOD),
       LOOKUP_FIELD("Integrity", 2, GNS_INTEGRITY),
@@ -2746,7 +2770,7 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("Number of SVs", BYTES(1), "Number of satellites used in solution"),
       {"HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision"},
       {"PDOP", BYTES(2), 0.01, true, 0, "Positional dilution of precision"},
-      {"Geoidal Separation", BYTES(4), 0.01, true, "m", "Geoidal Separation"},
+      DISTANCE_FIELD("Geoidal Separation", BYTES(4), 0.01, "Geoidal Separation"),
       SIMPLE_DESC_FIELD("Reference Stations", BYTES(1), "Number of reference stations"),
       LOOKUP_FIELD("Reference Station Type", 4, GNS),
       {"Reference Station ID", 12, 1, false, ""},
@@ -2859,11 +2883,11 @@ Pgn pgnList[] = {
       ANGLE_POS_FIELD("True Heading", ""),
       RESERVED_FIELD(4),
       LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
-      {"Length", BYTES(2), 0.1, false, "m", ""},
-      {"Beam", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
-      {"Name", BYTES(20), RES_ASCII, false, 0, ",0=unavailable"},
+      DECIMETERS_FIELD("Length"),
+      DECIMETERS_FIELD("Beam"),
+      DECIMETERS_FIELD("Position reference from Starboard"),
+      DECIMETERS_FIELD("Position reference from Bow"),
+      ASCII_FIELD("Name", BYTES(20)),
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
       LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
       RESERVED_FIELD(4),
@@ -2885,10 +2909,10 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
       LOOKUP_FIELD("AIS RAIM Flag", 1, RAIM_FLAG),
       LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
-      {"Length/Diameter", BYTES(2), 0.1, false, "m", ""},
-      {"Beam/Diameter", BYTES(2), 0.1, false, "m", ""},
-      {"Position Reference from Starboard Edge", BYTES(2), 0.1, false, "m", ""},
-      {"Position Reference from True North Facing Edge", BYTES(2), 0.1, false, "m", ""},
+      DECIMETERS_FIELD("Length/Diameter"),
+      DECIMETERS_FIELD("Beam/Diameter"),
+      DECIMETERS_FIELD("Position Reference from Starboard Edge"),
+      DECIMETERS_FIELD("Position Reference from True North Facing Edge"),
       LOOKUP_FIELD("AtoN Type", 5, ATON_TYPE),
       LOOKUP_FIELD("Off Position Indicator", 1, YES_NO),
       LOOKUP_FIELD("Virtual AtoN Flag", 1, YES_NO),
@@ -2909,25 +2933,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      20,
      0,
-     {{"Local Datum",
-       BYTES(4),
-       RES_ASCII,
-       false,
-       0,
-       "defined in IHO Publication S-60, Appendices B and C."
-       " First three chars are datum ID as per IHO tables."
-       " Fourth char is local datum subdivision code."},
+     {ASCII_DESC_FIELD("Local Datum",
+                       BYTES(4),
+                       "defined in IHO Publication S-60, Appendices B and C. First three chars are datum ID as per IHO tables."
+                       " Fourth char is local datum subdivision code."),
       {"Delta Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Delta Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Delta Altitude", BYTES(4), 1e-6, true, "m", ""},
-      {"Reference Datum",
-       BYTES(4),
-       RES_ASCII,
-       false,
-       0,
-       "defined in IHO Publication S-60, Appendices B and C."
-       " First three chars are datum ID as per IHO tables."
-       " Fourth char is local datum subdivision code."},
+      DISTANCE_FIELD("Delta Altitude", BYTES(4), 1e-6, ""),
+      ASCII_DESC_FIELD("Reference Datum",
+                       BYTES(4),
+                       "defined in IHO Publication S-60, Appendices B and C."
+                       " First three chars are datum ID as per IHO tables."
+                       " Fourth char is local datum subdivision code."),
       {0}}}
 
     ,
@@ -2937,9 +2954,9 @@ Pgn pgnList[] = {
      PACKET_FAST,
      37,
      0,
-     {{"Delta X", BYTES(4), 0.01, true, "m", "Delta shift in X axis from WGS 84"},
-      {"Delta Y", BYTES(4), 0.01, true, "m", "Delta shift in Y axis from WGS 84"},
-      {"Delta Z", BYTES(4), 0.01, true, "m", "Delta shift in Z axis from WGS 84"},
+     {DISTANCE_FIELD("Delta X", BYTES(4), 0.01, "Delta shift in X axis from WGS 84"),
+      DISTANCE_FIELD("Delta Y", BYTES(4), 0.01, "Delta shift in Y axis from WGS 84"),
+      DISTANCE_FIELD("Delta Z", BYTES(4), 0.01, "Delta shift in Z axis from WGS 84"),
       {"Rotation in X",
        BYTES(4),
        RES_FLOAT,
@@ -2962,16 +2979,13 @@ Pgn pgnList[] = {
        "Rotational shift in Z axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
        "positive axis towards the origin, counter-clockwise rotations are positive."},
       {"Scale", BYTES(4), RES_FLOAT, true, "ppm", "Scale factor expressed in parts-per-million"},
-      {"Ellipsoid Semi-major Axis", BYTES(4), 0.01, true, "m", "Semi-major axis (a) of the User Datum ellipsoid"},
+      DISTANCE_FIELD("Ellipsoid Semi-major Axis", BYTES(4), 0.01, "Semi-major axis (a) of the User Datum ellipsoid"),
       {"Ellipsoid Flattening Inverse", BYTES(4), RES_FLOAT, true, 0, "Flattening (1/f) of the User Datum ellipsoid"},
-      {"Datum Name",
-       BYTES(4),
-       RES_ASCII,
-       false,
-       0,
-       "4 character code from IHO Publication S-60,Appendices B and C."
-       " First three chars are datum ID as per IHO tables."
-       " Fourth char is local datum subdivision code."},
+      ASCII_DESC_FIELD("Datum Name",
+                       BYTES(4),
+                       "4 character code from IHO Publication S-60,Appendices B and C."
+                       " First three chars are datum ID as per IHO tables."
+                       " Fourth char is local datum subdivision code."),
       {0}}}
 
     ,
@@ -2985,7 +2999,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("XTE mode", 4, RESIDUAL_MODE),
       RESERVED_FIELD(2),
       LOOKUP_FIELD("Navigation Terminated", 2, YES_NO),
-      {"XTE", BYTES(4), 0.01, true, "m", ""},
+      DISTANCE_FIELD("XTE", BYTES(4), 0.01, ""),
       RESERVED_FIELD(BYTES(2)),
       {0}}}
 
@@ -2997,7 +3011,7 @@ Pgn pgnList[] = {
      0x22,
      0,
      {ONE_BYTE_FIELD("SID"),
-      {"Distance to Waypoint", BYTES(4), 0.01, false, "m", ""},
+      HIRES_LENGTH_FIELD("Distance to Waypoint", 0.01),
       LOOKUP_FIELD("Course/Bearing reference", 2, DIRECTION_REFERENCE),
       LOOKUP_FIELD("Perpendicular Crossed", 2, YES_NO),
       LOOKUP_FIELD("Arrival Circle Entered", 2, YES_NO),
@@ -3075,7 +3089,7 @@ Pgn pgnList[] = {
       {"Calculation Type", 2, RES_LOOKUP, false, 0, ""},
       RESERVED_FIELD(2),
       ANGLE_POS_FIELD("Bearing, Origin to Destination", ""),
-      {"Distance", BYTES(4), 0.01, false, "m", ""},
+      HIRES_LENGTH_FIELD("Distance", 0.01),
       {"Origin Mark Type", 4, RES_LOOKUP, false, 0, ""},
       LOOKUP_FIELD("Destination Mark Type", 4, MARK_TYPE),
       SIMPLE_FIELD("Origin Mark ID", BYTES(4)),
@@ -3099,7 +3113,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("DGNSS Mode (desired)", 3, DGNSS_MODE),
       SIMPLE_FIELD("Position/Velocity Filter", 2),
       SIMPLE_FIELD("Max Correction Age", BYTES(2)),
-      {"Antenna Altitude for 2D Mode", BYTES(2), 0.01, false, "m", ""},
+      LENGTH_FIELD("Antenna Altitude for 2D Mode", BYTES(2), 0.01, ""),
       LOOKUP_FIELD("Use Antenna Altitude for 2D Mode", 2, YES_NO),
       {0}}}
 
@@ -3371,17 +3385,17 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       INTEGER_DESC_FIELD("IMO number", BYTES(4), ",0=unavailable"),
-      {"Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable"},
-      {"Name", BYTES(20), RES_ASCII, false, 0, ",0=unavailable"},
+      ASCII_FIELD("Callsign", BYTES(7)),
+      ASCII_FIELD("Name", BYTES(20)),
       LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
-      {"Length", BYTES(2), 0.1, false, "m", ""},
-      {"Beam", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
+      DECIMETERS_FIELD("Length"),
+      DECIMETERS_FIELD("Beam"),
+      DECIMETERS_FIELD("Position reference from Starboard"),
+      DECIMETERS_FIELD("Position reference from Bow"),
       {"ETA Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       {"ETA Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Draft", BYTES(2), 0.01, false, "m", ""},
-      {"Destination", BYTES(20), RES_ASCII, false, 0, ",0=unavailable"},
+      LENGTH_FIELD("Draft", BYTES(2), 0.01, ""),
+      ASCII_FIELD("Destination", BYTES(20)),
       LOOKUP_FIELD("AIS version indicator", 2, AIS_VERSION),
       LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
@@ -3470,7 +3484,7 @@ Pgn pgnList[] = {
        0,
        "Information used by the TDMA slot allocation algorithm and synchronization information"},
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
-      {"Altitude", BYTES(8), 1e-6, true, "m", ""},
+      DISTANCE_FIELD("Altitude", BYTES(8), 1e-6, ""),
       BINARY_FIELD("Reserved for Regional Applications", BYTES(1), ""),
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
       RESERVED_FIELD(7),
@@ -3525,7 +3539,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(2),
       SIMPLE_FIELD("Retransmit flag", 1),
       RESERVED_FIELD(7),
-      {"Safety Related Text", BYTES(255), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Safety Related Text", BYTES(255)),
       {0}}}
 
     ,
@@ -3541,7 +3555,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(2),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(3),
-      {"Safety Related Text", BYTES(36), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Safety Related Text", BYTES(36)),
       {0}}}
 
     ,
@@ -3687,8 +3701,8 @@ Pgn pgnList[] = {
       {"DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank"},
       LOOKUP_FIELD("Nature of Distress", BYTES(1), DSC_NATURE),
       LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
-      {"Proposed Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Proposed Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Proposed Rx Frequency/Channel", BYTES(6)),
+      ASCII_FIELD("Proposed Tx Frequency/Channel", BYTES(6)),
       {"Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {"Latitude of Vessel Reported",
        BYTES(4),
@@ -3702,8 +3716,8 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("DSC EOS Symbol"),
       LOOKUP_FIELD("Expansion Enabled", 2, YES_NO),
       RESERVED_FIELD(6),
-      {"Calling Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Calling Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Calling Rx Frequency/Channel", BYTES(6)),
+      ASCII_FIELD("Calling Tx Frequency/Channel", BYTES(6)),
       {"Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       SIMPLE_FIELD("DSC Equipment Assigned Message ID", BYTES(2)),
@@ -3723,8 +3737,8 @@ Pgn pgnList[] = {
       {"DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank"},
       LOOKUP_FIELD("1st Telecommand", BYTES(1), DSC_FIRST_TELECOMMAND),
       LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
-      {"Proposed Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Proposed Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Proposed Rx Frequency/Channel", BYTES(6)),
+      ASCII_FIELD("Proposed Tx Frequency/Channel", BYTES(6)),
       {"Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {"Latitude of Vessel Reported",
        BYTES(4),
@@ -3738,8 +3752,8 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("DSC EOS Symbol"),
       LOOKUP_FIELD("Expansion Enabled", 2, YES_NO),
       RESERVED_FIELD(6),
-      {"Calling Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Calling Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Calling Rx Frequency/Channel", BYTES(6)),
+      ASCII_FIELD("Calling Tx Frequency/Channel", BYTES(6)),
       {"Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       SIMPLE_FIELD("DSC Equipment Assigned Message ID", BYTES(2)),
@@ -3757,7 +3771,7 @@ Pgn pgnList[] = {
      {SIMPLE_FIELD("Message ID", 6),
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Name", BYTES(20), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Name", BYTES(20)),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(3),
       INTEGER_FIELD("Sequence ID", BYTES(1)),
@@ -3774,12 +3788,12 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
-      {"Vendor ID", BYTES(7), RES_ASCII, false, 0, ""},
-      {"Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable"},
-      {"Length", BYTES(2), 0.1, false, "m", ""},
-      {"Beam", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
+      ASCII_FIELD("Vendor ID", BYTES(7)),
+      ASCII_FIELD("Callsign", BYTES(7)),
+      DECIMETERS_FIELD("Length"),
+      DECIMETERS_FIELD("Beam"),
+      DECIMETERS_FIELD("Position reference from Starboard"),
+      DECIMETERS_FIELD("Position reference from Bow"),
       {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "MMSI of mother ship sent by daughter vessels"},
       RESERVED_FIELD(2),
       INTEGER_DESC_FIELD("Spare", 6, ",0=unavailable"),
@@ -3807,7 +3821,7 @@ Pgn pgnList[] = {
 
           ,
       ONE_BYTE_FIELD("Database ID"),
-      {"Database Name", BYTES(8), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Database Name", BYTES(8)),
       {"Database Timestamp", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Database Datestamp", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       SIMPLE_FIELD("WP Position Resolution", 6),
@@ -3831,7 +3845,7 @@ Pgn pgnList[] = {
           ,
       ONE_BYTE_FIELD("Database ID"),
       ONE_BYTE_FIELD("Route ID"),
-      {"Route Name", BYTES(8), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Route Name", BYTES(8)),
       RESERVED_FIELD(4),
       SIMPLE_FIELD("WP Identification Method", 2),
       SIMPLE_FIELD("Route Status", 2),
@@ -3846,7 +3860,7 @@ Pgn pgnList[] = {
      0,
      {ONE_BYTE_FIELD("Database ID"),
       ONE_BYTE_FIELD("Route ID"),
-      {"Route/WP-List Name", BYTES(8), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Route/WP-List Name", BYTES(8)),
       {"Route/WP-List Timestamp", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Route/WP-List Datestamp", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       ONE_BYTE_FIELD("Change at Last Timestamp"),
@@ -3873,7 +3887,7 @@ Pgn pgnList[] = {
 
           ,
       ONE_BYTE_FIELD("WP ID"),
-      {"WP Name", BYTES(8), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("WP Name", BYTES(8)),
       {"WP Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"WP Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {0}}}
@@ -3891,7 +3905,7 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("Database ID"),
       ONE_BYTE_FIELD("Route ID"),
       ONE_BYTE_FIELD("WP ID"),
-      {"WP Name", BYTES(8), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("WP Name", BYTES(8)),
       {0}}}
 
     ,
@@ -3929,7 +3943,7 @@ Pgn pgnList[] = {
 
           ,
       ONE_BYTE_FIELD("WP ID / RPS#"),
-      {"Comment", BYTES(8), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Comment", BYTES(8)),
       {0}}}
 
     ,
@@ -3946,7 +3960,7 @@ Pgn pgnList[] = {
 
           ,
       ONE_BYTE_FIELD("Route ID"),
-      {"Comment", BYTES(8), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Comment", BYTES(8)),
       {0}}}
 
     ,
@@ -3962,7 +3976,7 @@ Pgn pgnList[] = {
 
           ,
       ONE_BYTE_FIELD("Database ID"),
-      {"Comment", BYTES(8), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Comment", BYTES(8)),
       {0}}}
 
     ,
@@ -3996,7 +4010,7 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("Database ID"),
       RESERVED_FIELD(BYTES(1)),
       ONE_BYTE_FIELD("WP ID"),
-      {"WP Name", BYTES(8), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("WP Name", BYTES(8)),
       {"WP Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"WP Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {0}}}
@@ -4128,8 +4142,8 @@ Pgn pgnList[] = {
       {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Tide Level", BYTES(2), 0.001, true, "m", "Relative to MLLW"},
-      {"Tide Level standard deviation", BYTES(2), 0.01, false, "m", ""},
+      DISTANCE_FIELD("Tide Level", BYTES(2), 0.001, "Relative to MLLW"),
+      LENGTH_FIELD("Tide Level standard deviation", BYTES(2), 0.01, ""),
       {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
       {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
       {0}}}
@@ -4173,7 +4187,7 @@ Pgn pgnList[] = {
       {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Measurement Depth", BYTES(4), 0.01, false, "m", "Depth below transducer"},
+      LENGTH_FIELD("Measurement Depth", BYTES(4), 0.01, "Depth below transducer"),
       SPEED_FIELD("Current speed"),
       ANGLE_POS_FIELD("Current flow direction", ""),
       {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
@@ -4229,7 +4243,7 @@ Pgn pgnList[] = {
       {"Pressure Tendency Rate", BYTES(2), 1, false, "", ""},
       {"Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Station ID", BYTES(8), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Station ID", BYTES(8)),
       {0}}}
 
     ,
@@ -4604,10 +4618,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Item", BYTES(1), SONICHUB_TUNING),
       RADIO_FREQUENCY_FIELD("Frequency", 1),
-      SIMPLE_FIELD("Noise level", 2) // Not sure about this
-      ,
-      SIMPLE_FIELD("Signal level", 4) // ... and this, doesn't make complete sense compared to display
-      ,
+      SIMPLE_FIELD("Noise level", 2),  // Not sure about this
+      SIMPLE_FIELD("Signal level", 4), // ... and this, doesn't make complete sense compared to display
       RESERVED_FIELD(2),
       STRINGLZ_FIELD("Text", BYTES(32)),
       {0}}}
@@ -4890,7 +4902,7 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("C"),
       ONE_BYTE_FIELD("SID"),
       ONE_BYTE_FIELD("Prio"),
-      {"Text", BYTES(32), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Text", BYTES(32)),
       {0}}}
 
     ,
@@ -4914,13 +4926,13 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       INTEGER_FIELD("Product Code", BYTES(2)),
-      {"Model", BYTES(32), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Model", BYTES(32)),
       ONE_BYTE_FIELD("A"),
       ONE_BYTE_FIELD("B"),
       ONE_BYTE_FIELD("C"),
-      {"Firmware version", BYTES(10), RES_ASCII, false, 0, ""},
-      {"Firmware date", BYTES(32), RES_ASCII, false, 0, ""},
-      {"Firmware time", BYTES(32), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Firmware version", BYTES(10)),
+      ASCII_FIELD("Firmware date", BYTES(32)),
+      ASCII_FIELD("Firmware time", BYTES(32)),
       {0}}}
 
     ,
@@ -5529,7 +5541,7 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("D"),
       ONE_BYTE_FIELD("E"),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Name", BYTES(20), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Name", BYTES(20)),
       {0}}}
 
     ,
@@ -5565,12 +5577,12 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("E"),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
       LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
-      {"Vendor ID", BYTES(7), RES_ASCII, false, 0, ""},
-      {"Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable"},
-      {"Length", BYTES(2), 0.1, false, "m", ""},
-      {"Beam", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
+      ASCII_FIELD("Vendor ID", BYTES(7)),
+      ASCII_FIELD("Callsign", BYTES(7)),
+      DECIMETERS_FIELD("Length"),
+      DECIMETERS_FIELD("Beam"),
+      DECIMETERS_FIELD("Position reference from Starboard"),
+      DECIMETERS_FIELD("Position reference from Bow"),
       {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "Id of mother ship sent by daughter vessels"},
       RESERVED_FIELD(2),
       INTEGER_DESC_FIELD("Spare", 6, ",0=unavailable"),
@@ -5773,7 +5785,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Message ID", BYTES(2)),
       ONE_BYTE_FIELD("B"),
       ONE_BYTE_FIELD("C"),
-      {"Text", BYTES(255), RES_ASCII, false, 0, ""},
+      ASCII_FIELD("Text", BYTES(255)),
       {0}}}
 
     ,
