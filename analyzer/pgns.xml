@@ -2672,6 +2672,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
+          <Units>Cos Phi</Units>
           <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -2803,6 +2804,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
+          <Units>Cos Phi</Units>
           <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -2935,8 +2937,9 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Units>Cos Phi</Units>
           <Resolution>0</Resolution>
-          <Signed>true</Signed>
+          <Signed>false</Signed>
         </Field>
         <Field>
           <Order>3</Order>
@@ -3067,6 +3070,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Units>Cos Phi</Units>
           <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -3219,11 +3223,11 @@ limitations under the License.
           <Order>1</Order>
           <Id>reactivePower</Id>
           <Name>Reactive Power</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>var</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
         <Field>
@@ -3231,8 +3235,9 @@ limitations under the License.
           <Id>powerFactor</Id>
           <Name>Power Factor</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Units>Cos Phi</Units>
           <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -3241,7 +3246,7 @@ limitations under the License.
           <Id>powerFactorLagging</Id>
           <Name>Power Factor Lagging</Name>
           <BitLength>2</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
@@ -3266,22 +3271,22 @@ limitations under the License.
           <Order>1</Order>
           <Id>realPower</Id>
           <Name>Real Power</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>apparentPower</Id>
           <Name>Apparent Power</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
       </Fields>
@@ -3351,11 +3356,11 @@ limitations under the License.
           <Order>1</Order>
           <Id>reactivePower</Id>
           <Name>Reactive Power</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>var</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
         <Field>
@@ -3363,8 +3368,9 @@ limitations under the License.
           <Id>powerFactor</Id>
           <Name>Power Factor</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Units>Cos Phi</Units>
           <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -3373,7 +3379,7 @@ limitations under the License.
           <Id>powerFactorLagging</Id>
           <Name>Power Factor Lagging</Name>
           <BitLength>2</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
@@ -3398,22 +3404,22 @@ limitations under the License.
           <Order>1</Order>
           <Id>realPower</Id>
           <Name>Real Power</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>apparentPower</Id>
           <Name>Apparent Power</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
       </Fields>
@@ -3483,11 +3489,11 @@ limitations under the License.
           <Order>1</Order>
           <Id>reactivePower</Id>
           <Name>Reactive Power</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>var</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
         <Field>
@@ -3495,8 +3501,9 @@ limitations under the License.
           <Id>powerFactor</Id>
           <Name>Power Factor</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Units>Cos Phi</Units>
           <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -3505,7 +3512,7 @@ limitations under the License.
           <Id>powerFactorLagging</Id>
           <Name>Power Factor Lagging</Name>
           <BitLength>2</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
@@ -3534,7 +3541,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
         <Field>
@@ -3545,7 +3552,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
       </Fields>
@@ -3615,11 +3622,11 @@ limitations under the License.
           <Order>1</Order>
           <Id>reactivePower</Id>
           <Name>Reactive Power</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>var</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
         <Field>
@@ -3627,8 +3634,9 @@ limitations under the License.
           <Id>powerFactor</Id>
           <Name>Power Factor</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Units>Cos Phi</Units>
           <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -3637,7 +3645,7 @@ limitations under the License.
           <Id>powerFactorLagging</Id>
           <Name>Power Factor Lagging</Name>
           <BitLength>2</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
@@ -3666,7 +3674,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
         <Field>
@@ -3677,7 +3685,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
           <Offset>-2000000000</Offset>
         </Field>
       </Fields>

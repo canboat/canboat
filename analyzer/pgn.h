@@ -268,6 +268,21 @@ typedef struct
     .name = nam, .size = BYTES(4), .resolution = 1, .units = "kWh", .description = "" \
   }
 
+#define AC_OFFSET_POWER_FIELD(nam, unit)                                                                                     \
+  {                                                                                                                          \
+    .name = nam, .size = BYTES(4), .resolution = 1, .hasSign = true, .units = unit, .offset = -2000000000, .description = "" \
+  }
+
+#define ISO_POWER_FACTOR_FIELD                                                                               \
+  {                                                                                                          \
+    .name = "Power Factor", .size = BYTES(2), .resolution = 1 / 16384, .units = "Cos Phi", .description = "" \
+  }
+
+#define POWER_FACTOR_FIELD                                                                              \
+  {                                                                                                     \
+    .name = "Power Factor", .size = BYTES(1), .resolution = 0.01, .units = "Cos Phi", .description = "" \
+  }
+
 typedef struct
 {
   const char *name;
@@ -639,7 +654,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Reactive Power", BYTES(2), 1, false, "var", ""},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
+      ISO_POWER_FACTOR_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
@@ -650,7 +665,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, true, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000}, {0}}}
+     {AC_OFFSET_POWER_FIELD("Real Power", "W"), AC_OFFSET_POWER_FIELD("Apparent Power", "VA"), {0}}}
 
     ,
     {"Utility Phase C Basic AC Quantities",
@@ -673,7 +688,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Reactive Power", BYTES(2), 1, false, "var", ""},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
+      ISO_POWER_FACTOR_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
@@ -684,7 +699,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, true, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000}, {0}}}
+     {AC_OFFSET_POWER_FIELD("Real Power", "W"), AC_OFFSET_POWER_FIELD("Apparent Power", "VA"), {0}}}
 
     ,
     {"Utility Phase B Basic AC Quantities",
@@ -706,8 +721,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(4), 1, true, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, true, 0, ""},
+     {AC_OFFSET_POWER_FIELD("Reactive Power", "var"),
+      ISO_POWER_FACTOR_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
@@ -718,7 +733,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, true, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000}, {0}}}
+     {AC_OFFSET_POWER_FIELD("Real Power", "W"), AC_OFFSET_POWER_FIELD("Apparent Power", "VA"), {0}}}
 
     ,
     {"Utility Phase A Basic AC Quantities",
@@ -740,8 +755,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(4), 1, true, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
+     {AC_OFFSET_POWER_FIELD("Reactive Power", "var"),
+      ISO_POWER_FACTOR_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
@@ -752,7 +767,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, true, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000}, {0}}}
+     {AC_OFFSET_POWER_FIELD("Real Power", "W"), AC_OFFSET_POWER_FIELD("Apparent Power", "VA"), {0}}}
 
     ,
     {"Utility Average Basic AC Quantities",
@@ -783,8 +798,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
+     {AC_OFFSET_POWER_FIELD("Reactive Power", "var"),
+      ISO_POWER_FACTOR_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
@@ -795,7 +810,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(2), 1, false, "W", "", -2000000000}, {"Apparent Power", BYTES(2), 1, false, "VA", "", -2000000000}, {0}}}
+     {AC_OFFSET_POWER_FIELD("Real Power", "W"), AC_OFFSET_POWER_FIELD("Apparent Power", "VA"), {0}}}
 
     ,
     {"Generator Phase C Basic AC Quantities",
@@ -817,8 +832,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
+     {AC_OFFSET_POWER_FIELD("Reactive Power", "var"),
+      ISO_POWER_FACTOR_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
@@ -829,7 +844,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(2), 1, false, "W", "", -2000000000}, {"Apparent Power", BYTES(2), 1, false, "VA", "", -2000000000}, {0}}}
+     {AC_OFFSET_POWER_FIELD("Real Power", "W"), AC_OFFSET_POWER_FIELD("Apparent Power", "VA"), {0}}}
 
     ,
     {"Generator Phase B Basic AC Quantities",
@@ -851,8 +866,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
+     {AC_OFFSET_POWER_FIELD("Reactive Power", "var"),
+      ISO_POWER_FACTOR_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
@@ -863,7 +878,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, false, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, false, "VA", "", -2000000000}, {0}}}
+     {AC_OFFSET_POWER_FIELD("Real Power", "W"), AC_OFFSET_POWER_FIELD("Apparent Power", "VA"), {0}}}
 
     ,
     {"Generator Phase A Basic AC Quantities",
@@ -885,8 +900,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
+     {AC_OFFSET_POWER_FIELD("Reactive Power", "var"),
+      ISO_POWER_FACTOR_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       {0}}}
 
@@ -897,7 +912,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, false, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, false, "VA", "", -2000000000}, {0}}}
+     {AC_OFFSET_POWER_FIELD("Real Power", "W"), AC_OFFSET_POWER_FIELD("Apparent Power", "VA"), {0}}}
 
     ,
     {"Generator Average Basic AC Quantities",
@@ -1178,8 +1193,7 @@ Pgn pgnList[] = {
       BINARY_FIELD("Sub Mode", BYTES(1), ""),
       BINARY_FIELD("Pilot Mode Data", BYTES(1), ""),
       RESERVED_FIELD(BYTES(3)),
-      {0}}}
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+      {0}}} /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Depth Quality Factor",
      65408,
@@ -2254,7 +2268,7 @@ Pgn pgnList[] = {
       {"Breaker Size", BYTES(2), 0.1, false, "A", ""},
       {"Real Power", BYTES(4), RES_INTEGER, false, "W", ""},
       {"Reactive Power", BYTES(4), RES_INTEGER, false, "VAR", ""},
-      {"Power Factor", BYTES(1), 0.01, false, "Cos Phi", ""},
+      POWER_FACTOR_FIELD,
       {0}}}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
@@ -2278,7 +2292,7 @@ Pgn pgnList[] = {
       {"Breaker Size", BYTES(2), 0.1, false, "A", ""},
       {"Real Power", BYTES(4), RES_INTEGER, false, "W", ""},
       {"Reactive Power", BYTES(4), RES_INTEGER, false, "VAR", ""},
-      {"Power Factor", BYTES(1), 0.01, false, "Cos Phi", ""},
+      POWER_FACTOR_FIELD,
       {0}}}
 
     /* http://www.maretron.com/support/manuals/TLA100UM_1.2.pdf */
@@ -5941,9 +5955,7 @@ Pgn pgnList[] = {
       INTEGER_DESC_FIELD("Uptime", BYTES(4), "s"),
       INTEGER_FIELD("Gateway address", BYTES(1)),
       INTEGER_FIELD("Rejected TX requests", BYTES(4)),
-      {0}}}
-
-};
+      {0}}}};
 
 size_t pgnListSize = ARRAY_SIZE(pgnList);
 
