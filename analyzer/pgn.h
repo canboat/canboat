@@ -217,6 +217,11 @@ typedef struct
     .name = nam, .size = len, .resolution = RES_STRINGLZ, .description = "" \
   }
 
+#define TEMPERATURE_HIGH_FIELD(nam)                                                                    \
+  {                                                                                                    \
+    .name = nam, .size = BYTES(2), .resolution = RES_TEMPERATURE_HIGH, .units = "K", .description = "" \
+  }
+
 typedef struct
 {
   const char *name;
@@ -2023,7 +2028,7 @@ Pgn pgnList[] = {
      0,
      {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       {"Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Oil temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
+      TEMPERATURE_HIGH_FIELD("Oil temperature"),
       {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       VOLTAGE_FIELD("Alternator Potential", 0.01),
       {"Fuel Rate", BYTES(2), 0.1, true, "L/h", ""},
@@ -2048,7 +2053,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Transmission Gear", 2, GEAR_STATUS),
       RESERVED_FIELD(6),
       {"Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Oil temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
+      TEMPERATURE_HIGH_FIELD("Oil temperature"),
       INTEGER_FIELD("Discrete Status 1", BYTES(1)),
       RESERVED_FIELD(BYTES(1)),
       {0}}}
@@ -4106,7 +4111,7 @@ Pgn pgnList[] = {
       INSTANCE_FIELD,
       LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
       {"Temperature", BYTES(3), RES_TEMPERATURE_HIRES, false, "K", ""},
-      {"Set Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
+      TEMPERATURE_HIGH_FIELD("Set Temperature"),
       {0}}}
 
     ,
@@ -5340,8 +5345,8 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("SID"),
       INSTANCE_FIELD,
       LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
-      {"Actual Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
-      {"Set Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
+      TEMPERATURE_HIGH_FIELD("Actual Temperature"),
+      TEMPERATURE_HIGH_FIELD("Set Temperature"),
       {0}}}
 
     ,
