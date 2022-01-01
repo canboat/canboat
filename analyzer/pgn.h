@@ -248,6 +248,21 @@ typedef struct
 
 #define HIRES_LENGTH_FIELD(nam, res) LENGTH_FIELD(nam, BYTES(4), res, "")
 
+#define SHORT_TIME_FIELD(nam)                                                              \
+  {                                                                                        \
+    .name = nam, .size = BYTES(2), .resolution = RES_TIME, .units = "s", .description = "" \
+  }
+
+#define TIME_FIELD(nam, desc)                                                                \
+  {                                                                                          \
+    .name = nam, .size = BYTES(4), .resolution = RES_TIME, .units = "s", .description = desc \
+  }
+
+#define ELAPSED_FIELD(nam, len, res)                                             \
+  {                                                                              \
+    .name = nam, .size = len, .resolution = res, .units = "s", .description = "" \
+  }
+
 typedef struct
 {
   const char *name;
@@ -1179,7 +1194,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(135),
       ONE_BYTE_FIELD("SID"),
-      {"Duration of interval", BYTES(2), 0.001, false, "s", ""},
+      ELAPSED_FIELD("Duration of interval", BYTES(2), 0.001),
       SIMPLE_FIELD("Number of pulses received", BYTES(2)),
       RESERVED_FIELD(BYTES(1)),
       {0}}}
@@ -1226,8 +1241,8 @@ Pgn pgnList[] = {
      2,
      {MATCH_FIELD("Function Code", BYTES(1), 0, "Request"),
       INTEGER_DESC_FIELD("PGN", BYTES(3), "Requested PGN"),
-      {"Transmission interval", BYTES(4), 0.001, false, "s", ""},
-      {"Transmission interval offset", BYTES(2), 0.01, false, "s", ""},
+      ELAPSED_FIELD("Transmission interval", BYTES(4), 0.001),
+      ELAPSED_FIELD("Transmission interval offset", BYTES(2), 0.01),
       SIMPLE_DESC_FIELD("# of Parameters", BYTES(1), "How many parameter pairs will follow"),
       INTEGER_DESC_FIELD("Parameter", BYTES(1), "Parameter index"),
       VARIABLE_FIELD("Value", "Parameter value, variable length"),
@@ -1655,8 +1670,8 @@ Pgn pgnList[] = {
       MATCH_FIELD("Proprietary ID", BYTES(1), 43, "Speed Filter"),
       LOOKUP_FIELD("Filter type", 4, AIRMAR_FILTER),
       RESERVED_FIELD(4),
-      {"Sample interval", BYTES(2), 0.01, false, "s", ""},
-      {"Filter duration", BYTES(2), 0.01, false, "s", ""},
+      ELAPSED_FIELD("Sample interval", BYTES(2), 0.01),
+      ELAPSED_FIELD("Filter duration", BYTES(2), 0.01),
       {0}}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
@@ -1671,8 +1686,8 @@ Pgn pgnList[] = {
       MATCH_FIELD("Proprietary ID", BYTES(1), 44, "Temperature Filter"),
       LOOKUP_FIELD("Filter type", 4, AIRMAR_FILTER),
       RESERVED_FIELD(4),
-      {"Sample interval", BYTES(2), 0.01, false, "s", ""},
-      {"Filter duration", BYTES(2), 0.01, false, "s", ""},
+      ELAPSED_FIELD("Sample interval", BYTES(2), 0.01),
+      ELAPSED_FIELD("Filter duration", BYTES(2), 0.01),
       {0}}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
@@ -1830,7 +1845,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Source", 4, SYSTEM_TIME),
       RESERVED_FIELD(4),
       {"Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Time", "Seconds since midnight"),
       {0}}}
 
     /* http://www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf */
@@ -1902,11 +1917,11 @@ Pgn pgnList[] = {
       INTEGER_DESC_FIELD("MOB Emitter ID", BYTES(4), "Identifier for each MOB emitter, unique to the vessel"),
       LOOKUP_FIELD("Man Overboard Status", 3, MOB_STATUS),
       RESERVED_FIELD(5),
-      {"Activation Time", BYTES(4), RES_TIME, false, "s", "Time of day (UTC) when MOB was activated"},
+      TIME_FIELD("Activation Time", "Time of day (UTC) when MOB was activated"),
       LOOKUP_FIELD("Position Source", 3, MOB_POSITION_SOURCE),
       RESERVED_FIELD(5),
       {"Position Date", BYTES(2), RES_DATE, false, "", "Date of MOB position"},
-      {"Position Time", BYTES(4), RES_TIME, false, "s", "Time of day of MOB position (UTC)"},
+      TIME_FIELD("Position Time", "Time of day of MOB position (UTC)"),
       {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
@@ -2056,7 +2071,7 @@ Pgn pgnList[] = {
       {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
       VOLTAGE_FIELD("Alternator Potential", 0.01),
       {"Fuel Rate", BYTES(2), 0.1, true, "L/h", ""},
-      {"Total Engine hours", BYTES(4), 1.0, false, "s", ""},
+      ELAPSED_FIELD("Total Engine hours", BYTES(4), 1.0),
       {"Coolant Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Fuel Pressure", BYTES(2), 1, false, "kPa", ""},
       RESERVED_FIELD(BYTES(1)),
@@ -2089,10 +2104,10 @@ Pgn pgnList[] = {
      PACKET_FAST,
      10,
      0,
-     {{"Time to Empty", BYTES(4), 0.001, false, "s", ""},
+     {ELAPSED_FIELD("Time to Empty", BYTES(4), 0.001),
       HIRES_LENGTH_FIELD("Distance to Empty", 0.01),
       {"Estimated Fuel Remaining", BYTES(2), 1, false, "L", ""},
-      {"Trip Run Time", BYTES(4), 0.001, false, "s", ""},
+      ELAPSED_FIELD("Trip Run Time", BYTES(4), 0.001),
       {0}}}
 
     ,
@@ -2600,7 +2615,7 @@ Pgn pgnList[] = {
      14,
      0,
      {{"Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
-      {"Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
+      TIME_FIELD("Time", "Timestamp of last reset Seconds since midnight"),
       LENGTH_FIELD("Log", BYTES(4), 1, "Total cumulative distance"),
       LENGTH_FIELD("Trip Log", BYTES(4), 1, "Distance since last reset"),
       {0}}}
@@ -2625,7 +2640,7 @@ Pgn pgnList[] = {
       SPEED_FIELD("Speed"),
       HIRES_LENGTH_FIELD("CPA", 0.01),
       {"TCPA", BYTES(4), 0.001, false, "s", "negative = time elapsed since event, positive = time to go"},
-      {"UTC of Fix", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("UTC of Fix", "Seconds since midnight"),
       ASCII_FIELD("Name", BYTES(255)),
       {0}}}
 
@@ -2691,7 +2706,7 @@ Pgn pgnList[] = {
       LOOKUP_BITFIELD("Windlass Monitoring Events", 8, WINDLASS_MONITORING),
       VOLTAGE_MEDIUM_FIELD("Controller voltage", 0.2),
       {"Motor current", BYTES(1), 1, false, "A", ""},
-      {"Total Motor Time", BYTES(2), 60, false, "s", ""},
+      ELAPSED_FIELD("Total Motor Time", BYTES(2), 60),
       RESERVED_FIELD(BYTES(1)),
       {0}}}
 
@@ -2759,7 +2774,7 @@ Pgn pgnList[] = {
      3,
      {ONE_BYTE_FIELD("SID"),
       {"Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Time", "Seconds since midnight"),
       {"Latitude", BYTES(8), RES_LATITUDE, true, "deg", ""},
       {"Longitude", BYTES(8), RES_LONGITUDE, true, "deg", ""},
       DISTANCE_FIELD("Altitude", BYTES(8), 1e-6, "Altitude referenced to WGS-84"),
@@ -2774,7 +2789,7 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("Reference Stations", BYTES(1), "Number of reference stations"),
       LOOKUP_FIELD("Reference Station Type", 4, GNS),
       {"Reference Station ID", 12, 1, false, ""},
-      {"Age of DGNSS Corrections", BYTES(2), 0.01, false, "s", ""},
+      ELAPSED_FIELD("Age of DGNSS Corrections", BYTES(2), 0.01),
       {0}}}
 
     ,
@@ -2785,7 +2800,7 @@ Pgn pgnList[] = {
      8,
      0,
      {{"Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Time", "Seconds since midnight"),
       {"Local Offset", BYTES(2), RES_INTEGER, true, "minutes", "Minutes"},
       {0}}}
 
@@ -3016,7 +3031,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Perpendicular Crossed", 2, YES_NO),
       LOOKUP_FIELD("Arrival Circle Entered", 2, YES_NO),
       LOOKUP_FIELD("Calculation Type", 2, BEARING_MODE),
-      {"ETA Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("ETA Time", "Seconds since midnight"),
       {"ETA Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       ANGLE_POS_FIELD("Bearing, Origin to Destination Waypoint", ""),
       ANGLE_POS_FIELD("Bearing, Position to Destination Waypoint", ""),
@@ -3165,7 +3180,7 @@ Pgn pgnList[] = {
       INTEGER_FIELD("GPS Week number", BYTES(2)),
       BINARY_FIELD("SV Health Bits", BYTES(1), ""),
       {"Eccentricity", BYTES(2), 1e-21, false, "m/m", ""},
-      {"Almanac Reference Time", BYTES(1), 1e12, false, "s", ""},
+      ELAPSED_FIELD("Almanac Reference Time", BYTES(1), 1e12),
       {"Inclination Angle", BYTES(2), 1e-19, true, "semi-circle", ""},
       {"Rate of Right Ascension", BYTES(2), 1e-38, true, "semi-circle/s", ""},
       {"Root of Semi-major Axis", BYTES(3), 1e-11, false, "sqrt(m)", ""},
@@ -3359,7 +3374,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
       LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
       BINARY_FIELD("Reserved", 6, "NMEA reserved to align next data on byte boundary"),
-      {"Position Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Position Time", "Seconds since midnight"),
       {"Communication State",
        19,
        RES_BINARY,
@@ -3393,7 +3408,7 @@ Pgn pgnList[] = {
       DECIMETERS_FIELD("Position reference from Starboard"),
       DECIMETERS_FIELD("Position reference from Bow"),
       {"ETA Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"ETA Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("ETA Time", "Seconds since midnight"),
       LENGTH_FIELD("Draft", BYTES(2), 0.01, ""),
       ASCII_FIELD("Destination", BYTES(20)),
       LOOKUP_FIELD("AIS version indicator", 2, AIS_VERSION),
@@ -3711,14 +3726,14 @@ Pgn pgnList[] = {
        "deg",
        "offset depends on previous field, as do all following fields"},
       {"Longitude of Vessel Reported", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Time of Position", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Time of Position", "Seconds since midnight"),
       {"MMSI of Ship In Distress", BYTES(5), RES_DECIMAL, false, "MMSI", ""},
       ONE_BYTE_FIELD("DSC EOS Symbol"),
       LOOKUP_FIELD("Expansion Enabled", 2, YES_NO),
       RESERVED_FIELD(6),
       ASCII_FIELD("Calling Rx Frequency/Channel", BYTES(6)),
       ASCII_FIELD("Calling Tx Frequency/Channel", BYTES(6)),
-      {"Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Time of Receipt", "Seconds since midnight"),
       {"Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       SIMPLE_FIELD("DSC Equipment Assigned Message ID", BYTES(2)),
       LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
@@ -3747,14 +3762,14 @@ Pgn pgnList[] = {
        "deg",
        "offset depends on previous field, as do all following fields"},
       {"Longitude of Vessel Reported", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Time of Position", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Time of Position", "Seconds since midnight"),
       {"MMSI of Ship In Distress", BYTES(5), RES_DECIMAL, false, "MMSI", ""},
       ONE_BYTE_FIELD("DSC EOS Symbol"),
       LOOKUP_FIELD("Expansion Enabled", 2, YES_NO),
       RESERVED_FIELD(6),
       ASCII_FIELD("Calling Rx Frequency/Channel", BYTES(6)),
       ASCII_FIELD("Calling Tx Frequency/Channel", BYTES(6)),
-      {"Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Time of Receipt", "Seconds since midnight"),
       {"Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       SIMPLE_FIELD("DSC Equipment Assigned Message ID", BYTES(2)),
       LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
@@ -3822,7 +3837,7 @@ Pgn pgnList[] = {
           ,
       ONE_BYTE_FIELD("Database ID"),
       ASCII_FIELD("Database Name", BYTES(8)),
-      {"Database Timestamp", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Database Timestamp", "Seconds since midnight"),
       {"Database Datestamp", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       SIMPLE_FIELD("WP Position Resolution", 6),
       RESERVED_FIELD(2),
@@ -3861,7 +3876,7 @@ Pgn pgnList[] = {
      {ONE_BYTE_FIELD("Database ID"),
       ONE_BYTE_FIELD("Route ID"),
       ASCII_FIELD("Route/WP-List Name", BYTES(8)),
-      {"Route/WP-List Timestamp", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Route/WP-List Timestamp", "Seconds since midnight"),
       {"Route/WP-List Datestamp", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       ONE_BYTE_FIELD("Change at Last Timestamp"),
       SIMPLE_FIELD("Number of WPs in the Route/WP-List", BYTES(2)),
@@ -4139,7 +4154,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Tide Tendency", 2, TIDE),
       RESERVED_FIELD(2),
       {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Measurement Time", "Seconds since midnight"),
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       DISTANCE_FIELD("Tide Level", BYTES(2), 0.001, "Relative to MLLW"),
@@ -4158,7 +4173,7 @@ Pgn pgnList[] = {
      {LOOKUP_FIELD("Mode", 4, RESIDUAL_MODE),
       RESERVED_FIELD(4),
       {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Measurement Time", "Seconds since midnight"),
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"Salinity",
@@ -4184,7 +4199,7 @@ Pgn pgnList[] = {
      {SIMPLE_FIELD("Mode", 4),
       RESERVED_FIELD(4),
       {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Measurement Time", "Seconds since midnight"),
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       LENGTH_FIELD("Measurement Depth", BYTES(4), 0.01, "Depth below transducer"),
@@ -4205,7 +4220,7 @@ Pgn pgnList[] = {
      {SIMPLE_FIELD("Mode", 4),
       RESERVED_FIELD(4),
       {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Measurement Time", "Seconds since midnight"),
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       SPEED_FIELD("Wind Speed"),
@@ -4229,7 +4244,7 @@ Pgn pgnList[] = {
      {SIMPLE_FIELD("Mode", 4),
       RESERVED_FIELD(4),
       {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
+      TIME_FIELD("Measurement Time", "Seconds since midnight"),
       {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       SPEED_FIELD("Wind Speed"),
@@ -4286,7 +4301,7 @@ Pgn pgnList[] = {
       {"System High Pressure", BYTES(2), RES_PRESSURE, false, "kPa", ""},
       {"Product Water Flow", BYTES(2), 0.1, true, "L/h", ""},
       {"Brine Water Flow", BYTES(2), 0.1, true, "L/h", ""},
-      {"Run Time", BYTES(4), RES_INTEGER, false, "s", ""},
+      ELAPSED_FIELD("Run Time", BYTES(4), 1),
       {0}}}
 
     /* https://www.nmea.org/Assets/20160725%20corrigenda%20pgn%20130569%20published.pdf */
@@ -4302,8 +4317,8 @@ Pgn pgnList[] = {
       INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
       INTEGER_DESC_FIELD("ID", BYTES(4), "Unique file ID"),
       LOOKUP_FIELD("Play status", BYTES(1), ENTERTAINMENT_PLAY_STATUS),
-      {"Elapsed Track Time", BYTES(2), RES_TIME, false, "s", ""},
-      {"Track Time", BYTES(2), RES_TIME, false, "s", ""},
+      SHORT_TIME_FIELD("Elapsed Track Time"),
+      SHORT_TIME_FIELD("Track Time"),
       LOOKUP_FIELD("Repeat Status", 4, ENTERTAINMENT_REPEAT_STATUS),
       LOOKUP_FIELD("Shuffle Status", 4, ENTERTAINMENT_SHUFFLE_STATUS),
       INTEGER_DESC_FIELD("Save Favorite Number", BYTES(1), "Used to command AV to save current station as favorite"),
@@ -4733,8 +4748,8 @@ Pgn pgnList[] = {
       INTEGER_FIELD("A", BYTES(1)),
       INTEGER_FIELD("Current Track", BYTES(4)),
       INTEGER_FIELD("Tracks", BYTES(4)),
-      {"Length", BYTES(4), 0.001, false, "s", ""},
-      {"Position in track", BYTES(4), 0.001, false, "s", ""},
+      ELAPSED_FIELD("Length", BYTES(4), 0.001),
+      ELAPSED_FIELD("Position in track", BYTES(4), 0.001),
       {0}}}
 
     ,
@@ -4868,7 +4883,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       MATCH_FIELD("Proprietary ID", BYTES(1), 48, "Position"),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
-      {"Position", BYTES(4), 0.001, false, "s", ""},
+      ELAPSED_FIELD("Position", BYTES(4), 0.001),
       {0}}}
 
     ,
@@ -5093,7 +5108,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("Message ID", BYTES(1), 9, "Track Progress"),
       ONE_BYTE_FIELD("A"),
       ONE_BYTE_FIELD("B"),
-      {"Progress", BYTES(3), 0.001, false, "s", ""},
+      ELAPSED_FIELD("Progress", BYTES(3), 0.001),
       {0}}}
 
     ,
@@ -5471,7 +5486,7 @@ Pgn pgnList[] = {
       INSTANCE_FIELD,
       ONE_BYTE_FIELD("Indicator Number"),
       {"Start Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
-      {"Start Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
+      TIME_FIELD("Start Time", "Timestamp of last reset Seconds since midnight"),
       INTEGER_FIELD("OFF Counter", BYTES(1)),
       INTEGER_FIELD("ON Counter", BYTES(1)),
       INTEGER_FIELD("ERROR Counter", BYTES(1)),
@@ -5499,7 +5514,7 @@ Pgn pgnList[] = {
       INSTANCE_FIELD,
       ONE_BYTE_FIELD("Indicator Number"),
       {"Start Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
-      {"Start Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
+      TIME_FIELD("Start Time", "Timestamp of last reset Seconds since midnight"),
       {"Accumulated OFF Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
       {"Accumulated ON Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
       {"Accumulated ERROR Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},

@@ -25565,8 +25565,6 @@ limitations under the License.
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Units>s</Units>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>

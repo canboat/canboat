@@ -21123,8 +21123,6 @@
             "BitOffset":160,
             "BitStart":0,
             "Units":"s",
-            "Type":"Integer",
-            "Resolution":1,
             "Signed":false}]},
       {
         "PGN":130569,
