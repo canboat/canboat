@@ -21,7 +21,6 @@ limitations under the License.
 */
 
 #define GLOBALS
-#define GLOBAL_COMPANYLIST
 #include "analyzer.h"
 
 #include "common.h"
@@ -78,7 +77,6 @@ typedef struct
 #define DATAFIELD_RESERVED3 (-4)
 
 DevicePackets *device[256];
-char          *manufacturer[1 << 12];
 
 bool            showRaw       = false;
 bool            showData      = false;
@@ -106,7 +104,6 @@ static bool            printCanFormat(RawMessage *msg);
 static bool            printNumber(char *fieldName, Field *field, uint8_t *data, size_t startBit, size_t bits);
 static bool            printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 static void            fillFieldCounts(void);
-static void            fillManufacturers(void);
 static void            printCanRaw(RawMessage *msg);
 
 static void usage(char **argv, char **av)
@@ -278,7 +275,6 @@ int main(int argc, char **argv)
     printf("{\"version\":\"%s\",\"units\":\"%s\"}\n", VERSION, showSI ? "si" : "std");
   }
 
-  fillManufacturers();
   fillFieldCounts();
   fillLookups();
   checkPgnList();
@@ -447,20 +443,6 @@ static char *getSep()
   }
 
   return s;
-}
-
-static void fillManufacturers(void)
-{
-  size_t i;
-
-  for (i = 0; i < ARRAY_SIZE(manufacturer); i++)
-  {
-    manufacturer[i] = 0;
-  }
-  for (i = 0; i < ARRAY_SIZE(companyList); i++)
-  {
-    manufacturer[companyList[i].id] = companyList[i].name;
-  }
 }
 
 static void fillFieldCounts(void)
@@ -1123,8 +1105,8 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
   {
     if (field->units && field->units[0] == '=')
     {
-      char  lookfor[20];
-      char *s;
+      char        lookfor[20];
+      const char *s;
 
       sprintf(lookfor, "=%" PRId64, value);
       if (strcmp(lookfor, field->units) != 0)
@@ -1148,7 +1130,7 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
       }
     }
 
-    else if (field->resolution == RES_LOOKUP && field->lookupValue)
+    else if ((field->resolution == RES_LOOKUP || field->resolution == RES_MANUFACTURER) && field->lookupValue)
     {
       const char *s = field->lookupValue[value];
 
@@ -1245,39 +1227,6 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
       else
       {
         mprintf("%s %s = 0x%" PRIx64, getSep(), fieldName, value);
-      }
-    }
-    else if (field->resolution == RES_MANUFACTURER)
-    {
-      char *m = 0;
-      char  unknownManufacturer[30];
-
-      if (value > 0 && value < ARRAY_SIZE(manufacturer))
-      {
-        m = manufacturer[value];
-      }
-      if (!m)
-      {
-        if (showJson)
-        {
-          mprintf("%s \"%s\":%" PRId64, getSep(), fieldName, value);
-          return true;
-        }
-        sprintf(unknownManufacturer, "Unknown Manufacturer %" PRId64, value);
-        m = unknownManufacturer;
-      }
-
-      if (showJsonValue)
-      {
-        mprintf("%s \"%s\":{\"value\":%" PRId64 ",\"name\":\"%s\"}", getSep(), fieldName, value, m);
-      }
-      else if (showJson)
-      {
-        mprintf("%s \"%s\": \"%s\"", getSep(), fieldName, m);
-      }
-      else
-      {
-        mprintf("%s %s = %s", getSep(), fieldName, m);
       }
     }
     else

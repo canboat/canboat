@@ -27,7 +27,7 @@ NGTXMLFILE=pgns-ngt.xml
 NGTJSONFILE=pgns-ngt.json
 IKXMLFILE=pgns-ik.xml
 IKJSONFILE=pgns-ik.json
-HEADERS=analyzer.h pgn.h company.h lookup.h
+HEADERS=analyzer.h pgn.h lookup.h
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h
 

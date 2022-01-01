@@ -21,7 +21,6 @@ limitations under the License.
 */
 
 #define GLOBALS
-#define GLOBAL_COMPANYLIST
 #include "analyzer.h"
 #include "common.h"
 
@@ -296,11 +295,14 @@ static void printXML(int indent, const char *element, const char *p)
 
   if (p)
   {
-    for (i = 0; i < indent; i++)
+    if (element)
     {
-      fputs(" ", stdout);
+      for (i = 0; i < indent; i++)
+      {
+        fputs(" ", stdout);
+      }
+      printf("<%s>", element);
     }
-    printf("<%s>", element);
     for (; *p; p++)
     {
       switch (*p)
@@ -325,7 +327,10 @@ static void printXML(int indent, const char *element, const char *p)
           putchar(*p);
       }
     }
-    printf("</%s>\n", element);
+    if (element)
+    {
+      printf("</%s>\n", element);
+    }
   }
 }
 
@@ -463,7 +468,9 @@ static void explainPGNXML(Pgn pgn)
 
           if (s)
           {
-            printf("            <EnumPair Value='%u' Name='%s' />\n", i, s);
+            printf("            <EnumPair Value='%u' Name='", i);
+            printXML(0, 0, s);
+            printf("' />\n");
           }
         }
         printf("          </EnumValues>\n");
@@ -481,7 +488,9 @@ static void explainPGNXML(Pgn pgn)
 
           if (s)
           {
-            printf("            <EnumPair Bit='%u' Name='%s' />\n", i, s);
+            printf("            <EnumPair Bit='%u' Name='", i);
+            printXML(0, 0, s);
+            printf("' />\n");
           }
         }
 
@@ -550,7 +559,9 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
       {
         if (lookupEnums[i].values[j])
         {
-          printf("      <EnumPair Value='%u' Name='%s' />\n", j, lookupEnums[i].values[j]);
+          printf("      <EnumPair Value='%u' Name='", j);
+          printXML(0, 0, lookupEnums[i].values[j]);
+          printf("' />\n");
         }
       }
       printf("    </Enumeration>\n");
@@ -564,7 +575,9 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
       {
         if (bitfieldEnums[i].values[j])
         {
-          printf("      <EnumPair Bit='%u' Name='%s' />\n", j, bitfieldEnums[i].values[j]);
+          printf("      <EnumPair Bit='%u' Name='", j);
+          printXML(0, 0, bitfieldEnums[i].values[j]);
+          printf("' />\n");
         }
       }
       printf("    </BitEnumeration>\n");

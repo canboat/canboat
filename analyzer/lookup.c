@@ -62,4 +62,24 @@ void fillLookups(void)
 
 #include "lookup.h"
 */
+
+  // Iterate over the PGNs and fill the description of company-code fixed values
+  {
+    int i;
+
+    for (i = 0; i < pgnListSize; i++)
+    {
+      Field *f = &pgnList[i].fieldList[0];
+
+      if (f->name && f->units && strcmp(f->name, "Manufacturer Code") == 0)
+      {
+        int id = 0;
+
+        if (sscanf(f->units, "=%d", &id) > 0)
+        {
+          f->description = lookupValueMANUFACTURER_CODE[id];
+        }
+      }
+    }
+  }
 }
