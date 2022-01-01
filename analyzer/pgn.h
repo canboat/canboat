@@ -99,6 +99,11 @@ typedef struct
     .name = "Reserved", .size = (len), .resolution = RES_BINARY, .description = "" \
   }
 
+#define BINARY_FIELD(nam, len, desc)                                          \
+  {                                                                           \
+    .name = nam, .size = (len), .resolution = RES_BINARY, .description = desc \
+  }
+
 typedef struct
 {
   const char *name;
@@ -207,7 +212,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Data", BYTES(8), RES_BINARY, false, 0, ""}, {0}},
+     {BINARY_FIELD("Data", BYTES(8), ""), {0}},
      0,
      0,
      true}
@@ -320,7 +325,7 @@ Pgn pgnList[] = {
      8,
      1,
      {{"Group Function Code", BYTES(1), 1, false, "=255", "Abort"},
-      {"Reason", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Reason", BYTES(1), ""),
       RESERVED_FIELD(BYTES(2)),
       {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
       {0}}}
@@ -332,7 +337,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number"},
+     {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
       {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       {"Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance"},
       {"Device Instance Upper", 5, 1, false, 0, "ISO Function Instance"},
@@ -402,7 +407,7 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       RESERVED_FIELD(2),
       LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
-      {"Data", BYTES(6), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Data", BYTES(6), ""),
       {0}},
      0,
      0,
@@ -420,7 +425,7 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       RESERVED_FIELD(2),
       LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
-      {"Data", BYTES(6), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Data", BYTES(6), ""),
       {0}},
      0,
      0,
@@ -775,7 +780,7 @@ Pgn pgnList[] = {
      0,
      /* ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in the
      data portion of the message must match the name information of the node whose network address is to be set. */
-     {{"Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number"},
+     {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
       {"Manufacturer Code", 11, 1, false, 0, ""},
       {"Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance"},
       {"Device Instance Upper", 5, 1, false, 0, "ISO Function Instance"},
@@ -814,7 +819,7 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       RESERVED_FIELD(2),
       LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
-      {"Data", BYTES(6), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Data", BYTES(6), ""),
       {0}},
      0,
      0,
@@ -939,11 +944,11 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
       RESERVED_FIELD(2),
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("SID", BYTES(1), ""),
       LOOKUP_FIELD("Alarm Status", BYTES(1), SEATALK_ALARM_STATUS),
       LOOKUP_FIELD("Alarm ID", BYTES(1), SEATALK_ALARM_ID),
       LOOKUP_FIELD("Alarm Group", BYTES(1), SEATALK_ALARM_GROUP),
-      {"Alarm Priority", BYTES(2), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Alarm Priority", BYTES(2), ""),
       {0}}},
     {"Simnet: Trim Tab Sensor Calibration",
      65289,
@@ -1070,7 +1075,7 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
       RESERVED_FIELD(2),
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("SID", BYTES(1), ""),
       {"Heading True", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Heading Magnetic", BYTES(2), RES_RADIANS, false, "rad", ""},
       RESERVED_FIELD(BYTES(1)),
@@ -1086,7 +1091,7 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
       RESERVED_FIELD(2),
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("SID", BYTES(1), ""),
       {"Target Heading True", BYTES(2), RES_RADIANS, false, "rad", ""},
       {"Target Heading Magnetic", BYTES(2), RES_RADIANS, false, "rad", ""},
       RESERVED_FIELD(BYTES(1)),
@@ -1151,9 +1156,9 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
       RESERVED_FIELD(2),
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Pilot Mode", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Sub Mode", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Pilot Mode Data", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Pilot Mode", BYTES(1), ""),
+      BINARY_FIELD("Sub Mode", BYTES(1), ""),
+      BINARY_FIELD("Pilot Mode Data", BYTES(1), ""),
       RESERVED_FIELD(BYTES(3)),
       {0}}}
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
@@ -1225,7 +1230,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      255,
      0,
-     {{"Data", BYTES(255), RES_BINARY, false, 0, ""}, {0}},
+     {BINARY_FIELD("Data", BYTES(255), ""), {0}},
      0,
      0,
      true}
@@ -1410,11 +1415,11 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
       {"command", BYTES(1), RES_INTEGER, false, "=132", "0x84"},
-      {"Unknown 1", BYTES(3), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Unknown 1", BYTES(3), ""),
       LOOKUP_FIELD("Pilot Mode", BYTES(1), SEATALK_PILOT_MODE),
       {"Sub Mode", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Pilot Mode Data", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Unknown 2", BYTES(10), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Pilot Mode Data", BYTES(1), ""),
+      BINARY_FIELD("Unknown 2", BYTES(10), ""),
       {0}}}
 
     ,
@@ -1542,14 +1547,9 @@ Pgn pgnList[] = {
       {"device", BYTES(1), RES_INTEGER, false, 0, ""},
       LOOKUP_FIELD("key", BYTES(1), SEATALK_KEYSTROKE),
       {"keyInverted", BYTES(1), RES_INTEGER, false, 0, "Bit negated version of key"},
-      {"Unknown data",
-       BYTES(14),
-       RES_BINARY,
-       false,
-       0,
-       ""} // xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF FF |
-           // FF FF FF FF FF | 42 00 F8 02 05])
-      ,
+      BINARY_FIELD("Unknown data", BYTES(14), ""),
+      // xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF FF |
+      // FF FF FF FF FF | 42 00 F8 02 05])
       {0}}}
 
     ,
@@ -1815,7 +1815,7 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       RESERVED_FIELD(2),
       LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
-      {"Data", BYTES(221), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Data", BYTES(221), ""),
       {0}},
      0,
      0,
@@ -1829,7 +1829,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      255,
      0,
-     {{"Data", BYTES(255), RES_BINARY, false, 0, ""}, {0}},
+     {BINARY_FIELD("Data", BYTES(255), ""), {0}},
      0,
      0,
      true}
@@ -1856,7 +1856,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Temporary Silence Support", 1, YES_NO),
       LOOKUP_FIELD("Acknowledge Support", 1, YES_NO),
       LOOKUP_FIELD("Escalation Support", 1, YES_NO),
-      {"NMEA Reserved", 2, RES_BINARY, false, 0, ""},
+      BINARY_FIELD("NMEA Reserved", 2, ""),
       {"Acknowledge Source Network ID NAME", BYTES(8), 1, false, 0, ""},
       LOOKUP_FIELD("Trigger Condition", 4, ALERT_TRIGGER_CONDITION),
       LOOKUP_FIELD("Threshold Status", 4, ALERT_THRESHOLD_STATUS),
@@ -1882,7 +1882,7 @@ Pgn pgnList[] = {
       {"Alert Occurrence Number", BYTES(1), 1, false, 0, ""},
       {"Acknowledge Source Network ID NAME", BYTES(8), 1, false, 0, ""},
       LOOKUP_FIELD("Response Command", 2, ALERT_RESPONSE_COMMAND),
-      {"NMEA Reserved", 6, RES_BINARY, false, 0, ""},
+      BINARY_FIELD("NMEA Reserved", 6, ""),
       {0}}}
 
     ,
@@ -2543,7 +2543,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"SID", BYTES(1), RES_BINARY, false, 0, ""},
+     {BINARY_FIELD("SID", BYTES(1), ""),
       {"Connection Number", BYTES(1), 1, false, 0, ""},
       LOOKUP_FIELD("Operating State", BYTES(1), CONVERTER_STATE),
       LOOKUP_FIELD("Temperature State", 2, GOOD_WARNING_ERROR),
@@ -2560,7 +2560,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"SID", BYTES(1), RES_BINARY, false, 0, ""},
+     {BINARY_FIELD("SID", BYTES(1), ""),
       {"Connection Number", BYTES(1), 1, false, 0, ""},
       {"DC Voltage", BYTES(2), 0.1, false, "V", ""},
       {"DC Current", BYTES(3), 0.01, true, "A", ""},
@@ -2707,12 +2707,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Anchor Docking Control", 2, OFF_ON),
       LOOKUP_FIELD("Speed Control Type", 2, SPEED_TYPE),
       RESERVED_FIELD(2),
-      {"Speed Control",
-       BYTES(1),
-       RES_BINARY,
-       false,
-       0,
-       "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100"},
+      BINARY_FIELD("Speed Control", BYTES(1), "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100"),
       LOOKUP_FIELD("Power Enable", 2, OFF_ON),
       LOOKUP_FIELD("Mechanical Lock", 2, OFF_ON),
       LOOKUP_FIELD("Deck and Anchor Wash", 2, OFF_ON),
@@ -2887,7 +2882,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Nav Status", 4, NAV_STATUS),
       LOOKUP_FIELD("Special Maneuver Indicator", 2, AIS_SPECIAL_MANEUVER),
       RESERVED_FIELD(2),
-      {"AIS Spare", 3, RES_BINARY, false, 0, ""},
+      BINARY_FIELD("AIS Spare", 3, ""),
       RESERVED_FIELD(5),
       {"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
       {0}}}
@@ -2986,10 +2981,10 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Off Position Indicator", 1, YES_NO),
       LOOKUP_FIELD("Virtual AtoN Flag", 1, YES_NO),
       LOOKUP_FIELD("Assigned Mode Flag", 1, AIS_ASSIGNED_MODE),
-      {"AIS Spare", 1, RES_BINARY, false, 0, ""},
+      BINARY_FIELD("AIS Spare", 1, ""),
       LOOKUP_FIELD("Position Fixing Device Type", 4, POSITION_FIX_DEVICE),
       RESERVED_FIELD(3),
-      {"AtoN Status", 8, RES_BINARY, false, 0, "00000000 = default"},
+      BINARY_FIELD("AtoN Status", 8, "00000000 = default"),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(3),
       {"AtoN Name", BYTES(34), RES_STRINGLAU, false, 0, ""},
@@ -3242,7 +3237,7 @@ Pgn pgnList[] = {
      0,
      {{"PRN", BYTES(1), RES_INTEGER, false, 0, ""},
       {"GPS Week number", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"SV Health Bits", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("SV Health Bits", BYTES(1), ""),
       {"Eccentricity", BYTES(2), 1e-21, false, "m/m", ""},
       {"Almanac Reference Time", BYTES(1), 1e12, false, "s", ""},
       {"Inclination Angle", BYTES(2), 1e-19, true, "semi-circle", ""},
@@ -3334,7 +3329,7 @@ Pgn pgnList[] = {
       {"Reference Station Type", BYTES(2), 1, false, 0, ""},
       {"Time of corrections", BYTES(1), 1, false, 0, ""},
       {"Station Health", BYTES(1), 1, false, 0, ""},
-      {"Reserved Bits", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Reserved Bits", BYTES(1), ""),
       {"Satellite ID", BYTES(1), 1, false, 0, ""},
       {"PRC", BYTES(1), 1, false, 0, ""},
       {"RRC", BYTES(1), 1, false, 0, ""},
@@ -3412,15 +3407,15 @@ Pgn pgnList[] = {
      {{"Message ID", 6, 1, false, 0, ""},
       {"Repeat Indicator", 2, 1, false, 0, ""},
       {"Source ID", BYTES(4), 1, false, "MMSI", ""},
-      {"NMEA 2000 Reserved", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("NMEA 2000 Reserved", BYTES(1), ""),
       {"AIS Transceiver Information", BYTES(1), 1, false, 0, ""},
       {"Spare", BYTES(1), 1, false, 0, ""},
       {"Longitude", BYTES(4), 1, false, 0, ""},
       {"Latitude", BYTES(4), 1, false, 0, ""},
-      {"NMEA 2000 Reserved", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("NMEA 2000 Reserved", BYTES(1), ""),
       {"Spare", BYTES(1), 1, false, 0, ""},
       {"Number of Bits in Binary Data Field", BYTES(1), 1, false, 0, ""},
-      {"Binary Data", BYTES(8), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Binary Data", BYTES(8), ""),
       {0}}}
 
     ,
@@ -3437,7 +3432,7 @@ Pgn pgnList[] = {
       {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
       LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
-      {"Reserved", 6, RES_BINARY, false, 0, "NMEA reserved to align next data on byte boundary"},
+      BINARY_FIELD("Reserved", 6, "NMEA reserved to align next data on byte boundary"),
       {"Position Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
       {"Communication State",
        19,
@@ -3447,9 +3442,9 @@ Pgn pgnList[] = {
        "Information used by the TDMA slot allocation algorithm and synchronization information"},
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Position Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Reserved", 4, RES_BINARY, false, 0, "NMEA reserved to align next data on byte boundary"},
+      BINARY_FIELD("Reserved", 4, "NMEA reserved to align next data on byte boundary"),
       LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
-      {"Spare", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Spare", BYTES(1), ""),
       {0}}}
 
     /* http://www.navcen.uscg.gov/enav/ais/AIS_messages.htm */
@@ -3500,7 +3495,7 @@ Pgn pgnList[] = {
       {"Retransmit flag", 1, 1, false, 0, ""},
       RESERVED_FIELD(1),
       {"Number of Bits in Binary Data Field", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Binary Data", BYTES(8), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Binary Data", BYTES(8), ""),
       {0}}}
 
     ,
@@ -3517,9 +3512,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(2),
       {"Destination ID #1", BYTES(4), 1, false, 0, ""},
-      {"Sequence Number for ID 1", 2, RES_BINARY, false, 0, "reserved"},
+      BINARY_FIELD("Sequence Number for ID 1", 2, "reserved"),
       RESERVED_FIELD(6),
-      {"Sequence Number for ID n", 2, RES_BINARY, false, 0, "reserved"},
+      BINARY_FIELD("Sequence Number for ID n", 2, "reserved"),
       {0}}}
 
     ,
@@ -3536,7 +3531,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(2),
       {"Number of Bits in Binary Data Field", BYTES(2), 1, false, 0, ""},
-      {"Binary Data", BYTES(255), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Binary Data", BYTES(255), ""),
       {0}}}
 
     ,
@@ -3564,7 +3559,7 @@ Pgn pgnList[] = {
        "Information used by the TDMA slot allocation algorithm and synchronization information"},
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       {"Altitude", BYTES(8), 1e-6, true, "m", ""},
-      {"Reserved for Regional Applications", BYTES(1), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Reserved for Regional Applications", BYTES(1), ""),
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
       RESERVED_FIELD(7),
       {0}}}
@@ -4598,7 +4593,7 @@ Pgn pgnList[] = {
       {"Volume", BYTES(1), RES_INTEGER, false, "%", ""},
       LOOKUP_FIELD_DESC("Volume change", 2, ENTERTAINMENT_VOLUME_CONTROL, "Write only"),
       LOOKUP_FIELD("Mute", 2, YES_NO),
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
+      RESERVED_FIELD(4),
       LOOKUP_FIELD("Channel", 8, ENTERTAINMENT_CHANNEL),
       {0}}}
 
@@ -5036,7 +5031,7 @@ Pgn pgnList[] = {
      {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
       RESERVED_FIELD(2),
       LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
-      {"Data", BYTES(221), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Data", BYTES(221), ""),
       {0}},
      0,
      0,
@@ -5074,7 +5069,7 @@ Pgn pgnList[] = {
       {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
       {"Version", BYTES(2), RES_INTEGER, false, 0, ""},
       {"Sequence", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Data", BYTES(217), RES_BINARY, false, 0, ""},
+      BINARY_FIELD("Data", BYTES(217), ""),
       {0}}}
 
     ,
