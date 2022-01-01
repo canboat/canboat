@@ -143,16 +143,22 @@ typedef struct
   {.name = "Manufacturer Code", .size = 11, .resolution = RES_MANUFACTURER, .description = ""}, RESERVED_FIELD(2), \
       LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE)
 
-#define MANUFACTURER_PROPRIETARY_FIELDS                                                                                                                                                                                                                                                                                              \
-  {.name = "Manufacturer Code", .size = 11, .resolution = RES_MANUFACTURER, .units = PROPRIETARY_PGN_ONLY, .description = "Only in PGN when PRN is proprietary", .lookupValue = lookupValueMANUFACTURER_CODE,                                                                                  \ .lookupName = "MANUFACTURER_CODE"}, \
-      {.name        = "Reserved",                                                                                                                                                                                                                                                                                                    \
-       .size        = 2,                                                                                                                                                                                                                                                                                                             \
-       .resolution  = RES_BINARY,                                                                                                                                                                                                                                                                                                    \
-       .units       = PROPRIETARY_PGN_ONLY,                                                                                                                                                                                                                                                                                          \
-       .description = "Only in PGN when PRN is proprietary"},                                                                                                                                                                                                                                                                        \
-  {                                                                                                                                                                                                                                                                                                                                  \
-    .name = "Industry code", .size = 3, .resolution = RES_LOOKUP, .units = PROPRIETARY_PGN_ONLY,                                                                                                                                                                                                                                     \
-    .description = "Only in PGN when PRN is proprietary", .lookupValue = lookupValueINDUSTRY_CODE, .lookupName = "INDUSTRY_CODE"                                                                                                                                                                                                     \
+#define MANUFACTURER_PROPRIETARY_FIELDS                                                                                          \
+  {.name        = "Manufacturer Code",                                                                                           \
+   .size        = 11,                                                                                                            \
+   .resolution  = RES_MANUFACTURER,                                                                                              \
+   .units       = PROPRIETARY_PGN_ONLY,                                                                                          \
+   .description = "Only in PGN when PRN is proprietary",                                                                         \
+   .lookupValue = lookupValueMANUFACTURER_CODE,                                                                                  \
+   .lookupName  = "MANUFACTURER_CODE"},                                                                                           \
+      {.name        = "Reserved",                                                                                                \
+       .size        = 2,                                                                                                         \
+       .resolution  = RES_BINARY,                                                                                                \
+       .units       = PROPRIETARY_PGN_ONLY,                                                                                      \
+       .description = "Only in PGN when PRN is proprietary"},                                                                    \
+  {                                                                                                                              \
+    .name = "Industry code", .size = 3, .resolution = RES_LOOKUP, .units = PROPRIETARY_PGN_ONLY,                                 \
+    .description = "Only in PGN when PRN is proprietary", .lookupValue = lookupValueINDUSTRY_CODE, .lookupName = "INDUSTRY_CODE" \
   }
 
 typedef struct

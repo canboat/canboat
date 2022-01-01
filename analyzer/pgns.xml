@@ -6633,8 +6633,6 @@ limitations under the License.
           <Name>Manufacturer Code</Name>
           <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>11</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
           <Match>proprietary pgn only</Match>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
@@ -6758,8 +6756,6 @@ limitations under the License.
           <Name>Manufacturer Code</Name>
           <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>11</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
           <Match>proprietary pgn only</Match>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
@@ -6890,8 +6886,6 @@ limitations under the License.
           <Name>Manufacturer Code</Name>
           <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>11</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
           <Match>proprietary pgn only</Match>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
@@ -7022,8 +7016,6 @@ limitations under the License.
           <Name>Manufacturer Code</Name>
           <Description>Only in PGN when PRN is proprietary</Description>
           <BitLength>11</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
           <Match>proprietary pgn only</Match>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
@@ -11406,7 +11398,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>V</Units>
           <Resolution>0.01</Resolution>
-          <Signed>true</Signed>
+          <Signed>false</Signed>
         </Field>
         <Field>
           <Order>6</Order>
@@ -13323,7 +13315,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>V</Units>
           <Resolution>0.01</Resolution>
-          <Signed>true</Signed>
+          <Signed>false</Signed>
         </Field>
         <Field>
           <Order>3</Order>
@@ -15318,7 +15310,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>controllerVoltage</Id>
           <Name>Controller voltage</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
@@ -15330,7 +15322,7 @@ limitations under the License.
           <Id>motorCurrent</Id>
           <Name>Motor current</Name>
           <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
           <Signed>false</Signed>
@@ -15340,7 +15332,7 @@ limitations under the License.
           <Id>totalMotorTime</Id>
           <Name>Total Motor Time</Name>
           <BitLength>16</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>s</Units>
           <Resolution>60</Resolution>
@@ -15351,7 +15343,7 @@ limitations under the License.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Type>Binary data</Type>
           <Signed>false</Signed>
