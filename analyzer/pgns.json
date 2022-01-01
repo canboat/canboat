@@ -28980,12 +28980,11 @@
             "Signed":false},
           {
             "Order":8,
-            "Id":"a",
-            "Name":"A",
+            "Id":"unusedB",
+            "Name":"Unused B",
             "BitLength":16,
             "BitOffset":64,
             "BitStart":0,
-            "Resolution":0,
             "Signed":false},
           {
             "Order":9,
@@ -28999,12 +28998,11 @@
             "Signed":true},
           {
             "Order":10,
-            "Id":"unused",
-            "Name":"Unused",
+            "Id":"unusedC",
+            "Name":"Unused C",
             "BitLength":16,
             "BitOffset":96,
             "BitStart":0,
-            "Resolution":0,
             "Signed":false}]},
       {
         "PGN":130845,
@@ -29133,12 +29131,11 @@
             "Signed":false},
           {
             "Order":8,
-            "Id":"a",
-            "Name":"A",
+            "Id":"unusedB",
+            "Name":"Unused B",
             "BitLength":16,
             "BitOffset":64,
             "BitStart":0,
-            "Resolution":0,
             "Signed":false},
           {
             "Order":9,
@@ -29152,12 +29149,11 @@
             "Signed":false},
           {
             "Order":10,
-            "Id":"unused",
-            "Name":"Unused",
+            "Id":"unusedC",
+            "Name":"Unused C",
             "BitLength":16,
             "BitOffset":96,
             "BitStart":0,
-            "Resolution":0,
             "Signed":false}]},
       {
         "PGN":130845,
@@ -29242,8 +29238,8 @@
             "Signed":false},
           {
             "Order":8,
-            "Id":"a",
-            "Name":"A",
+            "Id":"unusedB",
+            "Name":"Unused B",
             "BitLength":16,
             "BitOffset":64,
             "BitStart":0,
@@ -29260,12 +29256,11 @@
             "Signed":true},
           {
             "Order":10,
-            "Id":"unused",
-            "Name":"Unused",
+            "Id":"unusedC",
+            "Name":"Unused C",
             "BitLength":16,
             "BitOffset":96,
             "BitStart":0,
-            "Resolution":0,
             "Signed":false}]},
       {
         "PGN":130845,
@@ -29591,12 +29586,11 @@
             "Signed":false},
           {
             "Order":5,
-            "Id":"b",
-            "Name":"B",
+            "Id":"unusedA",
+            "Name":"Unused A",
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Resolution":0,
             "Signed":false},
           {
             "Order":6,
@@ -29618,12 +29612,11 @@
             "Enumeration":"SIMNET_AP_EVENTS"},
           {
             "Order":8,
-            "Id":"c",
-            "Name":"C",
+            "Id":"unusedB",
+            "Name":"Unused B",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
-            "Resolution":0,
             "Signed":false},
           {
             "Order":9,
@@ -29647,12 +29640,11 @@
             "Signed":false},
           {
             "Order":11,
-            "Id":"g",
-            "Name":"G",
+            "Id":"unusedC",
+            "Name":"Unused C",
             "BitLength":8,
             "BitOffset":88,
             "BitStart":0,
-            "Resolution":0,
             "Signed":false}]},
       {
         "PGN":130850,
@@ -29941,7 +29933,6 @@
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
-            "Resolution":0,
             "Signed":false},
           {
             "Order":9,

@@ -32,7 +32,6 @@ limitations under the License.
 #define RES_LAT_LONG_64 (1.0e-16)
 #define RES_PERCENTAGE (100.0 / 25000.0)
 
-#define RES_NOTUSED (0)
 #define RES_RADIANS (1e-4)
 #define RES_ROTATION (1e-3 / 32.0)
 #define RES_HIRES_ROTATION (1e-6 / 32.0)
@@ -5681,9 +5680,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       SIMPLE_FIELD("Unused", BYTES(3)),
       MATCH_FIELD("Type", BYTES(2), 0, "Heading Offset"),
-      {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
+      SIMPLE_FIELD("Unused B", BYTES(2)),
       ANGLE_REL_FIELD("Angle", ""),
-      {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
+      SIMPLE_FIELD("Unused C", BYTES(2)),
       {0}}}
 
     ,
@@ -5701,9 +5700,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       SIMPLE_FIELD("Unused", BYTES(3)),
       MATCH_FIELD("Type", BYTES(2), 768, "Local field"),
-      {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
+      SIMPLE_FIELD("Unused B", BYTES(2)),
       PERCENTAGE_FIELD("Local field"),
-      {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
+      SIMPLE_FIELD("Unused C", BYTES(2)),
       {0}}}
 
     ,
@@ -5718,9 +5717,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       SIMPLE_FIELD("Unused", BYTES(3)),
       MATCH_FIELD("Type", BYTES(2), 1024, "Local field"),
-      SIMPLE_FIELD("A", BYTES(2)),
+      SIMPLE_FIELD("Unused B", BYTES(2)),
       ANGLE_REL_FIELD("Field angle", ""),
-      {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
+      SIMPLE_FIELD("Unused C", BYTES(2)),
       {0}}}
 
     ,
@@ -5771,13 +5770,13 @@ Pgn pgnList[] = {
      0,
      {COMPANY(1857),
       MATCH_FIELD("Proprietary ID", BYTES(1), 2, "AP command"),
-      {"B", BYTES(2), RES_NOTUSED, false, 0, ""},
+      SIMPLE_FIELD("Unused A", BYTES(2)),
       ONE_BYTE_FIELD("Controlling Device"),
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
-      {"C", BYTES(1), RES_NOTUSED, false, 0, ""},
+      SIMPLE_FIELD("Unused B", BYTES(1)),
       LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
       ANGLE_POS_FIELD("Angle", ""),
-      {"G", BYTES(1), RES_NOTUSED, false, 0, ""},
+      SIMPLE_FIELD("Unused C", BYTES(1)),
       {0}}}
 
     ,
@@ -5825,7 +5824,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("B", BYTES(2)),
       ONE_BYTE_FIELD("Controlling Device"),
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
-      {"C", BYTES(1), RES_NOTUSED, false, 0, ""},
+      ONE_BYTE_FIELD("C"),
       LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
       ANGLE_POS_FIELD("Angle", ""),
       ONE_BYTE_FIELD("G"),

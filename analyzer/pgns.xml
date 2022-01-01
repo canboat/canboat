@@ -35043,12 +35043,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>unusedB</Id>
+          <Name>Unused B</Name>
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35064,12 +35063,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>unused</Id>
-          <Name>Unused</Name>
+          <Id>unusedC</Id>
+          <Name>Unused C</Name>
           <BitLength>16</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -35220,12 +35218,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>unusedB</Id>
+          <Name>Unused B</Name>
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35241,12 +35238,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>unused</Id>
-          <Name>Unused</Name>
+          <Id>unusedC</Id>
+          <Name>Unused C</Name>
           <BitLength>16</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -35347,8 +35343,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>unusedB</Id>
+          <Name>Unused B</Name>
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
@@ -35367,12 +35363,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>unused</Id>
-          <Name>Unused</Name>
+          <Id>unusedC</Id>
+          <Name>Unused C</Name>
           <BitLength>16</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -35757,12 +35752,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>b</Id>
-          <Name>B</Name>
+          <Id>unusedA</Id>
+          <Name>Unused A</Name>
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35801,12 +35795,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>c</Id>
-          <Name>C</Name>
+          <Id>unusedB</Id>
+          <Name>Unused B</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -35838,12 +35831,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>11</Order>
-          <Id>g</Id>
-          <Name>G</Name>
+          <Id>unusedC</Id>
+          <Name>Unused C</Name>
           <BitLength>8</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -36182,7 +36174,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
