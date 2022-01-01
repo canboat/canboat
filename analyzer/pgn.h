@@ -196,20 +196,21 @@ typedef struct
     .name = "Instance", .size = BYTES(1), .resolution = 1, .description = "" \
   }
 
-#define ONE_BYTE_FIELD(nam)                                           \
-  {                                                                   \
-    .name = nam, .size = BYTES(1), .resolution = 1, .description = "" \
+#define INTEGER_DESC_FIELD(nam, len, desc)                                   \
+  {                                                                          \
+    .name = nam, .size = len, .resolution = RES_INTEGER, .description = desc \
   }
 
-#define INTEGER_FIELD(nam, len)                                            \
-  {                                                                        \
-    .name = nam, .size = len, .resolution = RES_INTEGER, .description = "" \
+#define INTEGER_FIELD(nam, len) INTEGER_DESC_FIELD(nam, len, "")
+
+#define SIMPLE_DESC_FIELD(nam, len, desc)                          \
+  {                                                                \
+    .name = nam, .size = len, .resolution = 1, .description = desc \
   }
 
-#define SIMPLE_FIELD(nam, len)                                   \
-  {                                                              \
-    .name = nam, .size = len, .resolution = 1, .description = "" \
-  }
+#define SIMPLE_FIELD(nam, len) SIMPLE_DESC_FIELD(nam, len, "")
+
+#define ONE_BYTE_FIELD(nam) SIMPLE_FIELD(nam, BYTES(1))
 
 typedef struct
 {
@@ -334,7 +335,7 @@ Pgn pgnList[] = {
      {LOOKUP_FIELD("Control", BYTES(1), ISO_CONTROL),
       ONE_BYTE_FIELD("Group Function"),
       RESERVED_FIELD(24),
-      {"PGN", 24, RES_INTEGER, false, 0, "Parameter Group Number of requested information"},
+      INTEGER_DESC_FIELD("PGN", 24, "Parameter Group Number of requested information"),
       {0}}}
 
     ,
@@ -376,12 +377,13 @@ Pgn pgnList[] = {
      8,
      1,
      {MATCH_FIELD("Group Function Code", BYTES(1), 16, "RTS"),
-      {"Message size", BYTES(2), 1, false, 0, "bytes"},
-      {"Packets", BYTES(1), 1, false, 0, "packets"},
-      {"Packets reply", BYTES(1), 1, false, 0, "packets sent in response to CTS"} // This one is still mysterious to me...
-      ,
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
-      {0}}},
+      SIMPLE_DESC_FIELD("Message size", BYTES(2), "bytes"),
+      SIMPLE_DESC_FIELD("Packets", BYTES(1), "packets"),
+      SIMPLE_DESC_FIELD("Packets reply", BYTES(1), "packets sent in response to CTS"), // This one is still mysterious to me...
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "PGN"),
+      {0}}}
+
+    ,
     {"ISO Transport Protocol, Connection Management - Clear To Send",
      60416,
      PACKET_COMPLETE,
@@ -389,11 +391,13 @@ Pgn pgnList[] = {
      8,
      1,
      {MATCH_FIELD("Group Function Code", BYTES(1), 17, "CTS"),
-      {"Max packets", BYTES(1), 1, false, 0, "packets before waiting for next CTS"},
-      {"Next SID", BYTES(1), 1, false, 0, "packet"},
+      SIMPLE_DESC_FIELD("Max packets", BYTES(1), "packets before waiting for next CTS"),
+      SIMPLE_DESC_FIELD("Next SID", BYTES(1), "packet"),
       RESERVED_FIELD(BYTES(2)),
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
-      {0}}},
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "PGN"),
+      {0}}}
+
+    ,
     {"ISO Transport Protocol, Connection Management - End Of Message",
      60416,
      PACKET_COMPLETE,
@@ -401,11 +405,13 @@ Pgn pgnList[] = {
      8,
      1,
      {MATCH_FIELD("Group Function Code", BYTES(1), 19, "EOM"),
-      {"Total message size", BYTES(2), 1, false, 0, "bytes"},
-      {"Total number of packets received", BYTES(1), 1, false, 0, "packets"},
+      SIMPLE_DESC_FIELD("Total message size", BYTES(2), "bytes"),
+      SIMPLE_DESC_FIELD("Total number of packets received", BYTES(1), "packets"),
       RESERVED_FIELD(BYTES(1)),
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
-      {0}}},
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "PGN"),
+      {0}}}
+
+    ,
     {"ISO Transport Protocol, Connection Management - Broadcast Announce",
      60416,
      PACKET_COMPLETE,
@@ -413,10 +419,10 @@ Pgn pgnList[] = {
      8,
      1,
      {MATCH_FIELD("Group Function Code", BYTES(1), 32, "BAM"),
-      {"Message size", BYTES(2), 1, false, 0, "bytes"},
-      {"Packets", BYTES(1), 1, false, 0, "frames"},
+      SIMPLE_DESC_FIELD("Message size", BYTES(2), "bytes"),
+      SIMPLE_DESC_FIELD("Packets", BYTES(1), "frames"),
       RESERVED_FIELD(BYTES(1)),
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "PGN"),
       {0}}},
     {"ISO Transport Protocol, Connection Management - Abort",
      60416,
@@ -427,7 +433,7 @@ Pgn pgnList[] = {
      {MATCH_FIELD("Group Function Code", BYTES(1), 255, "Abort"),
       BINARY_FIELD("Reason", BYTES(1), ""),
       RESERVED_FIELD(BYTES(2)),
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "PGN"),
       {0}}}
 
     ,
@@ -439,12 +445,12 @@ Pgn pgnList[] = {
      0,
      {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
       {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      {"Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance"},
-      {"Device Instance Upper", 5, 1, false, 0, "ISO Function Instance"},
-      {"Device Function", 8, 1, false, 0, "ISO Function"},
+      SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
+      SIMPLE_DESC_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
+      SIMPLE_DESC_FIELD("Device Function", 8, "ISO Function"),
       RESERVED_FIELD(1),
       LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
-      {"System Instance", 4, 1, false, 0, "ISO Device Class Instance"},
+      SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
       LOOKUP_FIELD("Industry Group", 3, INDUSTRY_CODE),
       RESERVED_FIELD(1),
       {0}}}
@@ -861,12 +867,12 @@ Pgn pgnList[] = {
      data portion of the message must match the name information of the node whose network address is to be set. */
      {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
       SIMPLE_FIELD("Manufacturer Code", 11),
-      {"Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance"},
-      {"Device Instance Upper", 5, 1, false, 0, "ISO Function Instance"},
-      {"Device Function", BYTES(1), 1, false, 0, "ISO Function"},
+      SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
+      SIMPLE_DESC_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
+      SIMPLE_DESC_FIELD("Device Function", BYTES(1), "ISO Function"),
       RESERVED_FIELD(1),
       LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
-      {"System Instance", 4, 1, false, 0, "ISO Device Class Instance"},
+      SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
       LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
       RESERVED_FIELD(1),
       ONE_BYTE_FIELD("New Source Address"),
@@ -1185,11 +1191,11 @@ Pgn pgnList[] = {
      12,
      2,
      {MATCH_FIELD("Function Code", BYTES(1), 0, "Request"),
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "Requested PGN"},
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "Requested PGN"),
       {"Transmission interval", BYTES(4), 0.001, false, "s", ""},
       {"Transmission interval offset", BYTES(2), 0.01, false, "s", ""},
-      {"# of Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow"},
-      {"Parameter", BYTES(1), RES_INTEGER, false, 0, "Parameter index"},
+      SIMPLE_DESC_FIELD("# of Parameters", BYTES(1), "How many parameter pairs will follow"),
+      INTEGER_DESC_FIELD("Parameter", BYTES(1), "Parameter index"),
       {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, "Parameter value, variable length"},
       {0}}}
 
@@ -1201,11 +1207,11 @@ Pgn pgnList[] = {
      8,
      2,
      {MATCH_FIELD("Function Code", BYTES(1), 1, "Command"),
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "Commanded PGN"},
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "Commanded PGN"),
       LOOKUP_FIELD("Priority", 4, PRIORITY),
       RESERVED_FIELD(4),
-      {"# of Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow"},
-      {"Parameter", BYTES(1), RES_INTEGER, false, 0, "Parameter index"},
+      SIMPLE_DESC_FIELD("# of Parameters", BYTES(1), "How many parameter pairs will follow"),
+      INTEGER_DESC_FIELD("Parameter", BYTES(1), "Parameter index"),
       {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, "Parameter value, variable length"},
       {0}}}
 
@@ -1217,7 +1223,7 @@ Pgn pgnList[] = {
      8,
      1,
      {MATCH_FIELD("Function Code", BYTES(1), 2, "Acknowledge"),
-      {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
+      INTEGER_DESC_FIELD("PGN", 24, "Commanded PGN"),
       LOOKUP_FIELD("PGN error code", 4, PGN_ERROR_CODE),
       LOOKUP_FIELD("Transmission interval/Priority error code", 4, TRANSMISSION_INTERVAL),
       SIMPLE_FIELD("# of Parameters", 8),
@@ -1232,7 +1238,7 @@ Pgn pgnList[] = {
      8,
      102,
      {MATCH_FIELD("Function Code", BYTES(1), 3, "Read Fields"),
-      {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
+      INTEGER_DESC_FIELD("PGN", 24, "Commanded PGN"),
       MANUFACTURER_PROPRIETARY_FIELDS,
       INTEGER_FIELD("Unique ID", 8),
       SIMPLE_FIELD("# of Selection Pairs", 8),
@@ -1250,7 +1256,7 @@ Pgn pgnList[] = {
      8,
      202,
      {MATCH_FIELD("Function Code", BYTES(1), 4, "Read Fields Reply"),
-      {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
+      INTEGER_DESC_FIELD("PGN", 24, "Commanded PGN"),
       MANUFACTURER_PROPRIETARY_FIELDS,
       INTEGER_FIELD("Unique ID", 8),
       SIMPLE_FIELD("# of Selection Pairs", 8),
@@ -1269,7 +1275,7 @@ Pgn pgnList[] = {
      8,
      202,
      {MATCH_FIELD("Function Code", BYTES(1), 5, "Write Fields"),
-      {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
+      INTEGER_DESC_FIELD("PGN", 24, "Commanded PGN"),
       MANUFACTURER_PROPRIETARY_FIELDS,
       INTEGER_FIELD("Unique ID", 8),
       SIMPLE_FIELD("# of Selection Pairs", 8),
@@ -1288,7 +1294,7 @@ Pgn pgnList[] = {
      8,
      202,
      {MATCH_FIELD("Function Code", BYTES(1), 6, "Write Fields Reply"),
-      {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
+      INTEGER_DESC_FIELD("PGN", 24, "Commanded PGN"),
       MANUFACTURER_PROPRIETARY_FIELDS,
       INTEGER_FIELD("Unique ID", 8),
       SIMPLE_FIELD("# of Selection Pairs", 8),
@@ -1442,7 +1448,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("command", BYTES(1), 134, "0x86"),
       INTEGER_FIELD("device", BYTES(1)),
       LOOKUP_FIELD("key", BYTES(1), SEATALK_KEYSTROKE),
-      {"keyInverted", BYTES(1), RES_INTEGER, false, 0, "Bit negated version of key"},
+      INTEGER_DESC_FIELD("keyInverted", BYTES(1), "Bit negated version of key"),
       BINARY_FIELD("Unknown data", BYTES(14), ""),
       // xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF FF |
       // FF FF FF FF FF | 42 00 F8 02 05])
@@ -1494,7 +1500,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("Proprietary ID", BYTES(1), 33, "Calibrate Compass"),
       LOOKUP_FIELD("Calibrate Function", BYTES(1), AIRMAR_CALIBRATE_FUNCTION),
       LOOKUP_FIELD("Calibration Status", BYTES(1), AIRMAR_CALIBRATE_STATUS),
-      {"Verify Score", BYTES(1), RES_INTEGER, false, 0, "TBD"},
+      INTEGER_DESC_FIELD("Verify Score", BYTES(1), "TBD"),
       {"X-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
       {"Y-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
       {"Z-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
@@ -1523,7 +1529,7 @@ Pgn pgnList[] = {
       MATCH_FIELD("Proprietary ID", BYTES(1), 34, "True Wind Options"),
       LOOKUP_FIELD_DESC("COG substitution for HDG", 2, YES_NO, "Allow use of COG when HDG not available?"),
       LOOKUP_FIELD("Calibration Status", BYTES(1), AIRMAR_CALIBRATE_STATUS),
-      {"Verify Score", BYTES(1), RES_INTEGER, false, 0, "TBD"},
+      INTEGER_DESC_FIELD("Verify Score", BYTES(1), "TBD"),
       {"X-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
       {"Y-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
       {"Z-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
@@ -1666,9 +1672,9 @@ Pgn pgnList[] = {
      8,
      0,
      {COMPANY(137),
-      {"Product code", BYTES(2), 1, false, 0, "0x1b2=SSC200"},
+      SIMPLE_DESC_FIELD("Product code", BYTES(2), "0x1b2=SSC200"),
       SIMPLE_FIELD("Software code", BYTES(2)),
-      {"Command", BYTES(1), 1, false, 0, "0x50=Deviation calibration result"},
+      SIMPLE_DESC_FIELD("Command", BYTES(1), "0x50=Deviation calibration result"),
       ONE_BYTE_FIELD("Status"),
       {0}}}
 
@@ -1859,7 +1865,7 @@ Pgn pgnList[] = {
      35,
      0,
      {ONE_BYTE_FIELD("SID"),
-      {"MOB Emitter ID", BYTES(4), RES_INTEGER, false, 0, "Identifier for each MOB emitter, unique to the vessel"},
+      INTEGER_DESC_FIELD("MOB Emitter ID", BYTES(4), "Identifier for each MOB emitter, unique to the vessel"),
       LOOKUP_FIELD("Man Overboard Status", 3, MOB_STATUS),
       RESERVED_FIELD(5),
       {"Activation Time", BYTES(4), RES_TIME, false, "s", "Time of day (UTC) when MOB was activated"},
@@ -2573,7 +2579,7 @@ Pgn pgnList[] = {
      27,
      0,
      {ONE_BYTE_FIELD("SID"),
-      {"Target ID #", BYTES(1), 1, false, 0, "Number of route, waypoint, event, mark, etc."},
+      SIMPLE_DESC_FIELD("Target ID #", BYTES(1), "Number of route, waypoint, event, mark, etc."),
       LOOKUP_FIELD("Track Status", 2, TRACKING),
       LOOKUP_FIELD("Reported Target", 1, YES_NO),
       LOOKUP_FIELD("Target Acquisition", 1, TARGET_ACQUISITION),
@@ -2727,11 +2733,11 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Method", 4, GNS_METHOD),
       LOOKUP_FIELD("Integrity", 2, GNS_INTEGRITY),
       RESERVED_FIELD(6),
-      {"Number of SVs", BYTES(1), 1, false, 0, "Number of satellites used in solution"},
+      SIMPLE_DESC_FIELD("Number of SVs", BYTES(1), "Number of satellites used in solution"),
       {"HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision"},
       {"PDOP", BYTES(2), 0.01, true, 0, "Positional dilution of precision"},
       {"Geoidal Separation", BYTES(4), 0.01, true, "m", "Geoidal Separation"},
-      {"Reference Stations", BYTES(1), 1, false, 0, "Number of reference stations"},
+      SIMPLE_DESC_FIELD("Reference Stations", BYTES(1), "Number of reference stations"),
       LOOKUP_FIELD("Reference Station Type", 4, GNS),
       {"Reference Station ID", 12, 1, false, ""},
       {"Age of DGNSS Corrections", BYTES(2), 0.01, false, "s", ""},
@@ -3075,7 +3081,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      13,
      0,
-     {{"SV Elevation Mask", BYTES(2), 1, false, 0, "Will not use SV below this elevation"},
+     {SIMPLE_DESC_FIELD("SV Elevation Mask", BYTES(2), "Will not use SV below this elevation"),
       {"PDOP Mask", BYTES(2), 0.01, false, 0, "Will not report position above this PDOP"},
       {"PDOP Switch", BYTES(2), 0.01, false, 0, "Will report 2D position above this PDOP"},
       {"SNR Mask", BYTES(2), 0.01, false, 0, "Will not use SV below this SNR"},
@@ -3112,7 +3118,7 @@ Pgn pgnList[] = {
      233,
      7,
      {ONE_BYTE_FIELD("SID"),
-      {"Mode", 2, RES_INTEGER, false, 0, "Unknown lookup values"},
+      INTEGER_DESC_FIELD("Mode", 2, "Unknown lookup values"),
       RESERVED_FIELD(6),
       ONE_BYTE_FIELD("Sats in View"),
       ONE_BYTE_FIELD("PRN"),
@@ -3354,7 +3360,7 @@ Pgn pgnList[] = {
      {SIMPLE_FIELD("Message ID", 6),
       LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
       {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"IMO number", BYTES(4), RES_INTEGER, false, 0, ",0=unavailable"},
+      INTEGER_DESC_FIELD("IMO number", BYTES(4), ",0=unavailable"),
       {"Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable"},
       {"Name", BYTES(20), RES_ASCII, false, 0, ",0=unavailable"},
       LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
@@ -3608,7 +3614,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Channel A", 7),
       SIMPLE_FIELD("Channel B", 7),
       RESERVED_FIELD(2),
-      {"Power", BYTES(1), 1, false, 0, "reserved"},
+      SIMPLE_DESC_FIELD("Power", BYTES(1), "reserved"),
       INTEGER_FIELD("Tx/Rx Mode", BYTES(1)),
       {"North East Longitude Corner 1", BYTES(4), RES_LONGITUDE, true, "deg", ""},
       {"North East Latitude Corner 1", BYTES(4), RES_LATITUDE, true, "deg", ""},
@@ -3766,7 +3772,7 @@ Pgn pgnList[] = {
       {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
       {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "MMSI of mother ship sent by daughter vessels"},
       RESERVED_FIELD(2),
-      {"Spare", 6, RES_INTEGER, false, 0, ",0=unavailable"},
+      INTEGER_DESC_FIELD("Spare", 6, ",0=unavailable"),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(3),
       INTEGER_FIELD("Sequence ID", BYTES(1)),
@@ -4269,20 +4275,20 @@ Pgn pgnList[] = {
      0,
      {LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
       LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
-      {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
-      {"ID", BYTES(4), RES_INTEGER, false, 0, "Unique file ID"},
+      INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
+      INTEGER_DESC_FIELD("ID", BYTES(4), "Unique file ID"),
       LOOKUP_FIELD("Play status", BYTES(1), ENTERTAINMENT_PLAY_STATUS),
       {"Elapsed Track Time", BYTES(2), RES_TIME, false, "s", ""},
       {"Track Time", BYTES(2), RES_TIME, false, "s", ""},
       LOOKUP_FIELD("Repeat Status", 4, ENTERTAINMENT_REPEAT_STATUS),
       LOOKUP_FIELD("Shuffle Status", 4, ENTERTAINMENT_SHUFFLE_STATUS),
-      {"Save Favorite Number", BYTES(1), RES_INTEGER, false, 0, "Used to command AV to save current station as favorite"},
-      {"Play Favorite Number", BYTES(2), RES_INTEGER, false, 0, "Used to command AV to play indicated favorite station"},
+      INTEGER_DESC_FIELD("Save Favorite Number", BYTES(1), "Used to command AV to save current station as favorite"),
+      INTEGER_DESC_FIELD("Play Favorite Number", BYTES(2), "Used to command AV to play indicated favorite station"),
       LOOKUP_FIELD("Thumbs Up/Down", BYTES(1), ENTERTAINMENT_LIKE_STATUS),
       {"Signal Strength", BYTES(1), RES_INTEGER, false, "%", ""},
       RADIO_FREQUENCY_FIELD("Radio Frequency", 10),
-      {"HD Frequency Multicast", BYTES(1), RES_INTEGER, false, 0, "Digital sub channel"},
-      {"Delete Favorite Number", BYTES(1), RES_INTEGER, false, 0, "Used to command AV to delete current station as favorite"},
+      INTEGER_DESC_FIELD("HD Frequency Multicast", BYTES(1), "Digital sub channel"),
+      INTEGER_DESC_FIELD("Delete Favorite Number", BYTES(1), "Used to command AV to delete current station as favorite"),
       INTEGER_FIELD("Total Number of Tracks", BYTES(2)),
       {0}}}
 
@@ -4296,8 +4302,8 @@ Pgn pgnList[] = {
      233,
      0,
      {LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
-      {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
-      {"ID", BYTES(4), RES_INTEGER, false, 0, "Unique file ID"},
+      INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
+      INTEGER_DESC_FIELD("ID", BYTES(4), "Unique file ID"),
       LOOKUP_FIELD("Type", BYTES(1), ENTERTAINMENT_TYPE),
       {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
       INTEGER_FIELD("Track", BYTES(2)),
@@ -4323,12 +4329,12 @@ Pgn pgnList[] = {
      2,
      {
          LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
-         {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
+         INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
          LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
-         {"Group ID", BYTES(4), RES_INTEGER, false, 0, "Unique group ID"},
-         {"ID offset", BYTES(2), RES_INTEGER, false, 0, "First ID in this PGN"},
-         {"ID count", BYTES(2), RES_INTEGER, false, 0, "Number of IDs in this PGN"},
-         {"Total ID count", BYTES(2), RES_INTEGER, false, 0, "Total IDs in group"},
+         INTEGER_DESC_FIELD("Group ID", BYTES(4), "Unique group ID"),
+         INTEGER_DESC_FIELD("ID offset", BYTES(2), "First ID in this PGN"),
+         INTEGER_DESC_FIELD("ID count", BYTES(2), "Number of IDs in this PGN"),
+         INTEGER_DESC_FIELD("Total ID count", BYTES(2), "Total IDs in group"),
          LOOKUP_FIELD("ID type", BYTES(1), ENTERTAINMENT_ID_TYPE),
          INTEGER_FIELD("ID", BYTES(4)),
          {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""}
@@ -4345,8 +4351,8 @@ Pgn pgnList[] = {
      233,
      0,
      {LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
-      {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
-      {"Group ID", BYTES(4), RES_INTEGER, false, 0, "Unique group ID"},
+      INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
+      INTEGER_DESC_FIELD("Group ID", BYTES(4), "Unique group ID"),
       LOOKUP_FIELD("Group type 1", BYTES(1), ENTERTAINMENT_GROUP),
       {"Group name 1", BYTES(2), RES_STRINGLAU, false, 0, ""},
       LOOKUP_FIELD("Group type 2", BYTES(1), ENTERTAINMENT_GROUP),
@@ -4362,12 +4368,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      10,
-     {{"ID offset", BYTES(2), RES_INTEGER, false, 0, "First ID in this PGN"},
-      {"ID count", BYTES(2), RES_INTEGER, false, 0, "Number of IDs in this PGN"},
-      {"Total ID count", BYTES(2), RES_INTEGER, false, 0, "Total IDs in group"},
-      {"ID", BYTES(1), RES_INTEGER, false, 0, "Source ID"},
+     {INTEGER_DESC_FIELD("ID offset", BYTES(2), "First ID in this PGN"),
+      INTEGER_DESC_FIELD("ID count", BYTES(2), "Number of IDs in this PGN"),
+      INTEGER_DESC_FIELD("Total ID count", BYTES(2), "Total IDs in group"),
+      INTEGER_DESC_FIELD("ID", BYTES(1), "Source ID"),
       LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
-      {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
+      INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
       {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
       LOOKUP_BITFIELD("Play support", BYTES(4), ENTERTAINMENT_PLAY_STATUS_BITFIELD),
       LOOKUP_BITFIELD("Browse support", BYTES(2), ENTERTAINMENT_GROUP_BITFIELD),
@@ -4384,9 +4390,9 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      2,
-     {{"First zone ID", BYTES(1), RES_INTEGER, false, 0, "First Zone in this PGN"},
-      {"Zone count", BYTES(1), RES_INTEGER, false, 0, "Number of Zones in this PGN"},
-      {"Total zone count", BYTES(1), RES_INTEGER, false, 0, "Total Zones supported by this device"},
+     {INTEGER_DESC_FIELD("First zone ID", BYTES(1), "First Zone in this PGN"),
+      INTEGER_DESC_FIELD("Zone count", BYTES(1), "Number of Zones in this PGN"),
+      INTEGER_DESC_FIELD("Total zone count", BYTES(1), "Total Zones supported by this device"),
       LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
       {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
@@ -4471,9 +4477,9 @@ Pgn pgnList[] = {
      PACKET_FAST,
      14,
      2,
-     {{"First zone ID", BYTES(1), RES_INTEGER, false, 0, "First Zone in this PGN"},
-      {"Zone count", BYTES(1), RES_INTEGER, false, 0, "Number of Zones in this PGN"},
-      {"Total zone count", BYTES(1), RES_INTEGER, false, 0, "Total Zones supported by this device"},
+     {INTEGER_DESC_FIELD("First zone ID", BYTES(1), "First Zone in this PGN"),
+      INTEGER_DESC_FIELD("Zone count", BYTES(1), "Number of Zones in this PGN"),
+      INTEGER_DESC_FIELD("Total zone count", BYTES(1), "Total Zones supported by this device"),
       LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
       {"Zone name", BYTES(2), RES_STRINGLAU, false, 0, ""},
       {0}}}
@@ -4500,7 +4506,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      2,
-     {{"First preset", BYTES(1), RES_INTEGER, false, 0, "First preset in this PGN"},
+     {INTEGER_DESC_FIELD("First preset", BYTES(1), "First preset in this PGN"),
       INTEGER_FIELD("Preset count", BYTES(1)),
       INTEGER_FIELD("Total preset count", BYTES(1)),
       LOOKUP_FIELD("Preset type", BYTES(1), ENTERTAINMENT_EQ),
@@ -4514,7 +4520,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      3,
-     {{"First address", BYTES(1), RES_INTEGER, false, 0, "First address in this PGN"},
+     {INTEGER_DESC_FIELD("First address", BYTES(1), "First address in this PGN"),
       INTEGER_FIELD("Address count", BYTES(1)),
       INTEGER_FIELD("Total address count", BYTES(1)),
       INTEGER_FIELD("Bluetooth address", BYTES(6)),
@@ -5343,7 +5349,7 @@ Pgn pgnList[] = {
      {COMPANY(381),
       ONE_BYTE_FIELD("Field 4"),
       ONE_BYTE_FIELD("Field 5"),
-      {"Timestamp", BYTES(4), 1, false, 0, "Increasing field, what else can it be?"},
+      SIMPLE_DESC_FIELD("Timestamp", BYTES(4), "Increasing field, what else can it be?"),
       {0}}}
 
     /* M/V Dirona */
@@ -5557,7 +5563,7 @@ Pgn pgnList[] = {
       {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
       {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "Id of mother ship sent by daughter vessels"},
       RESERVED_FIELD(2),
-      {"Spare", 6, RES_INTEGER, false, 0, ",0=unavailable"},
+      INTEGER_DESC_FIELD("Spare", 6, ",0=unavailable"),
       {0}}}
 
     ,
@@ -5803,7 +5809,7 @@ Pgn pgnList[] = {
                         BYTES(1),
                         AIRMAR_POST_ID,
                         "See Airmar docs for table of IDs and failure codes; these lookup values are for DST200"),
-      {"Test result", BYTES(1), RES_INTEGER, false, 0, "Values other than 0 are failure codes"},
+      INTEGER_DESC_FIELD("Test result", BYTES(1), "Values other than 0 are failure codes"),
       {0}}}
 
     ,
@@ -5890,7 +5896,7 @@ Pgn pgnList[] = {
      {INTEGER_FIELD("CAN network load", BYTES(1)),
       INTEGER_FIELD("Errors", BYTES(4)),
       INTEGER_FIELD("Device count", BYTES(1)),
-      {"Uptime", BYTES(4), RES_INTEGER, false, 0, "s"},
+      INTEGER_DESC_FIELD("Uptime", BYTES(4), "s"),
       INTEGER_FIELD("Gateway address", BYTES(1)),
       INTEGER_FIELD("Rejected TX requests", BYTES(4)),
       {0}}}
