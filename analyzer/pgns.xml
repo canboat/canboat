@@ -5032,6 +5032,8 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5042,6 +5044,8 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5119,6 +5123,8 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -11450,27 +11456,27 @@ limitations under the License.
         </Field>
         <Field>
           <Order>13</Order>
-          <Id>percentEngineLoad</Id>
-          <Name>Percent Engine Load</Name>
+          <Id>engineLoad</Id>
+          <Name>Engine Load</Name>
           <BitLength>8</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
-          <Signed>true</Signed>
+          <Signed>false</Signed>
         </Field>
         <Field>
           <Order>14</Order>
-          <Id>percentEngineTorque</Id>
-          <Name>Percent Engine Torque</Name>
+          <Id>engineTorque</Id>
+          <Name>Engine Torque</Name>
           <BitLength>8</BitLength>
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
-          <Signed>true</Signed>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>
@@ -13769,6 +13775,8 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -14299,7 +14307,8 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
-          <Resolution>0.004</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -24049,7 +24058,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>%</Units>
           <Resolution>0.004</Resolution>
-          <Signed>true</Signed>
+          <Signed>false</Signed>
         </Field>
         <Field>
           <Order>6</Order>
@@ -24194,7 +24203,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>%</Units>
           <Resolution>0.004</Resolution>
-          <Signed>true</Signed>
+          <Signed>false</Signed>
         </Field>
         <Field>
           <Order>5</Order>
@@ -24205,7 +24214,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>%</Units>
           <Resolution>0.004</Resolution>
-          <Signed>true</Signed>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>

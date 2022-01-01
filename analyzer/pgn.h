@@ -288,6 +288,16 @@ typedef struct
     .name = "Power Factor", .size = BYTES(1), .resolution = 0.01, .units = "Cos Phi", .description = "" \
   }
 
+#define SHORT_PERCENTAGE_FIELD(nam)                                                           \
+  {                                                                                           \
+    .name = nam, .size = BYTES(1), .resolution = RES_INTEGER, .units = "%", .description = "" \
+  }
+
+#define PERCENTAGE_FIELD(nam)                                                                    \
+  {                                                                                              \
+    .name = nam, .size = BYTES(2), .resolution = RES_PERCENTAGE, .units = "%", .description = "" \
+  }
+
 typedef struct
 {
   const char *name;
@@ -1085,8 +1095,8 @@ Pgn pgnList[] = {
      0,
      {COMPANY(275),
       ONE_BYTE_FIELD("Status"),
-      {"Battery Status", BYTES(1), 1, false, "%", ""},
-      {"Battery Charge Status", BYTES(1), 1, false, "%", ""},
+      SHORT_PERCENTAGE_FIELD("Battery Status"),
+      SHORT_PERCENTAGE_FIELD("Battery Charge Status"),
       RESERVED_FIELD(BYTES(3)),
       {0}}}
 
@@ -1097,7 +1107,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {COMPANY(275), ONE_BYTE_FIELD("Unknown"), {"Signal Strength", BYTES(1), 1, false, "%", ""}, RESERVED_FIELD(BYTES(3)), {0}}}
+     {COMPANY(275), ONE_BYTE_FIELD("Unknown"), SHORT_PERCENTAGE_FIELD("Signal Strength"), RESERVED_FIELD(BYTES(3)), {0}}}
 
     ,
     {"Simnet: Reprogram Status", 65325, PACKET_INCOMPLETE, PACKET_SINGLE, 0x08, 0, {COMPANY(1857), {0}}}
@@ -2098,8 +2108,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       LOOKUP_BITFIELD("Discrete Status 1", BYTES(2), ENGINE_STATUS_1),
       LOOKUP_BITFIELD("Discrete Status 2", BYTES(2), ENGINE_STATUS_2),
-      {"Percent Engine Load", BYTES(1), RES_INTEGER, true, "%", ""},
-      {"Percent Engine Torque", BYTES(1), RES_INTEGER, true, "%", ""},
+      SHORT_PERCENTAGE_FIELD("Engine Load"),
+      SHORT_PERCENTAGE_FIELD("Engine Torque"),
       {0}}}
 
     ,
@@ -2308,7 +2318,7 @@ Pgn pgnList[] = {
      0,
      {SIMPLE_FIELD("Instance", 4),
       LOOKUP_FIELD("Type", 4, TANK_TYPE),
-      {"Level", BYTES(2), RES_PERCENTAGE, false, "%", ""},
+      PERCENTAGE_FIELD("Level"),
       {"Capacity", BYTES(4), 0.1, false, "L", ""},
       RESERVED_FIELD(BYTES(1)),
       {0}}}
@@ -2449,9 +2459,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Nominal Voltage", 4, BATTERY_VOLTAGE),
       LOOKUP_FIELD("Chemistry", 4, BATTERY_CHEMISTRY),
       {"Capacity", BYTES(2), 1, false, "C", ""},
-      {"Temperature Coefficient", BYTES(1), RES_INTEGER, false, "%", ""},
+      SHORT_PERCENTAGE_FIELD("Temperature Coefficient"),
       {"Peukert Exponent", BYTES(1), 0.002, false, 0, "Possibly in Excess-1 notation"},
-      {"Charge Efficiency Factor", BYTES(1), 1, false, "%", ""},
+      SHORT_PERCENTAGE_FIELD("Charge Efficiency Factor"),
       {0}}}
 
     ,
@@ -2561,7 +2571,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Direction Control", 4, THRUSTER_DIRECTION_CONTROL),
       LOOKUP_FIELD("Power Enabled", 2, OFF_ON),
       LOOKUP_FIELD("Retract Control", 2, THRUSTER_RETRACT_CONTROL),
-      {"Speed Control", BYTES(1), RES_PERCENTAGE, false, "%", ""},
+      SHORT_PERCENTAGE_FIELD("Speed Control"),
       LOOKUP_BITFIELD("Control Events", BYTES(1), THRUSTER_CONTROL_EVENTS),
       {"Command Timeout", BYTES(1), 1e-3, false, 0, ""},
       ANGLE_POS_FIELD("Azimuth Control", ""),
@@ -4092,7 +4102,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Temperature Source", 6, TEMPERATURE_SOURCE),
       LOOKUP_FIELD("Humidity Source", 2, HUMIDITY_SOURCE),
       TEMPERATURE_FIELD("Temperature"),
-      {"Humidity", BYTES(2), RES_PERCENTAGE, true, "%", ""},
+      PERCENTAGE_FIELD("Humidity"),
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {0}}}
 
@@ -4120,8 +4130,8 @@ Pgn pgnList[] = {
      {ONE_BYTE_FIELD("SID"),
       INSTANCE_FIELD,
       LOOKUP_FIELD("Source", BYTES(1), HUMIDITY_SOURCE),
-      {"Actual Humidity", BYTES(2), RES_PERCENTAGE, true, "%", ""},
-      {"Set Humidity", BYTES(2), RES_PERCENTAGE, true, "%", ""},
+      PERCENTAGE_FIELD("Actual Humidity"),
+      PERCENTAGE_FIELD("Set Humidity"),
       {0}}}
 
     ,
@@ -4345,7 +4355,7 @@ Pgn pgnList[] = {
       INTEGER_DESC_FIELD("Save Favorite Number", BYTES(1), "Used to command AV to save current station as favorite"),
       INTEGER_DESC_FIELD("Play Favorite Number", BYTES(2), "Used to command AV to play indicated favorite station"),
       LOOKUP_FIELD("Thumbs Up/Down", BYTES(1), ENTERTAINMENT_LIKE_STATUS),
-      {"Signal Strength", BYTES(1), RES_INTEGER, false, "%", ""},
+      SHORT_PERCENTAGE_FIELD("Signal Strength"),
       RADIO_FREQUENCY_FIELD("Radio Frequency", 10),
       INTEGER_DESC_FIELD("HD Frequency Multicast", BYTES(1), "Digital sub channel"),
       INTEGER_DESC_FIELD("Delete Favorite Number", BYTES(1), "Used to command AV to delete current station as favorite"),
@@ -4552,7 +4562,7 @@ Pgn pgnList[] = {
      4,
      0,
      {LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
-      {"Volume", BYTES(1), RES_INTEGER, false, "%", ""},
+      SHORT_PERCENTAGE_FIELD("Volume"),
       LOOKUP_FIELD_DESC("Volume change", 2, ENTERTAINMENT_VOLUME_CONTROL, "Write only"),
       LOOKUP_FIELD("Mute", 2, YES_NO),
       RESERVED_FIELD(4),
@@ -4586,7 +4596,7 @@ Pgn pgnList[] = {
       INTEGER_FIELD("Bluetooth address", BYTES(6)),
       LOOKUP_FIELD("Status", BYTES(1), BLUETOOTH_STATUS),
       {"Device name", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Signal strength", BYTES(1), RES_INTEGER, false, "%", ""},
+      SHORT_PERCENTAGE_FIELD("Signal strength"),
       {0}}}
 
     ,
@@ -4611,7 +4621,7 @@ Pgn pgnList[] = {
      14,
      2,
      {LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
-      {"Volume limit", BYTES(1), RES_INTEGER, false, "%", ""},
+      SHORT_PERCENTAGE_FIELD("Volume limit"),
       {"Fade", BYTES(1), RES_INTEGER, true, "%", ""},
       {"Balance", BYTES(1), RES_INTEGER, true, "%", ""},
       {"Sub volume", BYTES(1), RES_INTEGER, true, "%", ""},
@@ -5681,7 +5691,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Unused", BYTES(3)),
       MATCH_FIELD("Type", BYTES(2), 768, "Local field"),
       {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
-      {"Local field", BYTES(2), RES_PERCENTAGE, false, "%", ""},
+      PERCENTAGE_FIELD("Local field"),
       {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
       {0}}}
 
