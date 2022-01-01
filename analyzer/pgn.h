@@ -229,6 +229,11 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = RES_TEMPERATURE_HIGH, .units = "K", .description = "" \
   }
 
+#define TEMPERATURE_FIELD(nam)                                                                    \
+  {                                                                                               \
+    .name = nam, .size = BYTES(2), .resolution = RES_TEMPERATURE, .units = "K", .description = "" \
+  }
+
 #define VARIABLE_FIELD(nam, desc)                                                      \
   {                                                                                    \
     .name = nam, .size = LEN_VARIABLE, .resolution = RES_VARIABLE, .description = desc \
@@ -1003,10 +1008,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {COMPANY(140),
-      LOOKUP_FIELD("Temperature Source", BYTES(1), TEMPERATURE_SOURCE),
-      {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {0}}}
+     {COMPANY(140), LOOKUP_FIELD("Temperature Source", BYTES(1), TEMPERATURE_SOURCE), TEMPERATURE_FIELD("Actual Temperature"), {0}}}
 
     ,
     {"Chetco: Dimmer",
@@ -1228,7 +1230,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(135),
       ONE_BYTE_FIELD("SID"),
-      {"Internal Device Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Internal Device Temperature"),
       VOLTAGE_FIELD("Supply Voltage", 0.01),
       RESERVED_FIELD(BYTES(1)),
       {0}}}
@@ -2087,7 +2089,7 @@ Pgn pgnList[] = {
      {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       {"Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       TEMPERATURE_HIGH_FIELD("Oil temperature"),
-      {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Temperature"),
       VOLTAGE_FIELD("Alternator Potential", 0.01),
       {"Fuel Rate", BYTES(2), 0.1, true, "L/h", ""},
       ELAPSED_FIELD("Total Engine hours", BYTES(4), 1.0),
@@ -2356,7 +2358,7 @@ Pgn pgnList[] = {
      {INSTANCE_FIELD,
       VOLTAGE_FIELD("Voltage", 0.01),
       {"Current", BYTES(2), 0.1, true, "A", ""},
-      {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Temperature"),
       ONE_BYTE_FIELD("SID"),
       {0}}}
 
@@ -2390,7 +2392,7 @@ Pgn pgnList[] = {
       {"Charge Current Limit", BYTES(2), 0.1, false, "A", ""},
       ONE_BYTE_FIELD("Charging Algorithm"),
       ONE_BYTE_FIELD("Charger Mode"),
-      {"Estimated Temperature", BYTES(2), RES_TEMPERATURE, false, 0, "When no sensor present"},
+      TEMPERATURE_FIELD("Estimated Temperature"),
       SIMPLE_FIELD("Equalize One Time Enable/Disable", 4),
       SIMPLE_FIELD("Over Charge Enable/Disable", 4),
       SIMPLE_FIELD("Equalize Time", BYTES(2)),
@@ -2576,7 +2578,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Motor Type", 4, THRUSTER_MOTOR_TYPE),
       RESERVED_FIELD(4),
       {"Power Rating", BYTES(2), 1, false, "W", ""},
-      {"Maximum Temperature Rating", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Maximum Temperature Rating"),
       {"Maximum Rotational Speed", BYTES(2), 0.25, false, "rpm", ""},
       {0}}}
 
@@ -2591,7 +2593,7 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("Identifier"),
       LOOKUP_BITFIELD("Motor Events", BYTES(1), THRUSTER_MOTOR_EVENTS),
       {"Current", BYTES(1), 1, false, "A", ""},
-      {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Temperature"),
       {"Operating Time", BYTES(2), 1, false, "minutes", ""},
       {0}}}
 
@@ -4073,8 +4075,8 @@ Pgn pgnList[] = {
      8,
      0,
      {ONE_BYTE_FIELD("SID"),
-      {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Outside Ambient Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Water Temperature"),
+      TEMPERATURE_FIELD("Outside Ambient Air Temperature"),
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       RESERVED_FIELD(BYTES(1)),
       {0}}}
@@ -4089,7 +4091,7 @@ Pgn pgnList[] = {
      {ONE_BYTE_FIELD("SID"),
       LOOKUP_FIELD("Temperature Source", 6, TEMPERATURE_SOURCE),
       LOOKUP_FIELD("Humidity Source", 2, HUMIDITY_SOURCE),
-      {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Temperature"),
       {"Humidity", BYTES(2), RES_PERCENTAGE, true, "%", ""},
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {0}}}
@@ -4104,8 +4106,8 @@ Pgn pgnList[] = {
      {ONE_BYTE_FIELD("SID"),
       INSTANCE_FIELD,
       LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
-      {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Set Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Actual Temperature"),
+      TEMPERATURE_FIELD("Set Temperature"),
       {0}}}
 
     ,
@@ -4203,7 +4205,7 @@ Pgn pgnList[] = {
        "The average Salinity of ocean water is about 35 grams of salts per kilogram of sea water (g/kg), usually written as 35 "
        "ppt "
        "which is read as 35 parts per thousand."},
-      {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Water Temperature"),
       {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
       {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
       {0}}}
@@ -4224,7 +4226,7 @@ Pgn pgnList[] = {
       LENGTH_FIELD("Measurement Depth", BYTES(4), 0.01, "Depth below transducer"),
       SPEED_FIELD("Current speed"),
       ANGLE_POS_FIELD("Current flow direction", ""),
-      {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Water Temperature"),
       {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
       {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
       {0}}}
@@ -4248,7 +4250,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(5),
       SPEED_FIELD("Wind Gusts"),
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Ambient Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Ambient Temperature"),
       {"Station ID", BYTES(257), RES_STRING, false, 0, ""},
       {"Station Name", BYTES(257), RES_STRING, false, 0, ""},
       {0}}}
@@ -4275,8 +4277,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Dominant Wave Period", BYTES(2)),
       {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Pressure Tendency Rate", BYTES(2), 1, false, "", ""},
-      {"Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Air Temperature"),
+      TEMPERATURE_FIELD("Water Temperature"),
       ASCII_FIELD("Station ID", BYTES(8)),
       {0}}}
 
@@ -4313,7 +4315,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("System Status", 2, OK_WARNING),
       RESERVED_FIELD(2),
       {"Salinity", BYTES(2), RES_INTEGER, false, "ppm", ""},
-      {"Product Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Product Water Temperature"),
       {"Pre-filter Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Post-filter Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
       {"Feed Pressure", BYTES(2), RES_PRESSURE, true, "kPa", ""},
@@ -5831,9 +5833,9 @@ Pgn pgnList[] = {
      0,
      {COMPANY(135),
       ONE_BYTE_FIELD("C"),
-      {"Apparent Windchill Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"True Windchill Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Dewpoint", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Apparent Windchill Temperature"),
+      TEMPERATURE_FIELD("True Windchill Temperature"),
+      TEMPERATURE_FIELD("Dewpoint"),
       {0}}}
 
     ,
@@ -5845,9 +5847,9 @@ Pgn pgnList[] = {
      0,
      {COMPANY(135),
       ONE_BYTE_FIELD("C"),
-      {"Plate Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Dewpoint", BYTES(2), RES_TEMPERATURE, false, "K", ""},
+      TEMPERATURE_FIELD("Plate Temperature"),
+      TEMPERATURE_FIELD("Air Temperature"),
+      TEMPERATURE_FIELD("Dewpoint"),
       {0}}}
 
     ,

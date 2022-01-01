@@ -13462,10 +13462,10 @@ limitations under the License.
           <Order>8</Order>
           <Id>estimatedTemperature</Id>
           <Name>Estimated Temperature</Name>
-          <Description>When no sensor present</Description>
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
