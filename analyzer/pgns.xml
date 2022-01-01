@@ -10045,9 +10045,7 @@ limitations under the License.
           <Order>11</Order>
           <Id>alertTextDescription</Id>
           <Name>Alert Text Description</Name>
-          <BitLength>128</BitLength>
-          <BitOffset>136</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -10055,7 +10053,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>alertLocationTextDescription</Id>
           <Name>Alert Location Text Description</Name>
-          <BitLength>128</BitLength>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -10365,9 +10363,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>installationDescription1</Id>
           <Name>Installation Description #1</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -10375,7 +10371,7 @@ limitations under the License.
           <Order>2</Order>
           <Id>installationDescription2</Id>
           <Name>Installation Description #2</Name>
-          <BitLength>16</BitLength>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -10383,7 +10379,7 @@ limitations under the License.
           <Order>3</Order>
           <Id>manufacturerInformation</Id>
           <Name>Manufacturer Information</Name>
-          <BitLength>16</BitLength>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -17115,9 +17111,7 @@ limitations under the License.
           <Order>23</Order>
           <Id>atonName</Id>
           <Name>AtoN Name</Name>
-          <BitLength>272</BitLength>
-          <BitOffset>208</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -21971,9 +21965,7 @@ limitations under the License.
           <Order>8</Order>
           <Id>telephoneNumber</Id>
           <Name>Telephone Number</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>168</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -22111,7 +22103,7 @@ limitations under the License.
           <Order>22</Order>
           <Id>dscExpansionFieldData</Id>
           <Name>DSC Expansion Field Data</Name>
-          <BitLength>16</BitLength>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -22255,9 +22247,7 @@ limitations under the License.
           <Order>8</Order>
           <Id>telephoneNumber</Id>
           <Name>Telephone Number</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>168</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -22395,7 +22385,7 @@ limitations under the License.
           <Order>22</Order>
           <Id>dscExpansionFieldData</Id>
           <Name>DSC Expansion Field Data</Name>
-          <BitLength>16</BitLength>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -25940,9 +25930,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26042,7 +26030,7 @@ limitations under the License.
           <Order>15</Order>
           <Id>artist</Id>
           <Name>Artist</Name>
-          <BitLength>16</BitLength>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26050,7 +26038,7 @@ limitations under the License.
           <Order>16</Order>
           <Id>album</Id>
           <Name>Album</Name>
-          <BitLength>16</BitLength>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26058,7 +26046,7 @@ limitations under the License.
           <Order>17</Order>
           <Id>station</Id>
           <Name>Station</Name>
-          <BitLength>16</BitLength>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26224,9 +26212,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>144</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26335,9 +26321,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>groupName1</Id>
           <Name>Group name 1</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26366,7 +26350,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>groupName2</Id>
           <Name>Group name 2</Name>
-          <BitLength>16</BitLength>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26395,7 +26379,7 @@ limitations under the License.
           <Order>9</Order>
           <Id>groupName3</Id>
           <Name>Group name 3</Name>
-          <BitLength>16</BitLength>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26517,9 +26501,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26702,9 +26684,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -27200,9 +27180,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>zoneName</Id>
           <Name>Zone name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -27390,9 +27368,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>presetName</Id>
           <Name>Preset name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -27475,9 +27451,7 @@ limitations under the License.
           <Order>6</Order>
           <Id>deviceName</Id>
           <Name>Device name</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable/>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>

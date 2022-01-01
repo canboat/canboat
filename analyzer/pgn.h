@@ -228,6 +228,11 @@ typedef struct
     .name = nam, .size = LEN_VARIABLE, .resolution = RES_STRING, .description = "" \
   }
 
+#define STRINGLAU_FIELD(nam)                                                          \
+  {                                                                                   \
+    .name = nam, .size = LEN_VARIABLE, .resolution = RES_STRINGLAU, .description = "" \
+  }
+
 #define ASCII_FIELD(nam, len) ASCII_DESC_FIELD(nam, len, "")
 
 #define TEMPERATURE_HIGH_FIELD(nam)                                                                    \
@@ -1857,8 +1862,8 @@ Pgn pgnList[] = {
       ONE_BYTE_FIELD("Data Source Index-Source"),
       ONE_BYTE_FIELD("Alert Occurrence Number"),
       LOOKUP_FIELD("Language ID", BYTES(1), ALERT_LANGUAGE_ID),
-      {"Alert Text Description", BYTES(16), RES_STRINGLAU, false, 0, ""},
-      {"Alert Location Text Description", BYTES(16), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Alert Text Description"),
+      STRINGLAU_FIELD("Alert Location Text Description"),
       {0}}}
 
     ,
@@ -1931,9 +1936,9 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x2a,
      0,
-     {{"Installation Description #1", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Installation Description #2", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Manufacturer Information", BYTES(2), RES_STRINGLAU, false, 0, ""},
+     {STRINGLAU_FIELD("Installation Description #1"),
+      STRINGLAU_FIELD("Installation Description #2"),
+      STRINGLAU_FIELD("Manufacturer Information"),
       {0}}}
 
     /************ PERIODIC DATA PGNs **************/
@@ -2975,7 +2980,7 @@ Pgn pgnList[] = {
       BINARY_FIELD("AtoN Status", 8, "00000000 = default"),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(3),
-      {"AtoN Name", BYTES(34), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("AtoN Name"),
       {0}}}
 
     ,
@@ -3755,7 +3760,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
       ASCII_FIELD("Proposed Rx Frequency/Channel", BYTES(6)),
       ASCII_FIELD("Proposed Tx Frequency/Channel", BYTES(6)),
-      {"Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Telephone Number"),
       {"Latitude of Vessel Reported",
        BYTES(4),
        RES_LATITUDE,
@@ -3774,7 +3779,7 @@ Pgn pgnList[] = {
       {"Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       SIMPLE_FIELD("DSC Equipment Assigned Message ID", BYTES(2)),
       LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
-      {"DSC Expansion Field Data", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("DSC Expansion Field Data"),
       {0}}}
 
     ,
@@ -3791,7 +3796,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
       ASCII_FIELD("Proposed Rx Frequency/Channel", BYTES(6)),
       ASCII_FIELD("Proposed Tx Frequency/Channel", BYTES(6)),
-      {"Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Telephone Number"),
       {"Latitude of Vessel Reported",
        BYTES(4),
        RES_LATITUDE,
@@ -3810,7 +3815,7 @@ Pgn pgnList[] = {
       {"Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
       SIMPLE_FIELD("DSC Equipment Assigned Message ID", BYTES(2)),
       LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
-      {"DSC Expansion Field Data", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("DSC Expansion Field Data"),
       {0}}}
 
     ,
@@ -4381,7 +4386,7 @@ Pgn pgnList[] = {
       INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
       INTEGER_DESC_FIELD("ID", BYTES(4), "Unique file ID"),
       LOOKUP_FIELD("Type", BYTES(1), ENTERTAINMENT_TYPE),
-      {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Name"),
       INTEGER_FIELD("Track", BYTES(2)),
       INTEGER_FIELD("Station", BYTES(2)),
       INTEGER_FIELD("Favorite", BYTES(1)),
@@ -4391,9 +4396,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("In play queue", 2, YES_NO),
       LOOKUP_FIELD("Locked", 2, YES_NO),
       RESERVED_FIELD(4),
-      {"Artist", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Album", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Station", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Artist"),
+      STRINGLAU_FIELD("Album"),
+      STRINGLAU_FIELD("Station"),
       {0}}}
 
     ,
@@ -4413,7 +4418,7 @@ Pgn pgnList[] = {
          INTEGER_DESC_FIELD("Total ID count", BYTES(2), "Total IDs in group"),
          LOOKUP_FIELD("ID type", BYTES(1), ENTERTAINMENT_ID_TYPE),
          INTEGER_FIELD("ID", BYTES(4)),
-         {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""}
+         STRINGLAU_FIELD("Name")
          // TODO: Add support for extra fields *after* the repeating fields.
          // The NMEA, in all its wisdom, suddenly feels a repeating field PGN can act to different rules. Sigh.
          // , { "Artist", BYTES(2), RES_STRINGLAU, false, 0, "" }
@@ -4430,11 +4435,11 @@ Pgn pgnList[] = {
       INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
       INTEGER_DESC_FIELD("Group ID", BYTES(4), "Unique group ID"),
       LOOKUP_FIELD("Group type 1", BYTES(1), ENTERTAINMENT_GROUP),
-      {"Group name 1", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Group name 1"),
       LOOKUP_FIELD("Group type 2", BYTES(1), ENTERTAINMENT_GROUP),
-      {"Group name 2", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Group name 2"),
       LOOKUP_FIELD("Group type 3", BYTES(1), ENTERTAINMENT_GROUP),
-      {"Group name 3", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Group name 3"),
       {0}}}
 
     ,
@@ -4450,7 +4455,7 @@ Pgn pgnList[] = {
       INTEGER_DESC_FIELD("ID", BYTES(1), "Source ID"),
       LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
       INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
-      {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Name"),
       LOOKUP_BITFIELD("Play support", BYTES(4), ENTERTAINMENT_PLAY_STATUS_BITFIELD),
       LOOKUP_BITFIELD("Browse support", BYTES(2), ENTERTAINMENT_GROUP_BITFIELD),
       LOOKUP_FIELD("Thumbs support", 2, YES_NO),
@@ -4470,7 +4475,7 @@ Pgn pgnList[] = {
       INTEGER_DESC_FIELD("Zone count", BYTES(1), "Number of Zones in this PGN"),
       INTEGER_DESC_FIELD("Total zone count", BYTES(1), "Total Zones supported by this device"),
       LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
-      {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Name"),
       {0}}}
 
     ,
@@ -4557,7 +4562,7 @@ Pgn pgnList[] = {
       INTEGER_DESC_FIELD("Zone count", BYTES(1), "Number of Zones in this PGN"),
       INTEGER_DESC_FIELD("Total zone count", BYTES(1), "Total Zones supported by this device"),
       LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
-      {"Zone name", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Zone name"),
       {0}}}
 
     ,
@@ -4586,7 +4591,7 @@ Pgn pgnList[] = {
       INTEGER_FIELD("Preset count", BYTES(1)),
       INTEGER_FIELD("Total preset count", BYTES(1)),
       LOOKUP_FIELD("Preset type", BYTES(1), ENTERTAINMENT_EQ),
-      {"Preset name", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Preset name"),
       {0}}}
 
     ,
@@ -4601,7 +4606,7 @@ Pgn pgnList[] = {
       INTEGER_FIELD("Total address count", BYTES(1)),
       INTEGER_FIELD("Bluetooth address", BYTES(6)),
       LOOKUP_FIELD("Status", BYTES(1), BLUETOOTH_STATUS),
-      {"Device name", BYTES(2), RES_STRINGLAU, false, 0, ""},
+      STRINGLAU_FIELD("Device name"),
       SHORT_PERCENTAGE_FIELD("Signal strength"),
       {0}}}
 
