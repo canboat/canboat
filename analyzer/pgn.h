@@ -263,6 +263,11 @@ typedef struct
     .name = nam, .size = len, .resolution = res, .units = "s", .description = "" \
   }
 
+#define ENERGY_FIELD(nam)                                                             \
+  {                                                                                   \
+    .name = nam, .size = BYTES(4), .resolution = 1, .units = "kWh", .description = "" \
+  }
+
 typedef struct
 {
   const char *name;
@@ -624,7 +629,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Total Energy Export", BYTES(4), 1, false, "kWh", ""}, {"Total Energy Import", BYTES(4), 1, false, "kWh", ""}, {0}}}
+     {ENERGY_FIELD("Total Energy Export"), ENERGY_FIELD("Total Energy Import"), {0}}}
 
     ,
     {"Utility Phase C AC Reactive Power",
@@ -769,7 +774,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Total Energy Export", BYTES(4), 1, false, "kWh", ""}, {"Total Energy Import", BYTES(4), 1, false, "kWh", ""}, {0}}}
+     {ENERGY_FIELD("Total Energy Export"), ENERGY_FIELD("Total Energy Import"), {0}}}
 
     ,
     {"Generator Phase C AC Reactive Power",
