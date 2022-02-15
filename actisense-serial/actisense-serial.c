@@ -267,7 +267,7 @@ int main(int argc, char **argv)
   // Do not read anything until we have seen 10 messages on bus
   for (i = 0; i < 10;)
   {
-    int r = isReady(handle, INVALID_SOCKET, INVALID_SOCKET, 1);
+    int r = isReady(handle, INVALID_SOCKET, INVALID_SOCKET, timeout);
 
     if ((r & FD1_ReadReady) > 0)
     {
@@ -282,7 +282,7 @@ int main(int argc, char **argv)
   for (wait = timeout;;)
   {
     unsigned char msg[BUFFER_SIZE];
-    int           r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, wait);
+    int           r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, timeout);
 
     if ((r & FD1_ReadReady) > 0)
     {
