@@ -371,12 +371,11 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
     {
       // Format msg as iKonvert message
       sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
-      /*if (hexMode)
+      if (hexMode)
       {
         sbAppendEncodeHex(out, msg.data, msg.len, 0);
       }
       else
-      */
       {
         sbAppendEncodeBase64(out, msg.data, msg.len, 0);
       }
