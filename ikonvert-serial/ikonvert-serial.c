@@ -46,6 +46,7 @@ static bool writeonly;
 static bool passthru;
 static bool rate_limit_off;
 static long timeout;
+static long resetTimeout;
 static bool isFile;
 static bool isSerialDevice;
 static bool hexMode;
@@ -63,8 +64,8 @@ StringBuffer dataBuffer;  // Temporary buffer during parse or generate
 StringBuffer txList;      // TX list to send to iKonvert
 StringBuffer rxList;      // RX list to send to iKonvert
 
-uint64_t lastNow; // Epoch time of last timestamp
-uint64_t lastTS;  // Last timestamp received from iKonvert. Beware roll-around, max value is 999999
+uint64_t lastNow;      // Epoch time of last timestamp
+uint64_t lastTS;       // Last timestamp received from iKonvert. Beware roll-around, max value is 999999
 
 static void processInBuffer(StringBuffer *in, StringBuffer *out);
 static void processReadBuffer(StringBuffer *in, int out);
@@ -136,6 +137,13 @@ int main(int argc, char **argv)
       argv++;
       timeout = strtol(argv[1], 0, 10);
       logDebug("timeout set to %ld seconds\n", timeout);
+    }
+    else if (strcasecmp(argv[1], "-reset") == 0 && argc > 2)
+    {
+      argc--;
+      argv++;
+      resetTimeout = strtol(argv[1], 0, 10);
+      logDebug("reset timeout set to %ld seconds\n", resetTimeout);
     }
     else if (strcasecmp(argv[1], "-s") == 0 && argc > 2)
     {
@@ -346,10 +354,26 @@ int main(int argc, char **argv)
       processReadBuffer(&readBuffer, STDOUT);
     }
 
-    if (rd == 0)
+    // The isReady() function already aborted the program
+    // where nothing at all was received from the iKonvert, for instance
+    // when there is no N2K bus power.
+    // However, we may also want reinitialize when there was no actual data
+    // received from the iKonvert, e.g. no PGN was received. A reset of the
+    // iKonvert is enough for that, so initializeDevices() suffices.
+    if (sendInitState == 0 && resetTimeout > 0)
     {
-      logDebug("Timeout\n");
-      initializeDevice();
+      uint64_t now = getNow();
+
+      logInfo("lastNow=%llu now=%llu to=%llu\n", lastNow, now, now - 1000 * timeout);
+
+      if (lastNow == 0)
+      {
+        lastNow = now;
+      }
+      if (lastNow < now - 1000 * resetTimeout)
+      {
+        initializeDevice();
+      }
     }
   }
 
