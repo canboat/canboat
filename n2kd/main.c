@@ -209,16 +209,16 @@ typedef struct
 } Pgn;
 
 /*
- * An index from PRN to index in the data[] array. By keeping
- * the PGNs that we have seen coalesced in data[] we can loop over all
- * of them very efficiently.
+ * An array of pointers to arrays of Pgn, indexed by PrnToIdx(prn);
+ * Each pointer points to an array of Pgn structures, dynamically allocated.
  */
 Pgn *pgnIdx[PGN_SPACE];
 
 /*
- * Support for 512 different PGNs. Since this is more than there are defined
- * by the NMEA this does not need to be variable.
+ * Keep track of which pgnIdx[] entries are non zero.
  * Each entry points to the location of pgnIdx[...].
+ * This is just a speed up to avoid looping over lots of empty
+ * entries in pgnIdx.
  */
 Pgn ** pgnList[512];
 size_t maxPgnList;
