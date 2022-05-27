@@ -372,6 +372,7 @@ int main(int argc, char **argv)
       }
       if (lastNow < now - 1000 * resetTimeout)
       {
+        lastNow = now;
         initializeDevice();
       }
     }
