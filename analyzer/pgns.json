@@ -1494,7 +1494,7 @@
         {"1": "Controller over current cut-out"},
         {"2": "Controller over temperature cut-out"},
         {"3": "Manufacturer defined"}
-      ]}}]
+      ]}],
     "PGNs": [
     
       {
@@ -30309,5 +30309,5 @@
             "Resolution":1,
             "Signed":false}]}
     ]
-    }
+}
     
