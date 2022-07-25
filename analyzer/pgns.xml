@@ -15051,18 +15051,11 @@ limitations under the License.
           <BitLength>4</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Lookup table</Type>
+          <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumValues Name='WINDLASS_CONTROL'>
-            <EnumPair Value='0' Name='Another device controlling windlass' />
-            <EnumPair Value='4' Name='Off' />
-            <EnumPair Value='5' Name='Down' />
-            <EnumPair Value='6' Name='Up' />
-            <EnumPair Value='8' Name='Controller under voltage cut-out' />
-            <EnumPair Value='9' Name='Controller over current cut-out' />
-            <EnumPair Value='10' Name='Controller over temperature cut-out' />
-            <EnumPair Value='11' Name='Manufacturer defined' />
-          </EnumValues>
+          <EnumBitValues Name='WINDLASS_CONTROL'>
+            <EnumPair Bit='0' Name='Another device controlling windlass' />
+          </EnumBitValues>
         </Field>
         <Field>
           <Order>14</Order>

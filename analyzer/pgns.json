@@ -12599,9 +12599,10 @@
             "BitLength":4,
             "BitOffset":48,
             "BitStart":0,
-            "Type":"Lookup table",
+            "Type":"Bitfield",
             "Signed":false,
-            "Enumeration":"WINDLASS_CONTROL"},
+            "Enumeration":"WINDLASS_CONTROL"
+    },
           {
             "Order":14,
             "Id":"reserved",
