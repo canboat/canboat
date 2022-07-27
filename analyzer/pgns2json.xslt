@@ -342,20 +342,20 @@
   </xsl:template>
 
   <xsl:template match="Enumerations">
-    <xsl:call-template name="indent"/>"Enumerations":[<xsl:apply-templates/>]<xsl:if
+    <xsl:call-template name="indent"/>"Enumerations":[<xsl:apply-templates/>],<xsl:if
     test="not(following-sibling::*)">}</xsl:if>
   </xsl:template>
 
   <xsl:template match="Enumeration">
     <xsl:call-template name="indent"/>{"type":"lookup","name":"<xsl:value-of select="@Name"/>","maxValue":"<xsl:value-of select="@MaxValue"/>","values":[<xsl:apply-templates/>
       ]}<xsl:if test="not(position() = last())">,</xsl:if>
-    <xsl:if test="not(following-sibling::*)">}</xsl:if>
+    <xsl:if test="not(following-sibling::*)"></xsl:if>
   </xsl:template>
 
   <xsl:template match="BitEnumeration">
     <xsl:call-template name="indent"/>{"type":"bitfield","name":"<xsl:value-of select="@Name"/>","maxValue":"<xsl:value-of select="@MaxValue"/>","values":[<xsl:apply-templates/>
       ]}<xsl:if test="not(position() = last())">,</xsl:if>
-    <xsl:if test="not(following-sibling::*)">}</xsl:if>
+    <xsl:if test="not(following-sibling::*)"></xsl:if>
   </xsl:template>
 
   <xsl:template match="Enumeration/EnumPair">
@@ -395,7 +395,7 @@
     "PGNs": [
     <xsl:apply-templates/>
     ]
-    }
+}
     </xsl:template>
 
 </xsl:stylesheet>
