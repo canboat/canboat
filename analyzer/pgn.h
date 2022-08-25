@@ -209,7 +209,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
 
 #define LOOKUP_ENGINE_INSTANCE (",0=Single Engine or Dual Engine Port,1=Dual Engine Starboard")
 
-// http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
+// https://osukl.com/wp-content/uploads/2020/02/3155_User-Manual_-Rev_1.21_.pdf (page 12)
 #define LOOKUP_ENGINE_STATUS_1                                                                                                     \
   (",0=Check Engine,1=Over Temperature,2=Low Oil Pressure,3=Low Oil Level,4=Low Fuel Pressure,5=Low System Voltage,6=Low Coolant " \
    "Level,7=Water Flow,8=Water In Fuel,9=Charge Indicator,10=Preheat Indicator,11=High Boost Pressure,12=Rev Limit "               \
