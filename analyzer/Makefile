@@ -20,9 +20,11 @@ PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
-TARGETS=$(ANALYZER)
+TARGETS=$(ANALYZER) $(ANALYZER_EXPLAIN)
 XMLFILE=pgns.xml
 JSONFILE=pgns.json
+XML2FILE=pgns-v2.xml
+JSON2FILE=pgns-v2.json
 NGTXMLFILE=pgns-ngt.xml
 NGTJSONFILE=pgns-ngt.json
 IKXMLFILE=pgns-ik.xml
@@ -42,7 +44,8 @@ $(ANALYZER_EXPLAIN): analyzer-explain.c pgn.c lookup.c $(HEADERS) $(COMMON) Make
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c $(COMMONDIR)/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 json: $(ANALYZER_EXPLAIN) pgns2json.xslt
-	$(ANALYZER_EXPLAIN) -explain-xml >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
+	$(ANALYZER_EXPLAIN) -explain-xml >$(XML2FILE) && xsltproc pgns2json.xslt $(XML2FILE) >$(JSON2FILE)
+	$(ANALYZER_EXPLAIN) -explain-xml -expand-lookups >$(XMLFILE) && xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
 	$(ANALYZER_EXPLAIN) -explain-ngt-xml >$(NGTXMLFILE) && xsltproc pgns2json.xslt $(NGTXMLFILE) >$(NGTJSONFILE)
 	$(ANALYZER_EXPLAIN) -explain-ik-xml >$(IKXMLFILE) && xsltproc pgns2json.xslt $(IKXMLFILE) >$(IKJSONFILE)
 

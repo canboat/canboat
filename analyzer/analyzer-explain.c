@@ -41,14 +41,15 @@ enum GeoFormats
 #define DATAFIELD_RESERVED2 (-3)
 #define DATAFIELD_RESERVED3 (-4)
 
-bool            showRaw       = false;
-bool            showData      = false;
-bool            showBytes     = false;
-bool            showJson      = false;
-bool            showJsonEmpty = false;
-bool            showJsonValue = false;
-bool            showSI        = false; // Output everything in strict SI units
-char           *sep           = " ";
+bool            showRaw         = false;
+bool            showData        = false;
+bool            showBytes       = false;
+bool            showJson        = false;
+bool            showJsonEmpty   = false;
+bool            showJsonValue   = false;
+bool            showSI          = false; // Output everything in strict SI units
+bool            doExpandLookups = false;
+char           *sep             = " ";
 char            closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
 enum GeoFormats showGeo  = GEO_DD;
 int             onlyPgn  = 0;
@@ -93,6 +94,7 @@ static void usage(char **argv, char **av)
   printf("     -explain-xml      Export the PGN database in XML format\n");
   printf("     -explain-ngt-xml  Export the Actisense PGN database in XML format\n");
   printf("     -explain-ik-xml   Export the iKonvert PGN database in XML format\n");
+  printf("     -expand-lookups   Explain lookups everywhere they are used (historic format)\n");
   printf("     -camel            Show fieldnames in normalCamelCase\n");
   printf("     -upper-camel      Show fieldnames in UpperCamelCase\n");
   printf("     -version          Print the version of the program and quit\n");
@@ -144,6 +146,10 @@ int main(int argc, char **argv)
     else if (strcasecmp(av[1], "-explain") == 0)
     {
       doExplain = true;
+    }
+    else if (strcasecmp(av[1], "-expand-lookups") == 0)
+    {
+      doExpandLookups = true;
     }
     else
     {
@@ -453,39 +459,53 @@ static void explainPGNXML(Pgn pgn)
 
       if (f.resolution == RES_LOOKUP && f.lookupValue)
       {
-        uint32_t maxValue = (1 << f.size) - 1;
-
-        printf("          <EnumValues Name='%s'>\n", f.lookupName);
-
-        for (uint32_t i = 0; i <= maxValue; i++)
+        if (doExpandLookups)
         {
-          const char *s = f.lookupValue[i];
+          uint32_t maxValue = (1 << f.size) - 1;
 
-          if (s)
+          printf("          <EnumValues Name='%s'>\n", f.lookupName);
+
+          for (uint32_t i = 0; i <= maxValue; i++)
           {
-            printf("            <EnumPair Value='%u' Name='%s' />\n", i, s);
+            const char *s = f.lookupValue[i];
+
+            if (s)
+            {
+              printf("            <EnumPair Value='%u' Name='%s' />\n", i, s);
+            }
           }
+          printf("          </EnumValues>\n");
         }
-        printf("          </EnumValues>\n");
+        else
+        {
+          printf("          <LookupEnumeration>%s</LookupEnumeration>\n", f.lookupName);
+        }
       }
 
       if (f.resolution == RES_BITFIELD && f.lookupValue)
       {
-        uint32_t maxValue = f.size;
-
-        printf("          <EnumBitValues Name='%s'>\n", f.lookupName);
-
-        for (uint32_t i = 0; i < maxValue; i++)
+        if (doExpandLookups)
         {
-          const char *s = f.lookupValue[i];
+          uint32_t maxValue = f.size;
 
-          if (s)
+          printf("          <EnumBitValues Name='%s'>\n", f.lookupName);
+
+          for (uint32_t i = 0; i < maxValue; i++)
           {
-            printf("            <EnumPair Bit='%u' Name='%s' />\n", i, s);
-          }
-        }
+            const char *s = f.lookupValue[i];
 
-        printf("          </EnumBitValues>\n");
+            if (s)
+            {
+              printf("            <EnumPair Bit='%u' Name='%s' />\n", i, s);
+            }
+          }
+
+          printf("          </EnumBitValues>\n");
+        }
+        else
+        {
+          printf("          <LookupBitEnumeration>%s</LookupBitEnumeration>\n", f.lookupName);
+        }
       }
 
       if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU)
@@ -538,7 +558,7 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
          "  <License>Apache License Version 2.0</License>\n"
          "  <Version>" VERSION "</Version>\n");
 
-  if (normal)
+  if (normal && !doExpandLookups)
   {
     printf("  <Enumerations>\n");
 

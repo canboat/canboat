@@ -2724,7 +2724,7 @@ Pgn pgnList[] = {
        false,
        "s",
        "If timeout elapses the thruster stops operating and reverts to static mode"},
-      LOOKUP_FIELD("Windlass Control Events", 4, WINDLASS_CONTROL),
+      LOOKUP_BITFIELD("Windlass Control Events", 4, WINDLASS_CONTROL),
       {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
       {0}}}
 
