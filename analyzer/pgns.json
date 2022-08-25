@@ -1494,7 +1494,7 @@
         {"1": "Controller over current cut-out"},
         {"2": "Controller over temperature cut-out"},
         {"3": "Manufacturer defined"}
-      ]}}]
+      ]}],
     "PGNs": [
     
       {
@@ -12599,9 +12599,10 @@
             "BitLength":4,
             "BitOffset":48,
             "BitStart":0,
-            "Type":"Lookup table",
+            "Type":"Bitfield",
             "Signed":false,
-            "Enumeration":"WINDLASS_CONTROL"},
+            "Enumeration":"WINDLASS_CONTROL"
+    },
           {
             "Order":14,
             "Id":"reserved",
@@ -30309,5 +30310,5 @@
             "Resolution":1,
             "Signed":false}]}
     ]
-    }
+}
     
