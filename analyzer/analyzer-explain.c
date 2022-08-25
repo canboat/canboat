@@ -463,7 +463,7 @@ static void explainPGNXML(Pgn pgn)
         {
           uint32_t maxValue = (1 << f.size) - 1;
 
-          printf("          <EnumValues Name='%s'>\n", f.lookupName);
+          printf("          <EnumValues>\n");
 
           for (uint32_t i = 0; i <= maxValue; i++)
           {
@@ -488,7 +488,7 @@ static void explainPGNXML(Pgn pgn)
         {
           uint32_t maxValue = f.size;
 
-          printf("          <EnumBitValues Name='%s'>\n", f.lookupName);
+          printf("          <EnumBitValues>\n");
 
           for (uint32_t i = 0; i < maxValue; i++)
           {

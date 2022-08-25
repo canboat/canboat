@@ -2076,7 +2076,8 @@
         {"2": "Controller over temperature cut-out"},
         {"3": "Manufacturer defined"}
         ]
-      }]
+      }],
+  
     "PGNs": [
     
       {

@@ -45,7 +45,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ISO_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='ACK' />
             <EnumPair Value='1' Name='NAK' />
             <EnumPair Value='2' Name='Access Denied' />
@@ -526,7 +526,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DEVICE_CLASS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Reserved for 2000 Use' />
             <EnumPair Value='10' Name='System tools' />
             <EnumPair Value='20' Name='Safety systems' />
@@ -565,7 +565,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -865,7 +865,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -929,7 +929,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -1195,7 +1195,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POWER_FACTOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Leading' />
             <EnumPair Value='1' Name='Lagging' />
             <EnumPair Value='2' Name='Error' />
@@ -1326,7 +1326,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POWER_FACTOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Leading' />
             <EnumPair Value='1' Name='Lagging' />
             <EnumPair Value='2' Name='Error' />
@@ -1458,7 +1458,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POWER_FACTOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Leading' />
             <EnumPair Value='1' Name='Lagging' />
             <EnumPair Value='2' Name='Error' />
@@ -1590,7 +1590,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POWER_FACTOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Leading' />
             <EnumPair Value='1' Name='Lagging' />
             <EnumPair Value='2' Name='Error' />
@@ -1756,7 +1756,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POWER_FACTOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Leading' />
             <EnumPair Value='1' Name='Lagging' />
             <EnumPair Value='2' Name='Error' />
@@ -1888,7 +1888,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POWER_FACTOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Leading' />
             <EnumPair Value='1' Name='Lagging' />
             <EnumPair Value='2' Name='Error' />
@@ -2020,7 +2020,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POWER_FACTOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Leading' />
             <EnumPair Value='1' Name='Lagging' />
             <EnumPair Value='2' Name='Error' />
@@ -2152,7 +2152,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POWER_FACTOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Leading' />
             <EnumPair Value='1' Name='Lagging' />
             <EnumPair Value='2' Name='Error' />
@@ -2323,7 +2323,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DEVICE_CLASS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Reserved for 2000 Use' />
             <EnumPair Value='10' Name='System tools' />
             <EnumPair Value='20' Name='Safety systems' />
@@ -2362,7 +2362,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -2507,7 +2507,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -2663,7 +2663,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='BOOT_STATE'>
+          <EnumValues>
             <EnumPair Value='0' Name='in Startup Monitor' />
             <EnumPair Value='1' Name='running Bootloader' />
             <EnumPair Value='2' Name='running Application' />
@@ -2723,7 +2723,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TEMPERATURE_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Sea Temperature' />
             <EnumPair Value='1' Name='Outside Temperature' />
             <EnumPair Value='2' Name='Inside Temperature' />
@@ -2965,7 +2965,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ACCESS_LEVEL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Locked' />
             <EnumPair Value='1' Name='unlocked level 1' />
             <EnumPair Value='2' Name='unlocked level 2' />
@@ -3112,7 +3112,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SEATALK_ALARM_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Alarm condition not met' />
             <EnumPair Value='1' Name='Alarm condition met and not silenced' />
             <EnumPair Value='2' Name='Alarm condition met and silenced' />
@@ -3127,7 +3127,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SEATALK_ALARM_ID'>
+          <EnumValues>
             <EnumPair Value='0' Name='No Alarm' />
             <EnumPair Value='1' Name='Shallow Depth' />
             <EnumPair Value='2' Name='Deep Depth' />
@@ -3248,7 +3248,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SEATALK_ALARM_GROUP'>
+          <EnumValues>
             <EnumPair Value='0' Name='Instrument' />
             <EnumPair Value='1' Name='Autopilot' />
             <EnumPair Value='2' Name='Radar' />
@@ -4043,7 +4043,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SEATALK_ALARM_ID'>
+          <EnumValues>
             <EnumPair Value='0' Name='No Alarm' />
             <EnumPair Value='1' Name='Shallow Depth' />
             <EnumPair Value='2' Name='Deep Depth' />
@@ -4164,7 +4164,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SEATALK_ALARM_GROUP'>
+          <EnumValues>
             <EnumPair Value='0' Name='Instrument' />
             <EnumPair Value='1' Name='Autopilot' />
             <EnumPair Value='2' Name='Radar' />
@@ -4531,7 +4531,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIRMAR_DEPTH_QUALITY_FACTOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Depth unlocked' />
             <EnumPair Value='1' Name='Quality 10%' />
             <EnumPair Value='2' Name='Quality 20%' />
@@ -4933,7 +4933,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='PRIORITY'>
+          <EnumValues>
             <EnumPair Value='0' Name='0' />
             <EnumPair Value='1' Name='1' />
             <EnumPair Value='2' Name='2' />
@@ -5033,7 +5033,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='PGN_ERROR_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Acknowledge' />
             <EnumPair Value='1' Name='PGN not supported' />
             <EnumPair Value='2' Name='PGN not available' />
@@ -5052,7 +5052,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TRANSMISSION_INTERVAL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Acknowledge' />
             <EnumPair Value='1' Name='Transmit Interval/Priority not supported' />
             <EnumPair Value='2' Name='Transmit Interval too low' />
@@ -5078,7 +5078,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='PARAMETER_FIELD'>
+          <EnumValues>
             <EnumPair Value='0' Name='Acknowledge' />
             <EnumPair Value='1' Name='Invalid parameter field' />
             <EnumPair Value='2' Name='Temporary error' />
@@ -5159,7 +5159,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -5297,7 +5297,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -5444,7 +5444,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -5591,7 +5591,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -5689,7 +5689,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='PGN_LIST_FUNCTION'>
+          <EnumValues>
             <EnumPair Value='0' Name='Transmit PGN list' />
             <EnumPair Value='1' Name='Receive PGN list' />
           </EnumValues>
@@ -5800,7 +5800,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SEATALK_PILOT_MODE'>
+          <EnumValues>
             <EnumPair Value='64' Name='Standby' />
             <EnumPair Value='66' Name='Auto' />
             <EnumPair Value='70' Name='Wind' />
@@ -5932,7 +5932,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='FUSION_COMMAND'>
+          <EnumValues>
             <EnumPair Value='1' Name='Play' />
             <EnumPair Value='2' Name='Pause' />
             <EnumPair Value='4' Name='Next' />
@@ -6033,7 +6033,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='FUSION_SIRIUS_COMMAND'>
+          <EnumValues>
             <EnumPair Value='1' Name='Next' />
             <EnumPair Value='2' Name='Prev' />
           </EnumValues>
@@ -6269,7 +6269,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='FUSION_MUTE_COMMAND'>
+          <EnumValues>
             <EnumPair Value='1' Name='Mute On' />
             <EnumPair Value='2' Name='Mute Off' />
           </EnumValues>
@@ -6583,7 +6583,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SEATALK_KEYSTROKE'>
+          <EnumValues>
             <EnumPair Value='1' Name='Auto' />
             <EnumPair Value='2' Name='Standby' />
             <EnumPair Value='3' Name='Wind' />
@@ -6712,7 +6712,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SEATALK_DEVICE_ID'>
+          <EnumValues>
             <EnumPair Value='3' Name='S100' />
             <EnumPair Value='5' Name='Course Computer' />
           </EnumValues>
@@ -6881,7 +6881,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIRMAR_CALIBRATE_FUNCTION'>
+          <EnumValues>
             <EnumPair Value='0' Name='Normal/cancel calibration' />
             <EnumPair Value='1' Name='Enter calibration mode' />
             <EnumPair Value='2' Name='Reset calibration to 0' />
@@ -6899,7 +6899,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIRMAR_CALIBRATE_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Queried' />
             <EnumPair Value='1' Name='Passed' />
             <EnumPair Value='2' Name='Failed - timeout' />
@@ -7098,7 +7098,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -7112,7 +7112,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIRMAR_CALIBRATE_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Queried' />
             <EnumPair Value='1' Name='Passed' />
             <EnumPair Value='2' Name='Failed - timeout' />
@@ -7305,7 +7305,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -7561,7 +7561,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIRMAR_TEMPERATURE_INSTANCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Device Sensor' />
             <EnumPair Value='1' Name='Onboard Water Sensor' />
             <EnumPair Value='2' Name='Optional Water Sensor' />
@@ -7657,7 +7657,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIRMAR_FILTER'>
+          <EnumValues>
             <EnumPair Value='0' Name='No filter' />
             <EnumPair Value='1' Name='Basic IIR filter' />
           </EnumValues>
@@ -7762,7 +7762,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIRMAR_FILTER'>
+          <EnumValues>
             <EnumPair Value='0' Name='No filter' />
             <EnumPair Value='1' Name='Basic IIR filter' />
           </EnumValues>
@@ -7867,7 +7867,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIRMAR_TRANSMISSION_INTERVAL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Measure interval' />
             <EnumPair Value='1' Name='Requested by user' />
           </EnumValues>
@@ -8075,7 +8075,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -8140,7 +8140,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_TYPE'>
+          <EnumValues>
             <EnumPair Value='1' Name='Emergency Alarm' />
             <EnumPair Value='2' Name='Alarm' />
             <EnumPair Value='5' Name='Warning' />
@@ -8156,7 +8156,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_CATEGORY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Navigational' />
             <EnumPair Value='1' Name='Technical' />
           </EnumValues>
@@ -8233,7 +8233,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -8247,7 +8247,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -8261,7 +8261,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -8275,7 +8275,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -8289,7 +8289,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -8303,7 +8303,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -8336,7 +8336,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_TRIGGER_CONDITION'>
+          <EnumValues>
             <EnumPair Value='0' Name='Manual' />
             <EnumPair Value='1' Name='Auto' />
             <EnumPair Value='2' Name='Test' />
@@ -8352,7 +8352,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_THRESHOLD_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Normal' />
             <EnumPair Value='1' Name='Threshold Exceeded' />
             <EnumPair Value='2' Name='Extreme Threshold Exceeded' />
@@ -8379,7 +8379,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_STATE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Disabled' />
             <EnumPair Value='1' Name='Normal' />
             <EnumPair Value='2' Name='Active' />
@@ -8408,7 +8408,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_TYPE'>
+          <EnumValues>
             <EnumPair Value='1' Name='Emergency Alarm' />
             <EnumPair Value='2' Name='Alarm' />
             <EnumPair Value='5' Name='Warning' />
@@ -8424,7 +8424,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_CATEGORY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Navigational' />
             <EnumPair Value='1' Name='Technical' />
           </EnumValues>
@@ -8510,7 +8510,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_RESPONSE_COMMAND'>
+          <EnumValues>
             <EnumPair Value='0' Name='Acknowledge' />
             <EnumPair Value='1' Name='Temporary Silence' />
             <EnumPair Value='2' Name='Test Command off' />
@@ -8547,7 +8547,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_TYPE'>
+          <EnumValues>
             <EnumPair Value='1' Name='Emergency Alarm' />
             <EnumPair Value='2' Name='Alarm' />
             <EnumPair Value='5' Name='Warning' />
@@ -8563,7 +8563,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_CATEGORY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Navigational' />
             <EnumPair Value='1' Name='Technical' />
           </EnumValues>
@@ -8640,7 +8640,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ALERT_LANGUAGE_ID'>
+          <EnumValues>
             <EnumPair Value='0' Name='English (US)' />
             <EnumPair Value='1' Name='English (UK)' />
             <EnumPair Value='2' Name='Arabic' />
@@ -8753,7 +8753,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SYSTEM_TIME'>
+          <EnumValues>
             <EnumPair Value='0' Name='GPS' />
             <EnumPair Value='1' Name='GLONASS' />
             <EnumPair Value='2' Name='Radio Station' />
@@ -8842,7 +8842,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='CONTROLLER_STATE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Error Active' />
             <EnumPair Value='1' Name='Error Passive' />
             <EnumPair Value='2' Name='Bus Off' />
@@ -8857,7 +8857,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='CONTROLLER_STATE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Error Active' />
             <EnumPair Value='1' Name='Error Passive' />
             <EnumPair Value='2' Name='Bus Off' />
@@ -8872,7 +8872,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='EQUIPMENT_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Operational' />
             <EnumPair Value='1' Name='Fault' />
           </EnumValues>
@@ -9055,7 +9055,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='MOB_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='MOB Emitter Activated' />
             <EnumPair Value='1' Name='Manual on-board MOB Button Activation' />
             <EnumPair Value='2' Name='Test mode' />
@@ -9093,7 +9093,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='MOB_POSITION_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Position estimated by the vessel' />
             <EnumPair Value='1' Name='Position reported by MOB emitter' />
           </EnumValues>
@@ -9167,7 +9167,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DIRECTION_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
             <EnumPair Value='2' Name='Error' />
@@ -9226,7 +9226,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='LOW_BATTERY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Good' />
             <EnumPair Value='1' Name='Low' />
           </EnumValues>
@@ -9261,7 +9261,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -9275,7 +9275,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -9289,7 +9289,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -9303,7 +9303,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -9317,7 +9317,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='STEERING_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Main Steering' />
             <EnumPair Value='1' Name='Non-Follow-Up Device' />
             <EnumPair Value='2' Name='Follow-Up Device' />
@@ -9335,7 +9335,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TURN_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Rudder limit controlled' />
             <EnumPair Value='1' Name='Turn rate controlled' />
             <EnumPair Value='2' Name='Radius controlled' />
@@ -9350,7 +9350,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DIRECTION_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
             <EnumPair Value='2' Name='Error' />
@@ -9375,7 +9375,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DIRECTION_RUDDER'>
+          <EnumValues>
             <EnumPair Value='0' Name='No Order' />
             <EnumPair Value='1' Name='Move to starboard' />
             <EnumPair Value='2' Name='Move to port' />
@@ -9508,7 +9508,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DIRECTION_RUDDER'>
+          <EnumValues>
             <EnumPair Value='0' Name='No Order' />
             <EnumPair Value='1' Name='Move to starboard' />
             <EnumPair Value='2' Name='Move to port' />
@@ -9620,7 +9620,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DIRECTION_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
             <EnumPair Value='2' Name='Error' />
@@ -9796,7 +9796,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='MAGNETIC_VARIATION'>
+          <EnumValues>
             <EnumPair Value='0' Name='Manual' />
             <EnumPair Value='1' Name='Automatic Chart' />
             <EnumPair Value='2' Name='Automatic Table' />
@@ -9863,7 +9863,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENGINE_INSTANCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Single Engine or Dual Engine Port' />
             <EnumPair Value='1' Name='Dual Engine Starboard' />
           </EnumValues>
@@ -9930,7 +9930,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENGINE_INSTANCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Single Engine or Dual Engine Port' />
             <EnumPair Value='1' Name='Dual Engine Starboard' />
           </EnumValues>
@@ -10042,7 +10042,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='ENGINE_STATUS_1'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='Check Engine' />
             <EnumPair Bit='1' Name='Over Temperature' />
             <EnumPair Bit='2' Name='Low Oil Pressure' />
@@ -10070,7 +10070,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='ENGINE_STATUS_2'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='Warning Level 1' />
             <EnumPair Bit='1' Name='Warning Level 2' />
             <EnumPair Bit='2' Name='Power Reduction' />
@@ -10125,7 +10125,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENGINE_INSTANCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Single Engine or Dual Engine Port' />
             <EnumPair Value='1' Name='Dual Engine Starboard' />
           </EnumValues>
@@ -10139,7 +10139,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GEAR_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Forward' />
             <EnumPair Value='1' Name='Neutral' />
             <EnumPair Value='2' Name='Reverse' />
@@ -10273,7 +10273,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENGINE_INSTANCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Single Engine or Dual Engine Port' />
             <EnumPair Value='1' Name='Dual Engine Starboard' />
           </EnumValues>
@@ -10341,7 +10341,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENGINE_INSTANCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Single Engine or Dual Engine Port' />
             <EnumPair Value='1' Name='Dual Engine Starboard' />
           </EnumValues>
@@ -10505,7 +10505,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10519,7 +10519,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10533,7 +10533,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10547,7 +10547,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10561,7 +10561,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10575,7 +10575,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10589,7 +10589,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10603,7 +10603,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10617,7 +10617,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10631,7 +10631,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10645,7 +10645,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10659,7 +10659,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10673,7 +10673,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10687,7 +10687,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10701,7 +10701,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10715,7 +10715,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10729,7 +10729,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10743,7 +10743,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10757,7 +10757,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10771,7 +10771,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10785,7 +10785,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10799,7 +10799,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10813,7 +10813,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10827,7 +10827,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10841,7 +10841,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10855,7 +10855,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10869,7 +10869,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10883,7 +10883,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10917,7 +10917,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10931,7 +10931,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10945,7 +10945,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10959,7 +10959,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10973,7 +10973,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -10987,7 +10987,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11001,7 +11001,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11015,7 +11015,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11029,7 +11029,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11043,7 +11043,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11057,7 +11057,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11071,7 +11071,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11085,7 +11085,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11099,7 +11099,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11113,7 +11113,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11127,7 +11127,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11141,7 +11141,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11155,7 +11155,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11169,7 +11169,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11183,7 +11183,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11197,7 +11197,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11211,7 +11211,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11225,7 +11225,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11239,7 +11239,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11253,7 +11253,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11267,7 +11267,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11281,7 +11281,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11295,7 +11295,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11349,7 +11349,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ACCEPTABILITY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Bad level' />
             <EnumPair Value='1' Name='Bad frequency' />
             <EnumPair Value='2' Name='Being qualified' />
@@ -11494,7 +11494,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='WAVEFORM'>
+          <EnumValues>
             <EnumPair Value='0' Name='Sine wave' />
             <EnumPair Value='1' Name='Modified sine wave' />
           </EnumValues>
@@ -11617,7 +11617,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TANK_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Fuel' />
             <EnumPair Value='1' Name='Water' />
             <EnumPair Value='2' Name='Gray water' />
@@ -11697,7 +11697,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DC_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Battery' />
             <EnumPair Value='1' Name='Alternator' />
             <EnumPair Value='2' Name='Convertor' />
@@ -11792,7 +11792,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='CHARGER_STATE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Not charging' />
             <EnumPair Value='1' Name='Bulk' />
             <EnumPair Value='2' Name='Absorption' />
@@ -11814,7 +11814,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='CHARGER_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Standalone' />
             <EnumPair Value='1' Name='Primary' />
             <EnumPair Value='2' Name='Secondary' />
@@ -11830,7 +11830,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11844,7 +11844,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -11978,7 +11978,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INVERTER_STATE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Invert' />
             <EnumPair Value='1' Name='AC passthru' />
             <EnumPair Value='2' Name='Load sense' />
@@ -11995,7 +11995,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -12297,7 +12297,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='BATTERY_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Flooded' />
             <EnumPair Value='1' Name='Gel' />
             <EnumPair Value='2' Name='AGM' />
@@ -12312,7 +12312,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -12336,7 +12336,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='BATTERY_VOLTAGE'>
+          <EnumValues>
             <EnumPair Value='0' Name='6V' />
             <EnumPair Value='1' Name='12V' />
             <EnumPair Value='2' Name='24V' />
@@ -12355,7 +12355,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='BATTERY_CHEMISTRY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Pb (Lead)' />
             <EnumPair Value='1' Name='Li' />
             <EnumPair Value='2' Name='NiCd' />
@@ -12665,7 +12665,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='CONVERTER_STATE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='Low Power Mode' />
             <EnumPair Value='2' Name='Fault' />
@@ -12688,7 +12688,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GOOD_WARNING_ERROR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Good' />
             <EnumPair Value='1' Name='Warning' />
             <EnumPair Value='2' Name='Error' />
@@ -12703,7 +12703,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GOOD_WARNING_ERROR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Good' />
             <EnumPair Value='1' Name='Warning' />
             <EnumPair Value='2' Name='Error' />
@@ -12718,7 +12718,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GOOD_WARNING_ERROR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Good' />
             <EnumPair Value='1' Name='Warning' />
             <EnumPair Value='2' Name='Error' />
@@ -12733,7 +12733,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GOOD_WARNING_ERROR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Good' />
             <EnumPair Value='1' Name='Warning' />
             <EnumPair Value='2' Name='Error' />
@@ -12890,7 +12890,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='THRUSTER_DIRECTION_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='Ready' />
             <EnumPair Value='2' Name='To Port' />
@@ -12906,7 +12906,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -12920,7 +12920,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='THRUSTER_RETRACT_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='Extend' />
             <EnumPair Value='2' Name='Retract' />
@@ -12946,7 +12946,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='THRUSTER_CONTROL_EVENTS'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='Another device controlling thruster' />
             <EnumPair Bit='1' Name='Boat speed too fast to safely use thruster' />
           </EnumBitValues>
@@ -13001,7 +13001,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='THRUSTER_MOTOR_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='12VDC' />
             <EnumPair Value='1' Name='24VDC' />
             <EnumPair Value='2' Name='48VDC' />
@@ -13090,7 +13090,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='THRUSTER_MOTOR_EVENTS'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='Motor over temperature cutout' />
             <EnumPair Bit='1' Name='Motor over current cutout' />
             <EnumPair Bit='2' Name='Low oil level warning' />
@@ -13182,7 +13182,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='WATER_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Paddle wheel' />
             <EnumPair Value='1' Name='Pitot tube' />
             <EnumPair Value='2' Name='Doppler' />
@@ -13366,7 +13366,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TRACKING'>
+          <EnumValues>
             <EnumPair Value='0' Name='Cancelled' />
             <EnumPair Value='1' Name='Acquiring' />
             <EnumPair Value='2' Name='Tracking' />
@@ -13382,7 +13382,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -13396,7 +13396,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TARGET_ACQUISITION'>
+          <EnumValues>
             <EnumPair Value='0' Name='Manual' />
             <EnumPair Value='1' Name='Automatic' />
           </EnumValues>
@@ -13410,7 +13410,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DIRECTION_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
             <EnumPair Value='2' Name='Error' />
@@ -13554,7 +13554,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='WINDLASS_DIRECTION'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='Down' />
             <EnumPair Value='2' Name='Up' />
@@ -13569,7 +13569,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -13583,7 +13583,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SPEED_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Single speed' />
             <EnumPair Value='1' Name='Dual speed' />
             <EnumPair Value='2' Name='Proportional speed' />
@@ -13620,7 +13620,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -13634,7 +13634,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -13648,7 +13648,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -13662,7 +13662,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -13688,7 +13688,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='WINDLASS_CONTROL'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='Another device controlling windlass' />
           </EnumBitValues>
         </Field>
@@ -13741,7 +13741,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='WINDLASS_DIRECTION'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='Down' />
             <EnumPair Value='2' Name='Up' />
@@ -13756,7 +13756,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='WINDLASS_MOTION'>
+          <EnumValues>
             <EnumPair Value='0' Name='Windlass stopped' />
             <EnumPair Value='1' Name='Deployment occurring' />
             <EnumPair Value='2' Name='Retrieval occurring' />
@@ -13771,7 +13771,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RODE_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Chain presently detected' />
             <EnumPair Value='1' Name='Rope presently detected' />
           </EnumValues>
@@ -13818,7 +13818,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DOCKING_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Not docked' />
             <EnumPair Value='1' Name='Fully docked' />
           </EnumValues>
@@ -13832,7 +13832,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='WINDLASS_OPERATION'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='System error' />
             <EnumPair Bit='1' Name='Sensor error' />
             <EnumPair Bit='2' Name='No windlass motion detected' />
@@ -13878,7 +13878,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='WINDLASS_MONITORING'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='Controller under voltage cut-out' />
             <EnumPair Bit='1' Name='Controller over current cut-out' />
             <EnumPair Bit='2' Name='Controller over temperature cut-out' />
@@ -13992,7 +13992,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DIRECTION_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
             <EnumPair Value='2' Name='Error' />
@@ -14264,7 +14264,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GNS'>
+          <EnumValues>
             <EnumPair Value='0' Name='GPS' />
             <EnumPair Value='1' Name='GLONASS' />
             <EnumPair Value='2' Name='GPS+GLONASS' />
@@ -14285,7 +14285,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GNS_METHOD'>
+          <EnumValues>
             <EnumPair Value='0' Name='no GNSS' />
             <EnumPair Value='1' Name='GNSS fix' />
             <EnumPair Value='2' Name='DGNSS fix' />
@@ -14306,7 +14306,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GNS_INTEGRITY'>
+          <EnumValues>
             <EnumPair Value='0' Name='No integrity checking' />
             <EnumPair Value='1' Name='Safe' />
             <EnumPair Value='2' Name='Caution' />
@@ -14386,7 +14386,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GNS'>
+          <EnumValues>
             <EnumPair Value='0' Name='GPS' />
             <EnumPair Value='1' Name='GLONASS' />
             <EnumPair Value='2' Name='GPS+GLONASS' />
@@ -14498,7 +14498,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -14550,7 +14550,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POSITION_ACCURACY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Low' />
             <EnumPair Value='1' Name='High' />
           </EnumValues>
@@ -14564,7 +14564,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RAIM_FLAG'>
+          <EnumValues>
             <EnumPair Value='0' Name='not in use' />
             <EnumPair Value='1' Name='in use' />
           </EnumValues>
@@ -14579,7 +14579,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TIME_STAMP'>
+          <EnumValues>
             <EnumPair Value='60' Name='Not available' />
             <EnumPair Value='61' Name='Manual input mode' />
             <EnumPair Value='62' Name='Dead reckoning mode' />
@@ -14628,7 +14628,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -14669,7 +14669,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='NAV_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Under way using engine' />
             <EnumPair Value='1' Name='At anchor' />
             <EnumPair Value='2' Name='Not under command' />
@@ -14693,7 +14693,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_SPECIAL_MANEUVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Not available' />
             <EnumPair Value='1' Name='Not engaged in special maneuver' />
             <EnumPair Value='2' Name='Engaged in special maneuver' />
@@ -14772,7 +14772,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -14824,7 +14824,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POSITION_ACCURACY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Low' />
             <EnumPair Value='1' Name='High' />
           </EnumValues>
@@ -14838,7 +14838,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RAIM_FLAG'>
+          <EnumValues>
             <EnumPair Value='0' Name='not in use' />
             <EnumPair Value='1' Name='in use' />
           </EnumValues>
@@ -14852,7 +14852,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TIME_STAMP'>
+          <EnumValues>
             <EnumPair Value='60' Name='Not available' />
             <EnumPair Value='61' Name='Manual input mode' />
             <EnumPair Value='62' Name='Dead reckoning mode' />
@@ -14901,7 +14901,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -14949,7 +14949,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='SOTDMA' />
             <EnumPair Value='1' Name='CS' />
           </EnumValues>
@@ -14964,7 +14964,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -14978,7 +14978,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -14992,7 +14992,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_BAND'>
+          <EnumValues>
             <EnumPair Value='0' Name='Top 525 kHz of marine band' />
             <EnumPair Value='1' Name='Entire marine band' />
           </EnumValues>
@@ -15006,7 +15006,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -15020,7 +15020,7 @@ limitations under the License.
           <BitStart>7</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Autonomous' />
             <EnumPair Value='1' Name='Assigned' />
           </EnumValues>
@@ -15034,7 +15034,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_COMMUNICATION_STATE'>
+          <EnumValues>
             <EnumPair Value='0' Name='SOTDMA' />
             <EnumPair Value='1' Name='ITDMA' />
           </EnumValues>
@@ -15068,7 +15068,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -15120,7 +15120,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POSITION_ACCURACY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Low' />
             <EnumPair Value='1' Name='High' />
           </EnumValues>
@@ -15134,7 +15134,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RAIM_FLAG'>
+          <EnumValues>
             <EnumPair Value='0' Name='not in use' />
             <EnumPair Value='1' Name='in use' />
           </EnumValues>
@@ -15148,7 +15148,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TIME_STAMP'>
+          <EnumValues>
             <EnumPair Value='60' Name='Not available' />
             <EnumPair Value='61' Name='Manual input mode' />
             <EnumPair Value='62' Name='Dead reckoning mode' />
@@ -15215,7 +15215,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SHIP_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
             <EnumPair Value='29' Name='Wing In Ground (no other information)' />
@@ -15295,7 +15295,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POSITION_FIX_DEVICE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Default: undefined' />
             <EnumPair Value='1' Name='GPS' />
             <EnumPair Value='2' Name='GLONASS' />
@@ -15371,7 +15371,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AVAILABLE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Available' />
             <EnumPair Value='1' Name='Not available' />
           </EnumValues>
@@ -15385,7 +15385,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Autonomous' />
             <EnumPair Value='1' Name='Assigned' />
           </EnumValues>
@@ -15409,7 +15409,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -15447,7 +15447,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -15499,7 +15499,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POSITION_ACCURACY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Low' />
             <EnumPair Value='1' Name='High' />
           </EnumValues>
@@ -15513,7 +15513,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RAIM_FLAG'>
+          <EnumValues>
             <EnumPair Value='0' Name='not in use' />
             <EnumPair Value='1' Name='in use' />
           </EnumValues>
@@ -15527,7 +15527,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TIME_STAMP'>
+          <EnumValues>
             <EnumPair Value='60' Name='Not available' />
             <EnumPair Value='61' Name='Manual input mode' />
             <EnumPair Value='62' Name='Dead reckoning mode' />
@@ -15587,7 +15587,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ATON_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Default: Type of AtoN not specified' />
             <EnumPair Value='1' Name='Reference point' />
             <EnumPair Value='2' Name='RACON' />
@@ -15631,7 +15631,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -15645,7 +15645,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -15659,7 +15659,7 @@ limitations under the License.
           <BitStart>7</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_ASSIGNED_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Autonomous and continuous' />
             <EnumPair Value='1' Name='Assigned mode' />
           </EnumValues>
@@ -15683,7 +15683,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POSITION_FIX_DEVICE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Default: undefined' />
             <EnumPair Value='1' Name='GPS' />
             <EnumPair Value='2' Name='GLONASS' />
@@ -15726,7 +15726,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -15978,7 +15978,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RESIDUAL_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Autonomous' />
             <EnumPair Value='1' Name='Differential enhanced' />
             <EnumPair Value='2' Name='Estimated' />
@@ -16006,7 +16006,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -16073,7 +16073,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DIRECTION_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
             <EnumPair Value='2' Name='Error' />
@@ -16088,7 +16088,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -16102,7 +16102,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -16116,7 +16116,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='BEARING_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Great Circle' />
             <EnumPair Value='1' Name='Rhumbline' />
           </EnumValues>
@@ -16394,7 +16394,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DIRECTION_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
             <EnumPair Value='2' Name='Error' />
@@ -16480,7 +16480,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='MARK_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Collision' />
             <EnumPair Value='1' Name='Turning point' />
             <EnumPair Value='2' Name='Reference' />
@@ -16606,7 +16606,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='MARK_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Collision' />
             <EnumPair Value='1' Name='Turning point' />
             <EnumPair Value='2' Name='Reference' />
@@ -16701,7 +16701,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GNSS_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='1D' />
             <EnumPair Value='1' Name='2D' />
             <EnumPair Value='2' Name='3D' />
@@ -16717,7 +16717,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DGNSS_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='None' />
             <EnumPair Value='1' Name='SBAS if available' />
             <EnumPair Value='3' Name='SBAS' />
@@ -16761,7 +16761,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -16795,7 +16795,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GNSS_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='1D' />
             <EnumPair Value='1' Name='2D' />
             <EnumPair Value='2' Name='3D' />
@@ -16811,7 +16811,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='GNSS_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='1D' />
             <EnumPair Value='1' Name='2D' />
             <EnumPair Value='2' Name='3D' />
@@ -16974,7 +16974,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SATELLITE_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Not tracked' />
             <EnumPair Value='1' Name='Tracked' />
             <EnumPair Value='2' Name='Used' />
@@ -18131,7 +18131,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -18183,7 +18183,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POSITION_ACCURACY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Low' />
             <EnumPair Value='1' Name='High' />
           </EnumValues>
@@ -18197,7 +18197,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RAIM_FLAG'>
+          <EnumValues>
             <EnumPair Value='0' Name='not in use' />
             <EnumPair Value='1' Name='in use' />
           </EnumValues>
@@ -18246,7 +18246,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -18288,7 +18288,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POSITION_FIX_DEVICE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Default: undefined' />
             <EnumPair Value='1' Name='GPS' />
             <EnumPair Value='2' Name='GLONASS' />
@@ -18340,7 +18340,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -18399,7 +18399,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SHIP_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
             <EnumPair Value='29' Name='Wing In Ground (no other information)' />
@@ -18549,7 +18549,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_VERSION'>
+          <EnumValues>
             <EnumPair Value='0' Name='ITU-R M.1371-1' />
             <EnumPair Value='1' Name='ITU-R M.1371-3' />
           </EnumValues>
@@ -18563,7 +18563,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POSITION_FIX_DEVICE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Default: undefined' />
             <EnumPair Value='1' Name='GPS' />
             <EnumPair Value='2' Name='GLONASS' />
@@ -18585,7 +18585,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AVAILABLE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Available' />
             <EnumPair Value='1' Name='Not available' />
           </EnumValues>
@@ -18610,7 +18610,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -18648,7 +18648,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -18687,7 +18687,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -18798,7 +18798,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -18835,7 +18835,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -18926,7 +18926,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -18962,7 +18962,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -19036,7 +19036,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -19088,7 +19088,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='POSITION_ACCURACY'>
+          <EnumValues>
             <EnumPair Value='0' Name='Low' />
             <EnumPair Value='1' Name='High' />
           </EnumValues>
@@ -19102,7 +19102,7 @@ limitations under the License.
           <BitStart>1</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RAIM_FLAG'>
+          <EnumValues>
             <EnumPair Value='0' Name='not in use' />
             <EnumPair Value='1' Name='in use' />
           </EnumValues>
@@ -19116,7 +19116,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TIME_STAMP'>
+          <EnumValues>
             <EnumPair Value='60' Name='Not available' />
             <EnumPair Value='61' Name='Manual input mode' />
             <EnumPair Value='62' Name='Dead reckoning mode' />
@@ -19165,7 +19165,7 @@ limitations under the License.
           <BitStart>3</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -19204,7 +19204,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AVAILABLE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Available' />
             <EnumPair Value='1' Name='Not available' />
           </EnumValues>
@@ -19328,7 +19328,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -19364,7 +19364,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -19438,7 +19438,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -19475,7 +19475,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -19578,7 +19578,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -19616,7 +19616,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -19680,7 +19680,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -19718,7 +19718,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -19861,7 +19861,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -19900,7 +19900,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -19988,7 +19988,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -20026,7 +20026,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -20124,7 +20124,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -20162,7 +20162,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -20376,7 +20376,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -20559,7 +20559,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DSC_FORMAT'>
+          <EnumValues>
             <EnumPair Value='102' Name='Geographical area' />
             <EnumPair Value='112' Name='Distress' />
             <EnumPair Value='114' Name='Common interest' />
@@ -20601,7 +20601,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DSC_NATURE'>
+          <EnumValues>
             <EnumPair Value='100' Name='Fire' />
             <EnumPair Value='101' Name='Flooding' />
             <EnumPair Value='102' Name='Collision' />
@@ -20625,7 +20625,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DSC_SECOND_TELECOMMAND'>
+          <EnumValues>
             <EnumPair Value='100' Name='No reason given' />
             <EnumPair Value='101' Name='Congestion at MSC' />
             <EnumPair Value='102' Name='Busy' />
@@ -20734,7 +20734,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -20807,7 +20807,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DSC_EXPANSION_DATA'>
+          <EnumValues>
             <EnumPair Value='100' Name='Enhanced position' />
             <EnumPair Value='101' Name='Source and datum of position' />
             <EnumPair Value='102' Name='SOG' />
@@ -20852,7 +20852,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DSC_FORMAT'>
+          <EnumValues>
             <EnumPair Value='102' Name='Geographical area' />
             <EnumPair Value='112' Name='Distress' />
             <EnumPair Value='114' Name='Common interest' />
@@ -20871,7 +20871,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DSC_CATEGORY'>
+          <EnumValues>
             <EnumPair Value='100' Name='Routine' />
             <EnumPair Value='108' Name='Safety' />
             <EnumPair Value='110' Name='Urgency' />
@@ -20898,7 +20898,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DSC_FIRST_TELECOMMAND'>
+          <EnumValues>
             <EnumPair Value='100' Name='F3E/G3E All modes TP' />
             <EnumPair Value='101' Name='F3E/G3E duplex TP' />
             <EnumPair Value='103' Name='Polling' />
@@ -20924,7 +20924,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DSC_SECOND_TELECOMMAND'>
+          <EnumValues>
             <EnumPair Value='100' Name='No reason given' />
             <EnumPair Value='101' Name='Congestion at MSC' />
             <EnumPair Value='102' Name='Busy' />
@@ -21033,7 +21033,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -21106,7 +21106,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DSC_EXPANSION_DATA'>
+          <EnumValues>
             <EnumPair Value='100' Name='Enhanced position' />
             <EnumPair Value='101' Name='Source and datum of position' />
             <EnumPair Value='102' Name='SOG' />
@@ -21154,7 +21154,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -21192,7 +21192,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -21252,7 +21252,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -21280,7 +21280,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SHIP_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
             <EnumPair Value='29' Name='Wing In Ground (no other information)' />
@@ -21438,7 +21438,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIS_TRANSCEIVER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Channel A VDL reception' />
             <EnumPair Value='1' Name='Channel B VDL reception' />
             <EnumPair Value='2' Name='Channel A VDL transmission' />
@@ -22609,7 +22609,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='WIND_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True (ground referenced to North' />
             <EnumPair Value='1' Name='Magnetic (ground referenced to Magnetic North)' />
             <EnumPair Value='2' Name='Apparent' />
@@ -22721,7 +22721,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TEMPERATURE_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Sea Temperature' />
             <EnumPair Value='1' Name='Outside Temperature' />
             <EnumPair Value='2' Name='Inside Temperature' />
@@ -22748,7 +22748,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='HUMIDITY_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Inside' />
             <EnumPair Value='1' Name='Outside' />
           </EnumValues>
@@ -22825,7 +22825,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TEMPERATURE_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Sea Temperature' />
             <EnumPair Value='1' Name='Outside Temperature' />
             <EnumPair Value='2' Name='Inside Temperature' />
@@ -22905,7 +22905,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='HUMIDITY_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Inside' />
             <EnumPair Value='1' Name='Outside' />
           </EnumValues>
@@ -22970,7 +22970,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='PRESSURE_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Atmospheric' />
             <EnumPair Value='1' Name='Water' />
             <EnumPair Value='2' Name='Steam' />
@@ -23032,7 +23032,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='PRESSURE_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Atmospheric' />
             <EnumPair Value='1' Name='Water' />
             <EnumPair Value='2' Name='Steam' />
@@ -23094,7 +23094,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TEMPERATURE_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Sea Temperature' />
             <EnumPair Value='1' Name='Outside Temperature' />
             <EnumPair Value='2' Name='Inside Temperature' />
@@ -23156,7 +23156,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RESIDUAL_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Autonomous' />
             <EnumPair Value='1' Name='Differential enhanced' />
             <EnumPair Value='2' Name='Estimated' />
@@ -23173,7 +23173,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TIDE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Falling' />
             <EnumPair Value='1' Name='Rising' />
           </EnumValues>
@@ -23304,7 +23304,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RESIDUAL_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Autonomous' />
             <EnumPair Value='1' Name='Differential enhanced' />
             <EnumPair Value='2' Name='Estimated' />
@@ -23685,7 +23685,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='WIND_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True (ground referenced to North' />
             <EnumPair Value='1' Name='Magnetic (ground referenced to Magnetic North)' />
             <EnumPair Value='2' Name='Apparent' />
@@ -23876,7 +23876,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='WIND_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True (ground referenced to North' />
             <EnumPair Value='1' Name='Magnetic (ground referenced to Magnetic North)' />
             <EnumPair Value='2' Name='Apparent' />
@@ -24015,7 +24015,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='WATERMAKER_STATE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Stopped' />
             <EnumPair Value='1' Name='Starting' />
             <EnumPair Value='2' Name='Running' />
@@ -24035,7 +24035,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -24049,7 +24049,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -24063,7 +24063,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -24077,7 +24077,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -24091,7 +24091,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -24105,7 +24105,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OK_WARNING'>
+          <EnumValues>
             <EnumPair Value='0' Name='OK' />
             <EnumPair Value='1' Name='Warning' />
           </EnumValues>
@@ -24119,7 +24119,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -24133,7 +24133,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OK_WARNING'>
+          <EnumValues>
             <EnumPair Value='0' Name='OK' />
             <EnumPair Value='1' Name='Warning' />
           </EnumValues>
@@ -24147,7 +24147,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OK_WARNING'>
+          <EnumValues>
             <EnumPair Value='0' Name='OK' />
             <EnumPair Value='1' Name='Warning' />
           </EnumValues>
@@ -24161,7 +24161,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OK_WARNING'>
+          <EnumValues>
             <EnumPair Value='0' Name='OK' />
             <EnumPair Value='1' Name='Warning' />
           </EnumValues>
@@ -24175,7 +24175,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OK_WARNING'>
+          <EnumValues>
             <EnumPair Value='0' Name='OK' />
             <EnumPair Value='1' Name='Warning' />
           </EnumValues>
@@ -24189,7 +24189,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OK_WARNING'>
+          <EnumValues>
             <EnumPair Value='0' Name='OK' />
             <EnumPair Value='1' Name='Warning' />
           </EnumValues>
@@ -24333,7 +24333,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_ZONE'>
+          <EnumValues>
             <EnumPair Value='0' Name='All zones' />
             <EnumPair Value='1' Name='Zone 1' />
             <EnumPair Value='2' Name='Zone 2' />
@@ -24350,7 +24350,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Vessel alarm' />
             <EnumPair Value='1' Name='AM' />
             <EnumPair Value='2' Name='FM' />
@@ -24411,7 +24411,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_PLAY_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Play' />
             <EnumPair Value='1' Name='Pause' />
             <EnumPair Value='2' Name='Stop' />
@@ -24472,7 +24472,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_REPEAT_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='One' />
             <EnumPair Value='2' Name='All' />
@@ -24487,7 +24487,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_SHUFFLE_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='Play queue' />
             <EnumPair Value='2' Name='All' />
@@ -24526,7 +24526,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_LIKE_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='None' />
             <EnumPair Value='1' Name='Thumbs up' />
             <EnumPair Value='2' Name='Thumbs down' />
@@ -24616,7 +24616,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Vessel alarm' />
             <EnumPair Value='1' Name='AM' />
             <EnumPair Value='2' Name='FM' />
@@ -24677,7 +24677,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='File' />
             <EnumPair Value='1' Name='Playlist Name' />
             <EnumPair Value='2' Name='Genre Name' />
@@ -24759,7 +24759,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_ZONE'>
+          <EnumValues>
             <EnumPair Value='0' Name='All zones' />
             <EnumPair Value='1' Name='Zone 1' />
             <EnumPair Value='2' Name='Zone 2' />
@@ -24775,7 +24775,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -24788,7 +24788,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -24856,7 +24856,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Vessel alarm' />
             <EnumPair Value='1' Name='AM' />
             <EnumPair Value='2' Name='FM' />
@@ -24905,7 +24905,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_ZONE'>
+          <EnumValues>
             <EnumPair Value='0' Name='All zones' />
             <EnumPair Value='1' Name='Zone 1' />
             <EnumPair Value='2' Name='Zone 2' />
@@ -24970,7 +24970,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_ID_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Group' />
             <EnumPair Value='1' Name='File' />
             <EnumPair Value='2' Name='Encrypted group' />
@@ -25024,7 +25024,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Vessel alarm' />
             <EnumPair Value='1' Name='AM' />
             <EnumPair Value='2' Name='FM' />
@@ -25085,7 +25085,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_GROUP'>
+          <EnumValues>
             <EnumPair Value='0' Name='File' />
             <EnumPair Value='1' Name='Playlist Name' />
             <EnumPair Value='2' Name='Genre Name' />
@@ -25117,7 +25117,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_GROUP'>
+          <EnumValues>
             <EnumPair Value='0' Name='File' />
             <EnumPair Value='1' Name='Playlist Name' />
             <EnumPair Value='2' Name='Genre Name' />
@@ -25148,7 +25148,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_GROUP'>
+          <EnumValues>
             <EnumPair Value='0' Name='File' />
             <EnumPair Value='1' Name='Playlist Name' />
             <EnumPair Value='2' Name='Genre Name' />
@@ -25245,7 +25245,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Vessel alarm' />
             <EnumPair Value='1' Name='AM' />
             <EnumPair Value='2' Name='FM' />
@@ -25303,7 +25303,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='ENTERTAINMENT_PLAY_STATUS_BITFIELD'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='Play' />
             <EnumPair Bit='1' Name='Pause' />
             <EnumPair Bit='2' Name='Stop' />
@@ -25340,7 +25340,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='ENTERTAINMENT_GROUP_BITFIELD'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='File' />
             <EnumPair Bit='1' Name='Playlist Name' />
             <EnumPair Bit='2' Name='Genre Name' />
@@ -25362,7 +25362,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -25375,7 +25375,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -25388,7 +25388,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='ENTERTAINMENT_REPEAT_BITFIELD'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='Song' />
             <EnumPair Bit='1' Name='Play queue' />
           </EnumBitValues>
@@ -25401,7 +25401,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='ENTERTAINMENT_SHUFFLE_BITFIELD'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='Play queue' />
             <EnumPair Bit='1' Name='All' />
           </EnumBitValues>
@@ -25468,7 +25468,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_ZONE'>
+          <EnumValues>
             <EnumPair Value='0' Name='All zones' />
             <EnumPair Value='1' Name='Zone 1' />
             <EnumPair Value='2' Name='Zone 2' />
@@ -25547,7 +25547,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='RESIDUAL_MODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Autonomous' />
             <EnumPair Value='1' Name='Differential enhanced' />
             <EnumPair Value='2' Name='Estimated' />
@@ -25564,7 +25564,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='DIRECTION_REFERENCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='True' />
             <EnumPair Value='1' Name='Magnetic' />
             <EnumPair Value='2' Name='Error' />
@@ -25757,7 +25757,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -25771,7 +25771,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_DEFAULT_SETTINGS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Save current settings as user default' />
             <EnumPair Value='1' Name='Load user default' />
             <EnumPair Value='2' Name='Load manufacturer default' />
@@ -25786,7 +25786,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_REGIONS'>
+          <EnumValues>
             <EnumPair Value='0' Name='USA' />
             <EnumPair Value='1' Name='Europe' />
             <EnumPair Value='2' Name='Asia' />
@@ -25817,7 +25817,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Bitfield</Type>
           <Signed>false</Signed>
-          <EnumBitValues Name='VIDEO_PROTOCOLS'>
+          <EnumBitValues>
             <EnumPair Bit='0' Name='PAL' />
             <EnumPair Bit='1' Name='NTSC' />
           </EnumBitValues>
@@ -25857,7 +25857,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -25871,7 +25871,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_DEFAULT_SETTINGS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Save current settings as user default' />
             <EnumPair Value='1' Name='Load user default' />
             <EnumPair Value='2' Name='Load manufacturer default' />
@@ -25886,7 +25886,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_REGIONS'>
+          <EnumValues>
             <EnumPair Value='0' Name='USA' />
             <EnumPair Value='1' Name='Europe' />
             <EnumPair Value='2' Name='Asia' />
@@ -25968,7 +25968,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_ZONE'>
+          <EnumValues>
             <EnumPair Value='0' Name='All zones' />
             <EnumPair Value='1' Name='Zone 1' />
             <EnumPair Value='2' Name='Zone 2' />
@@ -26010,7 +26010,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_ZONE'>
+          <EnumValues>
             <EnumPair Value='0' Name='All zones' />
             <EnumPair Value='1' Name='Zone 1' />
             <EnumPair Value='2' Name='Zone 2' />
@@ -26040,7 +26040,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_VOLUME_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Up' />
             <EnumPair Value='1' Name='Down' />
           </EnumValues>
@@ -26054,7 +26054,7 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -26079,7 +26079,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_CHANNEL'>
+          <EnumValues>
             <EnumPair Value='0' Name='All channels' />
             <EnumPair Value='1' Name='Stereo full range' />
             <EnumPair Value='2' Name='Stereo front' />
@@ -26153,7 +26153,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_EQ'>
+          <EnumValues>
             <EnumPair Value='0' Name='Flat' />
             <EnumPair Value='1' Name='Rock' />
             <EnumPair Value='2' Name='Hall' />
@@ -26246,7 +26246,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='BLUETOOTH_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Connected' />
             <EnumPair Value='1' Name='Not connected' />
             <EnumPair Value='2' Name='Not paired' />
@@ -26308,7 +26308,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='BLUETOOTH_SOURCE_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Reserved' />
             <EnumPair Value='1' Name='Connected' />
             <EnumPair Value='2' Name='Connecting' />
@@ -26324,7 +26324,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -26338,7 +26338,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -26378,7 +26378,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_ZONE'>
+          <EnumValues>
             <EnumPair Value='0' Name='All zones' />
             <EnumPair Value='1' Name='Zone 1' />
             <EnumPair Value='2' Name='Zone 2' />
@@ -26479,7 +26479,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_EQ'>
+          <EnumValues>
             <EnumPair Value='0' Name='Flat' />
             <EnumPair Value='1' Name='Rock' />
             <EnumPair Value='2' Name='Hall' />
@@ -26502,7 +26502,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_FILTER'>
+          <EnumValues>
             <EnumPair Value='0' Name='Full range' />
             <EnumPair Value='1' Name='High pass' />
             <EnumPair Value='2' Name='Low pass' />
@@ -26543,7 +26543,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_CHANNEL'>
+          <EnumValues>
             <EnumPair Value='0' Name='All channels' />
             <EnumPair Value='1' Name='Stereo full range' />
             <EnumPair Value='2' Name='Stereo front' />
@@ -26641,7 +26641,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -26750,7 +26750,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -26764,7 +26764,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_TUNING'>
+          <EnumValues>
             <EnumPair Value='1' Name='Seeking up' />
             <EnumPair Value='2' Name='Tuned' />
             <EnumPair Value='3' Name='Seeking down' />
@@ -26900,7 +26900,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -26997,7 +26997,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -27011,7 +27011,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='AM' />
             <EnumPair Value='1' Name='FM' />
             <EnumPair Value='2' Name='iPod' />
@@ -27102,7 +27102,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -27220,7 +27220,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -27234,7 +27234,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='FUSION_MUTE_COMMAND'>
+          <EnumValues>
             <EnumPair Value='1' Name='Mute On' />
             <EnumPair Value='2' Name='Mute Off' />
           </EnumValues>
@@ -27320,7 +27320,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -27428,7 +27428,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -27442,7 +27442,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_TUNING'>
+          <EnumValues>
             <EnumPair Value='1' Name='Seeking up' />
             <EnumPair Value='2' Name='Tuned' />
             <EnumPair Value='3' Name='Seeking down' />
@@ -27578,7 +27578,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -27592,7 +27592,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_PLAYLIST'>
+          <EnumValues>
             <EnumPair Value='1' Name='Report' />
             <EnumPair Value='4' Name='Next song' />
             <EnumPair Value='6' Name='Previous song' />
@@ -27734,7 +27734,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -27841,7 +27841,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -27948,7 +27948,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -28055,7 +28055,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -28189,7 +28189,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -28286,7 +28286,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -28389,7 +28389,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -28497,7 +28497,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -28583,7 +28583,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -28681,7 +28681,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SONICHUB_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Set' />
             <EnumPair Value='128' Name='Ack' />
           </EnumValues>
@@ -28880,7 +28880,7 @@ limitations under the License.
           <BitStart>5</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='INDUSTRY_CODE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Global' />
             <EnumPair Value='1' Name='Highway' />
             <EnumPair Value='2' Name='Agriculture' />
@@ -29526,7 +29526,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='ENTERTAINMENT_PLAY_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Play' />
             <EnumPair Value='1' Name='Pause' />
             <EnumPair Value='2' Name='Stop' />
@@ -30233,7 +30233,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='FUSION_RADIO_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='AM' />
             <EnumPair Value='1' Name='FM' />
           </EnumValues>
@@ -30550,7 +30550,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='YES_NO'>
+          <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
@@ -30786,7 +30786,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='FUSION_REPLAY_MODE'>
+          <EnumValues>
             <EnumPair Value='9' Name='USB repeat' />
             <EnumPair Value='10' Name='USB shuffle' />
             <EnumPair Value='12' Name='iPod repeat' />
@@ -30829,7 +30829,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='FUSION_REPLAY_STATUS'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='One/track' />
             <EnumPair Value='2' Name='All/album' />
@@ -30941,7 +30941,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='FUSION_MUTE_COMMAND'>
+          <EnumValues>
             <EnumPair Value='1' Name='Mute On' />
             <EnumPair Value='2' Name='Mute Off' />
           </EnumValues>
@@ -31357,7 +31357,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='FUSION_POWER_STATE'>
+          <EnumValues>
             <EnumPair Value='1' Name='On' />
             <EnumPair Value='2' Name='Off' />
           </EnumValues>
@@ -31898,7 +31898,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TEMPERATURE_SOURCE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Sea Temperature' />
             <EnumPair Value='1' Name='Outside Temperature' />
             <EnumPair Value='2' Name='Inside Temperature' />
@@ -32567,7 +32567,7 @@ limitations under the License.
           <BitStart>4</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='TANK_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Fuel' />
             <EnumPair Value='1' Name='Water' />
             <EnumPair Value='2' Name='Gray water' />
@@ -32744,7 +32744,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -32940,7 +32940,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='OFF_ON'>
+          <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='On' />
           </EnumValues>
@@ -33178,7 +33178,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -33426,7 +33426,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -33472,7 +33472,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SHIP_TYPE'>
+          <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
             <EnumPair Value='29' Name='Wing In Ground (no other information)' />
@@ -33841,7 +33841,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -34018,7 +34018,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -34145,7 +34145,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -34271,7 +34271,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='REPEAT_INDICATOR'>
+          <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
             <EnumPair Value='2' Name='Second retransmission' />
@@ -34350,7 +34350,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SIMNET_BACKLIGHT_LEVEL'>
+          <EnumValues>
             <EnumPair Value='1' Name='Day mode' />
             <EnumPair Value='4' Name='Night mode' />
             <EnumPair Value='11' Name='Level 1' />
@@ -34607,7 +34607,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SIMNET_AP_EVENTS'>
+          <EnumValues>
             <EnumPair Value='6' Name='Standby' />
             <EnumPair Value='9' Name='Auto mode' />
             <EnumPair Value='10' Name='Nav mode' />
@@ -34642,7 +34642,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SIMNET_DIRECTION'>
+          <EnumValues>
             <EnumPair Value='2' Name='Port' />
             <EnumPair Value='3' Name='Starboard' />
             <EnumPair Value='4' Name='Left rudder (port)' />
@@ -34986,7 +34986,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SIMNET_AP_EVENTS'>
+          <EnumValues>
             <EnumPair Value='6' Name='Standby' />
             <EnumPair Value='9' Name='Auto mode' />
             <EnumPair Value='10' Name='Nav mode' />
@@ -35021,7 +35021,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='SIMNET_DIRECTION'>
+          <EnumValues>
             <EnumPair Value='2' Name='Port' />
             <EnumPair Value='3' Name='Starboard' />
             <EnumPair Value='4' Name='Left rudder (port)' />
@@ -35388,7 +35388,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIRMAR_POST_CONTROL'>
+          <EnumValues>
             <EnumPair Value='0' Name='Report previous values' />
             <EnumPair Value='1' Name='Generate new values' />
           </EnumValues>
@@ -35424,7 +35424,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <EnumValues Name='AIRMAR_POST_ID'>
+          <EnumValues>
             <EnumPair Value='1' Name='Format Code' />
             <EnumPair Value='2' Name='Factory EEPROM' />
             <EnumPair Value='3' Name='User EEPROM' />
