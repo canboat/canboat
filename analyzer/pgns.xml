@@ -196,6 +196,7 @@ limitations under the License.
       <EnumPair Value='911' Name='Nautic-on' />
       <EnumPair Value='930' Name='Ecotronix' />
       <EnumPair Value='962' Name='Timbolier Industries' />
+      <EnumPair Value='963' Name='TJC Micro' />
       <EnumPair Value='968' Name='Cox Powertrain' />
       <EnumPair Value='969' Name='Blue Seas' />
       <EnumPair Value='1850' Name='Teleflex Marine (SeaStar Solutions)' />
