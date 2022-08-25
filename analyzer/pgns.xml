@@ -8658,7 +8658,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>date</Id>
           <Name>Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -8671,7 +8670,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>time</Id>
           <Name>Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -8951,7 +8949,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>activationTime</Id>
           <Name>Activation Time</Name>
-          <Description>Time of day (UTC) when MOB was activated</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -8988,11 +8985,10 @@ limitations under the License.
           <Order>8</Order>
           <Id>positionDate</Id>
           <Name>Position Date</Name>
-          <Description>Date of MOB position</Description>
           <BitLength>16</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Units></Units>
+          <Units>days</Units>
           <Type>Date</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -9001,7 +8997,6 @@ limitations under the License.
           <Order>9</Order>
           <Id>positionTime</Id>
           <Name>Position Time</Name>
-          <Description>Time of day of MOB position (UTC)</Description>
           <BitLength>32</BitLength>
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
@@ -9695,7 +9690,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>ageOfService</Id>
           <Name>Age of service</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -13153,7 +13147,6 @@ limitations under the License.
           <Order>1</Order>
           <Id>date</Id>
           <Name>Date</Name>
-          <Description>Timestamp of last reset in Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -13166,7 +13159,6 @@ limitations under the License.
           <Order>2</Order>
           <Id>time</Id>
           <Name>Time</Name>
-          <Description>Timestamp of last reset Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -13370,7 +13362,6 @@ limitations under the License.
           <Order>14</Order>
           <Id>utcOfFix</Id>
           <Name>UTC of Fix</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
@@ -14063,7 +14054,6 @@ limitations under the License.
           <Order>2</Order>
           <Id>date</Id>
           <Name>Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
@@ -14076,7 +14066,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>time</Id>
           <Name>Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -14299,7 +14288,6 @@ limitations under the License.
           <Order>1</Order>
           <Id>date</Id>
           <Name>Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -14312,7 +14300,6 @@ limitations under the License.
           <Order>2</Order>
           <Id>time</Id>
           <Name>Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -15983,7 +15970,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>etaTime</Id>
           <Name>ETA Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -15996,7 +15982,6 @@ limitations under the License.
           <Order>8</Order>
           <Id>etaDate</Id>
           <Name>ETA Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
@@ -18052,7 +18037,6 @@ limitations under the License.
           <Order>9</Order>
           <Id>positionTime</Id>
           <Name>Position Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
@@ -18094,7 +18078,6 @@ limitations under the License.
           <Order>12</Order>
           <Id>positionDate</Id>
           <Name>Position Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
@@ -18332,7 +18315,6 @@ limitations under the License.
           <Order>12</Order>
           <Id>etaDate</Id>
           <Name>ETA Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>360</BitOffset>
           <BitStart>0</BitStart>
@@ -18345,7 +18327,6 @@ limitations under the License.
           <Order>13</Order>
           <Id>etaTime</Id>
           <Name>ETA Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>376</BitOffset>
           <BitStart>0</BitStart>
@@ -20494,7 +20475,6 @@ limitations under the License.
           <Order>11</Order>
           <Id>timeOfPosition</Id>
           <Name>Time of Position</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <Units>s</Units>
           <Type>Time</Type>
@@ -20557,7 +20537,6 @@ limitations under the License.
           <Order>18</Order>
           <Id>timeOfReceipt</Id>
           <Name>Time of Receipt</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <Units>s</Units>
           <Type>Time</Type>
@@ -20568,7 +20547,6 @@ limitations under the License.
           <Order>19</Order>
           <Id>dateOfReceipt</Id>
           <Name>Date of Receipt</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <Units>days</Units>
           <Type>Date</Type>
@@ -20776,7 +20754,6 @@ limitations under the License.
           <Order>11</Order>
           <Id>timeOfPosition</Id>
           <Name>Time of Position</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <Units>s</Units>
           <Type>Time</Type>
@@ -20839,7 +20816,6 @@ limitations under the License.
           <Order>18</Order>
           <Id>timeOfReceipt</Id>
           <Name>Time of Receipt</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <Units>s</Units>
           <Type>Time</Type>
@@ -20850,7 +20826,6 @@ limitations under the License.
           <Order>19</Order>
           <Id>dateOfReceipt</Id>
           <Name>Date of Receipt</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <Units>days</Units>
           <Type>Date</Type>
@@ -21327,7 +21302,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>databaseTimestamp</Id>
           <Name>Database Timestamp</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
@@ -21340,7 +21314,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>databaseDatestamp</Id>
           <Name>Database Datestamp</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
@@ -21544,7 +21517,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>routeWpListTimestamp</Id>
           <Name>Route/WP-List Timestamp</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
@@ -21557,7 +21529,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>routeWpListDatestamp</Id>
           <Name>Route/WP-List Datestamp</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
@@ -22950,7 +22921,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>measurementDate</Id>
           <Name>Measurement Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
@@ -22963,7 +22933,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -23080,7 +23049,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>measurementDate</Id>
           <Name>Measurement Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
@@ -23093,7 +23061,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -23206,7 +23173,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>measurementDate</Id>
           <Name>Measurement Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
@@ -23219,7 +23185,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -23354,7 +23319,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>measurementDate</Id>
           <Name>Measurement Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
@@ -23367,7 +23331,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -23539,7 +23502,6 @@ limitations under the License.
           <Order>3</Order>
           <Id>measurementDate</Id>
           <Name>Measurement Date</Name>
-          <Description>Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
@@ -23552,7 +23514,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
-          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -32352,7 +32313,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>startDate</Id>
           <Name>Start Date</Name>
-          <Description>Timestamp of last reset in Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -32365,7 +32325,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>startTime</Id>
           <Name>Start Time</Name>
-          <Description>Timestamp of last reset Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -32549,7 +32508,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>startDate</Id>
           <Name>Start Date</Name>
-          <Description>Timestamp of last reset in Days since January 1, 1970</Description>
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -32562,7 +32520,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>startTime</Id>
           <Name>Start Time</Name>
-          <Description>Timestamp of last reset Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>

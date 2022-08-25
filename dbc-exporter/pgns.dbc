@@ -1,4 +1,4 @@
-VERSION "Canboat export 2022-08-25T23:29:15.990176"
+VERSION "Canboat export 2022-08-26T00:11:22.941140"
 
 
 NS_ : 
@@ -1381,8 +1381,6 @@ CM_ BO_ 2582645502 "Alert Configuration";
 CM_ BO_ 2582645758 "Alert Threshold";
 CM_ BO_ 2582646014 "Alert Value";
 CM_ BO_ 2582647038 "System Time";
-CM_ SG_ 2582647038 time "Seconds since midnight";
-CM_ SG_ 2582647038 date "Days since January 1, 1970";
 CM_ BO_ 2582647294 "Heartbeat";
 CM_ SG_ 2582647294 dataTransmitOffset "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset.";
 CM_ BO_ 2582648062 "Product Information";
@@ -1395,7 +1393,6 @@ CM_ BO_ 2582713342 "Rate of Turn";
 CM_ BO_ 2582713598 "Heave";
 CM_ BO_ 2582714878 "Attitude";
 CM_ BO_ 2582715134 "Magnetic Variation";
-CM_ SG_ 2582715134 ageOfService "Days since January 1, 1970";
 CM_ BO_ 2582774014 "Engine Parameters, Rapid Update";
 CM_ BO_ 2582774270 "Engine Parameters, Dynamic";
 CM_ BO_ 2582775294 "Transmission Parameters, Dynamic";
@@ -1444,8 +1441,6 @@ CM_ BO_ 2583168254 "Altitude Delta, Rapid Update";
 CM_ BO_ 2583168510 "GNSS Position Data";
 CM_ BO_ 2583169534 "Time & Date";
 CM_ SG_ 2583169534 localOffset "Minutes";
-CM_ SG_ 2583169534 time "Seconds since midnight";
-CM_ SG_ 2583169534 date "Days since January 1, 1970";
 CM_ BO_ 2583170814 "AIS Class A Position Report";
 CM_ BO_ 2583171070 "AIS Class B Position Report";
 CM_ BO_ 2583171326 "AIS Class B Extended Position Report";
