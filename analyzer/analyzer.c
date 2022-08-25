@@ -627,8 +627,8 @@ static bool printLatLon(char *name, double resolution, uint8_t *data, size_t byt
   }
   else
   {
-    uint32_t degrees   = (uint32_t)(absVal / RES_LAT_LONG_PRECISION);
-    uint32_t remainder = (uint32_t)(absVal % RES_LAT_LONG_PRECISION);
+    uint32_t degrees   = (uint32_t) (absVal / RES_LAT_LONG_PRECISION);
+    uint32_t remainder = (uint32_t) (absVal % RES_LAT_LONG_PRECISION);
     uint32_t minutes   = (remainder * 60) / RES_LAT_LONG_PRECISION;
     double   seconds   = (((uint64_t) remainder * 3600) / (double) RES_LAT_LONG_PRECISION) - (60 * minutes);
 
@@ -871,7 +871,6 @@ static void print6BitASCIIChar(uint8_t b)
 static bool print6BitASCIIText(char *name, uint8_t *data, size_t startBit, size_t bits)
 {
   uint8_t  value        = 0;
-  uint8_t  maxValue     = 0;
   uint8_t  bitMask      = 1 << startBit;
   uint64_t bitMagnitude = 1;
   size_t   bit;
@@ -890,7 +889,6 @@ static bool print6BitASCIIText(char *name, uint8_t *data, size_t startBit, size_
   {
     /* Act on the current bit */
     bool bitIsSet = (*data & bitMask) > 0;
-    maxValue |= bitMagnitude;
     if (bitIsSet)
     {
       value |= bitMagnitude;
@@ -925,7 +923,6 @@ static bool print6BitASCIIText(char *name, uint8_t *data, size_t startBit, size_
 static bool printHex(char *name, uint8_t *data, size_t startBit, size_t bits)
 {
   uint8_t  value        = 0;
-  uint8_t  maxValue     = 0;
   uint8_t  bitMask      = 1 << startBit;
   uint64_t bitMagnitude = 1;
   size_t   bit;
@@ -951,7 +948,6 @@ static bool printHex(char *name, uint8_t *data, size_t startBit, size_t bits)
   {
     /* Act on the current bit */
     bool bitIsSet = (*data & bitMask) > 0;
-    maxValue |= bitMagnitude;
     if (bitIsSet)
     {
       value |= bitMagnitude;
@@ -986,7 +982,6 @@ static bool printHex(char *name, uint8_t *data, size_t startBit, size_t bits)
 static bool printDecimal(char *name, uint8_t *data, size_t startBit, size_t bits)
 {
   uint8_t  value        = 0;
-  uint8_t  maxValue     = 0;
   uint8_t  bitMask      = 1 << startBit;
   uint64_t bitMagnitude = 1;
   size_t   bit;
@@ -1010,7 +1005,6 @@ static bool printDecimal(char *name, uint8_t *data, size_t startBit, size_t bits
   {
     /* Act on the current bit */
     bool bitIsSet = (*data & bitMask) > 0;
-    maxValue |= bitMagnitude;
     if (bitIsSet)
     {
       value |= bitMagnitude;
