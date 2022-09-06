@@ -6,8 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Wip
 
+## [3.0.0] - 2022-09-06
+
 ### Added
 
+- #266: Major refactoring, split analyzer-explain off and add better XML and JSON output
 - A `dbc-exporter` was added.
 
 ### Changed

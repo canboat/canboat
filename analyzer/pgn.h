@@ -21,19 +21,15 @@ limitations under the License.
 */
 
 #include "common.h"
+#include "parse.h"
+
+#define LEN_VARIABLE (0)
 
 #define RES_LAT_LONG_PRECISION (10000000) /* 1e7 */
 #define RES_LAT_LONG (1.0e-7)
 #define RES_LAT_LONG_64 (1.0e-16)
 #define RES_PERCENTAGE (100.0 / 25000.0)
 
-typedef struct
-{
-  char *   name;
-  uint32_t size; /* Size in bits. All fields are contiguous in message; use 'reserved' fields to fill in empty bits. */
-#define LEN_VARIABLE (0)
-  double resolution; /* Either a positive real value or one of the following RES_ special values */
-#define RES_NOTUSED (0)
 #define RES_RADIANS (1e-4)
 #define RES_ROTATION (1e-3 / 32.0)
 #define RES_HIRES_ROTATION (1e-6 / 32.0)
@@ -51,7 +47,7 @@ typedef struct
 #define RES_STRING (-12.0)
 #define RES_FLOAT (-13.0)
 #define RES_PRESSURE (-14.0)
-#define RES_STRINGLZ (-15.0) /* ASCII string starting with length byte and terminated by zero byte */
+#define RES_STRINGLZ (-15.0)  /* ASCII string starting with length byte and terminated by zero byte */
 #define RES_STRINGLAU (-16.0) /* ASCII or UNICODE string starting with length byte and ASCII/Unicode byte */
 #define RES_DECIMAL (-17.0)
 #define RES_BITFIELD (-18.0)
@@ -61,17 +57,314 @@ typedef struct
 #define RES_VARIABLE (-22.0)
 #define MAX_RESOLUTION_LOOKUP 22
 
-  bool  hasSign; /* Is the value signed, e.g. has both positive and negative values? */
-  char *units;   /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) unless it starts with , in which
-                  * case it contains a set of lookup values.
-                  */
-  char *  description;
-  int32_t offset;  /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
-                    * of two's complement as used by NMEA 2000.
-                    * See http://en.wikipedia.org/wiki/Offset_binary
-                    */
-  char *camelName; /* Filled by C, no need to set in initializers. */
+typedef struct
+{
+  char       *name;
+  uint32_t    size;  /* Size in bits. All fields are contiguous in message; use 'reserved' fields to fill in empty bits. */
+  const char *units; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) */
+  const char *description;
+  int32_t     offset; /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
+                       * of two's complement as used by NMEA 2000.
+                       * See http://en.wikipedia.org/wiki/Offset_binary
+                       */
+  double resolution;  /* Either a positive real value or one of the RES_ special values */
+  bool   proprietary; /* Field is only present if earlier PGN field is in propietary range */
+  bool   hasSign;     /* Is the value signed, e.g. has both positive and negative values? */
+
+  /* The following fields are filled by C, no need to set in initializers */
+  char        *camelName;
+  const char **lookupValue;
+  const char  *lookupName;
 } Field;
+
+#define END_OF_FIELDS \
+  {                   \
+    0                 \
+  }
+
+#define LOOKUP_FIELD(nam, len, typ)                                                                              \
+  {                                                                                                              \
+    .name = nam, .size = len, .resolution = RES_LOOKUP, .lookupValue = lookupValue##typ, .lookupName = xstr(typ) \
+  }
+
+#define LOOKUP_FIELD_DESC(nam, len, typ, desc)                                                                    \
+  {                                                                                                               \
+    .name = nam, .size = len, .resolution = RES_LOOKUP, .lookupValue = lookupValue##typ, .lookupName = xstr(typ), \
+    .description = desc                                                                                           \
+  }
+
+#define LOOKUP_BITFIELD(nam, len, typ)                                                                             \
+  {                                                                                                                \
+    .name = nam, .size = len, .resolution = RES_BITFIELD, .lookupValue = lookupValue##typ, .lookupName = xstr(typ) \
+  }
+
+#define UNKNOWN_LOOKUP_FIELD(nam, len)                 \
+  {                                                    \
+    .name = nam, .size = len, .resolution = RES_LOOKUP \
+  }
+
+#define RESERVED_FIELD(len)                                     \
+  {                                                             \
+    .name = "Reserved", .size = (len), .resolution = RES_BINARY \
+  }
+
+#define BINARY_FIELD(nam, len, desc)                                          \
+  {                                                                           \
+    .name = nam, .size = (len), .resolution = RES_BINARY, .description = desc \
+  }
+
+#define BINARY_UNIT_FIELD(nam, len, unit, desc, prop)                                                             \
+  {                                                                                                               \
+    .name = nam, .size = (len), .resolution = RES_BINARY, .units = unit, .description = desc, .proprietary = prop \
+  }
+
+#define LATITUDE_I32_FIELD(nam)                                                                \
+  {                                                                                            \
+    .name = nam, .size = BYTES(4), .resolution = RES_LATITUDE, .hasSign = true, .units = "deg" \
+  }
+
+#define LATITUDE_I64_FIELD(nam)                                                                \
+  {                                                                                            \
+    .name = nam, .size = BYTES(8), .resolution = RES_LATITUDE, .hasSign = true, .units = "deg" \
+  }
+
+#define LONGITUDE_I32_FIELD(nam)                                                                \
+  {                                                                                             \
+    .name = nam, .size = BYTES(4), .resolution = RES_LONGITUDE, .hasSign = true, .units = "deg" \
+  }
+
+#define LONGITUDE_I64_FIELD(nam)                                                                \
+  {                                                                                             \
+    .name = nam, .size = BYTES(8), .resolution = RES_LONGITUDE, .hasSign = true, .units = "deg" \
+  }
+
+#define ANGLE_U16_FIELD(nam, desc)                                                                                  \
+  {                                                                                                                 \
+    .name = nam, .size = BYTES(2), .resolution = RES_RADIANS, .hasSign = false, .units = "rad", .description = desc \
+  }
+
+#define ANGLE_I16_FIELD(nam, desc)                                                                                 \
+  {                                                                                                                \
+    .name = nam, .size = BYTES(2), .resolution = RES_RADIANS, .hasSign = true, .units = "rad", .description = desc \
+  }
+
+// A whole bunch of different NUMBER fields, with variing resolutions
+
+#define NUMBER_FIELD(nam, len, res, sign, unit, desc)                                                \
+  {                                                                                                  \
+    .name = nam, .size = len, .resolution = res, .hasSign = sign, .units = unit, .description = desc \
+  }
+
+#define VOLTAGE_FIELD(nam, res) NUMBER_FIELD(nam, BYTES(2), res, false, "V", NULL)
+#define RADIO_FREQUENCY_FIELD(nam, res) NUMBER_FIELD(nam, BYTES(4), res, false, "Hz", NULL)
+#define FREQUENCY_FIELD(nam, res) NUMBER_FIELD(nam, BYTES(2), res, false, "Hz", NULL)
+#define SPEED_I16_MM_FIELD(nam) NUMBER_FIELD(nam, BYTES(2), 0.001, true, "m/s", NULL)
+#define SPEED_I16_CM_FIELD(nam) NUMBER_FIELD(nam, BYTES(2), 0.01, true, "m/s", NULL)
+#define SPEED_U16_CM_FIELD(nam) NUMBER_FIELD(nam, BYTES(2), 0.01, false, "m/s", NULL)
+#define SPEED_U16_DM_FIELD(nam) NUMBER_FIELD(nam, BYTES(2), 0.1, false, "m/s", NULL)
+#define MATCH_FIELD(nam, len, id, desc) NUMBER_FIELD(nam, len, 1, false, "=" xstr(id), desc)
+#define SIMPLE_DESC_FIELD(nam, len, desc) NUMBER_FIELD(nam, len, 1, false, NULL, desc)
+#define SIMPLE_FIELD(nam, len) SIMPLE_DESC_FIELD(nam, len, NULL)
+#define SIMPLE_SIGNED_FIELD(nam, len) NUMBER_FIELD(nam, len, 1, true, NULL, NULL)
+#define ONE_BYTE_FIELD(nam) SIMPLE_FIELD(nam, BYTES(1))
+#define DISTANCE_FIELD(nam, len, res, desc) NUMBER_FIELD(nam, len, res, true, "m", desc)
+#define LENGTH_FIELD(nam, len, res, desc) NUMBER_FIELD(nam, len, res, false, "m", desc)
+#define DECIMETERS_FIELD(nam) LENGTH_FIELD(nam, BYTES(2), 0.1, "")
+#define HIRES_LENGTH_FIELD(nam, res) LENGTH_FIELD(nam, BYTES(4), res, "")
+#define ELAPSED_FIELD(nam, len, res) NUMBER_FIELD(nam, len, res, false, "s", NULL)
+#define TIME_DELTA_MS_FIELD(nam, len, desc) NUMBER_FIELD(nam, len, 0.001, true, "s", desc)
+#define CURRENT_FIELD(nam, len, res) NUMBER_FIELD(nam, len, res, false, "A", NULL)
+#define SIGNED_CURRENT_FIELD(nam, len, res) NUMBER_FIELD(nam, len, res, true, "A", NULL)
+
+// Fully defined NUMBER fields
+
+#define INSTANCE_FIELD ONE_BYTE_FIELD("Instance")
+#define POWER_FACTOR_U16_FIELD NUMBER_FIELD("Power Factor", BYTES(2), 1 / 16384., false, "Cos Phi", NULL)
+#define POWER_FACTOR_U8_FIELD NUMBER_FIELD("Power Factor", BYTES(1), 0.01, false, "Cos Phi", NULL)
+
+// End of NUMBER fields
+
+#define MANUFACTURER_FIELD(unit, desc, prop)                                                                     \
+  {                                                                                                              \
+    .name = "Manufacturer Code", .size = 11, .resolution = RES_MANUFACTURER, .description = desc, .units = unit, \
+    .lookupValue = lookupValueMANUFACTURER_CODE, .lookupName = "MANUFACTURER_CODE", .proprietary = prop          \
+  }
+
+#define INDUSTRY_FIELD(unit, desc, prop)                                                              \
+  {                                                                                                   \
+    .name = "Industry Code", .size = 3, .resolution = RES_LOOKUP, .units = unit, .description = desc, \
+    .lookupValue = lookupValueINDUSTRY_CODE, .lookupName = "INDUSTRY_CODE", .proprietary = prop       \
+  }
+
+#define MARINE_INDUSTRY_FIELD INDUSTRY_FIELD("=4", "Marine Industry", false)
+
+#define COMPANY(id) MANUFACTURER_FIELD("=" xstr(id), NULL, false), RESERVED_FIELD(2), MARINE_INDUSTRY_FIELD
+
+#define MANUFACTURER_FIELDS MANUFACTURER_FIELD(NULL, NULL, false), RESERVED_FIELD(2), INDUSTRY_FIELD(NULL, NULL, false)
+
+#define MANUFACTURER_PROPRIETARY_FIELDS                                                    \
+  MANUFACTURER_FIELD(NULL, "Only in PGN when PRN is proprietary", true),                   \
+      BINARY_UNIT_FIELD("Reserved", 2, NULL, "Only in PGN when PRN is proprietary", true), \
+      INDUSTRY_FIELD(NULL, "Only in PGN when PRN is proprietary", true)
+
+#define INTEGER_DESC_FIELD(nam, len, desc)                                   \
+  {                                                                          \
+    .name = nam, .size = len, .resolution = RES_INTEGER, .description = desc \
+  }
+
+#define INTEGER_UNIT_FIELD(nam, len, unit)                             \
+  {                                                                    \
+    .name = nam, .size = len, .resolution = RES_INTEGER, .units = unit \
+  }
+
+#define SIGNED_INTEGER_UNIT_FIELD(nam, len, unit)                                       \
+  {                                                                                     \
+    .name = nam, .size = len, .resolution = RES_INTEGER, .units = unit, .hasSign = true \
+  }
+
+#define INTEGER_FIELD(nam, len) INTEGER_DESC_FIELD(nam, len, "")
+
+#define MMSI_FIELD(nam)                                                       \
+  {                                                                           \
+    .name = nam, .size = BYTES(4), .resolution = RES_INTEGER, .units = "MMSI" \
+  }
+
+#define DECIMAL_FIELD(nam, len, desc)                                        \
+  {                                                                          \
+    .name = nam, .size = len, .resolution = RES_DECIMAL, .description = desc \
+  }
+
+#define DECIMAL_UNIT_FIELD(nam, len, unit)                             \
+  {                                                                    \
+    .name = nam, .size = len, .resolution = RES_DECIMAL, .units = unit \
+  }
+
+#define STRINGLZ_FIELD(nam, len)                         \
+  {                                                      \
+    .name = nam, .size = len, .resolution = RES_STRINGLZ \
+  }
+
+#define ASCII_DESC_FIELD(nam, len, desc)                                   \
+  {                                                                        \
+    .name = nam, .size = len, .resolution = RES_ASCII, .description = desc \
+  }
+
+#define STRINGVAR_FIELD(nam)                                    \
+  {                                                             \
+    .name = nam, .size = LEN_VARIABLE, .resolution = RES_STRING \
+  }
+
+#define STRINGLAU_FIELD(nam)                                       \
+  {                                                                \
+    .name = nam, .size = LEN_VARIABLE, .resolution = RES_STRINGLAU \
+  }
+
+#define ASCII_FIELD(nam, len) ASCII_DESC_FIELD(nam, len, "")
+
+#define TEMPERATURE_HIGH_FIELD(nam)                                                 \
+  {                                                                                 \
+    .name = nam, .size = BYTES(2), .resolution = RES_TEMPERATURE_HIGH, .units = "K" \
+  }
+
+#define TEMPERATURE_FIELD(nam)                                                 \
+  {                                                                            \
+    .name = nam, .size = BYTES(2), .resolution = RES_TEMPERATURE, .units = "K" \
+  }
+
+#define TEMPERATURE_U24_FIELD(nam)                                                   \
+  {                                                                                  \
+    .name = nam, .size = BYTES(3), .resolution = RES_TEMPERATURE_HIRES, .units = "K" \
+  }
+
+#define SHORT_TIME_FIELD(nam)                                           \
+  {                                                                     \
+    .name = nam, .size = BYTES(2), .resolution = RES_TIME, .units = "s" \
+  }
+
+#define TIME_FIELD(nam)                                                 \
+  {                                                                     \
+    .name = nam, .size = BYTES(4), .resolution = RES_TIME, .units = "s" \
+  }
+
+#define DATE_FIELD(nam)                                                    \
+  {                                                                        \
+    .name = nam, .size = BYTES(2), .resolution = RES_DATE, .units = "days" \
+  }
+
+#define VARIABLE_FIELD(nam, desc)                                                      \
+  {                                                                                    \
+    .name = nam, .size = LEN_VARIABLE, .resolution = RES_VARIABLE, .description = desc \
+  }
+
+#define ENERGY_FIELD(nam)                                                    \
+  {                                                                          \
+    .name = nam, .size = BYTES(4), .resolution = RES_INTEGER, .units = "kWh" \
+  }
+
+#define POWER_I32_OFFSET_FIELD(nam, unit)                                                                           \
+  {                                                                                                                 \
+    .name = nam, .size = BYTES(4), .resolution = RES_INTEGER, .hasSign = true, .units = unit, .offset = -2000000000 \
+  }
+
+#define POWER_U16_FIELD(nam)                                               \
+  {                                                                        \
+    .name = nam, .size = BYTES(2), .resolution = RES_INTEGER, .units = "W" \
+  }
+
+#define POWER_I32_FIELD(nam)                                                                \
+  {                                                                                         \
+    .name = nam, .size = BYTES(4), .resolution = RES_INTEGER, .hasSign = true, .units = "W" \
+  }
+
+#define POWER_U32_FIELD(nam, unit)                                          \
+  {                                                                         \
+    .name = nam, .size = BYTES(4), .resolution = RES_INTEGER, .units = unit \
+  }
+
+#define PERCENTAGE_U8_FIELD(nam)                                           \
+  {                                                                        \
+    .name = nam, .size = BYTES(1), .resolution = RES_INTEGER, .units = "%" \
+  }
+
+#define PERCENTAGE_I8_FIELD(nam)                                                            \
+  {                                                                                         \
+    .name = nam, .size = BYTES(1), .resolution = RES_INTEGER, .hasSign = true, .units = "%" \
+  }
+
+#define PERCENTAGE_U16_FIELD(nam)                                             \
+  {                                                                           \
+    .name = nam, .size = BYTES(2), .resolution = RES_PERCENTAGE, .units = "%" \
+  }
+
+#define HIRES_ROTATION_FIELD(nam)                                                                      \
+  {                                                                                                    \
+    .name = nam, .size = BYTES(4), .resolution = RES_HIRES_ROTATION, .hasSign = true, .units = "rad/s" \
+  }
+
+#define ROTATION_FIELD(nam)                                                                      \
+  {                                                                                              \
+    .name = nam, .size = BYTES(2), .resolution = RES_ROTATION, .hasSign = true, .units = "rad/s" \
+  }
+
+#define PRESSURE_FIELD(nam)                                                   \
+  {                                                                           \
+    .name = nam, .size = BYTES(2), .resolution = RES_PRESSURE, .units = "hPa" \
+  }
+
+#define HIGH_PRESSURE_FIELD(nam, sign)                                                         \
+  {                                                                                            \
+    .name = nam, .size = BYTES(2), .resolution = RES_PRESSURE, .hasSign = sign, .units = "kPa" \
+  }
+
+#define HIRES_PRESSURE_FIELD(nam, sign)                                                              \
+  {                                                                                                  \
+    .name = nam, .size = BYTES(4), .resolution = RES_PRESSURE_HIRES, .hasSign = sign, .units = "dPa" \
+  }
+
+#define FLOAT_FIELD(nam, unit, desc)                                                                            \
+  {                                                                                                             \
+    .name = nam, .size = BYTES(4), .resolution = RES_FLOAT, .hasSign = true, .units = unit, .description = desc \
+  }
 
 typedef struct
 {
@@ -89,7 +382,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
                                                         {"Integer", "1"},
                                                         {"Lookup table", 0},
                                                         {"Binary data", 0},
-                                                        {"Manufacturer code", 0},
+                                                        {"Manufacturer Code", 0},
                                                         {"String with start/stop byte", 0},
                                                         {"IEEE Float", 0},
                                                         {"Pressure", 0},
@@ -101,676 +394,14 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
                                                         {"Temperature (hires)", "0.001"},
                                                         {"Pressure (hires)", "0.1"}};
 
-#define LOOKUP_INDUSTRY_CODE (",0=Global,1=Highway,2=Agriculture,3=Construction,4=Marine,5=Industrial")
+#define LOOKUP_TYPE(type, length)                      \
+  extern const char *lookupValue##type[1 << (length)]; \
+  extern uint32_t    lookupLength##type;
+#define LOOKUP_TYPE_BITFIELD(type, length)      \
+  extern const char *lookupValue##type[length]; \
+  extern uint32_t    lookupLength##type;
 
-#define LOOKUP_SHIP_TYPE                                                                                                           \
-  (",0=unavailable"                                                                                                                \
-   ",20=Wing In Ground,29=Wing In Ground (no other information)"                                                                   \
-   ",30=Fishing,31=Towing,32=Towing exceeds 200m or wider than 25m,33=Engaged in dredging or underwater operations,34=Engaged in " \
-   "diving operations"                                                                                                             \
-   ",35=Engaged in military operations,36=Sailing,37=Pleasure"                                                                     \
-   ",40=High speed craft,41=High speed craft carrying dangerous goods,42=High speed craft hazard cat B,43=High speed craft "       \
-   "hazard cat C,44=High speed craft hazard cat D,49=High speed craft (no additional information)"                                 \
-   ",50=Pilot vessel,51=SAR,52=Tug,53=Port tender,54=Anti-pollution,55=Law enforcement,56=Spare,57=Spare #2,58=Medical,59=RR "     \
-   "Resolution No.18"                                                                                                              \
-   ",60=Passenger ship,69=Passenger ship (no additional information)"                                                              \
-   ",70=Cargo ship,71=Cargo ship carrying dangerous goods,72=Cargo ship hazard cat B,73=Cargo ship hazard cat C,74=Cargo ship "    \
-   "hazard cat D,79=Cargo ship (no additional information)"                                                                        \
-   ",80=Tanker,81=Tanker carrying dangerous goods,82=Tanker hazard cat B,83=Tanker hazard cat C,84=Tanker hazard cat D,89=Tanker " \
-   "(no additional information)"                                                                                                   \
-   ",90=Other,91=Other carrying dangerous goods,92=Other hazard cat B,93=Other hazard cat C,94=Other hazard cat D,99=Other (no "   \
-   "additional information)")
-
-/* http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf */
-#define LOOKUP_DEVICE_CLASS                        \
-  (",0=Reserved for 2000 Use"                      \
-   ",10=System tools"                              \
-   ",20=Safety systems"                            \
-   ",25=Internetwork device"                       \
-   ",30=Electrical Distribution"                   \
-   ",35=Electrical Generation"                     \
-   ",40=Steering and Control surfaces"             \
-   ",50=Propulsion"                                \
-   ",60=Navigation"                                \
-   ",70=Communication"                             \
-   ",75=Sensor Communication Interface"            \
-   ",80=Instrumentation/general systems"           \
-   ",85=External Environment"                      \
-   ",90=Internal Environment"                      \
-   ",100=Deck + cargo + fishing equipment systems" \
-   ",120=Display"                                  \
-   ",125=Entertainment")
-
-#define LOOKUP_REPEAT_INDICATOR (",0=Initial,1=First retransmission,2=Second retransmission,3=Final retransmission")
-
-#define LOOKUP_AIS_TRANSCEIVER        \
-  (",0=Channel A VDL reception"       \
-   ",1=Channel B VDL reception"       \
-   ",2=Channel A VDL transmission"    \
-   ",3=Channel B VDL transmission"    \
-   ",4=Own information not broadcast" \
-   ",5=Reserved")
-
-#define LOOKUP_AIS_ASSIGNED_MODE  \
-  (",0=Autonomous and continuous" \
-   ",1=Assigned mode")
-
-#define LOOKUP_ATON_TYPE                                 \
-  (",0=Default: Type of AtoN not specified"              \
-   ",1=Reference point"                                   \
-   ",2=RACON"                                            \
-   ",3=Fixed structure off-shore"                        \
-   ",4=Reserved for future use"                          \
-   ",5=Fixed light: without sectors"                     \
-   ",6=Fixed light: with sectors"                        \
-   ",7=Fixed leading light front"                        \
-   ",8=Fixed leading light rear"                         \
-   ",9=Fixed beacon: cardinal N"                         \
-   ",10=Fixed beacon: cardinal E"                        \
-   ",11=Fixed beacon: cardinal S"                        \
-   ",12=Fixed beacon: cardinal W"                        \
-   ",13=Fixed beacon: port hand"                         \
-   ",14=Fixed beacon: starboard hand"                    \
-   ",15=Fixed beacon: preferred channel port hand"       \
-   ",16=Fixed beacon: preferred channel starboard hand"  \
-   ",17=Fixed beacon: isolated danger"                   \
-   ",18=Fixed beacon: safe water"                        \
-   ",19=Fixed beacon: special mark"                      \
-   ",20=Floating AtoN: cardinal N"                       \
-   ",21=Floating AtoN: cardinal E"                       \
-   ",22=Floating AtoN: cardinal S"                       \
-   ",23=Floating AtoN: cardinal W"                       \
-   ",24=Floating AtoN: port hand mark"                   \
-   ",25=Floating AtoN: starboard hand mark"              \
-   ",26=Floating AtoN: preferred channel port hand"      \
-   ",27=Floating AtoN: preferred channel starboard hand" \
-   ",28=Floating AtoN: isolated danger"                  \
-   ",29=Floating AtoN: safe water"                       \
-   ",30=Floating AtoN: special mark"                     \
-   ",31=Floating AtoN: light vessel/LANBY/rigs")
-
-#define LOOKUP_AIS_SPECIAL_MANEUVER     \
-  (",0=Not available"                   \
-   ",1=Not engaged in special maneuver" \
-   ",2=Engaged in special maneuver"     \
-   ",3=Reserved")
-
-#define LOOKUP_POSITION_FIX_DEVICE   \
-  (",0=Default: undefined"           \
-   ",1=GPS"                          \
-   ",2=GLONASS"                      \
-   ",3=Combined GPS/GLONASS"         \
-   ",4=Loran-C"                      \
-   ",5=Chayka"                       \
-   ",6=Integrated navigation system" \
-   ",7=Surveyed"                     \
-   ",8=Galileo"                      \
-   ",15=Internal GNSS")
-
-#define LOOKUP_ENGINE_INSTANCE (",0=Single Engine or Dual Engine Port,1=Dual Engine Starboard")
-
-// https://osukl.com/wp-content/uploads/2020/02/3155_User-Manual_-Rev_1.21_.pdf (page 12)
-#define LOOKUP_ENGINE_STATUS_1                                                                                                     \
-  (",0=Check Engine,1=Over Temperature,2=Low Oil Pressure,3=Low Oil Level,4=Low Fuel Pressure,5=Low System Voltage,6=Low Coolant " \
-   "Level,7=Water Flow,8=Water In Fuel,9=Charge Indicator,10=Preheat Indicator,11=High Boost Pressure,12=Rev Limit "               \
-   "Exceeded,13=EGR System,14=Throttle Position Sensor,15=Emergency Stop")
-#define LOOKUP_ENGINE_STATUS_2                                                                                           \
-  (",0=Warning Level 1,1=Warning Level 2,2=Power Reduction,3=Maintenance Needed,4=Engine Comm Error,5=Sub or Secondary " \
-   "Throttle,6=Neutral Start Protect,7=Engine Shutting Down")
-
-#define LOOKUP_GEAR_STATUS (",0=Forward,1=Neutral,2=Reverse")
-
-#define LOOKUP_POSITION_ACCURACY (",0=Low,1=High")
-
-#define LOOKUP_RAIM_FLAG (",0=not in use,1=in use")
-
-#define LOOKUP_TIME_STAMP (",60=Not available,61=Manual input mode,62=Dead reckoning mode,63=Positioning system is inoperative")
-
-#define LOOKUP_GNS_AIS (",0=undefined,1=GPS,2=GLONASS,3=GPS+GLONASS,4=Loran-C,5=Chayka,6=integrated,7=surveyed,8=Galileo")
-#define LOOKUP_GNS \
-  (",0=GPS,1=GLONASS,2=GPS+GLONASS,3=GPS+SBAS/WAAS,4=GPS+SBAS/WAAS+GLONASS,5=Chayka,6=integrated,7=surveyed,8=Galileo")
-
-#define LOOKUP_GNS_METHOD                                                                                             \
-  (",0=no GNSS,1=GNSS fix,2=DGNSS fix,3=Precise GNSS,4=RTK Fixed Integer,5=RTK float,6=Estimated (DR) mode,7=Manual " \
-   "Input,8=Simulate mode")
-
-#define LOOKUP_GNS_INTEGRITY (",0=No integrity checking,1=Safe,2=Caution")
-
-#define LOOKUP_SYSTEM_TIME (",0=GPS,1=GLONASS,2=Radio Station,3=Local Cesium clock,4=Local Rubidium clock,5=Local Crystal clock")
-
-#define LOOKUP_MAGNETIC_VARIATION \
-  (",0=Manual"                    \
-   ",1=Automatic Chart"           \
-   ",2=Automatic Table"           \
-   ",3=Automatic Calculation"     \
-   ",4=WMM 2000"                  \
-   ",5=WMM 2005"                  \
-   ",6=WMM 2010"                  \
-   ",7=WMM 2015"                  \
-   ",8=WMM 2020")
-
-#define LOOKUP_RESIDUAL_MODE (",0=Autonomous,1=Differential enhanced,2=Estimated,3=Simulator,4=Manual")
-
-#define LOOKUP_WIND_REFERENCE                                                                                       \
-  (",0=True (ground referenced to North),1=Magnetic (ground referenced to Magnetic North),2=Apparent,3=True (boat " \
-   "referenced),4=True (water referenced)")
-
-#define LOOKUP_WATER_REFERENCE (",0=Paddle wheel,1=Pitot tube,2=Doppler,3=Correlation (ultra sound),4=Electro Magnetic")
-
-#define LOOKUP_YES_NO \
-  (",0=No" \
-   ",1=Yes") /* Note that Error and Unknown are automatically decoded */
-#define LOOKUP_OK_WARNING (",0=OK,1=Warning")
-#define LOOKUP_OFF_ON \
-  (",0=Off"           \
-   ",1=On") /* Note that Error and Unknown are automatically decoded */
-
-#define LOOKUP_DIRECTION_REFERENCE (",0=True,1=Magnetic,2=Error,3=Null")
-
-#define LOOKUP_DIRECTION_RUDDER (",0=No Order,1=Move to starboard,2=Move to port")
-
-#define LOOKUP_NAV_STATUS                    \
-  (",0=Under way using engine"               \
-   ",1=At anchor"                            \
-   ",2=Not under command"                    \
-   ",3=Restricted maneuverability"           \
-   ",4=Constrained by her draught"           \
-   ",5=Moored"                               \
-   ",6=Aground"                              \
-   ",7=Engaged in Fishing"                   \
-   ",8=Under way sailing"                    \
-   ",9=Hazardous material - High Speed"      \
-   ",10=Hazardous material - Wing in Ground" \
-   ",14=AIS-SART")
-
-#define LOOKUP_POWER_FACTOR (",0=Leading,1=Lagging,2=Error")
-
-#define LOOKUP_TEMPERATURE_SOURCE           \
-  (",0=Sea Temperature"                     \
-   ",1=Outside Temperature"                 \
-   ",2=Inside Temperature"                  \
-   ",3=Engine Room Temperature"             \
-   ",4=Main Cabin Temperature"              \
-   ",5=Live Well Temperature"               \
-   ",6=Bait Well Temperature"               \
-   ",7=Refrigeration Temperature"           \
-   ",8=Heating System Temperature"          \
-   ",9=Dew Point Temperature"               \
-   ",10=Apparent Wind Chill Temperature"    \
-   ",11=Theoretical Wind Chill Temperature" \
-   ",12=Heat Index Temperature"             \
-   ",13=Freezer Temperature"                \
-   ",14=Exhaust Gas Temperature")
-
-#define LOOKUP_HUMIDITY_SOURCE \
-  (",0=Inside"                 \
-   ",1=Outside")
-
-#define LOOKUP_PRESSURE_SOURCE \
-  (",0=Atmospheric"            \
-   ",1=Water"                  \
-   ",2=Steam"                  \
-   ",3=Compressed Air"         \
-   ",4=Hydraulic"              \
-   ",5=Filter"                 \
-   ",6=AltimeterSetting"       \
-   ",7=Oil"                    \
-   ",8=Fuel")
-#define LOOKUP_DSC_FORMAT     \
-  (",102=Geographical area"   \
-   ",112=Distress"            \
-   ",114=Common interest"     \
-   ",116=All ships"           \
-   ",120=Individual stations" \
-   ",121=Non-calling purpose" \
-   ",123=Individual station automatic")
-
-#define LOOKUP_DSC_CATEGORY \
-  (",100=Routine"           \
-   ",108=Safety"            \
-   ",110=Urgency"           \
-   ",112=Distress")
-
-#define LOOKUP_DSC_NATURE     \
-  (",100=Fire"                \
-   ",101=Flooding"            \
-   ",102=Collision"           \
-   ",103=Grounding"           \
-   ",104=Listing"             \
-   ",105=Sinking"             \
-   ",106=Disabled and adrift" \
-   ",107=Undesignated"        \
-   ",108=Abandoning ship"     \
-   ",109=Piracy"              \
-   ",110=Man overboard"       \
-   ",112=EPIRB emission")
-
-#define LOOKUP_DSC_FIRST_TELECOMMAND                      \
-  (",100=F3E/G3E All modes TP"                            \
-   ",101=F3E/G3E duplex TP"                               \
-   ",103=Polling"                                         \
-   ",104=Unable to comply"                                \
-   ",105=End of call"                                     \
-   ",106=Data"                                            \
-   ",109=J3E TP"                                          \
-   ",110=Distress acknowledgement"                        \
-   ",112=Distress relay"                                  \
-   ",113=F1B/J2B TTY-FEC"                                 \
-   ",115=F1B/J2B TTY-ARQ"                                 \
-   ",118=Test"                                            \
-   ",121=Ship position or location registration updating" \
-   ",126=No information")
-
-#define LOOKUP_DSC_SECOND_TELECOMMAND                                   \
-  (",100=No reason given"                                               \
-   ",101=Congestion at MSC"                                             \
-   ",102=Busy"                                                          \
-   ",103=Queue indication"                                              \
-   ",104=Station barred"                                                \
-   ",105=No operator available"                                         \
-   ",106=Operator temporarily unavailable"                              \
-   ",107=Equipment disabled"                                            \
-   ",108=Unable to use proposed channel"                                \
-   ",109=Unable to use proposed mode"                                   \
-   ",110=Ships and aircraft of States not parties to an armed conflict" \
-   ",111=Medical transports"                                            \
-   ",112=Pay phone/public call office"                                  \
-   ",113=Fax/data"                                                      \
-   ",126=No information")
-
-#define LOOKUP_DSC_EXPANSION_DATA           \
-  (",100=Enhanced position"                 \
-   ",101=Source and datum of position"      \
-   ",102=SOG"                               \
-   ",103=COG"                               \
-   ",104=Additional station identification" \
-   ",105=Enhanced geographic area"          \
-   ",106=Number of persons on board")
-
-#define LOOKUP_SEATALK_ALARM_STATUS          \
-  (",0=Alarm condition not met"              \
-   ",1=Alarm condition met and not silenced" \
-   ",2=Alarm condition met and silenced")
-
-#define LOOKUP_SEATALK_ALARM_ID                                   \
-  (",0=No Alarm"                                                  \
-   ",1=Shallow Depth"                                             \
-   ",2=Deep Depth"                                                \
-   ",3=Shallow Anchor"                                            \
-   ",4=Deep Anchor"                                               \
-   ",5=Off Course"                                                \
-   ",6=AWA High"                                                  \
-   ",7=AWA Low"                                                   \
-   ",8=AWS High"                                                  \
-   ",9=AWS Low"                                                   \
-   ",10=TWA High"                                                 \
-   ",11=TWA Low"                                                  \
-   ",12=TWS High"                                                 \
-   ",13=TWS Low"                                                  \
-   ",14=WP Arrival"                                               \
-   ",15=Boat Speed High"                                          \
-   ",16=Boat Speed Low"                                           \
-   ",17=Sea Temp High"                                            \
-   ",18=Sea Temp Low"                                             \
-   ",19=Pilot Watch"                                              \
-   ",20=Pilot Off Course"                                         \
-   ",21=Pilot Wind Shift"                                         \
-   ",22=Pilot Low Battery"                                        \
-   ",23=Pilot Last Minute Of Watch"                               \
-   ",24=Pilot No NMEA Data"                                       \
-   ",25=Pilot Large XTE"                                          \
-   ",26=Pilot NMEA DataError"                                     \
-   ",27=Pilot CU Disconnected"                                    \
-   ",28=Pilot Auto Release"                                       \
-   ",29=Pilot Way Point Advance"                                  \
-   ",30=Pilot Drive Stopped"                                      \
-   ",31=Pilot Type Unspecified"                                   \
-   ",32=Pilot Calibration Required"                               \
-   ",33=Pilot Last Heading"                                       \
-   ",34=Pilot No Pilot"                                           \
-   ",35=Pilot Route Complete"                                     \
-   ",36=Pilot Variable Text"                                      \
-   ",37=GPS Failure"                                              \
-   ",38=MOB"                                                      \
-   ",39=Seatalk1 Anchor"                                          \
-   ",40=Pilot Swapped Motor Power"                                \
-   ",41=Pilot Standby Too Fast To Fish"                           \
-   ",42=Pilot No GPS Fix"                                         \
-   ",43=Pilot No GPS COG"                                         \
-   ",44=Pilot Start Up"                                           \
-   ",45=Pilot Too Slow"                                           \
-   ",46=Pilot No Compass"                                         \
-   ",47=Pilot Rate Gyro Fault"                                    \
-   ",48=Pilot Current Limit"                                      \
-   ",49=Pilot Way Point Advance Port"                             \
-   ",50=Pilot Way Point Advance Stbd"                             \
-   ",51=Pilot No Wind Data"                                       \
-   ",52=Pilot No Speed Data"                                      \
-   ",53=Pilot Seatalk Fail1"                                      \
-   ",54=Pilot Seatalk Fail2"                                      \
-   ",55=Pilot Warning Too Fast To Fish"                           \
-   ",56=Pilot Auto Dockside Fail"                                 \
-   ",57=Pilot Turn Too Fast"                                      \
-   ",58=Pilot No Nav Data"                                        \
-   ",59=Pilot Lost Waypoint Data"                                 \
-   ",60=Pilot EEPROM Corrupt"                                     \
-   ",61=Pilot Rudder Feedback Fail"                               \
-   ",62=Pilot Autolearn Fail1"                                    \
-   ",63=Pilot Autolearn Fail2"                                    \
-   ",64=Pilot Autolearn Fail3"                                    \
-   ",65=Pilot Autolearn Fail4"                                    \
-   ",66=Pilot Autolearn Fail5"                                    \
-   ",67=Pilot Autolearn Fail6"                                    \
-   ",68=Pilot Warning Cal Required"                               \
-   ",69=Pilot Warning OffCourse"                                  \
-   ",70=Pilot Warning XTE"                                        \
-   ",71=Pilot Warning Wind Shift"                                 \
-   ",72=Pilot Warning Drive Short"                                \
-   ",73=Pilot Warning Clutch Short"                               \
-   ",74=Pilot Warning Solenoid Short"                             \
-   ",75=Pilot Joystick Fault"                                     \
-   ",76=Pilot No Joystick Data"                                   \
-   ",77=not assigned"                                             \
-   ",78=not assigned"                                             \
-   ",79=not assigned"                                             \
-   ",80=Pilot Invalid Command"                                    \
-   ",81=AIS TX Malfunction"                                       \
-   ",82=AIS Antenna VSWR fault"                                   \
-   ",83=AIS Rx channel 1 malfunction"                             \
-   ",84=AIS Rx channel 2 malfunction"                             \
-   ",85=AIS No sensor position in use"                            \
-   ",86=AIS No valid SOG information"                             \
-   ",87=AIS No valid COG information"                             \
-   ",88=AIS 12V alarm"                                            \
-   ",89=AIS 6V alarm"                                             \
-   ",90=AIS Noise threshold exceeded channel A"                   \
-   ",91=AIS Noise threshold exceeded channel B"                   \
-   ",92=AIS Transmitter PA fault"                                 \
-   ",93=AIS 3V3 alarm"                                            \
-   ",94=AIS Rx channel 70 malfunction"                            \
-   ",95=AIS Heading lost/invalid"                                 \
-   ",96=AIS internal GPS lost"                                    \
-   ",97=AIS No sensor position"                                   \
-   ",98=AIS Lock failure"                                         \
-   ",99=AIS Internal GGA timeout"                                 \
-   ",100=AIS Protocol stack restart"                              \
-   ",101=Pilot No IPS communications"                             \
-   ",102=Pilot Power-On or Sleep-Switch Reset While Engaged     " \
-   ",103=Pilot Unexpected Reset While Engaged"                    \
-   ",104=AIS Dangerous Target"                                    \
-   ",105=AIS Lost Target"                                         \
-   ",106=AIS Safety Related Message (used to silence)"            \
-   ",107=AIS Connection Lost"                                     \
-   ",108=No Fix")
-
-#define LOOKUP_SEATALK_ALARM_GROUP \
-  (",0=Instrument"                 \
-   ",1=Autopilot"                  \
-   ",2=Radar"                      \
-   ",3=Chart Plotter"              \
-   ",4=AIS")
-
-#define LOOKUP_ENTERTAINMENT_ZONE \
-  (",0=All zones"                 \
-   ",1=Zone 1"                    \
-   ",2=Zone 2"                    \
-   ",3=Zone 3"                    \
-   ",4=Zone 4")
-
-#define LOOKUP_ENTERTAINMENT_SOURCE \
-  (",0=Vessel alarm"                \
-   ",1=AM"                          \
-   ",2=FM"                          \
-   ",3=Weather"                     \
-   ",4=DAB"                         \
-   ",5=Aux"                         \
-   ",6=USB"                         \
-   ",7=CD"                          \
-   ",8=MP3"                         \
-   ",9=Apple iOS"                   \
-   ",10=Android"                    \
-   ",11=Bluetooth"                  \
-   ",12=Sirius XM"                  \
-   ",13=Pandora"                    \
-   ",14=Spotify"                    \
-   ",15=Slacker"                    \
-   ",16=Songza"                     \
-   ",17=Apple Radio"                \
-   ",18=Last FM"                    \
-   ",19=Ethernet"                   \
-   ",20=Video MP4"                  \
-   ",21=Video DVD"                  \
-   ",22=Video BluRay"               \
-   ",23=HDMI"                       \
-   ",24=Video")
-
-#define LOOKUP_ENTERTAINMENT_PLAY_STATUS \
-  (",0=Play"                             \
-   ",1=Pause"                            \
-   ",2=Stop"                             \
-   ",3=FF (1x)"                          \
-   ",4=FF (2x)"                          \
-   ",5=FF (3x)"                          \
-   ",6=FF (4x)"                          \
-   ",7=RW (1x)"                          \
-   ",8=RW (2x)"                          \
-   ",9=RW (3x)"                          \
-   ",10=RW (4x)"                         \
-   ",11=Skip ahead"                      \
-   ",12=Skip back"                       \
-   ",13=Jog ahead"                       \
-   ",14=Jog back"                        \
-   ",15=Seek up"                         \
-   ",16=Seek down"                       \
-   ",17=Scan up"                         \
-   ",18=Scan down"                       \
-   ",19=Tune up"                         \
-   ",20=Tune down"                       \
-   ",21=Slow motion (.75x)"              \
-   ",22=Slow motion (.5x)"               \
-   ",23=Slow motion (.25x)"              \
-   ",24=Slow motion (.125x)"             \
-   ",25=Source renaming")
-
-#define LOOKUP_ENTERTAINMENT_REPEAT_STATUS \
-  (",0=Off"                                \
-   ",1=One"                                \
-   ",2=All")
-
-#define LOOKUP_ENTERTAINMENT_SHUFFLE_STATUS \
-  (",0=Off"                                 \
-   ",1=Play queue"                          \
-   ",2=All")
-
-#define LOOKUP_ENTERTAINMENT_LIKE_STATUS \
-  (",0=None"                             \
-   ",1=Thumbs up"                        \
-   ",2=Thumbs down")
-
-#define LOOKUP_ENTERTAINMENT_TYPE \
-  (",0=File"                      \
-   ",1=Playlist Name"             \
-   ",2=Genre Name"                \
-   ",3=Album Name"                \
-   ",4=Artist Name"               \
-   ",5=Track Name"                \
-   ",6=Station Name"              \
-   ",7=Station Number"            \
-   ",8=Favourite Number"          \
-   ",9=Play Queue"                \
-   ",10=Content Info")
-
-#define LOOKUP_ENTERTAINMENT_GROUP \
-  (",0=File"                       \
-   ",1=Playlist Name"              \
-   ",2=Genre Name"                 \
-   ",3=Album Name"                 \
-   ",4=Artist Name"                \
-   ",5=Track Name"                 \
-   ",6=Station Name"               \
-   ",7=Station Number"             \
-   ",8=Favourite Number"           \
-   ",9=Play Queue"                 \
-   ",10=Content Info")
-
-#define LOOKUP_ENTERTAINMENT_CHANNEL \
-  (",0=All channels"                 \
-   ",1=Stereo full range"            \
-   ",2=Stereo front"                 \
-   ",3=Stereo back"                  \
-   ",4=Stereo surround"              \
-   ",5=Center"                       \
-   ",6=Subwoofer"                    \
-   ",7=Front left"                   \
-   ",8=Front right"                  \
-   ",9=Back left"                    \
-   ",10=Back right"                  \
-   ",11=Surround left"               \
-   ",12=Surround right")
-
-#define LOOKUP_ENTERTAINMENT_EQ \
-  (",0=Flat"                    \
-   ",1=Rock"                    \
-   ",2=Hall"                    \
-   ",3=Jazz"                    \
-   ",4=Pop"                     \
-   ",5=Live"                    \
-   ",6=Classic"                 \
-   ",7=Vocal"                   \
-   ",8=Arena"                   \
-   ",9=Cinema"                  \
-   ",10=Custom")
-
-#define LOOKUP_ENTERTAINMENT_FILTER \
-  (",0=Full range"                  \
-   ",1=High pass"                   \
-   ",2=Low pass"                    \
-   ",3=Band pass"                   \
-   ",4=Notch filter")
-
-#define LOOKUP_ALERT_TYPE  \
-  (",0=Reserved"           \
-   ",1=Emergency Alarm"    \
-   ",2=Alarm"              \
-   ",3=Reserved"           \
-   ",4=Reserved"           \
-   ",5=Warning"            \
-   ",6=Reserved"           \
-   ",7=Reserved"           \
-   ",8=Caution"            \
-   ",13=Reserved"          \
-   ",14=Data out of range" \
-   ",15=Data not available")
-
-#define LOOKUP_ALERT_CATEGORY \
-  (",0=Navigational"          \
-   ",1=Technical"             \
-   ",13=Reserved"             \
-   ",14=Data out of range"    \
-   ",15=Data not available")
-
-#define LOOKUP_ALERT_TRIGGER_CONDITION \
-  (",0=Manual"                         \
-   ",1=Auto"                           \
-   ",2=Test"                           \
-   ",3=Disabled"                       \
-   ",13=Reserved"                      \
-   ",14=Data out of range"             \
-   ",15=Data not available")
-
-#define LOOKUP_ALERT_THRESHOLD_STATUS \
-  (",0=Normal"                        \
-   ",1=Threshold Exceeded"            \
-   ",2=Extreme Threshold Exceeded"    \
-   ",3=Low Threshold Exceeded"        \
-   ",4=Acknowledged"                  \
-   ",5=Awaiting Acknowledge"          \
-   ",253=Reserved"                    \
-   ",254=Data out of range"           \
-   ",255=Data not available")
-
-#define LOOKUP_ALERT_STATE   \
-  (",0=Disabled"             \
-   ",1=Normal"               \
-   ",2=Active"               \
-   ",3=Silenced"             \
-   ",4=Acknowledged"         \
-   ",5=Awaiting Acknowledge" \
-   ",253=Reserved"           \
-   ",254=Data out of range"  \
-   ",255=Data not available")
-
-#define LOOKUP_ALERT_LANGUAGE_ID \
-  (",0=English (US)"             \
-   ",1=English (UK)"             \
-   ",2=Arabic"                   \
-   ",3=Chinese (simplified)"     \
-   ",4=Croatian"                 \
-   ",5=Danish"                   \
-   ",6=Dutch"                    \
-   ",7=Finnish"                  \
-   ",8=French"                   \
-   ",9=German"                   \
-   ",10=Greek"                   \
-   ",11=Italian"                 \
-   ",12=Japanese"                \
-   ",13=Korean"                  \
-   ",14=Norwegian"               \
-   ",15=Polish"                  \
-   ",16=Portuguese"              \
-   ",17=Russian"                 \
-   ",18=Spanish"                 \
-   ",19=Swedish")
-
-#define LOOKUP_ALERT_RESPONSE_COMMAND \
-  (",0=Acknowledge"                   \
-   ",1=Temporary Silence"             \
-   ",2=Test Command off"              \
-   ",3=Test Command on")
-
-#define LOOKUP_CONVERTER_STATE \
-  (",0=Off"                    \
-   ",1=Low Power Mode"         \
-   ",2=Fault"                  \
-   ",3=Bulk"                   \
-   ",4=Absorption"             \
-   ",5=Float"                  \
-   ",6=Storage"                \
-   ",7=Equalize"               \
-   ",8=Pass thru"              \
-   ",9=Inverting"              \
-   ",10=Assisting")
-
-#define LOOKUP_THRUSTER_DIRECTION_CONTROL \
-  (",0=Off"                               \
-   ",1=Ready"                             \
-   ",2=To Port"                           \
-   ",3=To Starboard")
-
-#define LOOKUP_THRUSTER_RETRACT_CONTROL \
-  (",0=Off"                             \
-   ",1=Extend"                          \
-   ",2=Retract"                         \
-   ",3=Reserved")
-
-#define LOOKUP_THRUSTER_CONTROL_EVENTS       \
-  (",0=Another device controlling thruster"  \
-   ",1=Boat speed too fast to safely use thruster")
-
-#define LOOKUP_THRUSTER_MOTOR_TYPE \
-  (",0=12VDC"                      \
-   ",1=24VDC"                      \
-   ",2=48VDC"                      \
-   ",3=24VAC"                      \
-   ",4=Hydraulic")
-
-#define LOOKUP_THRUSTER_MOTOR_EVENTS       \
-  (",0=Motor over temperature cutout"  \
-   ",1=Motor over current cutout"  \
-   ",2=Low oil level warning"  \
-   ",3=Oil over temperature warning"  \
-   ",4=Controller under voltage cutout"  \
-   ",5=Manufacturer defined")
+#include "lookup.h"
 
 typedef enum PacketComplete
 {
@@ -794,7 +425,7 @@ typedef enum PacketType
 
 typedef struct
 {
-  char *     description;
+  char      *description;
   uint32_t   pgn;
   uint16_t   complete;        /* Either PACKET_COMPLETE or bit values set for various unknown items */
   PacketType type;            /* Single, Fast or ISO11783 */
@@ -802,7 +433,7 @@ typedef struct
   uint32_t   repeatingFields; /* How many fields at the end repeat until the PGN is exhausted? */
   Field      fieldList[30]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t   fieldCount;    /* Filled by C, no need to set in initializers. */
-  char *     camelDescription; /* Filled by C, no need to set in initializers. */
+  char      *camelDescription; /* Filled by C, no need to set in initializers. */
   bool       unknownPgn;       /* true = this is a catch-all for unknown PGNs */
 } Pgn;
 
@@ -820,12 +451,10 @@ void checkPgnList(void);
 Field *getField(uint32_t pgn, uint32_t field);
 void   extractNumber(const Field *field, uint8_t *data, size_t startBit, size_t bits, int64_t *value, int64_t *maxValue);
 
-int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson);
-int parseRawFormatFast(char *msg, RawMessage *m, bool showJson);
-int parseRawFormatAirmar(char *msg, RawMessage *m, bool showJson);
-int parseRawFormatChetco(char *msg, RawMessage *m, bool showJson);
-int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolute);
-int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson);
+void camelCase(bool upperCamelCase);
+
+/* lookup.c */
+extern void fillLookups(void);
 
 #ifdef GLOBALS
 Pgn pgnList[] = {
@@ -838,7 +467,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Data", BYTES(8), RES_BINARY, false, 0, ""}, {0}},
+     {BINARY_FIELD("Data", BYTES(8), ""), END_OF_FIELDS},
      0,
      0,
      true}
@@ -857,14 +486,14 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Control", BYTES(1), RES_LOOKUP, false, ",0=ACK,1=NAK,2=Access Denied,3=Address Busy", ""},
-      {"Group Function", BYTES(1), 1, false, 0, ""},
-      {"Reserved", 24, RES_BINARY, false, 0, "Reserved"},
-      {"PGN", 24, RES_INTEGER, false, 0, "Parameter Group Number of requested information"},
-      {0}}}
+     {LOOKUP_FIELD("Control", BYTES(1), ISO_CONTROL),
+      ONE_BYTE_FIELD("Group Function"),
+      RESERVED_FIELD(24),
+      INTEGER_DESC_FIELD("PGN", 24, "Parameter Group Number of requested information"),
+      END_OF_FIELDS}}
 
     ,
-    {"ISO Request", 59904, PACKET_COMPLETE, PACKET_SINGLE, 3, 0, {{"PGN", 24, RES_INTEGER, false, 0, ""}, {0}}}
+    {"ISO Request", 59904, PACKET_COMPLETE, PACKET_SINGLE, 3, 0, {INTEGER_FIELD("PGN", 24), END_OF_FIELDS}}
 
     /* For a good explanation of ISO 11783 transport protocol (as used in J1939) see
      * http://www.simmasoftware.com/j1939-presentation.pdf
@@ -889,7 +518,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      1,
-     {{"SID", BYTES(1), 1, false, 0, ""}, {"Data", BYTES(7), 1, false, 0, ""}, {0}}}
+     {ONE_BYTE_FIELD("SID"), SIMPLE_FIELD("Data", BYTES(7)), END_OF_FIELDS}}
 
     // ''ISO 11783 defines this group function PGN as part of the transport protocol method used for transmitting messages that have
     // 9 or more data bytes. This PGN's role in the transport process is determined by the group function value found in the first
@@ -901,60 +530,65 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      1,
-     {{"Group Function Code", BYTES(1), 1, false, "=16", "RTS"},
-      {"Message size", BYTES(2), 1, false, 0, "bytes"},
-      {"Packets", BYTES(1), 1, false, 0, "packets"},
-      {"Packets reply", BYTES(1), 1, false, 0, "packets sent in response to CTS"} // This one is still mysterious to me...
-      ,
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
-      {0}}},
+     {MATCH_FIELD("Group Function Code", BYTES(1), 16, "RTS"),
+      SIMPLE_DESC_FIELD("Message size", BYTES(2), "bytes"),
+      SIMPLE_DESC_FIELD("Packets", BYTES(1), "packets"),
+      SIMPLE_DESC_FIELD("Packets reply", BYTES(1), "packets sent in response to CTS"), // This one is still mysterious to me...
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "PGN"),
+      END_OF_FIELDS}}
+
+    ,
     {"ISO Transport Protocol, Connection Management - Clear To Send",
      60416,
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
      1,
-     {{"Group Function Code", BYTES(1), 1, false, "=17", "CTS"},
-      {"Max packets", BYTES(1), 1, false, 0, "packets before waiting for next CTS"},
-      {"Next SID", BYTES(1), 1, false, 0, "packet"},
-      {"Reserved", BYTES(2), RES_BINARY, false, 0, ""},
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
-      {0}}},
+     {MATCH_FIELD("Group Function Code", BYTES(1), 17, "CTS"),
+      SIMPLE_DESC_FIELD("Max packets", BYTES(1), "packets before waiting for next CTS"),
+      SIMPLE_DESC_FIELD("Next SID", BYTES(1), "packet"),
+      RESERVED_FIELD(BYTES(2)),
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "PGN"),
+      END_OF_FIELDS}}
+
+    ,
     {"ISO Transport Protocol, Connection Management - End Of Message",
      60416,
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
      1,
-     {{"Group Function Code", BYTES(1), 1, false, "=19", "EOM"},
-      {"Total message size", BYTES(2), 1, false, 0, "bytes"},
-      {"Total number of packets received", BYTES(1), 1, false, 0, "packets"},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
-      {0}}},
+     {MATCH_FIELD("Group Function Code", BYTES(1), 19, "EOM"),
+      SIMPLE_DESC_FIELD("Total message size", BYTES(2), "bytes"),
+      SIMPLE_DESC_FIELD("Total number of packets received", BYTES(1), "packets"),
+      RESERVED_FIELD(BYTES(1)),
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "PGN"),
+      END_OF_FIELDS}}
+
+    ,
     {"ISO Transport Protocol, Connection Management - Broadcast Announce",
      60416,
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
      1,
-     {{"Group Function Code", BYTES(1), 1, false, "=32", "BAM"},
-      {"Message size", BYTES(2), 1, false, 0, "bytes"},
-      {"Packets", BYTES(1), 1, false, 0, "frames"},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
-      {0}}},
+     {MATCH_FIELD("Group Function Code", BYTES(1), 32, "BAM"),
+      SIMPLE_DESC_FIELD("Message size", BYTES(2), "bytes"),
+      SIMPLE_DESC_FIELD("Packets", BYTES(1), "frames"),
+      RESERVED_FIELD(BYTES(1)),
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "PGN"),
+      END_OF_FIELDS}},
     {"ISO Transport Protocol, Connection Management - Abort",
      60416,
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
      1,
-     {{"Group Function Code", BYTES(1), 1, false, "=255", "Abort"},
-      {"Reason", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Reserved", BYTES(2), RES_BINARY, false, 0, ""},
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "PGN"},
-      {0}}}
+     {MATCH_FIELD("Group Function Code", BYTES(1), 255, "Abort"),
+      BINARY_FIELD("Reason", BYTES(1), NULL),
+      RESERVED_FIELD(BYTES(2)),
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "PGN"),
+      END_OF_FIELDS}}
 
     ,
     {"ISO Address Claim",
@@ -963,17 +597,17 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number"},
-      {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      {"Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance"},
-      {"Device Instance Upper", 5, 1, false, 0, "ISO Function Instance"},
-      {"Device Function", 8, 1, false, 0, "ISO Function"},
-      {"Reserved", 1, RES_BINARY, false, 0, ""},
-      {"Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, ""},
-      {"System Instance", 4, 1, false, 0, "ISO Device Class Instance"},
-      {"Industry Group", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
-      {"Reserved", 1, RES_BINARY, false, 0, "ISO Self Configurable"},
-      {0}}}
+     {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
+      MANUFACTURER_FIELD(NULL, NULL, false),
+      SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
+      SIMPLE_DESC_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
+      SIMPLE_DESC_FIELD("Device Function", 8, "ISO Function"),
+      RESERVED_FIELD(1),
+      LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
+      SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
+      LOOKUP_FIELD("Industry Group", 3, INDUSTRY_CODE),
+      RESERVED_FIELD(1),
+      END_OF_FIELDS}}
 
     /* PDU1 (addressed) single-frame PGN range 0EF00 to 0xEFFF (61184 - 61439) */
 
@@ -985,14 +619,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=1", "Wireless Keypad Light Control"},
-      {"Variant", BYTES(1), 1, false, 0, ""},
-      {"Wireless Setting", BYTES(1), 1, false, 0, ""},
-      {"Wired Setting", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1851),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Wireless Keypad Light Control"),
+      ONE_BYTE_FIELD("Variant"),
+      ONE_BYTE_FIELD("Wireless Setting"),
+      ONE_BYTE_FIELD("Wired Setting"),
+      END_OF_FIELDS}}
 
     ,
     {"Seatalk: Wireless Keypad Light Control",
@@ -1001,13 +633,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"PID", BYTES(1), 1, false, 0, ""},
-      {"Variant", BYTES(1), 1, false, 0, ""},
-      {"Beep Control", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1851), ONE_BYTE_FIELD("PID"), ONE_BYTE_FIELD("Variant"), ONE_BYTE_FIELD("Beep Control"), END_OF_FIELDS}}
 
     ,
     {"Victron Battery Register",
@@ -1016,12 +642,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=358", "Victron"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Register Id", BYTES(2), 1, false, 0, ""},
-      {"Payload", BYTES(4), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(358), SIMPLE_FIELD("Register Id", BYTES(2)), SIMPLE_FIELD("Payload", BYTES(4)), END_OF_FIELDS}}
 
     ,
     {"Manufacturer Proprietary single-frame addressed",
@@ -1030,11 +651,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
-      {"Data", BYTES(6), RES_BINARY, false, 0, ""},
-      {0}},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
      0,
      0,
      true}
@@ -1048,11 +665,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
-      {"Data", BYTES(6), RES_BINARY, false, 0, ""},
-      {0}},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
      0,
      0,
      true}
@@ -1066,10 +679,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      END_OF_FIELDS}}
 
     ,
     {"Bus #1 Phase B Basic AC Quantities",
@@ -1078,10 +691,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      END_OF_FIELDS}}
 
     ,
     {"Bus #1 Phase A Basic AC Quantities",
@@ -1090,10 +703,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      END_OF_FIELDS}}
 
     ,
     {"Bus #1 Average Basic AC Quantities",
@@ -1102,10 +715,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      END_OF_FIELDS}}
 
     ,
     {"Utility Total AC Energy",
@@ -1114,7 +727,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Total Energy Export", BYTES(4), 1, false, "kWh", ""}, {"Total Energy Import", BYTES(4), 1, false, "kWh", ""}, {0}}}
+     {ENERGY_FIELD("Total Energy Export"), ENERGY_FIELD("Total Energy Import"), END_OF_FIELDS}}
 
     ,
     {"Utility Phase C AC Reactive Power",
@@ -1123,10 +736,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(2), 1, false, "var", ""},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
-      {0}}}
+     {NUMBER_FIELD("Reactive Power", BYTES(2), 1, false, "var", NULL),
+      POWER_FACTOR_U16_FIELD,
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      END_OF_FIELDS}}
 
     ,
     {"Utility Phase C AC Power",
@@ -1135,7 +748,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, true, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000}, {0}}}
+     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
 
     ,
     {"Utility Phase C Basic AC Quantities",
@@ -1144,11 +757,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {"AC RMS Current", BYTES(2), 1, false, "A", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 1),
+      END_OF_FIELDS}}
 
     ,
     {"Utility Phase B AC Reactive Power",
@@ -1157,10 +770,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(2), 1, false, "var", ""},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
-      {0}}}
+     {NUMBER_FIELD("Reactive Power", BYTES(2), 1, false, "var", NULL),
+      POWER_FACTOR_U16_FIELD,
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      END_OF_FIELDS}}
 
     ,
     {"Utility Phase B AC Power",
@@ -1169,7 +782,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, true, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000}, {0}}}
+     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
 
     ,
     {"Utility Phase B Basic AC Quantities",
@@ -1178,11 +791,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {"AC RMS Current", BYTES(2), 1, false, "A", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 1),
+      END_OF_FIELDS}}
 
     ,
     {"Utility Phase A AC Reactive Power",
@@ -1191,10 +804,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(4), 1, true, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, true, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
-      {0}}}
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+      POWER_FACTOR_U16_FIELD,
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      END_OF_FIELDS}}
 
     ,
     {"Utility Phase A AC Power",
@@ -1203,7 +816,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, true, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000}, {0}}}
+     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
 
     ,
     {"Utility Phase A Basic AC Quantities",
@@ -1212,11 +825,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {"AC RMS Current", BYTES(2), 1, false, "A", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 1),
+      END_OF_FIELDS}}
 
     ,
     {"Utility Total AC Reactive Power",
@@ -1225,10 +838,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(4), 1, true, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
-      {0}}}
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+      POWER_FACTOR_U16_FIELD,
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      END_OF_FIELDS}}
 
     ,
     {"Utility Total AC Power",
@@ -1237,7 +850,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, true, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, true, "VA", "", -2000000000}, {0}}}
+     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
 
     ,
     {"Utility Average Basic AC Quantities",
@@ -1246,11 +859,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {"AC RMS Current", BYTES(2), 1, false, "A", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 1),
+      END_OF_FIELDS}}
 
     ,
     {"Generator Total AC Energy",
@@ -1259,7 +872,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Total Energy Export", BYTES(4), 1, false, "kWh", ""}, {"Total Energy Import", BYTES(4), 1, false, "kWh", ""}, {0}}}
+     {ENERGY_FIELD("Total Energy Export"), ENERGY_FIELD("Total Energy Import"), END_OF_FIELDS}}
 
     ,
     {"Generator Phase C AC Reactive Power",
@@ -1268,10 +881,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
-      {0}}}
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+      POWER_FACTOR_U16_FIELD,
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      END_OF_FIELDS}}
 
     ,
     {"Generator Phase C AC Power",
@@ -1280,7 +893,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(2), 1, false, "W", "", -2000000000}, {"Apparent Power", BYTES(2), 1, false, "VA", "", -2000000000}, {0}}}
+     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
 
     ,
     {"Generator Phase C Basic AC Quantities",
@@ -1289,11 +902,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {"AC RMS Current", BYTES(2), 1, false, "A", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 1),
+      END_OF_FIELDS}}
 
     ,
     {"Generator Phase B AC Reactive Power",
@@ -1302,10 +915,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
-      {0}}}
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+      POWER_FACTOR_U16_FIELD,
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      END_OF_FIELDS}}
 
     ,
     {"Generator Phase B AC Power",
@@ -1314,7 +927,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(2), 1, false, "W", "", -2000000000}, {"Apparent Power", BYTES(2), 1, false, "VA", "", -2000000000}, {0}}}
+     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
 
     ,
     {"Generator Phase B Basic AC Quantities",
@@ -1323,11 +936,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {"AC RMS Current", BYTES(2), 1, false, "A", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 1),
+      END_OF_FIELDS}}
 
     ,
     {"Generator Phase A AC Reactive Power",
@@ -1336,10 +949,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
-      {0}}}
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+      POWER_FACTOR_U16_FIELD,
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      END_OF_FIELDS}}
 
     ,
     {"Generator Phase A AC Power",
@@ -1348,7 +961,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, false, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, false, "VA", "", -2000000000}, {0}}}
+     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
 
     ,
     {"Generator Phase A Basic AC Quantities",
@@ -1357,11 +970,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {"AC RMS Current", BYTES(2), 1, false, "A", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 1),
+      END_OF_FIELDS}}
 
     ,
     {"Generator Total AC Reactive Power",
@@ -1370,10 +983,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Reactive Power", BYTES(2), 1, false, "var", "", -2000000000},
-      {"Power Factor", BYTES(2), 1 / 16384, false, 0, ""},
-      {"Power Factor Lagging", 2, RES_LOOKUP, false, LOOKUP_POWER_FACTOR, ""},
-      {0}}}
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+      POWER_FACTOR_U16_FIELD,
+      LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      END_OF_FIELDS}}
 
     ,
     {"Generator Total AC Power",
@@ -1382,7 +995,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Real Power", BYTES(4), 1, false, "W", "", -2000000000}, {"Apparent Power", BYTES(4), 1, false, "VA", "", -2000000000}, {0}}}
+     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
 
     ,
     {"Generator Average Basic AC Quantities",
@@ -1391,11 +1004,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Line-Line AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"Line-Neutral AC RMS Voltage", BYTES(2), 1, false, "V", ""},
-      {"AC Frequency", BYTES(2), 1 / 128.0, false, "Hz", ""},
-      {"AC RMS Current", BYTES(2), 1, false, "A", ""},
-      {0}}}
+     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
+      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+      FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 1),
+      END_OF_FIELDS}}
 
     ,
     {"ISO Commanded Address",
@@ -1406,18 +1019,18 @@ Pgn pgnList[] = {
      0,
      /* ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in the
      data portion of the message must match the name information of the node whose network address is to be set. */
-     {{"Unique Number", 21, RES_BINARY, false, 0, "ISO Identity Number"},
-      {"Manufacturer Code", 11, 1, false, 0, ""},
-      {"Device Instance Lower", 3, 1, false, 0, "ISO ECU Instance"},
-      {"Device Instance Upper", 5, 1, false, 0, "ISO Function Instance"},
-      {"Device Function", BYTES(1), 1, false, 0, "ISO Function"},
-      {"Reserved", 1, RES_BINARY, false, 0, ""},
-      {"Device Class", 7, RES_LOOKUP, false, LOOKUP_DEVICE_CLASS, ""},
-      {"System Instance", 4, 1, false, 0, "ISO Device Class Instance"},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
-      {"Reserved", 1, RES_BINARY, false, 0, "ISO Self Configurable"},
-      {"New Source Address", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
+      MANUFACTURER_FIELD("Manufacturer Code", NULL, false),
+      SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
+      SIMPLE_DESC_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
+      SIMPLE_DESC_FIELD("Device Function", BYTES(1), "ISO Function"),
+      RESERVED_FIELD(1),
+      LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
+      SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
+      LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
+      RESERVED_FIELD(1),
+      ONE_BYTE_FIELD("New Source Address"),
+      END_OF_FIELDS}}
 
     /* proprietary PDU2 (non addressed) single-frame range 0xFF00 to 0xFFFF (65280 - 65535) */
 
@@ -1428,12 +1041,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Heave", BYTES(4), 0.001, true, "m", ""},
-      {"Reserved", BYTES(2), RES_NOTUSED, false, 0, ""},
-      {0}}}
+     {COMPANY(1855), DISTANCE_FIELD("Heave", BYTES(4), 0.001, NULL), RESERVED_FIELD(BYTES(2)), END_OF_FIELDS}}
 
     ,
     {"Manufacturer Proprietary single-frame non-addressed",
@@ -1442,11 +1050,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
-      {"Data", BYTES(6), RES_BINARY, false, 0, ""},
-      {0}},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
      0,
      0,
      true}
@@ -1458,14 +1062,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Bank Instance", BYTES(1), 1, false, 0, ""},
-      {"Indicator Number", BYTES(1), 1, false, 0, ""},
-      {"Breaker Current", BYTES(2), 0.1, true, "A", ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(137),
+      ONE_BYTE_FIELD("Bank Instance"),
+      ONE_BYTE_FIELD("Indicator Number"),
+      CURRENT_FIELD("Breaker Current", BYTES(2), 0.1),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -1475,11 +1077,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Boot State", 4, RES_LOOKUP, false, ",0=in Startup Monitor,1=running Bootloader,2=running Application", ""},
-      {0}}}
+     {COMPANY(135), LOOKUP_FIELD("Boot State", 4, BOOT_STATE), END_OF_FIELDS}}
 
     ,
     {"Lowrance: Temperature",
@@ -1488,12 +1086,10 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "Lowrance"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Temperature Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
-      {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {0}}}
+     {COMPANY(140),
+      LOOKUP_FIELD("Temperature Source", BYTES(1), TEMPERATURE_SOURCE),
+      TEMPERATURE_FIELD("Actual Temperature"),
+      END_OF_FIELDS}}
 
     ,
     {"Chetco: Dimmer",
@@ -1502,29 +1098,18 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=409", "Chetco"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, 1, false, 0, ""},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Dimmer1", BYTES(1), 1, false, 0, ""},
-      {"Dimmer2", BYTES(1), 1, false, 0, ""},
-      {"Dimmer3", BYTES(1), 1, false, 0, ""},
-      {"Dimmer4", BYTES(1), 1, false, 0, ""},
-      {"Control", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(409),
+      INSTANCE_FIELD,
+      ONE_BYTE_FIELD("Dimmer1"),
+      ONE_BYTE_FIELD("Dimmer2"),
+      ONE_BYTE_FIELD("Dimmer3"),
+      ONE_BYTE_FIELD("Dimmer4"),
+      ONE_BYTE_FIELD("Control"),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
-    {"Airmar: Boot State Request",
-     65286,
-     PACKET_COMPLETE,
-     PACKET_SINGLE,
-     8,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Airmar: Boot State Request", 65286, PACKET_COMPLETE, PACKET_SINGLE, 8, 0, {COMPANY(135), END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -1534,31 +1119,18 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Format Code", 3, RES_LOOKUP, false, ",1=Format code 1", ""},
-      {"Access Level", 3, RES_LOOKUP, false, ",0=Locked,1=unlocked level 1,2=unlocked level 2", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, ""},
-      {"Access Seed/Key",
-       BYTES(4),
-       RES_INTEGER,
-       false,
-       0,
-       "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208."},
-      {0}}}
+     {COMPANY(135),
+      INTEGER_FIELD("Format Code", 3),
+      LOOKUP_FIELD("Access Level", 3, ACCESS_LEVEL),
+      RESERVED_FIELD(2),
+      INTEGER_DESC_FIELD(
+          "Access Seed/Key",
+          BYTES(4),
+          "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208."),
+      END_OF_FIELDS}}
 
     ,
-    {"Simnet: Configure Temperature Sensor",
-     65287,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Simnet: Configure Temperature Sensor", 65287, PACKET_INCOMPLETE, PACKET_SINGLE, 0x08, 0, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Seatalk: Alarm",
@@ -1567,61 +1139,23 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Alarm Status", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_STATUS, ""},
-      {"Alarm ID", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_ID, ""},
-      {"Alarm Group", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_GROUP, ""},
-      {"Alarm Priority", BYTES(2), RES_BINARY, false, 0, ""},
-      {0}}},
-    {"Simnet: Trim Tab Sensor Calibration",
-     65289,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+     {COMPANY(1851),
+      BINARY_FIELD("SID", BYTES(1), NULL),
+      LOOKUP_FIELD("Alarm Status", BYTES(1), SEATALK_ALARM_STATUS),
+      LOOKUP_FIELD("Alarm ID", BYTES(1), SEATALK_ALARM_ID),
+      LOOKUP_FIELD("Alarm Group", BYTES(1), SEATALK_ALARM_GROUP),
+      BINARY_FIELD("Alarm Priority", BYTES(2), NULL),
+      END_OF_FIELDS}},
+    {"Simnet: Trim Tab Sensor Calibration", 65289, PACKET_INCOMPLETE, PACKET_SINGLE, 0x08, 0, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
-    {"Simnet: Paddle Wheel Speed Configuration",
-     65290,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Simnet: Paddle Wheel Speed Configuration", 65290, PACKET_INCOMPLETE, PACKET_SINGLE, 0x08, 0, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
-    {"Simnet: Clear Fluid Level Warnings",
-     65292,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Simnet: Clear Fluid Level Warnings", 65292, PACKET_INCOMPLETE, PACKET_SINGLE, 0x08, 0, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
-    {"Simnet: LGC-2000 Configuration",
-     65293,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Simnet: LGC-2000 Configuration", 65293, PACKET_INCOMPLETE, PACKET_SINGLE, 0x08, 0, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Navico: Wireless Battery Status",
@@ -1630,14 +1164,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Status", BYTES(1), 1, false, 0, ""},
-      {"Battery Status", BYTES(1), 1, false, "%", ""},
-      {"Battery Charge Status", BYTES(1), 1, false, "%", ""},
-      {"Reserved", BYTES(3), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      ONE_BYTE_FIELD("Status"),
+      PERCENTAGE_U8_FIELD("Battery Status"),
+      PERCENTAGE_U8_FIELD("Battery Charge Status"),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS}}
 
     ,
     {"Navico: Wireless Signal Status",
@@ -1646,37 +1178,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Unknown", BYTES(1), 1, false, 0, ""},
-      {"Signal Strength", BYTES(1), 1, false, "%", ""},
-      {"Reserved", BYTES(3), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(275), ONE_BYTE_FIELD("Unknown"), PERCENTAGE_U8_FIELD("Signal Strength"), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS}}
 
     ,
-    {"Simnet: Reprogram Status",
-     65325,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Simnet: Reprogram Status", 65325, PACKET_INCOMPLETE, PACKET_SINGLE, 0x08, 0, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
-    {"Simnet: Autopilot Mode",
-     65341,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Simnet: Autopilot Mode", 65341, PACKET_INCOMPLETE, PACKET_SINGLE, 0x08, 0, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Seatalk: Pilot Wind Datum",
@@ -1685,27 +1193,23 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Wind Datum", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Rolling Average Wind Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},
-      {0}}},
+     {COMPANY(1851),
+      ANGLE_U16_FIELD("Wind Datum", NULL),
+      ANGLE_U16_FIELD("Rolling Average Wind Angle", NULL),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}},
     {"Seatalk: Pilot Heading",
      65359,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Heading True", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Heading Magnetic", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reserved", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1851),
+      BINARY_FIELD("SID", BYTES(1), NULL),
+      ANGLE_U16_FIELD("Heading True", NULL),
+      ANGLE_U16_FIELD("Heading Magnetic", NULL),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Seatalk: Pilot Locked Heading",
@@ -1714,14 +1218,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Target Heading True", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Target Heading Magnetic", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {0}}}
+     {COMPANY(1851),
+      BINARY_FIELD("SID", BYTES(1), NULL),
+      ANGLE_U16_FIELD("Target Heading True", NULL),
+      ANGLE_U16_FIELD("Target Heading Magnetic", NULL),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Seatalk: Silence Alarm",
@@ -1730,13 +1232,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Alarm ID", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_ID, ""},
-      {"Alarm Group", BYTES(1), RES_LOOKUP, false, LOOKUP_SEATALK_ALARM_GROUP, ""},
-      {"Reserved", 32, RES_BINARY, false, 0, ""},
-      {0}}}
+     {COMPANY(1851),
+      LOOKUP_FIELD("Alarm ID", BYTES(1), SEATALK_ALARM_ID),
+      LOOKUP_FIELD("Alarm Group", BYTES(1), SEATALK_ALARM_GROUP),
+      RESERVED_FIELD(32),
+      END_OF_FIELDS}}
 
     ,
     {"Seatalk: Keypad Message",
@@ -1745,17 +1245,15 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), 1, false, 0, ""},
-      {"First key", BYTES(1), 1, false, 0, ""},
-      {"Second key", BYTES(1), 1, false, 0, ""},
-      {"First key state", 2, 1, false, 0, ""},
-      {"Second key state", 2, 1, false, 0, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"Encoder Position", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1851),
+      ONE_BYTE_FIELD("Proprietary ID"),
+      ONE_BYTE_FIELD("First key"),
+      ONE_BYTE_FIELD("Second key"),
+      SIMPLE_FIELD("First key state", 2),
+      SIMPLE_FIELD("Second key state", 2),
+      RESERVED_FIELD(4),
+      ONE_BYTE_FIELD("Encoder Position"),
+      END_OF_FIELDS}}
 
     ,
     {"SeaTalk: Keypad Heartbeat",
@@ -1764,13 +1262,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), 1, false, 0, ""},
-      {"Variant", BYTES(1), 1, false, 0, ""},
-      {"Status", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1851), ONE_BYTE_FIELD("Proprietary ID"), ONE_BYTE_FIELD("Variant"), ONE_BYTE_FIELD("Status"), END_OF_FIELDS}}
 
     ,
     {"Seatalk: Pilot Mode",
@@ -1779,15 +1271,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Pilot Mode", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Sub Mode", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Pilot Mode Data", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Reserved", BYTES(3), RES_BINARY, false, 0, ""},
-      {0}}}
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+     {COMPANY(1851),
+      BINARY_FIELD("Pilot Mode", BYTES(1), NULL),
+      BINARY_FIELD("Sub Mode", BYTES(1), NULL),
+      BINARY_FIELD("Pilot Mode Data", BYTES(1), NULL),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS}} /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Depth Quality Factor",
      65408,
@@ -1795,12 +1284,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), 1, false, 0, ""},
-      {"Depth Quality Factor", 4, RES_LOOKUP, false, ",0=No Depth Lock", ""},
-      {0}}}
+     {COMPANY(135), ONE_BYTE_FIELD("SID"), LOOKUP_FIELD("Depth Quality Factor", 4, AIRMAR_DEPTH_QUALITY_FACTOR), END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -1810,14 +1294,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), 1, false, 0, ""},
-      {"Duration of interval", BYTES(2), 0.001, false, "s", ""},
-      {"Number of pulses received", BYTES(2), 1, false, 0, ""},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {0}}}
+     {COMPANY(135),
+      ONE_BYTE_FIELD("SID"),
+      ELAPSED_FIELD("Duration of interval", BYTES(2), 0.001),
+      SIMPLE_FIELD("Number of pulses received", BYTES(2)),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -1827,26 +1309,15 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), 1, false, 0, ""},
-      {"Internal Device Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Supply Voltage", BYTES(2), 0.01, false, "V", ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {0}}}
+     {COMPANY(135),
+      ONE_BYTE_FIELD("SID"),
+      TEMPERATURE_FIELD("Internal Device Temperature"),
+      VOLTAGE_FIELD("Supply Voltage", 0.01),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
-    {"Simnet: Autopilot Mode",
-     65480,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Simnet: Autopilot Mode", 65480, PACKET_INCOMPLETE, PACKET_SINGLE, 0x08, 0, {COMPANY(1857), END_OF_FIELDS}}
 
     /* PDU1 (addressed) fast-packet PGN range 0x10000 to 0x1EEFF (65536 - 126719) */
     ,
@@ -1856,7 +1327,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      255,
      0,
-     {{"Data", BYTES(255), RES_BINARY, false, 0, ""}, {0}},
+     {BINARY_FIELD("Data", BYTES(255), NULL), END_OF_FIELDS},
      0,
      0,
      true}
@@ -1870,14 +1341,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      12,
      2,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=0", "Request"},
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "Requested PGN"},
-      {"Transmission interval", BYTES(4), 0.001, false, "s", ""},
-      {"Transmission interval offset", BYTES(2), 0.01, false, "s", ""},
-      {"# of Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow"},
-      {"Parameter", BYTES(1), RES_INTEGER, false, 0, "Parameter index"},
-      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, "Parameter value, variable length"},
-      {0}}}
+     {MATCH_FIELD("Function Code", BYTES(1), 0, "Request"),
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "Requested PGN"),
+      ELAPSED_FIELD("Transmission interval", BYTES(4), 0.001),
+      ELAPSED_FIELD("Transmission interval offset", BYTES(2), 0.01),
+      SIMPLE_DESC_FIELD("# of Parameters", BYTES(1), "How many parameter pairs will follow"),
+      INTEGER_DESC_FIELD("Parameter", BYTES(1), "Parameter index"),
+      VARIABLE_FIELD("Value", "Parameter value, variable length"),
+      END_OF_FIELDS}}
 
     ,
     {"NMEA - Command group function",
@@ -1886,14 +1357,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=1", "Command"},
-      {"PGN", BYTES(3), RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Priority", 4, RES_LOOKUP, 0, ",8=Leave priority unchanged,9=Reset to default"},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"# of Parameters", BYTES(1), 1, false, 0, "How many parameter pairs will follow"},
-      {"Parameter", BYTES(1), RES_INTEGER, false, 0, "Parameter index"},
-      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, "Parameter value, variable length"},
-      {0}}}
+     {MATCH_FIELD("Function Code", BYTES(1), 1, "Command"),
+      INTEGER_DESC_FIELD("PGN", BYTES(3), "Commanded PGN"),
+      LOOKUP_FIELD("Priority", 4, PRIORITY),
+      RESERVED_FIELD(4),
+      SIMPLE_DESC_FIELD("# of Parameters", BYTES(1), "How many parameter pairs will follow"),
+      INTEGER_DESC_FIELD("Parameter", BYTES(1), "Parameter index"),
+      VARIABLE_FIELD("Value", "Parameter value, variable length"),
+      END_OF_FIELDS}}
 
     ,
     {"NMEA - Acknowledge group function",
@@ -1902,30 +1373,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      1,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=2", "Acknowledge"},
-      {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      {"PGN error code",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=Acknowledge,1=PGN not supported,2=PGN not available,3=Access denied,4=Not supported,5=Tag not supported,6=Read or Write "
-       "not supported",
-       ""},
-      {"Transmission interval/Priority error code",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=Acknowledge,1=Transmit Interval/Priority not supported,2=Transmit Interval to low,3=Access denied,4=Not supported",
-       ""},
-      {"# of Parameters", 8, 1, false, 0, ""},
-      {"Parameter",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=Acknowledge,1=Invalid parameter field,2=Temporary error,3=Parameter out of range,4=Access denied,5=Not supported,6=Read "
-       "or Write not supported",
-       ""},
-      {0}}}
+     {MATCH_FIELD("Function Code", BYTES(1), 2, "Acknowledge"),
+      INTEGER_DESC_FIELD("PGN", 24, "Commanded PGN"),
+      LOOKUP_FIELD("PGN error code", 4, PGN_ERROR_CODE),
+      LOOKUP_FIELD("Transmission interval/Priority error code", 4, TRANSMISSION_INTERVAL),
+      SIMPLE_FIELD("# of Parameters", 8),
+      LOOKUP_FIELD("Parameter", 4, PARAMETER_FIELD),
+      END_OF_FIELDS}}
 
     ,
     {"NMEA - Read Fields group function",
@@ -1934,23 +1388,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      102,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=3", "Read Fields"},
-      {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Unique ID", 8, RES_INTEGER, false, 0, ""},
-      {"# of Selection Pairs", 8, 1, false, 0, ""},
-      {"# of Parameters", 8, 1, false, 0, ""},
-      {"Selection Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
-      {"Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {MATCH_FIELD("Function Code", BYTES(1), 3, "Read Fields"),
+      INTEGER_DESC_FIELD("PGN", 24, "Commanded PGN"),
+      MANUFACTURER_PROPRIETARY_FIELDS,
+      INTEGER_FIELD("Unique ID", 8),
+      SIMPLE_FIELD("# of Selection Pairs", 8),
+      SIMPLE_FIELD("# of Parameters", 8),
+      INTEGER_FIELD("Selection Parameter", BYTES(1)),
+      VARIABLE_FIELD("Selection Value", NULL),
+      INTEGER_FIELD("Parameter", BYTES(1)),
+      END_OF_FIELDS}}
 
-    /* The following won't work when analyzing non-proprietary PGNs */
     ,
     {"NMEA - Read Fields reply group function",
      126208,
@@ -1958,34 +1406,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      202,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=4", "Read Fields Reply"},
-      {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Manufacturer Code",
-       11,
-       RES_MANUFACTURER,
-       false,
-       0,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Industry Code",
-       3,
-       RES_LOOKUP,
-       false,
-       LOOKUP_INDUSTRY_CODE,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Unique ID", 8, RES_INTEGER, false, 0, ""},
-      {"# of Selection Pairs", 8, 1, false, 0, ""},
-      {"# of Parameters", 8, 1, false, 0, ""},
-      {"Selection Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
-      {"Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
-      {0}}}
+     {MATCH_FIELD("Function Code", BYTES(1), 4, "Read Fields Reply"),
+      INTEGER_DESC_FIELD("PGN", 24, "Commanded PGN"),
+      MANUFACTURER_PROPRIETARY_FIELDS,
+      INTEGER_FIELD("Unique ID", 8),
+      SIMPLE_FIELD("# of Selection Pairs", 8),
+      SIMPLE_FIELD("# of Parameters", 8),
+      INTEGER_FIELD("Selection Parameter", BYTES(1)),
+      VARIABLE_FIELD("Selection Value", NULL),
+      INTEGER_FIELD("Parameter", BYTES(1)),
+      VARIABLE_FIELD("Value", NULL),
+      END_OF_FIELDS}}
 
-    /* The following won't work when analyzing non-proprietary PGNs */
     ,
     {"NMEA - Write Fields group function",
      126208,
@@ -1993,34 +1425,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      202,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=5", "Write Fields"},
-      {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Manufacturer Code",
-       11,
-       RES_MANUFACTURER,
-       false,
-       0,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Industry Code",
-       3,
-       RES_LOOKUP,
-       false,
-       LOOKUP_INDUSTRY_CODE,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Unique ID", 8, RES_INTEGER, false, 0, ""},
-      {"# of Selection Pairs", 8, 1, false, 0, ""},
-      {"# of Parameters", 8, 1, false, 0, ""},
-      {"Selection Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
-      {"Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
-      {0}}}
+     {MATCH_FIELD("Function Code", BYTES(1), 5, "Write Fields"),
+      INTEGER_DESC_FIELD("PGN", 24, "Commanded PGN"),
+      MANUFACTURER_PROPRIETARY_FIELDS,
+      INTEGER_FIELD("Unique ID", 8),
+      SIMPLE_FIELD("# of Selection Pairs", 8),
+      SIMPLE_FIELD("# of Parameters", 8),
+      INTEGER_FIELD("Selection Parameter", BYTES(1)),
+      VARIABLE_FIELD("Selection Value", NULL),
+      INTEGER_FIELD("Parameter", BYTES(1)),
+      VARIABLE_FIELD("Value", NULL),
+      END_OF_FIELDS}}
 
-    /* The following won't work when analyzing non-proprietary PGNs */
     ,
     {"NMEA - Write Fields reply group function",
      126208,
@@ -2028,32 +1444,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      202,
-     {{"Function Code", BYTES(1), RES_INTEGER, false, "=6", "Write Fields Reply"},
-      {"PGN", 24, RES_INTEGER, false, 0, "Commanded PGN"},
-      {"Manufacturer Code",
-       11,
-       RES_MANUFACTURER,
-       false,
-       0,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Reserved", 2, RES_NOTUSED, false, 0, "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Industry Code",
-       3,
-       RES_LOOKUP,
-       false,
-       LOOKUP_INDUSTRY_CODE,
-       "Only for proprietary PGNs"} // TODO: Only in PGN when field PGN is proprietary. Sigh.
-      ,
-      {"Unique ID", 8, RES_INTEGER, false, 0, ""},
-      {"# of Selection Pairs", 8, 1, false, 0, ""},
-      {"# of Parameters", 8, 1, false, 0, ""},
-      {"Selection Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Selection Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
-      {"Parameter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Value", LEN_VARIABLE, RES_VARIABLE, false, 0, ""},
-      {0}}}
+     {MATCH_FIELD("Function Code", BYTES(1), 6, "Write Fields Reply"),
+      INTEGER_DESC_FIELD("PGN", 24, "Commanded PGN"),
+      MANUFACTURER_PROPRIETARY_FIELDS,
+      INTEGER_FIELD("Unique ID", 8),
+      SIMPLE_FIELD("# of Selection Pairs", 8),
+      SIMPLE_FIELD("# of Parameters", 8),
+      INTEGER_FIELD("Selection Parameter", BYTES(1)),
+      VARIABLE_FIELD("Selection Value", NULL),
+      INTEGER_FIELD("Parameter", BYTES(1)),
+      VARIABLE_FIELD("Value", NULL),
+      END_OF_FIELDS}}
 
     /************ RESPONSE TO REQUEST PGNS **************/
 
@@ -2064,20 +1465,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      1,
-     {{"Function Code",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",0=Transmit PGN list,1=Receive PGN list",
-       "Transmit or receive PGN Group Function Code"},
-      {
-          "PGN",
-          24,
-          RES_INTEGER,
-          false,
-          0,
-      },
-      {0}}}
+     {LOOKUP_FIELD("Function Code", BYTES(1), PGN_LIST_FUNCTION), INTEGER_FIELD("PGN", BYTES(3)), END_OF_FIELDS}}
 
     /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
@@ -2088,17 +1476,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      21,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
-      {"command", BYTES(1), RES_INTEGER, false, "=132", "0x84"},
-      {"Unknown 1", BYTES(3), RES_BINARY, false, 0, ""},
-      {"Pilot Mode", BYTES(1), RES_INTEGER, false, ",64=Standby,66=Auto,70=Wind,74=Track", ""},
-      {"Sub Mode", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Pilot Mode Data", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Unknown 2", BYTES(10), RES_BINARY, false, 0, ""},
-      {0}}}
+     {COMPANY(1851),
+      MATCH_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
+      MATCH_FIELD("command", BYTES(1), 132, "0x84"),
+      BINARY_FIELD("Unknown 1", BYTES(3), NULL),
+      LOOKUP_FIELD("Pilot Mode", BYTES(1), SEATALK_PILOT_MODE),
+      INTEGER_FIELD("Sub Mode", BYTES(1)),
+      BINARY_FIELD("Pilot Mode Data", BYTES(1), NULL),
+      BINARY_FIELD("Unknown 2", BYTES(10), NULL),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Media Control",
@@ -2107,14 +1493,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=3", "Media Control"},
-      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Play,2=Pause,4=Next,6=Prev", ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 3, "Media Control"),
+      INTEGER_FIELD("Unknown", BYTES(1)),
+      INTEGER_FIELD("Source ID", BYTES(1)),
+      LOOKUP_FIELD("Command", BYTES(1), FUSION_COMMAND),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Sirius Control",
@@ -2123,14 +1507,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      7,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=30", "Sirius Control"},
-      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Next,2=Prev", ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 30, "Sirius Control"),
+      INTEGER_FIELD("Unknown", BYTES(1)),
+      INTEGER_FIELD("Source ID", BYTES(1)),
+      LOOKUP_FIELD("Command", BYTES(1), FUSION_SIRIUS_COMMAND),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Request Status",
@@ -2139,12 +1521,10 @@ Pgn pgnList[] = {
      PACKET_FAST,
      3,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=1", "Request Status"},
-      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Request Status"),
+      INTEGER_FIELD("Unknown", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Set Source",
@@ -2153,13 +1533,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      3,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=2", "Set Source"},
-      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 2, "Set Source"),
+      INTEGER_FIELD("Unknown", BYTES(1)),
+      INTEGER_FIELD("Source ID", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Mute",
@@ -2168,12 +1546,10 @@ Pgn pgnList[] = {
      PACKET_FAST,
      3,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=17", "Mute"},
-      {"Command", BYTES(1), RES_LOOKUP, false, ",1=Mute On,2=Mute Off", ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 17, "Mute"),
+      LOOKUP_FIELD("Command", BYTES(1), FUSION_MUTE_COMMAND),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Set Zone Volume",
@@ -2182,14 +1558,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=24", "Set Zone Volume"},
-      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Volume", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 24, "Set Zone Volume"),
+      INTEGER_FIELD("Unknown", BYTES(1)),
+      INTEGER_FIELD("Zone", BYTES(1)),
+      INTEGER_FIELD("Volume", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Set All Volumes",
@@ -2198,16 +1572,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=25", "Set All Volumes"},
-      {"Unknown", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Zone1", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Zone2", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Zone3", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Zone4", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 25, "Set All Volumes"),
+      INTEGER_FIELD("Unknown", BYTES(1)),
+      INTEGER_FIELD("Zone1", BYTES(1)),
+      INTEGER_FIELD("Zone2", BYTES(1)),
+      INTEGER_FIELD("Zone3", BYTES(1)),
+      INTEGER_FIELD("Zone4", BYTES(1)),
+      END_OF_FIELDS}}
 
     /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
     ,
@@ -2217,27 +1589,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      21,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
-      {"command", BYTES(1), RES_BINARY, false, "=134", "0x86"},
-      {"device", BYTES(1), RES_LOOKUP, false, ",33=S100", ""},
-      {"key",
-       BYTES(2),
-       RES_LOOKUP,
-       false,
-       ",64005=-1,63495=+1,64770=Standby,65025=Auto,64515=Wind,56355=Track,63240=+10,63750=-10,56865=-1 and -10,56610=+1 and +10",
-       ""},
-      {"Unknown data",
-       BYTES(14),
-       RES_BINARY,
-       false,
-       0,
-       ""} // xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF FF |
-           // FF FF FF FF FF | 42 00 F8 02 05])
-      ,
-      {0}}}
+     {COMPANY(1851),
+      MATCH_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
+      MATCH_FIELD("command", BYTES(1), 134, "0x86"),
+      INTEGER_FIELD("device", BYTES(1)),
+      LOOKUP_FIELD("key", BYTES(1), SEATALK_KEYSTROKE),
+      INTEGER_DESC_FIELD("keyInverted", BYTES(1), "Bit negated version of key"),
+      BINARY_FIELD("Unknown data", BYTES(14), NULL),
+      // xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF FF |
+      // FF FF FF FF FF | 42 00 F8 02 05])
+      END_OF_FIELDS}}
 
     ,
     {"Seatalk1: Device Identification",
@@ -2246,15 +1607,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(2), RES_INTEGER, false, "=33264", "0x81f0"},
-      {"command", BYTES(1), RES_BINARY, false, "=144", "0x90"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""} // 0x00
-      ,
-      {"device", BYTES(1), RES_LOOKUP, false, ",3=S100,5=Course Computer", ""},
-      {0}}}
+     {COMPANY(1851),
+      MATCH_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
+      MATCH_FIELD("command", BYTES(1), 144, "0x90"),
+      RESERVED_FIELD(BYTES(1)),
+      LOOKUP_FIELD("device", BYTES(1), SEATALK_DEVICE_ID),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
     ,
@@ -2264,19 +1622,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=32", "Attitude Offsets"},
-      {"Azimuth offset",
-       BYTES(2),
-       RES_RADIANS,
-       true,
-       "rad",
-       "Positive: sensor rotated to port, negative: sensor rotated to starboard"},
-      {"Pitch offset", BYTES(2), RES_RADIANS, true, "rad", "Positive: sensor tilted to bow, negative: sensor tilted to stern"},
-      {"Roll offset", BYTES(2), RES_RADIANS, true, "rad", "Positive: sensor tilted to port, negative: sensor tilted to starboard"},
-      {0}}}
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 32, "Attitude Offsets"),
+      NUMBER_FIELD("Azimuth offset",
+                   BYTES(2),
+                   RES_RADIANS,
+                   true,
+                   "rad",
+                   "Positive: sensor rotated to port, negative: sensor rotated to starboard"),
+      ANGLE_I16_FIELD("Pitch offset", "Positive: sensor tilted to bow, negative: sensor tilted to stern"),
+      ANGLE_I16_FIELD("Roll offset", "Positive: sensor tilted to port, negative: sensor tilted to starboard"),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
     ,
@@ -2286,39 +1642,26 @@ Pgn pgnList[] = {
      PACKET_FAST,
      24,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=33", "Calibrate Compass"},
-      {"Calibrate Function",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",0=Normal/cancel calibration,1=Enter calibration mode,2=Reset calibration to 0,3=Verify,4=Reset compass to "
-       "defaults,5=Reset damping to defaults",
-       ""},
-      {"Calibration Status",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",0=Queried,1=Passed,2=Failed - timeout,3=Failed - tilt error,4=Failed - other,5=In progress",
-       ""},
-      {"Verify Score", BYTES(1), RES_INTEGER, false, 0, "TBD"},
-      {"X-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
-      {"Y-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
-      {"Z-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
-      {"X-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"},
-      {"Y-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"},
-      {"Z-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"},
-      {"X-axis angular offset", BYTES(2), 0.1, true, "deg", "default 0, range 0 to 3600"},
-      {"Pitch and Roll damping", BYTES(2), 0.05, true, "s", "default 30, range 0 to 200"},
-      {"Compass/Rate gyro damping",
-       BYTES(2),
-       0.05,
-       true,
-       "s",
-       "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"},
-      {0}}}
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 33, "Calibrate Compass"),
+      LOOKUP_FIELD("Calibrate Function", BYTES(1), AIRMAR_CALIBRATE_FUNCTION),
+      LOOKUP_FIELD("Calibration Status", BYTES(1), AIRMAR_CALIBRATE_STATUS),
+      INTEGER_DESC_FIELD("Verify Score", BYTES(1), "TBD"),
+      NUMBER_FIELD("X-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"),
+      NUMBER_FIELD("Y-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"),
+      NUMBER_FIELD("Z-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"),
+      NUMBER_FIELD("X-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"),
+      NUMBER_FIELD("Y-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"),
+      NUMBER_FIELD("Z-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"),
+      NUMBER_FIELD("X-axis angular offset", BYTES(2), 0.1, true, "deg", "default 0, range 0 to 3600"),
+      NUMBER_FIELD("Pitch and Roll damping", BYTES(2), 0.05, true, "s", "default 30, range 0 to 200"),
+      NUMBER_FIELD("Compass/Rate gyro damping",
+                   BYTES(2),
+                   0.05,
+                   true,
+                   "s",
+                   "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
     ,
@@ -2328,38 +1671,26 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=34", "True Wind Options"},
-      {"COG substitution for HDG",
-       2,
-       RES_LOOKUP,
-       false,
-       ",0=Use HDG only,1=Allow COG to replace HDG",
-       "Allow use of COG when HDG not available?"},
-      {"Calibration Status",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",0=Queried,1=Passed,2=Failed - timeout,3=Failed - tilt error,4=Failed - other,5=In progress",
-       ""},
-      {"Verify Score", BYTES(1), RES_INTEGER, false, 0, "TBD"},
-      {"X-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
-      {"Y-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
-      {"Z-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"},
-      {"X-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"},
-      {"Y-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"},
-      {"Z-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"},
-      {"X-axis angular offset", BYTES(2), 0.1, true, "deg", "default 0, range 0 to 3600"},
-      {"Pitch and Roll damping", BYTES(2), 0.05, true, "s", "default 30, range 0 to 200"},
-      {"Compass/Rate gyro damping",
-       BYTES(2),
-       0.05,
-       true,
-       "s",
-       "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"},
-      {0}}}
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 34, "True Wind Options"),
+      LOOKUP_FIELD_DESC("COG substitution for HDG", 2, YES_NO, "Allow use of COG when HDG not available?"),
+      LOOKUP_FIELD("Calibration Status", BYTES(1), AIRMAR_CALIBRATE_STATUS),
+      INTEGER_DESC_FIELD("Verify Score", BYTES(1), "TBD"),
+      NUMBER_FIELD("X-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"),
+      NUMBER_FIELD("Y-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"),
+      NUMBER_FIELD("Z-axis gain value", BYTES(2), 0.01, true, 0, "default 100, range 50 to 500"),
+      NUMBER_FIELD("X-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"),
+      NUMBER_FIELD("Y-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"),
+      NUMBER_FIELD("Z-axis linear offset", BYTES(2), 0.01, true, "Tesla", "default 0, range -320.00 to 320.00"),
+      NUMBER_FIELD("X-axis angular offset", BYTES(2), 0.1, true, "deg", "default 0, range 0 to 3600"),
+      NUMBER_FIELD("Pitch and Roll damping", BYTES(2), 0.05, true, "s", "default 30, range 0 to 200"),
+      NUMBER_FIELD("Compass/Rate gyro damping",
+                   BYTES(2),
+                   0.05,
+                   true,
+                   "s",
+                   "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -2369,13 +1700,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=35", "Simulate Mode"},
-      {"Simulate Mode", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Reserved", 22, RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 35, "Simulate Mode"),
+      LOOKUP_FIELD("Simulate Mode", 2, OFF_ON),
+      RESERVED_FIELD(22),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -2385,13 +1714,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=40", "Calibrate Depth"},
-      {"Speed of Sound Mode", BYTES(2), 0.1, false, "m/s", "actual allowed range is 1350.0 to 1650.0 m/s"},
-      {"Reserved", 8, RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 40, "Calibrate Depth"),
+      NUMBER_FIELD("Speed of Sound Mode", BYTES(2), 0.1, false, "m/s", "actual allowed range is 1350.0 to 1650.0 m/s"),
+      RESERVED_FIELD(8),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -2401,19 +1728,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      12,
      2,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=41", "Calibrate Speed"},
-      {"Number of pairs of data points",
-       BYTES(1),
-       RES_INTEGER,
-       false,
-       0,
-       "actual range is 0 to 25. 254=restore default speed curve"},
-      {"Input frequency", BYTES(2), 0.1, false, "Hz", ""},
-      {"Output speed", BYTES(2), 0.01, false, "m/s", ""},
-      {0}}}
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 41, "Calibrate Speed"),
+      INTEGER_DESC_FIELD("Number of pairs of data points", BYTES(1), "actual range is 0 to 25. 254=restore default speed curve"),
+      FREQUENCY_FIELD("Input frequency", 0.1),
+      SPEED_U16_CM_FIELD("Output speed"),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -2423,14 +1743,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      2,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=42", "Calibrate Temperature"},
-      {"Temperature instance", 2, RES_LOOKUP, false, ",0=Device Sensor,1=Onboard Water Sensor,2=Optional Water Sensor", ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
-      {"Temperature offset", BYTES(2), 0.001, true, "K", "actual range is -9.999 to +9.999 K"},
-      {0}}}
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 42, "Calibrate Temperature"),
+      LOOKUP_FIELD("Temperature instance", 2, AIRMAR_TEMPERATURE_INSTANCE),
+      RESERVED_FIELD(6),
+      NUMBER_FIELD("Temperature offset", BYTES(2), 0.001, true, "K", "actual range is -9.999 to +9.999 K"),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -2440,15 +1758,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=43", "Speed Filter"},
-      {"Filter type", 4, RES_LOOKUP, false, ",0=no filter,1=basic IIR filter", ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Sample interval", BYTES(2), 0.01, false, "s", ""},
-      {"Filter duration", BYTES(2), 0.01, false, "s", ""},
-      {0}}}
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 43, "Speed Filter"),
+      LOOKUP_FIELD("Filter type", 4, AIRMAR_FILTER),
+      RESERVED_FIELD(4),
+      ELAPSED_FIELD("Sample interval", BYTES(2), 0.01),
+      ELAPSED_FIELD("Filter duration", BYTES(2), 0.01),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -2458,15 +1774,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=44", "Temperature Filter"},
-      {"Filter type", 4, RES_LOOKUP, false, ",0=no filter,1=basic IIR filter,15=data not available", ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Sample interval", BYTES(2), 0.01, false, "s", ""},
-      {"Filter duration", BYTES(2), 0.01, false, "s", ""},
-      {0}}}
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 44, "Temperature Filter"),
+      LOOKUP_FIELD("Filter type", 4, AIRMAR_FILTER),
+      RESERVED_FIELD(4),
+      ELAPSED_FIELD("Sample interval", BYTES(2), 0.01),
+      ELAPSED_FIELD("Filter duration", BYTES(2), 0.01),
+      END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -2476,18 +1790,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      2,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, "=46", "NMEA 2000 options"},
-      {"Transmission Interval",
-       2,
-       RES_LOOKUP,
-       false,
-       ",0=Measure Interval,1=Requested by user,2=reserved,3=data not available",
-       ""},
-      {"Reserved", 22, RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 46, "NMEA 2000 options"),
+      LOOKUP_FIELD("Transmission Interval", 2, AIRMAR_TRANSMISSION_INTERVAL),
+      RESERVED_FIELD(22),
+      END_OF_FIELDS}}
 
     ,
     {"Airmar: Addressable Multi-Frame",
@@ -2496,11 +1803,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      4,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(135), INTEGER_FIELD("Proprietary ID", BYTES(1)), END_OF_FIELDS}}
 
     ,
     {"Maretron: Slave Response",
@@ -2509,14 +1812,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Product code", BYTES(2), 1, false, 0, "0x1b2=SSC200"},
-      {"Software code", BYTES(2), 1, false, 0, ""},
-      {"Command", BYTES(1), 1, false, 0, "0x50=Deviation calibration result"},
-      {"Status", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(137),
+      SIMPLE_DESC_FIELD("Product code", BYTES(2), "0x1b2=SSC200"),
+      SIMPLE_FIELD("Software code", BYTES(2)),
+      SIMPLE_DESC_FIELD("Command", BYTES(1), "0x50=Deviation calibration result"),
+      ONE_BYTE_FIELD("Status"),
+      END_OF_FIELDS}}
 
     ,
     {"Manufacturer Proprietary fast-packet addressed",
@@ -2525,11 +1826,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      223,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
-      {"Data", BYTES(221), RES_BINARY, false, 0, ""},
-      {0}},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), NULL), END_OF_FIELDS},
      0,
      0,
      true}
@@ -2542,7 +1839,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      255,
      0,
-     {{"Data", BYTES(255), RES_BINARY, false, 0, ""}, {0}},
+     {BINARY_FIELD("Data", BYTES(255), NULL), END_OF_FIELDS},
      0,
      0,
      true}
@@ -2554,28 +1851,28 @@ Pgn pgnList[] = {
      PACKET_FAST,
      28,
      0,
-     {{"Alert Type", 4, RES_LOOKUP, false, LOOKUP_ALERT_TYPE, ""},
-      {"Alert Category", 4, RES_LOOKUP, false, LOOKUP_ALERT_CATEGORY, ""},
-      {"Alert System", BYTES(1), 1, false, 0, ""},
-      {"Alert Sub-System", BYTES(1), 1, false, 0, ""},
-      {"Alert ID", BYTES(2), 1, false, 0, ""},
-      {"Data Source Network ID NAME", BYTES(8), 1, false, 0, ""},
-      {"Data Source Instance", BYTES(1), 1, false, 0, ""},
-      {"Data Source Index-Source", BYTES(1), 1, false, 0, ""},
-      {"Alert Occurrence Number", BYTES(1), 1, false, 0, ""},
-      {"Temporary Silence Status", 1, RES_LOOKUP, false, ",0=Not Temporary Silence,1=Temporary Silence", ""},
-      {"Acknowledge Status", 1, RES_LOOKUP, false, ",0=Not Acknowledged,1=Acknowledged", ""},
-      {"Escalation Status", 1, RES_LOOKUP, false, ",0=Not Escalated,1=Escalated", ""},
-      {"Temporary Silence Support", 1, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
-      {"Acknowledge Support", 1, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
-      {"Escalation Support", 1, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
-      {"NMEA Reserved", 2, RES_BINARY, false, 0, ""},
-      {"Acknowledge Source Network ID NAME", BYTES(8), 1, false, 0, ""},
-      {"Trigger Condition", 4, RES_LOOKUP, false, LOOKUP_ALERT_TRIGGER_CONDITION, ""},
-      {"Threshold Status", 4, RES_LOOKUP, false, LOOKUP_ALERT_THRESHOLD_STATUS, ""},
-      {"Alert Priority", BYTES(1), 1, false, 0, ""},
-      {"Alert State", BYTES(1), RES_LOOKUP, false, LOOKUP_ALERT_STATE, ""},
-      {0}}}
+     {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      ONE_BYTE_FIELD("Alert System"),
+      ONE_BYTE_FIELD("Alert Sub-System"),
+      SIMPLE_FIELD("Alert ID", BYTES(2)),
+      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      ONE_BYTE_FIELD("Data Source Instance"),
+      ONE_BYTE_FIELD("Data Source Index-Source"),
+      ONE_BYTE_FIELD("Alert Occurrence Number"),
+      LOOKUP_FIELD("Temporary Silence Status", 1, YES_NO),
+      LOOKUP_FIELD("Acknowledge Status", 1, YES_NO),
+      LOOKUP_FIELD("Escalation Status", 1, YES_NO),
+      LOOKUP_FIELD("Temporary Silence Support", 1, YES_NO),
+      LOOKUP_FIELD("Acknowledge Support", 1, YES_NO),
+      LOOKUP_FIELD("Escalation Support", 1, YES_NO),
+      BINARY_FIELD("NMEA Reserved", 2, NULL),
+      SIMPLE_FIELD("Acknowledge Source Network ID NAME", BYTES(8)),
+      LOOKUP_FIELD("Trigger Condition", 4, ALERT_TRIGGER_CONDITION),
+      LOOKUP_FIELD("Threshold Status", 4, ALERT_THRESHOLD_STATUS),
+      ONE_BYTE_FIELD("Alert Priority"),
+      LOOKUP_FIELD("Alert State", BYTES(1), ALERT_STATE),
+      END_OF_FIELDS}}
 
     ,
     {"Alert Response",
@@ -2584,19 +1881,19 @@ Pgn pgnList[] = {
      PACKET_FAST,
      25,
      0,
-     {{"Alert Type", 4, RES_LOOKUP, false, LOOKUP_ALERT_TYPE, ""},
-      {"Alert Category", 4, RES_LOOKUP, false, LOOKUP_ALERT_CATEGORY, ""},
-      {"Alert System", BYTES(1), 1, false, 0, ""},
-      {"Alert Sub-System", BYTES(1), 1, false, 0, ""},
-      {"Alert ID", BYTES(2), 1, false, 0, ""},
-      {"Data Source Network ID NAME", BYTES(8), 1, false, 0, ""},
-      {"Data Source Instance", BYTES(1), 1, false, 0, ""},
-      {"Data Source Index-Source", BYTES(1), 1, false, 0, ""},
-      {"Alert Occurrence Number", BYTES(1), 1, false, 0, ""},
-      {"Acknowledge Source Network ID NAME", BYTES(8), 1, false, 0, ""},
-      {"Response Command", 2, RES_LOOKUP, false, LOOKUP_ALERT_RESPONSE_COMMAND, ""},
-      {"NMEA Reserved", 6, RES_BINARY, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      ONE_BYTE_FIELD("Alert System"),
+      ONE_BYTE_FIELD("Alert Sub-System"),
+      SIMPLE_FIELD("Alert ID", BYTES(2)),
+      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      ONE_BYTE_FIELD("Data Source Instance"),
+      ONE_BYTE_FIELD("Data Source Index-Source"),
+      ONE_BYTE_FIELD("Alert Occurrence Number"),
+      SIMPLE_FIELD("Acknowledge Source Network ID NAME", BYTES(8)),
+      LOOKUP_FIELD("Response Command", 2, ALERT_RESPONSE_COMMAND),
+      BINARY_FIELD("NMEA Reserved", 6, NULL),
+      END_OF_FIELDS}}
 
     ,
     {"Alert Text",
@@ -2605,28 +1902,28 @@ Pgn pgnList[] = {
      PACKET_FAST,
      49,
      0,
-     {{"Alert Type", 4, RES_LOOKUP, false, LOOKUP_ALERT_TYPE, ""},
-      {"Alert Category", 4, RES_LOOKUP, false, LOOKUP_ALERT_CATEGORY, ""},
-      {"Alert System", BYTES(1), 1, false, 0, ""},
-      {"Alert Sub-System", BYTES(1), 1, false, 0, ""},
-      {"Alert ID", BYTES(2), 1, false, 0, ""},
-      {"Data Source Network ID NAME", BYTES(8), 1, false, 0, ""},
-      {"Data Source Instance", BYTES(1), 1, false, 0, ""},
-      {"Data Source Index-Source", BYTES(1), 1, false, 0, ""},
-      {"Alert Occurrence Number", BYTES(1), 1, false, 0, ""},
-      {"Language ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ALERT_LANGUAGE_ID, ""},
-      {"Alert Text Description", BYTES(16), RES_STRINGLAU, false, 0, ""},
-      {"Alert Location Text Description", BYTES(16), RES_STRINGLAU, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      ONE_BYTE_FIELD("Alert System"),
+      ONE_BYTE_FIELD("Alert Sub-System"),
+      SIMPLE_FIELD("Alert ID", BYTES(2)),
+      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      ONE_BYTE_FIELD("Data Source Instance"),
+      ONE_BYTE_FIELD("Data Source Index-Source"),
+      ONE_BYTE_FIELD("Alert Occurrence Number"),
+      LOOKUP_FIELD("Language ID", BYTES(1), ALERT_LANGUAGE_ID),
+      STRINGLAU_FIELD("Alert Text Description"),
+      STRINGLAU_FIELD("Alert Location Text Description"),
+      END_OF_FIELDS}}
 
     ,
-    {"Alert Configuration", 126986, PACKET_INCOMPLETE, PACKET_FAST, 8, 0, {{0}}}
+    {"Alert Configuration", 126986, PACKET_INCOMPLETE, PACKET_FAST, 8, 0, {END_OF_FIELDS}}
 
     ,
-    {"Alert Threshold", 126987, PACKET_INCOMPLETE, PACKET_FAST, 8, 0, {{0}}}
+    {"Alert Threshold", 126987, PACKET_INCOMPLETE, PACKET_FAST, 8, 0, {END_OF_FIELDS}}
 
     ,
-    {"Alert Value", 126988, PACKET_INCOMPLETE, PACKET_FAST, 8, 0, {{0}}}
+    {"Alert Value", 126988, PACKET_INCOMPLETE, PACKET_FAST, 8, 0, {END_OF_FIELDS}}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
@@ -2636,12 +1933,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Source", 4, RES_LOOKUP, false, LOOKUP_SYSTEM_TIME, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      LOOKUP_FIELD("Source", 4, SYSTEM_TIME),
+      RESERVED_FIELD(4),
+      DATE_FIELD("Date"),
+      TIME_FIELD("Time"),
+      END_OF_FIELDS}}
 
     /* http://www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf */
     /* http://www.nmea.org/Assets/20190624%20NMEA%20Heartbeat%20Information%20Amendment%20AT%2020190623HB.pdf */
@@ -2652,18 +1949,19 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Data transmit offset",
-       BYTES(2),
-       0.001,
-       false,
-       "s",
-       "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset."},
-      {"Sequence Counter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Controller 1 State", 2, RES_LOOKUP, false, ",0=Error Active,1=Error Passive,2=Bus Off,3=Not Available", ""},
-      {"Controller 2 State", 2, RES_LOOKUP, false, ",0=Error Active,1=Error Passive,2=Bus Off,3=Not Available", ""},
-      {"Equipment Status", 2, RES_LOOKUP, false, ",0=Operational,1=Fault,2=Reserved,3=Not Available", ""},
-      {"Reserved", 34, RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {NUMBER_FIELD(
+          "Data transmit offset",
+          BYTES(2),
+          0.001,
+          false,
+          "s",
+          "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset."),
+      INTEGER_FIELD("Sequence Counter", BYTES(1)),
+      LOOKUP_FIELD("Controller 1 State", 2, CONTROLLER_STATE),
+      LOOKUP_FIELD("Controller 2 State", 2, CONTROLLER_STATE),
+      LOOKUP_FIELD("Equipment Status", 2, EQUIPMENT_STATUS),
+      RESERVED_FIELD(34),
+      END_OF_FIELDS}}
 
     ,
     {"Product Information",
@@ -2672,15 +1970,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x86,
      0,
-     {{"NMEA 2000 Version", BYTES(2), 1, false, 0, ""},
-      {"Product Code", BYTES(2), 1, false, 0, ""},
-      {"Model ID", BYTES(32), RES_ASCII, false, 0, ""},
-      {"Software Version Code", BYTES(32), RES_ASCII, false, 0, ""},
-      {"Model Version", BYTES(32), RES_ASCII, false, 0, ""},
-      {"Model Serial Code", BYTES(32), RES_ASCII, false, 0, ""},
-      {"Certification Level", BYTES(1), 1, false, 0, ""},
-      {"Load Equivalency", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("NMEA 2000 Version", BYTES(2)),
+      SIMPLE_FIELD("Product Code", BYTES(2)),
+      ASCII_FIELD("Model ID", BYTES(32)),
+      ASCII_FIELD("Software Version Code", BYTES(32)),
+      ASCII_FIELD("Model Version", BYTES(32)),
+      ASCII_FIELD("Model Serial Code", BYTES(32)),
+      ONE_BYTE_FIELD("Certification Level"),
+      ONE_BYTE_FIELD("Load Equivalency"),
+      END_OF_FIELDS}}
 
     ,
     {"Configuration Information",
@@ -2689,10 +1987,10 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x2a,
      0,
-     {{"Installation Description #1", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Installation Description #2", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Manufacturer Information", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {0}}}
+     {STRINGLAU_FIELD("Installation Description #1"),
+      STRINGLAU_FIELD("Installation Description #2"),
+      STRINGLAU_FIELD("Manufacturer Information"),
+      END_OF_FIELDS}}
 
     /************ PERIODIC DATA PGNs **************/
     /* http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
@@ -2708,30 +2006,25 @@ Pgn pgnList[] = {
      PACKET_FAST,
      35,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"MOB Emitter ID", BYTES(4), RES_INTEGER, false, 0, "Identifier for each MOB emitter, unique to the vessel"},
-      {"Man Overboard Status",
-       3,
-       RES_LOOKUP,
-       false,
-       ",0=MOB Emitter Activated,1=Manual on-board MOB Button Activation,2=Test Mode,3=MOB Not Active",
-       ""},
-      {"Reserved", 5, RES_BINARY, false, 0, ""},
-      {"Activation Time", BYTES(4), RES_TIME, false, "s", "Time of day (UTC) when MOB was activated"},
-      {"Position Source", 3, RES_LOOKUP, false, ",0=Position estimated by the Vessel,1=Position reported by MOB emitter", ""},
-      {"Reserved", 5, RES_BINARY, false, 0, ""},
-      {"Position Date", BYTES(2), RES_DATE, false, "", "Date of MOB position"},
-      {"Position Time", BYTES(4), RES_TIME, false, "s", "Time of day of MOB position (UTC)"},
-      {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, ""},
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
-      {"MMSI of vessel of origin", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"MOB Emitter Battery Status", 3, RES_LOOKUP, false, ",0=Good,1=Low", ""},
-      {"Reserved", 5, RES_BINARY, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INTEGER_DESC_FIELD("MOB Emitter ID", BYTES(4), "Identifier for each MOB emitter, unique to the vessel"),
+      LOOKUP_FIELD("Man Overboard Status", 3, MOB_STATUS),
+      RESERVED_FIELD(5),
+      TIME_FIELD("Activation Time"),
+      LOOKUP_FIELD("Position Source", 3, MOB_POSITION_SOURCE),
+      RESERVED_FIELD(5),
+      DATE_FIELD("Position Date"),
+      TIME_FIELD("Position Time"),
+      LATITUDE_I32_FIELD("Latitude"),
+      LONGITUDE_I32_FIELD("Longitude"),
+      LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
+      RESERVED_FIELD(6),
+      ANGLE_U16_FIELD("COG", NULL),
+      SPEED_U16_CM_FIELD("SOG"),
+      MMSI_FIELD("MMSI of vessel of origin"),
+      LOOKUP_FIELD("MOB Emitter Battery Low Status", 3, LOW_BATTERY),
+      RESERVED_FIELD(5),
+      END_OF_FIELDS}}
 
     ,
     {"Heading/Track control",
@@ -2740,31 +2033,25 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x15,
      0,
-     {{"Rudder Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Off-Heading Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Off-Track Limit Exceeded", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Override", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Steering Mode",
-       3,
-       RES_LOOKUP,
-       false,
-       ",0=Main Steering,1=Non-Follow-up Device,10=Follow-up Device,11=Heading Control Standalone,100=Heading Control,101=Track "
-       "Control",
-       ""},
-      {"Turn Mode", 3, RES_LOOKUP, false, ",0=Rudder Limit controlled,1=turn rate controlled,10=radius controlled", ""},
-      {"Heading Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
-      {"Reserved", 5, RES_BINARY, false, 0, ""},
-      {"Commanded Rudder Direction", 3, RES_LOOKUP, false, LOOKUP_DIRECTION_RUDDER, ""},
-      {"Commanded Rudder Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Heading-To-Steer (Course)", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Track", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Rudder Limit", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Off-Heading Limit", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Radius of Turn Order", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Rate of Turn Order", BYTES(2), RES_ROTATION, true, "rad/s", ""},
-      {"Off-Track Limit", BYTES(2), 1, true, "m", ""},
-      {"Vessel Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {0}}}
+     {LOOKUP_FIELD("Rudder Limit Exceeded", 2, YES_NO),
+      LOOKUP_FIELD("Off-Heading Limit Exceeded", 2, YES_NO),
+      LOOKUP_FIELD("Off-Track Limit Exceeded", 2, YES_NO),
+      LOOKUP_FIELD("Override", 2, YES_NO),
+      LOOKUP_FIELD("Steering Mode", 3, STEERING_MODE),
+      LOOKUP_FIELD("Turn Mode", 3, TURN_MODE),
+      LOOKUP_FIELD("Heading Reference", 2, DIRECTION_REFERENCE),
+      RESERVED_FIELD(5),
+      LOOKUP_FIELD("Commanded Rudder Direction", 3, DIRECTION_RUDDER),
+      ANGLE_I16_FIELD("Commanded Rudder Angle", NULL),
+      ANGLE_U16_FIELD("Heading-To-Steer (Course)", NULL),
+      ANGLE_U16_FIELD("Track", NULL),
+      ANGLE_U16_FIELD("Rudder Limit", NULL),
+      ANGLE_U16_FIELD("Off-Heading Limit", NULL),
+      ANGLE_I16_FIELD("Radius of Turn Order", NULL),
+      ROTATION_FIELD("Rate of Turn Order"),
+      DISTANCE_FIELD("Off-Track Limit", BYTES(2), 1, NULL),
+      ANGLE_U16_FIELD("Vessel Heading", NULL),
+      END_OF_FIELDS}}
 
     /* http://www.maretron.com/support/manuals/RAA100UM_1.0.pdf */
     ,
@@ -2774,13 +2061,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Direction Order", 3, RES_LOOKUP, false, LOOKUP_DIRECTION_RUDDER, ""},
-      {"Reserved", 5, RES_BINARY, false, 0, "Reserved"},
-      {"Angle Order", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Position", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Reserved", BYTES(2), RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {INSTANCE_FIELD,
+      LOOKUP_FIELD("Direction Order", 3, DIRECTION_RUDDER),
+      RESERVED_FIELD(5),
+      ANGLE_I16_FIELD("Angle Order", NULL),
+      ANGLE_I16_FIELD("Position", NULL),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}}
 
     /* NMEA + Simrad AT10 */
     /* http://www.maretron.com/support/manuals/SSC200UM_1.7.pdf */
@@ -2792,13 +2079,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Deviation", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Variation", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      ANGLE_U16_FIELD("Heading", NULL),
+      ANGLE_I16_FIELD("Deviation", NULL),
+      ANGLE_I16_FIELD("Variation", NULL),
+      LOOKUP_FIELD("Reference", 2, DIRECTION_REFERENCE),
+      RESERVED_FIELD(6),
+      END_OF_FIELDS}}
 
     /* http://www.maretron.com/support/manuals/SSC200UM_1.7.pdf */
     /* Lengths observed from Simrad RC42 */
@@ -2809,7 +2096,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      5,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""}, {"Rate", BYTES(4), RES_HIRES_ROTATION, true, "rad/s", ""}, {0}}}
+     {ONE_BYTE_FIELD("SID"), HIRES_ROTATION_FIELD("Rate"), END_OF_FIELDS}}
 
     ,
     {"Heave",
@@ -2818,10 +2105,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Heave", BYTES(2), 0.01, true, "m", ""},
-      {"Reserved", BYTES(5), RES_NOTUSED, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"), DISTANCE_FIELD("Heave", BYTES(2), 0.01, NULL), RESERVED_FIELD(BYTES(5)), END_OF_FIELDS}}
 
     ,
     {"Attitude",
@@ -2830,11 +2114,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      7,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Yaw", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Pitch", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Roll", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      ANGLE_I16_FIELD("Yaw", NULL),
+      ANGLE_I16_FIELD("Pitch", NULL),
+      ANGLE_I16_FIELD("Roll", NULL),
+      END_OF_FIELDS}}
 
     /* NMEA + Simrad AT10 */
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
@@ -2845,12 +2129,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      6,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Source", 4, RES_LOOKUP, false, LOOKUP_MAGNETIC_VARIATION, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Age of service", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Variation", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      LOOKUP_FIELD("Source", 4, MAGNETIC_VARIATION),
+      RESERVED_FIELD(4),
+      DATE_FIELD("Age of service"),
+      ANGLE_I16_FIELD("Variation", NULL),
+      END_OF_FIELDS}}
 
     /* Engine group PGNs all derived PGN Numbers from              */
     /* http://www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf  */
@@ -2863,12 +2147,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
-      {"Speed", BYTES(2), 0.25, false, "rpm", ""},
-      {"Boost Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Tilt/Trim", BYTES(1), 1, true, "", ""},
-      {"Reserved", BYTES(2), RES_BINARY, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
+      NUMBER_FIELD("Speed", BYTES(2), 0.25, false, "rpm", NULL),
+      PRESSURE_FIELD("Boost Pressure"),
+      SIMPLE_SIGNED_FIELD("Tilt/Trim", BYTES(1)),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}}
 
     // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
     ,
@@ -2878,21 +2162,21 @@ Pgn pgnList[] = {
      PACKET_FAST,
      26,
      0,
-     {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
-      {"Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Oil temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
-      {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Alternator Potential", BYTES(2), 0.01, true, "V", ""},
-      {"Fuel Rate", BYTES(2), 0.1, true, "L/h", ""},
-      {"Total Engine hours", BYTES(4), 1.0, false, "s", ""},
-      {"Coolant Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Fuel Pressure", BYTES(2), 1, false, "kPa", ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Discrete Status 1", BYTES(2), RES_BITFIELD, false, LOOKUP_ENGINE_STATUS_1, ""},
-      {"Discrete Status 2", BYTES(2), RES_BITFIELD, false, LOOKUP_ENGINE_STATUS_2, ""},
-      {"Percent Engine Load", BYTES(1), RES_INTEGER, true, "%", ""},
-      {"Percent Engine Torque", BYTES(1), RES_INTEGER, true, "%", ""},
-      {0}}}
+     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
+      PRESSURE_FIELD("Oil pressure"),
+      TEMPERATURE_HIGH_FIELD("Oil temperature"),
+      TEMPERATURE_FIELD("Temperature"),
+      VOLTAGE_FIELD("Alternator Potential", 0.01),
+      NUMBER_FIELD("Fuel Rate", BYTES(2), 0.1, true, "L/h", NULL),
+      ELAPSED_FIELD("Total Engine hours", BYTES(4), 1.0),
+      PRESSURE_FIELD("Coolant Pressure"),
+      NUMBER_FIELD("Fuel Pressure", BYTES(2), 1, false, "kPa", NULL),
+      RESERVED_FIELD(BYTES(1)),
+      LOOKUP_BITFIELD("Discrete Status 1", BYTES(2), ENGINE_STATUS_1),
+      LOOKUP_BITFIELD("Discrete Status 2", BYTES(2), ENGINE_STATUS_2),
+      PERCENTAGE_U8_FIELD("Engine Load"),
+      PERCENTAGE_U8_FIELD("Engine Torque"),
+      END_OF_FIELDS}}
 
     ,
     {"Transmission Parameters, Dynamic",
@@ -2901,14 +2185,14 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", 8, RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
-      {"Transmission Gear", 2, RES_LOOKUP, false, LOOKUP_GEAR_STATUS, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, ""},
-      {"Oil pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Oil temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
-      {"Discrete Status 1", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Instance", 8, ENGINE_INSTANCE),
+      LOOKUP_FIELD("Transmission Gear", 2, GEAR_STATUS),
+      RESERVED_FIELD(6),
+      PRESSURE_FIELD("Oil pressure"),
+      TEMPERATURE_HIGH_FIELD("Oil temperature"),
+      INTEGER_FIELD("Discrete Status 1", BYTES(1)),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Trip Parameters, Vessel",
@@ -2917,11 +2201,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      10,
      0,
-     {{"Time to Empty", BYTES(4), 0.001, false, "s", ""},
-      {"Distance to Empty", BYTES(4), 0.01, false, "m", ""},
-      {"Estimated Fuel Remaining", BYTES(2), 1, false, "L", ""},
-      {"Trip Run Time", BYTES(4), 0.001, false, "s", ""},
-      {0}}}
+     {ELAPSED_FIELD("Time to Empty", BYTES(4), 0.001),
+      HIRES_LENGTH_FIELD("Distance to Empty", 0.01),
+      NUMBER_FIELD("Estimated Fuel Remaining", BYTES(2), 1, false, "L", NULL),
+      ELAPSED_FIELD("Trip Run Time", BYTES(4), 0.001),
+      END_OF_FIELDS}}
 
     ,
     {"Trip Parameters, Engine",
@@ -2930,12 +2214,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
-      {"Trip Fuel Used", BYTES(2), 1, false, "L", ""},
-      {"Fuel Rate, Average", BYTES(2), 0.1, true, "L/h", ""},
-      {"Fuel Rate, Economy", BYTES(2), 0.1, true, "L/h", ""},
-      {"Instantaneous Fuel Economy", BYTES(2), 0.1, true, "L/h", ""},
-      {0}}}
+     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
+      NUMBER_FIELD("Trip Fuel Used", BYTES(2), 1, false, "L", NULL),
+      NUMBER_FIELD("Fuel Rate, Average", BYTES(2), 0.1, true, "L/h", NULL),
+      NUMBER_FIELD("Fuel Rate, Economy", BYTES(2), 0.1, true, "L/h", NULL),
+      NUMBER_FIELD("Instantaneous Fuel Economy", BYTES(2), 0.1, true, "L/h", NULL),
+      END_OF_FIELDS}}
 
     ,
     {"Engine Parameters, Static",
@@ -2944,11 +2228,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      52,
      0,
-     {{"Instance", BYTES(1), RES_LOOKUP, false, LOOKUP_ENGINE_INSTANCE, ""},
-      {"Rated Engine Speed", BYTES(2), 0.25, false, 0, "rpm"},
-      {"VIN", BYTES(17), RES_ASCII, false, 0, ""},
-      {"Software ID", BYTES(32), RES_ASCII, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
+      NUMBER_FIELD("Rated Engine Speed", BYTES(2), 0.25, false, "rpm", NULL),
+      ASCII_FIELD("VIN", BYTES(17)),
+      ASCII_FIELD("Software ID", BYTES(32)),
+      END_OF_FIELDS}}
 
     ,
     {"Load Controller Connection State/Control",
@@ -2957,15 +2241,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      10,
      0,
-     {{"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Connection ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"State", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Status", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Operational Status & Control", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"PWM Duty Cycle", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"TimeON", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"TimeOFF", BYTES(2), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {INTEGER_FIELD("Sequence ID", BYTES(1)),
+      INTEGER_FIELD("Connection ID", BYTES(1)),
+      INTEGER_FIELD("State", BYTES(1)),
+      INTEGER_FIELD("Status", BYTES(1)),
+      INTEGER_FIELD("Operational Status & Control", BYTES(1)),
+      INTEGER_FIELD("PWM Duty Cycle", BYTES(1)),
+      INTEGER_FIELD("TimeON", BYTES(2)),
+      INTEGER_FIELD("TimeOFF", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Binary Switch Bank Status",
@@ -2974,57 +2258,72 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Indicator1", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator2", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator3", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator4", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator5", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator6", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator7", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator8", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator9", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator10", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator11", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator12", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator13", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator14", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator15", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator16", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator17", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator18", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator19", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator20", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator21", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator22", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator23", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator24", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator25", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator26", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator27", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Indicator28", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {0}}},
+     {INSTANCE_FIELD,
+      LOOKUP_FIELD("Indicator1", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator2", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator3", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator4", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator5", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator6", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator7", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator8", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator9", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator10", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator11", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator12", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator13", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator14", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator15", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator16", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator17", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator18", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator19", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator20", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator21", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator22", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator23", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator24", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator25", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator26", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator27", 2, OFF_ON),
+      LOOKUP_FIELD("Indicator28", 2, OFF_ON),
+      END_OF_FIELDS}},
     {"Switch Bank Control",
      127502,
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},   {"Switch1", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch2", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch3", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch4", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch5", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch6", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch7", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch8", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},  {"Switch9", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch10", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch11", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch12", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch13", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch14", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch15", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch16", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch17", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch18", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch19", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch20", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch21", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch22", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch23", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch24", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch25", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch26", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {"Switch27", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Switch28", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""}, {0}}}
+     {INSTANCE_FIELD,
+      LOOKUP_FIELD("Switch1", 2, OFF_ON),
+      LOOKUP_FIELD("Switch2", 2, OFF_ON),
+      LOOKUP_FIELD("Switch3", 2, OFF_ON),
+      LOOKUP_FIELD("Switch4", 2, OFF_ON),
+      LOOKUP_FIELD("Switch5", 2, OFF_ON),
+      LOOKUP_FIELD("Switch6", 2, OFF_ON),
+      LOOKUP_FIELD("Switch7", 2, OFF_ON),
+      LOOKUP_FIELD("Switch8", 2, OFF_ON),
+      LOOKUP_FIELD("Switch9", 2, OFF_ON),
+      LOOKUP_FIELD("Switch10", 2, OFF_ON),
+      LOOKUP_FIELD("Switch11", 2, OFF_ON),
+      LOOKUP_FIELD("Switch12", 2, OFF_ON),
+      LOOKUP_FIELD("Switch13", 2, OFF_ON),
+      LOOKUP_FIELD("Switch14", 2, OFF_ON),
+      LOOKUP_FIELD("Switch15", 2, OFF_ON),
+      LOOKUP_FIELD("Switch16", 2, OFF_ON),
+      LOOKUP_FIELD("Switch17", 2, OFF_ON),
+      LOOKUP_FIELD("Switch18", 2, OFF_ON),
+      LOOKUP_FIELD("Switch19", 2, OFF_ON),
+      LOOKUP_FIELD("Switch20", 2, OFF_ON),
+      LOOKUP_FIELD("Switch21", 2, OFF_ON),
+      LOOKUP_FIELD("Switch22", 2, OFF_ON),
+      LOOKUP_FIELD("Switch23", 2, OFF_ON),
+      LOOKUP_FIELD("Switch24", 2, OFF_ON),
+      LOOKUP_FIELD("Switch25", 2, OFF_ON),
+      LOOKUP_FIELD("Switch26", 2, OFF_ON),
+      LOOKUP_FIELD("Switch27", 2, OFF_ON),
+      LOOKUP_FIELD("Switch28", 2, OFF_ON),
+      END_OF_FIELDS}}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
@@ -3034,21 +2333,21 @@ Pgn pgnList[] = {
      PACKET_FAST,
      2 + 3 * 18,
      10,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Number of Lines", BYTES(1), 1, false, 0, ""}
+     {INSTANCE_FIELD,
+      ONE_BYTE_FIELD("Number of Lines")
 
-      ,
-      {"Line", 2, RES_LOOKUP, false, ",0=Line 1,1=Line 2,2=Line 3,3=Reserved", ""},
-      {"Acceptability", 2, RES_LOOKUP, false, ",0=Bad Level,1=Bad Frequency,2=Being Qualified,3=Good", ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"Voltage", BYTES(2), 0.01, false, "V", ""},
-      {"Current", BYTES(2), 0.1, false, "A", ""},
-      {"Frequency", BYTES(2), 0.01, false, "Hz", ""},
-      {"Breaker Size", BYTES(2), 0.1, false, "A", ""},
-      {"Real Power", BYTES(4), RES_INTEGER, false, "W", ""},
-      {"Reactive Power", BYTES(4), RES_INTEGER, false, "VAR", ""},
-      {"Power Factor", BYTES(1), 0.01, false, "Cos Phi", ""},
-      {0}}}
+          ,
+      INTEGER_FIELD("Line", 2),
+      LOOKUP_FIELD("Acceptability", 2, ACCEPTABILITY),
+      RESERVED_FIELD(4),
+      VOLTAGE_FIELD("Voltage", 0.01),
+      CURRENT_FIELD("Current", BYTES(2), 0.1),
+      FREQUENCY_FIELD("Frequency", 0.01),
+      CURRENT_FIELD("Breaker Size", BYTES(2), 0.1),
+      POWER_U32_FIELD("Real Power", "W"),
+      POWER_U32_FIELD("Reactive Power", "VAR"),
+      POWER_FACTOR_U8_FIELD,
+      END_OF_FIELDS}}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
@@ -3058,21 +2357,19 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      2 + 3 * 18,
      10,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Number of Lines", BYTES(1), 1, false, 0, ""}
-
-      ,
-      {"Line", 2, RES_LOOKUP, false, ",0=Line 1,1=Line 2,2=Line 3", ""},
-      {"Waveform", 3, RES_LOOKUP, false, ",0=Sine Wave,1=Modified Sine Wave", ""},
-      {"Reserved", 3, RES_BINARY, false, 0, ""},
-      {"Voltage", BYTES(2), 0.01, false, "V", ""},
-      {"Current", BYTES(2), 0.1, false, "A", ""},
-      {"Frequency", BYTES(2), 0.01, false, "Hz", ""},
-      {"Breaker Size", BYTES(2), 0.1, false, "A", ""},
-      {"Real Power", BYTES(4), RES_INTEGER, false, "W", ""},
-      {"Reactive Power", BYTES(4), RES_INTEGER, false, "VAR", ""},
-      {"Power Factor", BYTES(1), 0.01, false, "Cos Phi", ""},
-      {0}}}
+     {INSTANCE_FIELD,
+      ONE_BYTE_FIELD("Number of Lines"),
+      INTEGER_FIELD("Line", 2),
+      LOOKUP_FIELD("Waveform", 3, WAVEFORM),
+      RESERVED_FIELD(3),
+      VOLTAGE_FIELD("Voltage", 0.01),
+      CURRENT_FIELD("Current", BYTES(2), 0.1),
+      FREQUENCY_FIELD("Frequency", 0.01),
+      CURRENT_FIELD("Breaker Size", BYTES(2), 0.1),
+      POWER_U32_FIELD("Real Power", "W"),
+      POWER_U32_FIELD("Reactive Power", "VAR"),
+      POWER_FACTOR_U8_FIELD,
+      END_OF_FIELDS}}
 
     /* http://www.maretron.com/support/manuals/TLA100UM_1.2.pdf */
     /* Observed from EP65R */
@@ -3083,12 +2380,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", 4, 1, false, 0, ""},
-      {"Type", 4, RES_LOOKUP, false, ",0=Fuel,1=Water,2=Gray water,3=Live well,4=Oil,5=Black water", ""},
-      {"Level", BYTES(2), RES_PERCENTAGE, false, "%", ""},
-      {"Capacity", BYTES(4), 0.1, false, "L", ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {SIMPLE_FIELD("Instance", 4),
+      LOOKUP_FIELD("Type", 4, TANK_TYPE),
+      PERCENTAGE_U16_FIELD("Level"),
+      NUMBER_FIELD("Capacity", BYTES(4), 0.1, false, "L", NULL),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"DC Detailed Status",
@@ -3097,15 +2394,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      11,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"DC Type", BYTES(1), RES_LOOKUP, false, ",0=Battery,1=Alternator,2=Convertor,3=Solar Cell,4=Wind Generator", ""},
-      {"State of Charge", BYTES(1), 1, false, 0, ""},
-      {"State of Health", BYTES(1), 1, false, 0, ""},
-      {"Time Remaining", BYTES(2), 1, false, 0, ""},
-      {"Ripple Voltage", BYTES(2), 0.01, false, "V", ""},
-      {"Amp Hours", BYTES(2), 3600, false, "C", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INSTANCE_FIELD,
+      LOOKUP_FIELD("DC Type", BYTES(1), DC_SOURCE),
+      ONE_BYTE_FIELD("State of Charge"),
+      ONE_BYTE_FIELD("State of Health"),
+      SIMPLE_FIELD("Time Remaining", BYTES(2)),
+      VOLTAGE_FIELD("Ripple Voltage", 0.01),
+      NUMBER_FIELD("Amp Hours", BYTES(2), 3600, false, "C", NULL),
+      END_OF_FIELDS}}
 
     // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
     ,
@@ -3115,20 +2412,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Battery Instance", BYTES(1), 1, false, 0, ""},
-      {"Operating State",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=Not charging,1=Bulk,2=Absorption,3=Overcharge,4=Equalise,5=Float,6=No Float,7=Constant VI,8=Disabled,9=Fault",
-       ""},
-      {"Charge Mode", 4, RES_LOOKUP, false, ",0=Standalone,1=Primary,2=Secondary,3=Echo", ""},
-      {"Enabled", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Equalization Pending", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"Equalization Time Remaining", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {INSTANCE_FIELD,
+      ONE_BYTE_FIELD("Battery Instance"),
+      LOOKUP_FIELD("Operating State", 4, CHARGER_STATE),
+      LOOKUP_FIELD("Charge Mode", 4, CHARGER_MODE),
+      LOOKUP_FIELD("Enabled", 2, OFF_ON),
+      LOOKUP_FIELD("Equalization Pending", 2, OFF_ON),
+      RESERVED_FIELD(4),
+      SIMPLE_FIELD("Equalization Time Remaining", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Battery Status",
@@ -3137,12 +2429,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Voltage", BYTES(2), 0.01, true, "V", ""},
-      {"Current", BYTES(2), 0.1, true, "A", ""},
-      {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"SID", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {INSTANCE_FIELD,
+      VOLTAGE_FIELD("Voltage", 0.01),
+      SIGNED_CURRENT_FIELD("Current", BYTES(2), 0.1),
+      TEMPERATURE_FIELD("Temperature"),
+      ONE_BYTE_FIELD("SID"),
+      END_OF_FIELDS}}
 
     /* https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf */
     ,
@@ -3152,13 +2444,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      4,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"AC Instance", BYTES(1), 1, false, 0, ""},
-      {"DC Instance", BYTES(1), 1, false, 0, ""},
-      {"Operating State", 4, RES_LOOKUP, false, ",0=Invert,1=AC Passthru,2=Load Sense,3=Fault,4=Disabled,14=Error,15=Data Not Available", ""},
-      {"Inverter Enable/Disable", 2, RES_LOOKUP, false, "0=Disabled,1=Enabled,2=Error,3=Unknown", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {INSTANCE_FIELD,
+      ONE_BYTE_FIELD("AC Instance"),
+      ONE_BYTE_FIELD("DC Instance"),
+      LOOKUP_FIELD("Operating State", 4, INVERTER_STATE),
+      LOOKUP_FIELD("Inverter Enable", 2, OFF_ON),
+      RESERVED_FIELD(2),
+      END_OF_FIELDS}}
 
     ,
     {"Charger Configuration Status",
@@ -3167,18 +2459,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      13,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Battery Instance", BYTES(1), 1, false, 0, ""},
-      {"Charger Enable/Disable", 2, 1, false, 0, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, ""},
-      {"Charge Current Limit", BYTES(2), 0.1, false, "A", ""},
-      {"Charging Algorithm", BYTES(1), 1, false, 0, ""},
-      {"Charger Mode", BYTES(1), 1, false, 0, ""},
-      {"Estimated Temperature", BYTES(2), RES_TEMPERATURE, false, 0, "When no sensor present"},
-      {"Equalize One Time Enable/Disable", 4, 1, false, 0, ""},
-      {"Over Charge Enable/Disable", 4, 1, false, 0, ""},
-      {"Equalize Time", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {INSTANCE_FIELD,
+      ONE_BYTE_FIELD("Battery Instance"),
+      SIMPLE_FIELD("Charger Enable/Disable", 2),
+      RESERVED_FIELD(6),
+      CURRENT_FIELD("Charge Current Limit", BYTES(2), 0.1),
+      ONE_BYTE_FIELD("Charging Algorithm"),
+      ONE_BYTE_FIELD("Charger Mode"),
+      TEMPERATURE_FIELD("Estimated Temperature"),
+      SIMPLE_FIELD("Equalize One Time Enable/Disable", 4),
+      SIMPLE_FIELD("Over Charge Enable/Disable", 4),
+      SIMPLE_FIELD("Equalize Time", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Inverter Configuration Status",
@@ -3187,15 +2479,15 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"AC Instance", BYTES(1), 1, false, 0, ""},
-      {"DC Instance", BYTES(1), 1, false, 0, ""},
-      {"Inverter Enable/Disable", 2, 1, false, 0, ""},
-      {"Inverter Mode", BYTES(1), 1, false, 0, ""},
-      {"Load Sense Enable/Disable", BYTES(1), 1, false, 0, ""},
-      {"Load Sense Power Threshold", BYTES(1), 1, false, 0, ""},
-      {"Load Sense Interval", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {INSTANCE_FIELD,
+      ONE_BYTE_FIELD("AC Instance"),
+      ONE_BYTE_FIELD("DC Instance"),
+      SIMPLE_FIELD("Inverter Enable/Disable", 2),
+      ONE_BYTE_FIELD("Inverter Mode"),
+      ONE_BYTE_FIELD("Load Sense Enable/Disable"),
+      ONE_BYTE_FIELD("Load Sense Power Threshold"),
+      ONE_BYTE_FIELD("Load Sense Interval"),
+      END_OF_FIELDS}}
 
     ,
     {"AGS Configuration Status",
@@ -3204,10 +2496,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Generator Instance", BYTES(1), 1, false, 0, ""},
-      {"AGS Mode", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {INSTANCE_FIELD, ONE_BYTE_FIELD("Generator Instance"), ONE_BYTE_FIELD("AGS Mode"), END_OF_FIELDS}}
 
     /* #143, @ksltd writes that it is definitely 10 bytes and that
      * nominal voltage is a lookup, Peukert Exponent and Charge Efficiency
@@ -3227,17 +2516,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      10,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Battery Type", 4, RES_LOOKUP, false, ",0=Flooded,1=Gel,2=AGM", ""},
-      {"Supports Equalization", 2, RES_LOOKUP, false, ",0=Not Supported,1=Supported", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, ""},
-      {"Nominal Voltage", 4, RES_LOOKUP, false, ",0=6V,1=12V,2=24V,3=32V,4=36V,5=42V,6=48V", ""},
-      {"Chemistry", 4, RES_LOOKUP, false, ",0=LeadAcid,1=Li,2=Nicad,3=Zno,4=NiMH", ""},
-      {"Capacity", BYTES(2), 1, false, "C", ""},
-      {"Temperature Coefficient", BYTES(1), RES_INTEGER, false, "%", ""},
-      {"Peukert Exponent", BYTES(1), 0.002, false, 0, "Possibly in Excess-1 notation"},
-      {"Charge Efficiency Factor", BYTES(1), 1, false, "%", ""},
-      {0}}}
+     {INSTANCE_FIELD,
+      LOOKUP_FIELD("Battery Type", 4, BATTERY_TYPE),
+      LOOKUP_FIELD("Supports Equalization", 2, YES_NO),
+      RESERVED_FIELD(2),
+      LOOKUP_FIELD("Nominal Voltage", 4, BATTERY_VOLTAGE),
+      LOOKUP_FIELD("Chemistry", 4, BATTERY_CHEMISTRY),
+      NUMBER_FIELD("Capacity", BYTES(2), 1, false, "C", NULL),
+      PERCENTAGE_U8_FIELD("Temperature Coefficient"),
+      NUMBER_FIELD("Peukert Exponent", BYTES(1), 0.002, false, NULL, "Possibly in Excess-1 notation"),
+      PERCENTAGE_U8_FIELD("Charge Efficiency Factor"),
+      END_OF_FIELDS}}
 
     ,
     {"AGS Status",
@@ -3246,13 +2535,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Instance", BYTES(1), 1, false, 0, ""},
-      {"Generator Instance", BYTES(1), 1, false, 0, ""},
-      {"AGS Operating State", BYTES(1), 1, false, 0, ""},
-      {"Generator State", BYTES(1), 1, false, 0, ""},
-      {"Generator On Reason", BYTES(1), 1, false, 0, ""},
-      {"Generator Off Reason", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {INSTANCE_FIELD,
+      ONE_BYTE_FIELD("Generator Instance"),
+      ONE_BYTE_FIELD("AGS Operating State"),
+      ONE_BYTE_FIELD("Generator State"),
+      ONE_BYTE_FIELD("Generator On Reason"),
+      ONE_BYTE_FIELD("Generator Off Reason"),
+      END_OF_FIELDS}}
 
     ,
     {"AC Power / Current - Phase A",
@@ -3261,11 +2550,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Connection Number", BYTES(1), 1, false, 0, ""},
-      {"AC RMS Current", BYTES(2), 0.1, false, "A", ""},
-      {"Power", BYTES(4), 1, true, "W", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("Connection Number"),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 0.1),
+      POWER_I32_FIELD("Power"),
+      END_OF_FIELDS}}
 
     ,
     {"AC Power / Current - Phase B",
@@ -3274,11 +2563,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Connection Number", BYTES(1), 1, false, 0, ""},
-      {"AC RMS Current", BYTES(2), 0.1, false, "A", ""},
-      {"Power", BYTES(4), 1, true, "W", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("Connection Number"),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 0.1),
+      POWER_I32_FIELD("Power"),
+      END_OF_FIELDS}}
 
     ,
     {"AC Power / Current - Phase C",
@@ -3287,11 +2576,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Connection Number", BYTES(1), 1, false, 0, ""},
-      {"AC RMS Current", BYTES(2), 0.1, false, "A", ""},
-      {"Power", BYTES(4), 1, true, "W", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("Connection Number"),
+      CURRENT_FIELD("AC RMS Current", BYTES(2), 0.1),
+      POWER_I32_FIELD("Power"),
+      END_OF_FIELDS}}
 
     ,
     {"Converter Status",
@@ -3300,15 +2589,15 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"SID", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Connection Number", BYTES(1), 1, false, 0, ""},
-      {"Operating State", BYTES(1), RES_LOOKUP, false, LOOKUP_CONVERTER_STATE, ""},
-      {"Temperature State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Over Temperature,3=Not Available", ""},
-      {"Overload State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Overload,3=Not Available", ""},
-      {"Low DC Voltage State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=DC voltage too low,3=Not Available", ""},
-      {"Ripple State", 2, RES_LOOKUP, false, ",0=Ok,1=Warning,2=Ripple Too High,3=Not Available", ""},
-      {"Reserved", BYTES(4), RES_NOTUSED, false, 0, ""},
-      {0}}}
+     {BINARY_FIELD("SID", BYTES(1), NULL),
+      ONE_BYTE_FIELD("Connection Number"),
+      LOOKUP_FIELD("Operating State", BYTES(1), CONVERTER_STATE),
+      LOOKUP_FIELD("Temperature State", 2, GOOD_WARNING_ERROR),
+      LOOKUP_FIELD("Overload State", 2, GOOD_WARNING_ERROR),
+      LOOKUP_FIELD("Low DC Voltage State", 2, GOOD_WARNING_ERROR),
+      LOOKUP_FIELD("Ripple State", 2, GOOD_WARNING_ERROR),
+      RESERVED_FIELD(BYTES(4)),
+      END_OF_FIELDS}}
 
     ,
     {"DC Voltage/Current",
@@ -3317,12 +2606,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"SID", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Connection Number", BYTES(1), 1, false, 0, ""},
-      {"DC Voltage", BYTES(2), 0.1, false, "V", ""},
-      {"DC Current", BYTES(3), 0.01, true, "A", ""},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {0}}}
+     {BINARY_FIELD("SID", BYTES(1), NULL),
+      ONE_BYTE_FIELD("Connection Number"),
+      VOLTAGE_FIELD("DC Voltage", 0.1),
+      SIGNED_CURRENT_FIELD("DC Current", BYTES(3), 0.01),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS}}
 
     /* https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf */
     ,
@@ -3332,10 +2621,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Leeway Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Reserved", BYTES(5), RES_BINARY, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"), ANGLE_I16_FIELD("Leeway Angle", NULL), RESERVED_FIELD(BYTES(5)), END_OF_FIELDS}}
 
     ,
     {"Thruster Control Status",
@@ -3344,16 +2630,16 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Identifier", BYTES(1), 1, false, 0, ""},
-      {"Direction Control", 4, RES_LOOKUP, false, LOOKUP_THRUSTER_DIRECTION_CONTROL, ""},
-      {"Power Enabled", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Retract Control", 2, RES_LOOKUP, false, LOOKUP_THRUSTER_RETRACT_CONTROL, ""},
-      {"Speed Control", BYTES(1), RES_PERCENTAGE, false, "%", ""},
-      {"Control Events", BYTES(1), RES_BITFIELD, false, LOOKUP_THRUSTER_CONTROL_EVENTS, ""},
-      {"Command Timeout", BYTES(1), 1e-3, false, 0, ""},
-      {"Azimuth Control", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("Identifier"),
+      LOOKUP_FIELD("Direction Control", 4, THRUSTER_DIRECTION_CONTROL),
+      LOOKUP_FIELD("Power Enabled", 2, OFF_ON),
+      LOOKUP_FIELD("Retract Control", 2, THRUSTER_RETRACT_CONTROL),
+      PERCENTAGE_U8_FIELD("Speed Control"),
+      LOOKUP_BITFIELD("Control Events", BYTES(1), THRUSTER_CONTROL_EVENTS),
+      NUMBER_FIELD("Command Timeout", BYTES(1), 1e-3, false, "s", NULL),
+      ANGLE_U16_FIELD("Azimuth Control", NULL),
+      END_OF_FIELDS}}
 
     ,
     {"Thruster Information",
@@ -3362,13 +2648,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Identifier", BYTES(1), 1, false, 0, ""},
-      {"Motor Type", 4, RES_LOOKUP, false, LOOKUP_THRUSTER_MOTOR_TYPE, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"Power Rating", BYTES(2), 1, false, "W", ""},
-      {"Maximum Temperature Rating", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Maximum Rotational Speed", BYTES(2), 0.25, false, "rpm", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("Identifier"),
+      LOOKUP_FIELD("Motor Type", 4, THRUSTER_MOTOR_TYPE),
+      RESERVED_FIELD(4),
+      POWER_U16_FIELD("Power Rating"),
+      TEMPERATURE_FIELD("Maximum Temperature Rating"),
+      NUMBER_FIELD("Maximum Rotational Speed", BYTES(2), 0.25, false, "rpm", NULL),
+      END_OF_FIELDS}}
 
     ,
     {"Thruster Motor Status",
@@ -3377,14 +2663,14 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Identifier", BYTES(1), 1, false, 0, ""},
-      {"Motor Events", BYTES(1), RES_BITFIELD, false, LOOKUP_THRUSTER_MOTOR_EVENTS, ""},
-      {"Current", BYTES(1), 1, false, "A", ""},
-      {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Operating Time", BYTES(2), 1, false, "minutes", ""},
-      {0}}}
-    
+     {ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("Identifier"),
+      LOOKUP_BITFIELD("Motor Events", BYTES(1), THRUSTER_MOTOR_EVENTS),
+      CURRENT_FIELD("Current", BYTES(1), 1),
+      TEMPERATURE_FIELD("Temperature"),
+      NUMBER_FIELD("Operating Time", BYTES(2), 1, false, "minutes", NULL),
+      END_OF_FIELDS}}
+
     /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
     ,
     {"Speed",
@@ -3393,13 +2679,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Speed Water Referenced", BYTES(2), 0.01, false, "m/s", ""},
-      {"Speed Ground Referenced", BYTES(2), 0.01, false, "m/s", ""},
-      {"Speed Water Referenced Type", BYTES(1), RES_LOOKUP, false, LOOKUP_WATER_REFERENCE, ""},
-      {"Speed Direction", 4, 1, false, 0, ""},
-      {"Reserved", 12, RES_BINARY, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      SPEED_U16_CM_FIELD("Speed Water Referenced"),
+      SPEED_U16_CM_FIELD("Speed Ground Referenced"),
+      LOOKUP_FIELD("Speed Water Referenced Type", BYTES(1), WATER_REFERENCE),
+      SIMPLE_FIELD("Speed Direction", 4),
+      RESERVED_FIELD(12),
+      END_OF_FIELDS}}
 
     /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
     ,
@@ -3409,11 +2695,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Depth", BYTES(4), 0.01, false, "m", "Depth below transducer"},
-      {"Offset", BYTES(2), 0.001, true, "m", "Distance between transducer and surface (positive) or keel (negative)"},
-      {"Range", BYTES(1), 10, false, "m", "Max measurement range"},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      LENGTH_FIELD("Depth", BYTES(4), 0.01, "Depth below transducer"),
+      DISTANCE_FIELD("Offset", BYTES(2), 0.001, "Distance between transducer and surface (positive) or keel (negative)"),
+      LENGTH_FIELD("Range", BYTES(1), 10, "Max measurement range"),
+      END_OF_FIELDS}}
 
     /* http://www.nmea.org/Assets/nmea-2000-digital-interface-white-paper.pdf */
     ,
@@ -3423,11 +2709,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      14,
      0,
-     {{"Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
-      {"Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
-      {"Log", BYTES(4), 1, false, "m", "Total cumulative distance"},
-      {"Trip Log", BYTES(4), 1, false, "m", "Distance since last reset"},
-      {0}}}
+     {DATE_FIELD("Date"),
+      TIME_FIELD("Time"),
+      LENGTH_FIELD("Log", BYTES(4), 1, "Total cumulative distance"),
+      LENGTH_FIELD("Trip Log", BYTES(4), 1, "Distance since last reset"),
+      END_OF_FIELDS}}
 
     ,
     {"Tracked Target Data",
@@ -3436,22 +2722,22 @@ Pgn pgnList[] = {
      PACKET_FAST,
      27,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Target ID #", BYTES(1), 1, false, 0, "Number of route, waypoint, event, mark, etc."},
-      {"Track Status", 2, RES_LOOKUP, false, ",0=Cancelled,1=Acquiring,2=Tracking,3=Lost", ""},
-      {"Reported Target", 1, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Target Acquisition", 1, RES_LOOKUP, false, ",0=Manual,1=Automatic", ""},
-      {"Bearing Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, ""},
-      {"Bearing", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Distance", BYTES(4), 0.001, false, "m", ""},
-      {"Course", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"CPA", BYTES(4), 0.01, false, "m", ""},
-      {"TCPA", BYTES(4), 0.001, false, "s", "negative = time elapsed since event, positive = time to go"},
-      {"UTC of Fix", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Name", BYTES(255), RES_ASCII, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      SIMPLE_DESC_FIELD("Target ID #", BYTES(1), "Number of route, waypoint, event, mark, etc."),
+      LOOKUP_FIELD("Track Status", 2, TRACKING),
+      LOOKUP_FIELD("Reported Target", 1, YES_NO),
+      LOOKUP_FIELD("Target Acquisition", 1, TARGET_ACQUISITION),
+      LOOKUP_FIELD("Bearing Reference", 2, DIRECTION_REFERENCE),
+      RESERVED_FIELD(2),
+      ANGLE_U16_FIELD("Bearing", NULL),
+      HIRES_LENGTH_FIELD("Distance", 0.001),
+      ANGLE_U16_FIELD("Course", NULL),
+      SPEED_U16_CM_FIELD("Speed"),
+      HIRES_LENGTH_FIELD("CPA", 0.01),
+      TIME_DELTA_MS_FIELD("TCPA", BYTES(4), "negative = time elapsed since event, positive = time to go"),
+      TIME_FIELD("UTC of Fix"),
+      ASCII_FIELD("Name", BYTES(255)),
+      END_OF_FIELDS}}
 
     ,
     /* https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf */
@@ -3461,31 +2747,26 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      7,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Windlass ID", BYTES(1), 1, false, 0, ""},
-      {"Windlass Direction Control", 2, RES_LOOKUP, false, ",0=Off,1=Down,2=Up", ""},
-      {"Anchor Docking Control", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Speed Control Type", 2, RES_LOOKUP, false, ",0=Single Speed,1=Dual Speed,2=Proportional Speed", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
-      {"Speed Control",
-       BYTES(1),
-       RES_BINARY,
-       false,
-       0,
-       "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100"},
-      {"Power Enable", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Mechanical Lock", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Deck and Anchor Wash", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Anchor Light", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Command Timeout",
-       BYTES(1),
-       0.005,
-       false,
-       "s",
-       "If timeout elapses the thruster stops operating and reverts to static mode"},
-      {"Windlass Control Events", 4, RES_BITFIELD, false, ",0=Another device controlling windlass", ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("Windlass ID"),
+      LOOKUP_FIELD("Windlass Direction Control", 2, WINDLASS_DIRECTION),
+      LOOKUP_FIELD("Anchor Docking Control", 2, OFF_ON),
+      LOOKUP_FIELD("Speed Control Type", 2, SPEED_TYPE),
+      RESERVED_FIELD(2),
+      BINARY_FIELD("Speed Control", BYTES(1), "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100"),
+      LOOKUP_FIELD("Power Enable", 2, OFF_ON),
+      LOOKUP_FIELD("Mechanical Lock", 2, OFF_ON),
+      LOOKUP_FIELD("Deck and Anchor Wash", 2, OFF_ON),
+      LOOKUP_FIELD("Anchor Light", 2, OFF_ON),
+      NUMBER_FIELD("Command Timeout",
+                   BYTES(1),
+                   0.005,
+                   false,
+                   "s",
+                   "If timeout elapses the thruster stops operating and reverts to static mode"),
+      LOOKUP_BITFIELD("Windlass Control Events", 4, WINDLASS_CONTROL),
+      RESERVED_FIELD(4),
+      END_OF_FIELDS}}
 
     ,
     /* https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf */
@@ -3495,22 +2776,17 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Windlass ID", BYTES(1), 1, false, 0, ""},
-      {"Windlass Direction Control", 2, RES_LOOKUP, false, ",0=Off,1=Down,2=Up", ""},
-      {"Windlass Motion Status", 2, RES_LOOKUP, false, ",0=Windlass stopped,1=Deployment occurring,2=Retrieval occurring", ""},
-      {"Rode Type Status", 2, RES_LOOKUP, false, ",0=Chain presently detected,1=Rope presently detected,2=Error", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
-      {"Rode Counter Value", BYTES(2), 0.1, false, "m", ""},
-      {"Windlass Line Speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"Anchor Docking Status", 2, RES_LOOKUP, false, ",0=Not docked,1=Fully docked,2=Error", ""},
-      {"Windlass Operating Events",
-       6,
-       RES_BITFIELD,
-       false,
-       ",0=System error,1=Sensor error,2=No windlass motion detected,3=Retrieval docking distance reached,4=End or rode reached",
-       ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("Windlass ID"),
+      LOOKUP_FIELD("Windlass Direction Control", 2, WINDLASS_DIRECTION),
+      LOOKUP_FIELD("Windlass Motion Status", 2, WINDLASS_MOTION),
+      LOOKUP_FIELD("Rode Type Status", 2, RODE_TYPE),
+      RESERVED_FIELD(2),
+      DECIMETERS_FIELD("Rode Counter Value"),
+      SPEED_U16_CM_FIELD("Windlass Line Speed"),
+      LOOKUP_FIELD("Anchor Docking Status", 2, DOCKING_STATUS),
+      LOOKUP_BITFIELD("Windlass Operating Events", 6, WINDLASS_OPERATION),
+      END_OF_FIELDS}}
 
     ,
     /* https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf */
@@ -3520,20 +2796,14 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Windlass ID", BYTES(1), 1, false, 0, ""},
-      {"Windlass Monitoring Events",
-       8,
-       RES_BITFIELD,
-       false,
-       ",0=Controller under voltage cut-out,1=Controller over current cut-out,2=Controller over temperature cut-out,3=Manufacturer "
-       "defined",
-       ""},
-      {"Controller voltage", BYTES(1), 0.2, false, "V", ""},
-      {"Motor current", BYTES(1), 1, false, "A", ""},
-      {"Total Motor Time", BYTES(2), 60, false, "s", ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("Windlass ID"),
+      LOOKUP_BITFIELD("Windlass Monitoring Events", 8, WINDLASS_MONITORING),
+      VOLTAGE_FIELD("Controller voltage", 0.2),
+      CURRENT_FIELD("Motor current", BYTES(1), 1),
+      ELAPSED_FIELD("Total Motor Time", BYTES(2), 60),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Position, Rapid Update",
@@ -3542,7 +2812,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""}, {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""}, {0}}}
+     {LATITUDE_I32_FIELD("Latitude"), LONGITUDE_I32_FIELD("Longitude"), END_OF_FIELDS}}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
@@ -3552,13 +2822,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
-      {"Reserved", BYTES(2), RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
+      RESERVED_FIELD(6),
+      ANGLE_U16_FIELD("COG", NULL),
+      SPEED_U16_CM_FIELD("SOG"),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Position Delta, Rapid Update",
@@ -3567,11 +2837,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Time Delta", BYTES(2), 1, false, 0, ""},
-      {"Latitude Delta", BYTES(2), 1, true, 0, ""},
-      {"Longitude Delta", BYTES(2), 1, true, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      SIMPLE_FIELD("Time Delta", BYTES(2)),
+      SIMPLE_SIGNED_FIELD("Latitude Delta", BYTES(2)),
+      SIMPLE_SIGNED_FIELD("Longitude Delta", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Altitude Delta, Rapid Update",
@@ -3580,14 +2850,14 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Time Delta", BYTES(2), 1, true, 0, ""},
-      {"GNSS Quality", 2, 1, false, 0, ""},
-      {"Direction", 2, 1, false, 0, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Altitude Delta", BYTES(2), 1, true, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      SIMPLE_SIGNED_FIELD("Time Delta", BYTES(2)),
+      SIMPLE_FIELD("GNSS Quality", 2),
+      SIMPLE_FIELD("Direction", 2),
+      RESERVED_FIELD(4),
+      ANGLE_U16_FIELD("COG", NULL),
+      SIMPLE_SIGNED_FIELD("Altitude Delta", BYTES(2)),
+      END_OF_FIELDS}}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
@@ -3597,25 +2867,25 @@ Pgn pgnList[] = {
      PACKET_FAST,
      43,
      3,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Latitude", BYTES(8), RES_LATITUDE, true, "deg", ""},
-      {"Longitude", BYTES(8), RES_LONGITUDE, true, "deg", ""},
-      {"Altitude", BYTES(8), 1e-6, true, "m", "Altitude referenced to WGS-84"},
-      {"GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS, ""},
-      {"Method", 4, RES_LOOKUP, false, LOOKUP_GNS_METHOD, ""},
-      {"Integrity", 2, RES_LOOKUP, false, LOOKUP_GNS_INTEGRITY, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
-      {"Number of SVs", BYTES(1), 1, false, 0, "Number of satellites used in solution"},
-      {"HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision"},
-      {"PDOP", BYTES(2), 0.01, true, 0, "Positional dilution of precision"},
-      {"Geoidal Separation", BYTES(4), 0.01, true, "m", "Geoidal Separation"},
-      {"Reference Stations", BYTES(1), 1, false, 0, "Number of reference stations"},
-      {"Reference Station Type", 4, RES_LOOKUP, false, LOOKUP_GNS, ""},
-      {"Reference Station ID", 12, 1, false, ""},
-      {"Age of DGNSS Corrections", BYTES(2), 0.01, false, "s", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      DATE_FIELD("Date"),
+      TIME_FIELD("Time"),
+      LATITUDE_I64_FIELD("Latitude"),
+      LONGITUDE_I64_FIELD("Longitude"),
+      DISTANCE_FIELD("Altitude", BYTES(8), 1e-6, "Altitude referenced to WGS-84"),
+      LOOKUP_FIELD("GNSS type", 4, GNS),
+      LOOKUP_FIELD("Method", 4, GNS_METHOD),
+      LOOKUP_FIELD("Integrity", 2, GNS_INTEGRITY),
+      RESERVED_FIELD(6),
+      SIMPLE_DESC_FIELD("Number of SVs", BYTES(1), "Number of satellites used in solution"),
+      NUMBER_FIELD("HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision"),
+      NUMBER_FIELD("PDOP", BYTES(2), 0.01, true, 0, "Positional dilution of precision"),
+      DISTANCE_FIELD("Geoidal Separation", BYTES(4), 0.01, "Geoidal Separation"),
+      SIMPLE_DESC_FIELD("Reference Stations", BYTES(1), "Number of reference stations"),
+      LOOKUP_FIELD("Reference Station Type", 4, GNS),
+      SIMPLE_FIELD("Reference Station ID", 12),
+      ELAPSED_FIELD("Age of DGNSS Corrections", BYTES(2), 0.01),
+      END_OF_FIELDS}}
 
     ,
     {"Time & Date",
@@ -3624,10 +2894,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Local Offset", BYTES(2), RES_INTEGER, true, "minutes", "Minutes"},
-      {0}}}
+     {DATE_FIELD("Date"), TIME_FIELD("Time"), SIGNED_INTEGER_UNIT_FIELD("Local Offset", BYTES(2), "minutes"), END_OF_FIELDS}}
 
     ,
     {"AIS Class A Position Report",
@@ -3636,32 +2903,29 @@ Pgn pgnList[] = {
      PACKET_FAST,
      28,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Longitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Latitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, ""},
-      {"RAIM", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, ""},
-      {"Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated"},
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
-      {"Communication State",
-       19,
-       RES_BINARY,
-       false,
-       0,
-       "Information used by the TDMA slot allocation algorithm and synchronization information"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Heading", BYTES(2), RES_RADIANS, false, "rad", "True heading"},
-      {"Rate of Turn", BYTES(2), RES_ROTATION, true, "rad/s", ""},
-      {"Nav Status", 4, RES_LOOKUP, false, LOOKUP_NAV_STATUS, ""},
-      {"Special Maneuver Indicator", 2, RES_LOOKUP, false, LOOKUP_AIS_SPECIAL_MANEUVER, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Spare", 3, RES_BINARY, false, 0, ""},
-      {"Reserved", 5, RES_BINARY, false, 0, "reserved"},
-      {"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("User ID"),
+      LATITUDE_I32_FIELD("Longitude"),
+      LONGITUDE_I32_FIELD("Latitude"),
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
+      LOOKUP_FIELD_DESC("Time Stamp", 6, TIME_STAMP, "0-59 = UTC second when the report was generated"),
+      ANGLE_U16_FIELD("COG", NULL),
+      SPEED_U16_CM_FIELD("SOG"),
+      BINARY_FIELD("Communication State",
+                   19,
+                   "Information used by the TDMA slot allocation algorithm and synchronization information"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      ANGLE_U16_FIELD("Heading", "True heading"),
+      ROTATION_FIELD("Rate of Turn"),
+      LOOKUP_FIELD("Nav Status", 4, NAV_STATUS),
+      LOOKUP_FIELD("Special Maneuver Indicator", 2, AIS_SPECIAL_MANEUVER),
+      RESERVED_FIELD(2),
+      BINARY_FIELD("AIS Spare", 3, NULL),
+      RESERVED_FIELD(5),
+      INTEGER_FIELD("Sequence ID", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Class B Position Report",
@@ -3670,34 +2934,31 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x1a,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Longitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Latitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, ""},
-      {"RAIM", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, ""},
-      {"Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated"},
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
-      {"Communication State",
-       19,
-       RES_BINARY,
-       false,
-       0,
-       "Information used by the TDMA slot allocation algorithm and synchronization information"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Heading", BYTES(2), RES_RADIANS, false, "rad", "True heading"},
-      {"Regional Application", BYTES(1), 1, false, 0, ""},
-      {"Regional Application", 2, 1, false, 0, ""},
-      {"Unit type", 1, RES_LOOKUP, false, ",0=SOTDMA,1=CS", ""},
-      {"Integrated Display", 1, RES_LOOKUP, false, LOOKUP_YES_NO, "Whether the unit can show messages 12 and 14"},
-      {"DSC", 1, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Band", 1, RES_LOOKUP, false, ",0=top 525 kHz of marine band,1=entire marine band", ""},
-      {"Can handle Msg 22", 1, RES_LOOKUP, false, LOOKUP_YES_NO, "Whether device supports message 22"},
-      {"AIS mode", 1, RES_LOOKUP, false, ",0=Autonomous,1=Assigned", ""},
-      {"AIS communication state", 1, RES_LOOKUP, false, ",0=SOTDMA,1=ITDMA", ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("User ID"),
+      LONGITUDE_I32_FIELD("Longitude"),
+      LATITUDE_I32_FIELD("Latitude"),
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
+      LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
+      ANGLE_U16_FIELD("COG", NULL),
+      SPEED_U16_CM_FIELD("SOG"),
+      BINARY_FIELD("Communication State",
+                   19,
+                   "Information used by the TDMA slot allocation algorithm and synchronization information"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      ANGLE_U16_FIELD("Heading", "True heading"),
+      ONE_BYTE_FIELD("Regional Application"),
+      SIMPLE_FIELD("Regional Application", 2),
+      LOOKUP_FIELD("Unit type", 1, AIS_TYPE),
+      LOOKUP_FIELD_DESC("Integrated Display", 1, YES_NO, "Whether the unit can show messages 12 and 14"),
+      LOOKUP_FIELD("DSC", 1, YES_NO),
+      LOOKUP_FIELD("Band", 1, AIS_BAND),
+      LOOKUP_FIELD("Can handle Msg 22", 1, YES_NO),
+      LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
+      LOOKUP_FIELD("AIS communication state", 1, AIS_COMMUNICATION_STATE),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Class B Extended Position Report",
@@ -3706,33 +2967,33 @@ Pgn pgnList[] = {
      PACKET_FAST,
      33,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Longitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Latitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, ""},
-      {"AIS RAIM flag", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, ""},
-      {"Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated"},
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
-      {"Regional Application", BYTES(1), 1, false, 0, ""},
-      {"Regional Application", 4, 1, false, 0, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "reserved"},
-      {"Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, ""},
-      {"True Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS_AIS, ""},
-      {"Length", BYTES(2), 0.1, false, "m", ""},
-      {"Beam", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
-      {"Name", BYTES(20), RES_ASCII, false, 0, ",0=unavailable"},
-      {"DTE", 1, RES_LOOKUP, false, ",0=Available,1=Not available", ""},
-      {"AIS mode", 1, 1, false, ",0=Autonomous,1=Assigned", ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("User ID"),
+      LONGITUDE_I32_FIELD("Longitude"),
+      LATITUDE_I32_FIELD("Latitude"),
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("AIS RAIM flag", 1, RAIM_FLAG),
+      LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
+      ANGLE_U16_FIELD("COG", NULL),
+      SPEED_U16_CM_FIELD("SOG"),
+      ONE_BYTE_FIELD("Regional Application"),
+      SIMPLE_FIELD("Regional Application", 4),
+      RESERVED_FIELD(4),
+      LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
+      ANGLE_U16_FIELD("True Heading", NULL),
+      RESERVED_FIELD(4),
+      LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
+      DECIMETERS_FIELD("Length"),
+      DECIMETERS_FIELD("Beam"),
+      DECIMETERS_FIELD("Position reference from Starboard"),
+      DECIMETERS_FIELD("Position reference from Bow"),
+      ASCII_FIELD("Name", BYTES(20)),
+      LOOKUP_FIELD("DTE", 1, AVAILABLE),
+      LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
+      RESERVED_FIELD(4),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Aids to Navigation (AtoN) Report",
@@ -3741,30 +3002,30 @@ Pgn pgnList[] = {
      PACKET_FAST,
      60,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, ""},
-      {"AIS RAIM Flag", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, ""},
-      {"Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated"},
-      {"Length/Diameter", BYTES(2), 0.1, false, "m", ""},
-      {"Beam/Diameter", BYTES(2), 0.1, false, "m", ""},
-      {"Position Reference from Starboard Edge", BYTES(2), 0.1, false, "m", ""},
-      {"Position Reference from True North Facing Edge", BYTES(2), 0.1, false, "m", ""},
-      {"AtoN Type", 5, RES_LOOKUP, false, LOOKUP_ATON_TYPE, ""},
-      {"Off Position Indicator", 1, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Virtual AtoN Flag", 1, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Assigned Mode Flag", 1, RES_LOOKUP, false, LOOKUP_AIS_ASSIGNED_MODE, ""},
-      {"AIS Spare", 1, RES_BINARY, false, 0, ""},
-      {"Position Fixing Device Type", 4, RES_LOOKUP, false, LOOKUP_POSITION_FIX_DEVICE, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, ""},
-      {"AtoN Status", 8, RES_BINARY, false, 0, "00000000 = default"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, ""},
-      {"AtoN Name", BYTES(34), RES_STRINGLAU, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("User ID"),
+      LONGITUDE_I32_FIELD("Longitude"),
+      LATITUDE_I32_FIELD("Latitude"),
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("AIS RAIM Flag", 1, RAIM_FLAG),
+      LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
+      DECIMETERS_FIELD("Length/Diameter"),
+      DECIMETERS_FIELD("Beam/Diameter"),
+      DECIMETERS_FIELD("Position Reference from Starboard Edge"),
+      DECIMETERS_FIELD("Position Reference from True North Facing Edge"),
+      LOOKUP_FIELD("AtoN Type", 5, ATON_TYPE),
+      LOOKUP_FIELD("Off Position Indicator", 1, YES_NO),
+      LOOKUP_FIELD("Virtual AtoN Flag", 1, YES_NO),
+      LOOKUP_FIELD("Assigned Mode Flag", 1, AIS_ASSIGNED_MODE),
+      BINARY_FIELD("AIS Spare", 1, NULL),
+      LOOKUP_FIELD("Position Fixing Device Type", 4, POSITION_FIX_DEVICE),
+      RESERVED_FIELD(3),
+      BINARY_FIELD("AtoN Status", 8, "00000000 = default"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
+      STRINGLAU_FIELD("AtoN Name"),
+      END_OF_FIELDS}}
 
     ,
     {"Datum",
@@ -3773,26 +3034,19 @@ Pgn pgnList[] = {
      PACKET_FAST,
      20,
      0,
-     {{"Local Datum",
-       BYTES(4),
-       RES_ASCII,
-       false,
-       0,
-       "defined in IHO Publication S-60, Appendices B and C."
-       " First three chars are datum ID as per IHO tables."
-       " Fourth char is local datum subdivision code."},
-      {"Delta Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Delta Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Delta Altitude", BYTES(4), 1e-6, true, "m", ""},
-      {"Reference Datum",
-       BYTES(4),
-       RES_ASCII,
-       false,
-       0,
-       "defined in IHO Publication S-60, Appendices B and C."
-       " First three chars are datum ID as per IHO tables."
-       " Fourth char is local datum subdivision code."},
-      {0}}}
+     {ASCII_DESC_FIELD("Local Datum",
+                       BYTES(4),
+                       "defined in IHO Publication S-60, Appendices B and C. First three chars are datum ID as per IHO tables."
+                       " Fourth char is local datum subdivision code."),
+      LATITUDE_I32_FIELD("Delta Latitude"),
+      LONGITUDE_I32_FIELD("Delta Longitude"),
+      DISTANCE_FIELD("Delta Altitude", BYTES(4), 1e-6, NULL),
+      ASCII_DESC_FIELD("Reference Datum",
+                       BYTES(4),
+                       "defined in IHO Publication S-60, Appendices B and C."
+                       " First three chars are datum ID as per IHO tables."
+                       " Fourth char is local datum subdivision code."),
+      END_OF_FIELDS}}
 
     ,
     {"User Datum",
@@ -3801,42 +3055,33 @@ Pgn pgnList[] = {
      PACKET_FAST,
      37,
      0,
-     {{"Delta X", BYTES(4), 0.01, true, "m", "Delta shift in X axis from WGS 84"},
-      {"Delta Y", BYTES(4), 0.01, true, "m", "Delta shift in Y axis from WGS 84"},
-      {"Delta Z", BYTES(4), 0.01, true, "m", "Delta shift in Z axis from WGS 84"},
-      {"Rotation in X",
-       BYTES(4),
-       RES_FLOAT,
-       true,
-       0,
-       "Rotational shift in X axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
-       "positive axis towards the origin, counter-clockwise rotations are positive."},
-      {"Rotation in Y",
-       BYTES(4),
-       RES_FLOAT,
-       true,
-       0,
-       "Rotational shift in Y axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
-       "positive axis towards the origin, counter-clockwise rotations are positive."},
-      {"Rotation in Z",
-       BYTES(4),
-       RES_FLOAT,
-       true,
-       0,
-       "Rotational shift in Z axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
-       "positive axis towards the origin, counter-clockwise rotations are positive."},
-      {"Scale", BYTES(4), RES_FLOAT, true, "ppm", "Scale factor expressed in parts-per-million"},
-      {"Ellipsoid Semi-major Axis", BYTES(4), 0.01, true, "m", "Semi-major axis (a) of the User Datum ellipsoid"},
-      {"Ellipsoid Flattening Inverse", BYTES(4), RES_FLOAT, true, 0, "Flattening (1/f) of the User Datum ellipsoid"},
-      {"Datum Name",
-       BYTES(4),
-       RES_ASCII,
-       false,
-       0,
-       "4 character code from IHO Publication S-60,Appendices B and C."
-       " First three chars are datum ID as per IHO tables."
-       " Fourth char is local datum subdivision code."},
-      {0}}}
+     {DISTANCE_FIELD("Delta X", BYTES(4), 0.01, "Delta shift in X axis from WGS 84"),
+      DISTANCE_FIELD("Delta Y", BYTES(4), 0.01, "Delta shift in Y axis from WGS 84"),
+      DISTANCE_FIELD("Delta Z", BYTES(4), 0.01, "Delta shift in Z axis from WGS 84"),
+      FLOAT_FIELD(
+          "Rotation in X",
+          NULL,
+          "Rotational shift in X axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
+          "positive axis towards the origin, counter-clockwise rotations are positive."),
+      FLOAT_FIELD(
+          "Rotation in Y",
+          NULL,
+          "Rotational shift in Y axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
+          "positive axis towards the origin, counter-clockwise rotations are positive."),
+      FLOAT_FIELD(
+          "Rotation in Z",
+          NULL,
+          "Rotational shift in Z axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
+          "positive axis towards the origin, counter-clockwise rotations are positive."),
+      FLOAT_FIELD("Scale", "ppm", NULL),
+      DISTANCE_FIELD("Ellipsoid Semi-major Axis", BYTES(4), 0.01, "Semi-major axis (a) of the User Datum ellipsoid"),
+      FLOAT_FIELD("Ellipsoid Flattening Inverse", NULL, "Flattening (1/f) of the User Datum ellipsoid"),
+      ASCII_DESC_FIELD("Datum Name",
+                       BYTES(4),
+                       "4 character code from IHO Publication S-60,Appendices B and C."
+                       " First three chars are datum ID as per IHO tables."
+                       " Fourth char is local datum subdivision code."),
+      END_OF_FIELDS}}
 
     ,
     {"Cross Track Error",
@@ -3845,13 +3090,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"XTE mode", 4, RES_LOOKUP, false, LOOKUP_RESIDUAL_MODE, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Navigation Terminated", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"XTE", BYTES(4), 0.01, true, "m", ""},
-      {"Reserved", BYTES(2), RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      LOOKUP_FIELD("XTE mode", 4, RESIDUAL_MODE),
+      RESERVED_FIELD(2),
+      LOOKUP_FIELD("Navigation Terminated", 2, YES_NO),
+      DISTANCE_FIELD("XTE", BYTES(4), 0.01, NULL),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Navigation Data",
@@ -3860,22 +3105,22 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x22,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Distance to Waypoint", BYTES(4), 0.01, false, "m", ""},
-      {"Course/Bearing reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
-      {"Perpendicular Crossed", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Arrival Circle Entered", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Calculation Type", 2, RES_LOOKUP, false, ",0=Great Circle,1=Rhumb Line", ""},
-      {"ETA Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"ETA Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Bearing, Origin to Destination Waypoint", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Bearing, Position to Destination Waypoint", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Origin Waypoint Number", BYTES(4), 1, false, 0, ""},
-      {"Destination Waypoint Number", BYTES(4), 1, false, 0, ""},
-      {"Destination Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Destination Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Waypoint Closing Velocity", BYTES(2), 0.01, true, "m/s", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      HIRES_LENGTH_FIELD("Distance to Waypoint", 0.01),
+      LOOKUP_FIELD("Course/Bearing reference", 2, DIRECTION_REFERENCE),
+      LOOKUP_FIELD("Perpendicular Crossed", 2, YES_NO),
+      LOOKUP_FIELD("Arrival Circle Entered", 2, YES_NO),
+      LOOKUP_FIELD("Calculation Type", 2, BEARING_MODE),
+      TIME_FIELD("ETA Time"),
+      DATE_FIELD("ETA Date"),
+      ANGLE_U16_FIELD("Bearing, Origin to Destination Waypoint", NULL),
+      ANGLE_U16_FIELD("Bearing, Position to Destination Waypoint", NULL),
+      SIMPLE_FIELD("Origin Waypoint Number", BYTES(4)),
+      SIMPLE_FIELD("Destination Waypoint Number", BYTES(4)),
+      LATITUDE_I32_FIELD("Destination Latitude"),
+      LONGITUDE_I32_FIELD("Destination Longitude"),
+      SPEED_I16_CM_FIELD("Waypoint Closing Velocity"),
+      END_OF_FIELDS}}
 
     ,
     {"Navigation - Route/WP Information",
@@ -3884,20 +3129,20 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      4,
-     {{"Start RPS#", BYTES(2), 1, false, 0, ""},
-      {"nItems", BYTES(2), 1, false, 0, ""},
-      {"Database ID", BYTES(2), 1, false, 0, ""},
-      {"Route ID", BYTES(2), 1, false, 0, ""},
-      {"Navigation direction in route", 2, 1, false, 0, ""},
-      {"Supplementary Route/WP data available", 2, 1, false, 0, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Route Name", BYTES(255), RES_STRING, false, 0, ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, "Reserved"},
-      {"WP ID", BYTES(2), 1, false, 0, ""},
-      {"WP Name", BYTES(255), RES_STRING, false, 0, ""},
-      {"WP Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"WP Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {0}}}
+     {SIMPLE_FIELD("Start RPS#", BYTES(2)),
+      SIMPLE_FIELD("nItems", BYTES(2)),
+      SIMPLE_FIELD("Database ID", BYTES(2)),
+      SIMPLE_FIELD("Route ID", BYTES(2)),
+      SIMPLE_FIELD("Navigation direction in route", 2),
+      SIMPLE_FIELD("Supplementary Route/WP data available", 2),
+      RESERVED_FIELD(4),
+      STRINGVAR_FIELD("Route Name"),
+      RESERVED_FIELD(BYTES(1)),
+      SIMPLE_FIELD("WP ID", BYTES(2)),
+      STRINGVAR_FIELD("WP Name"),
+      LATITUDE_I32_FIELD("WP Latitude"),
+      LONGITUDE_I32_FIELD("WP Longitude"),
+      END_OF_FIELDS}}
 
     ,
     {"Set & Drift, Rapid Update",
@@ -3906,12 +3151,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Set Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
-      {"Set", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Drift", BYTES(2), 0.01, false, "m/s", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      LOOKUP_FIELD("Set Reference", 2, DIRECTION_REFERENCE),
+      RESERVED_FIELD(6),
+      ANGLE_U16_FIELD("Set", NULL),
+      SPEED_U16_CM_FIELD("Drift"),
+      END_OF_FIELDS}}
 
     ,
     {"Navigation - Route / Time to+from Mark",
@@ -3920,12 +3165,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      10,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Time to mark", BYTES(4), 0.001, true, "s", "negative = elapsed since event, positive = time to go"},
-      {"Mark Type", 4, RES_LOOKUP, false, ",0=Collision,1=Turning point,2=Reference,3=Wheelover,4=Waypoint", ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Mark ID", BYTES(4), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      TIME_DELTA_MS_FIELD("Time to mark", BYTES(4), "negative = elapsed since event, positive = time to go"),
+      LOOKUP_FIELD("Mark Type", 4, MARK_TYPE),
+      RESERVED_FIELD(4),
+      SIMPLE_FIELD("Mark ID", BYTES(4)),
+      END_OF_FIELDS}}
 
     ,
     {"Bearing and Distance between two Marks",
@@ -3934,17 +3179,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Bearing Reference", 4, RES_LOOKUP, false, 0, ""},
-      {"Calculation Type", 2, RES_LOOKUP, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
-      {"Bearing, Origin to Destination", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Distance", BYTES(4), 0.01, false, "m", ""},
-      {"Origin Mark Type", 4, RES_LOOKUP, false, 0, ""},
-      {"Destination Mark Type", 4, RES_LOOKUP, false, 0, ""},
-      {"Origin Mark ID", BYTES(4), 1, false, 0, ""},
-      {"Destination Mark ID", BYTES(4), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      UNKNOWN_LOOKUP_FIELD("Bearing Reference", 4),
+      UNKNOWN_LOOKUP_FIELD("Calculation Type", 2),
+      RESERVED_FIELD(2),
+      ANGLE_U16_FIELD("Bearing, Origin to Destination", NULL),
+      HIRES_LENGTH_FIELD("Distance", 0.01),
+      LOOKUP_FIELD("Origin Mark Type", 4, MARK_TYPE),
+      LOOKUP_FIELD("Destination Mark Type", 4, MARK_TYPE),
+      SIMPLE_FIELD("Origin Mark ID", BYTES(4)),
+      SIMPLE_FIELD("Destination Mark ID", BYTES(4)),
+      END_OF_FIELDS}}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     /* Haven't seen this yet (no way to send PGN 059904 yet) so lengths unknown */
@@ -3955,17 +3200,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      13,
      0,
-     {{"SV Elevation Mask", BYTES(2), 1, false, 0, "Will not use SV below this elevation"},
-      {"PDOP Mask", BYTES(2), 0.01, false, 0, "Will not report position above this PDOP"},
-      {"PDOP Switch", BYTES(2), 0.01, false, 0, "Will report 2D position above this PDOP"},
-      {"SNR Mask", BYTES(2), 0.01, false, 0, "Will not use SV below this SNR"},
-      {"GNSS Mode (desired)", 3, RES_LOOKUP, false, ",0=1D,1=2D,2=3D,3=Auto,4=Reserved,5=Reserved,6=Error", ""},
-      {"DGNSS Mode (desired)", 3, RES_LOOKUP, false, ",0=no SBAS,1=SBAS,3=SBAS", ""},
-      {"Position/Velocity Filter", 2, 1, false, 0, ""},
-      {"Max Correction Age", BYTES(2), 1, false, 0, ""},
-      {"Antenna Altitude for 2D Mode", BYTES(2), 0.01, false, "m", ""},
-      {"Use Antenna Altitude for 2D Mode", 2, RES_LOOKUP, false, ",0=use last 3D height,1=Use antenna altitude", ""},
-      {0}}}
+     {SIMPLE_DESC_FIELD("SV Elevation Mask", BYTES(2), "Will not use SV below this elevation"),
+      NUMBER_FIELD("PDOP Mask", BYTES(2), 0.01, false, 0, "Will not report position above this PDOP"),
+      NUMBER_FIELD("PDOP Switch", BYTES(2), 0.01, false, 0, "Will report 2D position above this PDOP"),
+      NUMBER_FIELD("SNR Mask", BYTES(2), 0.01, false, 0, "Will not use SV below this SNR"),
+      LOOKUP_FIELD("GNSS Mode (desired)", 3, GNSS_MODE),
+      LOOKUP_FIELD("DGNSS Mode (desired)", 3, DGNSS_MODE),
+      SIMPLE_FIELD("Position/Velocity Filter", 2),
+      SIMPLE_FIELD("Max Correction Age", BYTES(2)),
+      LENGTH_FIELD("Antenna Altitude for 2D Mode", BYTES(2), 0.01, NULL),
+      LOOKUP_FIELD("Use Antenna Altitude for 2D Mode", 2, YES_NO),
+      END_OF_FIELDS}}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
@@ -3975,14 +3220,14 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Desired Mode", 3, RES_LOOKUP, false, ",0=1D,1=2D,2=3D,3=Auto", ""},
-      {"Actual Mode", 3, RES_LOOKUP, false, ",0=1D,1=2D,2=3D,3=Auto", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
-      {"HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision"},
-      {"VDOP", BYTES(2), 0.01, true, 0, "Vertical dilution of precision"},
-      {"TDOP", BYTES(2), 0.01, true, 0, "Time dilution of precision"},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      LOOKUP_FIELD("Desired Mode", 3, GNSS_MODE),
+      LOOKUP_FIELD("Actual Mode", 3, GNSS_MODE),
+      RESERVED_FIELD(2),
+      NUMBER_FIELD("HDOP", BYTES(2), 0.01, true, 0, "Horizontal dilution of precision"),
+      NUMBER_FIELD("VDOP", BYTES(2), 0.01, true, 0, "Vertical dilution of precision"),
+      NUMBER_FIELD("TDOP", BYTES(2), 0.01, true, 0, "Time dilution of precision"),
+      END_OF_FIELDS}}
 
     ,
     {"GNSS Sats in View",
@@ -3991,18 +3236,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      7,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Mode", 2, RES_LOOKUP, false, ",3=Range residuals used to calculate position", ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "Reserved"},
-      {"Sats in View", BYTES(1), 1, false, 0, ""},
-      {"PRN", BYTES(1), 1, false, 0, ""},
-      {"Elevation", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Azimuth", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"SNR", BYTES(2), 0.01, false, "dB", ""},
-      {"Range residuals", BYTES(4), 1, true, 0, ""},
-      {"Status", 4, RES_LOOKUP, false, ",0=Not tracked,1=Tracked,2=Used,3=Not tracked+Diff,4=Tracked+Diff,5=Used+Diff", ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INTEGER_DESC_FIELD("Mode", 2, "Unknown lookup values"),
+      RESERVED_FIELD(6),
+      ONE_BYTE_FIELD("Sats in View"),
+      ONE_BYTE_FIELD("PRN"),
+      ANGLE_U16_FIELD("Elevation", NULL),
+      ANGLE_U16_FIELD("Azimuth", NULL),
+      NUMBER_FIELD("SNR", BYTES(2), 0.01, false, "dB", NULL),
+      NUMBER_FIELD("Range residuals", BYTES(4), 1, true, NULL, NULL),
+      LOOKUP_FIELD("Status", 4, SATELLITE_STATUS),
+      RESERVED_FIELD(4),
+      END_OF_FIELDS}}
 
     ,
     {"GPS Almanac Data",
@@ -4011,21 +3256,21 @@ Pgn pgnList[] = {
      PACKET_FAST,
      26,
      0,
-     {{"PRN", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"GPS Week number", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"SV Health Bits", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Eccentricity", BYTES(2), 1e-21, false, "m/m", ""},
-      {"Almanac Reference Time", BYTES(1), 1e12, false, "s", ""},
-      {"Inclination Angle", BYTES(2), 1e-19, true, "semi-circle", ""},
-      {"Rate of Right Ascension", BYTES(2), 1e-38, true, "semi-circle/s", ""},
-      {"Root of Semi-major Axis", BYTES(3), 1e-11, false, "sqrt(m)", ""},
-      {"Argument of Perigee", BYTES(3), 1e-23, true, "semi-circle", ""},
-      {"Longitude of Ascension Node", BYTES(3), 1e-23, true, "semi-circle", ""},
-      {"Mean Anomaly", BYTES(3), 1e-23, true, "semi-circle", ""},
-      {"Clock Parameter 1", 11, 1e-20, true, "s", ""},
-      {"Clock Parameter 2", 11, 1e-38, true, "s/s", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {INTEGER_FIELD("PRN", BYTES(1)),
+      INTEGER_FIELD("GPS Week number", BYTES(2)),
+      BINARY_FIELD("SV Health Bits", BYTES(1), NULL),
+      NUMBER_FIELD("Eccentricity", BYTES(2), 1e-21, false, "m/m", NULL),
+      ELAPSED_FIELD("Almanac Reference Time", BYTES(1), 1e12),
+      NUMBER_FIELD("Inclination Angle", BYTES(2), 1e-19, true, "semi-circle", NULL),
+      NUMBER_FIELD("Rate of Right Ascension", BYTES(2), 1e-38, true, "semi-circle/s", NULL),
+      NUMBER_FIELD("Root of Semi-major Axis", BYTES(3), 1e-11, false, "sqrt(m)", NULL),
+      NUMBER_FIELD("Argument of Perigee", BYTES(3), 1e-23, true, "semi-circle", NULL),
+      NUMBER_FIELD("Longitude of Ascension Node", BYTES(3), 1e-23, true, "semi-circle", NULL),
+      NUMBER_FIELD("Mean Anomaly", BYTES(3), 1e-23, true, "semi-circle", NULL),
+      NUMBER_FIELD("Clock Parameter 1", 11, 1e-20, true, "s", NULL),
+      NUMBER_FIELD("Clock Parameter 2", 11, 1e-38, true, "s/s", NULL),
+      RESERVED_FIELD(2),
+      END_OF_FIELDS}}
 
     ,
     {"GNSS Pseudorange Noise Statistics",
@@ -4034,15 +3279,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"RMS of Position Uncertainty", BYTES(2), 1, false, 0, ""},
-      {"STD of Major axis", BYTES(1), 1, false, 0, ""},
-      {"STD of Minor axis", BYTES(1), 1, false, 0, ""},
-      {"Orientation of Major axis", BYTES(1), 1, false, 0, ""},
-      {"STD of Lat Error", BYTES(1), 1, false, 0, ""},
-      {"STD of Lon Error", BYTES(1), 1, false, 0, ""},
-      {"STD of Alt Error", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      SIMPLE_FIELD("RMS of Position Uncertainty", BYTES(2)),
+      ONE_BYTE_FIELD("STD of Major axis"),
+      ONE_BYTE_FIELD("STD of Minor axis"),
+      ONE_BYTE_FIELD("Orientation of Major axis"),
+      ONE_BYTE_FIELD("STD of Lat Error"),
+      ONE_BYTE_FIELD("STD of Lon Error"),
+      ONE_BYTE_FIELD("STD of Alt Error"),
+      END_OF_FIELDS}}
 
     ,
     {"GNSS RAIM Output",
@@ -4051,17 +3296,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Integrity flag", 4, 1, false, 0, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Latitude expected error", BYTES(1), 1, false, 0, ""},
-      {"Longitude expected error", BYTES(1), 1, false, 0, ""},
-      {"Altitude expected error", BYTES(1), 1, false, 0, ""},
-      {"SV ID of most likely failed sat", BYTES(1), 1, false, 0, ""},
-      {"Probability of missed detection", BYTES(1), 1, false, 0, ""},
-      {"Estimate of pseudorange bias", BYTES(1), 1, false, 0, ""},
-      {"Std Deviation of bias", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      SIMPLE_FIELD("Integrity flag", 4),
+      RESERVED_FIELD(4),
+      ONE_BYTE_FIELD("Latitude expected error"),
+      ONE_BYTE_FIELD("Longitude expected error"),
+      ONE_BYTE_FIELD("Altitude expected error"),
+      ONE_BYTE_FIELD("SV ID of most likely failed sat"),
+      ONE_BYTE_FIELD("Probability of missed detection"),
+      ONE_BYTE_FIELD("Estimate of pseudorange bias"),
+      ONE_BYTE_FIELD("Std Deviation of bias"),
+      END_OF_FIELDS}}
 
     ,
     {"GNSS RAIM Settings",
@@ -4070,11 +3315,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"Radial Position Error Maximum Threshold", BYTES(1), 1, false, 0, ""},
-      {"Probability of False Alarm", BYTES(1), 1, false, 0, ""},
-      {"Probability of Missed Detection", BYTES(1), 1, false, 0, ""},
-      {"Pseudorange Residual Filtering Time Constant", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("Radial Position Error Maximum Threshold"),
+      ONE_BYTE_FIELD("Probability of False Alarm"),
+      ONE_BYTE_FIELD("Probability of Missed Detection"),
+      ONE_BYTE_FIELD("Pseudorange Residual Filtering Time Constant"),
+      END_OF_FIELDS}}
 
     ,
     {"GNSS Pseudorange Error Statistics",
@@ -4083,15 +3328,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"RMS Std Dev of Range Inputs", BYTES(2), 1, false, 0, ""},
-      {"Std Dev of Major error ellipse", BYTES(1), 1, false, 0, ""},
-      {"Std Dev of Minor error ellipse", BYTES(1), 1, false, 0, ""},
-      {"Orientation of error ellipse", BYTES(1), 1, false, 0, ""},
-      {"Std Dev Lat Error", BYTES(1), 1, false, 0, ""},
-      {"Std Dev Lon Error", BYTES(1), 1, false, 0, ""},
-      {"Std Dev Alt Error", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      SIMPLE_FIELD("RMS Std Dev of Range Inputs", BYTES(2)),
+      ONE_BYTE_FIELD("Std Dev of Major error ellipse"),
+      ONE_BYTE_FIELD("Std Dev of Minor error ellipse"),
+      ONE_BYTE_FIELD("Orientation of error ellipse"),
+      ONE_BYTE_FIELD("Std Dev Lat Error"),
+      ONE_BYTE_FIELD("Std Dev Lon Error"),
+      ONE_BYTE_FIELD("Std Dev Alt Error"),
+      END_OF_FIELDS}}
 
     ,
     {"DGNSS Corrections",
@@ -4100,18 +3345,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      13,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Reference Station ID", BYTES(2), 1, false, 0, ""},
-      {"Reference Station Type", BYTES(2), 1, false, 0, ""},
-      {"Time of corrections", BYTES(1), 1, false, 0, ""},
-      {"Station Health", BYTES(1), 1, false, 0, ""},
-      {"Reserved Bits", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Satellite ID", BYTES(1), 1, false, 0, ""},
-      {"PRC", BYTES(1), 1, false, 0, ""},
-      {"RRC", BYTES(1), 1, false, 0, ""},
-      {"UDRE", BYTES(1), 1, false, 0, ""},
-      {"IOD", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      SIMPLE_FIELD("Reference Station ID", BYTES(2)),
+      SIMPLE_FIELD("Reference Station Type", BYTES(2)),
+      ONE_BYTE_FIELD("Time of corrections"),
+      ONE_BYTE_FIELD("Station Health"),
+      BINARY_FIELD("Reserved Bits", BYTES(1), NULL),
+      ONE_BYTE_FIELD("Satellite ID"),
+      ONE_BYTE_FIELD("PRC"),
+      ONE_BYTE_FIELD("RRC"),
+      ONE_BYTE_FIELD("UDRE"),
+      ONE_BYTE_FIELD("IOD"),
+      END_OF_FIELDS}}
 
     ,
     {"GNSS Differential Correction Receiver Interface",
@@ -4120,13 +3365,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Channel", BYTES(1), 1, false, 0, ""},
-      {"Frequency", BYTES(1), 1, false, 0, ""},
-      {"Serial Interface Bit Rate", BYTES(1), 1, false, 0, ""},
-      {"Serial Interface Detection Mode", BYTES(1), 1, false, 0, ""},
-      {"Differential Source", BYTES(1), 1, false, 0, ""},
-      {"Differential Operation Mode", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("Channel"),
+      ONE_BYTE_FIELD("Frequency"),
+      ONE_BYTE_FIELD("Serial Interface Bit Rate"),
+      ONE_BYTE_FIELD("Serial Interface Detection Mode"),
+      ONE_BYTE_FIELD("Differential Source"),
+      ONE_BYTE_FIELD("Differential Operation Mode"),
+      END_OF_FIELDS}}
 
     ,
     {"GNSS Differential Correction Receiver Signal",
@@ -4135,21 +3380,21 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Channel", BYTES(1), 1, false, 0, ""},
-      {"Signal Strength", BYTES(1), 1, false, 0, ""},
-      {"Signal SNR", BYTES(1), 1, false, 0, ""},
-      {"Frequency", BYTES(1), 1, false, 0, ""},
-      {"Station Type", BYTES(1), 1, false, 0, ""},
-      {"Station ID", BYTES(1), 1, false, 0, ""},
-      {"Differential Signal Bit Rate", BYTES(1), 1, false, 0, ""},
-      {"Differential Signal Detection Mode", BYTES(1), 1, false, 0, ""},
-      {"Used as Correction Source", BYTES(1), 1, false, 0, ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, "Reserved"},
-      {"Differential Source", BYTES(1), 1, false, 0, ""},
-      {"Time since Last Sat Differential Sync", BYTES(1), 1, false, 0, ""},
-      {"Satellite Service ID No.", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("Channel"),
+      ONE_BYTE_FIELD("Signal Strength"),
+      ONE_BYTE_FIELD("Signal SNR"),
+      ONE_BYTE_FIELD("Frequency"),
+      ONE_BYTE_FIELD("Station Type"),
+      ONE_BYTE_FIELD("Station ID"),
+      ONE_BYTE_FIELD("Differential Signal Bit Rate"),
+      ONE_BYTE_FIELD("Differential Signal Detection Mode"),
+      ONE_BYTE_FIELD("Used as Correction Source"),
+      RESERVED_FIELD(BYTES(1)),
+      ONE_BYTE_FIELD("Differential Source"),
+      ONE_BYTE_FIELD("Time since Last Sat Differential Sync"),
+      ONE_BYTE_FIELD("Satellite Service ID No."),
+      END_OF_FIELDS}}
 
     ,
     {"GLONASS Almanac Data",
@@ -4158,20 +3403,20 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"PRN", BYTES(1), 1, false, 0, ""},
-      {"NA", BYTES(1), 1, false, 0, ""},
-      {"CnA", BYTES(1), 1, false, 0, ""},
-      {"HnA", BYTES(1), 1, false, 0, ""},
-      {"(epsilon)nA", BYTES(1), 1, false, 0, ""},
-      {"(deltaTnA)DOT", BYTES(1), 1, false, 0, ""},
-      {"(omega)nA", BYTES(1), 1, false, 0, ""},
-      {"(delta)TnA", BYTES(1), 1, false, 0, ""},
-      {"tnA", BYTES(1), 1, false, 0, ""},
-      {"(lambda)nA", BYTES(1), 1, false, 0, ""},
-      {"(delta)inA", BYTES(1), 1, false, 0, ""},
-      {"tcA", BYTES(1), 1, false, 0, ""},
-      {"tnA", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("PRN"),
+      ONE_BYTE_FIELD("NA"),
+      ONE_BYTE_FIELD("CnA"),
+      ONE_BYTE_FIELD("HnA"),
+      ONE_BYTE_FIELD("(epsilon)nA"),
+      ONE_BYTE_FIELD("(deltaTnA)DOT"),
+      ONE_BYTE_FIELD("(omega)nA"),
+      ONE_BYTE_FIELD("(delta)TnA"),
+      ONE_BYTE_FIELD("tnA"),
+      ONE_BYTE_FIELD("(lambda)nA"),
+      ONE_BYTE_FIELD("(delta)inA"),
+      ONE_BYTE_FIELD("tcA"),
+      ONE_BYTE_FIELD("tnA"),
+      END_OF_FIELDS}}
 
     ,
     {"AIS DGNSS Broadcast Binary Message",
@@ -4180,19 +3425,19 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, 1, false, 0, ""},
-      {"Source ID", BYTES(4), 1, false, "MMSI", ""},
-      {"NMEA 2000 Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {"AIS Transceiver Information", BYTES(1), 1, false, 0, ""},
-      {"Spare", BYTES(1), 1, false, 0, ""},
-      {"Longitude", BYTES(4), 1, false, 0, ""},
-      {"Latitude", BYTES(4), 1, false, 0, ""},
-      {"NMEA 2000 Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Spare", BYTES(1), 1, false, 0, ""},
-      {"Number of Bits in Binary Data Field", BYTES(1), 1, false, 0, ""},
-      {"Binary Data", BYTES(8), RES_BINARY, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      SIMPLE_FIELD("Repeat Indicator", 2),
+      MMSI_FIELD("Source ID"),
+      BINARY_FIELD("NMEA 2000 Reserved", BYTES(1), NULL),
+      ONE_BYTE_FIELD("AIS Transceiver Information"),
+      ONE_BYTE_FIELD("Spare"),
+      SIMPLE_FIELD("Longitude", BYTES(4)),
+      SIMPLE_FIELD("Latitude", BYTES(4)),
+      BINARY_FIELD("NMEA 2000 Reserved", BYTES(1), NULL),
+      ONE_BYTE_FIELD("Spare"),
+      ONE_BYTE_FIELD("Number of Bits in Binary Data Field"),
+      BINARY_FIELD("Binary Data", BYTES(8), NULL),
+      END_OF_FIELDS}}
 
     ,
     {"AIS UTC and Date Report",
@@ -4201,27 +3446,24 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x1a,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, ",0=Low,1=High", ""},
-      {"RAIM", 1, RES_LOOKUP, false, ",0=not in use,1=in use", ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "NMEA reserved to align next data on byte boundary"},
-      {"Position Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Communication State",
-       19,
-       RES_BINARY,
-       false,
-       0,
-       "Information used by the TDMA slot allocation algorithm and synchronization information"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Position Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Reserved", 4, RES_BINARY, false, 0, "NMEA reserved to align next data on byte boundary"},
-      {"GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS_AIS, ""},
-      {"Spare", BYTES(1), RES_BINARY, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("User ID"),
+      LONGITUDE_I32_FIELD("Longitude"),
+      LATITUDE_I32_FIELD("Latitude"),
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
+      BINARY_FIELD("Reserved", 6, "NMEA reserved to align next data on byte boundary"),
+      TIME_FIELD("Position Time"),
+      BINARY_FIELD("Communication State",
+                   19,
+                   "Information used by the TDMA slot allocation algorithm and synchronization information"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      DATE_FIELD("Position Date"),
+      BINARY_FIELD("Reserved", 4, "NMEA reserved to align next data on byte boundary"),
+      LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
+      BINARY_FIELD("Spare", BYTES(1), NULL),
+      END_OF_FIELDS}}
 
     /* http://www.navcen.uscg.gov/enav/ais/AIS_messages.htm */
     ,
@@ -4231,27 +3473,27 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x18,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"IMO number", BYTES(4), RES_INTEGER, false, 0, ",0=unavailable"},
-      {"Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable"},
-      {"Name", BYTES(20), RES_ASCII, false, 0, ",0=unavailable"},
-      {"Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, ""},
-      {"Length", BYTES(2), 0.1, false, "m", ""},
-      {"Beam", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
-      {"ETA Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"ETA Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Draft", BYTES(2), 0.01, false, "m", ""},
-      {"Destination", BYTES(20), RES_ASCII, false, 0, ",0=unavailable"},
-      {"AIS version indicator", 2, RES_LOOKUP, false, ",0=ITU-R M.1371-1,1=ITU-R M.1371-3", ""},
-      {"GNSS type", 4, RES_LOOKUP, false, LOOKUP_GNS_AIS, ""},
-      {"DTE", 1, RES_LOOKUP, false, ",0=available,1=not available", ""},
-      {"Reserved", 1, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("User ID"),
+      INTEGER_DESC_FIELD("IMO number", BYTES(4), ",0=unavailable"),
+      ASCII_FIELD("Callsign", BYTES(7)),
+      ASCII_FIELD("Name", BYTES(20)),
+      LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
+      DECIMETERS_FIELD("Length"),
+      DECIMETERS_FIELD("Beam"),
+      DECIMETERS_FIELD("Position reference from Starboard"),
+      DECIMETERS_FIELD("Position reference from Bow"),
+      DATE_FIELD("ETA Date"),
+      TIME_FIELD("ETA Time"),
+      LENGTH_FIELD("Draft", BYTES(2), 0.01, NULL),
+      ASCII_FIELD("Destination", BYTES(20)),
+      LOOKUP_FIELD("AIS version indicator", 2, AIS_VERSION),
+      LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
+      LOOKUP_FIELD("DTE", 1, AVAILABLE),
+      RESERVED_FIELD(1),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Addressed Binary Message",
@@ -4260,19 +3502,19 @@ Pgn pgnList[] = {
      PACKET_FAST,
      13,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Reserved", 1, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Sequence Number", 2, 1, false, 0, ""},
-      {"Destination ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "reserved"},
-      {"Retransmit flag", 1, 1, false, 0, ""},
-      {"Reserved", 1, RES_BINARY, false, 0, "reserved"},
-      {"Number of Bits in Binary Data Field", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Binary Data", BYTES(8), RES_BINARY, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      RESERVED_FIELD(1),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      SIMPLE_FIELD("Sequence Number", 2),
+      MMSI_FIELD("Destination ID"),
+      RESERVED_FIELD(6),
+      SIMPLE_FIELD("Retransmit flag", 1),
+      RESERVED_FIELD(1),
+      INTEGER_FIELD("Number of Bits in Binary Data Field", BYTES(2)),
+      BINARY_FIELD("Binary Data", BYTES(8), NULL),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Acknowledge",
@@ -4281,17 +3523,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      12,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", BYTES(4), 1, false, "MMSI", ""},
-      {"Reserved", 1, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Destination ID #1", BYTES(4), 1, false, 0, ""},
-      {"Sequence Number for ID 1", 2, RES_BINARY, false, 0, "reserved"},
-      {"Reserved", 6, RES_BINARY, false, 0, "reserved"},
-      {"Sequence Number for ID n", 2, RES_BINARY, false, 0, "reserved"},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      RESERVED_FIELD(1),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(2),
+      SIMPLE_FIELD("Destination ID #1", BYTES(4)),
+      BINARY_FIELD("Sequence Number for ID 1", 2, "reserved"),
+      RESERVED_FIELD(6),
+      BINARY_FIELD("Sequence Number for ID n", 2, "reserved"),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Binary Broadcast Message",
@@ -4300,15 +3542,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", BYTES(4), 1, false, 0, ""},
-      {"Reserved", 1, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Number of Bits in Binary Data Field", BYTES(2), 1, false, 0, ""},
-      {"Binary Data", BYTES(255), RES_BINARY, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      SIMPLE_FIELD("Source ID", BYTES(4)),
+      RESERVED_FIELD(1),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(2),
+      SIMPLE_FIELD("Number of Bits in Binary Data Field", BYTES(2)),
+      BINARY_FIELD("Binary Data", BYTES(255), NULL),
+      END_OF_FIELDS}}
 
     ,
     {"AIS SAR Aircraft Position Report",
@@ -4317,28 +3559,25 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Position Accuracy", 1, RES_LOOKUP, false, LOOKUP_POSITION_ACCURACY, ""},
-      {"RAIM", 1, RES_LOOKUP, false, LOOKUP_RAIM_FLAG, ""},
-      {"Time Stamp", 6, RES_LOOKUP, false, LOOKUP_TIME_STAMP, "0-59 = UTC second when the report was generated"},
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"SOG", BYTES(2), 0.1, false, "m/s", ""},
-      {"Communication State",
-       19,
-       RES_BINARY,
-       false,
-       0,
-       "Information used by the TDMA slot allocation algorithm and synchronization information"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Altitude", BYTES(8), 1e-6, true, "m", ""},
-      {"Reserved for Regional Applications", BYTES(1), RES_BINARY, false, 0, ""},
-      {"DTE", 1, RES_LOOKUP, false, ",0=Available,1=Not available", ""},
-      {"Reserved", 7, RES_BINARY, false, 0, "reserved"},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("User ID"),
+      LONGITUDE_I32_FIELD("Longitude"),
+      LATITUDE_I32_FIELD("Latitude"),
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
+      LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
+      ANGLE_U16_FIELD("COG", NULL),
+      SPEED_U16_DM_FIELD("SOG"),
+      BINARY_FIELD("Communication State",
+                   19,
+                   "Information used by the TDMA slot allocation algorithm and synchronization information"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      DISTANCE_FIELD("Altitude", BYTES(8), 1e-6, NULL),
+      BINARY_FIELD("Reserved for Regional Applications", BYTES(1), NULL),
+      LOOKUP_FIELD("DTE", 1, AVAILABLE),
+      RESERVED_FIELD(7),
+      END_OF_FIELDS}}
 
     ,
     {"Radio Frequency/Mode/Power",
@@ -4347,13 +3586,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Rx Frequency", BYTES(4), 10, false, "Hz", ""},
-      {"Tx Frequency", BYTES(4), 10, false, "Hz", ""},
-      {"Radio Channel", BYTES(1), 1, false, 0, ""},
-      {"Tx Power", BYTES(1), 1, false, 0, ""},
-      {"Mode", BYTES(1), 1, false, 0, ""},
-      {"Channel Bandwidth", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {RADIO_FREQUENCY_FIELD("Rx Frequency", 10),
+      RADIO_FREQUENCY_FIELD("Tx Frequency", 10),
+      ONE_BYTE_FIELD("Radio Channel"),
+      ONE_BYTE_FIELD("Tx Power"),
+      ONE_BYTE_FIELD("Mode"),
+      ONE_BYTE_FIELD("Channel Bandwidth"),
+      END_OF_FIELDS}}
 
     ,
     {"AIS UTC/Date Inquiry",
@@ -4362,51 +3601,49 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", 30, 1, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
-      {"Destination ID", 30, 1, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
+      MMSI_FIELD("Destination ID"),
+      END_OF_FIELDS}}
 
     ,
+    // Derived from https://navcen.uscg.gov/ais-addressed-safety-related-message12
     {"AIS Addressed Safety Related Message",
      129801,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      12,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", 30, 1, false, "MMSI", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Sequence Number", 2, 1, false, 0, ""},
-      {"Destination ID", 30, 1, false, "MMSI", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Retransmit flag", 1, 1, false, 0, ""},
-      {"Reserved", 7, RES_BINARY, false, 0, "reserved"},
-      {"Safety Related Text", BYTES(255), RES_ASCII, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      SIMPLE_FIELD("Sequence Number", 2),
+      RESERVED_FIELD(1),
+      MMSI_FIELD("Destination ID"),
+      SIMPLE_FIELD("Retransmit flag", 1),
+      RESERVED_FIELD(7),
+      ASCII_FIELD("Safety Related Text", BYTES(117)),
+      END_OF_FIELDS}}
 
     ,
+    // Derived from https://www.navcen.uscg.gov/ais-safety-related-broadcast-message14
     {"AIS Safety Related Broadcast Message",
      129802,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      8,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", 30, RES_INTEGER, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
-      {"Safety Related Text", BYTES(36), RES_ASCII, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
+      ASCII_FIELD("Safety Related Text", BYTES(162)),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Interrogation",
@@ -4415,23 +3652,19 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      8,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", 30, RES_INTEGER, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, "reserved"}
-
-      ,
-      {"Destination ID", 30, RES_INTEGER, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Message ID A", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Slot Offset A", 14, RES_INTEGER, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Message ID B", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Slot Offset B", 14, RES_INTEGER, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
+      MMSI_FIELD("Destination ID"),
+      INTEGER_FIELD("Message ID A", BYTES(1)),
+      INTEGER_FIELD("Slot Offset A", 14),
+      RESERVED_FIELD(2),
+      INTEGER_FIELD("Message ID B", BYTES(1)),
+      INTEGER_FIELD("Slot Offset B", 14),
+      RESERVED_FIELD(2),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Assignment Mode Command",
@@ -4440,18 +3673,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      23,
      3,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", 30, RES_INTEGER, false, "MMSI", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, "reserved"}
-
-      ,
-      {"Destination ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Offset", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Increment", BYTES(2), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
+      MMSI_FIELD("Destination ID"),
+      INTEGER_FIELD("Offset", BYTES(2)),
+      INTEGER_FIELD("Increment", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Data Link Management Message",
@@ -4460,19 +3690,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      4,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", 30, RES_INTEGER, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, "reserved"}
-
-      ,
-      {"Offset", 10, RES_INTEGER, false, 0, ""},
-      {"Number of Slots", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Timeout", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Increment", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
+      INTEGER_FIELD("Offset", 10),
+      INTEGER_FIELD("Number of Slots", BYTES(1)),
+      INTEGER_FIELD("Timeout", BYTES(1)),
+      INTEGER_FIELD("Increment", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Channel Management",
@@ -4481,28 +3708,27 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", 30, RES_INTEGER, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
-      {"Channel A", 7, 1, false, 0, ""},
-      {"Channel B", 7, 1, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Power", BYTES(1), 1, false, 0, "reserved"},
-      {"Tx/Rx Mode", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"North East Longitude Corner 1", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"North East Latitude Corner 1", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"South West Longitude Corner 1", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"South West Latitude Corner 2", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "reserved"},
-      {"Addressed or Broadcast Message Indicator", 2, 1, false, 0, ""},
-      {"Channel A Bandwidth", 7, RES_INTEGER, false, 0, ""},
-      {"Channel B Bandwidth", 7, RES_INTEGER, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Transitional Zone Size", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
+      SIMPLE_FIELD("Channel A", 7),
+      SIMPLE_FIELD("Channel B", 7),
+      RESERVED_FIELD(2),
+      SIMPLE_DESC_FIELD("Power", BYTES(1), "reserved"),
+      INTEGER_FIELD("Tx/Rx Mode", BYTES(1)),
+      LONGITUDE_I32_FIELD("North East Longitude Corner 1"),
+      LATITUDE_I32_FIELD("North East Latitude Corner 1"),
+      LONGITUDE_I32_FIELD("South West Longitude Corner 1"),
+      LATITUDE_I32_FIELD("South West Latitude Corner 2"),
+      RESERVED_FIELD(6),
+      SIMPLE_FIELD("Addressed or Broadcast Message Indicator", 2),
+      INTEGER_FIELD("Channel A Bandwidth", 7),
+      INTEGER_FIELD("Channel B Bandwidth", 7),
+      RESERVED_FIELD(2),
+      ONE_BYTE_FIELD("Transitional Zone Size"),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Class B Group Assignment",
@@ -4511,23 +3737,22 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat Indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Source ID", 30, RES_INTEGER, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Tx/Rx Mode", 2, RES_INTEGER, false, 0, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "reserved"},
-      {"North East Longitude Corner 1", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"North East Latitude Corner 1", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"South West Longitude Corner 1", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"South West Latitude Corner 2", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Station Type", 6, 1, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Ship and Cargo Filter", 6, 1, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Reporting Interval", BYTES(2), 1, false, 0, ""},
-      {"Quiet Time", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      INTEGER_FIELD("Tx/Rx Mode", 2),
+      RESERVED_FIELD(6),
+      LONGITUDE_I32_FIELD("North East Longitude Corner 1"),
+      LATITUDE_I32_FIELD("North East Latitude Corner 1"),
+      LONGITUDE_I32_FIELD("South West Longitude Corner 1"),
+      LATITUDE_I32_FIELD("South West Latitude Corner 2"),
+      SIMPLE_FIELD("Station Type", 6),
+      RESERVED_FIELD(2),
+      SIMPLE_FIELD("Ship and Cargo Filter", 6),
+      RESERVED_FIELD(2),
+      SIMPLE_FIELD("Reporting Interval", BYTES(2)),
+      SIMPLE_FIELD("Quiet Time", BYTES(2)),
+      END_OF_FIELDS}}
 
     /* http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf */
     /* This is like the worst PGN ever.
@@ -4548,34 +3773,29 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"DSC Format", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FORMAT, ""},
-      {"DSC Category", BYTES(1), RES_LOOKUP, false, "=112", "Distress"},
-      {"DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank"},
-      {"Nature of Distress", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_NATURE, ""},
-      {"Subsequent Communication Mode or 2nd Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_SECOND_TELECOMMAND, ""},
-      {"Proposed Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Proposed Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Latitude of Vessel Reported",
-       BYTES(4),
-       RES_LATITUDE,
-       true,
-       "deg",
-       "offset depends on previous field, as do all following fields"},
-      {"Longitude of Vessel Reported", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Time of Position", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"MMSI of Ship In Distress", BYTES(5), RES_DECIMAL, false, "MMSI", ""},
-      {"DSC EOS Symbol", BYTES(1), 1, false, 0, ""},
-      {"Expansion Enabled", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "reserved"},
-      {"Calling Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Calling Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"DSC Equipment Assigned Message ID", BYTES(2), 1, false, 0, ""},
-      {"DSC Expansion Field Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_EXPANSION_DATA, ""},
-      {"DSC Expansion Field Data", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("DSC Format", BYTES(1), DSC_FORMAT),
+      MATCH_FIELD("DSC Category", BYTES(1), 112, "Distress"),
+      DECIMAL_FIELD("DSC Message Address", BYTES(5), "MMSI, Geographic Area or blank"),
+      LOOKUP_FIELD("Nature of Distress", BYTES(1), DSC_NATURE),
+      LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
+      ASCII_FIELD("Proposed Rx Frequency/Channel", BYTES(6)),
+      ASCII_FIELD("Proposed Tx Frequency/Channel", BYTES(6)),
+      STRINGLAU_FIELD("Telephone Number"),
+      LATITUDE_I32_FIELD("Latitude of Vessel Reported"),
+      LONGITUDE_I32_FIELD("Longitude of Vessel Reported"),
+      TIME_FIELD("Time of Position"),
+      DECIMAL_FIELD("MMSI of Ship In Distress", BYTES(5), NULL),
+      ONE_BYTE_FIELD("DSC EOS Symbol"),
+      LOOKUP_FIELD("Expansion Enabled", 2, YES_NO),
+      RESERVED_FIELD(6),
+      ASCII_FIELD("Calling Rx Frequency/Channel", BYTES(6)),
+      ASCII_FIELD("Calling Tx Frequency/Channel", BYTES(6)),
+      TIME_FIELD("Time of Receipt"),
+      DATE_FIELD("Date of Receipt"),
+      SIMPLE_FIELD("DSC Equipment Assigned Message ID", BYTES(2)),
+      LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
+      STRINGLAU_FIELD("DSC Expansion Field Data"),
+      END_OF_FIELDS}}
 
     ,
     {"DSC Call Information",
@@ -4584,34 +3804,29 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"DSC Format Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FORMAT, ""},
-      {"DSC Category Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_CATEGORY, ""},
-      {"DSC Message Address", BYTES(5), RES_DECIMAL, false, 0, "MMSI, Geographic Area or blank"},
-      {"1st Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_FIRST_TELECOMMAND, ""},
-      {"Subsequent Communication Mode or 2nd Telecommand", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_SECOND_TELECOMMAND, ""},
-      {"Proposed Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Proposed Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Telephone Number", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Latitude of Vessel Reported",
-       BYTES(4),
-       RES_LATITUDE,
-       true,
-       "deg",
-       "offset depends on previous field, as do all following fields"},
-      {"Longitude of Vessel Reported", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Time of Position", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"MMSI of Ship In Distress", BYTES(5), RES_DECIMAL, false, "MMSI", ""},
-      {"DSC EOS Symbol", BYTES(1), 1, false, 0, ""},
-      {"Expansion Enabled", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Reserved", 6, RES_BINARY, false, 0, "reserved"},
-      {"Calling Rx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Calling Tx Frequency/Channel", BYTES(6), RES_ASCII, false, 0, ""},
-      {"Time of Receipt", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Date of Receipt", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"DSC Equipment Assigned Message ID", BYTES(2), 1, false, 0, ""},
-      {"DSC Expansion Field Symbol", BYTES(1), RES_LOOKUP, false, LOOKUP_DSC_EXPANSION_DATA, ""},
-      {"DSC Expansion Field Data", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("DSC Format Symbol", BYTES(1), DSC_FORMAT),
+      LOOKUP_FIELD("DSC Category Symbol", BYTES(1), DSC_CATEGORY),
+      DECIMAL_FIELD("DSC Message Address", BYTES(5), "MMSI, Geographic Area or blank"),
+      LOOKUP_FIELD("1st Telecommand", BYTES(1), DSC_FIRST_TELECOMMAND),
+      LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
+      ASCII_FIELD("Proposed Rx Frequency/Channel", BYTES(6)),
+      ASCII_FIELD("Proposed Tx Frequency/Channel", BYTES(6)),
+      STRINGLAU_FIELD("Telephone Number"),
+      LATITUDE_I32_FIELD("Latitude of Vessel Reported"),
+      LONGITUDE_I32_FIELD("Longitude of Vessel Reported"),
+      TIME_FIELD("Time of Position"),
+      DECIMAL_FIELD("MMSI of Ship In Distress", BYTES(5), NULL),
+      ONE_BYTE_FIELD("DSC EOS Symbol"),
+      LOOKUP_FIELD("Expansion Enabled", 2, YES_NO),
+      RESERVED_FIELD(6),
+      ASCII_FIELD("Calling Rx Frequency/Channel", BYTES(6)),
+      ASCII_FIELD("Calling Tx Frequency/Channel", BYTES(6)),
+      TIME_FIELD("Time of Receipt"),
+      DATE_FIELD("Date of Receipt"),
+      SIMPLE_FIELD("DSC Equipment Assigned Message ID", BYTES(2)),
+      LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
+      STRINGLAU_FIELD("DSC Expansion Field Data"),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Class B static data (msg 24 Part A)",
@@ -4620,14 +3835,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      27,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Name", BYTES(20), RES_ASCII, false, 0, ""},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
-      {"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("User ID"),
+      ASCII_FIELD("Name", BYTES(20)),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
+      INTEGER_FIELD("Sequence ID", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"AIS Class B static data (msg 24 Part B)",
@@ -4636,29 +3851,29 @@ Pgn pgnList[] = {
      PACKET_FAST,
      34,
      0,
-     {{"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, ""},
-      {"Vendor ID", BYTES(7), RES_ASCII, false, 0, ""},
-      {"Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable"},
-      {"Length", BYTES(2), 0.1, false, "m", ""},
-      {"Beam", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
-      {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "MMSI of mother ship sent by daughter vessels"},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Spare", 6, RES_INTEGER, false, 0, ",0=unavailable"},
-      {"AIS Transceiver information", 5, RES_LOOKUP, false, LOOKUP_AIS_TRANSCEIVER, ""},
-      {"Reserved", 3, RES_BINARY, false, 0, "reserved"},
-      {"Sequence ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("User ID"),
+      LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
+      ASCII_FIELD("Vendor ID", BYTES(7)),
+      ASCII_FIELD("Callsign", BYTES(7)),
+      DECIMETERS_FIELD("Length"),
+      DECIMETERS_FIELD("Beam"),
+      DECIMETERS_FIELD("Position reference from Starboard"),
+      DECIMETERS_FIELD("Position reference from Bow"),
+      MMSI_FIELD("Mothership User ID"),
+      RESERVED_FIELD(2),
+      INTEGER_DESC_FIELD("Spare", 6, ",0=unavailable"),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
+      INTEGER_FIELD("Sequence ID", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
-    {"Label", 130060, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, 0, 0, {{0}}}
+    {"Label", 130060, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, 0, 0, {END_OF_FIELDS}}
 
     ,
-    {"Channel Source Configuration", 130061, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, 0, 0, {{0}}}
+    {"Channel Source Configuration", 130061, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, 0, 0, {END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - Database List",
@@ -4667,21 +3882,21 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      9,
-     {{"Start Database ID", BYTES(1), 1, false, 0, ""},
-      {"nItems", BYTES(1), 1, false, 0, ""},
-      {"Number of Databases Available", BYTES(1), 1, false, 0, ""}
+     {ONE_BYTE_FIELD("Start Database ID"),
+      ONE_BYTE_FIELD("nItems"),
+      ONE_BYTE_FIELD("Number of Databases Available")
 
-      ,
-      {"Database ID", BYTES(1), 1, false, 0, ""},
-      {"Database Name", BYTES(8), RES_ASCII, false, 0, ""},
-      {"Database Timestamp", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Database Datestamp", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"WP Position Resolution", 6, 1, false, 0, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Number of Routes in Database", BYTES(2), 1, false, 0, ""},
-      {"Number of WPs in Database", BYTES(2), 1, false, 0, ""},
-      {"Number of Bytes in Database", BYTES(2), 1, false, 0, ""},
-      {0}}}
+          ,
+      ONE_BYTE_FIELD("Database ID"),
+      ASCII_FIELD("Database Name", BYTES(8)),
+      TIME_FIELD("Database Timestamp"),
+      DATE_FIELD("Database Datestamp"),
+      SIMPLE_FIELD("WP Position Resolution", 6),
+      RESERVED_FIELD(2),
+      SIMPLE_FIELD("Number of Routes in Database", BYTES(2)),
+      SIMPLE_FIELD("Number of WPs in Database", BYTES(2)),
+      SIMPLE_FIELD("Number of Bytes in Database", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - Route List",
@@ -4690,18 +3905,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      6,
-     {{"Start Route ID", BYTES(1), 1, false, 0, ""},
-      {"nItems", BYTES(1), 1, false, 0, ""},
-      {"Number of Routes in Database", BYTES(1), 1, false, 0, ""}
+     {ONE_BYTE_FIELD("Start Route ID"),
+      ONE_BYTE_FIELD("nItems"),
+      ONE_BYTE_FIELD("Number of Routes in Database")
 
-      ,
-      {"Database ID", BYTES(1), 1, false, 0, ""},
-      {"Route ID", BYTES(1), 1, false, 0, ""},
-      {"Route Name", BYTES(8), RES_ASCII, false, 0, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "reserved"},
-      {"WP Identification Method", 2, 1, false, 0, ""},
-      {"Route Status", 2, 1, false, 0, ""},
-      {0}}}
+          ,
+      ONE_BYTE_FIELD("Database ID"),
+      ONE_BYTE_FIELD("Route ID"),
+      ASCII_FIELD("Route Name", BYTES(8)),
+      RESERVED_FIELD(4),
+      SIMPLE_FIELD("WP Identification Method", 2),
+      SIMPLE_FIELD("Route Status", 2),
+      END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - Route/WP-List Attributes",
@@ -4710,19 +3925,19 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Database ID", BYTES(1), 1, false, 0, ""},
-      {"Route ID", BYTES(1), 1, false, 0, ""},
-      {"Route/WP-List Name", BYTES(8), RES_ASCII, false, 0, ""},
-      {"Route/WP-List Timestamp", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Route/WP-List Datestamp", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Change at Last Timestamp", BYTES(1), 1, false, 0, ""},
-      {"Number of WPs in the Route/WP-List", BYTES(2), 1, false, 0, ""},
-      {"Critical supplementary parameters", BYTES(1), 1, false, 0, ""},
-      {"Navigation Method", 2, 1, false, 0, ""},
-      {"WP Identification Method", 2, 1, false, 0, ""},
-      {"Route Status", 2, 1, false, 0, ""},
-      {"XTE Limit for the Route", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("Database ID"),
+      ONE_BYTE_FIELD("Route ID"),
+      ASCII_FIELD("Route/WP-List Name", BYTES(8)),
+      TIME_FIELD("Route/WP-List Timestamp"),
+      DATE_FIELD("Route/WP-List Datestamp"),
+      ONE_BYTE_FIELD("Change at Last Timestamp"),
+      SIMPLE_FIELD("Number of WPs in the Route/WP-List", BYTES(2)),
+      ONE_BYTE_FIELD("Critical supplementary parameters"),
+      SIMPLE_FIELD("Navigation Method", 2),
+      SIMPLE_FIELD("WP Identification Method", 2),
+      SIMPLE_FIELD("Route Status", 2),
+      SIMPLE_FIELD("XTE Limit for the Route", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - Route - WP Name & Position",
@@ -4731,18 +3946,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      4,
-     {{"Start RPS#", BYTES(1), 1, false, 0, ""},
-      {"nItems", BYTES(1), 1, false, 0, ""},
-      {"Number of WPs in the Route/WP-List", BYTES(2), 1, false, 0, ""},
-      {"Database ID", BYTES(1), 1, false, 0, ""},
-      {"Route ID", BYTES(1), 1, false, 0, ""}
+     {ONE_BYTE_FIELD("Start RPS#"),
+      ONE_BYTE_FIELD("nItems"),
+      SIMPLE_FIELD("Number of WPs in the Route/WP-List", BYTES(2)),
+      ONE_BYTE_FIELD("Database ID"),
+      ONE_BYTE_FIELD("Route ID")
 
-      ,
-      {"WP ID", BYTES(1), 1, false, 0, ""},
-      {"WP Name", BYTES(8), RES_ASCII, false, 0, ""},
-      {"WP Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"WP Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {0}}}
+          ,
+      ONE_BYTE_FIELD("WP ID"),
+      ASCII_FIELD("WP Name", BYTES(8)),
+      LATITUDE_I32_FIELD("WP Latitude"),
+      LONGITUDE_I32_FIELD("WP Longitude"),
+      END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - Route - WP Name",
@@ -4751,14 +3966,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"Start RPS#", BYTES(1), 1, false, 0, ""},
-      {"nItems", BYTES(1), 1, false, 0, ""},
-      {"Number of WPs in the Route/WP-List", BYTES(2), 1, false, 0, ""},
-      {"Database ID", BYTES(1), 1, false, 0, ""},
-      {"Route ID", BYTES(1), 1, false, 0, ""},
-      {"WP ID", BYTES(1), 1, false, 0, ""},
-      {"WP Name", BYTES(8), RES_ASCII, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("Start RPS#"),
+      ONE_BYTE_FIELD("nItems"),
+      SIMPLE_FIELD("Number of WPs in the Route/WP-List", BYTES(2)),
+      ONE_BYTE_FIELD("Database ID"),
+      ONE_BYTE_FIELD("Route ID"),
+      ONE_BYTE_FIELD("WP ID"),
+      ASCII_FIELD("WP Name", BYTES(8)),
+      END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - XTE Limit & Navigation Method",
@@ -4767,18 +3982,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      6,
-     {{"Start RPS#", BYTES(1), 1, false, 0, ""},
-      {"nItems", BYTES(1), 1, false, 0, ""},
-      {"Number of WPs with a specific XTE Limit or Nav. Method", BYTES(2), 1, false, 0, ""}
+     {ONE_BYTE_FIELD("Start RPS#"),
+      ONE_BYTE_FIELD("nItems"),
+      SIMPLE_FIELD("Number of WPs with a specific XTE Limit or Nav. Method", BYTES(2))
 
-      ,
-      {"Database ID", BYTES(1), 1, false, 0, ""},
-      {"Route ID", BYTES(1), 1, false, 0, ""},
-      {"RPS#", BYTES(1), 1, false, 0, ""},
-      {"XTE limit in the leg after WP", BYTES(2), 1, false, 0, ""},
-      {"Nav. Method in the leg after WP", 4, 1, false, 0, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {0}}}
+          ,
+      ONE_BYTE_FIELD("Database ID"),
+      ONE_BYTE_FIELD("Route ID"),
+      ONE_BYTE_FIELD("RPS#"),
+      SIMPLE_FIELD("XTE limit in the leg after WP", BYTES(2)),
+      SIMPLE_FIELD("Nav. Method in the leg after WP", 4),
+      RESERVED_FIELD(4),
+      END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - WP Comment",
@@ -4787,16 +4002,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"Start ID", BYTES(1), 1, false, 0, ""},
-      {"nItems", BYTES(1), 1, false, 0, ""},
-      {"Number of WPs with Comments", BYTES(2), 1, false, 0, ""},
-      {"Database ID", BYTES(1), 1, false, 0, ""},
-      {"Route ID", BYTES(1), 1, false, 0, ""}
+     {ONE_BYTE_FIELD("Start ID"),
+      ONE_BYTE_FIELD("nItems"),
+      SIMPLE_FIELD("Number of WPs with Comments", BYTES(2)),
+      ONE_BYTE_FIELD("Database ID"),
+      ONE_BYTE_FIELD("Route ID")
 
-      ,
-      {"WP ID / RPS#", BYTES(1), 1, false, 0, ""},
-      {"Comment", BYTES(8), RES_ASCII, false, 0, ""},
-      {0}}}
+          ,
+      ONE_BYTE_FIELD("WP ID / RPS#"),
+      ASCII_FIELD("Comment", BYTES(8)),
+      END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - Route Comment",
@@ -4805,15 +4020,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"Start Route ID", BYTES(1), 1, false, 0, ""},
-      {"nItems", BYTES(1), 1, false, 0, ""},
-      {"Number of Routes with Comments", BYTES(2), 1, false, 0, ""},
-      {"Database ID", BYTES(1), 1, false, 0, ""}
+     {ONE_BYTE_FIELD("Start Route ID"),
+      ONE_BYTE_FIELD("nItems"),
+      SIMPLE_FIELD("Number of Routes with Comments", BYTES(2)),
+      ONE_BYTE_FIELD("Database ID")
 
-      ,
-      {"Route ID", BYTES(1), 1, false, 0, ""},
-      {"Comment", BYTES(8), RES_ASCII, false, 0, ""},
-      {0}}}
+          ,
+      ONE_BYTE_FIELD("Route ID"),
+      ASCII_FIELD("Comment", BYTES(8)),
+      END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - Database Comment",
@@ -4822,14 +4037,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"Start Database ID", BYTES(1), 1, false, 0, ""},
-      {"nItems", BYTES(1), 1, false, 0, ""},
-      {"Number of Databases with Comments", BYTES(2), 1, false, 0, ""}
+     {ONE_BYTE_FIELD("Start Database ID"),
+      ONE_BYTE_FIELD("nItems"),
+      SIMPLE_FIELD("Number of Databases with Comments", BYTES(2))
 
-      ,
-      {"Database ID", BYTES(1), 1, false, 0, ""},
-      {"Comment", BYTES(8), RES_ASCII, false, 0, ""},
-      {0}}}
+          ,
+      ONE_BYTE_FIELD("Database ID"),
+      ASCII_FIELD("Comment", BYTES(8)),
+      END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - Radius of Turn",
@@ -4838,16 +4053,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      2,
-     {{"Start RPS#", BYTES(1), 1, false, 0, ""},
-      {"nItems", BYTES(1), 1, false, 0, ""},
-      {"Number of WPs with a specific Radius of Turn", BYTES(2), 1, false, 0, ""},
-      {"Database ID", BYTES(1), 1, false, 0, ""},
-      {"Route ID", BYTES(1), 1, false, 0, ""}
+     {ONE_BYTE_FIELD("Start RPS#"),
+      ONE_BYTE_FIELD("nItems"),
+      SIMPLE_FIELD("Number of WPs with a specific Radius of Turn", BYTES(2)),
+      ONE_BYTE_FIELD("Database ID"),
+      ONE_BYTE_FIELD("Route ID")
 
-      ,
-      {"RPS#", BYTES(1), 1, false, 0, ""},
-      {"Radius of Turn", BYTES(2), 1, false, 0, ""},
-      {0}}}
+          ,
+      ONE_BYTE_FIELD("RPS#"),
+      SIMPLE_FIELD("Radius of Turn", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Route and WP Service - WP List - WP Name & Position",
@@ -4856,18 +4071,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      4,
-     {{"Start WP ID", BYTES(1), 1, false, 0, ""},
-      {"nItems", BYTES(1), 1, false, 0, ""},
-      {"Number of valid WPs in the WP-List", BYTES(2), 1, false, 0, ""},
-      {"Database ID", BYTES(1), 1, false, 0, ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, "reserved"}
-
-      ,
-      {"WP ID", BYTES(1), 1, false, 0, ""},
-      {"WP Name", BYTES(8), RES_ASCII, false, 0, ""},
-      {"WP Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"WP Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("Start WP ID"),
+      ONE_BYTE_FIELD("nItems"),
+      SIMPLE_FIELD("Number of valid WPs in the WP-List", BYTES(2)),
+      ONE_BYTE_FIELD("Database ID"),
+      RESERVED_FIELD(BYTES(1)),
+      ONE_BYTE_FIELD("WP ID"),
+      ASCII_FIELD("WP Name", BYTES(8)),
+      LATITUDE_I32_FIELD("WP Latitude"),
+      LONGITUDE_I32_FIELD("WP Longitude"),
+      END_OF_FIELDS}}
 
     /* http://askjackrabbit.typepad.com/ask_jack_rabbit/page/7/ */
     ,
@@ -4877,12 +4090,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"Wind Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, ""},
-      {"Reserved", 5 + BYTES(2), RES_BINARY, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      SPEED_U16_CM_FIELD("Wind Speed"),
+      ANGLE_U16_FIELD("Wind Angle", NULL),
+      LOOKUP_FIELD("Reference", 3, WIND_REFERENCE),
+      RESERVED_FIELD(5 + BYTES(2)),
+      END_OF_FIELDS}}
 
     /* Water temperature, Transducer Measurement */
     ,
@@ -4892,12 +4105,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Outside Ambient Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      TEMPERATURE_FIELD("Water Temperature"),
+      TEMPERATURE_FIELD("Outside Ambient Air Temperature"),
+      PRESSURE_FIELD("Atmospheric Pressure"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Environmental Parameters",
@@ -4906,13 +4119,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Temperature Source", 6, RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
-      {"Humidity Source", 2, RES_LOOKUP, false, LOOKUP_HUMIDITY_SOURCE, ""},
-      {"Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Humidity", BYTES(2), RES_PERCENTAGE, true, "%", ""},
-      {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      LOOKUP_FIELD("Temperature Source", 6, TEMPERATURE_SOURCE),
+      LOOKUP_FIELD("Humidity Source", 2, HUMIDITY_SOURCE),
+      TEMPERATURE_FIELD("Temperature"),
+      PERCENTAGE_U16_FIELD("Humidity"),
+      PRESSURE_FIELD("Atmospheric Pressure"),
+      END_OF_FIELDS}}
 
     ,
     {"Temperature",
@@ -4921,12 +4134,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
-      {"Actual Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Set Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INSTANCE_FIELD,
+      LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
+      TEMPERATURE_FIELD("Actual Temperature"),
+      TEMPERATURE_FIELD("Set Temperature"),
+      END_OF_FIELDS}}
 
     ,
     {"Humidity",
@@ -4935,12 +4148,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_HUMIDITY_SOURCE, ""},
-      {"Actual Humidity", BYTES(2), RES_PERCENTAGE, true, "%", ""},
-      {"Set Humidity", BYTES(2), RES_PERCENTAGE, true, "%", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INSTANCE_FIELD,
+      LOOKUP_FIELD("Source", BYTES(1), HUMIDITY_SOURCE),
+      PERCENTAGE_U16_FIELD("Actual Humidity"),
+      PERCENTAGE_U16_FIELD("Set Humidity"),
+      END_OF_FIELDS}}
 
     ,
     {"Actual Pressure",
@@ -4949,11 +4162,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, ""},
-      {"Pressure", BYTES(4), RES_PRESSURE_HIRES, true, "dPa", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INSTANCE_FIELD,
+      LOOKUP_FIELD("Source", BYTES(1), PRESSURE_SOURCE),
+      HIRES_PRESSURE_FIELD("Pressure", true),
+      END_OF_FIELDS}}
 
     ,
     {"Set Pressure",
@@ -4962,11 +4175,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_PRESSURE_SOURCE, ""},
-      {"Pressure", BYTES(4), RES_PRESSURE_HIRES, false, "dPa", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INSTANCE_FIELD,
+      LOOKUP_FIELD("Source", BYTES(1), PRESSURE_SOURCE),
+      HIRES_PRESSURE_FIELD("Pressure", false),
+      END_OF_FIELDS}}
 
     ,
     {"Temperature Extended Range",
@@ -4975,12 +4188,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
-      {"Temperature", BYTES(3), RES_TEMPERATURE_HIRES, false, "K", ""},
-      {"Set Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INSTANCE_FIELD,
+      LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
+      TEMPERATURE_U24_FIELD("Temperature"),
+      TEMPERATURE_HIGH_FIELD("Set Temperature"),
+      END_OF_FIELDS}}
 
     ,
     {"Tide Station Data",
@@ -4989,18 +4202,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      20,
      0,
-     {{"Mode", 4, RES_LOOKUP, false, LOOKUP_RESIDUAL_MODE, ""},
-      {"Tide Tendency", 2, RES_LOOKUP, false, ",0=Falling,1=Rising", ""},
-      {"Reserved", 2, RES_BINARY, false, 0, ""},
-      {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Tide Level", BYTES(2), 0.001, true, "m", "Relative to MLLW"},
-      {"Tide Level standard deviation", BYTES(2), 0.01, false, "m", ""},
-      {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
-      {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Mode", 4, RESIDUAL_MODE),
+      LOOKUP_FIELD("Tide Tendency", 2, TIDE),
+      RESERVED_FIELD(2),
+      DATE_FIELD("Measurement Date"),
+      TIME_FIELD("Measurement Time"),
+      LATITUDE_I32_FIELD("Station Latitude"),
+      LONGITUDE_I32_FIELD("Station Longitude"),
+      DISTANCE_FIELD("Tide Level", BYTES(2), 0.001, "Relative to MLLW"),
+      LENGTH_FIELD("Tide Level standard deviation", BYTES(2), 0.01, NULL),
+      STRINGVAR_FIELD("Station ID"),
+      STRINGVAR_FIELD("Station Name"),
+      END_OF_FIELDS}}
 
     ,
     {"Salinity Station Data",
@@ -5009,23 +4222,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      22,
      0,
-     {{"Mode", 4, RES_LOOKUP, false, LOOKUP_RESIDUAL_MODE, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Salinity",
-       BYTES(4),
-       RES_FLOAT,
-       true,
-       "ppt",
-       "The average Salinity of ocean water is about 35 grams of salts per kilogram of sea water (g/kg), usually written as 35 ppt "
-       "which is read as 35 parts per thousand."},
-      {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
-      {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Mode", 4, RESIDUAL_MODE),
+      RESERVED_FIELD(4),
+      DATE_FIELD("Measurement Date"),
+      TIME_FIELD("Measurement Time"),
+      LATITUDE_I32_FIELD("Station Latitude"),
+      LONGITUDE_I32_FIELD("Station Longitude"),
+      FLOAT_FIELD("Salinity", "ppt", NULL),
+      TEMPERATURE_FIELD("Water Temperature"),
+      STRINGVAR_FIELD("Station ID"),
+      STRINGVAR_FIELD("Station Name"),
+      END_OF_FIELDS}}
 
     ,
     {"Current Station Data",
@@ -5034,19 +4241,19 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Mode", 4, 1, false, 0, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Measurement Depth", BYTES(4), 0.01, false, "m", "Depth below transducer"},
-      {"Current speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"Current flow direction", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Station ID", BYTES(2), RES_STRING, false, 0, ""},
-      {"Station Name", BYTES(2), RES_STRING, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Mode", 4),
+      RESERVED_FIELD(4),
+      DATE_FIELD("Measurement Date"),
+      TIME_FIELD("Measurement Time"),
+      LATITUDE_I32_FIELD("Station Latitude"),
+      LONGITUDE_I32_FIELD("Station Longitude"),
+      LENGTH_FIELD("Measurement Depth", BYTES(4), 0.01, "Depth below transducer"),
+      SPEED_U16_CM_FIELD("Current speed"),
+      ANGLE_U16_FIELD("Current flow direction", NULL),
+      TEMPERATURE_FIELD("Water Temperature"),
+      STRINGVAR_FIELD("Station ID"),
+      STRINGVAR_FIELD("Station Name"),
+      END_OF_FIELDS}}
 
     ,
     {"Meteorological Station Data",
@@ -5055,22 +4262,22 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x1e,
      0,
-     {{"Mode", 4, 1, false, 0, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"Wind Direction", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Wind Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, ""},
-      {"Reserved", 5, RES_BINARY, false, "", "reserved"},
-      {"Wind Gusts", BYTES(2), 0.01, false, "m/s", ""},
-      {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Ambient Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Station ID", BYTES(257), RES_STRING, false, 0, ""},
-      {"Station Name", BYTES(257), RES_STRING, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Mode", 4),
+      RESERVED_FIELD(4),
+      DATE_FIELD("Measurement Date"),
+      TIME_FIELD("Measurement Time"),
+      LATITUDE_I32_FIELD("Station Latitude"),
+      LONGITUDE_I32_FIELD("Station Longitude"),
+      SPEED_U16_CM_FIELD("Wind Speed"),
+      ANGLE_U16_FIELD("Wind Direction", NULL),
+      LOOKUP_FIELD("Wind Reference", 3, WIND_REFERENCE),
+      RESERVED_FIELD(5),
+      SPEED_U16_CM_FIELD("Wind Gusts"),
+      PRESSURE_FIELD("Atmospheric Pressure"),
+      TEMPERATURE_FIELD("Ambient Temperature"),
+      STRINGVAR_FIELD("Station ID"),
+      STRINGVAR_FIELD("Station Name"),
+      END_OF_FIELDS}}
 
     ,
     {"Moored Buoy Station Data",
@@ -5079,28 +4286,28 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Mode", 4, 1, false, 0, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, ""},
-      {"Measurement Date", BYTES(2), RES_DATE, false, "days", "Days since January 1, 1970"},
-      {"Measurement Time", BYTES(4), RES_TIME, false, "s", "Seconds since midnight"},
-      {"Station Latitude", BYTES(4), RES_LATITUDE, true, "deg", ""},
-      {"Station Longitude", BYTES(4), RES_LONGITUDE, true, "deg", ""},
-      {"Wind Speed", BYTES(2), 0.01, false, "m/s", ""},
-      {"Wind Direction", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Wind Reference", 3, RES_LOOKUP, false, LOOKUP_WIND_REFERENCE, ""},
-      {"Reserved", 5, RES_BINARY, false, "", "reserved"},
-      {"Wind Gusts", BYTES(2), 0.01, false, "m/s", ""},
-      {"Wave Height", BYTES(2), 1, false, 0, ""},
-      {"Dominant Wave Period", BYTES(2), 1, false, 0, ""},
-      {"Atmospheric Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Pressure Tendency Rate", BYTES(2), 1, false, "", ""},
-      {"Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Station ID", BYTES(8), RES_ASCII, false, 0, ""},
-      {0}}}
+     {SIMPLE_FIELD("Mode", 4),
+      RESERVED_FIELD(4),
+      DATE_FIELD("Measurement Date"),
+      TIME_FIELD("Measurement Time"),
+      LATITUDE_I32_FIELD("Station Latitude"),
+      LONGITUDE_I32_FIELD("Station Longitude"),
+      SPEED_U16_CM_FIELD("Wind Speed"),
+      ANGLE_U16_FIELD("Wind Direction", NULL),
+      LOOKUP_FIELD("Wind Reference", 3, WIND_REFERENCE),
+      RESERVED_FIELD(5),
+      SPEED_U16_CM_FIELD("Wind Gusts"),
+      SIMPLE_FIELD("Wave Height", BYTES(2)),
+      SIMPLE_FIELD("Dominant Wave Period", BYTES(2)),
+      PRESSURE_FIELD("Atmospheric Pressure"),
+      NUMBER_FIELD("Pressure Tendency Rate", BYTES(2), 1, false, NULL, NULL),
+      TEMPERATURE_FIELD("Air Temperature"),
+      TEMPERATURE_FIELD("Water Temperature"),
+      ASCII_FIELD("Station ID", BYTES(8)),
+      END_OF_FIELDS}}
 
     ,
-    {"Payload Mass", 130560, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, 0, 0, {{0}}}
+    {"Payload Mass", 130560, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, 0, 0, {END_OF_FIELDS}}
 
     /* http://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
 
@@ -5117,35 +4324,30 @@ Pgn pgnList[] = {
      PACKET_FAST,
      24,
      0,
-     {{"Watermaker Operating State",
-       6,
-       RES_LOOKUP,
-       false,
-       ",0=Stopped,1=Starting,2=Running,3=Stopping,4=Flushing,5=Rinsing,6=Initiating,7=Manual Mode,62=Error,63=Unavailable",
-       ""},
-      {"Production Start/Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Rinse Start/Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Low Pressure Pump Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"High Pressure Pump Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Emergency Stop", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Product Solenoid Valve Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"Flush Mode Status", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Salinity Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"Sensor Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"Oil Change Indicator Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"Filter Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"System Status", 2, RES_LOOKUP, false, LOOKUP_OK_WARNING, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
-      {"Salinity", BYTES(2), RES_INTEGER, false, "ppm", ""},
-      {"Product Water Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Pre-filter Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Post-filter Pressure", BYTES(2), RES_PRESSURE, false, "hPa", ""},
-      {"Feed Pressure", BYTES(2), RES_PRESSURE, true, "kPa", ""},
-      {"System High Pressure", BYTES(2), RES_PRESSURE, false, "kPa", ""},
-      {"Product Water Flow", BYTES(2), 0.1, true, "L/h", ""},
-      {"Brine Water Flow", BYTES(2), 0.1, true, "L/h", ""},
-      {"Run Time", BYTES(4), RES_INTEGER, false, "s", ""},
-      {0}}}
+     {LOOKUP_FIELD("Watermaker Operating State", 6, WATERMAKER_STATE),
+      LOOKUP_FIELD("Production Start/Stop", 2, YES_NO),
+      LOOKUP_FIELD("Rinse Start/Stop", 2, YES_NO),
+      LOOKUP_FIELD("Low Pressure Pump Status", 2, YES_NO),
+      LOOKUP_FIELD("High Pressure Pump Status", 2, YES_NO),
+      LOOKUP_FIELD("Emergency Stop", 2, YES_NO),
+      LOOKUP_FIELD("Product Solenoid Valve Status", 2, OK_WARNING),
+      LOOKUP_FIELD("Flush Mode Status", 2, YES_NO),
+      LOOKUP_FIELD("Salinity Status", 2, OK_WARNING),
+      LOOKUP_FIELD("Sensor Status", 2, OK_WARNING),
+      LOOKUP_FIELD("Oil Change Indicator Status", 2, OK_WARNING),
+      LOOKUP_FIELD("Filter Status", 2, OK_WARNING),
+      LOOKUP_FIELD("System Status", 2, OK_WARNING),
+      RESERVED_FIELD(2),
+      INTEGER_UNIT_FIELD("Salinity", BYTES(2), "ppm"),
+      TEMPERATURE_FIELD("Product Water Temperature"),
+      PRESSURE_FIELD("Pre-filter Pressure"),
+      PRESSURE_FIELD("Post-filter Pressure"),
+      HIGH_PRESSURE_FIELD("Feed Pressure", true),
+      HIGH_PRESSURE_FIELD("System High Pressure", false),
+      NUMBER_FIELD("Product Water Flow", BYTES(2), 0.1, true, "L/h", NULL),
+      NUMBER_FIELD("Brine Water Flow", BYTES(2), 0.1, true, "L/h", NULL),
+      ELAPSED_FIELD("Run Time", BYTES(4), 1),
+      END_OF_FIELDS}}
 
     /* https://www.nmea.org/Assets/20160725%20corrigenda%20pgn%20130569%20published.pdf */
     ,
@@ -5155,24 +4357,24 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      0,
-     {{"Zone", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
-      {"Source", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SOURCE, ""},
-      {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
-      {"ID", BYTES(4), RES_INTEGER, false, 0, "Unique file ID"},
-      {"Play status", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_PLAY_STATUS, ""},
-      {"Elapsed Track Time", BYTES(2), RES_TIME, false, "s", ""},
-      {"Track Time", BYTES(2), RES_TIME, false, "s", ""},
-      {"Repeat Status", 4, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_REPEAT_STATUS, ""},
-      {"Shuffle Status", 4, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SHUFFLE_STATUS, ""},
-      {"Save Favorite Number", BYTES(1), RES_INTEGER, false, 0, "Used to command AV to save current station as favorite"},
-      {"Play Favorite Number", BYTES(2), RES_INTEGER, false, 0, "Used to command AV to play indicated favorite station"},
-      {"Thumbs Up/Down", BYTES(1), RES_INTEGER, false, LOOKUP_ENTERTAINMENT_LIKE_STATUS, ""},
-      {"Signal Strength", BYTES(1), RES_INTEGER, false, "%", ""},
-      {"Radio Frequency", BYTES(4), 10, false, "Hz", ""},
-      {"HD Frequency Multicast", BYTES(1), RES_INTEGER, false, 0, "Digital sub channel"},
-      {"Delete Favorite Number", BYTES(1), RES_INTEGER, false, 0, "Used to command AV to delete current station as favorite"},
-      {"Total Number of Tracks", BYTES(2), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
+      LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
+      INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
+      INTEGER_DESC_FIELD("ID", BYTES(4), "Unique file ID"),
+      LOOKUP_FIELD("Play status", BYTES(1), ENTERTAINMENT_PLAY_STATUS),
+      SHORT_TIME_FIELD("Elapsed Track Time"),
+      SHORT_TIME_FIELD("Track Time"),
+      LOOKUP_FIELD("Repeat Status", 4, ENTERTAINMENT_REPEAT_STATUS),
+      LOOKUP_FIELD("Shuffle Status", 4, ENTERTAINMENT_SHUFFLE_STATUS),
+      INTEGER_DESC_FIELD("Save Favorite Number", BYTES(1), "Used to command AV to save current station as favorite"),
+      INTEGER_DESC_FIELD("Play Favorite Number", BYTES(2), "Used to command AV to play indicated favorite station"),
+      LOOKUP_FIELD("Thumbs Up/Down", BYTES(1), ENTERTAINMENT_LIKE_STATUS),
+      PERCENTAGE_U8_FIELD("Signal Strength"),
+      RADIO_FREQUENCY_FIELD("Radio Frequency", 10),
+      INTEGER_DESC_FIELD("HD Frequency Multicast", BYTES(1), "Digital sub channel"),
+      INTEGER_DESC_FIELD("Delete Favorite Number", BYTES(1), "Used to command AV to delete current station as favorite"),
+      INTEGER_FIELD("Total Number of Tracks", BYTES(2)),
+      END_OF_FIELDS}}
 
     /* https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf */
 
@@ -5183,24 +4385,24 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      0,
-     {{"Source", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SOURCE, ""},
-      {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
-      {"ID", BYTES(4), RES_INTEGER, false, 0, "Unique file ID"},
-      {"Type", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_TYPE, ""},
-      {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Track", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Station", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Favorite", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Radio frequency", BYTES(4), 10., false, "Hz", ""},
-      {"HD Frequency", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Zone", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
-      {"In play queue", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Lock status", 2, RES_LOOKUP, false, ",0=Unlocked,1=Locked", "Sirius XM only"},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Artist", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Album", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Station", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
+      INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
+      INTEGER_DESC_FIELD("ID", BYTES(4), "Unique file ID"),
+      LOOKUP_FIELD("Type", BYTES(1), ENTERTAINMENT_TYPE),
+      STRINGLAU_FIELD("Name"),
+      INTEGER_FIELD("Track", BYTES(2)),
+      INTEGER_FIELD("Station", BYTES(2)),
+      INTEGER_FIELD("Favorite", BYTES(1)),
+      RADIO_FREQUENCY_FIELD("Radio Frequency", 10.),
+      INTEGER_FIELD("HD Frequency", BYTES(1)),
+      LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
+      LOOKUP_FIELD("In play queue", 2, YES_NO),
+      LOOKUP_FIELD("Locked", 2, YES_NO),
+      RESERVED_FIELD(4),
+      STRINGLAU_FIELD("Artist"),
+      STRINGLAU_FIELD("Album"),
+      STRINGLAU_FIELD("Station"),
+      END_OF_FIELDS}}
 
     ,
     {"Library Data Group",
@@ -5210,16 +4412,16 @@ Pgn pgnList[] = {
      233,
      2,
      {
-         {"Source", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SOURCE, ""},
-         {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
-         {"Zone", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
-         {"Group ID", BYTES(4), RES_INTEGER, false, 0, "Unique group ID"},
-         {"ID offset", BYTES(2), RES_INTEGER, false, 0, "First ID in this PGN"},
-         {"ID count", BYTES(2), RES_INTEGER, false, 0, "Number of IDs in this PGN"},
-         {"Total ID count", BYTES(2), RES_INTEGER, false, 0, "Total IDs in group"},
-         {"ID type", BYTES(1), RES_LOOKUP, false, ",0=Group,1=File,2=Encrypted group,3=Encrypted file", ""},
-         {"ID", BYTES(4), RES_INTEGER, false, 0, ""},
-         {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""}
+         LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
+         INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
+         LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
+         INTEGER_DESC_FIELD("Group ID", BYTES(4), "Unique group ID"),
+         INTEGER_DESC_FIELD("ID offset", BYTES(2), "First ID in this PGN"),
+         INTEGER_DESC_FIELD("ID count", BYTES(2), "Number of IDs in this PGN"),
+         INTEGER_DESC_FIELD("Total ID count", BYTES(2), "Total IDs in group"),
+         LOOKUP_FIELD("ID type", BYTES(1), ENTERTAINMENT_ID_TYPE),
+         INTEGER_FIELD("ID", BYTES(4)),
+         STRINGLAU_FIELD("Name")
          // TODO: Add support for extra fields *after* the repeating fields.
          // The NMEA, in all its wisdom, suddenly feels a repeating field PGN can act to different rules. Sigh.
          // , { "Artist", BYTES(2), RES_STRINGLAU, false, 0, "" }
@@ -5232,16 +4434,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      0,
-     {{"Source", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SOURCE, ""},
-      {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
-      {"Group ID", BYTES(4), RES_INTEGER, false, 0, "Unique group ID"},
-      {"Group type 1", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_GROUP, ""},
-      {"Group name 1", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Group type 2", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_GROUP, ""},
-      {"Group name 2", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Group type 3", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_GROUP, ""},
-      {"Group name 3", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
+      INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
+      INTEGER_DESC_FIELD("Group ID", BYTES(4), "Unique group ID"),
+      LOOKUP_FIELD("Group type 1", BYTES(1), ENTERTAINMENT_GROUP),
+      STRINGLAU_FIELD("Group name 1"),
+      LOOKUP_FIELD("Group type 2", BYTES(1), ENTERTAINMENT_GROUP),
+      STRINGLAU_FIELD("Group name 2"),
+      LOOKUP_FIELD("Group type 3", BYTES(1), ENTERTAINMENT_GROUP),
+      STRINGLAU_FIELD("Group name 3"),
+      END_OF_FIELDS}}
 
     ,
     {"Supported Source Data",
@@ -5250,20 +4452,20 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      10,
-     {{"ID offset", BYTES(2), RES_INTEGER, false, 0, "First ID in this PGN"},
-      {"ID count", BYTES(2), RES_INTEGER, false, 0, "Number of IDs in this PGN"},
-      {"Total ID count", BYTES(2), RES_INTEGER, false, 0, "Total IDs in group"},
-      {"ID", BYTES(1), RES_INTEGER, false, 0, "Source ID"},
-      {"Source", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_SOURCE, ""},
-      {"Number", BYTES(1), RES_INTEGER, false, 0, "Source number per type"},
-      {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Play support", BYTES(2), RES_BITFIELD, false, LOOKUP_ENTERTAINMENT_PLAY_STATUS, ""},
-      {"Browse support", BYTES(2), RES_BITFIELD, false, LOOKUP_ENTERTAINMENT_GROUP, ""},
-      {"Thumbs support", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Connected", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Repeat support", 2, RES_BITFIELD, false, ",1=Song,2=Play Queue", ""},
-      {"Shuffle support", 2, RES_BITFIELD, false, ",1=Play Queue,2=All", ""},
-      {0}}}
+     {INTEGER_DESC_FIELD("ID offset", BYTES(2), "First ID in this PGN"),
+      INTEGER_DESC_FIELD("ID count", BYTES(2), "Number of IDs in this PGN"),
+      INTEGER_DESC_FIELD("Total ID count", BYTES(2), "Total IDs in group"),
+      INTEGER_DESC_FIELD("ID", BYTES(1), "Source ID"),
+      LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
+      INTEGER_DESC_FIELD("Number", BYTES(1), "Source number per type"),
+      STRINGLAU_FIELD("Name"),
+      LOOKUP_BITFIELD("Play support", BYTES(4), ENTERTAINMENT_PLAY_STATUS_BITFIELD),
+      LOOKUP_BITFIELD("Browse support", BYTES(2), ENTERTAINMENT_GROUP_BITFIELD),
+      LOOKUP_FIELD("Thumbs support", 2, YES_NO),
+      LOOKUP_FIELD("Connected", 2, YES_NO),
+      LOOKUP_BITFIELD("Repeat support", 2, ENTERTAINMENT_REPEAT_BITFIELD),
+      LOOKUP_BITFIELD("Shuffle support", 2, ENTERTAINMENT_SHUFFLE_BITFIELD),
+      END_OF_FIELDS}}
 
     ,
     {"Supported Zone Data",
@@ -5272,12 +4474,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      2,
-     {{"First zone ID", BYTES(1), RES_INTEGER, false, 0, "First Zone in this PGN"},
-      {"Zone count", BYTES(1), RES_INTEGER, false, 0, "Number of Zones in this PGN"},
-      {"Total zone count", BYTES(1), RES_INTEGER, false, 0, "Total Zones supported by this device"},
-      {"Zone ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
-      {"Name", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {0}}}
+     {INTEGER_DESC_FIELD("First zone ID", BYTES(1), "First Zone in this PGN"),
+      INTEGER_DESC_FIELD("Zone count", BYTES(1), "Number of Zones in this PGN"),
+      INTEGER_DESC_FIELD("Total zone count", BYTES(1), "Total Zones supported by this device"),
+      LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
+      STRINGLAU_FIELD("Name"),
+      END_OF_FIELDS}}
 
     ,
     {"Small Craft Status",
@@ -5286,7 +4488,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      2,
      0,
-     {{"Port trim tab", BYTES(1), 1, true, 0, ""}, {"Starboard trim tab", BYTES(1), 1, true, 0, ""}, {0}}}
+     {SIMPLE_SIGNED_FIELD("Port trim tab", BYTES(1)), SIMPLE_SIGNED_FIELD("Starboard trim tab", BYTES(1)), END_OF_FIELDS}}
 
     ,
     {"Direction Data",
@@ -5295,19 +4497,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      14,
      0,
-     {{"Data Mode", 4, RES_LOOKUP, false, LOOKUP_RESIDUAL_MODE, ""},
-      {"COG Reference", 2, RES_LOOKUP, false, LOOKUP_DIRECTION_REFERENCE, ""},
-      {"Reserved", 2, RES_BINARY, false, 0, "Reserved"},
-      {"SID", BYTES(1), 1, false, 0, ""}
-      /* So far, 2 bytes. Very sure of this given molly rose data */
-      ,
-      {"COG", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"SOG", BYTES(2), 0.01, false, "m/s", ""},
-      {"Heading", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Speed through Water", BYTES(2), 0.01, false, "m/s", ""},
-      {"Set", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"Drift", BYTES(2), 0.01, false, "m/s", ""},
-      {0}}}
+     {LOOKUP_FIELD("Data Mode", 4, RESIDUAL_MODE),
+      LOOKUP_FIELD("COG Reference", 2, DIRECTION_REFERENCE),
+      RESERVED_FIELD(2),
+      ONE_BYTE_FIELD("SID"),
+      ANGLE_U16_FIELD("COG", NULL),
+      SPEED_U16_CM_FIELD("SOG"),
+      ANGLE_U16_FIELD("Heading", NULL),
+      SPEED_U16_CM_FIELD("Speed through Water"),
+      ANGLE_U16_FIELD("Set", NULL),
+      SPEED_U16_CM_FIELD("Drift"),
+      END_OF_FIELDS}}
 
     ,
     {"Vessel Speed Components",
@@ -5316,13 +4516,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      12,
      0,
-     {{"Longitudinal Speed, Water-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {"Transverse Speed, Water-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {"Longitudinal Speed, Ground-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {"Transverse Speed, Ground-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {"Stern Speed, Water-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {"Stern Speed, Ground-referenced", BYTES(2), 0.001, true, "m/s", ""},
-      {0}}}
+     {SPEED_I16_MM_FIELD("Longitudinal Speed, Water-referenced"),
+      SPEED_I16_MM_FIELD("Transverse Speed, Water-referenced"),
+      SPEED_I16_MM_FIELD("Longitudinal Speed, Ground-referenced"),
+      SPEED_I16_MM_FIELD("Transverse Speed, Ground-referenced"),
+      SPEED_I16_MM_FIELD("Stern Speed, Water-referenced"),
+      SPEED_I16_MM_FIELD("Stern Speed, Ground-referenced"),
+      END_OF_FIELDS}}
 
     ,
     {"System Configuration",
@@ -5331,23 +4531,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      (48 / 8 + 2),
      0,
-     {{"Power", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Default Settings",
-       2,
-       RES_LOOKUP,
-       false,
-       ",0=Save current settings as user default,1=Load user default,2=Load Manufacturer default",
-       ""},
-      {"Tuner regions",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=USA,1=Europe,2=Asia,3=Middle East,4=Latin America,5=Australia,6=Russia,7=Japan",
-       ""},
-      {"Max favorites", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Video protocols", 4, RES_BITFIELD, false, ",0=PAL,1=NTSC", ""},
-      {"Reserved", 44, RES_BINARY, false, 0, "Reserved"},
-      {0}}}
+     {LOOKUP_FIELD("Power", 2, YES_NO),
+      LOOKUP_FIELD("Default Settings", 2, ENTERTAINMENT_DEFAULT_SETTINGS),
+      LOOKUP_FIELD("Tuner regions", 4, ENTERTAINMENT_REGIONS),
+      INTEGER_FIELD("Max favorites", BYTES(1)),
+      LOOKUP_BITFIELD("Video protocols", 4, VIDEO_PROTOCOLS),
+      RESERVED_FIELD(44),
+      END_OF_FIELDS}}
 
     ,
     {"System Configuration (deprecated)",
@@ -5356,21 +4546,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      2,
      0,
-     {{"Power", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Default Settings",
-       2,
-       RES_LOOKUP,
-       false,
-       ",0=Save current settings as user default,1=Load user default,2=Load Manufacturer default",
-       ""},
-      {"Tuner regions",
-       4,
-       RES_LOOKUP,
-       false,
-       ",0=USA,1=Europe,2=Asia,3=Middle East,4=Latin America,5=Australia,6=Russia,7=Japan",
-       ""},
-      {"Max favorites", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {LOOKUP_FIELD("Power", 2, YES_NO),
+      LOOKUP_FIELD("Default Settings", 2, ENTERTAINMENT_DEFAULT_SETTINGS),
+      LOOKUP_FIELD("Tuner regions", 4, ENTERTAINMENT_REGIONS),
+      INTEGER_FIELD("Max favorites", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Zone Configuration (deprecated)",
@@ -5379,12 +4559,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      14,
      2,
-     {{"First zone ID", BYTES(1), RES_INTEGER, false, 0, "First Zone in this PGN"},
-      {"Zone count", BYTES(1), RES_INTEGER, false, 0, "Number of Zones in this PGN"},
-      {"Total zone count", BYTES(1), RES_INTEGER, false, 0, "Total Zones supported by this device"},
-      {"Zone ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
-      {"Zone name", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {0}}}
+     {INTEGER_DESC_FIELD("First zone ID", BYTES(1), "First Zone in this PGN"),
+      INTEGER_DESC_FIELD("Zone count", BYTES(1), "Number of Zones in this PGN"),
+      INTEGER_DESC_FIELD("Total zone count", BYTES(1), "Total Zones supported by this device"),
+      LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
+      STRINGLAU_FIELD("Zone name"),
+      END_OF_FIELDS}}
 
     ,
     {"Zone Volume",
@@ -5393,13 +4573,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      4,
      0,
-     {{"Zone ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
-      {"Volume", BYTES(1), RES_INTEGER, false, "%", ""},
-      {"Volume change", 2, RES_LOOKUP, false, ",0=Up,1=Down", "Write only"},
-      {"Mute", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Reserved", 4, RES_BINARY, false, 0, "Reserved"},
-      {"Channel", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_CHANNEL, ""},
-      {0}}}
+     {LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
+      PERCENTAGE_U8_FIELD("Volume"),
+      LOOKUP_FIELD_DESC("Volume change", 2, ENTERTAINMENT_VOLUME_CONTROL, "Write only"),
+      LOOKUP_FIELD("Mute", 2, YES_NO),
+      RESERVED_FIELD(4),
+      LOOKUP_FIELD("Channel", 8, ENTERTAINMENT_CHANNEL),
+      END_OF_FIELDS}}
 
     ,
     {"Available Audio EQ presets",
@@ -5408,12 +4588,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      2,
-     {{"First preset", BYTES(1), RES_INTEGER, false, 0, "First preset in this PGN"},
-      {"Preset count", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Total preset count", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Preset type", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_EQ, ""},
-      {"Preset name", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {0}}}
+     {INTEGER_DESC_FIELD("First preset", BYTES(1), "First preset in this PGN"),
+      INTEGER_FIELD("Preset count", BYTES(1)),
+      INTEGER_FIELD("Total preset count", BYTES(1)),
+      LOOKUP_FIELD("Preset type", BYTES(1), ENTERTAINMENT_EQ),
+      STRINGLAU_FIELD("Preset name"),
+      END_OF_FIELDS}}
 
     ,
     {"Available Bluetooth addresses",
@@ -5422,14 +4602,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      3,
-     {{"First address", BYTES(1), RES_INTEGER, false, 0, "First address in this PGN"},
-      {"Address count", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Total address count", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Bluetooth address", BYTES(6), RES_INTEGER, false, 0, ""},
-      {"Status", BYTES(1), RES_LOOKUP, false, ",0=Connected,1=Not connected,2=Not paired", ""},
-      {"Device name", BYTES(2), RES_STRINGLAU, false, 0, ""},
-      {"Signal strength", BYTES(1), RES_INTEGER, false, "%", ""},
-      {0}}}
+     {INTEGER_DESC_FIELD("First address", BYTES(1), "First address in this PGN"),
+      INTEGER_FIELD("Address count", BYTES(1)),
+      INTEGER_FIELD("Total address count", BYTES(1)),
+      INTEGER_FIELD("Bluetooth address", BYTES(6)),
+      LOOKUP_FIELD("Status", BYTES(1), BLUETOOTH_STATUS),
+      STRINGLAU_FIELD("Device name"),
+      PERCENTAGE_U8_FIELD("Signal strength"),
+      END_OF_FIELDS}}
 
     ,
     {"Bluetooth source status",
@@ -5438,12 +4618,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      233,
      0,
-     {{"Source number", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Status", 4, RES_LOOKUP, false, ",0=Reserved,1=Connected,2=Connecting,3=Not connected", ""},
-      {"Forget device", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Discovering", 2, RES_LOOKUP, false, LOOKUP_YES_NO, ""},
-      {"Bluetooth address", BYTES(6), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {INTEGER_FIELD("Source number", BYTES(1)),
+      LOOKUP_FIELD("Status", 4, BLUETOOTH_SOURCE_STATUS),
+      LOOKUP_FIELD("Forget device", 2, YES_NO),
+      LOOKUP_FIELD("Discovering", 2, YES_NO),
+      INTEGER_FIELD("Bluetooth address", BYTES(6)),
+      END_OF_FIELDS}}
 
     ,
     {"Zone Configuration",
@@ -5452,20 +4632,20 @@ Pgn pgnList[] = {
      PACKET_FAST,
      14,
      2,
-     {{"Zone ID", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_ZONE, ""},
-      {"Volume limit", BYTES(1), RES_INTEGER, false, "%", ""},
-      {"Fade", BYTES(1), RES_INTEGER, true, "%", ""},
-      {"Balance", BYTES(1), RES_INTEGER, true, "%", ""},
-      {"Sub volume", BYTES(1), RES_INTEGER, true, "%", ""},
-      {"EQ - Treble", BYTES(1), RES_INTEGER, true, "%", ""},
-      {"EQ - Mid range", BYTES(1), RES_INTEGER, true, "%", ""},
-      {"EQ - Bass", BYTES(1), RES_INTEGER, true, "%", ""},
-      {"Preset type", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_EQ, ""},
-      {"Audio filter", BYTES(1), RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_FILTER, ""},
-      {"High pass filter frequency", BYTES(2), RES_INTEGER, false, "Hz", ""},
-      {"Low pass filter frequency", BYTES(2), RES_INTEGER, false, "Hz", ""},
-      {"Channel", 8, RES_LOOKUP, false, LOOKUP_ENTERTAINMENT_CHANNEL, ""},
-      {0}}}
+     {LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
+      PERCENTAGE_U8_FIELD("Volume limit"),
+      PERCENTAGE_I8_FIELD("Fade"),
+      PERCENTAGE_I8_FIELD("Balance"),
+      PERCENTAGE_I8_FIELD("Sub volume"),
+      PERCENTAGE_I8_FIELD("EQ - Treble"),
+      PERCENTAGE_I8_FIELD("EQ - Mid range"),
+      PERCENTAGE_I8_FIELD("EQ - Bass"),
+      LOOKUP_FIELD("Preset type", BYTES(1), ENTERTAINMENT_EQ),
+      LOOKUP_FIELD("Audio filter", BYTES(1), ENTERTAINMENT_FILTER),
+      FREQUENCY_FIELD("High pass filter frequency", RES_INTEGER),
+      FREQUENCY_FIELD("Low pass filter frequency", RES_INTEGER),
+      LOOKUP_FIELD("Channel", 8, ENTERTAINMENT_CHANNEL),
+      END_OF_FIELDS}}
 
     /* proprietary PDU2 (non addressed) fast packet PGN range 0x1FF00 to 0x1FFFF (130816 - 131071) */
     ,
@@ -5475,15 +4655,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Init #2"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"A", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"B", BYTES(2), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Init #2"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("A", BYTES(2)),
+      INTEGER_FIELD("B", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: AM Radio",
@@ -5492,21 +4670,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=4", "AM Radio"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(1), RES_LOOKUP, false, ",1=Seeking up,2=Tuned,3=Seeking down", ""},
-      {"Frequency", BYTES(4), 0.001, false, "kHz", ""},
-      {"Noise level", 2, 1, false, 0, ""} // Not sure about this
-      ,
-      {"Signal level", 4, 1, false, 0, ""} // ... and this, doesn't make complete sense compared to display
-      ,
-      {"Reserved", 2, RES_BINARY, false, 0, ""},
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 4, "AM Radio"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      LOOKUP_FIELD("Item", BYTES(1), SONICHUB_TUNING),
+      RADIO_FREQUENCY_FIELD("Frequency", 1),
+      SIMPLE_FIELD("Noise level", 2),  // Not sure about this
+      SIMPLE_FIELD("Signal level", 4), // ... and this, doesn't make complete sense compared to display
+      RESERVED_FIELD(2),
+      STRINGLZ_FIELD("Text", BYTES(32)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Zone info",
@@ -5515,14 +4689,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=5", "Zone info"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Zone", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 5, "Zone info"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("Zone", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Source",
@@ -5531,14 +4703,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=6", "Source"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, ",0=AM,1=FM,2=iPod,3=USB,4=AUX,5=AUX 2,6=Mic", ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 6, "Source"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      LOOKUP_FIELD("Source", BYTES(1), SONICHUB_SOURCE),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Source List",
@@ -5547,16 +4717,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=8", "Source list"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Source ID", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"A", 8, RES_INTEGER, false, 0, ""},
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 8, "Source list"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("Source ID", BYTES(1)),
+      INTEGER_FIELD("A", 8),
+      STRINGLZ_FIELD("Text", BYTES(32)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Control",
@@ -5565,14 +4733,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Control"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(1), RES_LOOKUP, false, ",1=Mute on,2=Mute off", ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 9, "Control"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      LOOKUP_FIELD("Item", BYTES(1), FUSION_MUTE_COMMAND),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Unknown",
@@ -5581,15 +4747,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=9", "Unknown"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"A", 8, RES_INTEGER, false, 0, ""},
-      {"B", 8, RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 9, "Unknown"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("A", 8),
+      INTEGER_FIELD("B", 8),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: FM Radio",
@@ -5598,21 +4762,19 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=12", "FM Radio"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(1), RES_LOOKUP, false, ",1=Seeking up,2=Tuned,3=Seeking down", ""},
-      {"Frequency", BYTES(4), 0.001, false, "kHz", ""},
-      {"Noise level", 2, 1, false, 0, ""} // Not sure about this
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 12, "FM Radio"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      LOOKUP_FIELD("Item", BYTES(1), SONICHUB_TUNING),
+      RADIO_FREQUENCY_FIELD("Frequency", 1),
+      SIMPLE_FIELD("Noise level", 2) // Not sure about this
       ,
-      {"Signal level", 4, 1, false, 0, ""} // ... and this, doesn't make complete sense compared to display
+      SIMPLE_FIELD("Signal level", 4) // ... and this, doesn't make complete sense compared to display
       ,
-      {"Reserved", 2, RES_BINARY, false, 0, ""},
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+      RESERVED_FIELD(2),
+      STRINGLZ_FIELD("Text", BYTES(32)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Playlist",
@@ -5621,19 +4783,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=13", "Playlist"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(1), RES_LOOKUP, false, ",1=Report,4=Next Song,6=Previous Song", ""},
-      {"A", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Current Track", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Tracks", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Length", BYTES(4), 0.001, false, "s", ""},
-      {"Position in track", BYTES(4), 0.001, false, "s", ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 13, "Playlist"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      LOOKUP_FIELD("Item", BYTES(1), SONICHUB_PLAYLIST),
+      INTEGER_FIELD("A", BYTES(1)),
+      INTEGER_FIELD("Current Track", BYTES(4)),
+      INTEGER_FIELD("Tracks", BYTES(4)),
+      ELAPSED_FIELD("Length", BYTES(4), 0.001),
+      ELAPSED_FIELD("Position in track", BYTES(4), 0.001),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Track",
@@ -5642,15 +4802,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=14", "Track"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 14, "Track"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("Item", BYTES(4)),
+      STRINGLZ_FIELD("Text", BYTES(32)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Artist",
@@ -5659,15 +4817,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=15", "Artist"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 15, "Artist"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("Item", BYTES(4)),
+      STRINGLZ_FIELD("Text", BYTES(32)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Album",
@@ -5676,15 +4832,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=16", "Album"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 16, "Album"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("Item", BYTES(4)),
+      STRINGLZ_FIELD("Text", BYTES(32)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Menu Item",
@@ -5693,18 +4847,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=19", "Menu Item"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Item", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"D", BYTES(1), 1, false, 0, ""},
-      {"E", BYTES(1), 1, false, 0, ""},
-      {"Text", BYTES(32), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 19, "Menu Item"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("Item", BYTES(4)),
+      ONE_BYTE_FIELD("C"),
+      ONE_BYTE_FIELD("D"),
+      ONE_BYTE_FIELD("E"),
+      STRINGLZ_FIELD("Text", BYTES(32)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Zones",
@@ -5713,14 +4865,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=20", "Zones"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Zones", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 20, "Zones"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("Zones", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Max Volume",
@@ -5729,15 +4879,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=23", "Max Volume"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Zone", BYTES(1), RES_LOOKUP, false, ",0=Zone 1,1=Zone 2,2=Zone 3", ""},
-      {"Level", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 23, "Max Volume"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("Zone", BYTES(1)),
+      INTEGER_FIELD("Level", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Volume",
@@ -5746,15 +4894,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=24", "Volume"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Zone", BYTES(1), RES_LOOKUP, false, ",0=Zone 1,1=Zone 2,2=Zone 3", ""},
-      {"Level", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 24, "Volume"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("Zone", BYTES(1)),
+      INTEGER_FIELD("Level", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Init #1",
@@ -5763,13 +4909,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=25", "Init #1"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 25, "Init #1"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Position",
@@ -5778,14 +4922,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=48", "Position"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"Position", BYTES(4), 0.001, false, "s", ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 48, "Position"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      ELAPSED_FIELD("Position", BYTES(4), 0.001),
+      END_OF_FIELDS}}
 
     ,
     {"SonicHub: Init #3",
@@ -5794,15 +4936,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3"},
-      {"Control", BYTES(1), RES_LOOKUP, false, ",0=Set,128=Ack", ""},
-      {"A", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"B", BYTES(1), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 50, "Init #3"),
+      LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
+      INTEGER_FIELD("A", BYTES(1)),
+      INTEGER_FIELD("B", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Simrad: Text Message",
@@ -5811,19 +4951,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x40,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=50", "Init #3"} // FIXME
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 50, "Init #3") // FIXME
       ,
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"SID", BYTES(1), 1, false, 0, ""},
-      {"Prio", BYTES(1), 1, false, 0, ""},
-      {"Text", BYTES(32), RES_ASCII, false, 0, ""},
-      {0}}}
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      ONE_BYTE_FIELD("C"),
+      ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("Prio"),
+      ASCII_FIELD("Text", BYTES(32)),
+      END_OF_FIELDS}}
 
     ,
     {"Manufacturer Proprietary fast-packet non-addressed",
@@ -5832,11 +4970,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      223,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, LOOKUP_INDUSTRY_CODE, ""},
-      {"Data", BYTES(221), RES_BINARY, false, 0, ""},
-      {0}},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), NULL), END_OF_FIELDS},
      0,
      0,
      true}
@@ -5848,18 +4982,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x0e,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=275", "Navico"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Product Code", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Model", BYTES(32), RES_ASCII, false, 0, ""},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"Firmware version", BYTES(10), RES_ASCII, false, 0, ""},
-      {"Firmware date", BYTES(32), RES_ASCII, false, 0, ""},
-      {"Firmware time", BYTES(32), RES_ASCII, false, 0, ""},
-      {0}}}
+     {COMPANY(275),
+      INTEGER_FIELD("Product Code", BYTES(2)),
+      ASCII_FIELD("Model", BYTES(32)),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      ONE_BYTE_FIELD("C"),
+      ASCII_FIELD("Firmware version", BYTES(10)),
+      ASCII_FIELD("Firmware date", BYTES(32)),
+      ASCII_FIELD("Firmware time", BYTES(32)),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Reprogram Data",
@@ -5868,13 +5000,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      223,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Version", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Sequence", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Data", BYTES(217), RES_BINARY, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      INTEGER_FIELD("Version", BYTES(2)),
+      INTEGER_FIELD("Sequence", BYTES(2)),
+      BINARY_FIELD("Data", BYTES(217), NULL),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Request Reprogram",
@@ -5883,10 +5013,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+     {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Simnet: Reprogram Status",
@@ -5895,13 +5022,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Reserved", BYTES(1), RES_BINARY, false, 0, ""},
-      {"Status", BYTES(1), 1, false, 0, ""},
-      {"Reserved", BYTES(3), RES_BINARY, false, 0, ""},
-      {0}}}
+     {COMPANY(1857), RESERVED_FIELD(BYTES(1)), ONE_BYTE_FIELD("Status"), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS}}
 
     /* M/V Dirona */
     ,
@@ -5911,15 +5032,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"D", BYTES(1), 1, false, 0, ""},
-      {"E", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1855),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      ONE_BYTE_FIELD("C"),
+      ONE_BYTE_FIELD("D"),
+      ONE_BYTE_FIELD("E"),
+      END_OF_FIELDS}}
 
     /* Fusion */
     ,
@@ -5929,17 +5048,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      13,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=2", "Source"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"Source ID", BYTES(1), 1, false, 0, ""},
-      {"Current Source ID", BYTES(1), 1, false, 0, ""},
-      {"D", BYTES(1), 1, false, 0, ""},
-      {"E", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(5), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 2, "Source"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("Source ID"),
+      ONE_BYTE_FIELD("Current Source ID"),
+      ONE_BYTE_FIELD("D"),
+      ONE_BYTE_FIELD("E"),
+      STRINGLZ_FIELD("Source", BYTES(5)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Track Info",
@@ -5948,35 +5065,33 @@ Pgn pgnList[] = {
      PACKET_FAST,
      23,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=4", "Track Info"},
-      {"A", BYTES(2), 1, false, 0, ""},
-      {"Transport", 4, RES_LOOKUP, false, ",1=Playing,2=Paused", ""},
-      {"X", 4, 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"Track #", BYTES(2), 1, false, 0, ""},
-      {"C", BYTES(2), 1, false, 0, ""},
-      {"Track Count", BYTES(2), 1, false, 0, ""},
-      {"E", BYTES(2), 1, false, 0, ""},
-      {"Track Length", BYTES(3), 0.001, false, 0, ""},
-      {"G", BYTES(3), 0.001, false, 0, ""},
-      {"H", BYTES(2), 1, false, 0, ""}}},
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 4, "Track Info"),
+      SIMPLE_FIELD("A", BYTES(2)),
+      LOOKUP_FIELD("Transport", 4, ENTERTAINMENT_PLAY_STATUS),
+      SIMPLE_FIELD("X", 4),
+      ONE_BYTE_FIELD("B"),
+      SIMPLE_FIELD("Track #", BYTES(2)),
+      SIMPLE_FIELD("C", BYTES(2)),
+      SIMPLE_FIELD("Track Count", BYTES(2)),
+      SIMPLE_FIELD("E", BYTES(2)),
+      NUMBER_FIELD("Track Length", BYTES(3), 0.001, false, NULL, NULL),
+      NUMBER_FIELD("G", BYTES(3), 0.001, false, NULL, NULL),
+      SIMPLE_FIELD("H", BYTES(2))}}
+
+    ,
     {"Fusion: Track",
      130820,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      0x20,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=5", "Track Title"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(5), 1, false, 0, ""},
-      {"Track", BYTES(10), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 5, "Track Title"),
+      ONE_BYTE_FIELD("A"),
+      SIMPLE_FIELD("B", BYTES(5)),
+      STRINGLZ_FIELD("Track", BYTES(10)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Artist",
@@ -5985,14 +5100,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x20,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=6", "Track Artist"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(5), 1, false, 0, ""},
-      {"Artist", BYTES(10), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 6, "Track Artist"),
+      ONE_BYTE_FIELD("A"),
+      SIMPLE_FIELD("B", BYTES(5)),
+      STRINGLZ_FIELD("Artist", BYTES(10)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Album",
@@ -6001,14 +5114,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x20,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=7", "Track Album"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(5), 1, false, 0, ""},
-      {"Album", BYTES(10), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 7, "Track Album"),
+      ONE_BYTE_FIELD("A"),
+      SIMPLE_FIELD("B", BYTES(5)),
+      STRINGLZ_FIELD("Album", BYTES(10)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Unit Name",
@@ -6017,13 +5128,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x20,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=33", "Unit Name"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"Name", BYTES(14), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 33, "Unit Name"),
+      ONE_BYTE_FIELD("A"),
+      STRINGLZ_FIELD("Name", BYTES(14)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Zone Name",
@@ -6032,14 +5141,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x20,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=45", "Zone Name"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"Number", BYTES(1), 1, false, 0, ""},
-      {"Name", BYTES(13), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 45, "Zone Name"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("Number"),
+      STRINGLZ_FIELD("Name", BYTES(13)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Play Progress",
@@ -6048,14 +5155,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=9", "Track Progress"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"Progress", BYTES(3), 0.001, false, "s", ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 9, "Track Progress"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      ELAPSED_FIELD("Progress", BYTES(3), 0.001),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: AM/FM Station",
@@ -6064,17 +5169,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x0A,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=11", "AM/FM Station"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"AM/FM", BYTES(1), RES_LOOKUP, false, ",0=AM,1=FM", ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"Frequency", BYTES(4), 0.000001, false, "Hz", ""},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"Track", BYTES(10), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 11, "AM/FM Station"),
+      ONE_BYTE_FIELD("A"),
+      LOOKUP_FIELD("AM/FM", BYTES(1), FUSION_RADIO_SOURCE),
+      ONE_BYTE_FIELD("B"),
+      RADIO_FREQUENCY_FIELD("Frequency", 1),
+      ONE_BYTE_FIELD("C"),
+      STRINGLZ_FIELD("Track", BYTES(10)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: VHF",
@@ -6083,15 +5186,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=12", "VHF"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"Channel", BYTES(1), 1, false, 0, ""},
-      {"D", BYTES(3), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 12, "VHF"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      ONE_BYTE_FIELD("Channel"),
+      SIMPLE_FIELD("D", BYTES(3)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Squelch",
@@ -6100,14 +5201,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=13", "Squelch"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"Squelch", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 13, "Squelch"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      ONE_BYTE_FIELD("Squelch"),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Scan",
@@ -6116,14 +5215,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      6,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=14", "Scan"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"Scan", BYTES(1), RES_LOOKUP, false, ",0=Off,1=Scan", ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 14, "Scan"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      LOOKUP_FIELD("Scan", BITS(2), YES_NO),
+      SIMPLE_FIELD("C", BITS(6)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Menu Item",
@@ -6132,20 +5230,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      23,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=17", "Menu Item"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"Line", BYTES(1), 1, false, 0, ""},
-      {"E", BYTES(1), 1, false, 0, ""},
-      {"F", BYTES(1), 1, false, 0, ""},
-      {"G", BYTES(1), 1, false, 0, ""},
-      {"H", BYTES(1), 1, false, 0, ""},
-      {"I", BYTES(1), 1, false, 0, ""},
-      {"Text", BYTES(5), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 17, "Menu Item"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      ONE_BYTE_FIELD("Line"),
+      ONE_BYTE_FIELD("E"),
+      ONE_BYTE_FIELD("F"),
+      ONE_BYTE_FIELD("G"),
+      ONE_BYTE_FIELD("H"),
+      ONE_BYTE_FIELD("I"),
+      STRINGLZ_FIELD("Text", BYTES(5)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Replay",
@@ -6154,20 +5250,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      23,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=20", "Replay"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"Mode", BYTES(1), RES_LOOKUP, false, ",9=USB Repeat,10=USB Shuffle,12=iPod Repeat,13=iPod Shuffle", ""},
-      {"C", BYTES(3), 1, false, 0, ""},
-      {"D", BYTES(1), 1, false, 0, ""},
-      {"E", BYTES(1), 1, false, 0, ""},
-      {"Status", BYTES(1), RES_LOOKUP, false, ",0=Off,1=One/Track,2=All/Album", ""},
-      {"H", BYTES(1), 1, false, 0, ""},
-      {"I", BYTES(1), 1, false, 0, ""},
-      {"J", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 20, "Replay"),
+      ONE_BYTE_FIELD("A"),
+      LOOKUP_FIELD("Mode", BYTES(1), FUSION_REPLAY_MODE),
+      SIMPLE_FIELD("C", BYTES(3)),
+      ONE_BYTE_FIELD("D"),
+      ONE_BYTE_FIELD("E"),
+      LOOKUP_FIELD("Status", BYTES(1), FUSION_REPLAY_STATUS),
+      ONE_BYTE_FIELD("H"),
+      ONE_BYTE_FIELD("I"),
+      ONE_BYTE_FIELD("J"),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Mute",
@@ -6176,13 +5270,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      5,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=23", "Mute"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"Mute", BYTES(1), RES_LOOKUP, false, ",1=Muted,2=Not Muted", ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 23, "Mute"),
+      ONE_BYTE_FIELD("A"),
+      LOOKUP_FIELD("Mute", BYTES(1), FUSION_MUTE_COMMAND),
+      END_OF_FIELDS}}
 
     ,
     // Range: 0 to +24
@@ -6192,16 +5284,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=26", "Sub Volume"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"Zone 1", BYTES(1), 1, false, "vol", ""},
-      {"Zone 2", BYTES(1), 1, false, "vol", ""},
-      {"Zone 3", BYTES(1), 1, false, "vol", ""},
-      {"Zone 4", BYTES(1), 1, false, "vol", ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 26, "Sub Volume"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("Zone 1"),
+      ONE_BYTE_FIELD("Zone 2"),
+      ONE_BYTE_FIELD("Zone 3"),
+      ONE_BYTE_FIELD("Zone 4"),
+      END_OF_FIELDS}}
 
     ,
     // Range: -15 to +15
@@ -6211,16 +5301,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=27", "Tone"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"Bass", BYTES(1), 1, true, "vol", ""},
-      {"Mid", BYTES(1), 1, true, "vol", ""},
-      {"Treble", BYTES(1), 1, true, "vol", ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 27, "Tone"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      SIMPLE_SIGNED_FIELD("Bass", BYTES(1)),
+      SIMPLE_SIGNED_FIELD("Mid", BYTES(1)),
+      SIMPLE_SIGNED_FIELD("Treble", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Volume",
@@ -6229,16 +5317,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x0A,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=29", "Volume"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"Zone 1", BYTES(1), 1, false, "vol", ""},
-      {"Zone 2", BYTES(1), 1, false, "vol", ""},
-      {"Zone 3", BYTES(1), 1, false, "vol", ""},
-      {"Zone 4", BYTES(1), 1, false, "vol", ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 29, "Volume"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("Zone 1"),
+      ONE_BYTE_FIELD("Zone 2"),
+      ONE_BYTE_FIELD("Zone 3"),
+      ONE_BYTE_FIELD("Zone 4"),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Power State",
@@ -6247,13 +5333,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      5,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=32", "Power"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"State", BYTES(1), RES_LOOKUP, false, ",1=On,2=Off", ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 32, "Power"),
+      ONE_BYTE_FIELD("A"),
+      LOOKUP_FIELD("State", BYTES(1), FUSION_POWER_STATE),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: SiriusXM Channel",
@@ -6262,13 +5346,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x20,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=36", "SiriusXM Channel"},
-      {"A", BYTES(4), 1, false, 0, ""},
-      {"Channel", BYTES(12), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 36, "SiriusXM Channel"),
+      SIMPLE_FIELD("A", BYTES(4)),
+      STRINGLZ_FIELD("Channel", BYTES(12)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: SiriusXM Title",
@@ -6277,13 +5359,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x20,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=37", "SiriusXM Title"},
-      {"A", BYTES(4), 1, false, 0, ""},
-      {"Title", BYTES(12), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 37, "SiriusXM Title"),
+      SIMPLE_FIELD("A", BYTES(4)),
+      STRINGLZ_FIELD("Title", BYTES(12)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: SiriusXM Artist",
@@ -6292,13 +5372,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x20,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=38", "SiriusXM Artist"},
-      {"A", BYTES(4), 1, false, 0, ""},
-      {"Artist", BYTES(12), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 38, "SiriusXM Artist"),
+      SIMPLE_FIELD("A", BYTES(4)),
+      STRINGLZ_FIELD("Artist", BYTES(12)),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: SiriusXM Genre",
@@ -6307,13 +5385,11 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x20,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=419", "Fusion"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(1), 1, false, "=40", "SiriusXM Genre"},
-      {"A", BYTES(4), 1, false, 0, ""},
-      {"Genre", BYTES(12), RES_STRINGLZ, false, 0, ""},
-      {0}}}
+     {COMPANY(419),
+      MATCH_FIELD("Message ID", BYTES(1), 40, "SiriusXM Genre"),
+      SIMPLE_FIELD("A", BYTES(4)),
+      STRINGLZ_FIELD("Genre", BYTES(12)),
+      END_OF_FIELDS}}
 
     /* M/V Dirona */
     ,
@@ -6323,20 +5399,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x0c,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), 1, false, 0, ""},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"D", BYTES(1), 1, false, 0, ""},
-      {"E", BYTES(1), 1, false, 0, ""},
-      {"F", BYTES(1), 1, false, 0, ""},
-      {"G", BYTES(1), 1, false, 0, ""},
-      {"H", BYTES(1), 1, false, 0, ""},
-      {"I", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1855),
+      ONE_BYTE_FIELD("SID"),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      ONE_BYTE_FIELD("C"),
+      ONE_BYTE_FIELD("D"),
+      ONE_BYTE_FIELD("E"),
+      ONE_BYTE_FIELD("F"),
+      ONE_BYTE_FIELD("G"),
+      ONE_BYTE_FIELD("H"),
+      ONE_BYTE_FIELD("I"),
+      END_OF_FIELDS}}
 
     ,
     {"Maretron: Proprietary Temperature High Range",
@@ -6345,15 +5419,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"SID", BYTES(1), 1, false, 0, ""},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Source", BYTES(1), RES_LOOKUP, false, LOOKUP_TEMPERATURE_SOURCE, ""},
-      {"Actual Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
-      {"Set Temperature", BYTES(2), RES_TEMPERATURE_HIGH, false, "K", ""},
-      {0}}}
+     {COMPANY(137),
+      ONE_BYTE_FIELD("SID"),
+      INSTANCE_FIELD,
+      LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
+      TEMPERATURE_HIGH_FIELD("Actual Temperature"),
+      TEMPERATURE_HIGH_FIELD("Set Temperature"),
+      END_OF_FIELDS}}
 
     ,
     {"B&G: Wind data",
@@ -6362,13 +5434,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=381", "B&G"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Field 4", BYTES(1), 1, false, 0, ""},
-      {"Field 5", BYTES(1), 1, false, 0, ""},
-      {"Timestamp", BYTES(4), 1, false, 0, "Increasing field, what else can it be?"},
-      {0}}}
+     {COMPANY(381),
+      ONE_BYTE_FIELD("Field 4"),
+      ONE_BYTE_FIELD("Field 5"),
+      SIMPLE_DESC_FIELD("Timestamp", BYTES(4), "Increasing field, what else can it be?"),
+      END_OF_FIELDS}}
 
     /* M/V Dirona */
     ,
@@ -6378,15 +5448,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      9,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Field 4", BYTES(1), 1, false, 0, ""},
-      {"Field 5", BYTES(1), 1, false, 0, ""},
-      {"Field 6", BYTES(2), 1, false, 0, ""},
-      {"Field 7", BYTES(1), 1, false, 0, ""},
-      {"Field 8", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(137),
+      ONE_BYTE_FIELD("Field 4"),
+      ONE_BYTE_FIELD("Field 5"),
+      SIMPLE_FIELD("Field 6", BYTES(2)),
+      ONE_BYTE_FIELD("Field 7"),
+      SIMPLE_FIELD("Field 8", BYTES(2)),
+      END_OF_FIELDS}}
 
     /* Uwe Lovas has seen this from EP-70R */
     ,
@@ -6396,41 +5464,26 @@ Pgn pgnList[] = {
      PACKET_FAST,
      10,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=140", "Lowrance"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"D", BYTES(1), 1, false, 0, ""},
-      {"E", BYTES(2), 1, false, 0, ""},
-      {"F", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(140),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      ONE_BYTE_FIELD("C"),
+      ONE_BYTE_FIELD("D"),
+      SIMPLE_FIELD("E", BYTES(2)),
+      SIMPLE_FIELD("F", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
-    {"Simnet: Set Serial Number",
-     130828,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
-     PACKET_FAST,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Simnet: Set Serial Number", 130828, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, 0x08, 0, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Suzuki: Engine and Storage Device Config",
      130831,
-     PACKET_INCOMPLETE,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, 0, ""} // FIXME
-      ,
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+     {COMPANY(586), END_OF_FIELDS}}
 
     ,
     {"Simnet: Fuel Used - High Resolution",
@@ -6439,10 +5492,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+     {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Simnet: Engine and Tank Configuration",
@@ -6451,10 +5501,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+     {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Simnet: Set Engine and Tank Configuration",
@@ -6463,10 +5510,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+     {COMPANY(1857), END_OF_FIELDS}}
 
     /* Seen when HDS8 configures EP65R */
     ,
@@ -6476,19 +5520,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x0e,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"Device", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"F", 1 * 4, 1, false, 0, ""},
-      {"Tank type", 1 * 4, RES_LOOKUP, false, ",0=Fuel,1=Water,2=Gray water,3=Live well,4=Oil,5=Black water", ""},
-      {"Capacity", BYTES(4), 0.1, false, 0, ""},
-      {"G", BYTES(1), 1, false, 0, ""},
-      {"H", BYTES(2), 1, true, 0, ""},
-      {"I", BYTES(1), 1, true, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      ONE_BYTE_FIELD("C"),
+      INTEGER_FIELD("Device", BYTES(1)),
+      INSTANCE_FIELD,
+      SIMPLE_FIELD("F", 1 * 4),
+      LOOKUP_FIELD("Tank type", 1 * 4, TANK_TYPE),
+      NUMBER_FIELD("Capacity", BYTES(4), 0.1, false, NULL, NULL),
+      ONE_BYTE_FIELD("G"),
+      SIMPLE_SIGNED_FIELD("H", BYTES(2)),
+      SIMPLE_SIGNED_FIELD("I", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Maretron Proprietary Switch Status Counter",
@@ -6497,19 +5539,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      16,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Indicator Number", BYTES(1), 1, false, 0, ""},
-      {"Start Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
-      {"Start Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
-      {"OFF Counter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"ON Counter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"ERROR Counter", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Switch Status", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Reserved", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(137),
+      INSTANCE_FIELD,
+      ONE_BYTE_FIELD("Indicator Number"),
+      DATE_FIELD("Start Date"),
+      TIME_FIELD("Start Time"),
+      INTEGER_FIELD("OFF Counter", BYTES(1)),
+      INTEGER_FIELD("ON Counter", BYTES(1)),
+      INTEGER_FIELD("ERROR Counter", BYTES(1)),
+      LOOKUP_FIELD("Switch Status", 2, OFF_ON),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Fuel Flow Turbine Configuration",
@@ -6518,10 +5558,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+     {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Maretron Proprietary Switch Status Timer",
@@ -6530,19 +5567,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      23,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=137", "Maretron"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Instance", BYTES(1), 1, false, 0, ""},
-      {"Indicator Number", BYTES(1), 1, false, 0, ""},
-      {"Start Date", BYTES(2), RES_DATE, false, "days", "Timestamp of last reset in Days since January 1, 1970"},
-      {"Start Time", BYTES(4), RES_TIME, false, "s", "Timestamp of last reset Seconds since midnight"},
-      {"Accumulated OFF Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
-      {"Accumulated ON Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
-      {"Accumulated ERROR Period", BYTES(4), RES_DECIMAL, false, "seconds", ""},
-      {"Switch Status", 2, RES_LOOKUP, false, LOOKUP_OFF_ON, ""},
-      {"Reserved", 6, 1, false, 0, ""},
-      {0}}}
+     {COMPANY(137),
+      INSTANCE_FIELD,
+      ONE_BYTE_FIELD("Indicator Number"),
+      DATE_FIELD("Start Date"),
+      TIME_FIELD("Start Time"),
+      DECIMAL_UNIT_FIELD("Accumulated OFF Period", BYTES(4), "seconds"),
+      DECIMAL_UNIT_FIELD("Accumulated ON Period", BYTES(4), "seconds"),
+      DECIMAL_UNIT_FIELD("Accumulated ERROR Period", BYTES(4), "seconds"),
+      LOOKUP_FIELD("Switch Status", 2, OFF_ON),
+      RESERVED_FIELD(6),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Fluid Level Warning",
@@ -6551,10 +5586,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+     {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Simnet: Pressure Sensor Configuration",
@@ -6563,10 +5595,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+     {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Simnet: Data User Group Configuration",
@@ -6575,23 +5604,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
-
-    /* Where did this come from ?
-    ,
-    { "Simnet: DSC Message", 130842,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST,
-    0x08, 0,
-      { { "Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad" }
-      , { "Reserved", 2, RES_NOTUSED, false, 0, "" }
-      , { "Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry" }
-      , { 0 }
-      }
-    }
-    */
+     {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Simnet: AIS Class B static data (msg 24 Part A)",
@@ -6600,16 +5613,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x1d,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", 6, 1, false, "=0", "Msg 24 Part A"},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"D", BYTES(1), 1, false, 0, ""},
-      {"E", BYTES(1), 1, false, 0, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Name", BYTES(20), RES_ASCII, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      MATCH_FIELD("Message ID", 6, 0, "Msg 24 Part A"),
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      ONE_BYTE_FIELD("D"),
+      ONE_BYTE_FIELD("E"),
+      MMSI_FIELD("User ID"),
+      ASCII_FIELD("Name", BYTES(20)),
+      END_OF_FIELDS}}
 
     ,
     {"Furuno: Six Degrees Of Freedom Movement",
@@ -6618,19 +5629,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      29,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"A", BYTES(4), 1, true, 0, ""},
-      {"B", BYTES(4), 1, true, 0, ""},
-      {"C", BYTES(4), 1, true, 0, ""},
-      {"D", BYTES(1), 1, true, 0, ""},
-      {"E", BYTES(4), 1, true, 0, ""},
-      {"F", BYTES(4), 1, true, 0, ""},
-      {"G", BYTES(2), 1, true, 0, ""},
-      {"H", BYTES(2), 1, true, 0, ""},
-      {"I", BYTES(2), 1, true, 0, ""},
-      {0}}}
+     {COMPANY(1855),
+      SIMPLE_SIGNED_FIELD("A", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("B", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("C", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("D", BYTES(1)),
+      SIMPLE_SIGNED_FIELD("E", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("F", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("G", BYTES(2)),
+      SIMPLE_SIGNED_FIELD("H", BYTES(2)),
+      SIMPLE_SIGNED_FIELD("I", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: AIS Class B static data (msg 24 Part B)",
@@ -6639,25 +5648,23 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x25,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", 6, 1, false, "=1", "Msg 24 Part B"},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"D", BYTES(1), 1, false, 0, ""},
-      {"E", BYTES(1), 1, false, 0, ""},
-      {"User ID", BYTES(4), RES_INTEGER, false, "MMSI", ""},
-      {"Type of ship", BYTES(1), RES_LOOKUP, false, LOOKUP_SHIP_TYPE, ""},
-      {"Vendor ID", BYTES(7), RES_ASCII, false, 0, ""},
-      {"Callsign", BYTES(7), RES_ASCII, false, 0, ",0=unavailable"},
-      {"Length", BYTES(2), 0.1, false, "m", ""},
-      {"Beam", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Starboard", BYTES(2), 0.1, false, "m", ""},
-      {"Position reference from Bow", BYTES(2), 0.1, false, "m", ""},
-      {"Mothership User ID", BYTES(4), RES_INTEGER, false, "MMSI", "Id of mother ship sent by daughter vessels"},
-      {"Reserved", 2, RES_BINARY, false, 0, "reserved"},
-      {"Spare", 6, RES_INTEGER, false, 0, ",0=unavailable"},
-      {0}}}
+     {COMPANY(1857),
+      MATCH_FIELD("Message ID", 6, 1, "Msg 24 Part B"),
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      ONE_BYTE_FIELD("D"),
+      ONE_BYTE_FIELD("E"),
+      MMSI_FIELD("User ID"),
+      LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
+      ASCII_FIELD("Vendor ID", BYTES(7)),
+      ASCII_FIELD("Callsign", BYTES(7)),
+      DECIMETERS_FIELD("Length"),
+      DECIMETERS_FIELD("Beam"),
+      DECIMETERS_FIELD("Position reference from Starboard"),
+      DECIMETERS_FIELD("Position reference from Bow"),
+      MMSI_FIELD("Mothership User ID"),
+      RESERVED_FIELD(2),
+      INTEGER_DESC_FIELD("Spare", 6, ",0=unavailable"),
+      END_OF_FIELDS}}
 
     ,
     {"Furuno: Heel Angle, Roll Information",
@@ -6666,15 +5673,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"Yaw", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Pitch", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Roll", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {0}}}
+     {COMPANY(1855),
+      ONE_BYTE_FIELD("A"),
+      ONE_BYTE_FIELD("B"),
+      ANGLE_I16_FIELD("Yaw", NULL),
+      ANGLE_I16_FIELD("Pitch", NULL),
+      ANGLE_I16_FIELD("Roll", NULL),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Sonar Status, Frequency and DSP Voltage",
@@ -6683,10 +5688,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+     {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Simnet: Compass Heading Offset",
@@ -6695,29 +5697,18 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x0e,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Unused", BYTES(3), 1, false, 0, ""},
-      {"Type", BYTES(2), 1, false, "=0", "Heading Offset"},
-      {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
-      {"Angle", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      SIMPLE_FIELD("Unused", BYTES(3)),
+      MATCH_FIELD("Type", BYTES(2), 0, "Heading Offset"),
+      SIMPLE_FIELD("Unused B", BYTES(2)),
+      ANGLE_I16_FIELD("Angle", NULL),
+      SIMPLE_FIELD("Unused C", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
-    {"Furuno: Multi Sats In View Extended",
-     130845,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Furuno: Multi Sats In View Extended", 130845, PACKET_INCOMPLETE, PACKET_FAST, 0x08, 0, {COMPANY(1855), END_OF_FIELDS}}
 
     ,
     {"Simnet: Compass Local Field",
@@ -6726,17 +5717,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x0e,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Unused", BYTES(3), 1, false, 0, ""},
-      {"Type", BYTES(2), 1, false, "=768", "Local field"},
-      {"A", BYTES(2), RES_NOTUSED, false, 0, ""},
-      {"Local field", BYTES(2), RES_PERCENTAGE, false, "%", ""},
-      {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      SIMPLE_FIELD("Unused", BYTES(3)),
+      MATCH_FIELD("Type", BYTES(2), 768, "Local field"),
+      SIMPLE_FIELD("Unused B", BYTES(2)),
+      PERCENTAGE_U16_FIELD("Local field"),
+      SIMPLE_FIELD("Unused C", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Compass Field Angle",
@@ -6745,17 +5734,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x0e,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"Unused", BYTES(3), 1, false, 0, ""},
-      {"Type", BYTES(2), 1, false, "=1024", "Local field"},
-      {"A", BYTES(2), 1, false, 0, ""},
-      {"Field angle", BYTES(2), RES_RADIANS, true, "rad", ""},
-      {"Unused", BYTES(2), RES_NOTUSED, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      SIMPLE_FIELD("Unused", BYTES(3)),
+      MATCH_FIELD("Type", BYTES(2), 1024, "Local field"),
+      SIMPLE_FIELD("Unused B", BYTES(2)),
+      ANGLE_I16_FIELD("Field angle", NULL),
+      SIMPLE_FIELD("Unused C", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Parameter Handle",
@@ -6764,39 +5751,22 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x0e,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", 6, 1, false, 0, ""},
-      {"Repeat indicator", 2, RES_LOOKUP, false, LOOKUP_REPEAT_INDICATOR, ""},
-      {"D", BYTES(1), 1, false, 0, ""},
-      {"Group", BYTES(1), 1, false, 0, ""},
-      {"F", BYTES(1), 1, false, 0, ""},
-      {"G", BYTES(1), 1, false, 0, ""},
-      {"H", BYTES(1), 1, false, 0, ""},
-      {"I", BYTES(1), 1, false, 0, ""},
-      {"J", BYTES(1), 1, false, 0, ""},
-      {"Backlight",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",1=Day Mode,4=Night Mode,11=Level 1,22=Level 2,33=Level 3,44=Level 4,55=Level 5,66=Level 6,77=Level 7,88=Level 8,99=Level "
-       "9",
-       ""},
-      {"L", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      SIMPLE_FIELD("Message ID", 6),
+      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      ONE_BYTE_FIELD("D"),
+      ONE_BYTE_FIELD("Group"),
+      ONE_BYTE_FIELD("F"),
+      ONE_BYTE_FIELD("G"),
+      ONE_BYTE_FIELD("H"),
+      ONE_BYTE_FIELD("I"),
+      ONE_BYTE_FIELD("J"),
+      LOOKUP_FIELD("Backlight", BYTES(1), SIMNET_BACKLIGHT_LEVEL),
+      SIMPLE_FIELD("L", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
-    {"Furuno: Motion Sensor Status Extended",
-     130846,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     0x08,
-     0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1855", "Furuno"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {0}}}
+    {"Furuno: Motion Sensor Status Extended", 130846, PACKET_INCOMPLETE, PACKET_FAST, 0x08, 0, {COMPANY(1855), END_OF_FIELDS}}
 
     ,
     {"SeaTalk: Node Statistics",
@@ -6805,36 +5775,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1851", "Raymarine"},
-      {"Software Release", BYTES(2), 1, false, 0, ""},
-      {"Development Version", BYTES(1), 1, false, 0, ""},
-      {"Product Code", BYTES(2), 1, false, 0, ""},
-      {"Year", BYTES(1), 1, false, 0, ""},
-      {"Month", BYTES(1), 1, false, 0, ""},
-      {"Device Number", BYTES(2), 1, false, 0, ""},
-      {"Node Voltage", BYTES(2), 0.01, false, "V", ""},
-      {0}}}
-
-#define LOOKUP_SIMNET_AP_EVENTS \
-  (",6=Standby"                 \
-   ",9=Auto mode"               \
-   ",10=Nav mode"               \
-   ",13=Non Follow Up mode"     \
-   ",15=Wind mode"              \
-   ",18=Square (Turn)"          \
-   ",19=C-Turn"                 \
-   ",20=U-Turn"                 \
-   ",21=Spiral (Turn)"          \
-   ",22=Zig Zag (Turn)"         \
-   ",23=Lazy-S (Turn)"          \
-   ",24=Depth (Turn)"           \
-   ",26=Change Course")
-
-#define LOOKUP_SIMNET_DIRECTION \
-  (",2=Port"                    \
-   ",3=Starboard"               \
-   ",4=Left rudder (port)"      \
-   ",5=Right rudder (starboard)")
+     {COMPANY(1851),
+      SIMPLE_FIELD("Product Code", BYTES(2)),
+      ONE_BYTE_FIELD("Year"),
+      ONE_BYTE_FIELD("Month"),
+      SIMPLE_FIELD("Device Number", BYTES(2)),
+      VOLTAGE_FIELD("Node Voltage", 0.01),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Event Command: AP command",
@@ -6843,17 +5790,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      12,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, ",2,4", "AP command"},
-      {"B", BYTES(2), RES_NOTUSED, false, 0, ""},
-      {"Controlling Device", BYTES(1), 1, false, 0, ""},
-      {"Event", BYTES(2), RES_LOOKUP, false, LOOKUP_SIMNET_AP_EVENTS, ""},
-      {"Direction", BYTES(1), RES_LOOKUP, false, LOOKUP_SIMNET_DIRECTION, ""},
-      {"Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"G", BYTES(1), RES_NOTUSED, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 2, "AP command"),
+      SIMPLE_FIELD("Unused A", BYTES(2)),
+      ONE_BYTE_FIELD("Controlling Device"),
+      LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
+      SIMPLE_FIELD("Unused B", BYTES(1)),
+      LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
+      ANGLE_U16_FIELD("Angle", NULL),
+      SIMPLE_FIELD("Unused C", BYTES(1)),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Event Command: Alarm?",
@@ -6862,17 +5808,15 @@ Pgn pgnList[] = {
      PACKET_FAST,
      12,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"A", BYTES(2), 1, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command"},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"Alarm", BYTES(2), RES_LOOKUP, false, ",57=Raise,56=Clear", ""},
-      {"Message ID", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"F", BYTES(1), 1, false, 0, ""},
-      {"G", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      SIMPLE_FIELD("A", BYTES(2)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Alarm command"),
+      ONE_BYTE_FIELD("C"),
+      INTEGER_FIELD("Alarm", BYTES(2)),
+      INTEGER_FIELD("Message ID", BYTES(2)),
+      ONE_BYTE_FIELD("F"),
+      ONE_BYTE_FIELD("G"),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Event Command: Unknown",
@@ -6881,16 +5825,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      12,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"A", BYTES(2), 1, false, 0, ""},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=1", "Alarm command"},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"C", BYTES(2), 1, false, 0, ""},
-      {"D", BYTES(2), 1, false, 0, ""},
-      {"E", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      SIMPLE_FIELD("A", BYTES(2)),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Alarm command"),
+      ONE_BYTE_FIELD("B"),
+      SIMPLE_FIELD("C", BYTES(2)),
+      SIMPLE_FIELD("D", BYTES(2)),
+      SIMPLE_FIELD("E", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Event Reply: AP command",
@@ -6899,17 +5841,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      12,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Proprietary ID", BYTES(1), RES_LOOKUP, false, "=2", "AP command"},
-      {"B", BYTES(2), 1, false, 0, ""},
-      {"Controlling Device", BYTES(1), 1, false, 0, ""},
-      {"Event", BYTES(2), RES_LOOKUP, false, LOOKUP_SIMNET_AP_EVENTS, ""},
-      {"Direction", BYTES(1), RES_LOOKUP, false, LOOKUP_SIMNET_DIRECTION, ""},
-      {"Angle", BYTES(2), RES_RADIANS, false, "rad", ""},
-      {"G", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 2, "AP command"),
+      SIMPLE_FIELD("B", BYTES(2)),
+      ONE_BYTE_FIELD("Controlling Device"),
+      LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
+      ONE_BYTE_FIELD("C"),
+      LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
+      ANGLE_U16_FIELD("Angle", NULL),
+      ONE_BYTE_FIELD("G"),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Alarm Message",
@@ -6918,14 +5859,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x08,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=1857", "Simrad"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Message ID", BYTES(2), 1, false, 0, ""},
-      {"B", BYTES(1), 1, false, 0, ""},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"Text", BYTES(255), RES_ASCII, false, 0, ""},
-      {0}}}
+     {COMPANY(1857),
+      SIMPLE_FIELD("Message ID", BYTES(2)),
+      ONE_BYTE_FIELD("B"),
+      ONE_BYTE_FIELD("C"),
+      ASCII_FIELD("Text", BYTES(255)),
+      END_OF_FIELDS}}
 
     ,
     {"Airmar: Additional Weather Data",
@@ -6934,14 +5873,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x1e,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"Apparent Windchill Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"True Windchill Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Dewpoint", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {0}}}
+     {COMPANY(135),
+      ONE_BYTE_FIELD("C"),
+      TEMPERATURE_FIELD("Apparent Windchill Temperature"),
+      TEMPERATURE_FIELD("True Windchill Temperature"),
+      TEMPERATURE_FIELD("Dewpoint"),
+      END_OF_FIELDS}}
 
     ,
     {"Airmar: Heater Control",
@@ -6950,14 +5887,12 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x9,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"C", BYTES(1), 1, false, 0, ""},
-      {"Plate Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Air Temperature", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {"Dewpoint", BYTES(2), RES_TEMPERATURE, false, "K", ""},
-      {0}}}
+     {COMPANY(135),
+      ONE_BYTE_FIELD("C"),
+      TEMPERATURE_FIELD("Plate Temperature"),
+      TEMPERATURE_FIELD("Air Temperature"),
+      TEMPERATURE_FIELD("Dewpoint"),
+      END_OF_FIELDS}}
 
     ,
     {"Airmar: POST",
@@ -6966,23 +5901,16 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x8,
      0,
-     {{"Manufacturer Code", 11, RES_MANUFACTURER, false, "=135", "Airmar"},
-      {"Reserved", 2, RES_NOTUSED, false, 0, ""},
-      {"Industry Code", 3, RES_LOOKUP, false, "=4", "Marine Industry"},
-      {"Control", 4, RES_LOOKUP, false, ",0=Report previous values,1=Generate new values", ""},
-      {"Reserved", 7, RES_BINARY, false, 0, ""},
-      {"Number of ID/test result pairs to follow", BYTES(1), RES_INTEGER, false, 0, ""}
-
-      ,
-      {"Test ID",
-       BYTES(1),
-       RES_LOOKUP,
-       false,
-       ",1=Format Code,2=Factory EEPROM,3=User EEPROM,4=Water Temp Sensor,5=Sonar Transceiver,6=Speed sensor,7=Internal "
-       "temperature sensor,8=Battery voltage sensor",
-       "See Airmar docs for table of IDs and failure codes; these lookup values are for DST200"},
-      {"Test result", BYTES(1), RES_LOOKUP, false, ",0=Pass", "Values other than 0 are failure codes"},
-      {0}}}
+     {COMPANY(135),
+      LOOKUP_FIELD("Control", 1, AIRMAR_POST_CONTROL),
+      RESERVED_FIELD(7),
+      INTEGER_FIELD("Number of ID/test result pairs to follow", BYTES(1)),
+      LOOKUP_FIELD_DESC("Test ID",
+                        BYTES(1),
+                        AIRMAR_POST_ID,
+                        "See Airmar docs for table of IDs and failure codes; these lookup values are for DST200"),
+      INTEGER_DESC_FIELD("Test result", BYTES(1), "Values other than 0 are failure codes"),
+      END_OF_FIELDS}}
 
     ,
     {"Actisense: Operating mode",
@@ -6991,12 +5919,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      0x0e,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Model ID", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Serial ID", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Error ID", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Operating Mode", BYTES(2), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INTEGER_FIELD("Model ID", BYTES(2)),
+      INTEGER_FIELD("Serial ID", BYTES(4)),
+      INTEGER_FIELD("Error ID", BYTES(4)),
+      SIMPLE_FIELD("Operating Mode", BYTES(2)),
+      END_OF_FIELDS}}
 
     ,
     {"Actisense: Startup status",
@@ -7005,14 +5933,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x0f,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Model ID", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Serial ID", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Error ID", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Firmware version", BYTES(2), 0.001, false, 0, ""},
-      {"Reset status", BYTES(1), 1, false, 0, ""},
-      {"A", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INTEGER_FIELD("Model ID", BYTES(2)),
+      INTEGER_FIELD("Serial ID", BYTES(4)),
+      INTEGER_FIELD("Error ID", BYTES(4)),
+      NUMBER_FIELD("Firmware version", BYTES(2), 0.001, false, NULL, NULL),
+      ONE_BYTE_FIELD("Reset status"),
+      ONE_BYTE_FIELD("A"),
+      END_OF_FIELDS}}
 
     ,
     {"Actisense: System status",
@@ -7021,33 +5949,33 @@ Pgn pgnList[] = {
      PACKET_FAST,
      0x22,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Model ID", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Serial ID", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Error ID", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Indi channel count", BYTES(1), 1, false, 0, ""},
-      {"Ch1 Rx Bandwidth", BYTES(1), 1, false, 0, ""},
-      {"Ch1 Rx Load", BYTES(1), 1, false, 0, ""},
-      {"Ch1 Rx Filtered", BYTES(1), 1, false, 0, ""},
-      {"Ch1 Rx Dropped", BYTES(1), 1, false, 0, ""},
-      {"Ch1 Tx Bandwidth", BYTES(1), 1, false, 0, ""},
-      {"Ch1 Tx Load", BYTES(1), 1, false, 0, ""},
-      {"Ch2 Rx Bandwidth", BYTES(1), 1, false, 0, ""},
-      {"Ch2 Rx Load", BYTES(1), 1, false, 0, ""},
-      {"Ch2 Rx Filtered", BYTES(1), 1, false, 0, ""},
-      {"Ch2 Rx Dropped", BYTES(1), 1, false, 0, ""},
-      {"Ch2 Tx Bandwidth", BYTES(1), 1, false, 0, ""},
-      {"Ch2 Tx Load", BYTES(1), 1, false, 0, ""},
-      {"Uni channel count", BYTES(1), 1, false, 0, ""},
-      {"Ch1 Bandwidth", BYTES(1), 1, false, 0, ""},
-      {"Ch1 Deleted", BYTES(1), 1, false, 0, ""},
-      {"Ch1 BufferLoading", BYTES(1), 1, false, 0, ""},
-      {"Ch1 PointerLoading", BYTES(1), 1, false, 0, ""},
-      {"Ch2 Bandwidth", BYTES(1), 1, false, 0, ""},
-      {"Ch2 Deleted", BYTES(1), 1, false, 0, ""},
-      {"Ch2 BufferLoading", BYTES(1), 1, false, 0, ""},
-      {"Ch2 PointerLoading", BYTES(1), 1, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"),
+      INTEGER_FIELD("Model ID", BYTES(2)),
+      INTEGER_FIELD("Serial ID", BYTES(4)),
+      INTEGER_FIELD("Error ID", BYTES(4)),
+      ONE_BYTE_FIELD("Indi channel count"),
+      ONE_BYTE_FIELD("Ch1 Rx Bandwidth"),
+      ONE_BYTE_FIELD("Ch1 Rx Load"),
+      ONE_BYTE_FIELD("Ch1 Rx Filtered"),
+      ONE_BYTE_FIELD("Ch1 Rx Dropped"),
+      ONE_BYTE_FIELD("Ch1 Tx Bandwidth"),
+      ONE_BYTE_FIELD("Ch1 Tx Load"),
+      ONE_BYTE_FIELD("Ch2 Rx Bandwidth"),
+      ONE_BYTE_FIELD("Ch2 Rx Load"),
+      ONE_BYTE_FIELD("Ch2 Rx Filtered"),
+      ONE_BYTE_FIELD("Ch2 Rx Dropped"),
+      ONE_BYTE_FIELD("Ch2 Tx Bandwidth"),
+      ONE_BYTE_FIELD("Ch2 Tx Load"),
+      ONE_BYTE_FIELD("Uni channel count"),
+      ONE_BYTE_FIELD("Ch1 Bandwidth"),
+      ONE_BYTE_FIELD("Ch1 Deleted"),
+      ONE_BYTE_FIELD("Ch1 BufferLoading"),
+      ONE_BYTE_FIELD("Ch1 PointerLoading"),
+      ONE_BYTE_FIELD("Ch2 Bandwidth"),
+      ONE_BYTE_FIELD("Ch2 Deleted"),
+      ONE_BYTE_FIELD("Ch2 BufferLoading"),
+      ONE_BYTE_FIELD("Ch2 PointerLoading"),
+      END_OF_FIELDS}}
 
     ,
     {"Actisense: ?",
@@ -7056,10 +5984,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      17,
      0,
-     {{"SID", BYTES(1), 1, false, 0, ""},
-      {"Model ID", BYTES(2), RES_INTEGER, false, 0, ""},
-      {"Serial ID", BYTES(4), RES_INTEGER, false, 0, ""},
-      {0}}}
+     {ONE_BYTE_FIELD("SID"), INTEGER_FIELD("Model ID", BYTES(2)), INTEGER_FIELD("Serial ID", BYTES(4)), END_OF_FIELDS}}
 
     ,
     {"iKonvert: Network status",
@@ -7068,213 +5993,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      15,
      0,
-     {{"CAN network load", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Errors", BYTES(4), RES_INTEGER, false, 0, ""},
-      {"Device count", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Uptime", BYTES(4), RES_INTEGER, false, 0, "s"},
-      {"Gateway address", BYTES(1), RES_INTEGER, false, 0, ""},
-      {"Rejected TX requests", BYTES(4), RES_INTEGER, false, 0, ""},
-      {0}}}
-
-};
+     {INTEGER_FIELD("CAN network load", BYTES(1)),
+      INTEGER_FIELD("Errors", BYTES(4)),
+      INTEGER_FIELD("Device count", BYTES(1)),
+      INTEGER_DESC_FIELD("Uptime", BYTES(4), "s"),
+      INTEGER_FIELD("Gateway address", BYTES(1)),
+      INTEGER_FIELD("Rejected TX requests", BYTES(4)),
+      END_OF_FIELDS}}};
 
 size_t pgnListSize = ARRAY_SIZE(pgnList);
 
 #else
 extern Pgn    pgnList[];
 extern size_t pgnListSize;
-#endif
-
-typedef struct
-{
-  char *name;
-  int   id;
-} Company;
-
-#ifdef GLOBAL_COMPANYLIST
-/* https://www.nmea.org/Assets/20190623%20manu%20code%20and%20product%20code.pdf */
-static Company companyList[] = {{"Actia", 199},
-                                {"Actisense", 273},
-                                {"Advansea", 578},
-                                {"AEM Power", 735},
-                                {"Aetna Engineering/Fireboy/Xintex", 215},
-                                {"Airmar", 135},
-                                {"Alltek Marine Electronics Corp", 459},
-                                {"Amphenol LTW Technology", 274},
-                                {"Aquatic AV", 600},
-                                {"ARKS Enterprises, Inc.", 69},
-                                {"Arlt Tecnologies", 614},
-                                {"ASA Electronics", 905},
-                                {"Attwood Marine", 502},
-                                {"Au Electronics Group", 735},
-                                {"Autonnic", 715},
-                                {"Aventics GmbH", 605},
-                                {"Bavaria Yacts", 637},
-                                {"Beede Instruments", 185},
-                                {"BEP Marine", 116},
-                                {"BEP Marine", 295},
-                                {"Beyond Measure", 396},
-                                {"B & G", 381},
-                                {"BJ Technologies (Beneteau)", 802},
-                                {"Blue Seas", 969},
-                                {"Blue Water Data", 148},
-                                {"Blue Water Desalination", 811},
-                                {"Böning Automationstechnologie GmbH & Co. KG", 341},
-                                {"Broyda Industries", 795},
-                                {"Camano Light", 384},
-                                {"Canadian Automotive", 796},
-                                {"Capi 2", 394},
-                                {"Carling Technologies Inc. (Moritz Aerospace)", 176},
-                                {"Chetco Digitial Instruments", 481},
-                                {"Clarion US", 773},
-                                {"Coelmo SRL Italy", 286},
-                                {"Comar Systems Limited", 438},
-                                {"ComNav", 404},
-                                {"Cox Powertrain", 968},
-                                {"CPAC Systems AB", 165},
-                                {"Cummins", 440},
-                                {"DaeMyung", 743},
-                                {"Data Panel Corp", 868},
-                                {"Dief", 329},
-                                {"Digital Switching Systems", 211},
-                                {"Digital Yacht", 437},
-                                {"Disenos Y Technologia", 201},
-                                {"Diverse Yacht Services", 641},
-                                {"Ecotronix", 930},
-                                {"Egersund Marine Electronics AS", 426},
-                                {"Electronic Design", 373},
-                                {"EMMI NETWORK S.L.", 224},
-                                {"Empir Bus", 304},
-                                {"em-trak Marine Electronics", 427},
-                                {"Eride", 243},
-                                {"Evinrude/BRP", 163},
-                                {"Faria Instruments", 1863},
-                                {"Fell Marine", 844},
-                                {"Fischer Panda", 311},
-                                {"Fischer Panda DE", 785},
-                                {"Fischer Panda Generators", 356},
-                                {"FLIR", 815},
-                                {"Floscan Instrument Co. Inc.", 192},
-                                {"Furuno", 1855},
-                                {"Fusion Electronics", 419},
-                                {"FW Murphy/Enovation Controls", 78},
-                                {"Garmin", 229},
-                                {"Garmin", 645},
-                                {"GeoNav", 385},
-                                {"Gill Sensors", 803},
-                                {"Glendinning", 378},
-                                {"GME aka Standard Communications Pty LTD", 475},
-                                {"Groco", 272},
-                                {"Hamilton Jet", 283},
-                                {"Hemisphere GPS Inc", 88},
-                                {"HMI Systems", 776},
-                                {"Honda Marine", 175},
-                                {"Honda Marine", 200},
-                                {"Honda Marine", 225},
-                                {"Honda Marine", 250},
-                                {"Honda Motor Company LTD", 140},
-                                {"Honda Motor Company LTD", 257},
-                                {"Humminbird Marine Electronics", 467},
-                                {"Humminbird Marine Electronics", 476},
-                                {"ICOM", 315},
-                                {"Intellian", 606},
-                                {"Japan Radio Co", 1853},
-                                {"JL Audio", 704},
-                                {"Johnson Outdoors Marine Electronics Inc Geonav", 385},
-                                {"Kohler Power Systems", 85},
-                                {"Korean Maritime University", 345},
-                                {"Kvasar", 743},
-                                {"Kvasar AB", 1859},
-                                {"KVH", 579},
-                                {"L3 Technologies", 890},
-                                {"Lcj Capteurs", 499},
-                                {"Litton", 1858},
-                                {"Livorsi Marine", 400},
-                                {"Lowrance", 140},
-                                {"Lumishore", 798},
-                                {"LxNav", 739},
-                                {"Maretron", 137},
-                                {"Marinecraft (South Korea)", 571},
-                                {"Marines Co (South Korea)", 909},
-                                {"Marinesoft Co. LTD", 510},
-                                {"Mastervolt", 355},
-                                {"MBW Technologies", 307},
-                                {"McMurdo Group aka Orolia LTD", 573},
-                                {"Mercury Marine", 144},
-                                {"MMP", 1860},
-                                {"Moritz Aerospace", 176},
-                                {"Mystic Valley Communications", 198},
-                                {"National Instruments Korea", 529},
-                                {"Nautibus Electronic GmbH", 147},
-                                {"Nautic-on", 911},
-                                {"Navico", 275},
-                                {"Navionics", 1852},
-                                {"Naviop S.R.L.", 503},
-                                {"Nexfour Solutions", 896},
-                                {"Nobletec", 193},
-                                {"NoLand Engineering", 517},
-                                {"Northern Lights", 374},
-                                {"Northstar Technologies", 1854},
-                                {"NovAtel", 305},
-                                {"Ocean Sat BV", 478},
-                                {"Ocean Signal", 777},
-                                {"Oceanvolt", 847},
-                                {"Offshore Systems (UK) Ltd.", 161},
-                                {"Onwa Marine", 532},
-                                {"Parker Hannifin aka Village Marine Tech", 451},
-                                {"Poly Planar", 781},
-                                {"Prospec", 862},
-                                {"Qwerty", 328},
-                                {"Raymarine", 1851},
-                                {"REAP Systems", 734},
-                                {"Rhodan Marine Systems", 894},
-                                {"Rockford Corp", 688},
-                                {"Rolls Royce Marine", 370},
-                                {"Rose Point Navigation Systems", 384},
-                                {"Sailormade Marine Telemetry/Tetra Technology LTD", 235},
-                                {"SamwonIT", 612},
-                                {"SAN GIORGIO S.E.I.N", 460},
-                                {"San Jose Technology", 580},
-                                {"Sea Cross Marine AB", 471},
-                                {"Sea Recovery", 285},
-                                {"Seekeeper", 778},
-                                {"Shenzhen Jiuzhou Himunication", 658},
-                                {"Ship Module aka Customware", 595},
-                                {"Simrad", 1857},
-                                {"SI-TEX Marine Electronics", 470},
-                                {"Sleipner Motor AS", 306},
-                                {"Standard Horizon", 421},
-                                {"Still Water Designs and Audio", 799},
-                                {"Suzuki Motor Corporation", 586},
-                                {"TeamSurv", 838},
-                                {"Teleflex Marine (SeaStar Solutions)", 1850},
-                                {"Thrane and Thrane", 351},
-                                {"Tides Marine", 797},
-                                {"Timbolier Industries", 962},
-                                {"TJC Micro", 963},
-                                {"Tohatsu Co, JP", 431},
-                                {"Transas USA", 518},
-                                {"Trimble", 1856},
-                                {"True Heading AB", 422},
-                                {"Twin Disc", 80},
-                                {"Undheim Systems", 824},
-                                {"US Coast Guard", 591},
-                                {"VDO (aka Continental-Corporation)", 443},
-                                {"Vector Cantech", 1861},
-                                {"Veethree Electronics & Marine", 466},
-                                {"Vesper Marine Ltd", 504},
-                                {"Victron Energy", 358},
-                                {"Volvo Penta", 174},
-                                {"Watcheye", 493},
-                                {"Wema U.S.A dba KUS", 644},
-                                {"Westerbeke", 154},
-                                {"Woosung", 744},
-                                {"Xantrex Technology Inc.", 168},
-                                {"Xintex/Atena", 215},
-                                {"Yacht Control", 583},
-                                {"Yacht Devices", 717},
-                                {"Yacht Monitoring Solutions", 233},
-                                {"Yamaha Marine", 1862},
-                                {"Yanmar Marine", 172},
-                                {"ZF", 228}};
 #endif

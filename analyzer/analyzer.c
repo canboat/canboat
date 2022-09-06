@@ -21,10 +21,9 @@ limitations under the License.
 */
 
 #define GLOBALS
-#define GLOBAL_COMPANYLIST
 #include "analyzer.h"
 
-#include "common.h"
+#include "parse.h"
 
 enum RawFormats
 {
@@ -78,7 +77,6 @@ typedef struct
 #define DATAFIELD_RESERVED3 (-4)
 
 DevicePackets *device[256];
-char *         manufacturer[1 << 12];
 
 bool            showRaw       = false;
 bool            showData      = false;
@@ -87,7 +85,7 @@ bool            showJson      = false;
 bool            showJsonEmpty = false;
 bool            showJsonValue = false;
 bool            showSI        = false; // Output everything in strict SI units
-char *          sep           = " ";
+char           *sep           = " ";
 char            closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
 enum GeoFormats showGeo  = GEO_DD;
 int             onlyPgn  = 0;
@@ -105,14 +103,10 @@ static enum RawFormats detectFormat(const char *msg);
 static bool            printCanFormat(RawMessage *msg);
 static bool            printNumber(char *fieldName, Field *field, uint8_t *data, size_t startBit, size_t bits);
 static bool            printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-static void            camelCase(bool upperCamelCase);
-static void            explain(void);
-static void            explainXML(bool, bool, bool);
 static void            fillFieldCounts(void);
-static void            fillManufacturers(void);
 static void            printCanRaw(RawMessage *msg);
 
-void usage(char **argv, char **av)
+static void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
   printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
@@ -120,7 +114,7 @@ void usage(char **argv, char **av)
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
-         "-explain | -explain-xml [-upper-camel]] | -version\n",
+         "-version\n",
          argv[0]);
   printf("     -json             Output in json format, for program consumption. Empty values are skipped\n");
   printf("     -empty            Modified json format where empty values are shown as NULL\n");
@@ -136,10 +130,6 @@ void usage(char **argv, char **av)
 #ifndef SKIP_SETSYSTEMCLOCK
   printf("     -clocksrc         Set the systemclock from time info from this NMEA source address\n");
 #endif
-  printf("     -explain          Export the PGN database in JSON format\n");
-  printf("     -explain-xml      Export the PGN database in XML format\n");
-  printf("     -explain-ngt-xml  Export the Actisense PGN database in XML format\n");
-  printf("     -explain-ik-xml   Export the iKonvert PGN database in XML format\n");
   printf("     -version          Print the version of the program and quit\n");
   printf("\nThe following options are used to debug the analyzer:\n");
   printf("     -raw              Print raw bytes (obsolete, use -data)\n");
@@ -153,13 +143,9 @@ int main(int argc, char **argv)
 {
   int    r;
   char   msg[2000];
-  FILE * file            = stdin;
-  int    ac              = argc;
-  char **av              = argv;
-  bool   doExplainXML    = false;
-  bool   doExplainNGTXML = false;
-  bool   doExplainIKXML  = false;
-  bool   doExplain       = false;
+  FILE  *file = stdin;
+  int    ac   = argc;
+  char **av   = argv;
 
   setProgName(argv[0]);
 
@@ -170,21 +156,13 @@ int main(int argc, char **argv)
       printf("%s\n", VERSION);
       exit(0);
     }
-    else if (strcasecmp(av[1], "-explain-xml") == 0)
+    else if (strcasecmp(av[1], "-camel") == 0)
     {
-      doExplainXML = true;
+      camelCase(false);
     }
-    else if (strcasecmp(av[1], "-explain-ngt-xml") == 0)
+    else if (strcasecmp(av[1], "-upper-camel") == 0)
     {
-      doExplainNGTXML = true;
-    }
-    else if (strcasecmp(av[1], "-explain-ik-xml") == 0)
-    {
-      doExplainIKXML = true;
-    }
-    else if (strcasecmp(av[1], "-explain") == 0)
-    {
-      doExplain = true;
+      camelCase(true);
     }
     else if (strcasecmp(av[1], "-raw") == 0)
     {
@@ -230,14 +208,6 @@ int main(int argc, char **argv)
     else if (strcasecmp(av[1], "-nosi") == 0)
     {
       showSI = false;
-    }
-    else if (strcasecmp(av[1], "-camel") == 0)
-    {
-      camelCase(false);
-    }
-    else if (strcasecmp(av[1], "-upper-camel") == 0)
-    {
-      camelCase(true);
     }
     else if (strcasecmp(av[1], "-json") == 0)
     {
@@ -296,21 +266,6 @@ int main(int argc, char **argv)
     }
   }
 
-  if (doExplain)
-  {
-    explain();
-    exit(0);
-  }
-  if (doExplainXML || doExplainIKXML || doExplainNGTXML)
-  {
-    if (!pgnList[0].camelDescription)
-    {
-      camelCase(false);
-    }
-    explainXML(doExplainXML, doExplainNGTXML, doExplainIKXML);
-    exit(0);
-  }
-
   if (!showJson)
   {
     logInfo("N2K packet analyzer\n" COPYRIGHT);
@@ -320,8 +275,8 @@ int main(int argc, char **argv)
     printf("{\"version\":\"%s\",\"units\":\"%s\"}\n", VERSION, showSI ? "si" : "std");
   }
 
-  fillManufacturers();
   fillFieldCounts();
+  fillLookups();
   checkPgnList();
 
   while (fgets(msg, sizeof(msg) - 1, file))
@@ -393,9 +348,9 @@ int main(int argc, char **argv)
   return 0;
 }
 
-enum RawFormats detectFormat(const char *msg)
+static enum RawFormats detectFormat(const char *msg)
 {
-  char *       p;
+  char        *p;
   int          r;
   unsigned int len;
 
@@ -465,7 +420,7 @@ enum RawFormats detectFormat(const char *msg)
   return RAWFORMAT_UNKNOWN;
 }
 
-char *getSep()
+static char *getSep()
 {
   char *s = sep;
 
@@ -488,20 +443,6 @@ char *getSep()
   }
 
   return s;
-}
-
-static void fillManufacturers(void)
-{
-  size_t i;
-
-  for (i = 0; i < ARRAY_SIZE(manufacturer); i++)
-  {
-    manufacturer[i] = 0;
-  }
-  for (i = 0; i < ARRAY_SIZE(companyList); i++)
-  {
-    manufacturer[companyList[i].id] = companyList[i].name;
-  }
 }
 
 static void fillFieldCounts(void)
@@ -589,7 +530,7 @@ static void printEmpty(const char *name, int64_t exceptionValue)
 static void printCanRaw(RawMessage *msg)
 {
   size_t i;
-  FILE * f = stdout;
+  FILE  *f = stdout;
 
   if (onlySrc >= 0 && onlySrc != msg->src)
   {
@@ -686,8 +627,8 @@ static bool printLatLon(char *name, double resolution, uint8_t *data, size_t byt
   }
   else
   {
-    uint32_t degrees   = (uint32_t)(absVal / RES_LAT_LONG_PRECISION);
-    uint32_t remainder = (uint32_t)(absVal % RES_LAT_LONG_PRECISION);
+    uint32_t degrees   = (uint32_t) (absVal / RES_LAT_LONG_PRECISION);
+    uint32_t remainder = (uint32_t) (absVal % RES_LAT_LONG_PRECISION);
     uint32_t minutes   = (remainder * 60) / RES_LAT_LONG_PRECISION;
     double   seconds   = (((uint64_t) remainder * 3600) / (double) RES_LAT_LONG_PRECISION) - (60 * minutes);
 
@@ -930,7 +871,6 @@ static void print6BitASCIIChar(uint8_t b)
 static bool print6BitASCIIText(char *name, uint8_t *data, size_t startBit, size_t bits)
 {
   uint8_t  value        = 0;
-  uint8_t  maxValue     = 0;
   uint8_t  bitMask      = 1 << startBit;
   uint64_t bitMagnitude = 1;
   size_t   bit;
@@ -949,7 +889,6 @@ static bool print6BitASCIIText(char *name, uint8_t *data, size_t startBit, size_
   {
     /* Act on the current bit */
     bool bitIsSet = (*data & bitMask) > 0;
-    maxValue |= bitMagnitude;
     if (bitIsSet)
     {
       value |= bitMagnitude;
@@ -984,7 +923,6 @@ static bool print6BitASCIIText(char *name, uint8_t *data, size_t startBit, size_
 static bool printHex(char *name, uint8_t *data, size_t startBit, size_t bits)
 {
   uint8_t  value        = 0;
-  uint8_t  maxValue     = 0;
   uint8_t  bitMask      = 1 << startBit;
   uint64_t bitMagnitude = 1;
   size_t   bit;
@@ -1010,7 +948,6 @@ static bool printHex(char *name, uint8_t *data, size_t startBit, size_t bits)
   {
     /* Act on the current bit */
     bool bitIsSet = (*data & bitMask) > 0;
-    maxValue |= bitMagnitude;
     if (bitIsSet)
     {
       value |= bitMagnitude;
@@ -1045,7 +982,6 @@ static bool printHex(char *name, uint8_t *data, size_t startBit, size_t bits)
 static bool printDecimal(char *name, uint8_t *data, size_t startBit, size_t bits)
 {
   uint8_t  value        = 0;
-  uint8_t  maxValue     = 0;
   uint8_t  bitMask      = 1 << startBit;
   uint64_t bitMagnitude = 1;
   size_t   bit;
@@ -1069,7 +1005,6 @@ static bool printDecimal(char *name, uint8_t *data, size_t startBit, size_t bits
   {
     /* Act on the current bit */
     bool bitIsSet = (*data & bitMask) > 0;
-    maxValue |= bitMagnitude;
     if (bitIsSet)
     {
       value |= bitMagnitude;
@@ -1162,10 +1097,10 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
 
   if (value <= maxValue - reserved)
   {
-    if (field->units && field->units[0] == '=')
+    if (field->units && field->units[0] == '=' && isdigit(field->units[2]))
     {
-      char  lookfor[20];
-      char *s;
+      char        lookfor[20];
+      const char *s;
 
       sprintf(lookfor, "=%" PRId64, value);
       if (strcmp(lookfor, field->units) != 0)
@@ -1189,31 +1124,23 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
       }
     }
 
-    else if (field->resolution == RES_LOOKUP && field->units)
+    else if ((field->resolution == RES_LOOKUP || field->resolution == RES_MANUFACTURER) && field->lookupValue)
     {
-      char  lookfor[20];
-      char *s, *e;
+      const char *s = field->lookupValue[value];
 
-      logDebug("RES_LOOKUP of value %" PRId64 " in '%s'\n", value, field->units);
-
-      sprintf(lookfor, ",%" PRId64 "=", value);
-      s = strstr(field->units, lookfor);
       if (s)
       {
-        s += strlen(lookfor);
-        e = strchr(s, ',');
-        e = e ? e : s + strlen(s);
         if (showJsonValue)
         {
-          mprintf("%s\"%s\":{\"value\":%" PRId64 ",\"name\":\"%.*s\"}", getSep(), fieldName, value, (int) (e - s), s);
+          mprintf("%s\"%s\":{\"value\":%" PRId64 ",\"name\":\"%s\"}", getSep(), fieldName, value, s);
         }
         else if (showJson)
         {
-          mprintf("%s\"%s\":\"%.*s\"", getSep(), fieldName, (int) (e - s), s);
+          mprintf("%s\"%s\":\"%s\"", getSep(), fieldName, s);
         }
         else
         {
-          mprintf("%s %s = %.*s", getSep(), fieldName, (int) (e - s), s);
+          mprintf("%s %s = %s", getSep(), fieldName, s);
         }
       }
       else
@@ -1229,10 +1156,8 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
       }
     }
 
-    else if (field->resolution == RES_BITFIELD && field->units)
+    else if (field->resolution == RES_BITFIELD && field->lookupValue)
     {
-      char         lookfor[20];
-      char *       s, *e;
       unsigned int bit;
       uint64_t     bitValue;
       char         sep;
@@ -1254,29 +1179,24 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
         logDebug("RES_BITFIELD is bit %u value %" PRIx64 " set %d\n", bit, bitValue, (value & value) >= 0);
         if ((value & bitValue) != 0)
         {
-          sprintf(lookfor, ",%u=", bit);
-          s = strstr(field->units, lookfor);
+          const char *s = field->lookupValue[value];
+
           if (s)
           {
-            s += strlen(lookfor);
-            e = strchr(s, ',');
-            e = e ? e : s + strlen(s);
             if (showJson)
             {
-              mprintf("%c\"%.*s\"", sep, (int) (e - s), s);
-              sep = ',';
+              mprintf("%c\"%s\"", sep, s);
             }
             else
             {
-              mprintf("%c%.*s", sep, (int) (e - s), s);
-              sep = ',';
+              mprintf("%c%s", sep, s);
             }
           }
           else
           {
             mprintf("%c\"%" PRIu64 "\"", sep, bitValue);
-            sep = ',';
           }
+          sep = ',';
         }
       }
       if (showJson)
@@ -1301,39 +1221,6 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
       else
       {
         mprintf("%s %s = 0x%" PRIx64, getSep(), fieldName, value);
-      }
-    }
-    else if (field->resolution == RES_MANUFACTURER)
-    {
-      char *m = 0;
-      char  unknownManufacturer[30];
-
-      if (value > 0 && value < ARRAY_SIZE(manufacturer))
-      {
-        m = manufacturer[value];
-      }
-      if (!m)
-      {
-        if (showJson)
-        {
-          mprintf("%s \"%s\":%" PRId64, getSep(), fieldName, value);
-          return true;
-        }
-        sprintf(unknownManufacturer, "Unknown Manufacturer %" PRId64, value);
-        m = unknownManufacturer;
-      }
-
-      if (showJsonValue)
-      {
-        mprintf("%s \"%s\":{\"value\":%" PRId64 ",\"name\":\"%s\"}", getSep(), fieldName, value, m);
-      }
-      else if (showJson)
-      {
-        mprintf("%s \"%s\": \"%s\"", getSep(), fieldName, m);
-      }
-      else
-      {
-        mprintf("%s %s = %s", getSep(), fieldName, m);
       }
     }
     else
@@ -1413,7 +1300,7 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
         {
           mprintf("%s %s = %.*f km", getSep(), fieldName, precision + 3, a / 1000);
         }
-        else
+        else if (units && units[0] != '=')
         {
           mprintf("%s %s = %.*f", getSep(), fieldName, precision, a);
           if (units)
@@ -1584,7 +1471,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
   size_t  fastPacketIndex;
   size_t  bucket;
   Packet *packet;
-  Pgn *   pgn = &pgnList[index];
+  Pgn    *pgn = &pgnList[index];
 
   if (!device[msg->src])
   {
@@ -1737,429 +1624,6 @@ static bool printCanFormat(RawMessage *msg)
     printPacket(unknownIndex, unknownIndex, msg);
   }
   return onlyPgn > 0;
-}
-
-static void explainPGN(Pgn pgn)
-{
-  int i;
-
-  printf("PGN: %d / %08o / %05X - %u - %s\n\n", pgn.pgn, pgn.pgn, pgn.pgn, pgn.size, pgn.description);
-
-  if (pgn.repeatingFields >= 100)
-  {
-    printf("     The last %u and %u fields repeat until the data is exhausted.\n\n",
-           pgn.repeatingFields % 100,
-           pgn.repeatingFields / 100);
-  }
-  else if (pgn.repeatingFields)
-  {
-    printf("     The last %u fields repeat until the data is exhausted.\n\n", pgn.repeatingFields);
-  }
-  for (i = 0; i < ARRAY_SIZE(pgn.fieldList) && pgn.fieldList[i].name; i++)
-  {
-    Field f = pgn.fieldList[i];
-    printf("  Field #%d: %s%s%s\n",
-           i + 1,
-           f.name,
-           f.name[0] && (f.description && f.description[0] && f.description[0] != ',') ? " - " : "",
-           (!f.description || f.description[0] == ',') ? "" : f.description);
-    if (!f.size)
-    {
-      printf("                  Bits: variable\n");
-    }
-    else
-    {
-      printf("                  Bits: %u\n", f.size);
-    }
-
-    if (f.units && f.units[0] == '=')
-    {
-      printf("                  Match: %s\n", &f.units[1]);
-    }
-    else if (f.units && f.units[0] != ',')
-    {
-      printf("                  Units: %s\n", f.units);
-    }
-
-    if (f.resolution < 0.0)
-    {
-      Resolution t = types[-1 * (int) f.resolution - 1];
-      if (t.name)
-      {
-        printf("                  Type: %s\n", t.name);
-      }
-      if (t.resolution)
-      {
-        printf("                  Resolution: %s\n", t.resolution);
-      }
-      else if (f.resolution == RES_LATITUDE || f.resolution == RES_LONGITUDE)
-      {
-        if (f.size == BYTES(8))
-        {
-          printf("                  Resolution: %.16f\n", 1e-16);
-        }
-        else
-        {
-          printf("                  Resolution: %.7f\n", 1e-7);
-        }
-      }
-    }
-    else if (f.resolution != 1.0)
-    {
-      printf("                  Resolution: %g\n", f.resolution);
-    }
-    printf("                  Signed: %s\n", (f.hasSign) ? "true" : "false");
-    if (f.offset != 0)
-    {
-      printf("                  Offset: %d\n", f.offset);
-    }
-
-    if ((f.resolution == RES_LOOKUP || f.resolution == RES_BITFIELD) && f.units && f.units[0] == ',')
-    {
-      char *s, *e;
-
-      for (s = f.units + 1;; s = e + 1)
-      {
-        e = strchr(s, ',');
-        e = e ? e : s + strlen(s);
-        printf("                  Lookup: %.*s\n", (int) (e - s), s);
-        if (!*e)
-        {
-          break;
-        }
-      }
-    }
-  }
-
-  printf("\n\n");
-}
-
-/*
- * Print string but replace special characters by their XML entity.
- */
-static void printXML(int indent, const char *element, const char *p)
-{
-  int i;
-
-  if (p)
-  {
-    for (i = 0; i < indent; i++)
-    {
-      fputs(" ", stdout);
-    }
-    printf("<%s>", element);
-    for (; *p; p++)
-    {
-      switch (*p)
-      {
-        case '&':
-          fputs("&amp;", stdout);
-          break;
-
-        case '<':
-          fputs("&lt;", stdout);
-          break;
-
-        case '>':
-          fputs("&gt;", stdout);
-          break;
-
-        case '"':
-          fputs("&quot;", stdout);
-          break;
-
-        default:
-          putchar(*p);
-      }
-    }
-    printf("</%s>\n", element);
-  }
-}
-
-static void explainPGNXML(Pgn pgn)
-{
-  int      i;
-  unsigned bitOffset     = 0;
-  bool     showBitOffset = true;
-
-  printf("    <PGNInfo>\n"
-         "      <PGN>%u</PGN>\n",
-         pgn.pgn);
-  printXML(6, "Id", pgn.camelDescription);
-  printXML(6, "Description", pgn.description);
-  printXML(6, "Type", (pgn.type == PACKET_ISO11783 ? "ISO" : (pgn.type == PACKET_FAST ? "Fast" : "Single")));
-  printf("      <Complete>%s</Complete>\n", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));
-
-  if (pgn.complete != PACKET_COMPLETE)
-  {
-    printf("      <Missing>\n");
-
-    if ((pgn.complete & PACKET_FIELDS_UNKNOWN) != 0)
-    {
-      printXML(8, "MissingAttribute", "Fields");
-    }
-    if ((pgn.complete & PACKET_FIELD_LENGTHS_UNKNOWN) != 0)
-    {
-      printXML(8, "MissingAttribute", "FieldLengths");
-    }
-    if ((pgn.complete & PACKET_PRECISION_UNKNOWN) != 0)
-    {
-      printXML(8, "MissingAttribute", "Precision");
-    }
-    if ((pgn.complete & PACKET_LOOKUPS_UNKNOWN) != 0)
-    {
-      printXML(8, "MissingAttribute", "Lookups");
-    }
-    if ((pgn.complete & PACKET_NOT_SEEN) != 0)
-    {
-      printXML(8, "MissingAttribute", "SampleData");
-    }
-
-    printf("      </Missing>\n");
-  }
-
-  printf("      <Length>%u</Length>\n", pgn.size);
-
-  if (pgn.repeatingFields >= 100)
-  {
-    printf("      <RepeatingFieldSet1>%u</RepeatingFieldSet1>\n", pgn.repeatingFields % 100);
-    printf("      <RepeatingFieldSet2>%u</RepeatingFieldSet2>\n", pgn.repeatingFields / 100);
-  }
-  else
-  {
-    printf("      <RepeatingFields>%u</RepeatingFields>\n", pgn.repeatingFields);
-  }
-
-  if (pgn.fieldList[0].name)
-  {
-    printf("      <Fields>\n");
-
-    for (i = 0; i < ARRAY_SIZE(pgn.fieldList) && pgn.fieldList[i].name; i++)
-    {
-      Field f = pgn.fieldList[i];
-
-      printf("        <Field>\n"
-             "          <Order>%d</Order>\n",
-             i + 1);
-      printXML(10, "Id", f.camelName);
-      printXML(10, "Name", f.name);
-
-      if (f.description && f.description[0] && f.description[0] != ',')
-      {
-        printXML(10, "Description", f.description);
-      }
-      printf("          <BitLength>%u</BitLength>\n", f.size);
-      if (showBitOffset)
-      {
-        printf("          <BitOffset>%u</BitOffset>\n", bitOffset);
-      }
-      printf("          <BitStart>%u</BitStart>\n", bitOffset % 8);
-      bitOffset = bitOffset + f.size;
-
-      if (f.units && f.units[0] == '=')
-      {
-        printf("          <Match>%s</Match>\n", &f.units[1]);
-      }
-      else if (f.units && f.units[0] != ',')
-      {
-        printf("          <Units>%s</Units>\n", f.units);
-      }
-
-      if (f.resolution < 0.0)
-      {
-        Resolution t = types[-1 * (int) f.resolution - 1];
-        if (t.name)
-        {
-          printf("                 <Type>%s</Type>\n", t.name);
-        }
-        if (t.resolution)
-        {
-          printf("                 <Resolution>%s</Resolution>\n", t.resolution);
-        }
-        else if (f.resolution == RES_LATITUDE || f.resolution == RES_LONGITUDE)
-        {
-          if (f.size == BYTES(8))
-          {
-            printf("                 <Resolution>%.16f</Resolution>\n", 1e-16);
-          }
-          else
-          {
-            printf("                 <Resolution>%.7f</Resolution>\n", 1e-7);
-          }
-        }
-      }
-      else if (f.resolution != 1.0)
-      {
-        printf("          <Resolution>%g</Resolution>\n", f.resolution);
-      }
-      printf("          <Signed>%s</Signed>\n", f.hasSign ? "true" : "false");
-      if (f.offset != 0)
-      {
-        printf("          <Offset>%d</Offset>\n", f.offset);
-      }
-
-      if (f.resolution == RES_LOOKUP && f.units && f.units[0] == ',')
-      {
-        char *s, *e, *p;
-
-        printf("          <EnumValues>\n");
-
-        for (s = f.units + 1;; s = e + 1)
-        {
-          e = strchr(s, ',');
-          e = e ? e : s + strlen(s);
-          p = strchr(s, '=');
-          if (p)
-          {
-            printf("            <EnumPair Value='%.*s' Name='%.*s' />\n", (int) (p - s), s, (int) (e - (p + 1)), p + 1);
-          }
-          if (!*e)
-          {
-            break;
-          }
-        }
-
-        printf("          </EnumValues>\n");
-      }
-
-      if (f.resolution == RES_BITFIELD && f.units && f.units[0] == ',')
-      {
-        char *s, *e, *p;
-
-        printf("          <EnumBitValues>\n");
-
-        for (s = f.units + 1;; s = e + 1)
-        {
-          e = strchr(s, ',');
-          e = e ? e : s + strlen(s);
-          p = strchr(s, '=');
-          if (p)
-          {
-            printf("            <EnumPair Bit='%.*s' Name='%.*s' />\n", (int) (p - s), s, (int) (e - (p + 1)), p + 1);
-          }
-          if (!*e)
-          {
-            break;
-          }
-        }
-
-        printf("          </EnumBitValues>\n");
-      }
-
-      if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU)
-      {
-        showBitOffset = false; // From here on there is no good bitoffset to be printed
-      }
-      printf("        </Field>\n");
-    }
-    printf("      </Fields>\n");
-  }
-  printf("    </PGNInfo>\n");
-}
-
-static void explain(void)
-{
-  int i;
-
-  printf(COPYRIGHT "\n\nThis program can understand a number of N2K messages. What follows is an explanation of the messages\n"
-                   "that it understands. First is a list of completely understood messages, as far as I can tell.\n"
-                   "What follows is a list of messages that contain fields that have unknown content or size, or even\n"
-                   "completely unknown fields. If you happen to know more, please tell me!\n\n");
-  printf("_______ Complete PGNs _________\n\n");
-  for (i = 1; i < ARRAY_SIZE(pgnList); i++)
-  {
-    if (pgnList[i].complete == PACKET_COMPLETE && pgnList[i].pgn < ACTISENSE_BEM)
-    {
-      explainPGN(pgnList[i]);
-    }
-  }
-  printf("_______ Incomplete PGNs _________\n\n");
-  for (i = 1; i < ARRAY_SIZE(pgnList); i++)
-  {
-    if (pgnList[i].complete != PACKET_COMPLETE && pgnList[i].pgn < ACTISENSE_BEM)
-    {
-      explainPGN(pgnList[i]);
-    }
-  }
-}
-
-char *camelize(const char *str, bool upperCamelCase)
-{
-  size_t len         = strlen(str);
-  char * ptr         = malloc(len + 1);
-  char * s           = ptr;
-  bool   lastIsAlpha = !upperCamelCase;
-
-  if (!s)
-  {
-    return 0;
-  }
-
-  for (s = ptr; *str; str++)
-  {
-    if (isalpha(*str) || isdigit(*str))
-    {
-      if (lastIsAlpha)
-      {
-        *s = tolower(*str);
-      }
-      else
-      {
-        *s          = toupper(*str);
-        lastIsAlpha = true;
-      }
-      s++;
-    }
-    else
-    {
-      lastIsAlpha = false;
-    }
-  }
-
-  *s = 0;
-  return ptr;
-}
-
-static void camelCase(bool upperCamelCase)
-{
-  int i, j;
-
-  for (i = 0; i < ARRAY_SIZE(pgnList); i++)
-  {
-    pgnList[i].camelDescription = camelize(pgnList[i].description, upperCamelCase);
-    for (j = 0; j < ARRAY_SIZE(pgnList[i].fieldList) && pgnList[i].fieldList[j].name; j++)
-    {
-      pgnList[i].fieldList[j].camelName = camelize(pgnList[i].fieldList[j].name, upperCamelCase);
-    }
-  }
-}
-
-static void explainXML(bool normal, bool actisense, bool ikonvert)
-{
-  int i;
-
-  printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-         "<!--\n" COPYRIGHT "\n-->\n"
-         "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
-         "Version=\"0.1\">\n"
-         "  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
-         "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
-         "  <License>Apache License Version 2.0</License>\n"
-         "  <Version>" VERSION "</Version>\n"
-         "  <PGNs>\n");
-
-  for (i = 1; i < ARRAY_SIZE(pgnList); i++)
-  {
-    int pgn = pgnList[i].pgn;
-    if ((normal && pgn < ACTISENSE_BEM) || (actisense && pgn >= ACTISENSE_BEM && pgn < IKONVERT_BEM)
-        || (ikonvert && pgn >= IKONVERT_BEM))
-    {
-      explainPGNXML(pgnList[i]);
-    }
-  }
-
-  printf("  </PGNs>\n"
-         "</PGNDefinitions>\n");
 }
 
 static bool printString(Field *field, const char *fieldName, uint8_t *data, size_t bytes, size_t *bits)
@@ -2327,6 +1791,20 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     // where they are zero. Some AIS devices (SRT) produce an 8 bit long
     // nav status, others just a four bit one.
     return true;
+  }
+
+  if (field->proprietary)
+  {
+    if ((refPgn >= 65280 && refPgn <= 65535) || (refPgn >= 126720 && refPgn <= 126975) || (refPgn >= 130816 && refPgn <= 131071))
+    {
+      // proprietary, allow field
+    }
+    else
+    {
+      // standard PGN, skip field
+      *bits = 0;
+      return true;
+    }
   }
   if (field->resolution < 0.0)
   {

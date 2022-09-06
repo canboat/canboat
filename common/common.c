@@ -459,7 +459,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
 
 char *sbSearchChar(const StringBuffer *const in, char c)
 {
-  char * p = sbGet(in);
+  char  *p = sbGet(in);
   size_t i;
 
   for (i = 0; i < in->len; i++)
@@ -532,8 +532,8 @@ this the "Extended Data Page" (EDP).
 
 void getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int *pgn, unsigned int *src, unsigned int *dst)
 {
-  unsigned char PF = (unsigned char) (id >> 16);
-  unsigned char PS = (unsigned char) (id >> 8);
+  unsigned char PF  = (unsigned char) (id >> 16);
+  unsigned char PS  = (unsigned char) (id >> 8);
   unsigned char RDP = (unsigned char) (id >> 24) & 3; // Use R + DP bits
 
   if (src)
@@ -644,8 +644,8 @@ SOCKET open_socket_stream(const char *url)
   int             sockfd = INVALID_SOCKET;
   int             n;
   struct addrinfo hints, *res, *addr;
-  char *          host;
-  const char *    service;
+  char           *host;
+  const char     *service;
 
   resolve_address(url, &host, &service);
 
@@ -854,66 +854,5 @@ bool parseConst(const char **msg, const char *str)
     *msg += strlen(str);
     return true;
   }
-  return false;
-}
-
-bool parseFastFormat(StringBuffer *in, RawMessage *msg)
-{
-  unsigned int prio;
-  unsigned int pgn;
-  unsigned int src;
-  unsigned int dst;
-  unsigned int bytes;
-
-  char *       p;
-  int          i;
-  int          b;
-  unsigned int byt;
-  int          r;
-
-  p = strchr(sbGet(in), '\n');
-  if (!p)
-  {
-    return false;
-  }
-
-  // Skip the timestamp
-  p = strchr(sbGet(in), ',');
-  if (!p)
-  {
-    return false;
-  }
-
-  r = sscanf(p, ",%u,%u,%u,%u,%u,%n", &prio, &pgn, &src, &dst, &bytes, &i);
-  if (r == 5)
-  {
-    // now store the timestamp, unchanged
-    memset(msg->timestamp, 0, sizeof msg->timestamp);
-    memcpy(msg->timestamp, sbGet(in), CB_MAX(p - sbGet(in), sizeof msg->timestamp - 1));
-
-    msg->prio = prio;
-    msg->pgn  = pgn;
-    msg->src  = src;
-    msg->dst  = dst;
-    msg->len  = bytes;
-
-    p += i - 1;
-
-    for (b = 0; b < CB_MIN(bytes, FASTPACKET_MAX_SIZE); b++)
-    {
-      if ((sscanf(p, ",%x%n", &byt, &i) == 1) && (byt < 256))
-      {
-        msg->data[b] = byt;
-      }
-      else
-      {
-        logError("Unable to parse incoming message '%s' data byte %u\n", sbGet(in), b);
-        return false;
-      }
-      p += i;
-    }
-    return true;
-  }
-  logError("Unable to parse incoming message '%s', r = %d\n", sbGet(in), r);
   return false;
 }
