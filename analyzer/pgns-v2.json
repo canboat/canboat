@@ -2,7 +2,7 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"2.0.0",
+    "Version":"3.0.0",
     "LookupEnumerations":[
       {
         "type": "lookup",
