@@ -2797,6 +2797,7 @@ limitations under the License.
             <EnumPair Value='12' Name='Heat Index Temperature' />
             <EnumPair Value='13' Name='Freezer Temperature' />
             <EnumPair Value='14' Name='Exhaust Gas Temperature' />
+            <EnumPair Value='15' Name='Shaft Seal Temperature' />
           </EnumValues>
         </Field>
         <Field>
@@ -22455,6 +22456,7 @@ limitations under the License.
             <EnumPair Value='12' Name='Heat Index Temperature' />
             <EnumPair Value='13' Name='Freezer Temperature' />
             <EnumPair Value='14' Name='Exhaust Gas Temperature' />
+            <EnumPair Value='15' Name='Shaft Seal Temperature' />
           </EnumValues>
         </Field>
         <Field>
@@ -22559,6 +22561,7 @@ limitations under the License.
             <EnumPair Value='12' Name='Heat Index Temperature' />
             <EnumPair Value='13' Name='Freezer Temperature' />
             <EnumPair Value='14' Name='Exhaust Gas Temperature' />
+            <EnumPair Value='15' Name='Shaft Seal Temperature' />
           </EnumValues>
         </Field>
         <Field>
@@ -22828,6 +22831,7 @@ limitations under the License.
             <EnumPair Value='12' Name='Heat Index Temperature' />
             <EnumPair Value='13' Name='Freezer Temperature' />
             <EnumPair Value='14' Name='Exhaust Gas Temperature' />
+            <EnumPair Value='15' Name='Shaft Seal Temperature' />
           </EnumValues>
         </Field>
         <Field>
@@ -31520,6 +31524,7 @@ limitations under the License.
             <EnumPair Value='12' Name='Heat Index Temperature' />
             <EnumPair Value='13' Name='Freezer Temperature' />
             <EnumPair Value='14' Name='Exhaust Gas Temperature' />
+            <EnumPair Value='15' Name='Shaft Seal Temperature' />
           </EnumValues>
         </Field>
         <Field>

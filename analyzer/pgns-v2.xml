@@ -499,6 +499,7 @@ limitations under the License.
       <EnumPair Value='12' Name='Heat Index Temperature' />
       <EnumPair Value='13' Name='Freezer Temperature' />
       <EnumPair Value='14' Name='Exhaust Gas Temperature' />
+      <EnumPair Value='15' Name='Shaft Seal Temperature' />
     </LookupEnumeration>
     <LookupEnumeration Name='HUMIDITY_SOURCE' MaxValue='255'>
       <EnumPair Value='0' Name='Inside' />

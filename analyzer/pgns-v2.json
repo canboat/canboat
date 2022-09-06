@@ -629,7 +629,8 @@
         {"name": "Theoretical Wind Chill Temperature", "value":"11"},
         {"name": "Heat Index Temperature", "value":"12"},
         {"name": "Freezer Temperature", "value":"13"},
-        {"name": "Exhaust Gas Temperature", "value":"14"}
+        {"name": "Exhaust Gas Temperature", "value":"14"},
+        {"name": "Shaft Seal Temperature", "value":"15"}
         ]
       },
       {

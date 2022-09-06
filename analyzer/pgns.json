@@ -2460,7 +2460,8 @@
               {"name":"Theoretical Wind Chill Temperature","value":"11"},
               {"name":"Heat Index Temperature","value":"12"},
               {"name":"Freezer Temperature","value":"13"},
-              {"name":"Exhaust Gas Temperature","value":"14"}]},
+              {"name":"Exhaust Gas Temperature","value":"14"},
+              {"name":"Shaft Seal Temperature","value":"15"}]},
           {
             "Order":5,
             "Id":"actualTemperature",
@@ -19900,7 +19901,8 @@
               {"name":"Theoretical Wind Chill Temperature","value":"11"},
               {"name":"Heat Index Temperature","value":"12"},
               {"name":"Freezer Temperature","value":"13"},
-              {"name":"Exhaust Gas Temperature","value":"14"}]},
+              {"name":"Exhaust Gas Temperature","value":"14"},
+              {"name":"Shaft Seal Temperature","value":"15"}]},
           {
             "Order":3,
             "Id":"humiditySource",
@@ -19993,7 +19995,8 @@
               {"name":"Theoretical Wind Chill Temperature","value":"11"},
               {"name":"Heat Index Temperature","value":"12"},
               {"name":"Freezer Temperature","value":"13"},
-              {"name":"Exhaust Gas Temperature","value":"14"}]},
+              {"name":"Exhaust Gas Temperature","value":"14"},
+              {"name":"Shaft Seal Temperature","value":"15"}]},
           {
             "Order":4,
             "Id":"actualTemperature",
@@ -20232,7 +20235,8 @@
               {"name":"Theoretical Wind Chill Temperature","value":"11"},
               {"name":"Heat Index Temperature","value":"12"},
               {"name":"Freezer Temperature","value":"13"},
-              {"name":"Exhaust Gas Temperature","value":"14"}]},
+              {"name":"Exhaust Gas Temperature","value":"14"},
+              {"name":"Shaft Seal Temperature","value":"15"}]},
           {
             "Order":4,
             "Id":"temperature",
@@ -27957,7 +27961,8 @@
               {"name":"Theoretical Wind Chill Temperature","value":"11"},
               {"name":"Heat Index Temperature","value":"12"},
               {"name":"Freezer Temperature","value":"13"},
-              {"name":"Exhaust Gas Temperature","value":"14"}]},
+              {"name":"Exhaust Gas Temperature","value":"14"},
+              {"name":"Shaft Seal Temperature","value":"15"}]},
           {
             "Order":7,
             "Id":"actualTemperature",
