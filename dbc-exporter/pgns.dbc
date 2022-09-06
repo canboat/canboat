@@ -1,4 +1,4 @@
-VERSION "Canboat export 2022-09-06T13:28:36.506371"
+VERSION "Canboat export 2022-09-06T14:49:30.260911"
 
 
 NS_ : 
@@ -93,7 +93,7 @@ BO_ 2566778366 PGN_65005_utilityTotalAcEnergy: 8 Vector__XXX
 
 BO_ 2566778622 PGN_65006_utilityPhaseCAcReactiv: 8 Vector__XXX
  SG_ powerFactorLagging : 32|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactor : 16|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ powerFactor : 16|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
  SG_ reactivePower : 0|16@1+ (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566778878 PGN_65007_utilityPhaseCAcPower: 8 Vector__XXX
@@ -108,7 +108,7 @@ BO_ 2566779134 PGN_65008_utilityPhaseCBasicAcQu: 8 Vector__XXX
 
 BO_ 2566779390 PGN_65009_utilityPhaseBAcReactiv: 8 Vector__XXX
  SG_ powerFactorLagging : 32|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactor : 16|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ powerFactor : 16|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
  SG_ reactivePower : 0|16@1+ (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566779646 PGN_65010_utilityPhaseBAcPower: 8 Vector__XXX
@@ -123,7 +123,7 @@ BO_ 2566779902 PGN_65011_utilityPhaseBBasicAcQu: 8 Vector__XXX
 
 BO_ 2566780158 PGN_65012_utilityPhaseAAcReactiv: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
  SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566780414 PGN_65013_utilityPhaseAAcPower: 8 Vector__XXX
@@ -138,7 +138,7 @@ BO_ 2566780670 PGN_65014_utilityPhaseABasicAcQu: 8 Vector__XXX
 
 BO_ 2566780926 PGN_65015_utilityTotalAcReactive: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
  SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566781182 PGN_65016_utilityTotalAcPower: 8 Vector__XXX
@@ -157,7 +157,7 @@ BO_ 2566781694 PGN_65018_generatorTotalAcEnergy: 8 Vector__XXX
 
 BO_ 2566781950 PGN_65019_generatorPhaseCAcReact: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
  SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566782206 PGN_65020_generatorPhaseCAcPower: 8 Vector__XXX
@@ -172,7 +172,7 @@ BO_ 2566782462 PGN_65021_generatorPhaseCBasicAc: 8 Vector__XXX
 
 BO_ 2566782718 PGN_65022_generatorPhaseBAcReact: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
  SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566782974 PGN_65023_generatorPhaseBAcPower: 8 Vector__XXX
@@ -187,7 +187,7 @@ BO_ 2566783230 PGN_65024_generatorPhaseBBasicAc: 8 Vector__XXX
 
 BO_ 2566783486 PGN_65025_generatorPhaseAAcReact: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
  SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566783742 PGN_65026_generatorPhaseAAcPower: 8 Vector__XXX
@@ -202,7 +202,7 @@ BO_ 2566783998 PGN_65027_generatorPhaseABasicAc: 8 Vector__XXX
 
 BO_ 2566784254 PGN_65028_generatorTotalAcReacti: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
  SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566784510 PGN_65029_generatorTotalAcPower: 8 Vector__XXX
@@ -688,7 +688,7 @@ BO_ 2582905086 PGN_128000_leewayAngle: 8 Vector__XXX
 
 BO_ 2582906622 PGN_128006_thrusterControlStatus: 8 Vector__XXX
  SG_ azimuthControl : 48|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
- SG_ commandTimeout : 40|8@1+ (0.001,0) [0|0] "" Vector__XXX
+ SG_ commandTimeout : 40|8@1+ (0.001,0) [0|0] "s" Vector__XXX
  SG_ controlEvents : 32|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ speedControl : 24|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ retractControl : 22|2@1+ (1,0) [0|0] "" Vector__XXX

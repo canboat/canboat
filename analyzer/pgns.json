@@ -1030,7 +1030,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"Cos Phi",
-            "Resolution":0,
+            "Resolution":6.10352e-05,
             "Signed":false},
           {
             "Order":3,
@@ -1150,7 +1150,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Units":"Cos Phi",
-            "Resolution":0,
+            "Resolution":6.10352e-05,
             "Signed":false},
           {
             "Order":3,
@@ -1273,7 +1273,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Cos Phi",
-            "Resolution":0,
+            "Resolution":6.10352e-05,
             "Signed":false},
           {
             "Order":3,
@@ -1396,7 +1396,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Cos Phi",
-            "Resolution":0,
+            "Resolution":6.10352e-05,
             "Signed":false},
           {
             "Order":3,
@@ -1552,7 +1552,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Cos Phi",
-            "Resolution":0,
+            "Resolution":6.10352e-05,
             "Signed":false},
           {
             "Order":3,
@@ -1675,7 +1675,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Cos Phi",
-            "Resolution":0,
+            "Resolution":6.10352e-05,
             "Signed":false},
           {
             "Order":3,
@@ -1798,7 +1798,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Cos Phi",
-            "Resolution":0,
+            "Resolution":6.10352e-05,
             "Signed":false},
           {
             "Order":3,
@@ -1921,7 +1921,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"Cos Phi",
-            "Resolution":0,
+            "Resolution":6.10352e-05,
             "Signed":false},
           {
             "Order":3,
@@ -8716,7 +8716,6 @@
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
-            "Units":null,
             "Signed":true},
           {
             "Order":5,
@@ -9119,10 +9118,10 @@
             "Order":2,
             "Id":"ratedEngineSpeed",
             "Name":"Rated Engine Speed",
-            "Description":"rpm",
             "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
+            "Units":"rpm",
             "Resolution":0.25,
             "Signed":false},
           {
@@ -11408,6 +11407,7 @@
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
+            "Units":"s",
             "Resolution":0.001,
             "Signed":false},
           {
@@ -11881,7 +11881,7 @@
             "BitStart":0,
             "Units":"s",
             "Resolution":0.001,
-            "Signed":false},
+            "Signed":true},
           {
             "Order":14,
             "Id":"utcOfFix",
@@ -14601,7 +14601,13 @@
             "BitOffset":64,
             "BitStart":0,
             "Type":"Lookup table",
-            "Signed":false},
+            "Signed":false,
+            "EnumValues":[
+              {"name":"Collision","value":"0"},
+              {"name":"Turning point","value":"1"},
+              {"name":"Reference","value":"2"},
+              {"name":"Wheelover","value":"3"},
+              {"name":"Waypoint","value":"4"}]},
           {
             "Order":8,
             "Id":"destinationMarkType",
@@ -18140,7 +18146,6 @@
             "Id":"mmsiOfShipInDistress",
             "Name":"MMSI of Ship In Distress",
             "BitLength":40,
-            "Units":"MMSI",
             "Type":"Decimal encoded number",
             "Signed":false},
           {
@@ -18387,7 +18392,6 @@
             "Id":"mmsiOfShipInDistress",
             "Name":"MMSI of Ship In Distress",
             "BitLength":40,
-            "Units":"MMSI",
             "Type":"Decimal encoded number",
             "Signed":false},
           {
@@ -20944,7 +20948,6 @@
             "BitLength":16,
             "BitOffset":224,
             "BitStart":0,
-            "Units":null,
             "Signed":false},
           {
             "Order":16,
@@ -27170,7 +27173,6 @@
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
-            "Units":"vol",
             "Signed":false},
           {
             "Order":7,
@@ -27179,7 +27181,6 @@
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
-            "Units":"vol",
             "Signed":false},
           {
             "Order":8,
@@ -27188,7 +27189,6 @@
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
-            "Units":"vol",
             "Signed":false},
           {
             "Order":9,
@@ -27197,7 +27197,6 @@
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
-            "Units":"vol",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -27277,7 +27276,6 @@
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
-            "Units":"vol",
             "Signed":true},
           {
             "Order":8,
@@ -27286,7 +27284,6 @@
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
-            "Units":"vol",
             "Signed":true},
           {
             "Order":9,
@@ -27295,7 +27292,6 @@
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
-            "Units":"vol",
             "Signed":true}]},
       {
         "PGN":130820,
@@ -27367,7 +27363,6 @@
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
-            "Units":"vol",
             "Signed":false},
           {
             "Order":7,
@@ -27376,7 +27371,6 @@
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
-            "Units":"vol",
             "Signed":false},
           {
             "Order":8,
@@ -27385,7 +27379,6 @@
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
-            "Units":"vol",
             "Signed":false},
           {
             "Order":9,
@@ -27394,7 +27387,6 @@
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
-            "Units":"vol",
             "Signed":false}]},
       {
         "PGN":130820,

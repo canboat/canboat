@@ -1184,7 +1184,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
-          <Resolution>0</Resolution>
+          <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -1320,7 +1320,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
-          <Resolution>0</Resolution>
+          <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -1459,7 +1459,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
-          <Resolution>0</Resolution>
+          <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -1598,7 +1598,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
-          <Resolution>0</Resolution>
+          <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -1775,7 +1775,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
-          <Resolution>0</Resolution>
+          <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -1914,7 +1914,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
-          <Resolution>0</Resolution>
+          <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2053,7 +2053,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
-          <Resolution>0</Resolution>
+          <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2192,7 +2192,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
-          <Resolution>0</Resolution>
+          <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -9823,7 +9823,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units></Units>
           <Signed>true</Signed>
         </Field>
         <Field>
@@ -10276,10 +10275,10 @@ limitations under the License.
           <Order>2</Order>
           <Id>ratedEngineSpeed</Id>
           <Name>Rated Engine Speed</Name>
-          <Description>rpm</Description>
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+          <Units>rpm</Units>
           <Resolution>0.25</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -12891,6 +12890,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
+          <Units>s</Units>
           <Resolution>0.001</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -13424,7 +13424,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>s</Units>
           <Resolution>0.001</Resolution>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
         </Field>
         <Field>
           <Order>14</Order>
@@ -16487,6 +16487,13 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
+          <EnumValues>
+            <EnumPair Value='0' Name='Collision' />
+            <EnumPair Value='1' Name='Turning point' />
+            <EnumPair Value='2' Name='Reference' />
+            <EnumPair Value='3' Name='Wheelover' />
+            <EnumPair Value='4' Name='Waypoint' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>8</Order>
@@ -20470,7 +20477,6 @@ limitations under the License.
           <Id>mmsiOfShipInDistress</Id>
           <Name>MMSI of Ship In Distress</Name>
           <BitLength>40</BitLength>
-          <Units>MMSI</Units>
           <Type>Decimal encoded number</Type>
           <Signed>false</Signed>
         </Field>
@@ -20748,7 +20754,6 @@ limitations under the License.
           <Id>mmsiOfShipInDistress</Id>
           <Name>MMSI of Ship In Distress</Name>
           <BitLength>40</BitLength>
-          <Units>MMSI</Units>
           <Type>Decimal encoded number</Type>
           <Signed>false</Signed>
         </Field>
@@ -23623,7 +23628,6 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
-          <Units></Units>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30634,7 +30638,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30644,7 +30647,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30654,7 +30656,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30664,7 +30665,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -30754,7 +30754,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>true</Signed>
         </Field>
         <Field>
@@ -30764,7 +30763,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>true</Signed>
         </Field>
         <Field>
@@ -30774,7 +30772,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>true</Signed>
         </Field>
       </Fields>
@@ -30855,7 +30852,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30865,7 +30861,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30875,7 +30870,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30885,7 +30879,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Units>vol</Units>
           <Signed>false</Signed>
         </Field>
       </Fields>
