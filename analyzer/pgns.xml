@@ -473,7 +473,7 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>21</BitOffset>
           <BitStart>5</BitStart>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -608,7 +608,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -696,7 +696,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -773,7 +773,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>358</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -839,7 +839,7 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -903,7 +903,7 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2328,6 +2328,8 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>21</BitOffset>
           <BitStart>5</BitStart>
+          <Units>Manufacturer Code</Units>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2471,7 +2473,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1855</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2540,7 +2542,7 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2601,7 +2603,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>137</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2685,7 +2687,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2745,7 +2747,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>140</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2834,7 +2836,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>409</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2933,7 +2935,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -2978,7 +2980,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3076,7 +3078,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3126,7 +3128,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3349,7 +3351,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3399,7 +3401,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3449,7 +3451,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3499,7 +3501,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3549,7 +3551,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3640,7 +3642,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3721,7 +3723,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3771,7 +3773,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3821,7 +3823,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3903,7 +3905,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -3990,7 +3992,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4077,7 +4079,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4275,7 +4277,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4389,7 +4391,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4466,7 +4468,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4556,7 +4558,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4633,7 +4635,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4722,7 +4724,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4814,7 +4816,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -4949,7 +4951,7 @@ limitations under the License.
           <Id>value</Id>
           <Name>Value</Name>
           <Description>Parameter value, variable length</Description>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5045,7 +5047,7 @@ limitations under the License.
           <Id>value</Id>
           <Name>Value</Name>
           <Description>Parameter value, variable length</Description>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5195,7 +5197,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>proprietary pgn only</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5262,7 +5264,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5318,7 +5320,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>proprietary pgn only</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5385,7 +5387,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5401,7 +5403,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5448,7 +5450,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>proprietary pgn only</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5515,7 +5517,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5531,7 +5533,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5578,7 +5580,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>proprietary pgn only</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5645,7 +5647,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>selectionValue</Id>
           <Name>Selection Value</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5661,7 +5663,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -5725,7 +5727,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5854,7 +5856,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -5953,7 +5955,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6050,7 +6052,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6122,7 +6124,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6205,7 +6207,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6280,7 +6282,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6374,7 +6376,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6490,7 +6492,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6617,7 +6619,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6708,7 +6710,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -6803,7 +6805,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7017,7 +7019,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7223,7 +7225,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7303,7 +7305,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7381,7 +7383,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7471,7 +7473,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7564,7 +7566,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7666,7 +7668,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7768,7 +7770,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7853,7 +7855,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7912,7 +7914,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>137</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -7998,7 +8000,7 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -8612,7 +8614,7 @@ limitations under the License.
           <Order>11</Order>
           <Id>alertTextDescription</Id>
           <Name>Alert Text Description</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -8620,7 +8622,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>alertLocationTextDescription</Id>
           <Name>Alert Location Text Description</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -8928,7 +8930,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>installationDescription1</Id>
           <Name>Installation Description #1</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -8936,7 +8938,7 @@ limitations under the License.
           <Order>2</Order>
           <Id>installationDescription2</Id>
           <Name>Installation Description #2</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -8944,7 +8946,7 @@ limitations under the License.
           <Order>3</Order>
           <Id>manufacturerInformation</Id>
           <Name>Manufacturer Information</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -15664,7 +15666,7 @@ limitations under the License.
           <Order>23</Order>
           <Id>atonName</Id>
           <Name>AtoN Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -16209,7 +16211,7 @@ limitations under the License.
           <Order>8</Order>
           <Id>routeName</Id>
           <Name>Route Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -16232,7 +16234,7 @@ limitations under the License.
           <Order>11</Order>
           <Id>wpName</Id>
           <Name>WP Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -20438,7 +20440,7 @@ limitations under the License.
           <Order>8</Order>
           <Id>telephoneNumber</Id>
           <Name>Telephone Number</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -20571,7 +20573,7 @@ limitations under the License.
           <Order>22</Order>
           <Id>dscExpansionFieldData</Id>
           <Name>DSC Expansion Field Data</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -20715,7 +20717,7 @@ limitations under the License.
           <Order>8</Order>
           <Id>telephoneNumber</Id>
           <Name>Telephone Number</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -20848,7 +20850,7 @@ limitations under the License.
           <Order>22</Order>
           <Id>dscExpansionFieldData</Id>
           <Name>DSC Expansion Field Data</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -22979,7 +22981,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -22987,7 +22989,7 @@ limitations under the License.
           <Order>11</Order>
           <Id>stationName</Id>
           <Name>Station Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -23107,7 +23109,7 @@ limitations under the License.
           <Order>9</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -23115,7 +23117,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>stationName</Id>
           <Name>Station Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -23253,7 +23255,7 @@ limitations under the License.
           <Order>11</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -23261,7 +23263,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>stationName</Id>
           <Name>Station Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -23436,7 +23438,7 @@ limitations under the License.
           <Order>14</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -23444,7 +23446,7 @@ limitations under the License.
           <Order>15</Order>
           <Id>stationName</Id>
           <Name>Station Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>String with start/stop byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24376,7 +24378,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24476,7 +24478,7 @@ limitations under the License.
           <Order>15</Order>
           <Id>artist</Id>
           <Name>Artist</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24484,7 +24486,7 @@ limitations under the License.
           <Order>16</Order>
           <Id>album</Id>
           <Name>Album</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24492,7 +24494,7 @@ limitations under the License.
           <Order>17</Order>
           <Id>station</Id>
           <Name>Station</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24658,7 +24660,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24767,7 +24769,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>groupName1</Id>
           <Name>Group name 1</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24796,7 +24798,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>groupName2</Id>
           <Name>Group name 2</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24825,7 +24827,7 @@ limitations under the License.
           <Order>9</Order>
           <Id>groupName3</Id>
           <Name>Group name 3</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -24947,7 +24949,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -25130,7 +25132,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -25626,7 +25628,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>zoneName</Id>
           <Name>Zone name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -25814,7 +25816,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>presetName</Id>
           <Name>Preset name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -25897,7 +25899,7 @@ limitations under the License.
           <Order>6</Order>
           <Id>deviceName</Id>
           <Name>Device name</Name>
-          <BitLengthVariable/>
+          <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
@@ -26223,7 +26225,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -26331,7 +26333,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -26479,7 +26481,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -26575,7 +26577,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -26679,7 +26681,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -26796,7 +26798,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -26895,7 +26897,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -27002,7 +27004,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -27150,7 +27152,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -27305,7 +27307,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -27411,7 +27413,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -27517,7 +27519,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -27623,7 +27625,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -27756,7 +27758,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -27852,7 +27854,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -27954,7 +27956,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28061,7 +28063,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28146,7 +28148,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28243,7 +28245,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28350,7 +28352,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28474,7 +28476,7 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28540,7 +28542,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28668,7 +28670,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28749,7 +28751,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28798,7 +28800,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28877,7 +28879,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1855</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -28972,7 +28974,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29088,7 +29090,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29269,7 +29271,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29358,7 +29360,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29447,7 +29449,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29536,7 +29538,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29616,7 +29618,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29705,7 +29707,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29795,7 +29797,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -29917,7 +29919,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30014,7 +30016,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30102,7 +30104,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30204,7 +30206,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30347,7 +30349,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30502,7 +30504,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30586,7 +30588,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30693,7 +30695,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30800,7 +30802,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30907,7 +30909,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -30992,7 +30994,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31073,7 +31075,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31154,7 +31156,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31235,7 +31237,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>419</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31315,7 +31317,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1855</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31450,7 +31452,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>137</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31569,7 +31571,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>381</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31647,7 +31649,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>137</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31743,7 +31745,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>140</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31848,7 +31850,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31899,7 +31901,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>586</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -31950,7 +31952,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32001,7 +32003,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32052,7 +32054,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32102,7 +32104,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32240,7 +32242,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>137</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32390,7 +32392,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32435,7 +32437,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>137</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32585,7 +32587,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32636,7 +32638,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32687,7 +32689,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32738,7 +32740,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32855,7 +32857,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1855</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -32986,7 +32988,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33249,7 +33251,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1855</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33351,7 +33353,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33401,7 +33403,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33525,7 +33527,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1855</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33576,7 +33578,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33701,7 +33703,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33826,7 +33828,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -33996,7 +33998,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1855</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34047,7 +34049,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1851</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34144,7 +34146,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34293,7 +34295,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34412,7 +34414,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34518,7 +34520,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34668,7 +34670,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>1857</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34756,7 +34758,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34852,7 +34854,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -34948,7 +34950,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>135</Match>
-          <Type>Manufacturer code</Type>
+          <Type>Manufacturer Code</Type>
           <Signed>false</Signed>
         </Field>
         <Field>

@@ -402,7 +402,7 @@
             "BitLength":11,
             "BitOffset":21,
             "BitStart":5,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":3,
@@ -523,7 +523,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -601,7 +601,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -669,7 +669,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":358,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -727,7 +727,7 @@
             "BitLength":11,
             "BitOffset":0,
             "BitStart":0,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -783,7 +783,7 @@
             "BitLength":11,
             "BitOffset":0,
             "BitStart":0,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2041,6 +2041,8 @@
             "BitLength":11,
             "BitOffset":21,
             "BitStart":5,
+            "Units":"Manufacturer Code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":3,
@@ -2169,7 +2171,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1855,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2230,7 +2232,7 @@
             "BitLength":11,
             "BitOffset":0,
             "BitStart":0,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2284,7 +2286,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":137,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2359,7 +2361,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2412,7 +2414,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":140,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2492,7 +2494,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":409,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2580,7 +2582,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2620,7 +2622,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2707,7 +2709,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2751,7 +2753,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -2960,7 +2962,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3004,7 +3006,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3048,7 +3050,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3092,7 +3094,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3136,7 +3138,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3217,7 +3219,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3289,7 +3291,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3333,7 +3335,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3377,7 +3379,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3450,7 +3452,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3528,7 +3530,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3606,7 +3608,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3793,7 +3795,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3894,7 +3896,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -3962,7 +3964,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -4042,7 +4044,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -4111,7 +4113,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -4190,7 +4192,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -4272,7 +4274,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -4392,7 +4394,7 @@
             "Id":"value",
             "Name":"Value",
             "Description":"Parameter value, variable length",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Signed":false}]},
       {
         "PGN":126208,
@@ -4478,7 +4480,7 @@
             "Id":"value",
             "Name":"Value",
             "Description":"Parameter value, variable length",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Signed":false}]},
       {
         "PGN":126208,
@@ -4611,7 +4613,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Match":"proprietary pgn only",
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":4,
@@ -4670,7 +4672,7 @@
             "Order":10,
             "Id":"selectionValue",
             "Name":"Selection Value",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Signed":false},
           {
             "Order":11,
@@ -4720,7 +4722,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Match":"proprietary pgn only",
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":4,
@@ -4779,7 +4781,7 @@
             "Order":10,
             "Id":"selectionValue",
             "Name":"Selection Value",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Signed":false},
           {
             "Order":11,
@@ -4793,7 +4795,7 @@
             "Order":12,
             "Id":"value",
             "Name":"Value",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Signed":false}]},
       {
         "PGN":126208,
@@ -4835,7 +4837,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Match":"proprietary pgn only",
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":4,
@@ -4894,7 +4896,7 @@
             "Order":10,
             "Id":"selectionValue",
             "Name":"Selection Value",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Signed":false},
           {
             "Order":11,
@@ -4908,7 +4910,7 @@
             "Order":12,
             "Id":"value",
             "Name":"Value",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Signed":false}]},
       {
         "PGN":126208,
@@ -4950,7 +4952,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Match":"proprietary pgn only",
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":4,
@@ -5009,7 +5011,7 @@
             "Order":10,
             "Id":"selectionValue",
             "Name":"Selection Value",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Signed":false},
           {
             "Order":11,
@@ -5023,7 +5025,7 @@
             "Order":12,
             "Id":"value",
             "Name":"Value",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Signed":false}]},
       {
         "PGN":126464,
@@ -5078,7 +5080,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -5193,7 +5195,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -5281,7 +5283,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -5367,7 +5369,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -5431,7 +5433,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -5505,7 +5507,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -5571,7 +5573,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -5655,7 +5657,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -5759,7 +5761,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -5873,7 +5875,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -5954,7 +5956,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -6039,7 +6041,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -6232,7 +6234,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -6418,7 +6420,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -6489,7 +6491,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -6559,7 +6561,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -6640,7 +6642,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -6723,7 +6725,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -6814,7 +6816,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -6905,7 +6907,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -6980,7 +6982,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -7032,7 +7034,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":137,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -7108,7 +7110,7 @@
             "BitLength":11,
             "BitOffset":0,
             "BitStart":0,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -7647,14 +7649,14 @@
             "Order":11,
             "Id":"alertTextDescription",
             "Name":"Alert Text Description",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
             "Order":12,
             "Id":"alertLocationTextDescription",
             "Name":"Alert Location Text Description",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -7924,21 +7926,21 @@
             "Order":1,
             "Id":"installationDescription1",
             "Name":"Installation Description #1",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
             "Order":2,
             "Id":"installationDescription2",
             "Name":"Installation Description #2",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
             "Order":3,
             "Id":"manufacturerInformation",
             "Name":"Manufacturer Information",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -13872,7 +13874,7 @@
             "Order":23,
             "Id":"atonName",
             "Name":"AtoN Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -14357,7 +14359,7 @@
             "Order":8,
             "Id":"routeName",
             "Name":"Route Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"String with start/stop byte",
             "Signed":false},
           {
@@ -14377,7 +14379,7 @@
             "Order":11,
             "Id":"wpName",
             "Name":"WP Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"String with start/stop byte",
             "Signed":false},
           {
@@ -18111,7 +18113,7 @@
             "Order":8,
             "Id":"telephoneNumber",
             "Name":"Telephone Number",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -18228,7 +18230,7 @@
             "Order":22,
             "Id":"dscExpansionFieldData",
             "Name":"DSC Expansion Field Data",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -18357,7 +18359,7 @@
             "Order":8,
             "Id":"telephoneNumber",
             "Name":"Telephone Number",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -18474,7 +18476,7 @@
             "Order":22,
             "Id":"dscExpansionFieldData",
             "Name":"DSC Expansion Field Data",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -20367,14 +20369,14 @@
             "Order":10,
             "Id":"stationId",
             "Name":"Station ID",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"String with start/stop byte",
             "Signed":false},
           {
             "Order":11,
             "Id":"stationName",
             "Name":"Station Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"String with start/stop byte",
             "Signed":false}]},
       {
@@ -20481,14 +20483,14 @@
             "Order":9,
             "Id":"stationId",
             "Name":"Station ID",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"String with start/stop byte",
             "Signed":false},
           {
             "Order":10,
             "Id":"stationName",
             "Name":"Station Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"String with start/stop byte",
             "Signed":false}]},
       {
@@ -20612,14 +20614,14 @@
             "Order":11,
             "Id":"stationId",
             "Name":"Station ID",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"String with start/stop byte",
             "Signed":false},
           {
             "Order":12,
             "Id":"stationName",
             "Name":"Station Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"String with start/stop byte",
             "Signed":false}]},
       {
@@ -20776,14 +20778,14 @@
             "Order":14,
             "Id":"stationId",
             "Name":"Station ID",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"String with start/stop byte",
             "Signed":false},
           {
             "Order":15,
             "Id":"stationName",
             "Name":"Station Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"String with start/stop byte",
             "Signed":false}]},
       {
@@ -21617,7 +21619,7 @@
             "Order":5,
             "Id":"name",
             "Name":"Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -21704,21 +21706,21 @@
             "Order":15,
             "Id":"artist",
             "Name":"Artist",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
             "Order":16,
             "Id":"album",
             "Name":"Album",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
             "Order":17,
             "Id":"station",
             "Name":"Station",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -21868,7 +21870,7 @@
             "Order":10,
             "Id":"name",
             "Name":"Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -21967,7 +21969,7 @@
             "Order":5,
             "Id":"groupName1",
             "Name":"Group name 1",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -21993,7 +21995,7 @@
             "Order":7,
             "Id":"groupName2",
             "Name":"Group name 2",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -22019,7 +22021,7 @@
             "Order":9,
             "Id":"groupName3",
             "Name":"Group name 3",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -22130,7 +22132,7 @@
             "Order":7,
             "Id":"name",
             "Name":"Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -22292,7 +22294,7 @@
             "Order":5,
             "Id":"name",
             "Name":"Name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -22728,7 +22730,7 @@
             "Order":5,
             "Id":"zoneName",
             "Name":"Zone name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -22894,7 +22896,7 @@
             "Order":5,
             "Id":"presetName",
             "Name":"Preset name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -22967,7 +22969,7 @@
             "Order":6,
             "Id":"deviceName",
             "Name":"Device name",
-            "BitLengthVariable":null,
+            "BitLengthVariable":true,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -23257,7 +23259,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -23353,7 +23355,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -23484,7 +23486,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -23569,7 +23571,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -23661,7 +23663,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -23765,7 +23767,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -23852,7 +23854,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -23947,7 +23949,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -24078,7 +24080,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -24216,7 +24218,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -24310,7 +24312,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -24404,7 +24406,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -24498,7 +24500,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -24616,7 +24618,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -24701,7 +24703,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -24792,7 +24794,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -24887,7 +24889,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -24962,7 +24964,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25048,7 +25050,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25143,7 +25145,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25253,7 +25255,7 @@
             "BitLength":11,
             "BitOffset":0,
             "BitStart":0,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25311,7 +25313,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25425,7 +25427,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25497,7 +25499,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25540,7 +25542,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25610,7 +25612,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1855,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25694,7 +25696,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25797,7 +25799,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -25959,7 +25961,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26038,7 +26040,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26117,7 +26119,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26196,7 +26198,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26267,7 +26269,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26346,7 +26348,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26426,7 +26428,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26534,7 +26536,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26620,7 +26622,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26698,7 +26700,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26788,7 +26790,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -26915,7 +26917,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27052,7 +27054,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27126,7 +27128,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27221,7 +27223,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27316,7 +27318,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27411,7 +27413,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27486,7 +27488,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27558,7 +27560,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27630,7 +27632,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27702,7 +27704,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":419,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27773,7 +27775,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1855,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -27893,7 +27895,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":137,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28000,7 +28002,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":381,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28069,7 +28071,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":137,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28154,7 +28156,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":140,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28247,7 +28249,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28292,7 +28294,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":586,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28337,7 +28339,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28382,7 +28384,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28427,7 +28429,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28471,7 +28473,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28594,7 +28596,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":137,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28728,7 +28730,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28768,7 +28770,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":137,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28902,7 +28904,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28947,7 +28949,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -28992,7 +28994,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -29037,7 +29039,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -29141,7 +29143,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1855,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -29257,7 +29259,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -29497,7 +29499,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1855,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -29588,7 +29590,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -29632,7 +29634,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -29742,7 +29744,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1855,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -29787,7 +29789,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -29898,7 +29900,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -30009,7 +30011,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -30160,7 +30162,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1855,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -30205,7 +30207,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1851,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -30291,7 +30293,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -30424,7 +30426,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -30530,7 +30532,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -30624,7 +30626,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -30758,7 +30760,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":1857,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -30836,7 +30838,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -30922,7 +30924,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,
@@ -31008,7 +31010,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":135,
-            "Type":"Manufacturer code",
+            "Type":"Manufacturer Code",
             "Signed":false},
           {
             "Order":2,

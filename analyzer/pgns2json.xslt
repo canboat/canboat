@@ -341,11 +341,15 @@
     <xsl:apply-templates select="node()"/>
   </xsl:template>
 
-  <xsl:template match="Enumerations">
-    <xsl:call-template name="indent"/>"Enumerations":[<xsl:apply-templates/>],
+  <xsl:template match="LookupEnumerations">
+    <xsl:call-template name="indent"/>"LookupEnumerations":[<xsl:apply-templates/>],
   </xsl:template>
 
-  <xsl:template match="Enumeration">
+  <xsl:template match="LookupBitEnumerations">
+    <xsl:call-template name="indent"/>"LookupBitEnumerations":[<xsl:apply-templates/>],
+  </xsl:template>
+
+  <xsl:template match="LookupEnumeration">
     <xsl:call-template name="indent"/>{
         "type": "lookup",
         "name": "<xsl:value-of select="@Name"/>",
@@ -355,7 +359,7 @@
       }<xsl:if test="not(position() = last())">,</xsl:if>
   </xsl:template>
 
-  <xsl:template match="BitEnumeration">
+  <xsl:template match="LookupBitEnumeration">
     <xsl:call-template name="indent"/>{
         "type": "bitfield",
         "name": "<xsl:value-of select="@Name"/>",
@@ -365,20 +369,20 @@
       }<xsl:if test="not(position() = last())">,</xsl:if>
   </xsl:template>
 
-  <xsl:template match="Enumeration/EnumPair">
+  <xsl:template match="LookupEnumeration/EnumPair">
     <xsl:call-template name="indent"/>{"name": "<xsl:value-of select="@Name"/>", "value":"<xsl:value-of select="@Value"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="BitEnumeration/EnumPair">
+  <xsl:template match="LookupBitEnumeration/BitPair">
     <xsl:call-template name="indent"/>{"<xsl:value-of select="@Bit"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="LookupEnumeration">
+  <xsl:template match="Field/LookupEnumeration">
     <xsl:call-template name="indent"/>"LookupEnumeration":"<xsl:value-of select="."/>"<xsl:text/>
     <xsl:if test="not(following-sibling::*)">}</xsl:if>
   </xsl:template>
 
-  <xsl:template match="LookupBitEnumeration">
+  <xsl:template match="Field/LookupBitEnumeration">
     <xsl:call-template name="indent"/>"LookupBitEnumeration":"<xsl:value-of select="."/>"<xsl:text/>
     <xsl:if test="not(following-sibling::*)">}</xsl:if>
   </xsl:template>

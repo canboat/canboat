@@ -419,7 +419,7 @@ static void explainPGNXML(Pgn pgn)
       }
       if (f.size == LEN_VARIABLE)
       {
-        printf("          <BitLengthVariable/>\n");
+        printf("          <BitLengthVariable>true</BitLengthVariable>\n");
       }
       else
       {
@@ -592,12 +592,12 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
 
   if (normal && !doExpandLookups)
   {
-    printf("  <Enumerations>\n");
+    printf("  <LookupEnumerations>\n");
 
     for (i = 0; i < ARRAY_SIZE(lookupEnums); i++)
     {
       uint32_t maxValue = (1 << lookupEnums[i].size) - 1;
-      printf("    <Enumeration Name='%s' MaxValue='%u'>\n", lookupEnums[i].name, maxValue);
+      printf("    <LookupEnumeration Name='%s' MaxValue='%u'>\n", lookupEnums[i].name, maxValue);
       for (int j = 0; j <= maxValue; j++)
       {
         if (lookupEnums[i].values[j])
@@ -607,26 +607,28 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
           printf("' />\n");
         }
       }
-      printf("    </Enumeration>\n");
+      printf("    </LookupEnumeration>\n");
     }
+    printf("  </LookupEnumerations>\n");
+    printf("  <LookupBitEnumerations>\n");
 
     for (i = 0; i < ARRAY_SIZE(bitfieldEnums); i++)
     {
       uint32_t maxValue = bitfieldEnums[i].size - 1;
-      printf("    <BitEnumeration Name='%s' MaxValue='%u'>\n", bitfieldEnums[i].name, maxValue);
+      printf("    <LookupBitEnumeration Name='%s' MaxValue='%u'>\n", bitfieldEnums[i].name, maxValue);
       for (int j = 0; j <= maxValue; j++)
       {
         if (bitfieldEnums[i].values[j])
         {
-          printf("      <EnumPair Bit='%u' Name='", j);
+          printf("      <BitPair Bit='%u' Name='", j);
           printXML(0, 0, bitfieldEnums[i].values[j]);
           printf("' />\n");
         }
       }
-      printf("    </BitEnumeration>\n");
+      printf("    </LookupBitEnumeration>\n");
     }
 
-    printf("  </Enumerations>\n");
+    printf("  </LookupBitEnumerations>\n");
   }
 
   printf("  <PGNs>\n");

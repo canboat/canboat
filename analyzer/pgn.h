@@ -382,7 +382,7 @@ static const Resolution types[MAX_RESOLUTION_LOOKUP] = {{"ASCII text", 0},
                                                         {"Integer", "1"},
                                                         {"Lookup table", 0},
                                                         {"Binary data", 0},
-                                                        {"Manufacturer code", 0},
+                                                        {"Manufacturer Code", 0},
                                                         {"String with start/stop byte", 0},
                                                         {"IEEE Float", 0},
                                                         {"Pressure", 0},
@@ -1020,7 +1020,7 @@ Pgn pgnList[] = {
      /* ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in the
      data portion of the message must match the name information of the node whose network address is to be set. */
      {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
-      SIMPLE_FIELD("Manufacturer Code", 11),
+      MANUFACTURER_FIELD("Manufacturer Code", NULL, false),
       SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
       SIMPLE_DESC_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
       SIMPLE_DESC_FIELD("Device Function", BYTES(1), "ISO Function"),
