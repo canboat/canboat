@@ -1,4 +1,4 @@
-VERSION "Canboat export 2022-08-26T00:11:22.941140"
+VERSION "Canboat export 2022-09-06T13:28:36.506371"
 
 
 NS_ : 
@@ -97,8 +97,8 @@ BO_ 2566778622 PGN_65006_utilityPhaseCAcReactiv: 8 Vector__XXX
  SG_ reactivePower : 0|16@1+ (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566778878 PGN_65007_utilityPhaseCAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566779134 PGN_65008_utilityPhaseCBasicAcQu: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -112,8 +112,8 @@ BO_ 2566779390 PGN_65009_utilityPhaseBAcReactiv: 8 Vector__XXX
  SG_ reactivePower : 0|16@1+ (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566779646 PGN_65010_utilityPhaseBAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566779902 PGN_65011_utilityPhaseBBasicAcQu: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -124,11 +124,11 @@ BO_ 2566779902 PGN_65011_utilityPhaseBBasicAcQu: 8 Vector__XXX
 BO_ 2566780158 PGN_65012_utilityPhaseAAcReactiv: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566780414 PGN_65013_utilityPhaseAAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566780670 PGN_65014_utilityPhaseABasicAcQu: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -139,11 +139,11 @@ BO_ 2566780670 PGN_65014_utilityPhaseABasicAcQu: 8 Vector__XXX
 BO_ 2566780926 PGN_65015_utilityTotalAcReactive: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566781182 PGN_65016_utilityTotalAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566781438 PGN_65017_utilityAverageBasicAcQ: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -158,11 +158,11 @@ BO_ 2566781694 PGN_65018_generatorTotalAcEnergy: 8 Vector__XXX
 BO_ 2566781950 PGN_65019_generatorPhaseCAcReact: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566782206 PGN_65020_generatorPhaseCAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566782462 PGN_65021_generatorPhaseCBasicAc: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -173,11 +173,11 @@ BO_ 2566782462 PGN_65021_generatorPhaseCBasicAc: 8 Vector__XXX
 BO_ 2566782718 PGN_65022_generatorPhaseBAcReact: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566782974 PGN_65023_generatorPhaseBAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566783230 PGN_65024_generatorPhaseBBasicAc: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -188,11 +188,11 @@ BO_ 2566783230 PGN_65024_generatorPhaseBBasicAc: 8 Vector__XXX
 BO_ 2566783486 PGN_65025_generatorPhaseAAcReact: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566783742 PGN_65026_generatorPhaseAAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566783998 PGN_65027_generatorPhaseABasicAc: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -203,11 +203,11 @@ BO_ 2566783998 PGN_65027_generatorPhaseABasicAc: 8 Vector__XXX
 BO_ 2566784254 PGN_65028_generatorTotalAcReacti: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (0,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "var" Vector__XXX
 
 BO_ 2566784510 PGN_65029_generatorTotalAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566784766 PGN_65030_generatorAverageBasicA: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -217,7 +217,7 @@ BO_ 2566784766 PGN_65030_generatorAverageBasicA: 8 Vector__XXX
 
 BO_ 2566849790 PGN_65284_maretronProprietaryDcB: 8 Vector__XXX
  SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ breakerCurrent : 32|16@1- (0.1,0) [0|0] "A" Vector__XXX
+ SG_ breakerCurrent : 32|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ indicatorNumber : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ bankInstance : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
@@ -647,19 +647,19 @@ BO_ 2582780670 PGN_127514_agsStatus: 8 Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582839550 PGN_127744_acPowerCurrentPhaseA: 8 Vector__XXX
- SG_ power : 32|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ power : 32|32@1- (1,0) [0|0] "W" Vector__XXX
  SG_ acRmsCurrent : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582839806 PGN_127745_acPowerCurrentPhaseB: 8 Vector__XXX
- SG_ power : 32|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ power : 32|32@1- (1,0) [0|0] "W" Vector__XXX
  SG_ acRmsCurrent : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582840062 PGN_127746_acPowerCurrentPhaseC: 8 Vector__XXX
- SG_ power : 32|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ power : 32|32@1- (1,0) [0|0] "W" Vector__XXX
  SG_ acRmsCurrent : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1440,7 +1440,6 @@ CM_ BO_ 2583167998 "Position Delta, Rapid Update";
 CM_ BO_ 2583168254 "Altitude Delta, Rapid Update";
 CM_ BO_ 2583168510 "GNSS Position Data";
 CM_ BO_ 2583169534 "Time & Date";
-CM_ SG_ 2583169534 localOffset "Minutes";
 CM_ BO_ 2583170814 "AIS Class A Position Report";
 CM_ BO_ 2583171070 "AIS Class B Position Report";
 CM_ BO_ 2583171326 "AIS Class B Extended Position Report";

@@ -1793,7 +1793,7 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     return true;
   }
 
-  if (field->units && strcmp(field->units, PROPRIETARY_PGN_ONLY) == 0)
+  if (field->proprietary)
   {
     if ((refPgn >= 65280 && refPgn <= 65535) || (refPgn >= 126720 && refPgn <= 126975) || (refPgn >= 130816 && refPgn <= 131071))
     {

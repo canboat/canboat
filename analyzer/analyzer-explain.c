@@ -257,7 +257,7 @@ static void explainPGN(Pgn pgn)
       }
     }
 
-    if (f.resolution == RES_LOOKUP && f.lookupValue)
+    if (!(f.units && f.units[0] == '=') && f.resolution == RES_LOOKUP && f.lookupValue)
     {
       uint32_t maxValue = (1 << f.size) - 1;
       printf("                  Range: 0..%u\n", maxValue);
@@ -408,7 +408,7 @@ static void explainPGNXML(Pgn pgn)
       printXML(10, "Id", f.camelName);
       printXML(10, "Name", f.name);
 
-      if (f.size == LEN_VARIABLE || (f.units && strcmp(f.units, PROPRIETARY_PGN_ONLY) == 0))
+      if (f.size == LEN_VARIABLE)
       {
         showBitOffset = false;
       }
@@ -432,6 +432,17 @@ static void explainPGNXML(Pgn pgn)
       }
       bitOffset = bitOffset + f.size;
 
+      if (f.proprietary)
+      {
+        if (doExpandLookups)
+        {
+          printf("          <Match>proprietary pgn only</Match>\n");
+        }
+        else
+        {
+          printf("          <Condition>PGNIsProprietary</Condition>\n");
+        }
+      }
       if (f.units && f.units[0] == '=')
       {
         printf("          <Match>%s</Match>\n", &f.units[1]);
@@ -474,7 +485,7 @@ static void explainPGNXML(Pgn pgn)
         printf("          <Offset>%d</Offset>\n", f.offset);
       }
 
-      if (f.resolution == RES_LOOKUP && f.lookupValue)
+      if (!(f.units && f.units[0] == '=') && f.resolution == RES_LOOKUP && f.lookupValue)
       {
         if (doExpandLookups)
         {
@@ -529,7 +540,7 @@ static void explainPGNXML(Pgn pgn)
         }
       }
 
-      if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU || f.resolution == RES_VARIABLE)
+      if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU || f.resolution == RES_VARIABLE || f.proprietary)
       {
         showBitOffset = false; // From here on there is no good bitoffset to be printed
       }
