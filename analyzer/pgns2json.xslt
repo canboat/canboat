@@ -351,30 +351,28 @@
 
   <xsl:template match="LookupEnumeration">
     <xsl:call-template name="indent"/>{
-        "type": "lookup",
         "name": "<xsl:value-of select="@Name"/>",
         "maxValue": <xsl:value-of select="@MaxValue"/>,
-        "values": [<xsl:apply-templates/>
+        "EnumValues": [<xsl:apply-templates/>
         ]
       }<xsl:if test="not(position() = last())">,</xsl:if>
   </xsl:template>
 
   <xsl:template match="LookupBitEnumeration">
     <xsl:call-template name="indent"/>{
-        "type": "bitfield",
         "name": "<xsl:value-of select="@Name"/>",
         "maxValue": <xsl:value-of select="@MaxValue"/>,
-        "values":[<xsl:apply-templates/>
+        "EnumBitValues":[<xsl:apply-templates/>
         ]
       }<xsl:if test="not(position() = last())">,</xsl:if>
   </xsl:template>
 
   <xsl:template match="LookupEnumeration/EnumPair">
-    <xsl:call-template name="indent"/>{"<xsl:value-of select="@Value"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+    <xsl:call-template name="indent"/>{"Name": "<xsl:value-of select="@Name"/>", "Value": <xsl:value-of select="@Value"/>}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="LookupBitEnumeration/BitPair">
-    <xsl:call-template name="indent"/>{"<xsl:value-of select="@Bit"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+    <xsl:call-template name="indent"/>{"Name": "<xsl:value-of select="@Name"/>", "Bit": <xsl:value-of select="@Bit"/>}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="Field/LookupEnumeration">

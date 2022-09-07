@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- #283: Enumerations in pgns-v2.json use names for all attributes.
 - #285: Fix `SHORT_TIME` field printing incorrect values.
 
 ## [3.1.0]
