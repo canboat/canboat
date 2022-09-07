@@ -1,4 +1,4 @@
-VERSION "Canboat export 2022-09-06T16:23:22.889227"
+VERSION "Canboat export 2022-09-07T13:17:07.181921"
 
 
 NS_ : 
@@ -1782,12 +1782,12 @@ VAL_ 2583299070 actualMode 0 "1D" 1 "2D" 2 "3D" 3 "Auto" ;
 VAL_ 2583299070 desiredMode 0 "1D" 1 "2D" 2 "3D" 3 "Auto" ;
 VAL_ 2583495422 reference 0 "True (ground referenced to North" 1 "Magnetic (ground referenced to Magnetic North)" 2 "Apparent" 3 "True (boat referenced)" 4 "True (water referenced)" ;
 VAL_ 2583496702 humiditySource 0 "Inside" 1 "Outside" ;
-VAL_ 2583496702 temperatureSource 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" ;
-VAL_ 2583496958 source 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" ;
+VAL_ 2583496702 temperatureSource 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" 15 "Shaft Seal Temperature" ;
+VAL_ 2583496958 source 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" 15 "Shaft Seal Temperature" ;
 VAL_ 2583497214 source 0 "Inside" 1 "Outside" ;
 VAL_ 2583497470 source 0 "Atmospheric" 1 "Water" 2 "Steam" 3 "Compressed Air" 4 "Hydraulic" 5 "Filter" 6 "AltimeterSetting" 7 "Oil" 8 "Fuel" ;
 VAL_ 2583497726 source 0 "Atmospheric" 1 "Water" 2 "Steam" 3 "Compressed Air" 4 "Hydraulic" 5 "Filter" 6 "AltimeterSetting" 7 "Oil" 8 "Fuel" ;
-VAL_ 2583497982 source 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" ;
+VAL_ 2583497982 source 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" 15 "Shaft Seal Temperature" ;
 
 
 

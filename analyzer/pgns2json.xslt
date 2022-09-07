@@ -353,7 +353,7 @@
     <xsl:call-template name="indent"/>{
         "type": "lookup",
         "name": "<xsl:value-of select="@Name"/>",
-        "maxValue": "<xsl:value-of select="@MaxValue"/>",
+        "maxValue": <xsl:value-of select="@MaxValue"/>,
         "values": [<xsl:apply-templates/>
         ]
       }<xsl:if test="not(position() = last())">,</xsl:if>
@@ -363,14 +363,14 @@
     <xsl:call-template name="indent"/>{
         "type": "bitfield",
         "name": "<xsl:value-of select="@Name"/>",
-        "maxValue":"<xsl:value-of select="@MaxValue"/>",
+        "maxValue": <xsl:value-of select="@MaxValue"/>,
         "values":[<xsl:apply-templates/>
         ]
       }<xsl:if test="not(position() = last())">,</xsl:if>
   </xsl:template>
 
   <xsl:template match="LookupEnumeration/EnumPair">
-    <xsl:call-template name="indent"/>{"name": "<xsl:value-of select="@Name"/>", "value":"<xsl:value-of select="@Value"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+    <xsl:call-template name="indent"/>{"<xsl:value-of select="@Value"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="LookupBitEnumeration/BitPair">
@@ -378,12 +378,12 @@
   </xsl:template>
 
   <xsl:template match="Field/LookupEnumeration">
-    <xsl:call-template name="indent"/>"LookupEnumeration":"<xsl:value-of select="."/>"<xsl:text/>
+    <xsl:call-template name="indent"/>"LookupEnumeration": "<xsl:value-of select="."/>"<xsl:text/>
     <xsl:if test="not(following-sibling::*)">}</xsl:if>
   </xsl:template>
 
   <xsl:template match="Field/LookupBitEnumeration">
-    <xsl:call-template name="indent"/>"LookupBitEnumeration":"<xsl:value-of select="."/>"<xsl:text/>
+    <xsl:call-template name="indent"/>"LookupBitEnumeration": "<xsl:value-of select="."/>"<xsl:text/>
     <xsl:if test="not(following-sibling::*)">}</xsl:if>
   </xsl:template>
 
@@ -396,7 +396,7 @@
   </xsl:template>
 
   <xsl:template match="EnumValues/EnumPair">
-    <xsl:call-template name="indent"/>{"name":"<xsl:value-of select="@Name"/>","value":"<xsl:value-of select="@Value"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+    <xsl:call-template name="indent"/>{"name": "<xsl:value-of select="@Name"/>", "value": <xsl:value-of select="@Value"/>}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="EnumBitValues/EnumPair">

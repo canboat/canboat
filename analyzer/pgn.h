@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "common.h"
 #include "parse.h"
+#include "pow.h"
 
 #define LEN_VARIABLE (0)
 
@@ -3259,16 +3260,16 @@ Pgn pgnList[] = {
      {INTEGER_FIELD("PRN", BYTES(1)),
       INTEGER_FIELD("GPS Week number", BYTES(2)),
       BINARY_FIELD("SV Health Bits", BYTES(1), NULL),
-      NUMBER_FIELD("Eccentricity", BYTES(2), 1e-21, false, "m/m", NULL),
-      ELAPSED_FIELD("Almanac Reference Time", BYTES(1), 1e12),
-      NUMBER_FIELD("Inclination Angle", BYTES(2), 1e-19, true, "semi-circle", NULL),
-      NUMBER_FIELD("Rate of Right Ascension", BYTES(2), 1e-38, true, "semi-circle/s", NULL),
-      NUMBER_FIELD("Root of Semi-major Axis", BYTES(3), 1e-11, false, "sqrt(m)", NULL),
-      NUMBER_FIELD("Argument of Perigee", BYTES(3), 1e-23, true, "semi-circle", NULL),
-      NUMBER_FIELD("Longitude of Ascension Node", BYTES(3), 1e-23, true, "semi-circle", NULL),
-      NUMBER_FIELD("Mean Anomaly", BYTES(3), 1e-23, true, "semi-circle", NULL),
-      NUMBER_FIELD("Clock Parameter 1", 11, 1e-20, true, "s", NULL),
-      NUMBER_FIELD("Clock Parameter 2", 11, 1e-38, true, "s/s", NULL),
+      NUMBER_FIELD("Eccentricity", BYTES(2), POW2NEG(21), false, "m/m", NULL),
+      ELAPSED_FIELD("Almanac Reference Time", BYTES(1), POW2(12)),
+      NUMBER_FIELD("Inclination Angle", BYTES(2), POW2NEG(19), true, "semi-circle", NULL),
+      NUMBER_FIELD("Rate of Right Ascension", BYTES(2), POW2NEG(38), true, "semi-circle/s", NULL),
+      NUMBER_FIELD("Root of Semi-major Axis", BYTES(3), POW2NEG(11), false, "sqrt(m)", NULL),
+      NUMBER_FIELD("Argument of Perigee", BYTES(3), POW2NEG(23), true, "semi-circle", NULL),
+      NUMBER_FIELD("Longitude of Ascension Node", BYTES(3), POW2NEG(23), true, "semi-circle", NULL),
+      NUMBER_FIELD("Mean Anomaly", BYTES(3), POW2NEG(23), true, "semi-circle", NULL),
+      NUMBER_FIELD("Clock Parameter 1", 11, POW2NEG(20), true, "s", NULL),
+      NUMBER_FIELD("Clock Parameter 2", 11, POW2NEG(38), true, "s/s", NULL),
       RESERVED_FIELD(2),
       END_OF_FIELDS}}
 

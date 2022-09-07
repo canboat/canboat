@@ -1,5 +1,7 @@
 /*
 
+Analyzes NMEA 2000 PGNs.
+
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
@@ -18,4 +20,27 @@ limitations under the License.
 
 */
 
-#define VERSION "3.1.0"
+#ifndef POW_H_INCLUDED
+#define POW_H_INCLUDED
+
+#include "dup.h"
+
+/**
+ * POW2(n) evaluates to the floating point value
+ * of 2^n.
+ *
+ * Can be used for values 0..39
+ */
+
+#define POW2(n) 1. DUP(n, *2)
+
+/**
+ * POW2NEG(n) evaluates to the floating point value
+ * of 2^-n.
+ *
+ * Can be used for values 0..39
+ */
+
+#define POW2NEG(n) 1. DUP(n, / 2)
+
+#endif
