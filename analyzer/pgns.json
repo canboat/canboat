@@ -2,7 +2,7 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"3.0.0",
+    "Version":"3.1.0",
     "PGNs": [
     
       {
@@ -15010,7 +15010,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Units":"m/m",
-            "Resolution":1e-21,
+            "Resolution":4.76837e-07,
             "Signed":false},
           {
             "Order":5,
@@ -15020,7 +15020,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"s",
-            "Resolution":1e+12,
+            "Resolution":4096,
             "Signed":false},
           {
             "Order":6,
@@ -15030,7 +15030,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Units":"semi-circle",
-            "Resolution":1e-19,
+            "Resolution":1.90735e-06,
             "Signed":true},
           {
             "Order":7,
@@ -15040,7 +15040,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Units":"semi-circle/s",
-            "Resolution":1e-38,
+            "Resolution":3.63798e-12,
             "Signed":true},
           {
             "Order":8,
@@ -15050,7 +15050,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Units":"sqrt(m)",
-            "Resolution":1e-11,
+            "Resolution":0.000488281,
             "Signed":false},
           {
             "Order":9,
@@ -15060,7 +15060,7 @@
             "BitOffset":112,
             "BitStart":0,
             "Units":"semi-circle",
-            "Resolution":1e-23,
+            "Resolution":1.19209e-07,
             "Signed":true},
           {
             "Order":10,
@@ -15070,7 +15070,7 @@
             "BitOffset":136,
             "BitStart":0,
             "Units":"semi-circle",
-            "Resolution":1e-23,
+            "Resolution":1.19209e-07,
             "Signed":true},
           {
             "Order":11,
@@ -15080,7 +15080,7 @@
             "BitOffset":160,
             "BitStart":0,
             "Units":"semi-circle",
-            "Resolution":1e-23,
+            "Resolution":1.19209e-07,
             "Signed":true},
           {
             "Order":12,
@@ -15090,7 +15090,7 @@
             "BitOffset":184,
             "BitStart":0,
             "Units":"s",
-            "Resolution":1e-20,
+            "Resolution":9.53674e-07,
             "Signed":true},
           {
             "Order":13,
@@ -15100,7 +15100,7 @@
             "BitOffset":195,
             "BitStart":3,
             "Units":"s/s",
-            "Resolution":1e-38,
+            "Resolution":3.63798e-12,
             "Signed":true},
           {
             "Order":14,

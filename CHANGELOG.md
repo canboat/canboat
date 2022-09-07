@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- #273: Fix resolutions for PGN 129541 which contain (very small) 2^-n values.
 - #279: Added value 15 'Shaft Seal Temperature' to TEMPERATURE_SOURCE lookup
 
 ## [3.0.0] - 2022-09-06

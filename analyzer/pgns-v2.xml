@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v3.0.0
+CANboat version v3.1.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>3.0.0</Version>
+  <Version>3.1.0</Version>
   <LookupEnumerations>
     <LookupEnumeration Name='INDUSTRY_CODE' MaxValue='7'>
       <EnumPair Value='0' Name='Global' />
@@ -16982,7 +16982,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/m</Units>
-          <Resolution>1e-21</Resolution>
+          <Resolution>4.76837e-07</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -16993,7 +16993,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>s</Units>
-          <Resolution>1e+12</Resolution>
+          <Resolution>4096</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -17004,7 +17004,7 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>semi-circle</Units>
-          <Resolution>1e-19</Resolution>
+          <Resolution>1.90735e-06</Resolution>
           <Signed>true</Signed>
         </Field>
         <Field>
@@ -17015,7 +17015,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>semi-circle/s</Units>
-          <Resolution>1e-38</Resolution>
+          <Resolution>3.63798e-12</Resolution>
           <Signed>true</Signed>
         </Field>
         <Field>
@@ -17026,7 +17026,7 @@ limitations under the License.
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Units>sqrt(m)</Units>
-          <Resolution>1e-11</Resolution>
+          <Resolution>0.000488281</Resolution>
           <Signed>false</Signed>
         </Field>
         <Field>
@@ -17037,7 +17037,7 @@ limitations under the License.
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Units>semi-circle</Units>
-          <Resolution>1e-23</Resolution>
+          <Resolution>1.19209e-07</Resolution>
           <Signed>true</Signed>
         </Field>
         <Field>
@@ -17048,7 +17048,7 @@ limitations under the License.
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Units>semi-circle</Units>
-          <Resolution>1e-23</Resolution>
+          <Resolution>1.19209e-07</Resolution>
           <Signed>true</Signed>
         </Field>
         <Field>
@@ -17059,7 +17059,7 @@ limitations under the License.
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Units>semi-circle</Units>
-          <Resolution>1e-23</Resolution>
+          <Resolution>1.19209e-07</Resolution>
           <Signed>true</Signed>
         </Field>
         <Field>
@@ -17070,7 +17070,7 @@ limitations under the License.
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
           <Units>s</Units>
-          <Resolution>1e-20</Resolution>
+          <Resolution>9.53674e-07</Resolution>
           <Signed>true</Signed>
         </Field>
         <Field>
@@ -17081,7 +17081,7 @@ limitations under the License.
           <BitOffset>195</BitOffset>
           <BitStart>3</BitStart>
           <Units>s/s</Units>
-          <Resolution>1e-38</Resolution>
+          <Resolution>3.63798e-12</Resolution>
           <Signed>true</Signed>
         </Field>
         <Field>
