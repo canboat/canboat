@@ -1829,7 +1829,11 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     }
     if (field->resolution == RES_TIME)
     {
-      valueu32    = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
+      valueu32 = data[0] + (data[1] << 8);
+      if (bytes == 4)
+      {
+        valueu32 += (data[2] << 16) + (data[3] << 24);
+      }
       currentTime = valueu32;
       return printTime(fieldName, valueu32);
     }

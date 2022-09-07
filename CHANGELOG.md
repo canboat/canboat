@@ -4,13 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## WIP
+
+### Changed
+
+- #285: Fix `SHORT_TIME` field printing incorrect values.
+
 ## [3.1.0]
 
 ### Added
 
+- #279: Added value 15 'Shaft Seal Temperature' to `TEMPERATURE_SOURCE` lookup.
+
+### Changed
+
 - #282: Lookup table values should be numbers, not strings.
 - #273: Fix resolutions for PGN 129541 which contain (very small) 2^-n values.
-- #279: Added value 15 'Shaft Seal Temperature' to TEMPERATURE_SOURCE lookup
 
 ## [3.0.0] - 2022-09-06
 
