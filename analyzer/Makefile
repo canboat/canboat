@@ -30,6 +30,7 @@ NGTXMLFILE=pgns-ngt.xml
 NGTJSONFILE=pgns-ngt.json
 IKXMLFILE=pgns-ik.xml
 IKJSONFILE=pgns-ik.json
+NPMFILE=package.json
 HEADERS=analyzer.h pgn.h lookup.h
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h
@@ -71,7 +72,10 @@ $(NGTJSONFILE): $(NGTXMLFILE) pgns2json.xslt
 $(IKJSONFILE): $(IKXMLFILE) pgns2json.xslt
 	xsltproc pgns2json.xslt $(IKXMLFILE) >$(IKJSONFILE)
 
-json: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE)
+$(NPMFILE): ../common/version.h $(ANALYZER)
+	./fixup-version.sh $(ANALYZER) $(NPMFILE)
+
+json: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE) $(NPMFILE)
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
