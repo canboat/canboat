@@ -47,13 +47,6 @@ enum MultiPackets
 
 enum MultiPackets multiPackets = MULTIPACKETS_SEPARATE;
 
-enum GeoFormats
-{
-  GEO_DD,
-  GEO_DM,
-  GEO_DMS
-};
-
 typedef struct
 {
   size_t   lastFastPacket;
@@ -67,31 +60,24 @@ typedef struct
   Packet packetList[ARRAY_SIZE(pgnList)];
 } DevicePackets;
 
-/* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
- * but I don't yet know which datafields reserve the reserved values.
- */
-#define DATAFIELD_UNKNOWN (0)
-#define DATAFIELD_ERROR (-1)
-#define DATAFIELD_RESERVED1 (-2)
-#define DATAFIELD_RESERVED2 (-3)
-#define DATAFIELD_RESERVED3 (-4)
-
 DevicePackets *device[256];
 
-bool            showRaw       = false;
-bool            showData      = false;
-bool            showBytes     = false;
-bool            showJson      = false;
-bool            showJsonEmpty = false;
-bool            showJsonValue = false;
-bool            showSI        = false; // Output everything in strict SI units
-char           *sep           = " ";
-char            closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
-enum GeoFormats showGeo  = GEO_DD;
-int             onlyPgn  = 0;
-int             onlySrc  = -1;
-int             clockSrc = -1;
-size_t          heapSize = 0;
+bool       showRaw       = false;
+bool       showData      = false;
+bool       showBytes     = false;
+bool       showJson      = false;
+bool       showJsonEmpty = false;
+bool       showJsonValue = false;
+bool       showSI        = false; // Output everything in strict SI units
+GeoFormats showGeo       = GEO_DD;
+
+char *sep = " ";
+char  closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
+
+int    onlyPgn  = 0;
+int    onlySrc  = -1;
+int    clockSrc = -1;
+size_t heapSize = 0;
 
 int g_variableFieldRepeat[2]; // Actual number of repetitions
 int g_variableFieldIndex;
@@ -101,7 +87,6 @@ static uint32_t currentTime = UINT32_MAX;
 
 static enum RawFormats detectFormat(const char *msg);
 static bool            printCanFormat(RawMessage *msg);
-static bool            printNumber(char *fieldName, Field *field, uint8_t *data, size_t startBit, size_t bits);
 static bool            printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 static void            fillFieldCounts(void);
 static void            printCanRaw(RawMessage *msg);
@@ -277,6 +262,7 @@ int main(int argc, char **argv)
 
   fillFieldCounts();
   fillLookups();
+  fillFieldType();
   checkPgnList();
 
   while (fgets(msg, sizeof(msg) - 1, file))
@@ -420,31 +406,6 @@ static enum RawFormats detectFormat(const char *msg)
   return RAWFORMAT_UNKNOWN;
 }
 
-static char *getSep()
-{
-  char *s = sep;
-
-  if (showJson)
-  {
-    sep = ",";
-    if (strchr(s, '{'))
-    {
-      if (strlen(closingBraces) >= sizeof(closingBraces) - 2)
-      {
-        logError("Too many braces\n");
-        exit(2);
-      }
-      strcat(closingBraces, "}");
-    }
-  }
-  else
-  {
-    sep = ";";
-  }
-
-  return s;
-}
-
 static void fillFieldCounts(void)
 {
   size_t i, j;
@@ -464,66 +425,6 @@ static void fillFieldCounts(void)
       exit(2);
     }
     pgnList[i].fieldCount = j;
-  }
-}
-
-char  mbuf[8192];
-char *mp = mbuf;
-
-void mprintf(const char *format, ...)
-{
-  va_list ap;
-  int     remain;
-
-  va_start(ap, format);
-  remain = sizeof(mbuf) - (mp - mbuf) - 1;
-  if (remain > 0)
-  {
-    mp += vsnprintf(mp, remain, format, ap);
-  }
-  va_end(ap);
-}
-
-void mreset(void)
-{
-  mp = mbuf;
-}
-
-void mwrite(FILE *stream)
-{
-  fwrite(mbuf, sizeof(char), mp - mbuf, stream);
-  fflush(stream);
-  mreset();
-}
-
-static void printEmpty(const char *name, int64_t exceptionValue)
-{
-  if (showJsonEmpty)
-  {
-    mprintf("%s\"%s\":null", getSep(), name);
-  }
-  else if (!showJson)
-  {
-    switch (exceptionValue)
-    {
-      case DATAFIELD_UNKNOWN:
-        mprintf("%s %s = Unknown", getSep(), name);
-        break;
-      case DATAFIELD_ERROR:
-        mprintf("%s %s = ERROR", getSep(), name);
-        break;
-      case DATAFIELD_RESERVED1:
-        mprintf("%s %s = RESERVED1", getSep(), name);
-        break;
-      case DATAFIELD_RESERVED2:
-        mprintf("%s %s = RESERVED2", getSep(), name);
-        break;
-      case DATAFIELD_RESERVED3:
-        mprintf("%s %s = RESERVED3", getSep(), name);
-        break;
-      default:
-        mprintf("%s %s = Unhandled value %ld", getSep(), name, exceptionValue);
-    }
   }
 }
 
@@ -551,187 +452,6 @@ static void printCanRaw(RawMessage *msg)
     }
     putc('\n', f);
   }
-}
-
-/*
- * There are three ways to print lat/long: DD, DM, DMS.
- * We print in the way set by the config. Default is DMS. DD is useful for Google Maps.
- */
-
-static bool printLatLon(char *name, double resolution, uint8_t *data, size_t bytes)
-{
-  uint64_t absVal;
-  int64_t  value;
-  int64_t  maxValue;
-  size_t   i;
-
-  value = 0;
-  for (i = 0; i < bytes; i++)
-  {
-    value |= ((uint64_t) data[i]) << (i * 8);
-  }
-  if (bytes == 4 && ((data[3] & 0x80) > 0))
-  {
-    value |= UINT64_C(0xffffffff00000000);
-  }
-  maxValue = (bytes == 8) ? INT64_C(0x7fffffffffffffff) : INT64_C(0x7fffffff);
-  if (value > maxValue - 2)
-  {
-    printEmpty(name, value - maxValue);
-    return true;
-  }
-
-  if (bytes == 8)
-  {
-    if (showBytes)
-    {
-      mprintf("(%" PRIx64 " = %" PRId64 ") ", value, value);
-    }
-
-    value /= INT64_C(1000000000);
-  }
-  absVal = (value < 0) ? -value : value;
-
-  if (showBytes)
-  {
-    mprintf("(%" PRId64 ") ", value);
-  }
-
-  if (showGeo == GEO_DD)
-  {
-    double dd = (double) value / (double) RES_LAT_LONG_PRECISION;
-
-    if (showJson)
-    {
-      mprintf("%s\"%s\":%10.7f", getSep(), name, dd);
-    }
-    else
-    {
-      mprintf("%s %s = %10.7f", getSep(), name, dd);
-    }
-  }
-  else if (showGeo == GEO_DM)
-  {
-    /* One degree = 10e6 */
-
-    uint64_t degrees   = (absVal / RES_LAT_LONG_PRECISION);
-    uint64_t remainder = (absVal % RES_LAT_LONG_PRECISION);
-    double   minutes   = (remainder * 60) / (double) RES_LAT_LONG_PRECISION;
-
-    mprintf((showJson ? "%s\"%s\":\"%02u&deg; %6.3f %c\"" : "%s %s = %02ud %6.3f %c"),
-            getSep(),
-            name,
-            (uint32_t) degrees,
-            minutes,
-            ((resolution == RES_LONGITUDE) ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
-  }
-  else
-  {
-    uint32_t degrees   = (uint32_t) (absVal / RES_LAT_LONG_PRECISION);
-    uint32_t remainder = (uint32_t) (absVal % RES_LAT_LONG_PRECISION);
-    uint32_t minutes   = (remainder * 60) / RES_LAT_LONG_PRECISION;
-    double   seconds   = (((uint64_t) remainder * 3600) / (double) RES_LAT_LONG_PRECISION) - (60 * minutes);
-
-    mprintf((showJson ? "%s\"%s\":\"%02u&deg;%02u&rsquo;%06.3f&rdquo;%c\"" : "%s %s = %02ud %02u' %06.3f\"%c"),
-            getSep(),
-            name,
-            degrees,
-            minutes,
-            seconds,
-            ((resolution == RES_LONGITUDE) ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
-    if (showJson)
-    {
-      double dd = (double) value / (double) RES_LAT_LONG_PRECISION;
-      mprintf("%s\"%s_dd\":%10.7f", getSep(), name, dd);
-    }
-  }
-  return true;
-}
-
-static bool printDate(char *name, uint16_t d)
-{
-  char       buf[sizeof("2008.03.10") + 1];
-  time_t     t;
-  struct tm *tm;
-
-  if (d >= 0xfffd)
-  {
-    printEmpty(name, d - INT64_C(0xffff));
-    return true;
-  }
-
-  if (showBytes)
-  {
-    mprintf("(date %hx = %hd) ", d, d);
-  }
-
-  t  = d * 86400;
-  tm = gmtime(&t);
-  if (!tm)
-  {
-    logAbort("Unable to convert %u to gmtime\n", (unsigned int) t);
-  }
-  strftime(buf, sizeof(buf), "%Y.%m.%d", tm);
-  if (showJson)
-  {
-    mprintf("%s\"%s\":\"%s\"", getSep(), name, buf);
-  }
-  else
-  {
-    mprintf("%s %s = %s", getSep(), name, buf);
-  }
-  return true;
-}
-
-static bool printTime(char *name, uint32_t t)
-{
-  uint32_t       hours;
-  uint32_t       minutes;
-  uint32_t       seconds;
-  uint32_t       units;
-  const uint32_t unitspersecond = 10000;
-
-  if (t >= 0xfffffffd)
-  {
-    printEmpty(name, t - INT64_C(0xffffffff));
-    return true;
-  }
-
-  if (showBytes)
-  {
-    mprintf("(time %x = %u) ", t, t);
-  }
-
-  seconds = t / unitspersecond;
-  units   = t % unitspersecond;
-  minutes = seconds / 60;
-  seconds = seconds % 60;
-  hours   = minutes / 60;
-  minutes = minutes % 60;
-
-  if (showJson)
-  {
-    if (units)
-    {
-      mprintf("%s \"%s\": \"%02u:%02u:%02u.%05u\"", getSep(), name, hours, minutes, seconds, units);
-    }
-    else
-    {
-      mprintf("%s \"%s\": \"%02u:%02u:%02u\"", getSep(), name, hours, minutes, seconds);
-    }
-  }
-  else
-  {
-    if (units)
-    {
-      mprintf("%s %s = %02u:%02u:%02u.%05u", getSep(), name, hours, minutes, seconds, units);
-    }
-    else
-    {
-      mprintf("%s %s = %02u:%02u:%02u", getSep(), name, hours, minutes, seconds);
-    }
-  }
-  return true;
 }
 
 static bool printTemperature(char *name, uint32_t t, uint32_t bits, double resolution)
@@ -1067,6 +787,7 @@ printVarField(Field *field, char *fieldName, uint32_t refPgn, uint8_t *data, siz
   return false;
 }
 
+#ifdef OLD
 static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t startBit, size_t bits)
 {
   int64_t value;
@@ -1318,6 +1039,7 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
 
   return true;
 }
+#endif
 
 void setSystemClock(void)
 {
@@ -1626,6 +1348,7 @@ static bool printCanFormat(RawMessage *msg)
   return onlyPgn > 0;
 }
 
+#ifdef OLD
 static bool printString(Field *field, const char *fieldName, uint8_t *data, size_t bytes, size_t *bits)
 {
   uint8_t len;
@@ -1759,6 +1482,7 @@ static bool printString(Field *field, const char *fieldName, uint8_t *data, size
 
   return true;
 }
+#endif
 
 static bool printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
@@ -1767,23 +1491,41 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
   size_t   bytes;
   uint16_t valueu16;
   uint32_t valueu32;
+  double   resolution;
 
   if (fieldName == NULL)
   {
-    fieldName = field->camelName ? field->camelName : field->name;
+    fieldName = field->camelName ? field->camelName : (char *) field->name;
   }
 
-  logDebug("printField(<%s>, \"%s\", ..., %zu, %zu) res=%f\n", field->name, fieldName, dataLen, startBit, field->resolution);
+  resolution = field->resolution;
+  if (resolution == 0.0)
+  {
+    resolution = field->ft->resolution;
+  }
 
-  *bits = field->size;
-  bytes = (*bits + 7) / 8;
-  bytes = min(bytes, dataLen);
-  *bits = min(bytes * 8, *bits);
+  logDebug("printField(<%s>, \"%s\", ..., %zu, %zu) res=%g\n", field->name, fieldName, dataLen, startBit, field->resolution);
+
+  if (field->size != 0 || field->ft != NULL)
+  {
+    *bits = (field->size != 0) ? field->size : field->ft->size;
+    bytes = (*bits + 7) / 8;
+    bytes = min(bytes, dataLen);
+    *bits = min(bytes * 8, *bits);
+  }
+  else
+  {
+    bytes = 0;
+    *bits = 0;
+  }
 
   if (strcmp(fieldName, "PGN") == 0)
   {
     refPgn = data[0] + (data[1] << 8) + (data[2] << 16);
   }
+
+  logDebug(
+      "printField <%s>, \"%s\": bits=%zu proprietary=%u refPgn=%u\n", field->name, fieldName, *bits, field->proprietary, refPgn);
 
   if (strcmp(fieldName, "Reserved") == 0)
   {
@@ -1806,6 +1548,17 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
       return true;
     }
   }
+
+  logDebug("printField <%s>, \"%s\": ft=%p ft->pf=%p\n", field->name, fieldName, field->ft, (field->ft) ? field->ft->pf : NULL);
+
+  if (field->ft != NULL && field->ft->pf != NULL)
+  {
+    logDebug("printField <%s>, \"%s\": calling function\n", field->name, fieldName);
+    return (field->ft->pf)(field, fieldName, data, dataLen, startBit, bits);
+  }
+  return false;
+
+#ifdef OLD
   if (field->resolution < 0.0)
   {
     /* These fields have only been found to start on byte boundaries,
@@ -1887,6 +1640,7 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     return false;
   }
   return printNumber(fieldName, field, data, startBit, *bits);
+#endif
 }
 
 bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bool showJson)

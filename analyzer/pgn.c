@@ -128,9 +128,8 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
         int64_t maxValue;
 
         hasFixedField = true;
-        extractNumber(field, data, startBit, field->size, &value, &maxValue);
-        desiredValue = strtol(field->units + 1, 0, 10);
-        if (value != desiredValue)
+        desiredValue  = strtol(field->units + 1, 0, 10);
+        if (!extractNumber(field, data, length, startBit, field->size, &value, &maxValue) || value != desiredValue)
         {
           matchedFixedField = false;
           break;
@@ -138,6 +137,7 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
       }
       startBit += bits;
       data += startBit / 8;
+      length -= startBit / 8;
       startBit %= 8;
     }
     if (!hasFixedField)
@@ -250,7 +250,13 @@ Field *getField(uint32_t pgnId, uint32_t field)
  *
  */
 
-void extractNumber(const Field *field, uint8_t *data, size_t startBit, size_t bits, int64_t *value, int64_t *maxValue)
+bool extractNumber(const Field *field,
+                   uint8_t     *data,
+                   size_t       dataLen,
+                   size_t       startBit,
+                   size_t       bits,
+                   int64_t     *value,
+                   int64_t     *maxValue)
 {
   bool hasSign = field->hasSign;
 
@@ -266,10 +272,10 @@ void extractNumber(const Field *field, uint8_t *data, size_t startBit, size_t bi
   *value = 0;
   maxv   = 0;
 
-  while (bitsRemaining)
+  while (bitsRemaining > 0 && dataLen > 0)
   {
     bitsInThisByte = min(8 - firstBit, bitsRemaining);
-    allOnes        = (uint64_t)((((uint64_t) 1) << bitsInThisByte) - 1);
+    allOnes        = (uint64_t) ((((uint64_t) 1) << bitsInThisByte) - 1);
 
     // How are bits ordered in bytes for bit fields? There are two ways, first field at LSB or first
     // field as MSB.
@@ -287,7 +293,13 @@ void extractNumber(const Field *field, uint8_t *data, size_t startBit, size_t bi
     {
       firstBit -= 8;
       data++;
+      dataLen--;
     }
+  }
+  if (bitsRemaining > 0)
+  {
+    logDebug("Insufficient length in PGN to fill field '%s'\n", field->name);
+    return false;
   }
 
   if (hasSign)
@@ -316,7 +328,16 @@ void extractNumber(const Field *field, uint8_t *data, size_t startBit, size_t bi
 
   *maxValue = (int64_t) maxv;
 
-  logDebug("extractNumber(<%s>,%p,%zu,%zu,%" PRId64 ",%" PRId64 ")\n", field->name, data, startBit, bits, *value, *maxValue);
+  logDebug("extractNumber(<%s>,%p,%zu,%zu,%zu,%" PRId64 ",%" PRId64 ")\n",
+           field->name,
+           data,
+           dataLen,
+           startBit,
+           bits,
+           *value,
+           *maxValue);
+
+  return true;
 }
 
 static char *camelize(const char *str, bool upperCamelCase)

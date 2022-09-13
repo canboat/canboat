@@ -24,13 +24,6 @@ limitations under the License.
 #include "analyzer.h"
 #include "common.h"
 
-enum GeoFormats
-{
-  GEO_DD,
-  GEO_DM,
-  GEO_DMS
-};
-
 /* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
  * but I don't yet know which datafields reserve the reserved values.
  */
@@ -40,21 +33,23 @@ enum GeoFormats
 #define DATAFIELD_RESERVED2 (-3)
 #define DATAFIELD_RESERVED3 (-4)
 
-bool            showRaw         = false;
-bool            showData        = false;
-bool            showBytes       = false;
-bool            showJson        = false;
-bool            showJsonEmpty   = false;
-bool            showJsonValue   = false;
-bool            showSI          = false; // Output everything in strict SI units
-bool            doExpandLookups = false;
-char           *sep             = " ";
-char            closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
-enum GeoFormats showGeo  = GEO_DD;
-int             onlyPgn  = 0;
-int             onlySrc  = -1;
-int             clockSrc = -1;
-size_t          heapSize = 0;
+bool       showRaw       = false;
+bool       showData      = false;
+bool       showBytes     = false;
+bool       showJson      = false;
+bool       showJsonEmpty = false;
+bool       showJsonValue = false;
+bool       showSI        = false; // Output everything in strict SI units
+GeoFormats showGeo       = GEO_DD;
+
+bool  doExpandLookups = false;
+char *sep             = " ";
+char  closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
+
+int    onlyPgn  = 0;
+int    onlySrc  = -1;
+int    clockSrc = -1;
+size_t heapSize = 0;
 
 int g_variableFieldRepeat[2]; // Actual number of repetitions
 int g_variableFieldIndex;
@@ -97,6 +92,7 @@ static void usage(char **argv, char **av)
   printf("     -camel            Show fieldnames in normalCamelCase\n");
   printf("     -upper-camel      Show fieldnames in UpperCamelCase\n");
   printf("     -version          Print the version of the program and quit\n");
+  printf("     -d                Print logging from level ERROR, INFO and DEBUG\n");
   printf("\n");
   exit(1);
 }
@@ -111,9 +107,6 @@ int main(int argc, char **argv)
   bool   doExplainIK  = false;
 
   setProgName(argv[0]);
-
-  camelCase(false);
-  fillLookups();
 
   for (; ac > 1; ac--, av++)
   {
@@ -150,11 +143,19 @@ int main(int argc, char **argv)
     {
       doExpandLookups = true;
     }
+    else if (strcasecmp(av[1], "-d") == 0)
+    {
+      setLogLevel(LOGLEVEL_DEBUG);
+      logDebug("Logging at debug level\n");
+    }
     else
     {
       usage(argv, av);
     }
   }
+
+  fillLookups();
+  fillFieldType();
 
   if (doExplain)
   {
@@ -209,33 +210,10 @@ static void explainPGN(Pgn pgn)
     }
     else if (f.units && f.units[0] != ',')
     {
-      printf("                  Units: %s\n", f.units);
+      printf("                  Unit: %s\n", f.units);
     }
 
-    if (f.resolution < 0.0)
-    {
-      Resolution t = types[-1 * (int) f.resolution - 1];
-      if (t.name)
-      {
-        printf("                  Type: %s\n", t.name);
-      }
-      if (t.resolution)
-      {
-        printf("                  Resolution: %s\n", t.resolution);
-      }
-      else if (f.resolution == RES_LATITUDE || f.resolution == RES_LONGITUDE)
-      {
-        if (f.size == BYTES(8))
-        {
-          printf("                  Resolution: %.16f\n", 1e-16);
-        }
-        else
-        {
-          printf("                  Resolution: %.7f\n", 1e-7);
-        }
-      }
-    }
-    else if (f.resolution != 1.0)
+    if (f.resolution != 1.0 && f.resolution != 0.0)
     {
       printf("                  Resolution: %g\n", f.resolution);
     }
@@ -247,17 +225,17 @@ static void explainPGN(Pgn pgn)
 
     if (f.lookupName)
     {
-      if (f.resolution == RES_LOOKUP)
+      if (strstr(f.fieldType, "BIT") == NULL)
       {
         printf("                  Enumeration: %s\n", f.lookupName);
       }
-      if (f.resolution == RES_BITFIELD)
+      else
       {
         printf("                  BitEnumeration: %s\n", f.lookupName);
       }
     }
 
-    if (!(f.units && f.units[0] == '=') && f.resolution == RES_LOOKUP && f.lookupValue)
+    if (!(f.units && f.units[0] == '=') && f.lookupValue != NULL && strcmp(f.fieldType, "LOOKUP") == 0)
     {
       uint32_t maxValue = (1 << f.size) - 1;
       printf("                  Range: 0..%u\n", maxValue);
@@ -272,7 +250,7 @@ static void explainPGN(Pgn pgn)
       }
     }
 
-    if (f.resolution == RES_BITFIELD && f.lookupValue)
+    if (f.lookupValue && strcmp(f.fieldType, "BITLOOKUP") == 0)
     {
       uint32_t maxValue = f.size;
 
@@ -449,33 +427,10 @@ static void explainPGNXML(Pgn pgn)
       }
       else if (f.units && f.units[0] != ',')
       {
-        printf("          <Units>%s</Units>\n", f.units);
+        printf("          <Unit>%s</Unit>\n", f.units);
       }
 
-      if (f.resolution < 0.0)
-      {
-        Resolution t = types[-1 * (int) f.resolution - 1];
-        if (t.name)
-        {
-          printf("          <Type>%s</Type>\n", t.name);
-        }
-        if (t.resolution)
-        {
-          printf("          <Resolution>%s</Resolution>\n", t.resolution);
-        }
-        else if (f.resolution == RES_LATITUDE || f.resolution == RES_LONGITUDE)
-        {
-          if (f.size == BYTES(8))
-          {
-            printf("          <Resolution>%.16f</Resolution>\n", 1e-16);
-          }
-          else
-          {
-            printf("          <Resolution>%.7f</Resolution>\n", 1e-7);
-          }
-        }
-      }
-      else if (f.resolution != 1.0)
+      if (f.resolution != 1.0 && f.resolution != 0.0)
       {
         printf("          <Resolution>%g</Resolution>\n", f.resolution);
       }
@@ -485,7 +440,16 @@ static void explainPGNXML(Pgn pgn)
         printf("          <Offset>%d</Offset>\n", f.offset);
       }
 
-      if (!(f.units && f.units[0] == '=') && f.resolution == RES_LOOKUP && f.lookupValue)
+      if (f.fieldType != NULL)
+      {
+        printf("          <FieldType>%s</FieldType>\n", f.fieldType);
+      }
+      else
+      {
+        logError("PGN %u field '%s' has no fieldtype\n", pgn.pgn, f.name);
+      }
+
+      if (!(f.units && f.units[0] == '=') && f.lookupValue && f.fieldType != NULL && strcmp(f.fieldType, "LOOKUP") == 0)
       {
         if (doExpandLookups)
         {
@@ -512,7 +476,7 @@ static void explainPGNXML(Pgn pgn)
         }
       }
 
-      if (f.resolution == RES_BITFIELD && f.lookupValue)
+      if (f.lookupValue && strcmp(f.fieldType, "BITLOOKUP") == 0)
       {
         if (doExpandLookups)
         {
@@ -540,7 +504,7 @@ static void explainPGNXML(Pgn pgn)
         }
       }
 
-      if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU || f.resolution == RES_VARIABLE || f.proprietary)
+      if ((f.ft != NULL && f.ft->variableSize) || f.proprietary)
       {
         showBitOffset = false; // From here on there is no good bitoffset to be printed
       }
@@ -577,23 +541,98 @@ static void explain(void)
   }
 }
 
+static void explainFieldTypesXML(void)
+{
+  printf("  <FieldTypes>\n");
+  for (size_t i = 0; i < fieldTypeCount; i++)
+  {
+    FieldType *ft = &fieldTypeList[i];
+
+    printf("    <FieldType Name=\"%s\">\n", ft->name);
+    if (ft->description != NULL)
+    {
+      printf("      <Description>%s</Description>\n", ft->description);
+    }
+    if (ft->encodingDescription != NULL)
+    {
+      printf("      <EncodingDescription>%s</EncodingDescription>\n", ft->encodingDescription);
+    }
+    if (ft->comment != NULL)
+    {
+      printf("      <Comment>%s</Comment>\n", ft->comment);
+    }
+    if (ft->baseFieldType != NULL)
+    {
+      printf("      <BaseFieldType>%s</BaseFieldType>\n", ft->baseFieldType);
+    }
+    if (ft->size != 0)
+    {
+      printf("      <Bits>%u</Bits>\n", ft->size);
+    }
+    if (ft->offset != 0)
+    {
+      printf("      <Offset>%d</Offset>\n", ft->offset);
+    }
+    if (ft->variableSize != Null)
+    {
+      printf("      <VariableSize>true</VariableSize>\n");
+    }
+    if (ft->unit != NULL)
+    {
+      printf("      <Unit>%s</Unit>\n", ft->unit);
+    }
+    if (ft->hasSign != Null)
+    {
+      printf("      <Signed>%s</Signed>\n", ft->hasSign == True ? "true" : "false");
+    }
+    if (ft->resolution != 1.0 && ft->resolution != 0.0)
+    {
+      printf("      <Resolution>%.16g</Resolution>\n", ft->resolution);
+    }
+    if (ft->format != NULL)
+    {
+      printf("      <Format>%s</Format>\n", ft->format);
+    }
+    if (ft->rangeMinText != NULL)
+    {
+      printf("      <RangeMin>%s</RangeMin>\n", ft->rangeMinText);
+    }
+    else if (!isnan(ft->rangeMin))
+    {
+      printf("      <RangeMin>%.16g</RangeMin>\n", ft->rangeMin);
+    }
+    if (ft->rangeMaxText != NULL)
+    {
+      printf("      <RangeMax>%s</RangeMax>\n", ft->rangeMaxText);
+    }
+    else if (!isnan(ft->rangeMax))
+    {
+      printf("      <RangeMax>%.16g</RangeMax>\n", ft->rangeMax);
+    }
+    printf("    </FieldType>\n");
+  }
+  printf("  </FieldTypes>\n");
+}
+
 static void explainXML(bool normal, bool actisense, bool ikonvert)
 {
   int i;
 
   printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-         "<!--\n" COPYRIGHT "\n-->\n"
+         "<?xml-stylesheet type=\"text/xsl\" href=\"canboat.xsl\"?>"
          "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
          "Version=\"0.1\">\n"
          "  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
          "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
          "  <License>Apache License Version 2.0</License>\n"
-         "  <Version>" VERSION "</Version>\n");
+         "  <Version>" VERSION "</Version>\n"
+         "  <Copyright>" COPYRIGHT "\n</Copyright>\n");
 
   if (normal && !doExpandLookups)
   {
-    printf("  <LookupEnumerations>\n");
+    explainFieldTypesXML();
 
+    printf("  <LookupEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(lookupEnums); i++)
     {
       uint32_t maxValue = (1 << lookupEnums[i].size) - 1;
@@ -610,8 +649,8 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
       printf("    </LookupEnumeration>\n");
     }
     printf("  </LookupEnumerations>\n");
-    printf("  <LookupBitEnumerations>\n");
 
+    printf("  <LookupBitEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(bitfieldEnums); i++)
     {
       uint32_t maxValue = bitfieldEnums[i].size - 1;
@@ -627,7 +666,6 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
       }
       printf("    </LookupBitEnumeration>\n");
     }
-
     printf("  </LookupBitEnumerations>\n");
   }
 

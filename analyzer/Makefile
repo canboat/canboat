@@ -23,29 +23,32 @@ ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
 TARGETS=$(ANALYZER) $(ANALYZER_EXPLAIN)
 XMLFILE=pgns.xml
 JSONFILE=pgns.json
-XML2FILE=pgns-v2.xml
-XSD2FILE=pgns-v2.xsd
-JSON2FILE=pgns-v2.json
+XML2FILE=../docs/canboat.xml
+XSD2FILE=../docs/canboat.xsd
+JSON2FILE=../docs/canboat.json
 NGTXMLFILE=pgns-ngt.xml
 NGTJSONFILE=pgns-ngt.json
 IKXMLFILE=pgns-ik.xml
 IKJSONFILE=pgns-ik.json
 NPMFILE=package.json
-HEADERS=analyzer.h pgn.h lookup.h
+HEADERS=analyzer.h pgn.h lookup.h fieldtype.h
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h
-ANALYZER_EXPLAIN_SOURCES=analyzer-explain.c pgn.c lookup.c $(HEADERS) $(COMMON) Makefile
+ANALYZER_EXPLAIN_SOURCES=analyzer-explain.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
 ANALYZER_EXPLAIN_DEP=$(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_SOURCES)
 
 CFLAGS?=-Wall -O2
+LDLIBS=-lm
 
 all: $(TARGETS)
 
-$(ANALYZER): analyzer.c pgn.c lookup.c $(HEADERS) $(COMMON) Makefile
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(LDLIBS$(LDLIBS-$(@)))
+$(ANALYZER): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
+	@mkdir -p $(TARGETDIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(ANALYZER_EXPLAIN): $(ANALYZER_EXPLAIN_SOURCES)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(LDLIBS$(LDLIBS-$(@)))
+	@mkdir -p $(TARGETDIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(XMLFILE): $(ANALYZER_EXPLAIN_DEP)
 	$(ANALYZER_EXPLAIN) -explain-xml -expand-lookups >$(XMLFILE)
@@ -82,3 +85,5 @@ clean:
 	-rm -f $(XMLFILE)
 	-rm -f $(JSONFILE)
 
+webserver:
+	cd ../docs; python3 -m http.server --cgi 8080

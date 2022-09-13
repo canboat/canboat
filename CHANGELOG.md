@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- The generated `pgns-v2` files (`.xml` and `.json`) added in 3.0.0 are moved to the
+  `docs` subdirectory and renamed to `canboat`.
+  They are now accompanied by:
+  - `canboat.xsl` for rendering `canboat.xml` in a webbrowser. This is now the main
+    documentation page for humans on how the PGN list is built up.
+  - `canboat.css` for helping in rendering `canboat.xml` in a webbrowser.
+  - `canboat.dtd` for validating `canboat.xml`.
+
+Issues resolved:
+
 - #283: Enumerations in pgns-v2.json use names for all attributes.
 - #285: Fix `SHORT_TIME` field printing incorrect values.
 

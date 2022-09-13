@@ -1,5 +1,5 @@
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="PGNDefinitions" type="PGNDefinitionsType">
+  <xs:element name="PGNDefinitions" type="PGNDefinitions">
     <xs:annotation>
       <xs:documentation>
 CANboat version v2.0.0
@@ -25,7 +25,7 @@ limitations under the License.
 </xs:documentation>
     </xs:annotation>
   </xs:element>
-  <xs:complexType name="EnumPairType">
+  <xs:complexType name="EnumPair">
     <xs:simpleContent>
       <xs:extension base="xs:string">
         <xs:attribute type="xs:short" name="Value" use="optional"/>
@@ -33,19 +33,19 @@ limitations under the License.
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
-  <xs:complexType name="LookupEnumerationType">
+  <xs:complexType name="LookupEnumeration">
     <xs:sequence>
-      <xs:element type="EnumPairType" name="EnumPair" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="EnumPair" name="EnumPair" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="Name"/>
     <xs:attribute type="xs:int" name="MaxValue"/>
   </xs:complexType>
-  <xs:complexType name="LookupEnumerationsType">
+  <xs:complexType name="LookupEnumerations">
     <xs:sequence>
-      <xs:element type="LookupEnumerationType" name="LookupEnumeration" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="LookupEnumeration" name="LookupEnumeration" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="BitPairType">
+  <xs:complexType name="BitPair">
     <xs:simpleContent>
       <xs:extension base="xs:string">
         <xs:attribute type="xs:byte" name="Bit" use="optional"/>
@@ -53,25 +53,53 @@ limitations under the License.
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
-  <xs:complexType name="LookupBitEnumerationType">
+  <xs:complexType name="LookupBitEnumeration">
     <xs:sequence>
-      <xs:element type="BitPairType" name="BitPair" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="BitPair" name="BitPair" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="Name"/>
     <xs:attribute type="xs:byte" name="MaxValue"/>
   </xs:complexType>
-  <xs:complexType name="LookupBitEnumerationsType">
+  <xs:complexType name="LookupBitEnumerations">
     <xs:sequence>
-      <xs:element type="LookupBitEnumerationType" name="LookupBitEnumeration" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="LookupBitEnumeration" name="LookupBitEnumeration" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
+
   <xs:complexType name="FieldType">
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element type="xs:string" name="Description"/>
+        <xs:element type="xs:string" name="EncodingDescription"/>
+        <xs:element type="xs:string" name="Comment"/>
+        <xs:element type="xs:float" name="Resolution"/>
+        <xs:element type="xs:float" name="Offset"/>
+        <xs:element type="xs:string" name="Unit"/>
+        <xs:element type="xs:boolean" name="Signed"/>
+        <xs:element type="xs:boolean" name="VariableSize"/>
+        <xs:element type="xs:short" name="Bits"/>
+        <xs:element type="xs:float" name="RangeMin"/>
+        <xs:element type="xs:float" name="RangeMax"/>
+        <xs:element type="xs:string" name="Format"/>
+        <xs:element type="xs:string" name="BaseFieldType"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name"/>
+  </xs:complexType>
+  <xs:complexType name="FieldTypes">
+    <xs:sequence>
+      <xs:element type="FieldType" name="FieldType" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Field">
     <xs:choice maxOccurs="unbounded" minOccurs="0">
       <xs:element type="xs:byte" name="Order"/>
       <xs:element type="xs:string" name="Id"/>
       <xs:element type="xs:string" name="Name"/>
       <xs:element type="xs:string" name="Description"/>
       <xs:element type="xs:short" name="BitLength"/>
+      <xs:element type="xs:boolean" name="BitLengthVariable"/>
       <xs:element type="xs:short" name="BitOffset"/>
       <xs:element type="xs:byte" name="BitStart"/>
       <xs:element type="xs:int" name="Match"/>
@@ -79,52 +107,56 @@ limitations under the License.
       <xs:element type="xs:float" name="Resolution"/>
       <xs:element type="xs:int" name="Offset"/>
       <xs:element type="xs:boolean" name="Signed"/>
+      <xs:element type="xs:string" name="FieldType"/>
       <xs:element type="xs:string" name="LookupEnumeration"/>
-      <xs:element type="xs:string" name="Units"/>
-      <xs:element type="xs:boolean" name="BitLengthVariable"/>
-      <xs:element type="xs:string" name="Condition"/>
       <xs:element type="xs:string" name="LookupBitEnumeration"/>
+      <xs:element type="xs:string" name="Unit"/>
+      <xs:element type="xs:string" name="Condition"/>
     </xs:choice>
   </xs:complexType>
-  <xs:complexType name="FieldsType">
+  <xs:complexType name="Fields">
     <xs:sequence>
-      <xs:element type="FieldType" name="Field" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="Field" name="Field" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="PGNInfoType">
-    <xs:sequence>
-      <xs:element type="xs:int" name="PGN"/>
-      <xs:element type="xs:string" name="Id"/>
-      <xs:element type="xs:string" name="Description"/>
-      <xs:element type="xs:string" name="Type"/>
-      <xs:element type="xs:string" name="Complete"/>
-      <xs:element type="MissingType" name="Missing" minOccurs="0"/>
-      <xs:element type="xs:short" name="Length"/>
-      <xs:element type="xs:byte" name="RepeatingFields" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFieldSet1" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFieldSet2" minOccurs="0"/>
-      <xs:element type="FieldsType" name="Fields" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="MissingType">
+
+  <xs:complexType name="Missing">
     <xs:sequence>
       <xs:element type="xs:string" name="MissingAttribute" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="PGNsType">
+
+  <xs:complexType name="PGNInfo">
     <xs:sequence>
-      <xs:element type="PGNInfoType" name="PGNInfo" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="xs:int" name="PGN"/>
+      <xs:element type="xs:string" name="Description"/>
+      <xs:element type="xs:string" name="Type"/>
+      <xs:element type="xs:string" name="Complete"/>
+      <xs:element type="Missing" name="Missing" minOccurs="0"/>
+      <xs:element type="xs:short" name="Length"/>
+      <xs:element type="xs:byte" name="RepeatingFields" minOccurs="0"/>
+      <xs:element type="xs:byte" name="RepeatingFieldSet1" minOccurs="0"/>
+      <xs:element type="xs:byte" name="RepeatingFieldSet2" minOccurs="0"/>
+      <xs:element type="Fields" name="Fields" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="PGNDefinitionsType">
+
+  <xs:complexType name="PGNs">
+    <xs:sequence>
+      <xs:element type="PGNInfo" name="PGNInfo" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PGNDefinitions">
     <xs:sequence>
       <xs:element type="xs:string" name="Comment"/>
       <xs:element type="xs:string" name="CreatorCode"/>
       <xs:element type="xs:string" name="License"/>
       <xs:element type="xs:string" name="Version"/>
-      <xs:element type="LookupEnumerationsType" name="LookupEnumerations"/>
-      <xs:element type="LookupBitEnumerationsType" name="LookupBitEnumerations"/>
-      <xs:element type="PGNsType" name="PGNs"/>
+      <xs:element type="xs:string" name="Copyright"/>
+      <xs:element type="FieldTypes" name="FieldTypes"/>
+      <xs:element type="LookupEnumerations" name="LookupEnumerations"/>
+      <xs:element type="LookupBitEnumerations" name="LookupBitEnumerations"/>
+      <xs:element type="PGNs" name="PGNs"/>
     </xs:sequence>
     <xs:attribute type="xs:float" name="Version"/>
   </xs:complexType>
