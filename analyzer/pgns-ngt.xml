@@ -3,8 +3,8 @@
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>3.1.0</Version>
-  <Copyright>CANboat version v3.1.0
+  <Version>4.0.0-alpha</Version>
+  <Copyright>CANboat version v4.0.0-alpha
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -89,7 +89,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>15</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -168,7 +168,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>34</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -417,7 +417,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>17</Length>
       <RepeatingFields>0</RepeatingFields>

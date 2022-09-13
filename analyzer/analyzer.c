@@ -1488,10 +1488,8 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
 {
   static uint32_t refPgn = 0; // Remember this over the entire set of fields
 
-  size_t   bytes;
-  uint16_t valueu16;
-  uint32_t valueu32;
-  double   resolution;
+  size_t bytes;
+  double resolution;
 
   if (fieldName == NULL)
   {

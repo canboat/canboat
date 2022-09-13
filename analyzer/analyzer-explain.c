@@ -327,10 +327,11 @@ static void explainPGNXML(Pgn pgn)
   printf("    <PGNInfo>\n"
          "      <PGN>%u</PGN>\n",
          pgn.pgn);
-  printXML(6, "Id", pgn.camelDescription);
+  printXML(6, "ID", pgn.camelDescription);
   printXML(6, "Description", pgn.description);
+  printXML(6, "Explanation", pgn.explanation);
   printXML(6, "Type", (pgn.type == PACKET_ISO11783 ? "ISO" : (pgn.type == PACKET_FAST ? "Fast" : "Single")));
-  printf("      <Complete>%s</Complete>\n", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));
+  printXML(6, "Complete", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));
 
   if (pgn.complete != PACKET_COMPLETE)
   {
@@ -344,9 +345,9 @@ static void explainPGNXML(Pgn pgn)
     {
       printXML(8, "MissingAttribute", "FieldLengths");
     }
-    if ((pgn.complete & PACKET_PRECISION_UNKNOWN) != 0)
+    if ((pgn.complete & PACKET_RESOLUTION_UNKNOWN) != 0)
     {
-      printXML(8, "MissingAttribute", "Precision");
+      printXML(8, "MissingAttribute", "Resolution");
     }
     if ((pgn.complete & PACKET_LOOKUPS_UNKNOWN) != 0)
     {
@@ -541,6 +542,27 @@ static void explain(void)
   }
 }
 
+static void explainMissingXML(void)
+{
+  printf("  <Missing>\n");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
+         "Fields",
+         "The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
+         "FieldLengths",
+         "The length of one or more fields is likely incorrect");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
+         "Resolution",
+         "The resolution of one or more fields is likely incorrect");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
+         "Lookups",
+         "One or more of the lookup fields contain missing or incorrect values");
+  printf(
+      "    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "SampleData", "The PGN has not been seen in any logfiles yet");
+
+  printf("  </Missing>\n");
+}
+
 static void explainFieldTypesXML(void)
 {
   printf("  <FieldTypes>\n");
@@ -631,6 +653,7 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
   if (normal && !doExpandLookups)
   {
     explainFieldTypesXML();
+    explainMissingXML();
 
     printf("  <LookupEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(lookupEnums); i++)

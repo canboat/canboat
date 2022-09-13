@@ -413,7 +413,6 @@ extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_
   uint64_t absVal;
   int64_t  value;
   int64_t  maxValue;
-  size_t   bytes       = *bits >> 3;
   bool     isLongitude = (strstr(fieldName, "ongit") != NULL);
   double   dd;
   double   degrees;

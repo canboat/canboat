@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="1.0" exclude-result-prefixes="xs">
 
+  <xsl:key name="Missing" match="/PGNDefinitions/Missing/MissingAttribute" use="@Name" />
+
   <!--
     Some fields contain "word~text~" where text should be rendered
     as a subscript, ie. the html <sub> tag.
@@ -23,13 +25,39 @@
   </xsl:template>
 
   <xsl:template name="pgn-list">
-    <h2>PGN list</h2>
+    <h2 id='pgn-list'>PGN list</h2>
     <xsl:for-each select="/PGNDefinitions/PGNs/*">
       <h3>
-        PGN <xsl:value-of select="PGN/text()"/>
+        <xsl:attribute name="id">
+          <xsl:value-of select="concat('pgn-', PGN)"/>
+        </xsl:attribute>
+        PGN <xsl:value-of select="PGN/."/>
         - <xsl:value-of select="Description/text()"/>
       </h3>
-      <table>
+        <p>
+          <xsl:value-of select="Explanation/."/>
+        </p>
+        <p>
+          <xsl:choose>
+            <xsl:when test="Complete = 'false'">
+              This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+              <ul>
+                <xsl:for-each select="Missing">
+                  <li>
+                    <xsl:value-of select="key('Missing', MissingAttribute)/."/>
+                  </li>
+                </xsl:for-each>
+              </ul>
+            </xsl:when>
+            <xsl:otherwise>
+              This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
+            </xsl:otherwise>
+          </xsl:choose>
+        </p>
+        <p>
+          This <xsl:value-of select="Type"/> PGN contains <xsl:value-of select="Length"/> bytes.
+        </p>
+        <table>
         <tr>
           <th> Order </th>
           <th> Name </th>
@@ -103,7 +131,7 @@
   </xsl:template>
 
   <xsl:template name="lookup-list">
-    <h2>Lookup enumerations</h2>
+    <h2 id='lookup-enumerations'>Lookup enumerations</h2>
     <xsl:for-each select="/PGNDefinitions/LookupEnumerations/*">
       <h3>
         <xsl:attribute name="id">
@@ -132,7 +160,7 @@
   </xsl:template>
 
   <xsl:template name="lookupbit-list">
-    <h2>Bitfield Lookup enumerations</h2>
+    <h2 id='bitfield-enumerations'>Bitfield Lookup enumerations</h2>
     <xsl:for-each select="/PGNDefinitions/LookupBitEnumerations/*">
       <h3>
         <xsl:attribute name="id">
@@ -161,7 +189,7 @@
   </xsl:template>
 
   <xsl:template name="fieldtypes-list">
-    <h2>Field types</h2>
+    <h2 id='field-types'>Field types</h2>
 
     All fields are of one of the following field types.
 
@@ -248,22 +276,63 @@
         <meta name="description" content="CANBoat PGN documentation"/>
         <!-- <link rel="icon" type="image/gif" href="https://www.redwood.com/favicon.ico"/> -->
         <link rel="stylesheet" type="text/css" href="canboat.css"/>
+        <script src="canboat.js"/>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet"/>
       </head>
       <body>
-        <p>
-          The CANBoat project PGN documentation version
-          <xsl:value-of select="/PGNDefinitions/Version/text()"/>.
-        </p>
-        <h3>License</h3>
-        <p>
-          <xsl:value-of select="/PGNDefinitions/License/text()"/>
-        </p>
 
-        <xsl:call-template name="pgn-list"/>
-        <xsl:call-template name="fieldtypes-list"/>
-        <xsl:call-template name="lookup-list"/>
-        <xsl:call-template name="lookupbit-list"/>
+        <div id="sidenav" class="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&#215;</a>
+          <a href="#main">Top</a>
+          <a href="#pgn-list">PGN list</a>
+          <a href="#field-types">Field Types</a>
+          <a href="#lookup-enumerations">Lookup enumerations</a>
+          <a href="#bitfield-enumerations">Bitfield enumerations</a>
+        </div>
+
+        <div id="sidenav-closed" class="sidenav">
+          <a href="javascript:void(0)" onclick="openNav()" id="hamburger">
+            <span/>
+            <span/>
+            <span/>
+          </a>
+        </div>
+
+        <div id="main">
+          <p>
+            The CANBoat project PGN documentation version
+            <xsl:value-of select="/PGNDefinitions/Version/text()"/>.
+          </p>
+          <h3>Copyright</h3>
+          <p class='xs'>
+            <xsl:value-of select="/PGNDefinitions/Copyright"/>
+          </p>
+
+          <h2 id='packet-framing'>Packet framing</h2>
+
+          <p>
+            NMEA 2000 messages that are 8 bytes or less can be transmitted in a single CAN frame. For messages of 9 or more bytes there
+            is an ISO 11783 defined method called Transport Protocol that can be used to transmit up to 1785 bytes. 
+            See <a href="#pgn-60416">PGN 60416</a>. This is <i>not</i> generally used though. What is used
+            is an alternative method with less overhead and less complexity for the sender. This is called <i>fast</i> packet framing.
+          </p>
+
+          <p>
+            In fast packet framing, the first packet contains two protocol bytes and six data bytes. Following packets contain one
+            protocol byte and seven data bytes. Up to 32 packets can be used for a single message so the total maxing data length
+            is 6 + 31 * 7 = 223 bytes.
+            The first byte in all frames contains a sequence counter in the high 3 bits and a frame counter in the lower 5 bits.
+            The second byte in the first frame contains the total number of frames that will be sent.
+            As there is no way to acknowledge or deny reception, if a message is missed the receiver will have to wait for the next
+            transmission of the message.
+          </p>
+
+          <xsl:call-template name="pgn-list"/>
+          <xsl:call-template name="fieldtypes-list"/>
+          <xsl:call-template name="lookup-list"/>
+          <xsl:call-template name="lookupbit-list"/>
+
+        </div>
 
       </body>
     </html>

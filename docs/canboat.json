@@ -2,8 +2,8 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"3.1.0",
-    "Copyright":"CANboat version v3.1.0\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"4.0.0-alpha",
+    "Copyright":"CANboat version v4.0.0-alpha\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "FieldTypes":{
       {Name:'NUMBER'
       }"FieldType":{
@@ -1171,6 +1171,7 @@
       }"FieldType":{
         "Description":"Variable",
         "EncodingDescription":"The definition of the field is that of the reference PGN and reference field, this is totally variable."}},
+    "Missing":["The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect"],["The length of one or more fields is likely incorrect"],["The resolution of one or more fields is likely incorrect"],["One or more of the lookup fields contain missing or incorrect values"],["The PGN has not been seen in any logfiles yet"],
     "LookupEnumerations":[
       {
         "name": "INDUSTRY_CODE",
@@ -3327,6 +3328,7 @@
       {
         "PGN":59392,
         "Description":"ISO Acknowledgement",
+        "Explanation":"This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. This message is the possible response to acknowledge the reception of a “normal broadcast” message or the response to a specific command to indicate compliance or failure.",
         "Type":"Single",
         "Complete":true,
         "Length":8,
@@ -3369,6 +3371,7 @@
       {
         "PGN":59904,
         "Description":"ISO Request",
+        "Explanation":"As defined by ISO, this message has a data length of 3 bytes with no padding added to complete the single frame. The appropriate response to this message is based on the PGN being requested, and whether the receiver supports the requested PGN.",
         "Type":"Single",
         "Complete":true,
         "Length":3,
@@ -3385,6 +3388,7 @@
       {
         "PGN":60160,
         "Description":"ISO Transport Protocol, Data Transfer",
+        "Explanation":"ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN represents a single packet of a multipacket message.",
         "Type":"Single",
         "Complete":true,
         "Length":8,
@@ -3409,6 +3413,7 @@
       {
         "PGN":60416,
         "Description":"ISO Transport Protocol, Connection Management - Request To Send",
+        "Explanation":"ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to prepare the receiver for the fact that this sender wants to transmit a long message. The receiver will respond with CTS.",
         "Type":"Single",
         "Complete":true,
         "Length":8,
@@ -3462,6 +3467,7 @@
       {
         "PGN":60416,
         "Description":"ISO Transport Protocol, Connection Management - Clear To Send",
+        "Explanation":"ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to signal to the sender that the receive is ready to receive a number of frames.",
         "Type":"Single",
         "Complete":true,
         "Length":8,
@@ -3480,7 +3486,7 @@
           {
             "Order":2,
             "Name":"Max packets",
-            "Description":"packets before waiting for next CTS",
+            "Description":"Number of frames that can be sent before another CTS is required",
             "BitLength":8,
             "BitOffset":8,
             "BitStart":0,
@@ -3489,7 +3495,7 @@
           {
             "Order":3,
             "Name":"Next SID",
-            "Description":"packet",
+            "Description":"Number of next frame to be transmitted",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -3514,6 +3520,7 @@
       {
         "PGN":60416,
         "Description":"ISO Transport Protocol, Connection Management - End Of Message",
+        "Explanation":"ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to mark the end of the message.",
         "Type":"Single",
         "Complete":true,
         "Length":8,
@@ -3540,8 +3547,8 @@
             "FieldType":"UNSIGNED_INTEGER"},
           {
             "Order":3,
-            "Name":"Total number of packets received",
-            "Description":"packets",
+            "Name":"Total number of frames received",
+            "Description":"Total number of of frames received",
             "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
@@ -3566,6 +3573,7 @@
       {
         "PGN":60416,
         "Description":"ISO Transport Protocol, Connection Management - Broadcast Announce",
+        "Explanation":"ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce a broadcast of a long message spanning multiple frames.",
         "Type":"Single",
         "Complete":true,
         "Length":8,
@@ -3618,6 +3626,7 @@
       {
         "PGN":60416,
         "Description":"ISO Transport Protocol, Connection Management - Abort",
+        "Explanation":"ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce an abort of a long message spanning multiple frames.",
         "Type":"Single",
         "Complete":true,
         "Length":8,
@@ -3660,6 +3669,7 @@
       {
         "PGN":60928,
         "Description":"ISO Address Claim",
+        "Explanation":"This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination.",
         "Type":"Single",
         "Complete":true,
         "Length":8,
@@ -3760,7 +3770,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3834,7 +3844,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3898,7 +3908,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3949,12 +3959,13 @@
       {
         "PGN":61184,
         "Description":"Manufacturer Proprietary single-frame addressed",
+        "Explanation":"This definition is used for manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN range 0EF00 to 0xEFFF (61184 - 61439) for which no reverse-engineered definition is available.",
         "Type":"Single",
         "Complete":false,
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3993,12 +4004,13 @@
       {
         "PGN":61440,
         "Description":"Unknown single-frame non-addressed",
+        "Explanation":"This definition is used for manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to 0xFEFF (61440 - 65279) for which no reverse-engineered definition is available.",
         "Type":"Single",
         "Complete":false,
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4150,7 +4162,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4188,7 +4200,7 @@
         "Type":"Single",
         "Complete":false,
         "Missing":[
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4654,7 +4666,7 @@
         "Type":"Single",
         "Complete":false,
         "Missing":[
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -5228,7 +5240,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -5286,7 +5298,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -5500,7 +5512,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "Lookups"],
         "Length":8,
         "RepeatingFields":0,
@@ -5694,7 +5706,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -5734,7 +5746,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -5817,7 +5829,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -5857,7 +5869,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -5897,7 +5909,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -5937,7 +5949,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -5977,7 +5989,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6114,7 +6126,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6154,7 +6166,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6194,7 +6206,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6262,7 +6274,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6472,7 +6484,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6568,7 +6580,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6632,7 +6644,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6704,7 +6716,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6831,7 +6843,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6907,7 +6919,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6947,7 +6959,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "Lookups"],
         "Length":255,
         "RepeatingFields":0,
@@ -6963,6 +6975,7 @@
       {
         "PGN":126208,
         "Description":"NMEA - Request group function",
+        "Explanation":"This is the Request variation of this group function PGN. The receiver shall respond by sending the requested PGN, at the desired transmission interval.",
         "Type":"Fast",
         "Complete":true,
         "Length":12,
@@ -7035,6 +7048,7 @@
       {
         "PGN":126208,
         "Description":"NMEA - Command group function",
+        "Explanation":"This is the Command variation of this group function PGN. This instructs the receiver to modify its internal state for the passed parameters. The receiver shall reply with an Acknowledge reply.",
         "Type":"Fast",
         "Complete":true,
         "Length":8,
@@ -7104,6 +7118,7 @@
       {
         "PGN":126208,
         "Description":"NMEA - Acknowledge group function",
+        "Explanation":"This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will attempt to perform the command (change its parameters) and reply positively or negatively.",
         "Type":"Fast",
         "Complete":true,
         "Length":8,
@@ -7166,12 +7181,13 @@
       {
         "PGN":126208,
         "Description":"NMEA - Read Fields group function",
+        "Explanation":"This is the Read Fields variation of this group function PGN. The receiver shall respond by sending a Read Reply variation of this PGN, containing the desired values.",
         "Type":"Fast",
         "Complete":false,
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFieldSet1":2,
         "RepeatingFieldSet2":1,
@@ -7260,6 +7276,7 @@
       {
         "PGN":126208,
         "Description":"NMEA - Read Fields reply group function",
+        "Explanation":"This is the Read Fields Reply variation of this group function PGN. The receiver is responding to a Read Fields request.",
         "Type":"Fast",
         "Complete":true,
         "Length":8,
@@ -7356,6 +7373,7 @@
       {
         "PGN":126208,
         "Description":"NMEA - Write Fields group function",
+        "Explanation":"This is the Write Fields variation of this group function PGN. The receiver shall modify internal state and reply with a Write Fields Reply message.",
         "Type":"Fast",
         "Complete":true,
         "Length":8,
@@ -7452,6 +7470,7 @@
       {
         "PGN":126208,
         "Description":"NMEA - Write Fields reply group function",
+        "Explanation":"This is the Write Fields Reply variation of this group function PGN. The receiver is responding to a Write Fields request.",
         "Type":"Fast",
         "Complete":true,
         "Length":8,
@@ -7578,7 +7597,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":21,
         "RepeatingFields":0,
         "Fields":[
@@ -7679,7 +7698,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -7754,7 +7773,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":7,
         "RepeatingFields":0,
         "Fields":[
@@ -7829,7 +7848,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":3,
         "RepeatingFields":0,
         "Fields":[
@@ -7887,7 +7906,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":3,
         "RepeatingFields":0,
         "Fields":[
@@ -7953,7 +7972,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":3,
         "RepeatingFields":0,
         "Fields":[
@@ -8012,7 +8031,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -8086,7 +8105,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -8176,7 +8195,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":21,
         "RepeatingFields":0,
         "Fields":[
@@ -8270,7 +8289,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -8593,7 +8612,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -9269,7 +9288,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":4,
         "RepeatingFields":0,
         "Fields":[
@@ -9389,7 +9408,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":223,
         "RepeatingFields":0,
         "Fields":[
@@ -9433,7 +9452,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":255,
         "RepeatingFields":0,
         "Fields":[
@@ -9850,7 +9869,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0},
       {
@@ -9861,7 +9880,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0},
       {
@@ -9872,12 +9891,13 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0},
       {
         "PGN":126992,
         "Description":"System Time",
+        "Explanation":"The purpose of this PGN is twofold: To provide a regular transmission of UTC time and date. To provide synchronism for measurement data.",
         "Type":"Single",
         "Complete":true,
         "Length":8,
@@ -9930,6 +9950,7 @@
       {
         "PGN":126993,
         "Description":"Heartbeat",
+        "Explanation":"Reception of this PGN confirms that a device is still present on the network.  Reception of this PGN may also be used to maintain an address to NAME association table within the receiving device.  The transmission interval may be used by the receiving unit to determine the time-out value for the connection supervision.  The value contained in Field 1 of this PGN reflects the PGN’s current Transmission Interval. Changes to this PGN’s Transmission Interval shall be reflected in Field 1.  The transmission interval can only be changed by using the Request Group Function PGN 126208 with no pairs of request parameters provided. Field 3 of the Request Group Function PGN 126208 may contain values between 1,000ms and 60,000ms.  This PGN cannot be requested by the ISO Request PGN 059904 or Request Group Function PGN 126208. In Request Group Function PGN 126208, setting Field 3 to a value of 0xFFFF FFFF and Field 4 to a value of 0xFFFF: “Transmit now without changing timing variables.” is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for additional context.",
         "Type":"Single",
         "Complete":true,
         "Length":8,
@@ -9992,6 +10013,7 @@
       {
         "PGN":126996,
         "Description":"Product Information",
+        "Explanation":"Provides product information onto the network that could be important for determining quality of data coming from this product.",
         "Type":"Fast",
         "Complete":true,
         "Length":134,
@@ -10064,6 +10086,7 @@
       {
         "PGN":126998,
         "Description":"Configuration Information",
+        "Explanation":"Free-form alphanumeric fields describing the installation (e.g., starboard engine room location) of the device and installation notes (e.g., calibration data).",
         "Type":"Fast",
         "Complete":true,
         "Length":42,
@@ -10090,6 +10113,7 @@
       {
         "PGN":127233,
         "Description":"Man Overboard Notification",
+        "Explanation":"The MOB PGN is intended to provide notification from a MOB monitoring system. The included position information may be that of the vessel or the MOB device itself as identified in field “X”, position source. Additional information may include the current state of the MOB device, time of activation, and MOB device battery status.\nThis PGN may be used to set a MOB waypoint, or to initiate an alert process.\nThis PGN may be used to command or register a MOB device emitter Ids or other applicable fields in the message with an MOB System or other equipment. If the fields in this PGN are configured over the network, the Command Group Function (PGN 126208) shall be used.\nQueries for this PGN shall be requested using either the ISO Request (PGN 059904) or the NMEA Request Group Function (PGN 126208).\nA device receiving an ISO (PGN 059904) for this PGN (127233), shall respond by providing as many of these PGNs (127233) as necessary for every MOB Emitter ID that has associated data fields.\nIf a Request Group Function (PGN 126208) requesting this PGN (127233) is received, the receiving device shall respond in the following manner:\n•If no requested fields have been included with the Request Group Function then the response is to return one or more PGNs, just like responding to the ISO Request (PGN 055904) described above.\n•If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response shall be filtered by these fields contained within this request resulting in one or more PGN (127233) responses.\nIf the MOB Emitter ID requested is not considered a valid MOB Emitter ID by the receiving device, then the appropriate response would be the Acknowledge Group Function (PGN 126208), containing the error state for PGN error code (Field 3) of “0x3 = Access denied.” And the requested MOB Emitter ID field parameter error code (Field 6) of “0x3 = Requested or command parameter out-of- range;”.\nThe Default update rate of this PGN is autonomous, as it is dependant upon notification rates of MOB devices.",
         "Type":"Fast",
         "Complete":true,
         "Length":35,
@@ -10593,7 +10617,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -12298,7 +12322,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":13,
         "RepeatingFields":0,
         "Fields":[
@@ -12402,7 +12426,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -12478,7 +12502,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -12514,7 +12538,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -12606,7 +12630,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -15577,7 +15601,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":10,
         "RepeatingFields":0,
@@ -15634,7 +15658,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -15733,7 +15757,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":13,
         "RepeatingFields":0,
@@ -16012,7 +16036,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":26,
         "RepeatingFields":0,
         "Fields":[
@@ -16166,7 +16190,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":9,
         "RepeatingFields":0,
@@ -16243,7 +16267,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -16335,7 +16359,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -16379,7 +16403,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":9,
         "RepeatingFields":0,
@@ -16456,7 +16480,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":13,
         "RepeatingFields":0,
@@ -16557,7 +16581,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -16618,7 +16642,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -16743,7 +16767,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -16860,7 +16884,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -16973,7 +16997,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":26,
         "RepeatingFields":0,
         "Fields":[
@@ -17584,7 +17608,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -17743,7 +17767,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -17807,7 +17831,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -17871,7 +17895,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -17967,7 +17991,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -18030,7 +18054,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":8,
         "Fields":[
@@ -18142,7 +18166,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":23,
         "RepeatingFields":3,
@@ -18223,7 +18247,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":4,
         "Fields":[
@@ -18310,7 +18334,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -18494,7 +18518,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -18655,7 +18679,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":2,
@@ -18831,7 +18855,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":2,
@@ -19222,7 +19246,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":0,
         "RepeatingFields":0},
@@ -19234,7 +19258,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":0,
         "RepeatingFields":0},
@@ -19246,7 +19270,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":9,
@@ -19358,7 +19382,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":6,
@@ -19443,7 +19467,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -19555,7 +19579,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":4,
@@ -19644,7 +19668,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":2,
@@ -19713,7 +19737,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":6,
@@ -19798,7 +19822,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":2,
@@ -19867,7 +19891,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":2,
@@ -19928,7 +19952,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":2,
@@ -19981,7 +20005,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":2,
@@ -20050,7 +20074,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":4,
@@ -20758,7 +20782,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -20879,7 +20903,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":30,
         "RepeatingFields":0,
@@ -21026,7 +21050,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -21204,7 +21228,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":0,
         "RepeatingFields":0},
@@ -21437,7 +21461,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":233,
         "RepeatingFields":0,
@@ -21603,7 +21627,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":233,
         "RepeatingFields":0,
@@ -21735,7 +21759,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":233,
         "RepeatingFields":2,
@@ -21834,7 +21858,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":233,
         "RepeatingFields":0,
@@ -21915,7 +21939,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":233,
         "RepeatingFields":10,
@@ -22030,7 +22054,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":233,
         "RepeatingFields":2,
@@ -22085,7 +22109,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":2,
         "RepeatingFields":0,
@@ -22114,7 +22138,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":14,
         "RepeatingFields":0,
@@ -22815,7 +22839,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":9,
         "RepeatingFields":0,
@@ -22899,7 +22923,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":64,
         "RepeatingFields":0,
@@ -23017,7 +23041,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -23092,7 +23116,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23168,7 +23192,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23259,7 +23283,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23335,7 +23359,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23418,7 +23442,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23535,7 +23559,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23655,7 +23679,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23738,7 +23762,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23821,7 +23845,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -23904,7 +23928,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -24011,7 +24035,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -24086,7 +24110,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -24248,7 +24272,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -24315,7 +24339,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -24392,7 +24416,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":9,
         "RepeatingFields":0,
@@ -24476,7 +24500,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -24582,7 +24606,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":223,
         "RepeatingFields":0,
         "Fields":[
@@ -24626,7 +24650,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -24730,7 +24754,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":223,
         "RepeatingFields":0,
         "Fields":[
@@ -24896,7 +24920,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -24976,7 +25000,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":13,
         "RepeatingFields":0,
         "Fields":[
@@ -25074,7 +25098,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":23,
         "RepeatingFields":0,
         "Fields":[
@@ -25217,7 +25241,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -25291,7 +25315,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -25365,7 +25389,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -25439,7 +25463,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -25505,7 +25529,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -25579,7 +25603,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -25655,7 +25679,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -25755,7 +25779,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -25837,7 +25861,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -25911,7 +25935,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -25994,7 +26018,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":23,
         "RepeatingFields":0,
         "Fields":[
@@ -26116,7 +26140,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":23,
         "RepeatingFields":0,
         "Fields":[
@@ -26240,7 +26264,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":5,
         "RepeatingFields":0,
         "Fields":[
@@ -26307,7 +26331,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -26397,7 +26421,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -26488,7 +26512,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":10,
         "RepeatingFields":0,
@@ -26579,7 +26603,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":5,
         "RepeatingFields":0,
@@ -26647,7 +26671,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":32,
         "RepeatingFields":0,
@@ -26714,7 +26738,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":32,
         "RepeatingFields":0,
@@ -26781,7 +26805,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":32,
         "RepeatingFields":0,
@@ -26848,7 +26872,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":32,
         "RepeatingFields":0,
@@ -26915,7 +26939,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -27116,7 +27140,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -27181,7 +27205,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -27261,7 +27285,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":10,
         "RepeatingFields":0,
@@ -27350,7 +27374,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -27391,7 +27415,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -27432,7 +27456,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -27473,7 +27497,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -27514,7 +27538,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -27555,7 +27579,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -27782,7 +27806,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -27938,7 +27962,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -27979,7 +28003,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -28020,7 +28044,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -28061,7 +28085,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":29,
         "RepeatingFields":0,
@@ -28154,7 +28178,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":29,
         "RepeatingFields":0,
         "Fields":[
@@ -28266,7 +28290,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":37,
         "RepeatingFields":0,
         "Fields":[
@@ -28440,7 +28464,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -28526,7 +28550,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -28567,7 +28591,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -28668,7 +28692,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -28708,7 +28732,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":14,
         "RepeatingFields":0,
@@ -28810,7 +28834,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":14,
         "RepeatingFields":0,
@@ -28912,7 +28936,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":14,
         "RepeatingFields":0,
@@ -29043,7 +29067,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -29083,7 +29107,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":0,
         "RepeatingFields":0,
@@ -29166,7 +29190,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -29276,7 +29300,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -29374,7 +29398,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -29464,7 +29488,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision"],
+          "Resolution"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -29574,7 +29598,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,
@@ -29647,7 +29671,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":30,
         "RepeatingFields":0,
@@ -29726,7 +29750,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":9,
         "RepeatingFields":0,
@@ -29805,7 +29829,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Precision",
+          "Resolution",
           "SampleData"],
         "Length":8,
         "RepeatingFields":0,

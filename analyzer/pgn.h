@@ -715,12 +715,12 @@ typedef enum PacketComplete
   PACKET_COMPLETE              = 0,
   PACKET_FIELDS_UNKNOWN        = 1,
   PACKET_FIELD_LENGTHS_UNKNOWN = 2,
-  PACKET_PRECISION_UNKNOWN     = 4,
+  PACKET_RESOLUTION_UNKNOWN    = 4,
   PACKET_LOOKUPS_UNKNOWN       = 8,
   PACKET_NOT_SEEN              = 16
 } PacketComplete;
 
-#define PACKET_INCOMPLETE (PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_PRECISION_UNKNOWN)
+#define PACKET_INCOMPLETE (PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN)
 #define PACKET_INCOMPLETE_LOOKUP (PACKET_INCOMPLETE | PACKET_LOOKUPS_UNKNOWN)
 
 typedef enum PacketType
@@ -732,16 +732,17 @@ typedef enum PacketType
 
 typedef struct
 {
-  char      *description;
-  uint32_t   pgn;
-  uint16_t   complete;        /* Either PACKET_COMPLETE or bit values set for various unknown items */
-  PacketType type;            /* Single, Fast or ISO11783 */
-  uint32_t   size;            /* (Minimal) size of this PGN. Helps to determine initial malloc */
-  uint32_t   repeatingFields; /* How many fields at the end repeat until the PGN is exhausted? */
-  Field      fieldList[30]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
-  uint32_t   fieldCount;    /* Filled by C, no need to set in initializers. */
-  char      *camelDescription; /* Filled by C, no need to set in initializers. */
-  bool       unknownPgn;       /* true = this is a catch-all for unknown PGNs */
+  char       *description;
+  uint32_t    pgn;
+  uint16_t    complete;        /* Either PACKET_COMPLETE or bit values set for various unknown items */
+  PacketType  type;            /* Single, Fast or ISO11783 */
+  uint32_t    size;            /* (Minimal) size of this PGN. Helps to determine initial malloc */
+  uint32_t    repeatingFields; /* How many fields at the end repeat until the PGN is exhausted? */
+  Field       fieldList[30]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
+  uint32_t    fieldCount;    /* Filled by C, no need to set in initializers. */
+  char       *camelDescription; /* Filled by C, no need to set in initializers. */
+  bool        unknownPgn;       /* true = this is a catch-all for unknown PGNs */
+  const char *explanation;      /* Preferably the NMEA 2000 explanation from the NMEA PGN field list */
 } Pgn;
 
 // Returns the first pgn that matches the given id, or 0 if not found.
@@ -803,12 +804,24 @@ Pgn pgnList[] = {
       UINT8_FIELD("Group Function"),
       RESERVED_FIELD(24),
       PGN_FIELD("PGN", "Parameter Group Number of requested information"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. "
+                    "This message is the possible response to acknowledge the reception of a “normal broadcast” message or the "
+                    "response to a specific command to indicate compliance or failure."}
 
     ,
-    {"ISO Request", 59904, PACKET_COMPLETE, PACKET_SINGLE, 3, 0, {PGN_FIELD("PGN", NULL), END_OF_FIELDS}}
+    {"ISO Request",
+     59904,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     3,
+     0,
+     {PGN_FIELD("PGN", NULL), END_OF_FIELDS},
+     .explanation = "As defined by ISO, this message has a data length of 3 bytes with no padding added to complete the single "
+                    "frame. The appropriate response to this message is based on the PGN being requested, and whether the receiver "
+                    "supports the requested PGN."}
 
-    /* For a good explanation of ISO 11783 transport protocol (as used in J1939) see
+    /* For a good explanation of ISO 11783 Transport Protocol (as used in J1939) see
      * http://www.simmasoftware.com/j1939-presentation.pdf
      *
      * First: Transmit a RTS message to the specific address that says:
@@ -822,7 +835,7 @@ Pgn pgnList[] = {
      * Third: Send data. Then repeat steps starting with #2. When all data sent, wait for ACK.
      */
 
-    // ISO 11783 defines this PGN as part of the transport protocol method used for transmitting messages that have 9 or more data
+    // ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data
     // bytes. This PGN represents a single packet of a multipacket message.
     ,
     {"ISO Transport Protocol, Data Transfer",
@@ -831,9 +844,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      1,
-     {UINT8_FIELD("SID"), SIMPLE_FIELD("Data", BYTES(7)), END_OF_FIELDS}}
+     {UINT8_FIELD("SID"), SIMPLE_FIELD("Data", BYTES(7)), END_OF_FIELDS},
+     .explanation = "ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have "
+                    "9 or more data bytes. This PGN represents a single packet of a multipacket message."}
 
-    // ''ISO 11783 defines this group function PGN as part of the transport protocol method used for transmitting messages that have
+    // ''ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have
     // 9 or more data bytes. This PGN's role in the transport process is determined by the group function value found in the first
     // data byte of the PGN.''
     ,
@@ -848,7 +863,10 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("Packets", BYTES(1), "packets"),
       SIMPLE_DESC_FIELD("Packets reply", BYTES(1), "packets sent in response to CTS"), // This one is still mysterious to me...
       PGN_FIELD("PGN", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
+                    "messages that have 9 or more data bytes. This PGN’s role in the transport process is to prepare the receiver "
+                    "for the fact that this sender wants to transmit a long message. The receiver will respond with CTS."}
 
     ,
     {"ISO Transport Protocol, Connection Management - Clear To Send",
@@ -858,11 +876,14 @@ Pgn pgnList[] = {
      8,
      1,
      {MATCH_FIELD("Group Function Code", BYTES(1), 17, "CTS"),
-      SIMPLE_DESC_FIELD("Max packets", BYTES(1), "packets before waiting for next CTS"),
-      SIMPLE_DESC_FIELD("Next SID", BYTES(1), "packet"),
+      SIMPLE_DESC_FIELD("Max packets", BYTES(1), "Number of frames that can be sent before another CTS is required"),
+      SIMPLE_DESC_FIELD("Next SID", BYTES(1), "Number of next frame to be transmitted"),
       RESERVED_FIELD(BYTES(2)),
       PGN_FIELD("PGN", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
+                    "messages that have 9 or more data bytes. This PGN’s role in the transport process is to signal to the sender "
+                    "that the receive is ready to receive a number of frames."}
 
     ,
     {"ISO Transport Protocol, Connection Management - End Of Message",
@@ -873,10 +894,13 @@ Pgn pgnList[] = {
      1,
      {MATCH_FIELD("Group Function Code", BYTES(1), 19, "EOM"),
       SIMPLE_DESC_FIELD("Total message size", BYTES(2), "bytes"),
-      SIMPLE_DESC_FIELD("Total number of packets received", BYTES(1), "packets"),
+      SIMPLE_DESC_FIELD("Total number of frames received", BYTES(1), "Total number of of frames received"),
       RESERVED_FIELD(BYTES(1)),
       PGN_FIELD("PGN", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation
+     = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that "
+       "have 9 or more data bytes. This PGN’s role in the transport process is to mark the end of the message."}
 
     ,
     {"ISO Transport Protocol, Connection Management - Broadcast Announce",
@@ -890,7 +914,12 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("Packets", BYTES(1), "frames"),
       RESERVED_FIELD(BYTES(1)),
       PGN_FIELD("PGN", NULL),
-      END_OF_FIELDS}},
+      END_OF_FIELDS},
+     .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
+                    "messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce a broadcast "
+                    "of a long message spanning multiple frames."}
+
+    ,
     {"ISO Transport Protocol, Connection Management - Abort",
      60416,
      PACKET_COMPLETE,
@@ -901,7 +930,10 @@ Pgn pgnList[] = {
       BINARY_FIELD("Reason", BYTES(1), NULL),
       RESERVED_FIELD(BYTES(2)),
       PGN_FIELD("PGN", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
+                    "messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce an abort "
+                    "of a long message spanning multiple frames."}
 
     ,
     {"ISO Address Claim",
@@ -920,7 +952,10 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
       LOOKUP_FIELD("Industry Group", 3, INDUSTRY_CODE),
       RESERVED_FIELD(1),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "This network management message is used to claim network address, reply to devices requesting the claimed "
+                    "address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group "
+                    "Function. This PGN contains several fields that are requestable, either independently or in any combination."}
 
     /* PDU1 (addressed) single-frame PGN range 0EF00 to 0xEFFF (61184 - 61439) */
 
@@ -967,7 +1002,9 @@ Pgn pgnList[] = {
      {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
      0,
      0,
-     true}
+     true,
+     .explanation = "This definition is used for manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN range 0EF00 to "
+                    "0xEFFF (61184 - 61439) for which no reverse-engineered definition is available."}
 
     /* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
 
@@ -981,7 +1018,10 @@ Pgn pgnList[] = {
      {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
      0,
      0,
-     true}
+     true,
+     .explanation
+     = "This definition is used for manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to "
+       "0xFEFF (61440 - 65279) for which no reverse-engineered definition is available."}
 
     /* Maretron ACM 100 manual documents PGN 65001-65030 */
 
@@ -1036,7 +1076,7 @@ Pgn pgnList[] = {
     ,
     {"Utility Total AC Energy",
      65005,
-     PACKET_PRECISION_UNKNOWN,
+     PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
      8,
      0,
@@ -1181,7 +1221,7 @@ Pgn pgnList[] = {
     ,
     {"Generator Total AC Energy",
      65018,
-     PACKET_PRECISION_UNKNOWN,
+     PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
      8,
      0,
@@ -1330,8 +1370,8 @@ Pgn pgnList[] = {
      PACKET_ISO11783,
      9,
      0,
-     /* ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in the
-     data portion of the message must match the name information of the node whose network address is to be set. */
+     /* ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in
+     the data portion of the message must match the name information of the node whose network address is to be set. */
      {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
       MANUFACTURER_FIELD("Manufacturer Code", NULL, false),
       SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
@@ -1660,7 +1700,9 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("# of Parameters", BYTES(1), "How many parameter pairs will follow"),
       UINT8_DESC_FIELD("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", "Parameter value, variable length"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "This is the Request variation of this group function PGN. The receiver shall respond by sending the requested "
+                    "PGN, at the desired transmission interval."}
 
     ,
     {"NMEA - Command group function",
@@ -1676,7 +1718,9 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("# of Parameters", BYTES(1), "How many parameter pairs will follow"),
       UINT8_DESC_FIELD("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", "Parameter value, variable length"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "This is the Command variation of this group function PGN. This instructs the receiver to modify its internal "
+                    "state for the passed parameters. The receiver shall reply with an Acknowledge reply."}
 
     ,
     {"NMEA - Acknowledge group function",
@@ -1691,7 +1735,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Transmission interval/Priority error code", 4, TRANSMISSION_INTERVAL),
       SIMPLE_FIELD("# of Parameters", 8),
       LOOKUP_FIELD("Parameter", 4, PARAMETER_FIELD),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will "
+                    "attempt to perform the command (change its parameters) and reply positively or negatively."}
 
     ,
     {"NMEA - Read Fields group function",
@@ -1709,7 +1755,9 @@ Pgn pgnList[] = {
       UINT8_FIELD("Selection Parameter"),
       VARIABLE_FIELD("Selection Value", NULL),
       UINT8_FIELD("Parameter"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "This is the Read Fields variation of this group function PGN. The receiver shall respond by sending a Read "
+                    "Reply variation of this PGN, containing the desired values."}
 
     ,
     {"NMEA - Read Fields reply group function",
@@ -1728,7 +1776,9 @@ Pgn pgnList[] = {
       VARIABLE_FIELD("Selection Value", NULL),
       UINT8_FIELD("Parameter"),
       VARIABLE_FIELD("Value", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation
+     = "This is the Read Fields Reply variation of this group function PGN. The receiver is responding to a Read Fields request."}
 
     ,
     {"NMEA - Write Fields group function",
@@ -1747,7 +1797,9 @@ Pgn pgnList[] = {
       VARIABLE_FIELD("Selection Value", NULL),
       UINT8_FIELD("Parameter"),
       VARIABLE_FIELD("Value", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "This is the Write Fields variation of this group function PGN. The receiver shall modify internal state and "
+                    "reply with a Write Fields Reply message."}
 
     ,
     {"NMEA - Write Fields reply group function",
@@ -1766,7 +1818,9 @@ Pgn pgnList[] = {
       VARIABLE_FIELD("Selection Value", NULL),
       UINT8_FIELD("Parameter"),
       VARIABLE_FIELD("Value", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation
+     = "This is the Write Fields Reply variation of this group function PGN. The receiver is responding to a Write Fields request."}
 
     /************ RESPONSE TO REQUEST PGNS **************/
 
@@ -2234,7 +2288,9 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       DATE_FIELD("Date"),
       TIME_FIELD("Time"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "The purpose of this PGN is twofold: To provide a regular transmission of UTC time and date. To provide "
+                    "synchronism for measurement data."}
 
     /* http://www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf */
     /* http://www.nmea.org/Assets/20190624%20NMEA%20Heartbeat%20Information%20Amendment%20AT%2020190623HB.pdf */
@@ -2253,7 +2309,20 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Controller 2 State", 2, CONTROLLER_STATE),
       LOOKUP_FIELD("Equipment Status", 2, EQUIPMENT_STATUS),
       RESERVED_FIELD(34),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation
+     = "Reception of this PGN confirms that a device is still present on the network.  Reception of this PGN may also be used to "
+       "maintain an address to NAME association table within the receiving device.  The transmission interval may be used by the "
+       "receiving unit to determine the time-out value for the connection supervision.  The value contained in Field 1 of this PGN "
+       "reflects the PGN’s current Transmission Interval. Changes to this PGN’s Transmission Interval shall be reflected in Field "
+       "1.  The transmission interval can only be changed by using the Request Group Function PGN 126208 with no pairs of request "
+       "parameters provided. Field 3 of the Request Group Function PGN 126208 may contain values between 1,000ms and 60,000ms.  "
+       "This PGN cannot be requested by the ISO Request PGN 059904 or Request Group Function PGN 126208. In Request Group Function "
+       "PGN 126208, setting Field 3 to a value of 0xFFFF FFFF and Field 4 to a value of 0xFFFF: “Transmit now without changing "
+       "timing variables.” is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 "
+       "of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See "
+       "ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for "
+       "additional context."}
 
     ,
     {"Product Information",
@@ -2270,7 +2339,9 @@ Pgn pgnList[] = {
       STRING_FIX_FIELD("Model Serial Code", BYTES(32)),
       UINT8_FIELD("Certification Level"),
       UINT8_FIELD("Load Equivalency"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "Provides product information onto the network that could be important for determining quality of data coming "
+                    "from this product."}
 
     ,
     {"Configuration Information",
@@ -2282,7 +2353,9 @@ Pgn pgnList[] = {
      {STRINGLAU_FIELD("Installation Description #1"),
       STRINGLAU_FIELD("Installation Description #2"),
       STRINGLAU_FIELD("Manufacturer Information"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation = "Free-form alphanumeric fields describing the installation (e.g., starboard engine room location) of the "
+                    "device and installation notes (e.g., calibration data)."}
 
     /************ PERIODIC DATA PGNs **************/
     /* http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
@@ -2316,7 +2389,30 @@ Pgn pgnList[] = {
       MMSI_FIELD("MMSI of vessel of origin"),
       LOOKUP_FIELD("MOB Emitter Battery Low Status", 3, LOW_BATTERY),
       RESERVED_FIELD(5),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation
+     = "The MOB PGN is intended to provide notification from a MOB monitoring system. The included position information may be "
+       "that of the vessel or the MOB device itself as identified in field “X”, position source. Additional information may "
+       "include the current state of the MOB device, time of activation, and MOB device battery status.\n"
+       "This PGN may be used to set a MOB waypoint, or to initiate an alert process.\n"
+       "This PGN may be used to command or register a MOB device emitter Ids or other applicable fields in the message with an MOB "
+       "System or other equipment. If the fields in this PGN are configured over the network, the Command Group Function (PGN "
+       "126208) shall be used.\n"
+       "Queries for this PGN shall be requested using either the ISO Request (PGN 059904) or the NMEA Request Group Function (PGN "
+       "126208).\n"
+       "A device receiving an ISO (PGN 059904) for this PGN (127233), shall respond by providing as many of these PGNs (127233) as "
+       "necessary for every MOB Emitter ID that has associated data fields.\n"
+       "If a Request Group Function (PGN 126208) requesting this PGN (127233) is received, the receiving device shall respond in "
+       "the following manner:\n"
+       "•If no requested fields have been included with the Request Group Function then the response is to return one or more "
+       "PGNs, just like responding to the ISO Request (PGN 055904) described above.\n"
+       "•If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response shall "
+       "be filtered by these fields contained within this request resulting in one or more PGN (127233) responses.\n"
+       "If the MOB Emitter ID requested is not considered a valid MOB Emitter ID by the receiving device, then the appropriate "
+       "response would be the Acknowledge Group Function (PGN 126208), containing the error state for PGN error code (Field 3) of "
+       "“0x3 = Access denied.” And the requested MOB Emitter ID field parameter error code (Field 6) of “0x3 = Requested or "
+       "command parameter out-of- range;”.\n"
+       "The Default update rate of this PGN is autonomous, as it is dependant upon notification rates of MOB devices."}
 
     ,
     {"Heading/Track control",

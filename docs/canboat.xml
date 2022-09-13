@@ -3,8 +3,8 @@
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>3.1.0</Version>
-  <Copyright>CANboat version v3.1.0
+  <Version>4.0.0-alpha</Version>
+  <Copyright>CANboat version v4.0.0-alpha
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -1193,6 +1193,13 @@ limitations under the License.
       <EncodingDescription>The definition of the field is that of the reference PGN and reference field, this is totally variable.</EncodingDescription>
     </FieldType>
   </FieldTypes>
+  <Missing>
+    <MissingAttribute Name="Fields">The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</MissingAttribute>
+    <MissingAttribute Name="FieldLengths">The length of one or more fields is likely incorrect</MissingAttribute>
+    <MissingAttribute Name="Resolution">The resolution of one or more fields is likely incorrect</MissingAttribute>
+    <MissingAttribute Name="Lookups">One or more of the lookup fields contain missing or incorrect values</MissingAttribute>
+    <MissingAttribute Name="SampleData">The PGN has not been seen in any logfiles yet</MissingAttribute>
+  </Missing>
   <LookupEnumerations>
     <LookupEnumeration Name='INDUSTRY_CODE' MaxValue='7'>
       <EnumPair Value='0' Name='Global' />
@@ -2724,6 +2731,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>59392</PGN>
       <Description>ISO Acknowledgement</Description>
+      <Explanation>This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. This message is the possible response to acknowledge the reception of a “normal broadcast” message or the response to a specific command to indicate compliance or failure.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -2772,6 +2780,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>59904</PGN>
       <Description>ISO Request</Description>
+      <Explanation>As defined by ISO, this message has a data length of 3 bytes with no padding added to complete the single frame. The appropriate response to this message is based on the PGN being requested, and whether the receiver supports the requested PGN.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>3</Length>
@@ -2791,6 +2800,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>60160</PGN>
       <Description>ISO Transport Protocol, Data Transfer</Description>
+      <Explanation>ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN represents a single packet of a multipacket message.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -2819,6 +2829,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>60416</PGN>
       <Description>ISO Transport Protocol, Connection Management - Request To Send</Description>
+      <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to prepare the receiver for the fact that this sender wants to transmit a long message. The receiver will respond with CTS.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -2879,6 +2890,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>60416</PGN>
       <Description>ISO Transport Protocol, Connection Management - Clear To Send</Description>
+      <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to signal to the sender that the receive is ready to receive a number of frames.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -2898,7 +2910,7 @@ limitations under the License.
         <Field>
           <Order>2</Order>
           <Name>Max packets</Name>
-          <Description>packets before waiting for next CTS</Description>
+          <Description>Number of frames that can be sent before another CTS is required</Description>
           <BitLength>8</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
@@ -2908,7 +2920,7 @@ limitations under the License.
         <Field>
           <Order>3</Order>
           <Name>Next SID</Name>
-          <Description>packet</Description>
+          <Description>Number of next frame to be transmitted</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -2938,6 +2950,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>60416</PGN>
       <Description>ISO Transport Protocol, Connection Management - End Of Message</Description>
+      <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to mark the end of the message.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -2966,8 +2979,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>3</Order>
-          <Name>Total number of packets received</Name>
-          <Description>packets</Description>
+          <Name>Total number of frames received</Name>
+          <Description>Total number of of frames received</Description>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -2997,6 +3010,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>60416</PGN>
       <Description>ISO Transport Protocol, Connection Management - Broadcast Announce</Description>
+      <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce a broadcast of a long message spanning multiple frames.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -3056,6 +3070,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>60416</PGN>
       <Description>ISO Transport Protocol, Connection Management - Abort</Description>
+      <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce an abort of a long message spanning multiple frames.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -3104,6 +3119,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>60928</PGN>
       <Description>ISO Address Claim</Description>
+      <Explanation>This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -3216,7 +3232,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3300,7 +3316,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3373,7 +3389,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3432,12 +3448,13 @@ limitations under the License.
     <PGNInfo>
       <PGN>61184</PGN>
       <Description>Manufacturer Proprietary single-frame addressed</Description>
+      <Explanation>This definition is used for manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN range 0EF00 to 0xEFFF (61184 - 61439) for which no reverse-engineered definition is available.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3483,12 +3500,13 @@ limitations under the License.
     <PGNInfo>
       <PGN>61440</PGN>
       <Description>Unknown single-frame non-addressed</Description>
+      <Explanation>This definition is used for manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to 0xFEFF (61440 - 65279) for which no reverse-engineered definition is available.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3662,7 +3680,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3706,7 +3724,7 @@ limitations under the License.
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4237,7 +4255,7 @@ limitations under the License.
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4889,7 +4907,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4955,7 +4973,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5198,7 +5216,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Lookups</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -5418,7 +5436,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5464,7 +5482,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5558,7 +5576,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5604,7 +5622,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5650,7 +5668,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5696,7 +5714,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5742,7 +5760,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5898,7 +5916,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5944,7 +5962,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5990,7 +6008,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6067,7 +6085,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6304,7 +6322,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6413,7 +6431,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6486,7 +6504,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6568,7 +6586,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6712,7 +6730,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6798,7 +6816,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6844,7 +6862,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Lookups</MissingAttribute>
       </Missing>
       <Length>255</Length>
@@ -6864,6 +6882,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>126208</PGN>
       <Description>NMEA - Request group function</Description>
+      <Explanation>This is the Request variation of this group function PGN. The receiver shall respond by sending the requested PGN, at the desired transmission interval.</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>12</Length>
@@ -6945,6 +6964,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>126208</PGN>
       <Description>NMEA - Command group function</Description>
+      <Explanation>This is the Command variation of this group function PGN. This instructs the receiver to modify its internal state for the passed parameters. The receiver shall reply with an Acknowledge reply.</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -7023,6 +7043,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>126208</PGN>
       <Description>NMEA - Acknowledge group function</Description>
+      <Explanation>This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will attempt to perform the command (change its parameters) and reply positively or negatively.</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -7093,12 +7114,13 @@ limitations under the License.
     <PGNInfo>
       <PGN>126208</PGN>
       <Description>NMEA - Read Fields group function</Description>
+      <Explanation>This is the Read Fields variation of this group function PGN. The receiver shall respond by sending a Read Reply variation of this PGN, containing the desired values.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFieldSet1>2</RepeatingFieldSet1>
@@ -7201,6 +7223,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>126208</PGN>
       <Description>NMEA - Read Fields reply group function</Description>
+      <Explanation>This is the Read Fields Reply variation of this group function PGN. The receiver is responding to a Read Fields request.</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -7311,6 +7334,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>126208</PGN>
       <Description>NMEA - Write Fields group function</Description>
+      <Explanation>This is the Write Fields variation of this group function PGN. The receiver shall modify internal state and reply with a Write Fields Reply message.</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -7421,6 +7445,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>126208</PGN>
       <Description>NMEA - Write Fields reply group function</Description>
+      <Explanation>This is the Write Fields Reply variation of this group function PGN. The receiver is responding to a Write Fields request.</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -7565,7 +7590,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>21</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7679,7 +7704,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7764,7 +7789,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>7</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7849,7 +7874,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7915,7 +7940,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7990,7 +8015,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8057,7 +8082,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8141,7 +8166,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8243,7 +8268,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>21</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8349,7 +8374,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8710,7 +8735,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9467,7 +9492,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>4</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9604,7 +9629,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9655,7 +9680,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>255</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -10127,7 +10152,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -10140,7 +10165,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -10153,7 +10178,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -10161,6 +10186,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>126992</PGN>
       <Description>System Time</Description>
+      <Explanation>The purpose of this PGN is twofold: To provide a regular transmission of UTC time and date. To provide synchronism for measurement data.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -10220,6 +10246,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>126993</PGN>
       <Description>Heartbeat</Description>
+      <Explanation>Reception of this PGN confirms that a device is still present on the network.  Reception of this PGN may also be used to maintain an address to NAME association table within the receiving device.  The transmission interval may be used by the receiving unit to determine the time-out value for the connection supervision.  The value contained in Field 1 of this PGN reflects the PGN’s current Transmission Interval. Changes to this PGN’s Transmission Interval shall be reflected in Field 1.  The transmission interval can only be changed by using the Request Group Function PGN 126208 with no pairs of request parameters provided. Field 3 of the Request Group Function PGN 126208 may contain values between 1,000ms and 60,000ms.  This PGN cannot be requested by the ISO Request PGN 059904 or Request Group Function PGN 126208. In Request Group Function PGN 126208, setting Field 3 to a value of 0xFFFF FFFF and Field 4 to a value of 0xFFFF: “Transmit now without changing timing variables.” is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for additional context.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -10290,6 +10317,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>126996</PGN>
       <Description>Product Information</Description>
+      <Explanation>Provides product information onto the network that could be important for determining quality of data coming from this product.</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>134</Length>
@@ -10372,6 +10400,7 @@ limitations under the License.
     <PGNInfo>
       <PGN>126998</PGN>
       <Description>Configuration Information</Description>
+      <Explanation>Free-form alphanumeric fields describing the installation (e.g., starboard engine room location) of the device and installation notes (e.g., calibration data).</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>42</Length>
@@ -10403,6 +10432,16 @@ limitations under the License.
     <PGNInfo>
       <PGN>127233</PGN>
       <Description>Man Overboard Notification</Description>
+      <Explanation>The MOB PGN is intended to provide notification from a MOB monitoring system. The included position information may be that of the vessel or the MOB device itself as identified in field “X”, position source. Additional information may include the current state of the MOB device, time of activation, and MOB device battery status.
+This PGN may be used to set a MOB waypoint, or to initiate an alert process.
+This PGN may be used to command or register a MOB device emitter Ids or other applicable fields in the message with an MOB System or other equipment. If the fields in this PGN are configured over the network, the Command Group Function (PGN 126208) shall be used.
+Queries for this PGN shall be requested using either the ISO Request (PGN 059904) or the NMEA Request Group Function (PGN 126208).
+A device receiving an ISO (PGN 059904) for this PGN (127233), shall respond by providing as many of these PGNs (127233) as necessary for every MOB Emitter ID that has associated data fields.
+If a Request Group Function (PGN 126208) requesting this PGN (127233) is received, the receiving device shall respond in the following manner:
+•If no requested fields have been included with the Request Group Function then the response is to return one or more PGNs, just like responding to the ISO Request (PGN 055904) described above.
+•If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response shall be filtered by these fields contained within this request resulting in one or more PGN (127233) responses.
+If the MOB Emitter ID requested is not considered a valid MOB Emitter ID by the receiving device, then the appropriate response would be the Acknowledge Group Function (PGN 126208), containing the error state for PGN error code (Field 3) of “0x3 = Access denied.” And the requested MOB Emitter ID field parameter error code (Field 6) of “0x3 = Requested or command parameter out-of- range;”.
+The Default update rate of this PGN is autonomous, as it is dependant upon notification rates of MOB devices.</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>35</Length>
@@ -10966,7 +11005,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -12883,7 +12922,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -13001,7 +13040,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -13088,7 +13127,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -13130,7 +13169,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -13234,7 +13273,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -16576,7 +16615,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>10</Length>
@@ -16641,7 +16680,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -16753,7 +16792,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>13</Length>
@@ -17067,7 +17106,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -17238,7 +17277,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>9</Length>
@@ -17326,7 +17365,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -17431,7 +17470,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -17482,7 +17521,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>9</Length>
@@ -17570,7 +17609,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>13</Length>
@@ -17685,7 +17724,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -17755,7 +17794,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -17897,7 +17936,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -18030,7 +18069,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -18158,7 +18197,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -18845,7 +18884,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -19023,7 +19062,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -19096,7 +19135,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -19169,7 +19208,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -19278,7 +19317,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -19350,7 +19389,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>8</RepeatingFields>
@@ -19477,7 +19516,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>23</Length>
@@ -19569,7 +19608,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>4</RepeatingFields>
@@ -19668,7 +19707,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -19875,7 +19914,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -20056,7 +20095,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -20257,7 +20296,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -20700,7 +20739,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>0</Length>
@@ -20714,7 +20753,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>0</Length>
@@ -20728,7 +20767,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -20855,7 +20894,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -20952,7 +20991,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -21079,7 +21118,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -21180,7 +21219,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -21259,7 +21298,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -21356,7 +21395,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -21435,7 +21474,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -21505,7 +21544,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -21566,7 +21605,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -21645,7 +21684,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -22446,7 +22485,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -22582,7 +22621,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>30</Length>
@@ -22747,7 +22786,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -22946,7 +22985,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>0</Length>
@@ -23206,7 +23245,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>233</Length>
@@ -23392,7 +23431,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>233</Length>
@@ -23544,7 +23583,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>233</Length>
@@ -23656,7 +23695,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>233</Length>
@@ -23749,7 +23788,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>233</Length>
@@ -23880,7 +23919,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>233</Length>
@@ -23943,7 +23982,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>2</Length>
@@ -23977,7 +24016,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>14</Length>
@@ -24774,7 +24813,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>9</Length>
@@ -24869,7 +24908,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>64</Length>
@@ -25002,7 +25041,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25087,7 +25126,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25173,7 +25212,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25276,7 +25315,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25362,7 +25401,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25456,7 +25495,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25588,7 +25627,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25723,7 +25762,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25817,7 +25856,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25911,7 +25950,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26005,7 +26044,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26126,7 +26165,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26211,7 +26250,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26394,7 +26433,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26470,7 +26509,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26557,7 +26596,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>9</Length>
@@ -26652,7 +26691,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26772,7 +26811,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26823,7 +26862,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26941,7 +26980,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27131,7 +27170,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27222,7 +27261,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27333,7 +27372,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27494,7 +27533,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27578,7 +27617,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27662,7 +27701,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27746,7 +27785,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27821,7 +27860,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27905,7 +27944,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27991,7 +28030,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28104,7 +28143,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28197,7 +28236,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28281,7 +28320,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28375,7 +28414,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28513,7 +28552,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28653,7 +28692,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>5</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28729,7 +28768,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28831,7 +28870,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -28934,7 +28973,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>10</Length>
@@ -29037,7 +29076,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>5</Length>
@@ -29114,7 +29153,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>32</Length>
@@ -29190,7 +29229,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>32</Length>
@@ -29266,7 +29305,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>32</Length>
@@ -29342,7 +29381,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>32</Length>
@@ -29418,7 +29457,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29645,7 +29684,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29719,7 +29758,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29810,7 +29849,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>10</Length>
@@ -29911,7 +29950,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -29958,7 +29997,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -30005,7 +30044,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -30052,7 +30091,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -30099,7 +30138,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -30146,7 +30185,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30402,7 +30441,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -30578,7 +30617,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -30625,7 +30664,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -30672,7 +30711,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -30719,7 +30758,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>29</Length>
@@ -30824,7 +30863,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>29</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30951,7 +30990,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>37</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31146,7 +31185,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31243,7 +31282,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -31290,7 +31329,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31404,7 +31443,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31450,7 +31489,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>14</Length>
@@ -31565,7 +31604,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>14</Length>
@@ -31680,7 +31719,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>14</Length>
@@ -31828,7 +31867,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31874,7 +31913,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>0</Length>
@@ -31968,7 +32007,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32092,7 +32131,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32203,7 +32242,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32305,7 +32344,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32429,7 +32468,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -32512,7 +32551,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>30</Length>
@@ -32601,7 +32640,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>9</Length>
@@ -32690,7 +32729,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
