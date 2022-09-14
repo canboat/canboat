@@ -186,13 +186,19 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
 
   if (field->resolution == 1.0)
   {
+    const char *fmt = "%" PRId64;
+
+    fmt = (field->ft->format != NULL) ? field->ft->format : "%" PRId64;
+
     if (showJson)
     {
-      mprintf("%s\"%s\":%" PRId64 "", getSep(), fieldName, value);
+      mprintf("%s\"%s\":", getSep(), fieldName);
+      mprintf(fmt, value);
     }
     else
     {
-      mprintf("%s %s = %" PRId64, getSep(), fieldName, value);
+      mprintf("%s %s = ", getSep(), fieldName);
+      mprintf(fmt, value);
     }
   }
   else

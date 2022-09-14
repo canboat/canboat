@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Issues resolved:
 
+- #267: Print User ID as string field, always with 9 digits.
 - #283: Enumerations in pgns-v2.json use names for all attributes.
 - #285: Fix `SHORT_TIME` field printing incorrect values.
 
