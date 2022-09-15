@@ -18,6 +18,10 @@ where you can find instructions on how to build the programs on your own compute
 
 See [Changelog](CHANGELOG.md).
 
+## Related Projects
+
+- [canboatjs](https://github.com/canboat/canboatjs) Pure JavaScript NMEA 2000 decoder and encoder
+
 ---
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
