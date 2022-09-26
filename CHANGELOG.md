@@ -48,6 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Issues resolved:
 
+- #305: Print reserved fields only when they are not all ones.
+- #304: Print spare fields only when they are not all zeroes.
+- #303: Allow lookups to use the values for "Error" and "Unknown".
 - #267: Print User ID as string field, always with 9 digits.
 - #283: Enumerations in pgns-v2.json use names for all attributes.
 - #285: Fix `SHORT_TIME` field printing incorrect values.
