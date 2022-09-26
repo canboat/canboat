@@ -71,11 +71,11 @@ void fillLookups(void)
     {
       Field *f = &pgnList[i].fieldList[0];
 
-      if (f->name && f->units && strcmp(f->name, "Manufacturer Code") == 0)
+      if (f->name != NULL && f->unit != NULL && strcmp(f->name, "Manufacturer Code") == 0)
       {
         int id = 0;
 
-        if (sscanf(f->units, "=%d", &id) > 0)
+        if (sscanf(f->unit, "=%d", &id) > 0)
         {
           f->description = lookupValueMANUFACTURER_CODE[id];
         }

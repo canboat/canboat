@@ -51,17 +51,17 @@ $(ANALYZER_EXPLAIN): $(ANALYZER_EXPLAIN_SOURCES)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(XMLFILE): $(ANALYZER_EXPLAIN_DEP)
-	$(ANALYZER_EXPLAIN) -explain-xml -expand-lookups >$(XMLFILE)
+	$(ANALYZER_EXPLAIN) -explain-xml -camel -v1 >$(XMLFILE)
 
 $(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE)
-	$(ANALYZER_EXPLAIN) -explain-xml >$(XML2FILE) && xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
+	$(ANALYZER_EXPLAIN) -explain-xml -camel >$(XML2FILE) && xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
 
 
 $(NGTXMLFILE): $(ANALYZER_EXPLAIN_DEP)
-	$(ANALYZER_EXPLAIN) -explain-ngt-xml >$(NGTXMLFILE)
+	$(ANALYZER_EXPLAIN) -explain-ngt-xml -camel -v1 >$(NGTXMLFILE)
 
 $(IKXMLFILE): $(ANALYZER_EXPLAIN_DEP)
-	$(ANALYZER_EXPLAIN) -explain-ik-xml >$(IKXMLFILE)
+	$(ANALYZER_EXPLAIN) -explain-ik-xml -camel -v1 >$(IKXMLFILE)
 
 $(JSONFILE): $(XMLFILE) pgns2json.xslt
 	xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)

@@ -143,7 +143,7 @@ limitations under the License.
   <xs:complexType name="PGNInfo">
     <xs:sequence>
       <xs:element type="xs:int" name="PGN"/>
-      <xs:element type="xs:string" name="ID" minOccurs="0"/>
+      <xs:element type="xs:string" name="Id"/>
       <xs:element type="xs:string" name="Description"/>
       <xs:element type="xs:string" name="Explanation" minOccurs="0"/>
       <xs:element type="xs:string" name="Type"/>

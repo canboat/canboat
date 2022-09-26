@@ -104,13 +104,15 @@ extern bool       showSI;
 extern GeoFormats showGeo;
 extern char      *sep;
 extern char       closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
+extern bool       g_skip;
 
 /* analyzer.c */
 
 /* print.c */
 
-extern char *getSep(void);
-extern void  mprintf(const char *format, ...);
-extern void  mreset(void);
-extern void  mwrite(FILE *stream);
-extern void  printEmpty(const char *name, int64_t exceptionValue);
+extern char  *getSep(void);
+extern void   mprintf(const char *format, ...);
+extern void   mreset(void);
+extern void   mwrite(FILE *stream);
+extern size_t mlocation(void);
+extern void   printEmpty(const char *name, int64_t exceptionValue);

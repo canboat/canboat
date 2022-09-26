@@ -28,6 +28,7 @@ limitations under the License.
 
 extern int g_variableFieldRepeat[2]; // Actual number of repetitions
 extern int g_variableFieldIndex;
+bool       g_skip;
 
 static bool unhandledStartOffset(const char *fieldName, size_t startBit)
 {
@@ -70,6 +71,11 @@ extern void mwrite(FILE *stream)
   mreset();
 }
 
+extern size_t mlocation(void)
+{
+  return mp - mbuf;
+}
+
 extern char *getSep(void)
 {
   char *s = sep;
@@ -97,11 +103,18 @@ extern char *getSep(void)
 
 extern void printEmpty(const char *fieldName, int64_t exceptionValue)
 {
-  if (showJsonEmpty)
+  if (showJson)
   {
-    mprintf("%s\"%s\":null", getSep(), fieldName);
+    if (showJsonEmpty)
+    {
+      mprintf("%s\"%s\":null", getSep(), fieldName);
+    }
+    else
+    {
+      g_skip = true;
+    }
   }
-  else if (!showJson)
+  else
   {
     switch (exceptionValue)
     {
@@ -142,7 +155,7 @@ static bool extractNumberNotEmpty(const Field *field,
     return false;
   }
 
-  if (*maxValue >= 15)
+  if (*maxValue >= 3)
   {
     reserved = 2; /* DATAFIELD_ERROR and DATAFIELD_UNKNOWN */
   }
@@ -172,16 +185,18 @@ static bool extractNumberNotEmpty(const Field *field,
 
 extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  int64_t value;
-  int64_t maxValue;
-  double  a;
+  int64_t     value;
+  int64_t     maxValue;
+  double      a;
+  const char *unit = field->unit;
 
   if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
   {
     return true;
   }
 
-  if (field->resolution == 1.0)
+  logDebug("fieldPrintNumber <%s> resolution=%g unit='%s'\n", fieldName, field->resolution, (field->unit ? field->unit : "-"));
+  if (field->resolution == 1.0 && field->unitOffset == 0.0)
   {
     const char *fmt = "%" PRId64;
 
@@ -196,61 +211,25 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
     {
       mprintf("%s %s = ", getSep(), fieldName);
       mprintf(fmt, value);
+      if (unit != NULL)
+      {
+        mprintf(" %s", unit);
+      }
     }
   }
   else
   {
-    int         precision;
-    double      r;
-    const char *units = field->units;
+    int    precision;
+    double r;
 
-    a = (double) value * field->resolution;
+    a = (double) value * field->resolution + field->unitOffset;
 
-    precision = 0;
-    for (r = field->resolution; (r > 0.0) && (r < 1.0); r *= 10.0)
+    precision = field->precision;
+    if (precision == 0)
     {
-      precision++;
-    }
-
-    if (field->resolution == RES_RADIANS)
-    {
-      units = "rad";
-      if (!showSI)
+      for (r = field->resolution; (r > 0.0) && (r < 1.0); r *= 10.0)
       {
-        a *= RadianToDegree;
-        precision -= 3;
-        units = "deg";
-      }
-    }
-    else if (field->resolution == RES_ROTATION || field->resolution == RES_HIRES_ROTATION)
-    {
-      units = "rad/s";
-      if (!showSI)
-      {
-        a *= RadianToDegree;
-        precision -= 3;
-        units = "deg/s";
-      }
-    }
-    else if (units && showSI)
-    {
-      if (strcmp(units, "kWh") == 0)
-      {
-        a *= 3.6e6; // 1 kWh = 3.6 MJ.
-      }
-      else if (strcmp(units, "Ah") == 0)
-      {
-        a *= 3600.0; // 1 Ah = 3600 C.
-      }
-
-      // Many more to follow, but pgn.h is not yet complete enough...
-    }
-    else if (units && !showSI)
-    {
-      if (strcmp(units, "C") == 0)
-      {
-        a /= 3600.0; // 3600 C = 1 Ah
-        units = "Ah";
+        precision++;
       }
     }
 
@@ -258,16 +237,16 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
     {
       mprintf("%s\"%s\":%.*f", getSep(), fieldName, precision, a);
     }
-    else if (units && strcmp(units, "m") == 0 && a >= 1000.0)
+    else if (unit != NULL && strcmp(unit, "m") == 0 && a >= 1000.0)
     {
       mprintf("%s %s = %.*f km", getSep(), fieldName, precision + 3, a / 1000);
     }
-    else if (units && units[0] != '=')
+    else
     {
       mprintf("%s %s = %.*f", getSep(), fieldName, precision, a);
-      if (units)
+      if (unit != NULL)
       {
-        mprintf(" %s", units);
+        mprintf(" %s", unit);
       }
     }
   }
@@ -309,9 +288,9 @@ extern bool fieldPrintFloat(Field *field, char *fieldName, uint8_t *data, size_t
   else
   {
     mprintf("%s %s = %g", getSep(), fieldName, f.a);
-    if (field->units)
+    if (field->unit)
     {
-      mprintf(" %s", field->units);
+      mprintf(" %s", field->unit);
     }
   }
 
@@ -382,20 +361,21 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
   int64_t value;
   int64_t maxValue;
 
-  if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
+  // Can't use extractNumberNotEmpty when the lookup key might use the 'error/unknown' values.
+  if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
   {
     return true;
   }
 
-  if (field->units && field->units[0] == '=' && isdigit(field->units[1]))
+  if (field->unit && field->unit[0] == '=' && isdigit(field->unit[1]))
   {
     char        lookfor[20];
     const char *s;
 
     sprintf(lookfor, "=%" PRId64, value);
-    if (strcmp(lookfor, field->units) != 0)
+    if (strcmp(lookfor, field->unit) != 0)
     {
-      logDebug("Field %s value %" PRId64 " does not match %s\n", fieldName, value, field->units + 1);
+      logDebug("Field %s value %" PRId64 " does not match %s\n", fieldName, value, field->unit + 1);
       return false;
     }
     s = field->description;
@@ -438,7 +418,11 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
   }
   else
   {
-    if (showJson)
+    if (*bits > 1 && (value >= maxValue - (*bits > 2 ? 2 : 1)))
+    {
+      printEmpty(fieldName, value - maxValue);
+    }
+    else if (showJson)
     {
       mprintf("%s\"%s\":\"%" PRId64 "\"", getSep(), fieldName, value);
     }
@@ -451,6 +435,50 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
   return true;
 }
 
+/*
+ * Only print reserved fields if they are NOT all ones, in that case we have an incorrect
+ * PGN definition.
+ */
+extern bool fieldPrintReserved(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+{
+  int64_t value;
+  int64_t maxValue;
+
+  if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+  if (value == maxValue)
+  {
+    g_skip = true;
+    return true;
+  }
+
+  return fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
+}
+
+/*
+ * Only print spare fields if they are NOT all zeroes, in that case we have an incorrect
+ * PGN definition.
+ */
+extern bool fieldPrintSpare(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+{
+  int64_t value;
+  int64_t maxValue;
+
+  if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+  if (value == 0)
+  {
+    g_skip = true;
+    return true;
+  }
+
+  return fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
+}
+
 extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
   int64_t value;
@@ -459,21 +487,44 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
   size_t  bit;
   char    sep;
 
-  if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
+  if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
   {
     return true;
+  }
+  if (value == 0)
+  {
+    printEmpty(fieldName, value - maxValue);
+    return true;
+  }
+
+  logDebug("RES_BITFIELD length %u value %" PRIx64 "\n", *bits, value);
+
+  if (showJson)
+  {
+    mprintf("%s\"%s\": ", getSep(), fieldName);
+    sep = '[';
+  }
+  else
+  {
+    mprintf("%s %s =", getSep(), fieldName);
+    sep = ' ';
   }
 
   for (bitValue = 1, bit = 0; bitValue <= maxValue; (bitValue *= 2), bit++)
   {
-    logDebug("RES_BITFIELD is bit %u value %" PRIx64 " set %d\n", bit, bitValue, (value & value) >= 0);
-    if ((value & bitValue) != 0)
+    bool isSet = (value & bitValue) != 0;
+    logDebug("RES_BITFIELD is bit %u value %" PRIx64 " set? = %d\n", bit, bitValue, isSet);
+    if (isSet)
     {
-      const char *s = field->lookupValue[value];
+      const char *s = field->lookupValue[bit];
 
-      if (s)
+      if (s != NULL)
       {
-        if (showJson)
+        if (showJsonValue)
+        {
+          mprintf("%c{\"value\":%" PRId64 ",\"name\":\"%s\"}", sep, bitValue, s);
+        }
+        else if (showJson)
         {
           mprintf("%c\"%s\"", sep, s);
         }
@@ -527,17 +578,15 @@ extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_
 
   if (showGeo == GEO_DD)
   {
-    scale = log10(1.0 / field->resolution);
-    dd    = (double) value * field->resolution;
-    logDebug("float %g resolution %g scale %g\n", dd, field->resolution, scale);
+    dd = (double) value * field->resolution;
 
     if (showJson)
     {
-      mprintf("%s\"%s\":%.*g", getSep(), fieldName, (int) scale, dd);
+      mprintf("%s\"%s\":%10.7f", getSep(), fieldName, dd);
     }
     else
     {
-      mprintf("%s %s = %.*g", getSep(), fieldName, (int) scale, dd);
+      mprintf("%s %s = %10.7f", getSep(), fieldName, dd);
     }
   }
   else if (showGeo == GEO_DM)
@@ -556,19 +605,17 @@ extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_
   }
   else
   {
-    scale     = floor(log10(1.0 / field->resolution / 3600.));
     dd        = (double) absVal * field->resolution;
     degrees   = floor(dd);
     remainder = dd - degrees;
     minutes   = floor(remainder * 60.);
     seconds   = floor(remainder * 3600.) - 60. * minutes;
 
-    mprintf((showJson ? "%s\"%s\":\"%02u&deg;%02u&rsquo;%06.*f&rdquo;%c\"" : "%s %s = %02ud %02u' %06.*f\"%c"),
+    mprintf((showJson ? "%s\"%s\":\"%02u&deg;%02u&rsquo;%06.3f&rdquo;%c\"" : "%s %s = %02ud %02u' %06.3f\"%c"),
             getSep(),
             fieldName,
             (int) degrees,
             (int) minutes,
-            (int) scale,
             seconds,
             (isLongitude ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
     if (showJson)
@@ -973,10 +1020,5 @@ extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_
   {
     mprintf("\"");
   }
-  return true;
-}
-
-extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
-{
   return true;
 }

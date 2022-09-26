@@ -29,20 +29,22 @@ limitations under the License.
 
 typedef bool (*FieldPrintFunctionType)(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 
-extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintFloat(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintDate(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintStringFix(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintStringVar(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintDate(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintFloat(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintReserved(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintSpare(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintStringFix(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintStringVar(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 
 typedef enum Bool
@@ -65,6 +67,7 @@ struct FieldType
   uint32_t    size;                // Size in bits
   Bool        variableSize;        // True if size varies per instance of PGN
   char       *baseFieldType;       // Some field types are variations of others
+  char       *v1Type;              // Type as printed in v1 xml/json
 
   // The following are only set for numbers
   const char *unit;       // String containing the 'Dimension' (e.g. s, h, m/s, etc.)
@@ -100,13 +103,19 @@ FieldType fieldTypeList[] = {
        "value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
      .pf = fieldPrintNumber},
 
-    {.name = "INTEGER", .description = "Integral number", .resolution = 1, .hasSign = True, .baseFieldType = "NUMBER"},
+    {.name          = "INTEGER",
+     .description   = "Integral number",
+     .resolution    = 1,
+     .hasSign       = True,
+     .baseFieldType = "NUMBER",
+     .v1Type        = "Integer"},
 
     {.name          = "UNSIGNED_INTEGER",
      .description   = "Unsigned integral number",
      .resolution    = 1,
      .hasSign       = False,
-     .baseFieldType = "NUMBER"},
+     .baseFieldType = "NUMBER",
+     .v1Type        = "Integer"},
 
     {.name = "INT8", .description = "8 bit signed integer", .size = 8, .hasSign = True, .baseFieldType = "INTEGER"},
 
@@ -187,7 +196,8 @@ FieldType fieldTypeList[] = {
      .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
                 "occurs that has no corresponding textual explanation.",
      .pf      = fieldPrintLookup,
-     .baseFieldType = "UNSIGNED_INTEGER"},
+     .baseFieldType = "UNSIGNED_INTEGER",
+     .v1Type        = "Lookup table"},
 
     {.name                = "BITLOOKUP",
      .description         = "Number value where each bit value encodes for a distinct meaning",
@@ -198,7 +208,12 @@ FieldType fieldTypeList[] = {
      .pf      = fieldPrintBitLookup,
      .baseFieldType = "UNSIGNED_INTEGER"},
 
-    {.name = "MANUFACTURER", .description = "Manufacturer", .size = 11, .pf = fieldPrintLookup, .baseFieldType = "LOOKUP"},
+    {.name          = "MANUFACTURER",
+     .description   = "Manufacturer",
+     .size          = 11,
+     .pf            = fieldPrintLookup,
+     .baseFieldType = "LOOKUP",
+     .v1Type        = "Manufacturer code"},
 
     {.name = "INDUSTRY", .description = "Industry", .size = 3, .pf = fieldPrintLookup, .baseFieldType = "LOOKUP"},
 
@@ -225,9 +240,9 @@ FieldType fieldTypeList[] = {
      .resolution    = 0.01,
      .baseFieldType = "UFIX16"},
 
-    {.name          = "SOUNDPRESSURELEVEL_UFIX16",
-     .description   = "Sound pressure level",
-     .comment       = "See https://en.wikipedia.org/wiki/Sound_pressure#Sound_pressure_level",
+    {.name          = "SIGNALTONOISERATIO_UFIX16",
+     .description   = "Signal-to-noise ratio",
+     .comment       = "See https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
      .resolution    = 0.01,
      .unit          = "dB",
      .baseFieldType = "UFIX16"},
@@ -249,7 +264,8 @@ FieldType fieldTypeList[] = {
      .resolution          = 1.0e-7,
      .unit                = "deg",
      .pf                  = fieldPrintLatLon,
-     .baseFieldType       = "FIX32"},
+     .baseFieldType       = "FIX32",
+     .v1Type              = "Lat/Lon"},
 
     {.name                = "GEO_FIX64",
      .description         = "Geographical latitude or longitude, high precision",
@@ -258,16 +274,8 @@ FieldType fieldTypeList[] = {
      .resolution          = 1.0e-16,
      .unit                = "deg",
      .pf                  = fieldPrintLatLon,
-     .baseFieldType       = "FIX64"},
-
-    {.name                = "LONGITUDE_INT64",
-     .description         = "Geographical longitude, high precision",
-     .encodingDescription = "The `Resolution` for this field is 1.0e-16, so the precision is about 0.01 nm (nanometer) when we "
-                            "refer to an Earth position",
-     .resolution          = 1.0e-16,
-     .unit                = "deg",
-     .pf                  = fieldPrintLatLon,
-     .baseFieldType       = "FIX64"},
+     .baseFieldType       = "FIX64",
+     .v1Type              = "Lat/Lon"},
 
     {.name          = "LENGTH_UFIX8_DAM",
      .description   = "Length, in decameter precision",
@@ -311,7 +319,12 @@ FieldType fieldTypeList[] = {
      .pf            = fieldPrintNumber,
      .baseFieldType = "UFIX32"},
 
-    {.name = "TEMPERATURE", .description = "Temperature", .resolution = 0.01, .unit = "K", .baseFieldType = "UFIX16"},
+    {.name          = "TEMPERATURE",
+     .description   = "Temperature",
+     .resolution    = 0.01,
+     .unit          = "K",
+     .baseFieldType = "UFIX16",
+     .v1Type        = "Temperature"},
 
     {.name                = "TEMPERATURE_HIGH",
      .description         = "Temperature, high range",
@@ -452,6 +465,12 @@ FieldType fieldTypeList[] = {
      .unit                = "V",
      .baseFieldType       = "UFIX16"},
 
+    {.name                = "VOLTAGE_INT16",
+     .description         = "Voltage, signed",
+     .encodingDescription = "Various resolutions are used, ranging from 0.01 V to 1 V.",
+     .unit                = "V",
+     .baseFieldType       = "INT16"},
+
     {.name          = "CURRENT",
      .description   = "Electrical current",
      .hasSign       = False,
@@ -559,7 +578,7 @@ FieldType fieldTypeList[] = {
     {.name          = "PRESSURE_RATE_FIX16_PA",
      .description   = "Pressure change rate, 16 bit signed in pascal precision.",
      .resolution    = 1000,
-     .unit          = "Pa/h",
+     .unit          = "Pa/hr",
      .baseFieldType = "FIX16"},
 
     {.name          = "PRESSURE_FIX16_KPA",
@@ -700,7 +719,7 @@ FieldType fieldTypeList[] = {
      .comment       = "Devices that support multiple sensors TODO",
      .baseFieldType = "UINT8"},
 
-    {.name = "PGN", .description = "PRN number", .baseFieldType = "UINT24"},
+    {.name = "PGN", .description = "PRN number", .resolution = 1, .baseFieldType = "UINT24"},
 
     {.name          = "POWER_FACTOR_UFIX16",
      .description   = "Power Factor",
@@ -732,7 +751,8 @@ FieldType fieldTypeList[] = {
      .comment
      = "It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values "
        "are supported.",
-     .pf = fieldPrintStringFix},
+     .pf     = fieldPrintStringFix,
+     .v1Type = "ASCII text"},
     {.name                = "STRING_VAR",
      .description         = "A varying length string containing single byte codepoints.",
      .encodingDescription = "The length of the string is determined either with a start (0x02) and stop (0x01) byte, or with a "
@@ -752,7 +772,8 @@ FieldType fieldTypeList[] = {
      = "It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values "
        "are supported.",
      .variableSize = True,
-     .pf           = fieldPrintStringLZ},
+     .pf           = fieldPrintStringLZ,
+     .v1Type       = "String with start/stop byte"},
 
     {.name = "STRING_LAU",
      .description
@@ -763,19 +784,21 @@ FieldType fieldTypeList[] = {
      = "It is unclear what character sets are allowed/supported. For single byte, assume ASCII. For UNICODE, assume UTF-16, "
        "but this has not been seen in the wild yet.",
      .variableSize = True,
-     .pf           = fieldPrintStringLAU},
+     .pf           = fieldPrintStringLAU,
+     .v1Type       = "ASCII or UNICODE string starting with length and control byte"},
 
     // Others
     {.name                = "BINARY",
      .description         = "Binary field",
      .encodingDescription = "Any content consisting of any number of bits.",
-     .pf                  = fieldPrintBinary},
+     .pf                  = fieldPrintBinary,
+     .v1Type              = "Binary data"},
 
     {.name                = "RESERVED",
      .description         = "Reserved field",
      .encodingDescription = "All reserved bits shall be 1",
      .comment             = "",
-     .pf                  = NULL,
+     .pf                  = fieldPrintReserved,
      .baseFieldType       = "BINARY"},
 
     {.name                = "SPARE",
@@ -783,7 +806,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "All reserved bits shall be 0",
      .comment = "This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS "
                 "ITU-1371 standard.",
-     .pf      = NULL,
+     .pf      = fieldPrintSpare,
      .baseFieldType = "BINARY"},
 
     {.name        = "MMSI",

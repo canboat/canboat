@@ -22,7 +22,7 @@ limitations under the License.
 
 #define FIELDTYPE_GLOBALS
 
-#include "pgn.h"
+#include "analyzer.h"
 
 extern FieldType *getFieldType(const char *name)
 {
@@ -35,6 +35,61 @@ extern FieldType *getFieldType(const char *name)
   }
   logError("fieldType '%s' not found\n", name);
   return NULL;
+}
+
+static void fixupUnit(Field *f)
+{
+  if (showSI)
+  {
+    if (strcmp(f->unit, "kWh") == 0)
+    {
+      f->resolution *= 3.6e6; // 1 kWh = 3.6 MJ.
+      f->unit = "J";
+    }
+    else if (strcmp(f->unit, "Ah") == 0)
+    {
+      f->resolution *= 3600.0; // 1 Ah = 3600 C.
+      f->unit = "C";
+    }
+
+    // Many more to follow, but pgn.h is not yet complete enough...
+  }
+  else // NOT SI
+  {
+    if (strcmp(f->unit, "C") == 0)
+    {
+      f->resolution /= 3600.0; // 3600 C = 1 Ah
+      f->unit = "Ah";
+      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+    }
+    else if (strcmp(f->unit, "Pa") == 0)
+    {
+      f->resolution /= 100000.0;
+      f->precision = 3;
+      f->unit      = "bar";
+      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+    }
+    else if (strcmp(f->unit, "K") == 0)
+    {
+      f->unitOffset = -273.15;
+      f->precision  = 2;
+      f->unit       = "C";
+      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+    }
+    else if (strcmp(f->unit, "rad") == 0)
+    {
+      f->resolution *= RadianToDegree;
+      f->unit      = "deg";
+      f->precision = 1;
+      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+    }
+    else if (strcmp(f->unit, "rad/s") == 0)
+    {
+      f->resolution *= RadianToDegree;
+      f->unit = "deg/s";
+      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+    }
+  }
 }
 
 extern void fillFieldType(void)
@@ -138,7 +193,28 @@ extern void fillFieldType(void)
 
       if ((ft->hasSign == True && f->hasSign == false) || (ft->hasSign == False && f->hasSign == true))
       {
-        logAbort("PGN %u '%s' field '%s' contains different sign field as fieldType '%s'\n", pgn, pname, f->name, f->fieldType);
+        logAbort(
+            "PGN %u '%s' field '%s' contains different sign attribute than fieldType '%s'\n", pgn, pname, f->name, f->fieldType);
+      }
+
+      if (ft->unit != NULL && f->unit == NULL)
+      {
+        f->unit = ft->unit;
+      }
+      if (f->unit != NULL && ft->unit != NULL && strcmp(f->unit, ft->unit) != 0)
+      {
+        logAbort("PGN %u '%s' field '%s' contains different unit attribute ('%s') than fieldType '%s' ('%s')\n",
+                 pgn,
+                 pname,
+                 f->name,
+                 f->unit,
+                 f->fieldType,
+                 ft->unit);
+      }
+
+      if (f->unit != NULL && f->resolution != 0.0)
+      {
+        fixupUnit(f);
       }
     }
   }

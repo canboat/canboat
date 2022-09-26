@@ -24,6 +24,10 @@ limitations under the License.
 
 #include "analyzer.h"
 
+/**
+ * Return the first Pgn entry for which the pgn is found.
+ * There can be multiple (with differing 'match' fields).
+ */
 Pgn *searchForPgn(int pgn)
 {
   size_t start = 0;
@@ -35,7 +39,7 @@ Pgn *searchForPgn(int pgn)
     mid = (start + end) / 2;
     if (pgn == pgnList[mid].pgn)
     {
-      while (mid && pgn == pgnList[mid - 1].pgn)
+      while (mid > 0 && pgn == pgnList[mid - 1].pgn)
       {
         mid--;
       }
@@ -122,13 +126,13 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
       const Field *field = &pgn->fieldList[i];
       int          bits  = field->size;
 
-      if (field->units && field->units[0] == '=')
+      if (field->unit != NULL && field->unit[0] == '=')
       {
         int64_t value, desiredValue;
         int64_t maxValue;
 
         hasFixedField = true;
-        desiredValue  = strtol(field->units + 1, 0, 10);
+        desiredValue  = strtol(field->unit + 1, 0, 10);
         if (!extractNumber(field, data, length, startBit, field->size, &value, &maxValue) || value != desiredValue)
         {
           matchedFixedField = false;
@@ -329,7 +333,7 @@ bool extractNumber(const Field *field,
 
   *maxValue = (int64_t) maxv;
 
-  logDebug("extractNumber(<%s>,%p,%zu,%zu,%zu,%" PRId64 ",%" PRId64 ")\n", name, data, dataLen, startBit, bits, *value, *maxValue);
+  logDebug("extractNumber <%s> startBit=%zu bits=%zu value=%" PRId64 " max=%" PRId64 "\n", name, startBit, bits, *value, *maxValue);
 
   return true;
 }

@@ -69,6 +69,7 @@ typedef int SOCKET;
 #endif
 
 #define STRSIZE(x) (sizeof(x) - 1)
+#define STRNULL(x) ((x != NULL) ? (x) : "NULL")
 
 #ifndef INVALID_SOCKET
 #define INVALID_SOCKET (-1)

@@ -86,7 +86,7 @@ static uint16_t currentDate = UINT16_MAX;
 static uint32_t currentTime = UINT32_MAX;
 
 static enum RawFormats detectFormat(const char *msg);
-static bool            printCanFormat(RawMessage *msg);
+static void            printCanFormat(RawMessage *msg);
 static bool            printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 static void            fillFieldCounts(void);
 static void            printCanRaw(RawMessage *msg);
@@ -455,583 +455,6 @@ static void printCanRaw(RawMessage *msg)
   }
 }
 
-static bool printTemperature(char *name, uint32_t t, uint32_t bits, double resolution)
-{
-  double  k        = t * resolution;
-  double  c        = k - 273.15;
-  double  f        = c * 1.8 + 32;
-  int64_t maxValue = (bits == 16) ? 0xffff : 0xffffff;
-
-  if (t >= maxValue - 2)
-  {
-    printEmpty(name, t - maxValue);
-    return true;
-  }
-
-  if (showSI)
-  {
-    if (showJson)
-    {
-      mprintf("%s\"%s\":%.2f", getSep(), name, k);
-    }
-    else
-    {
-      mprintf("%s %s = %.2f K", getSep(), name, k);
-    }
-    return true;
-  }
-
-  if (showJson)
-  {
-    mprintf("%s\"%s\":%.2f", getSep(), name, c);
-  }
-  else
-  {
-    mprintf("%s %s = %.2f C (%.1f F)", getSep(), name, c, f);
-  }
-
-  return true;
-}
-
-static bool printPressure(char *name, uint32_t v, Field *field)
-{
-  double pressure;
-  double bar;
-  double psi;
-  int    precision = 5;
-
-  pressure = v;
-  if (field->size <= 16)
-  {
-    if (v >= 0xfffd)
-    {
-      printEmpty(name, v - INT64_C(0xffff));
-      return true;
-    }
-    if (field->hasSign)
-    {
-      pressure = (int16_t) v;
-    }
-  }
-  else
-  {
-    if (v >= 0xfffffffd)
-    {
-      printEmpty(name, v - INT64_C(0xffffffff));
-      return true;
-    }
-    if (field->hasSign)
-    {
-      pressure = (int32_t) v;
-    }
-  }
-
-  // There are four types of known pressure: unsigned hectopascal, signed kpa, unsigned kpa, unsigned four bytes in pascal.
-
-  // Now scale pascal properly, it is in hPa or kPa.
-  if (field->units)
-  {
-    switch (field->units[0])
-    {
-      case 'h':
-      case 'H':
-        pressure *= 100.0;
-        precision -= 2;
-        break;
-      case 'k':
-      case 'K':
-        pressure *= 1000.0;
-        precision -= 3;
-        break;
-      case 'd':
-        pressure /= 10.0;
-        precision += 1;
-        break;
-    }
-  }
-
-  bar = pressure * 1e-5;        /* 1000 hectopascal = 1 Bar */
-  psi = pressure * 1.450377e-4; /* Silly but still used in some parts of the world */
-
-  if (showJson)
-  {
-    if (precision <= 3)
-    {
-      mprintf("%s\"%s\":%.0f", getSep(), name, pressure);
-    }
-    else
-    {
-      mprintf("%s\"%s\":%.*f", getSep(), name, precision - 3, pressure);
-    }
-  }
-  else
-  {
-    mprintf("%s %s = %.*f bar (%.*f PSI)", getSep(), name, precision, bar, precision - 1, psi);
-  }
-  return true;
-}
-
-static void print6BitASCIIChar(uint8_t b)
-{
-  int c;
-  if (b < 0x28)
-  {
-    c = b + 0x30;
-  }
-  else
-  {
-    c = b + 0x38;
-  }
-  if (showJson && (c == '\\'))
-  {
-    putchar(c);
-  }
-  putchar(c);
-}
-
-static bool print6BitASCIIText(char *name, uint8_t *data, size_t startBit, size_t bits)
-{
-  uint8_t  value        = 0;
-  uint8_t  bitMask      = 1 << startBit;
-  uint64_t bitMagnitude = 1;
-  size_t   bit;
-  char     buf[128];
-
-  if (showJson)
-  {
-    mprintf("%s\"%s\":\"", getSep(), name);
-  }
-  else
-  {
-    mprintf("%s %s = ", getSep(), name);
-  }
-
-  for (bit = 0; bit < bits && bit < sizeof(buf) * 8; bit++)
-  {
-    /* Act on the current bit */
-    bool bitIsSet = (*data & bitMask) > 0;
-    if (bitIsSet)
-    {
-      value |= bitMagnitude;
-    }
-
-    /* Find the next bit */
-    if (bitMask == 128)
-    {
-      bitMask = 1;
-      data++;
-    }
-    else
-    {
-      bitMask = bitMask << 1;
-    }
-    bitMagnitude = bitMagnitude << 1;
-
-    if (bit % 6 == 5)
-    {
-      print6BitASCIIChar(value);
-      value        = 0;
-      bitMagnitude = 1;
-    }
-  }
-  if (showJson)
-  {
-    mprintf("\"");
-  }
-  return true;
-}
-
-static bool printHex(char *name, uint8_t *data, size_t startBit, size_t bits)
-{
-  uint8_t  value        = 0;
-  uint8_t  bitMask      = 1 << startBit;
-  uint64_t bitMagnitude = 1;
-  size_t   bit;
-  char     buf[128];
-
-  logDebug("printHex(\"%s\", %p, %zu, %zu)\n", name, data, startBit, bits);
-
-  if (showJson)
-  {
-    {
-      mprintf("%s\"%s\":\"", getSep(), name);
-    }
-  }
-  else
-  {
-    mprintf("%s %s = ", getSep(), name);
-  }
-
-  for (bit = 0; bit < bits && bit < sizeof(buf) * 8; bit++)
-  {
-    /* Act on the current bit */
-    bool bitIsSet = (*data & bitMask) > 0;
-    if (bitIsSet)
-    {
-      value |= bitMagnitude;
-    }
-
-    /* Find the next bit */
-    if (bitMask == 128)
-    {
-      bitMask = 1;
-      data++;
-    }
-    else
-    {
-      bitMask = bitMask << 1;
-    }
-    bitMagnitude = bitMagnitude << 1;
-
-    if (bit % 8 == 7)
-    {
-      mprintf("%02x ", value);
-      value        = 0;
-      bitMagnitude = 1;
-    }
-  }
-  if (showJson)
-  {
-    mprintf("\"");
-  }
-  return true;
-}
-
-static bool printDecimal(char *name, uint8_t *data, size_t startBit, size_t bits)
-{
-  uint8_t  value        = 0;
-  uint8_t  bitMask      = 1 << startBit;
-  uint64_t bitMagnitude = 1;
-  size_t   bit;
-  char     buf[128];
-
-  if (showJson)
-  {
-    mprintf("%s\"%s\":\"", getSep(), name);
-  }
-  else
-  {
-    mprintf("%s %s = ", getSep(), name);
-  }
-
-  for (bit = 0; bit < bits && bit < sizeof(buf) * 8; bit++)
-  {
-    /* Act on the current bit */
-    bool bitIsSet = (*data & bitMask) > 0;
-    if (bitIsSet)
-    {
-      value |= bitMagnitude;
-    }
-
-    /* Find the next bit */
-    if (bitMask == 128)
-    {
-      bitMask = 1;
-      data++;
-    }
-    else
-    {
-      bitMask = bitMask << 1;
-    }
-    bitMagnitude = bitMagnitude << 1;
-
-    if (bit % 8 == 7)
-    {
-      if (value < 100)
-      {
-        mprintf("%02u", value);
-      }
-      value        = 0;
-      bitMagnitude = 1;
-    }
-  }
-  if (showJson)
-  {
-    mprintf("\"");
-  }
-  return true;
-}
-
-static bool
-printVarField(Field *field, char *fieldName, uint32_t refPgn, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
-{
-  Field *refField;
-
-  logDebug("printVarField(<%s>,\"%s\",%u, ..., %zu, %zu, %zu)\n", field->name, fieldName, refPgn, dataLen, startBit, *bits);
-
-  /* PGN 126208 contains variable field length.
-   * The field length can be derived from the PGN mentioned earlier in the message,
-   * plus the field number.
-   */
-
-  /*
-   * This is rather hacky. We know that the 'data' pointer points to the n-th variable field
-   * length and thus that the field number is exactly one byte earlier.
-   */
-
-  refField = getField(refPgn, data[-1] - 1);
-  if (refField)
-  {
-    return printField(refField, fieldName, data, dataLen, startBit, bits);
-  }
-
-  logError("Field %s: cannot derive variable length for PGN %d field # %d\n", fieldName, refPgn, data[-1]);
-  *bits = 8; /* Gotta assume something */
-  return false;
-}
-
-#ifdef OLD
-static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t startBit, size_t bits)
-{
-  int64_t value;
-  int64_t maxValue;
-  int64_t reserved;
-  double  a;
-
-  extractNumber(field, data, (bits + 7) >> 3, startBit, bits, &value, &maxValue);
-
-  if (maxValue >= 15)
-  {
-    reserved = 2; /* DATAFIELD_ERROR and DATAFIELD_UNKNOWN */
-  }
-  else if (maxValue > 1)
-  {
-    reserved = 1; /* DATAFIELD_UNKNOWN */
-  }
-  else
-  {
-    reserved = 0;
-  }
-
-  if (fieldName[0] == '#')
-  {
-    logDebug("g_variableFieldRepeat[%d]=%d\n", g_variableFieldIndex, value);
-    g_variableFieldRepeat[g_variableFieldIndex++] = value;
-  }
-
-  if (value <= maxValue - reserved)
-  {
-    if (field->units && field->units[0] == '=' && isdigit(field->units[2]))
-    {
-      char        lookfor[20];
-      const char *s;
-
-      sprintf(lookfor, "=%" PRId64, value);
-      if (strcmp(lookfor, field->units) != 0)
-      {
-        return false;
-      }
-      s = field->description;
-      if (!s)
-      {
-        s = lookfor + 1;
-      }
-      if (showJson)
-      {
-        mprintf("%s\"%s\":\"%s\"", getSep(), fieldName, s);
-      }
-      else
-      {
-        mprintf("%s %s = %s", getSep(), fieldName, s);
-      }
-    }
-
-    else if ((field->resolution == RES_LOOKUP || field->resolution == RES_MANUFACTURER) && field->lookupValue)
-    {
-      const char *s = field->lookupValue[value];
-
-      if (s)
-      {
-        if (showJsonValue)
-        {
-          mprintf("%s\"%s\":{\"value\":%" PRId64 ",\"name\":\"%s\"}", getSep(), fieldName, value, s);
-        }
-        else if (showJson)
-        {
-          mprintf("%s\"%s\":\"%s\"", getSep(), fieldName, s);
-        }
-        else
-        {
-          mprintf("%s %s = %s", getSep(), fieldName, s);
-        }
-      }
-      else
-      {
-        if (showJson)
-        {
-          mprintf("%s\"%s\":\"%" PRId64 "\"", getSep(), fieldName, value);
-        }
-        else
-        {
-          mprintf("%s %s = %" PRId64 "", getSep(), fieldName, value);
-        }
-      }
-    }
-
-    else if (field->resolution == RES_BITFIELD && field->lookupValue)
-    {
-      unsigned int bit;
-      uint64_t     bitValue;
-      char         sep;
-
-      logDebug("RES_BITFIELD value %" PRIx64 "\n", value);
-      if (showJson)
-      {
-        mprintf("%s\"%s\": ", getSep(), fieldName);
-        sep = '[';
-      }
-      else
-      {
-        mprintf("%s %s =", getSep(), fieldName);
-        sep = ' ';
-      }
-
-      for (bitValue = 1, bit = 0; bitValue <= maxValue; (bitValue *= 2), bit++)
-      {
-        logDebug("RES_BITFIELD is bit %u value %" PRIx64 " set %d\n", bit, bitValue, (value & value) >= 0);
-        if ((value & bitValue) != 0)
-        {
-          const char *s = field->lookupValue[value];
-
-          if (s)
-          {
-            if (showJson)
-            {
-              mprintf("%c\"%s\"", sep, s);
-            }
-            else
-            {
-              mprintf("%c%s", sep, s);
-            }
-          }
-          else
-          {
-            mprintf("%c\"%" PRIu64 "\"", sep, bitValue);
-          }
-          sep = ',';
-        }
-      }
-      if (showJson)
-      {
-        if (sep != '[')
-        {
-          mprintf("]");
-        }
-        else
-        {
-          mprintf("[]");
-        }
-      }
-    }
-
-    else if (field->resolution == RES_BINARY)
-    {
-      if (showJson)
-      {
-        mprintf("%s\"%s\":\"%" PRId64 "\"", getSep(), fieldName, value);
-      }
-      else
-      {
-        mprintf("%s %s = 0x%" PRIx64, getSep(), fieldName, value);
-      }
-    }
-    else
-    {
-      if (field->resolution == RES_INTEGER)
-      {
-        if (showJson)
-        {
-          mprintf("%s\"%s\":%" PRId64 "", getSep(), fieldName, value);
-        }
-        else
-        {
-          mprintf("%s %s = %" PRId64, getSep(), fieldName, value);
-        }
-      }
-      else
-      {
-        int         precision;
-        double      r;
-        const char *units = field->units;
-
-        a = (double) value * field->resolution;
-
-        precision = 0;
-        for (r = field->resolution; (r > 0.0) && (r < 1.0); r *= 10.0)
-        {
-          precision++;
-        }
-
-        if (field->resolution == RES_RADIANS)
-        {
-          units = "rad";
-          if (!showSI)
-          {
-            a *= RadianToDegree;
-            precision -= 3;
-            units = "deg";
-          }
-        }
-        else if (field->resolution == RES_ROTATION || field->resolution == RES_HIRES_ROTATION)
-        {
-          units = "rad/s";
-          if (!showSI)
-          {
-            a *= RadianToDegree;
-            precision -= 3;
-            units = "deg/s";
-          }
-        }
-        else if (units && showSI)
-        {
-          if (strcmp(units, "kWh") == 0)
-          {
-            a *= 3.6e6; // 1 kWh = 3.6 MJ.
-          }
-          else if (strcmp(units, "Ah") == 0)
-          {
-            a *= 3600.0; // 1 Ah = 3600 C.
-          }
-
-          // Many more to follow, but pgn.h is not yet complete enough...
-        }
-        else if (units && !showSI)
-        {
-          if (strcmp(units, "C") == 0)
-          {
-            a /= 3600.0; // 3600 C = 1 Ah
-            units = "Ah";
-          }
-        }
-
-        if (showJson)
-        {
-          mprintf("%s\"%s\":%.*f", getSep(), fieldName, precision, a);
-        }
-        else if (units && strcmp(units, "m") == 0 && a >= 1000.0)
-        {
-          mprintf("%s %s = %.*f km", getSep(), fieldName, precision + 3, a / 1000);
-        }
-        else if (units && units[0] != '=')
-        {
-          mprintf("%s %s = %.*f", getSep(), fieldName, precision, a);
-          if (units)
-          {
-            mprintf(" %s", units);
-          }
-        }
-      }
-    }
-  }
-  else
-  {
-    printEmpty(fieldName, value - maxValue);
-  }
-
-  return true;
-}
-#endif
-
 void setSystemClock(void)
 {
 #ifndef SKIP_SETSYSTEMCLOCK
@@ -1119,66 +542,18 @@ void setSystemClock(void)
 #endif
 }
 
-static void print_ascii_json_escaped(uint8_t *data, int len)
-{
-  int c;
-  int k;
-
-  for (k = 0; k < len; k++)
-  {
-    c = data[k];
-    switch (c)
-    {
-      case '\b':
-        mprintf("%s", "\\b");
-        break;
-
-      case '\n':
-        mprintf("%s", "\\n");
-        break;
-
-      case '\r':
-        mprintf("%s", "\\r");
-        break;
-
-      case '\t':
-        mprintf("%s", "\\t");
-        break;
-
-      case '\f':
-        mprintf("%s", "\\f");
-        break;
-
-      case '"':
-        mprintf("%s", "\\\"");
-        break;
-
-      case '\\':
-        mprintf("%s", "\\\\");
-        break;
-
-      case '/':
-        mprintf("%s", "\\/");
-        break;
-
-      case '\377':
-        // 0xff has been seen on recent Simrad VHF systems, and it seems to indicate
-        // end-of-field, with noise following. Assume this does not break other systems.
-        return;
-
-      default:
-        if (c >= ' ' && c <= '~')
-          mprintf("%c", c);
-    }
-  }
-}
-
-bool printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
+static void printPacket(RawMessage *msg)
 {
   size_t  fastPacketIndex;
   size_t  bucket;
   Packet *packet;
-  Pgn    *pgn = &pgnList[index];
+  Pgn    *pgn;
+
+  pgn = getMatchingPgn(msg->pgn, msg->data, msg->len);
+  if (!pgn)
+  {
+    pgn = pgnList; // the first entry is the "catch all" PGN description
+  }
 
   if (!device[msg->src])
   {
@@ -1190,7 +565,7 @@ bool printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
       die("Out of memory\n");
     }
   }
-  packet = &(device[msg->src]->packetList[index]);
+  packet = &(device[msg->src]->packetList[pgn - pgnList]);
 
   if (!packet->data)
   {
@@ -1284,57 +659,18 @@ bool printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
   printPgn(msg, packet->data, packet->size, showData, showJson);
 }
 
-static bool printCanFormat(RawMessage *msg)
+static void printCanFormat(RawMessage *msg)
 {
-  size_t i;
-  size_t unknownIndex = 0;
-
   if (onlySrc >= 0 && onlySrc != msg->src)
   {
-    return false;
+    return;
+  }
+  if (onlyPgn > 0 && onlyPgn != msg->pgn)
+  {
+    return;
   }
 
-  for (i = 0; i < ARRAY_SIZE(pgnList); i++)
-  {
-    if (msg->pgn == pgnList[i].pgn)
-    {
-      if (onlyPgn)
-      {
-        if (msg->pgn == onlyPgn)
-        {
-          if (printPacket(i, unknownIndex, msg))
-          {
-            return true;
-          }
-        }
-        continue;
-      }
-      if (!pgnList[i].size)
-      {
-        return true; /* We have field names, but no field sizes. */
-      }
-      /*
-       * Found the pgn that matches this particular packet
-       */
-      if (printPacket(i, unknownIndex, msg))
-      {
-        return true;
-      }
-    }
-    else if (msg->pgn < pgnList[i].pgn)
-    {
-      break;
-    }
-    if (pgnList[i].unknownPgn)
-    {
-      unknownIndex = i;
-    }
-  }
-  if (!onlyPgn)
-  {
-    printPacket(unknownIndex, unknownIndex, msg);
-  }
-  return onlyPgn > 0;
+  printPacket(msg);
 }
 
 static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
@@ -1408,10 +744,10 @@ static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
   mprintf("%s", showJson ? "}" : ")");
 }
 
+static uint32_t refPgn = 0; // Remember this over the entire set of fields
+
 static bool printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  static uint32_t refPgn = 0; // Remember this over the entire set of fields
-
   size_t bytes;
   double resolution;
   bool   r;
@@ -1450,14 +786,6 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
   logDebug(
       "printField <%s>, \"%s\": bits=%zu proprietary=%u refPgn=%u\n", field->name, fieldName, *bits, field->proprietary, refPgn);
 
-  if (strcmp(fieldName, "Reserved") == 0)
-  {
-    // Skipping reserved fields. Unfortunately we have some cases now
-    // where they are zero. Some AIS devices (SRT) produce an 8 bit long
-    // nav status, others just a four bit one.
-    return true;
-  }
-
   if (field->proprietary)
   {
     if ((refPgn >= 65280 && refPgn <= 65535) || (refPgn >= 126720 && refPgn <= 126975) || (refPgn >= 130816 && refPgn <= 131071))
@@ -1476,15 +804,24 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
 
   if (field->ft != NULL && field->ft->pf != NULL)
   {
+    size_t location;
+
     if (showBytes)
     {
       mprintf("%s%s", getSep(), showJson ? "{" : "");
       sep = "";
     }
     logDebug("printField <%s>, \"%s\": calling function for %s\n", field->name, fieldName, field->fieldType);
-    r = (field->ft->pf)(field, fieldName, data, dataLen, startBit, bits);
+    g_skip   = false;
+    location = mlocation();
+    r        = (field->ft->pf)(field, fieldName, data, dataLen, startBit, bits);
     logDebug("printField <%s>, \"%s\": result %d bits=%zu\n", field->name, fieldName, r, *bits);
-    if (showBytes)
+    if (r && !g_skip && location == mlocation())
+    {
+      logError("Field \"%s\" print routine did not print anything\n", field->name);
+      r = false;
+    }
+    else if (showBytes && !g_skip)
     {
       showBytesOrBits(data, startBit, *bits);
     }
@@ -1517,7 +854,7 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
   pgn = getMatchingPgn(msg->pgn, dataStart, length);
   if (!pgn)
   {
-    pgn = pgnList;
+    pgn = pgnList; // the first entry is the "catch all" PGN description
   }
 
   if (showData)
@@ -1701,4 +1038,19 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
     setSystemClock();
   }
   return r;
+}
+
+extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+{
+  Field *refField;
+
+  refField = getField(refPgn, data[-1] - 1);
+  if (refField)
+  {
+    return printField(refField, fieldName, data, dataLen, startBit, bits);
+  }
+
+  logError("Field %s: cannot derive variable length for PGN %d field # %d\n", fieldName, refPgn, data[-1]);
+  *bits = 8; /* Gotta assume something */
+  return false;
 }
