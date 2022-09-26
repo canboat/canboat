@@ -258,7 +258,8 @@ bool extractNumber(const Field *field,
                    int64_t     *value,
                    int64_t     *maxValue)
 {
-  bool hasSign = field->hasSign;
+  const bool  hasSign = field ? field->hasSign : false;
+  const char *name    = field ? field->name : "<bits>";
 
   size_t   firstBit      = startBit;
   size_t   bitsRemaining = bits;
@@ -298,7 +299,7 @@ bool extractNumber(const Field *field,
   }
   if (bitsRemaining > 0)
   {
-    logDebug("Insufficient length in PGN to fill field '%s'\n", field->name);
+    logDebug("Insufficient length in PGN to fill field '%s'\n", name);
     return false;
   }
 
@@ -306,7 +307,7 @@ bool extractNumber(const Field *field,
   {
     maxv >>= 1;
 
-    if (field->offset) /* J1939 Excess-K notation */
+    if (field && field->offset) /* J1939 Excess-K notation */
     {
       *value += field->offset;
     }
@@ -328,14 +329,7 @@ bool extractNumber(const Field *field,
 
   *maxValue = (int64_t) maxv;
 
-  logDebug("extractNumber(<%s>,%p,%zu,%zu,%zu,%" PRId64 ",%" PRId64 ")\n",
-           field->name,
-           data,
-           dataLen,
-           startBit,
-           bits,
-           *value,
-           *maxValue);
+  logDebug("extractNumber(<%s>,%p,%zu,%zu,%zu,%" PRId64 ",%" PRId64 ")\n", name, data, dataLen, startBit, bits, *value, *maxValue);
 
   return true;
 }

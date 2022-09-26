@@ -97,14 +97,13 @@ typedef enum GeoFormats
 
 extern bool       showRaw;
 extern bool       showData;
-extern bool       showBytes;
 extern bool       showJson;
 extern bool       showJsonEmpty;
 extern bool       showJsonValue;
 extern bool       showSI;
 extern GeoFormats showGeo;
 extern char      *sep;
-extern char       closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
+extern char       closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
 
 /* analyzer.c */
 

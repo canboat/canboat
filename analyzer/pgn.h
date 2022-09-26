@@ -5966,9 +5966,9 @@ Pgn pgnList[] = {
       UINT8_FIELD("Indicator Number"),
       DATE_FIELD("Start Date"),
       TIME_FIELD("Start Time"),
-      DECIMAL_UNIT_FIELD("Accumulated OFF Period", BYTES(4), "seconds"),
-      DECIMAL_UNIT_FIELD("Accumulated ON Period", BYTES(4), "seconds"),
-      DECIMAL_UNIT_FIELD("Accumulated ERROR Period", BYTES(4), "seconds"),
+      TIME_UFIX32_S_FIELD("Accumulated OFF Period", NULL),
+      TIME_UFIX32_S_FIELD("Accumulated ON Period", NULL),
+      TIME_UFIX32_S_FIELD("Accumulated ERROR Period", NULL),
       LOOKUP_FIELD("Switch Status", 2, OFF_ON),
       RESERVED_FIELD(6),
       END_OF_FIELDS}}

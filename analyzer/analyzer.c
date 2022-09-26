@@ -72,7 +72,7 @@ bool       showSI        = false; // Output everything in strict SI units
 GeoFormats showGeo       = GEO_DD;
 
 char *sep = " ";
-char  closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
+char  closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
 
 int    onlyPgn  = 0;
 int    onlySrc  = -1;
@@ -155,7 +155,8 @@ int main(int argc, char **argv)
     }
     else if (strcasecmp(av[1], "-debug") == 0)
     {
-      showBytes = true;
+      showJsonEmpty = true;
+      showBytes     = true;
     }
     else if (strcasecmp(av[1], "-d") == 0)
     {
@@ -650,14 +651,11 @@ static bool printHex(char *name, uint8_t *data, size_t startBit, size_t bits)
 
   logDebug("printHex(\"%s\", %p, %zu, %zu)\n", name, data, startBit, bits);
 
-  if (showBytes)
-  {
-    mprintf("(%s,%p,%zu,%zu) ", name, data, startBit, bits);
-  }
-
   if (showJson)
   {
-    mprintf("%s\"%s\":\"", getSep(), name);
+    {
+      mprintf("%s\"%s\":\"", getSep(), name);
+    }
   }
   else
   {
@@ -706,11 +704,6 @@ static bool printDecimal(char *name, uint8_t *data, size_t startBit, size_t bits
   uint64_t bitMagnitude = 1;
   size_t   bit;
   char     buf[128];
-
-  if (showBytes)
-  {
-    mprintf("(%s,%p,%zu,%zu) ", name, data, startBit, bits);
-  }
 
   if (showJson)
   {
@@ -795,7 +788,7 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
   int64_t reserved;
   double  a;
 
-  extractNumber(field, data, startBit, bits, &value, &maxValue);
+  extractNumber(field, data, (bits + 7) >> 3, startBit, bits, &value, &maxValue);
 
   if (maxValue >= 15)
   {
@@ -826,8 +819,6 @@ static bool printNumber(char *fieldName, Field *field, uint8_t *data, size_t sta
       sprintf(lookfor, "=%" PRId64, value);
       if (strcmp(lookfor, field->units) != 0)
       {
-        if (showBytes)
-          logError("Field %s value %" PRId64 " does not match %s\n", fieldName, value, field->units + 1);
         return false;
       }
       s = field->description;
@@ -1092,10 +1083,7 @@ void setSystemClock(void)
       logError("Failed to adjust system clock to %" PRIu64 "/%06u\n", (uint64_t) gps.tv_sec, gps.tv_usec);
       return;
     }
-    if (showBytes)
-    {
-      logInfo("Set system clock to %" PRIu64 "/%06u\n", (uint64_t) gps.tv_sec, gps.tv_usec);
-    }
+    logDebug("Set system clock to %" PRIu64 "/%06u\n", (uint64_t) gps.tv_sec, gps.tv_usec);
     return;
   }
 
@@ -1106,10 +1094,7 @@ void setSystemClock(void)
 
   if (delta.tv_usec < 2000 && delta.tv_usec > -2000)
   {
-    if (showBytes)
-    {
-      logDebug("Forget about small system clock skew %d\n", delta.tv_usec);
-    }
+    logDebug("Forget about small system clock skew %d\n", delta.tv_usec);
     return;
   }
 
@@ -1119,7 +1104,7 @@ void setSystemClock(void)
     return;
   }
 
-  if (showBytes)
+  if (isLogLevelEnabled(LOG_DEBUG))
   {
     logDebug("Now = %" PRIu64 "/%06u ", (uint64_t) now.tv_sec, now.tv_usec);
     logDebug("GPS = %" PRIu64 "/%06u ", (uint64_t) gps.tv_sec, gps.tv_usec);
@@ -1188,7 +1173,7 @@ static void print_ascii_json_escaped(uint8_t *data, int len)
   }
 }
 
-void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
+bool printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
 {
   size_t  fastPacketIndex;
   size_t  bucket;
@@ -1211,7 +1196,7 @@ void printPacket(size_t index, size_t unknownIndex, RawMessage *msg)
   {
     packet->allocSize = max(max(pgn->size, 8) + FASTPACKET_BUCKET_N_SIZE, msg->len);
     heapSize += packet->allocSize;
-    logInfo("New PGN %u for device %u (heap %zu bytes)\n", pgn->pgn, msg->src, heapSize);
+    logDebug("New PGN %u for device %u (heap %zu bytes)\n", pgn->pgn, msg->src, heapSize);
     packet->data = malloc(packet->allocSize);
     if (!packet->data)
     {
@@ -1317,8 +1302,10 @@ static bool printCanFormat(RawMessage *msg)
       {
         if (msg->pgn == onlyPgn)
         {
-          printPacket(i, unknownIndex, msg);
-          return true;
+          if (printPacket(i, unknownIndex, msg))
+          {
+            return true;
+          }
         }
         continue;
       }
@@ -1329,8 +1316,10 @@ static bool printCanFormat(RawMessage *msg)
       /*
        * Found the pgn that matches this particular packet
        */
-      printPacket(i, unknownIndex, msg);
-      return true;
+      if (printPacket(i, unknownIndex, msg))
+      {
+        return true;
+      }
     }
     else if (msg->pgn < pgnList[i].pgn)
     {
@@ -1348,141 +1337,76 @@ static bool printCanFormat(RawMessage *msg)
   return onlyPgn > 0;
 }
 
-#ifdef OLD
-static bool printString(Field *field, const char *fieldName, uint8_t *data, size_t bytes, size_t *bits)
+static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
 {
-  uint8_t len;
-  int     k;
-  uint8_t lastbyte;
+  int64_t     value;
+  int64_t     maxValue;
+  size_t      i;
+  size_t      remaining_bits;
+  const char *s;
+  uint8_t     byte;
 
-  logDebug("printString(<%s>,\"%s\",[%x,%x],%zu)\n", field->name, fieldName, data[0], data[1], bytes);
-
-  if (field->resolution == RES_STRINGLZ)
+  if (showJson)
   {
-    // STRINGLZ format is <len> [ <data> ... ]
-    len   = *data++;
-    bytes = len + 1;
-  }
-  else if (field->resolution == RES_STRINGLAU)
-  {
-    // STRINGLAU format is <len> <control> [ <data> ... ]
-    // where <control> == 0 = UNICODE, but we don't know whether it is UTF16, UTF8, etc. Not seen in the wild yet!
-    //       <control> == 1 = ASCII(?) or maybe UTF8?
-    int control;
-
-    bytes   = *data++;
-    control = *data++;
-    len     = bytes - 2;
-    if (control == 0)
-    {
-      logError("Unhandled UNICODE string in PGN\n");
-      return false;
-    }
-    if (control > 1)
-    {
-      logError("Unhandled string type %d in PGN\n");
-      return false;
-    }
-  }
-  else if (field->resolution == RES_STRING)
-  {
-    // STRING format is <start> [ <data> ... ] <stop>
-    //                  <len> [ <data> ... ] (with len > 2)
-    //                  <stop>                                 zero length data
-    //                  <#00>  ???
-    if (*data == 0x02)
-    {
-      data++;
-      for (len = 0; len < bytes && data[len] != 0x01; len++)
-        ;
-      bytes = len + 2;
-    }
-    else if (*data > 0x02)
-    {
-      bytes = *data++;
-      len   = bytes - 1;
-
-      // This is actually more like a STRINGLAU control byte, not sure
-      // whether these fields are actually just STRINGLAU?
-      if (*data == 0x01)
-      {
-        data++;
-        len--;
-      }
-    }
-    else
-    {
-      bytes = 1;
-      len   = 0;
-    }
+    mprintf(",\"bytes\"=\"");
   }
   else
   {
-    // ASCII format is a fixed length string
-    len   = BITS_TO_BYTES(field->size);
-    bytes = len;
+    mprintf(" (bytes = \"");
   }
-
-  *bits = BYTES(bytes);
-
-  logDebug("printString res=%f len=%zu bytes=%zu\n", field->resolution, len, bytes);
-
-  // Sanity check
-  if (len > bytes)
+  remaining_bits = bits;
+  s              = "";
+  for (i = 0; i < (bits + 7) >> 3; i++)
   {
-    len = bytes;
-  }
+    uint8_t byte = data[i];
 
-  if (showBytes)
-  {
-    for (k = 0; k < len; k++)
+    if (i == 0 && startBit != 0)
     {
-      mprintf("%02x ", data[k]);
-    }
-  }
-
-  if (len > 0)
-  {
-    // rtrim funny stuff from end, we see all sorts
-    lastbyte = data[len - 1];
-    if (lastbyte == 0xff || isspace(lastbyte) || lastbyte == 0 || lastbyte == '@')
-    {
-      while (len > 0 && (data[len - 1] == lastbyte))
+      byte = byte >> startBit; // Shift off older bits
+      if (remaining_bits + startBit < 8)
       {
-        len--;
+        byte = byte & ((1 << remaining_bits) - 1);
       }
+      byte = byte << startBit; // Shift zeros back in
+      remaining_bits -= (8 - startBit);
     }
+    else
+    {
+      if (remaining_bits < 8)
+      {
+        // only the lower remaining_bits should be used
+        byte = byte & ((1 << remaining_bits) - 1);
+      }
+      remaining_bits -= 8;
+    }
+    mprintf("%s%2.02X", s, byte);
+    s = " ";
+  }
+  mprintf("\"");
 
+  if (startBit != 0 || ((bits & 7) != 0))
+  {
+    extractNumber(NULL, data, (bits + 7) >> 3, startBit, bits, &value, &maxValue);
     if (showJson)
     {
-      mprintf("%s\"%s\":\"", getSep(), fieldName);
-      print_ascii_json_escaped(data, len);
-      mprintf("\"");
+      mprintf(",\"bits\"=\"");
     }
     else
     {
-      mprintf("%s %s = ", getSep(), fieldName);
-      for (k = 0; k < len; k++)
-      {
-        if (data[k] == 0xff)
-        {
-          break;
-        }
-        if (data[k] >= ' ' && data[k] <= '~')
-        {
-          mprintf("%c", data[k]);
-        }
-      }
+      mprintf(", bits = \"");
     }
-  }
-  else
-  {
-    printEmpty(fieldName, DATAFIELD_UNKNOWN);
+
+    for (i = bits; i > 0;)
+    {
+      i--;
+      byte = (value >> (i >> 3)) & 0xff;
+      mprintf("%c", (byte & (1 << (i & 7))) ? '1' : '0');
+    }
+    mprintf("\"");
   }
 
-  return true;
+  mprintf("%s", showJson ? "}" : ")");
 }
-#endif
 
 static bool printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
@@ -1490,6 +1414,7 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
 
   size_t bytes;
   double resolution;
+  bool   r;
 
   if (fieldName == NULL)
   {
@@ -1551,94 +1476,21 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
 
   if (field->ft != NULL && field->ft->pf != NULL)
   {
-    logDebug("printField <%s>, \"%s\": calling function\n", field->name, fieldName);
-    return (field->ft->pf)(field, fieldName, data, dataLen, startBit, bits);
+    if (showBytes)
+    {
+      mprintf("%s%s", getSep(), showJson ? "{" : "");
+      sep = "";
+    }
+    logDebug("printField <%s>, \"%s\": calling function for %s\n", field->name, fieldName, field->fieldType);
+    r = (field->ft->pf)(field, fieldName, data, dataLen, startBit, bits);
+    logDebug("printField <%s>, \"%s\": result %d bits=%zu\n", field->name, fieldName, r, *bits);
+    if (showBytes)
+    {
+      showBytesOrBits(data, startBit, *bits);
+    }
+    return r;
   }
   return false;
-
-#ifdef OLD
-  if (field->resolution < 0.0)
-  {
-    /* These fields have only been found to start on byte boundaries,
-     * making their location easier
-     */
-    if (field->resolution == RES_STRINGLZ || field->resolution == RES_STRINGLAU || field->resolution == RES_ASCII
-        || field->resolution == RES_STRING)
-    {
-      return printString(field, fieldName, data, dataLen, bits);
-    }
-
-    if (field->resolution == RES_LONGITUDE || field->resolution == RES_LATITUDE)
-    {
-      return printLatLon(fieldName, field->resolution, data, bytes);
-    }
-    if (field->resolution == RES_DATE)
-    {
-      valueu16    = data[0] + (data[1] << 8);
-      currentDate = valueu16;
-      return printDate(fieldName, valueu16);
-    }
-    if (field->resolution == RES_TIME)
-    {
-      valueu32 = data[0] + (data[1] << 8);
-      if (bytes == 4)
-      {
-        valueu32 += (data[2] << 16) + (data[3] << 24);
-      }
-      currentTime = valueu32;
-      return printTime(fieldName, valueu32);
-    }
-    if (field->resolution == RES_PRESSURE)
-    {
-      valueu32 = data[0] + (data[1] << 8);
-      return printPressure(fieldName, valueu32, field);
-    }
-    if (field->resolution == RES_PRESSURE_HIRES)
-    {
-      valueu32 = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
-      return printPressure(fieldName, valueu32, field);
-    }
-    if (field->resolution == RES_TEMPERATURE)
-    {
-      valueu32 = data[0] + (data[1] << 8);
-      return printTemperature(fieldName, valueu32, 16, 0.01);
-    }
-    if (field->resolution == RES_TEMPERATURE_HIGH)
-    {
-      valueu32 = data[0] + (data[1] << 8);
-      return printTemperature(fieldName, valueu32, 16, 0.1);
-    }
-    if (field->resolution == RES_TEMPERATURE_HIRES)
-    {
-      valueu32 = data[0] + (data[1] << 8) + (data[2] << 16);
-      return printTemperature(fieldName, valueu32, 24, 0.001);
-    }
-    if (field->resolution == RES_6BITASCII)
-    {
-      return print6BitASCIIText(fieldName, data, startBit, *bits);
-    }
-    if (field->resolution == RES_DECIMAL)
-    {
-      return printDecimal(fieldName, data, startBit, *bits);
-    }
-    if (field->resolution == RES_VARIABLE)
-    {
-      return printVarField(field, fieldName, refPgn, data, dataLen, startBit, bits);
-    }
-    if (*bits > BYTES(8))
-    {
-      return printHex(fieldName, data, startBit, *bits);
-    }
-    if (field->resolution == RES_INTEGER || field->resolution == RES_LOOKUP || field->resolution == RES_BITFIELD
-        || field->resolution == RES_BINARY || field->resolution == RES_MANUFACTURER)
-    {
-      return printNumber(fieldName, field, data, startBit, *bits);
-    }
-    logError("Unknown resolution %f for %s\n", field->resolution, fieldName);
-    return false;
-  }
-  return printNumber(fieldName, field, data, startBit, *bits);
-#endif
 }
 
 bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bool showJson)
@@ -1836,6 +1688,10 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
   }
   else
   {
+    if (!showJson)
+    {
+      mwrite(stdout);
+    }
     mreset();
     logError("PGN %u analysis error\n", msg->pgn);
   }

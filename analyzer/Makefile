@@ -33,7 +33,7 @@ IKJSONFILE=pgns-ik.json
 NPMFILE=package.json
 HEADERS=analyzer.h pgn.h lookup.h fieldtype.h
 COMMONDIR=../common
-COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h
+COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h
 ANALYZER_EXPLAIN_SOURCES=analyzer-explain.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
 ANALYZER_EXPLAIN_DEP=$(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_SOURCES)
 
@@ -44,11 +44,11 @@ all: $(TARGETS)
 
 $(ANALYZER): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
 	@mkdir -p $(TARGETDIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(ANALYZER_EXPLAIN): $(ANALYZER_EXPLAIN_SOURCES)
 	@mkdir -p $(TARGETDIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(XMLFILE): $(ANALYZER_EXPLAIN_DEP)
 	$(ANALYZER_EXPLAIN) -explain-xml -expand-lookups >$(XMLFILE)

@@ -39,7 +39,6 @@ static char *findOccurrence(char *msg, char c, int count)
       return 0;
     }
   }
-  logDebug("Found occurrence #%d of '%c' in msg '%s' at '%s'\n", count, c, msg, p);
   return p;
 }
 

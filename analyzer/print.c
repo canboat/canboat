@@ -24,6 +24,7 @@ limitations under the License.
 
 #include "analyzer.h"
 #include "common.h"
+#include "utf.h"
 
 extern int g_variableFieldRepeat[2]; // Actual number of repetitions
 extern int g_variableFieldIndex;
@@ -98,7 +99,7 @@ extern void printEmpty(const char *fieldName, int64_t exceptionValue)
 {
   if (showJsonEmpty)
   {
-    mprintf("%s\"%s\": null", getSep(), fieldName);
+    mprintf("%s\"%s\":null", getSep(), fieldName);
   }
   else if (!showJson)
   {
@@ -166,10 +167,6 @@ static bool extractNumberNotEmpty(const Field *field,
     return false;
   }
 
-  if (showBytes)
-  {
-    mprintf("(%" PRIx64 " = %" PRId64 ") ", value, value);
-  }
   return true;
 }
 
@@ -280,10 +277,103 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
 
 extern bool fieldPrintFloat(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
+  union
+  {
+    float    a;
+    uint32_t w;
+    uint8_t  b[4];
+  } f;
+
+  if (*bits != sizeof(f) || startBit != 0)
+  {
+    logError("field '%s' FLOAT value unhandled bits=%zu startBit=%zu\n", fieldName, *bits, startBit);
+    return false;
+  }
+  if (dataLen < sizeof(f))
+  {
+    return false;
+  }
+#ifdef __BIG_ENDIAN__
+  f.b[3] = data[0];
+  f.b[2] = data[1];
+  f.b[1] = data[2];
+  f.b[0] = data[3];
+#else
+  memcpy(&f.w, data, sizeof(f));
+#endif
+
+  if (showJson)
+  {
+    mprintf("%s\"%s\":%g", getSep(), fieldName, f.a);
+  }
+  else
+  {
+    mprintf("%s %s = %g", getSep(), fieldName, f.a);
+    if (field->units)
+    {
+      mprintf(" %s", field->units);
+    }
+  }
+
   return true;
 }
 extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
+  uint8_t  value        = 0;
+  uint8_t  bitMask      = 1 << startBit;
+  uint64_t bitMagnitude = 1;
+  size_t   bit;
+  char     buf[128];
+
+  if (startBit + *bits > dataLen * 8)
+  {
+    *bits = dataLen * 8 - startBit;
+  }
+
+  if (showJson)
+  {
+    mprintf("%s\"%s\":\"", getSep(), fieldName);
+  }
+  else
+  {
+    mprintf("%s %s = ", getSep(), fieldName);
+  }
+
+  for (bit = 0; bit < *bits && bit < sizeof(buf) * 8; bit++)
+  {
+    /* Act on the current bit */
+    bool bitIsSet = (*data & bitMask) > 0;
+    if (bitIsSet)
+    {
+      value |= bitMagnitude;
+    }
+
+    /* Find the next bit */
+    if (bitMask == 128)
+    {
+      bitMask = 1;
+      data++;
+    }
+    else
+    {
+      bitMask = bitMask << 1;
+    }
+    bitMagnitude = bitMagnitude << 1;
+
+    if (bit % 8 == 7)
+    {
+      if (value < 100)
+      {
+        mprintf("%02u", value);
+      }
+      value        = 0;
+      bitMagnitude = 1;
+    }
+  }
+  if (showJson)
+  {
+    mprintf("\"");
+  }
   return true;
 }
 
@@ -305,8 +395,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
     sprintf(lookfor, "=%" PRId64, value);
     if (strcmp(lookfor, field->units) != 0)
     {
-      if (showBytes)
-        logError("Field %s value %" PRId64 " does not match %s\n", fieldName, value, field->units + 1);
+      logDebug("Field %s value %" PRId64 " does not match %s\n", fieldName, value, field->units + 1);
       return false;
     }
     s = field->description;
@@ -607,30 +696,286 @@ extern bool fieldPrintDate(Field *field, char *fieldName, uint8_t *data, size_t 
   return true;
 }
 
+static void print_ascii_json_escaped(uint8_t *data, int len)
+{
+  int c;
+  int k;
+
+  for (k = 0; k < len; k++)
+  {
+    c = data[k];
+    switch (c)
+    {
+      case '\b':
+        mprintf("%s", "\\b");
+        break;
+
+      case '\n':
+        mprintf("%s", "\\n");
+        break;
+
+      case '\r':
+        mprintf("%s", "\\r");
+        break;
+
+      case '\t':
+        mprintf("%s", "\\t");
+        break;
+
+      case '\f':
+        mprintf("%s", "\\f");
+        break;
+
+      case '"':
+        mprintf("%s", "\\\"");
+        break;
+
+      case '\\':
+        mprintf("%s", "\\\\");
+        break;
+
+      case '/':
+        mprintf("%s", "\\/");
+        break;
+
+      case '\377':
+        // 0xff has been seen on recent Simrad VHF systems, and it seems to indicate
+        // end-of-field, with noise following. Assume this does not break other systems.
+        return;
+
+      default:
+        if (c >= ' ' && c <= '~')
+          mprintf("%c", c);
+    }
+  }
+}
+
+static bool printString(char *fieldName, uint8_t *data, size_t len)
+{
+  int     k;
+  uint8_t lastbyte;
+
+  if (len > 0)
+  {
+    // rtrim funny stuff from end, we see all sorts
+    lastbyte = data[len - 1];
+    if (lastbyte == 0xff || isspace(lastbyte) || lastbyte == 0 || lastbyte == '@')
+    {
+      while (len > 0 && (data[len - 1] == lastbyte))
+      {
+        len--;
+      }
+    }
+  }
+
+  if (len == 0)
+  {
+    printEmpty(fieldName, DATAFIELD_UNKNOWN);
+    return true;
+  }
+
+  if (showJson)
+  {
+    mprintf("%s\"%s\":\"", getSep(), fieldName);
+    print_ascii_json_escaped(data, len);
+    mprintf("\"");
+  }
+  else
+  {
+    mprintf("%s %s = ", getSep(), fieldName);
+    for (k = 0; k < len; k++)
+    {
+      if (data[k] == 0xff)
+      {
+        break;
+      }
+      if (data[k] >= ' ' && data[k] <= '~')
+      {
+        mprintf("%c", data[k]);
+      }
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Fixed length string where the length is defined by the field definition.
+ */
 extern bool fieldPrintStringFix(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  return true;
+  size_t len = field->size / 8;
+
+  logDebug("fieldPrintStringFix('%s',%zu) size=%zu\n", fieldName, dataLen, len);
+
+  len   = CB_MIN(len, dataLen); // Cap length to remaining bytes in message
+  *bits = BYTES(len);
+  return printString(fieldName, data, len);
 }
+
 extern bool fieldPrintStringVar(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  return true;
+  size_t len;
+
+  // No space in message for string, don't print anything
+  if (dataLen == 0)
+  {
+    len = 0;
+  }
+  else
+  {
+    // STRINGVAR format is <start> [ <data> ... ] <stop>
+    //                  <len> [ <data> ... ] (with len > 2)
+    //                  <stop>                                 zero length data
+    //                  <#00>  ???
+    if (*data == 0x02)
+    {
+      data++;
+      dataLen--;
+      for (len = 0; len < dataLen && data[len] != 0x01; len++)
+        ;
+      dataLen = len + 2;
+    }
+    else if (*data > 0x02)
+    {
+      dataLen = *data++;
+      len     = dataLen - 1;
+
+      // This is actually more like a STRINGLAU control byte, not sure
+      // whether these fields are actually just STRINGLAU?
+      if (*data == 0x01)
+      {
+        logDebug("field '%s' looks like STRING_LAU not STRING_VAR format\n", fieldName);
+        data++;
+        len--;
+      }
+    }
+    else
+    {
+      dataLen = 1;
+      len     = 0;
+    }
+  }
+
+  *bits = BYTES(dataLen);
+
+  return printString(fieldName, data, len);
 }
+
 extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  return true;
+  // STRINGLZ format is <len> [ <data> ... ]
+  size_t len = *data++;
+
+  // Cap to dataLen
+  len   = CB_MIN(len, dataLen - 1);
+  *bits = BYTES(len + 1);
+
+  return printString(fieldName, data, len);
 }
+
 extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  return true;
+  // STRINGLAU format is <len> <control> [ <data> ... ]
+  // where <control> == 0 = UTF16
+  //       <control> == 1 = ASCII(?) or maybe UTF8?
+  int     control;
+  size_t  len;
+  size_t  utf8_len;
+  utf8_t *utf8 = NULL;
+  bool    r;
+
+  len     = *data++;
+  control = *data++;
+  if (len < 2 || dataLen < 2)
+  {
+    logError("field '%s': Invalid string length %u in STRING_LAU field\n", fieldName, len);
+    return false;
+  }
+  len = len - 2;
+  // Cap to dataLen
+  len   = CB_MIN(len, dataLen - 2);
+  *bits = BYTES(len + 2);
+
+  if (control == 0)
+  {
+    utf8_len = utf16_to_utf8((const utf16_t *) data, len / 2, NULL, 0);
+    utf8     = malloc(utf8_len + 1);
+
+    if (utf8 == NULL)
+    {
+      die("Out of memory");
+    }
+    len = utf16_to_utf8((const utf16_t *) data, len / 2, utf8, utf8_len + 1);
+  }
+  else if (control > 1)
+  {
+    logError("Unhandled string type %d in PGN\n", control);
+    return false;
+  }
+
+  r = printString(fieldName, data, len);
+  if (utf8 != NULL)
+  {
+    free(utf8);
+  }
+  return r;
 }
-extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
-{
-  return true;
-}
+
 extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
+  size_t      i;
+  size_t      remaining_bits;
+  const char *s;
+
+  if (startBit + *bits > dataLen * 8)
+  {
+    *bits = dataLen * 8 - startBit;
+  }
+
+  if (showJson)
+  {
+    mprintf("%s\"%s\":\"", getSep(), fieldName);
+  }
+  else
+  {
+    mprintf("%s %s = ", getSep(), fieldName);
+  }
+  remaining_bits = *bits;
+  s              = "";
+  for (i = 0; i < (*bits + 7) >> 3; i++)
+  {
+    uint8_t byte = data[i];
+
+    if (i == 0 && startBit != 0)
+    {
+      byte = byte >> startBit; // Shift off older bits
+      if (remaining_bits + startBit < 8)
+      {
+        byte = byte & ((1 << remaining_bits) - 1);
+      }
+      byte = byte << startBit; // Shift zeros back in
+      remaining_bits -= (8 - startBit);
+    }
+    else
+    {
+      if (remaining_bits < 8)
+      {
+        // only the lower remaining_bits should be used
+        byte = byte & ((1 << remaining_bits) - 1);
+      }
+      remaining_bits -= 8;
+    }
+    mprintf("%s%2.02X", s, byte);
+    s = " ";
+  }
+  if (showJson)
+  {
+    mprintf("\"");
+  }
   return true;
 }
+
 extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
   return true;

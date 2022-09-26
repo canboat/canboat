@@ -35,7 +35,6 @@ limitations under the License.
 
 bool       showRaw       = false;
 bool       showData      = false;
-bool       showBytes     = false;
 bool       showJson      = false;
 bool       showJsonEmpty = false;
 bool       showJsonValue = false;
@@ -44,7 +43,7 @@ GeoFormats showGeo       = GEO_DD;
 
 bool  doExpandLookups = false;
 char *sep             = " ";
-char  closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
+char  closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
 
 int    onlyPgn  = 0;
 int    onlySrc  = -1;
