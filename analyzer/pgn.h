@@ -748,12 +748,15 @@ typedef struct
   Field       fieldList[30]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t    fieldCount;    /* Filled by C, no need to set in initializers. */
   char       *camelDescription; /* Filled by C, no need to set in initializers. */
-  bool        unknownPgn;       /* true = this is a catch-all for unknown PGNs */
+  bool        fallback;         /* true = this is a catch-all for unknown PGNs */
   const char *explanation;      /* Preferably the NMEA 2000 explanation from the NMEA PGN field list */
 } Pgn;
 
-// Returns the first pgn that matches the given id, or 0 if not found.
+// Returns the first pgn that matches the given id, or NULL if not found.
 Pgn *searchForPgn(int pgn);
+
+// Returns the catch-all PGN that matches the given id.
+Pgn *searchForUnknownPgn(int pgnId);
 
 // Returns a pointer (potentially invalid) to the first pgn that does not match "first".
 Pgn *endPgn(Pgn *first);
@@ -782,16 +785,16 @@ Pgn pgnList[] = {
 
     /* PDU1 (addressed) single-frame PGN range 0E800 to 0xEEFF (59392 - 61183) */
 
-    {"Unknown single-frame addressed",
+    {"0xE800-0xEEFF: Unknown single-frame addressed",
      0,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      8,
      0,
      {BINARY_FIELD("Data", BYTES(8), ""), END_OF_FIELDS},
-     0,
-     0,
-     true}
+     .fallback    = true,
+     .explanation = "PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to "
+                    "0xEFFF (59392 - 61183)."}
 
     /************ Protocol PGNs ************/
     /* http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
@@ -966,6 +969,20 @@ Pgn pgnList[] = {
 
     /* PDU1 (addressed) single-frame PGN range 0EF00 to 0xEFFF (61184 - 61439) */
 
+    ,
+    {"0xEF00-0xEFFF: Manufacturer Proprietary single-frame addressed",
+     61184,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     8,
+     0,
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
+     0,
+     0,
+     true,
+     .explanation = "Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN range 0xEF00 to "
+                    "0xEFFF (61184 - 61439)."}
+
     /* The following probably have the wrong Proprietary ID */
     ,
     {"Seatalk: Wireless Keypad Light Control",
@@ -999,36 +1016,19 @@ Pgn pgnList[] = {
      0,
      {COMPANY(358), SIMPLE_FIELD("Register Id", BYTES(2)), SIMPLE_FIELD("Payload", BYTES(4)), END_OF_FIELDS}}
 
-    ,
-    {"Manufacturer Proprietary single-frame addressed",
-     61184,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     8,
-     0,
-     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
-     0,
-     0,
-     true,
-     .explanation = "This definition is used for manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN range 0EF00 to "
-                    "0xEFFF (61184 - 61439) for which no reverse-engineered definition is available."}
-
     /* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
 
     ,
-    {"Unknown single-frame non-addressed",
+    {"0xF000-0xFEFF: Unknown single-frame non-addressed",
      61440,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      8,
      0,
      {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
-     0,
-     0,
-     true,
-     .explanation
-     = "This definition is used for manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to "
-       "0xFEFF (61440 - 65279) for which no reverse-engineered definition is available."}
+     .fallback    = true,
+     .explanation = "PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to "
+                    "0xFEFF (61440 - 65279)."}
 
     /* Maretron ACM 100 manual documents PGN 65001-65030 */
 
@@ -1164,7 +1164,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1198,7 +1198,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1241,7 +1241,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1275,7 +1275,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1309,7 +1309,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1343,7 +1343,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "var"),
+     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1395,15 +1395,6 @@ Pgn pgnList[] = {
     /* proprietary PDU2 (non addressed) single-frame range 0xFF00 to 0xFFFF (65280 - 65535) */
 
     ,
-    {"Furuno: Heave",
-     65280,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
-     0x08,
-     0,
-     {COMPANY(1855), DISTANCE_FIX32_MM_FIELD("Heave", NULL), RESERVED_FIELD(BYTES(2)), END_OF_FIELDS}}
-
-    ,
     {"Manufacturer Proprietary single-frame non-addressed",
      65280,
      PACKET_INCOMPLETE,
@@ -1414,6 +1405,15 @@ Pgn pgnList[] = {
      0,
      0,
      true}
+
+    ,
+    {"Furuno: Heave",
+     65280,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     0x08,
+     0,
+     {COMPANY(1855), DISTANCE_FIX32_MM_FIELD("Heave", NULL), RESERVED_FIELD(BYTES(2)), END_OF_FIELDS}}
 
     ,
     {"Maretron: Proprietary DC Breaker Current",
@@ -1680,16 +1680,16 @@ Pgn pgnList[] = {
 
     /* PDU1 (addressed) fast-packet PGN range 0x10000 to 0x1EEFF (65536 - 126719) */
     ,
-    {"Unknown fast-packet addressed",
+    {"0x10000 - 0x1EEFF: Unknown fast-packet addressed",
      65536,
      PACKET_INCOMPLETE_LOOKUP,
      PACKET_FAST,
-     255,
-     0,
-     {BINARY_FIELD("Data", BYTES(255), NULL), END_OF_FIELDS},
      0,
      0,
-     true}
+     {BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), NULL), END_OF_FIELDS},
+     .fallback    = true,
+     .explanation = "PGNs in PDU1 (addressed) fast-packet PGN range 0x10000 to "
+                    "0x1EEFF (65536 - 126719)."}
 
     /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
     /* http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf */
@@ -1841,6 +1841,18 @@ Pgn pgnList[] = {
      {LOOKUP_FIELD("Function Code", BYTES(1), PGN_LIST_FUNCTION), PGN_FIELD("PGN", NULL), END_OF_FIELDS}}
 
     /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
+
+    ,
+    {"0x1EF00-0x1EFFF: Unknown Manufacturer Proprietary fast-packet addressed",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     0,
+     0,
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), NULL), END_OF_FIELDS},
+     .fallback    = true,
+     .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN range 0x1EF00 to "
+                    "0x1EFFF (126720 - 126975)."}
 
     ,
     {"Seatalk1: Pilot Mode",
@@ -2176,30 +2188,18 @@ Pgn pgnList[] = {
       UINT8_FIELD("Status"),
       END_OF_FIELDS}}
 
+    /* PDU2 (non addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815) */
     ,
-    {"Manufacturer Proprietary fast-packet addressed",
-     126720,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     223,
-     0,
-     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), NULL), END_OF_FIELDS},
-     0,
-     0,
-     true}
-
-    /* PDU2 (non addressed) fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815) */
-    ,
-    {"Unknown fast-packet non-addressed",
+    {"0x1F000-0x1FEFF: Unknown mixed single/fast packet non-addressed",
      126976,
      PACKET_INCOMPLETE,
-     PACKET_FAST,
-     255,
+     PACKET_SINGLE,
+     FASTPACKET_MAX_SIZE,
      0,
-     {BINARY_FIELD("Data", BYTES(255), NULL), END_OF_FIELDS},
-     0,
-     0,
-     true}
+     {BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), NULL), END_OF_FIELDS},
+     .fallback    = true,
+     .explanation = "PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to "
+                    "0x1FEFF (126976 - 130815)."}
 
     ,
     {"Alert",
@@ -3130,7 +3130,7 @@ Pgn pgnList[] = {
       LENGTH_UFIX32_CM_FIELD("CPA", NULL),
       TIME_FIX32_MS_FIELD("TCPA", "negative = time elapsed since event, positive = time to go"),
       TIME_FIELD("UTC of Fix"),
-      STRING_FIX_FIELD("Name", BYTES(255)),
+      STRING_FIX_FIELD("Name", BYTES(FASTPACKET_MAX_SIZE)),
       END_OF_FIELDS}}
 
     ,
@@ -3362,7 +3362,7 @@ Pgn pgnList[] = {
       LONGITUDE_I32_FIELD("Longitude"),
       LATITUDE_I32_FIELD("Latitude"),
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
-      LOOKUP_FIELD("AIS RAIM flag", 1, RAIM_FLAG),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
       LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
       ANGLE_U16_FIELD("COG", NULL),
       SPEED_U16_CM_FIELD("SOG"),
@@ -3397,7 +3397,7 @@ Pgn pgnList[] = {
       LONGITUDE_I32_FIELD("Longitude"),
       LATITUDE_I32_FIELD("Latitude"),
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
-      LOOKUP_FIELD("AIS RAIM Flag", 1, RAIM_FLAG),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
       LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
       LENGTH_UFIX16_DM_FIELD("Length/Diameter"),
       LENGTH_UFIX16_DM_FIELD("Beam/Diameter"),
@@ -3883,7 +3883,7 @@ Pgn pgnList[] = {
      0x18,
      0,
      {SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       MMSI_FIELD("User ID"),
       UINT32_DESC_FIELD("IMO number", ",0=unavailable"),
       STRING_FIX_FIELD("Callsign", BYTES(7)),
@@ -3958,7 +3958,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(2),
       SIMPLE_FIELD("Number of Bits in Binary Data Field", BYTES(2)),
-      BINARY_FIELD("Binary Data", BYTES(255), NULL),
+      BINARY_FIELD("Binary Data", BYTES(FASTPACKET_MAX_SIZE), NULL),
       END_OF_FIELDS}}
 
     ,
@@ -3969,7 +3969,7 @@ Pgn pgnList[] = {
      8,
      0,
      {SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       MMSI_FIELD("User ID"),
       LONGITUDE_I32_FIELD("Longitude"),
       LATITUDE_I32_FIELD("Latitude"),
@@ -4247,7 +4247,7 @@ Pgn pgnList[] = {
      27,
      0,
      {SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       MMSI_FIELD("User ID"),
       STRING_FIX_FIELD("Name", BYTES(20)),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
@@ -4263,7 +4263,7 @@ Pgn pgnList[] = {
      34,
      0,
      {SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       MMSI_FIELD("User ID"),
       LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
       STRING_FIX_FIELD("Vendor ID", BYTES(7)),
@@ -5059,6 +5059,20 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     /* proprietary PDU2 (non addressed) fast packet PGN range 0x1FF00 to 0x1FFFF (130816 - 131071) */
+
+    ,
+    {"0x1FF00-0x1FFFF: Unknown Manufacturer Specific fast-packet non-addressed",
+     130816,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     FASTPACKET_MAX_SIZE,
+     0,
+     {BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), NULL), END_OF_FIELDS},
+     .fallback = true,
+     .explanation
+     = "This definition is used for Manufacturer Specific PGNs in PDU2 (non-addressed) fast-packet PGN range 0x1FF00 to "
+       "0x1FFFF (130816 - 131071) for which no reverse-engineered definition is available."}
+
     ,
     {"SonicHub: Init #2",
      130816,
@@ -5394,6 +5408,24 @@ Pgn pgnList[] = {
      0x0e,
      0,
      {COMPANY(275),
+      UINT16_FIELD("Product Code"),
+      STRING_FIX_FIELD("Model", BYTES(32)),
+      UINT8_FIELD("A"),
+      UINT8_FIELD("B"),
+      UINT8_FIELD("C"),
+      STRING_FIX_FIELD("Firmware version", BYTES(10)),
+      STRING_FIX_FIELD("Firmware date", BYTES(32)),
+      STRING_FIX_FIELD("Firmware time", BYTES(32)),
+      END_OF_FIELDS}}
+
+    ,
+    {"Lowrance: Product Information",
+     130817,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     0x0e,
+     0,
+     {COMPANY(140),
       UINT16_FIELD("Product Code"),
       STRING_FIX_FIELD("Model", BYTES(32)),
       UINT8_FIELD("A"),
@@ -6016,7 +6048,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(1857),
       MATCH_FIELD("Message ID", 6, 0, "Msg 24 Part A"),
-      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       UINT8_FIELD("D"),
       UINT8_FIELD("E"),
       MMSI_FIELD("User ID"),
@@ -6051,7 +6083,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(1857),
       MATCH_FIELD("Message ID", 6, 1, "Msg 24 Part B"),
-      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       UINT8_FIELD("D"),
       UINT8_FIELD("E"),
       MMSI_FIELD("User ID"),
@@ -6100,7 +6132,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(1857),
       SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       SIMPLE_FIELD("Unused", BYTES(3)),
       MATCH_FIELD("Type", BYTES(2), 0, "Heading Offset"),
       SIMPLE_FIELD("Unused B", BYTES(2)),
@@ -6120,7 +6152,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(1857),
       SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       SIMPLE_FIELD("Unused", BYTES(3)),
       MATCH_FIELD("Type", BYTES(2), 768, "Local field"),
       SIMPLE_FIELD("Unused B", BYTES(2)),
@@ -6137,7 +6169,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(1857),
       SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       SIMPLE_FIELD("Unused", BYTES(3)),
       MATCH_FIELD("Type", BYTES(2), 1024, "Local field"),
       SIMPLE_FIELD("Unused B", BYTES(2)),
@@ -6154,7 +6186,7 @@ Pgn pgnList[] = {
      0,
      {COMPANY(1857),
       SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat indicator", 2, REPEAT_INDICATOR),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       UINT8_FIELD("D"),
       UINT8_FIELD("Group"),
       UINT8_FIELD("F"),
@@ -6264,7 +6296,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Message ID", BYTES(2)),
       UINT8_FIELD("B"),
       UINT8_FIELD("C"),
-      STRING_FIX_FIELD("Text", BYTES(255)),
+      STRING_FIX_FIELD("Text", BYTES(FASTPACKET_MAX_SIZE)),
       END_OF_FIELDS}}
 
     ,
@@ -6331,7 +6363,7 @@ Pgn pgnList[] = {
     {"Actisense: Startup status",
      ACTISENSE_BEM + 0xf0,
      PACKET_INCOMPLETE,
-     PACKET_FAST,
+     PACKET_SINGLE,
      0x0f,
      0,
      {UINT8_FIELD("SID"),
@@ -6347,7 +6379,7 @@ Pgn pgnList[] = {
     {"Actisense: System status",
      ACTISENSE_BEM + 0xf2,
      PACKET_INCOMPLETE,
-     PACKET_FAST,
+     PACKET_SINGLE,
      0x22,
      0,
      {UINT8_FIELD("SID"),
@@ -6382,7 +6414,7 @@ Pgn pgnList[] = {
     {"Actisense: ?",
      ACTISENSE_BEM + 0xf4,
      PACKET_INCOMPLETE,
-     PACKET_FAST,
+     PACKET_SINGLE,
      17,
      0,
      {UINT8_FIELD("SID"), UINT16_FIELD("Model ID"), UINT32_FIELD("Serial ID"), END_OF_FIELDS}}
@@ -6391,7 +6423,7 @@ Pgn pgnList[] = {
     {"iKonvert: Network status",
      IKONVERT_BEM,
      PACKET_COMPLETE,
-     PACKET_FAST,
+     PACKET_SINGLE,
      15,
      0,
      {UINT8_FIELD("CAN network load"),

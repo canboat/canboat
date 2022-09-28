@@ -97,7 +97,7 @@ limitations under the License.
       <PGN>262384</PGN>
       <Id>actisenseStartupStatus</Id>
       <Description>Actisense: Startup status</Description>
-      <Type>Fast</Type>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
@@ -190,7 +190,7 @@ limitations under the License.
       <PGN>262386</PGN>
       <Id>actisenseSystemStatus</Id>
       <Description>Actisense: System status</Description>
-      <Type>Fast</Type>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
@@ -492,7 +492,7 @@ limitations under the License.
       <PGN>262388</PGN>
       <Id>actisense</Id>
       <Description>Actisense: ?</Description>
-      <Type>Fast</Type>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>

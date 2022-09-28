@@ -1075,500 +1075,6 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
-      <PGN>61184</PGN>
-      <Id>manufacturerProprietarySingleFrameAddressed</Id>
-      <Description>Manufacturer Proprietary single-frame addressed</Description>
-      <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
-      <Length>8</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Manufacturer code</Type>
-          <Signed>false</Signed>
-          <FieldType>MANUFACTURER</FieldType>
-          <EnumValues>
-            <EnumPair Value='69' Name='ARKS Enterprises, Inc.' />
-            <EnumPair Value='78' Name='FW Murphy/Enovation Controls' />
-            <EnumPair Value='80' Name='Twin Disc' />
-            <EnumPair Value='85' Name='Kohler Power Systems' />
-            <EnumPair Value='88' Name='Hemisphere GPS Inc' />
-            <EnumPair Value='116' Name='BEP Marine' />
-            <EnumPair Value='135' Name='Airmar' />
-            <EnumPair Value='137' Name='Maretron' />
-            <EnumPair Value='140' Name='Lowrance' />
-            <EnumPair Value='144' Name='Mercury Marine' />
-            <EnumPair Value='147' Name='Nautibus Electronic GmbH' />
-            <EnumPair Value='148' Name='Blue Water Data' />
-            <EnumPair Value='154' Name='Westerbeke' />
-            <EnumPair Value='161' Name='Offshore Systems (UK) Ltd.' />
-            <EnumPair Value='163' Name='Evinrude/BRP' />
-            <EnumPair Value='165' Name='CPAC Systems AB' />
-            <EnumPair Value='168' Name='Xantrex Technology Inc.' />
-            <EnumPair Value='172' Name='Yanmar Marine' />
-            <EnumPair Value='174' Name='Volvo Penta' />
-            <EnumPair Value='175' Name='Honda Marine' />
-            <EnumPair Value='176' Name='Carling Technologies Inc. (Moritz Aerospace)' />
-            <EnumPair Value='185' Name='Beede Instruments' />
-            <EnumPair Value='192' Name='Floscan Instrument Co. Inc.' />
-            <EnumPair Value='193' Name='Nobletec' />
-            <EnumPair Value='198' Name='Mystic Valley Communications' />
-            <EnumPair Value='199' Name='Actia' />
-            <EnumPair Value='200' Name='Honda Marine' />
-            <EnumPair Value='201' Name='Disenos Y Technologia' />
-            <EnumPair Value='211' Name='Digital Switching Systems' />
-            <EnumPair Value='215' Name='Xintex/Atena' />
-            <EnumPair Value='224' Name='EMMI NETWORK S.L.' />
-            <EnumPair Value='225' Name='Honda Marine' />
-            <EnumPair Value='228' Name='ZF' />
-            <EnumPair Value='229' Name='Garmin' />
-            <EnumPair Value='233' Name='Yacht Monitoring Solutions' />
-            <EnumPair Value='235' Name='Sailormade Marine Telemetry/Tetra Technology LTD' />
-            <EnumPair Value='243' Name='Eride' />
-            <EnumPair Value='250' Name='Honda Marine' />
-            <EnumPair Value='257' Name='Honda Motor Company LTD' />
-            <EnumPair Value='272' Name='Groco' />
-            <EnumPair Value='273' Name='Actisense' />
-            <EnumPair Value='274' Name='Amphenol LTW Technology' />
-            <EnumPair Value='275' Name='Navico' />
-            <EnumPair Value='283' Name='Hamilton Jet' />
-            <EnumPair Value='285' Name='Sea Recovery' />
-            <EnumPair Value='286' Name='Coelmo SRL Italy' />
-            <EnumPair Value='295' Name='BEP Marine' />
-            <EnumPair Value='304' Name='Empir Bus' />
-            <EnumPair Value='305' Name='NovAtel' />
-            <EnumPair Value='306' Name='Sleipner Motor AS' />
-            <EnumPair Value='307' Name='MBW Technologies' />
-            <EnumPair Value='311' Name='Fischer Panda' />
-            <EnumPair Value='315' Name='ICOM' />
-            <EnumPair Value='328' Name='Qwerty' />
-            <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
-            <EnumPair Value='345' Name='Korean Maritime University' />
-            <EnumPair Value='351' Name='Thrane and Thrane' />
-            <EnumPair Value='355' Name='Mastervolt' />
-            <EnumPair Value='356' Name='Fischer Panda Generators' />
-            <EnumPair Value='358' Name='Victron Energy' />
-            <EnumPair Value='370' Name='Rolls Royce Marine' />
-            <EnumPair Value='373' Name='Electronic Design' />
-            <EnumPair Value='374' Name='Northern Lights' />
-            <EnumPair Value='378' Name='Glendinning' />
-            <EnumPair Value='381' Name='B &amp; G' />
-            <EnumPair Value='384' Name='Rose Point Navigation Systems' />
-            <EnumPair Value='385' Name='Johnson Outdoors Marine Electronics Inc Geonav' />
-            <EnumPair Value='394' Name='Capi 2' />
-            <EnumPair Value='396' Name='Beyond Measure' />
-            <EnumPair Value='400' Name='Livorsi Marine' />
-            <EnumPair Value='404' Name='ComNav' />
-            <EnumPair Value='419' Name='Fusion Electronics' />
-            <EnumPair Value='421' Name='Standard Horizon' />
-            <EnumPair Value='422' Name='True Heading AB' />
-            <EnumPair Value='426' Name='Egersund Marine Electronics AS' />
-            <EnumPair Value='427' Name='em-trak Marine Electronics' />
-            <EnumPair Value='431' Name='Tohatsu Co, JP' />
-            <EnumPair Value='437' Name='Digital Yacht' />
-            <EnumPair Value='438' Name='Comar Systems Limited' />
-            <EnumPair Value='440' Name='Cummins' />
-            <EnumPair Value='443' Name='VDO (aka Continental-Corporation)' />
-            <EnumPair Value='451' Name='Parker Hannifin aka Village Marine Tech' />
-            <EnumPair Value='459' Name='Alltek Marine Electronics Corp' />
-            <EnumPair Value='460' Name='SAN GIORGIO S.E.I.N' />
-            <EnumPair Value='466' Name='Veethree Electronics &amp; Marine' />
-            <EnumPair Value='467' Name='Humminbird Marine Electronics' />
-            <EnumPair Value='470' Name='SI-TEX Marine Electronics' />
-            <EnumPair Value='471' Name='Sea Cross Marine AB' />
-            <EnumPair Value='475' Name='GME aka Standard Communications Pty LTD' />
-            <EnumPair Value='476' Name='Humminbird Marine Electronics' />
-            <EnumPair Value='478' Name='Ocean Sat BV' />
-            <EnumPair Value='481' Name='Chetco Digitial Instruments' />
-            <EnumPair Value='493' Name='Watcheye' />
-            <EnumPair Value='499' Name='Lcj Capteurs' />
-            <EnumPair Value='502' Name='Attwood Marine' />
-            <EnumPair Value='503' Name='Naviop S.R.L.' />
-            <EnumPair Value='504' Name='Vesper Marine Ltd' />
-            <EnumPair Value='510' Name='Marinesoft Co. LTD' />
-            <EnumPair Value='517' Name='NoLand Engineering' />
-            <EnumPair Value='518' Name='Transas USA' />
-            <EnumPair Value='529' Name='National Instruments Korea' />
-            <EnumPair Value='532' Name='Onwa Marine' />
-            <EnumPair Value='571' Name='Marinecraft (South Korea)' />
-            <EnumPair Value='573' Name='McMurdo Group aka Orolia LTD' />
-            <EnumPair Value='578' Name='Advansea' />
-            <EnumPair Value='579' Name='KVH' />
-            <EnumPair Value='580' Name='San Jose Technology' />
-            <EnumPair Value='583' Name='Yacht Control' />
-            <EnumPair Value='586' Name='Suzuki Motor Corporation' />
-            <EnumPair Value='591' Name='US Coast Guard' />
-            <EnumPair Value='595' Name='Ship Module aka Customware' />
-            <EnumPair Value='600' Name='Aquatic AV' />
-            <EnumPair Value='605' Name='Aventics GmbH' />
-            <EnumPair Value='606' Name='Intellian' />
-            <EnumPair Value='612' Name='SamwonIT' />
-            <EnumPair Value='614' Name='Arlt Tecnologies' />
-            <EnumPair Value='637' Name='Bavaria Yacts' />
-            <EnumPair Value='641' Name='Diverse Yacht Services' />
-            <EnumPair Value='644' Name='Wema U.S.A dba KUS' />
-            <EnumPair Value='645' Name='Garmin' />
-            <EnumPair Value='658' Name='Shenzhen Jiuzhou Himunication' />
-            <EnumPair Value='688' Name='Rockford Corp' />
-            <EnumPair Value='704' Name='JL Audio' />
-            <EnumPair Value='715' Name='Autonnic' />
-            <EnumPair Value='717' Name='Yacht Devices' />
-            <EnumPair Value='734' Name='REAP Systems' />
-            <EnumPair Value='735' Name='Au Electronics Group' />
-            <EnumPair Value='739' Name='LxNav' />
-            <EnumPair Value='743' Name='DaeMyung' />
-            <EnumPair Value='744' Name='Woosung' />
-            <EnumPair Value='773' Name='Clarion US' />
-            <EnumPair Value='776' Name='HMI Systems' />
-            <EnumPair Value='777' Name='Ocean Signal' />
-            <EnumPair Value='778' Name='Seekeeper' />
-            <EnumPair Value='781' Name='Poly Planar' />
-            <EnumPair Value='785' Name='Fischer Panda DE' />
-            <EnumPair Value='795' Name='Broyda Industries' />
-            <EnumPair Value='796' Name='Canadian Automotive' />
-            <EnumPair Value='797' Name='Tides Marine' />
-            <EnumPair Value='798' Name='Lumishore' />
-            <EnumPair Value='799' Name='Still Water Designs and Audio' />
-            <EnumPair Value='802' Name='BJ Technologies (Beneteau)' />
-            <EnumPair Value='803' Name='Gill Sensors' />
-            <EnumPair Value='811' Name='Blue Water Desalination' />
-            <EnumPair Value='815' Name='FLIR' />
-            <EnumPair Value='824' Name='Undheim Systems' />
-            <EnumPair Value='838' Name='TeamSurv' />
-            <EnumPair Value='844' Name='Fell Marine' />
-            <EnumPair Value='847' Name='Oceanvolt' />
-            <EnumPair Value='862' Name='Prospec' />
-            <EnumPair Value='868' Name='Data Panel Corp' />
-            <EnumPair Value='890' Name='L3 Technologies' />
-            <EnumPair Value='894' Name='Rhodan Marine Systems' />
-            <EnumPair Value='896' Name='Nexfour Solutions' />
-            <EnumPair Value='905' Name='ASA Electronics' />
-            <EnumPair Value='909' Name='Marines Co (South Korea)' />
-            <EnumPair Value='911' Name='Nautic-on' />
-            <EnumPair Value='930' Name='Ecotronix' />
-            <EnumPair Value='962' Name='Timbolier Industries' />
-            <EnumPair Value='963' Name='TJC Micro' />
-            <EnumPair Value='968' Name='Cox Powertrain' />
-            <EnumPair Value='969' Name='Blue Seas' />
-            <EnumPair Value='1850' Name='Teleflex Marine (SeaStar Solutions)' />
-            <EnumPair Value='1851' Name='Raymarine' />
-            <EnumPair Value='1852' Name='Navionics' />
-            <EnumPair Value='1853' Name='Japan Radio Co' />
-            <EnumPair Value='1854' Name='Northstar Technologies' />
-            <EnumPair Value='1855' Name='Furuno' />
-            <EnumPair Value='1856' Name='Trimble' />
-            <EnumPair Value='1857' Name='Simrad' />
-            <EnumPair Value='1858' Name='Litton' />
-            <EnumPair Value='1859' Name='Kvasar AB' />
-            <EnumPair Value='1860' Name='MMP' />
-            <EnumPair Value='1861' Name='Vector Cantech' />
-            <EnumPair Value='1862' Name='Yamaha Marine' />
-            <EnumPair Value='1863' Name='Faria Instruments' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Type>Lookup table</Type>
-          <Signed>false</Signed>
-          <FieldType>INDUSTRY</FieldType>
-          <EnumValues>
-            <EnumPair Value='0' Name='Global' />
-            <EnumPair Value='1' Name='Highway' />
-            <EnumPair Value='2' Name='Agriculture' />
-            <EnumPair Value='3' Name='Construction' />
-            <EnumPair Value='4' Name='Marine' />
-            <EnumPair Value='5' Name='Industrial' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>61440</PGN>
-      <Id>unknownSingleFrameNonAddressed</Id>
-      <Description>Unknown single-frame non-addressed</Description>
-      <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
-      <Length>8</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Manufacturer code</Type>
-          <Signed>false</Signed>
-          <FieldType>MANUFACTURER</FieldType>
-          <EnumValues>
-            <EnumPair Value='69' Name='ARKS Enterprises, Inc.' />
-            <EnumPair Value='78' Name='FW Murphy/Enovation Controls' />
-            <EnumPair Value='80' Name='Twin Disc' />
-            <EnumPair Value='85' Name='Kohler Power Systems' />
-            <EnumPair Value='88' Name='Hemisphere GPS Inc' />
-            <EnumPair Value='116' Name='BEP Marine' />
-            <EnumPair Value='135' Name='Airmar' />
-            <EnumPair Value='137' Name='Maretron' />
-            <EnumPair Value='140' Name='Lowrance' />
-            <EnumPair Value='144' Name='Mercury Marine' />
-            <EnumPair Value='147' Name='Nautibus Electronic GmbH' />
-            <EnumPair Value='148' Name='Blue Water Data' />
-            <EnumPair Value='154' Name='Westerbeke' />
-            <EnumPair Value='161' Name='Offshore Systems (UK) Ltd.' />
-            <EnumPair Value='163' Name='Evinrude/BRP' />
-            <EnumPair Value='165' Name='CPAC Systems AB' />
-            <EnumPair Value='168' Name='Xantrex Technology Inc.' />
-            <EnumPair Value='172' Name='Yanmar Marine' />
-            <EnumPair Value='174' Name='Volvo Penta' />
-            <EnumPair Value='175' Name='Honda Marine' />
-            <EnumPair Value='176' Name='Carling Technologies Inc. (Moritz Aerospace)' />
-            <EnumPair Value='185' Name='Beede Instruments' />
-            <EnumPair Value='192' Name='Floscan Instrument Co. Inc.' />
-            <EnumPair Value='193' Name='Nobletec' />
-            <EnumPair Value='198' Name='Mystic Valley Communications' />
-            <EnumPair Value='199' Name='Actia' />
-            <EnumPair Value='200' Name='Honda Marine' />
-            <EnumPair Value='201' Name='Disenos Y Technologia' />
-            <EnumPair Value='211' Name='Digital Switching Systems' />
-            <EnumPair Value='215' Name='Xintex/Atena' />
-            <EnumPair Value='224' Name='EMMI NETWORK S.L.' />
-            <EnumPair Value='225' Name='Honda Marine' />
-            <EnumPair Value='228' Name='ZF' />
-            <EnumPair Value='229' Name='Garmin' />
-            <EnumPair Value='233' Name='Yacht Monitoring Solutions' />
-            <EnumPair Value='235' Name='Sailormade Marine Telemetry/Tetra Technology LTD' />
-            <EnumPair Value='243' Name='Eride' />
-            <EnumPair Value='250' Name='Honda Marine' />
-            <EnumPair Value='257' Name='Honda Motor Company LTD' />
-            <EnumPair Value='272' Name='Groco' />
-            <EnumPair Value='273' Name='Actisense' />
-            <EnumPair Value='274' Name='Amphenol LTW Technology' />
-            <EnumPair Value='275' Name='Navico' />
-            <EnumPair Value='283' Name='Hamilton Jet' />
-            <EnumPair Value='285' Name='Sea Recovery' />
-            <EnumPair Value='286' Name='Coelmo SRL Italy' />
-            <EnumPair Value='295' Name='BEP Marine' />
-            <EnumPair Value='304' Name='Empir Bus' />
-            <EnumPair Value='305' Name='NovAtel' />
-            <EnumPair Value='306' Name='Sleipner Motor AS' />
-            <EnumPair Value='307' Name='MBW Technologies' />
-            <EnumPair Value='311' Name='Fischer Panda' />
-            <EnumPair Value='315' Name='ICOM' />
-            <EnumPair Value='328' Name='Qwerty' />
-            <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
-            <EnumPair Value='345' Name='Korean Maritime University' />
-            <EnumPair Value='351' Name='Thrane and Thrane' />
-            <EnumPair Value='355' Name='Mastervolt' />
-            <EnumPair Value='356' Name='Fischer Panda Generators' />
-            <EnumPair Value='358' Name='Victron Energy' />
-            <EnumPair Value='370' Name='Rolls Royce Marine' />
-            <EnumPair Value='373' Name='Electronic Design' />
-            <EnumPair Value='374' Name='Northern Lights' />
-            <EnumPair Value='378' Name='Glendinning' />
-            <EnumPair Value='381' Name='B &amp; G' />
-            <EnumPair Value='384' Name='Rose Point Navigation Systems' />
-            <EnumPair Value='385' Name='Johnson Outdoors Marine Electronics Inc Geonav' />
-            <EnumPair Value='394' Name='Capi 2' />
-            <EnumPair Value='396' Name='Beyond Measure' />
-            <EnumPair Value='400' Name='Livorsi Marine' />
-            <EnumPair Value='404' Name='ComNav' />
-            <EnumPair Value='419' Name='Fusion Electronics' />
-            <EnumPair Value='421' Name='Standard Horizon' />
-            <EnumPair Value='422' Name='True Heading AB' />
-            <EnumPair Value='426' Name='Egersund Marine Electronics AS' />
-            <EnumPair Value='427' Name='em-trak Marine Electronics' />
-            <EnumPair Value='431' Name='Tohatsu Co, JP' />
-            <EnumPair Value='437' Name='Digital Yacht' />
-            <EnumPair Value='438' Name='Comar Systems Limited' />
-            <EnumPair Value='440' Name='Cummins' />
-            <EnumPair Value='443' Name='VDO (aka Continental-Corporation)' />
-            <EnumPair Value='451' Name='Parker Hannifin aka Village Marine Tech' />
-            <EnumPair Value='459' Name='Alltek Marine Electronics Corp' />
-            <EnumPair Value='460' Name='SAN GIORGIO S.E.I.N' />
-            <EnumPair Value='466' Name='Veethree Electronics &amp; Marine' />
-            <EnumPair Value='467' Name='Humminbird Marine Electronics' />
-            <EnumPair Value='470' Name='SI-TEX Marine Electronics' />
-            <EnumPair Value='471' Name='Sea Cross Marine AB' />
-            <EnumPair Value='475' Name='GME aka Standard Communications Pty LTD' />
-            <EnumPair Value='476' Name='Humminbird Marine Electronics' />
-            <EnumPair Value='478' Name='Ocean Sat BV' />
-            <EnumPair Value='481' Name='Chetco Digitial Instruments' />
-            <EnumPair Value='493' Name='Watcheye' />
-            <EnumPair Value='499' Name='Lcj Capteurs' />
-            <EnumPair Value='502' Name='Attwood Marine' />
-            <EnumPair Value='503' Name='Naviop S.R.L.' />
-            <EnumPair Value='504' Name='Vesper Marine Ltd' />
-            <EnumPair Value='510' Name='Marinesoft Co. LTD' />
-            <EnumPair Value='517' Name='NoLand Engineering' />
-            <EnumPair Value='518' Name='Transas USA' />
-            <EnumPair Value='529' Name='National Instruments Korea' />
-            <EnumPair Value='532' Name='Onwa Marine' />
-            <EnumPair Value='571' Name='Marinecraft (South Korea)' />
-            <EnumPair Value='573' Name='McMurdo Group aka Orolia LTD' />
-            <EnumPair Value='578' Name='Advansea' />
-            <EnumPair Value='579' Name='KVH' />
-            <EnumPair Value='580' Name='San Jose Technology' />
-            <EnumPair Value='583' Name='Yacht Control' />
-            <EnumPair Value='586' Name='Suzuki Motor Corporation' />
-            <EnumPair Value='591' Name='US Coast Guard' />
-            <EnumPair Value='595' Name='Ship Module aka Customware' />
-            <EnumPair Value='600' Name='Aquatic AV' />
-            <EnumPair Value='605' Name='Aventics GmbH' />
-            <EnumPair Value='606' Name='Intellian' />
-            <EnumPair Value='612' Name='SamwonIT' />
-            <EnumPair Value='614' Name='Arlt Tecnologies' />
-            <EnumPair Value='637' Name='Bavaria Yacts' />
-            <EnumPair Value='641' Name='Diverse Yacht Services' />
-            <EnumPair Value='644' Name='Wema U.S.A dba KUS' />
-            <EnumPair Value='645' Name='Garmin' />
-            <EnumPair Value='658' Name='Shenzhen Jiuzhou Himunication' />
-            <EnumPair Value='688' Name='Rockford Corp' />
-            <EnumPair Value='704' Name='JL Audio' />
-            <EnumPair Value='715' Name='Autonnic' />
-            <EnumPair Value='717' Name='Yacht Devices' />
-            <EnumPair Value='734' Name='REAP Systems' />
-            <EnumPair Value='735' Name='Au Electronics Group' />
-            <EnumPair Value='739' Name='LxNav' />
-            <EnumPair Value='743' Name='DaeMyung' />
-            <EnumPair Value='744' Name='Woosung' />
-            <EnumPair Value='773' Name='Clarion US' />
-            <EnumPair Value='776' Name='HMI Systems' />
-            <EnumPair Value='777' Name='Ocean Signal' />
-            <EnumPair Value='778' Name='Seekeeper' />
-            <EnumPair Value='781' Name='Poly Planar' />
-            <EnumPair Value='785' Name='Fischer Panda DE' />
-            <EnumPair Value='795' Name='Broyda Industries' />
-            <EnumPair Value='796' Name='Canadian Automotive' />
-            <EnumPair Value='797' Name='Tides Marine' />
-            <EnumPair Value='798' Name='Lumishore' />
-            <EnumPair Value='799' Name='Still Water Designs and Audio' />
-            <EnumPair Value='802' Name='BJ Technologies (Beneteau)' />
-            <EnumPair Value='803' Name='Gill Sensors' />
-            <EnumPair Value='811' Name='Blue Water Desalination' />
-            <EnumPair Value='815' Name='FLIR' />
-            <EnumPair Value='824' Name='Undheim Systems' />
-            <EnumPair Value='838' Name='TeamSurv' />
-            <EnumPair Value='844' Name='Fell Marine' />
-            <EnumPair Value='847' Name='Oceanvolt' />
-            <EnumPair Value='862' Name='Prospec' />
-            <EnumPair Value='868' Name='Data Panel Corp' />
-            <EnumPair Value='890' Name='L3 Technologies' />
-            <EnumPair Value='894' Name='Rhodan Marine Systems' />
-            <EnumPair Value='896' Name='Nexfour Solutions' />
-            <EnumPair Value='905' Name='ASA Electronics' />
-            <EnumPair Value='909' Name='Marines Co (South Korea)' />
-            <EnumPair Value='911' Name='Nautic-on' />
-            <EnumPair Value='930' Name='Ecotronix' />
-            <EnumPair Value='962' Name='Timbolier Industries' />
-            <EnumPair Value='963' Name='TJC Micro' />
-            <EnumPair Value='968' Name='Cox Powertrain' />
-            <EnumPair Value='969' Name='Blue Seas' />
-            <EnumPair Value='1850' Name='Teleflex Marine (SeaStar Solutions)' />
-            <EnumPair Value='1851' Name='Raymarine' />
-            <EnumPair Value='1852' Name='Navionics' />
-            <EnumPair Value='1853' Name='Japan Radio Co' />
-            <EnumPair Value='1854' Name='Northstar Technologies' />
-            <EnumPair Value='1855' Name='Furuno' />
-            <EnumPair Value='1856' Name='Trimble' />
-            <EnumPair Value='1857' Name='Simrad' />
-            <EnumPair Value='1858' Name='Litton' />
-            <EnumPair Value='1859' Name='Kvasar AB' />
-            <EnumPair Value='1860' Name='MMP' />
-            <EnumPair Value='1861' Name='Vector Cantech' />
-            <EnumPair Value='1862' Name='Yamaha Marine' />
-            <EnumPair Value='1863' Name='Faria Instruments' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Type>Lookup table</Type>
-          <Signed>false</Signed>
-          <FieldType>INDUSTRY</FieldType>
-          <EnumValues>
-            <EnumPair Value='0' Name='Global' />
-            <EnumPair Value='1' Name='Highway' />
-            <EnumPair Value='2' Name='Agriculture' />
-            <EnumPair Value='3' Name='Construction' />
-            <EnumPair Value='4' Name='Marine' />
-            <EnumPair Value='5' Name='Industrial' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
       <PGN>65001</PGN>
       <Id>bus1PhaseCBasicAcQuantities</Id>
       <Description>Bus #1 Phase C Basic AC Quantities</Description>
@@ -2095,7 +1601,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Units>var</Units>
+          <Units>VAR</Units>
           <Type>Integer</Type>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2240,7 +1746,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Units>var</Units>
+          <Units>VAR</Units>
           <Type>Integer</Type>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2423,7 +1929,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Units>var</Units>
+          <Units>VAR</Units>
           <Type>Integer</Type>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2568,7 +2074,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Units>var</Units>
+          <Units>VAR</Units>
           <Type>Integer</Type>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2713,7 +2219,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Units>var</Units>
+          <Units>VAR</Units>
           <Type>Integer</Type>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2858,7 +2364,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Units>var</Units>
+          <Units>VAR</Units>
           <Type>Integer</Type>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -3404,253 +2910,6 @@ limitations under the License.
           <Type>Binary data</Type>
           <Signed>false</Signed>
           <FieldType>RESERVED</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>65280</PGN>
-      <Id>manufacturerProprietarySingleFrameNonAddressed</Id>
-      <Description>Manufacturer Proprietary single-frame non-addressed</Description>
-      <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
-      <Length>8</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Manufacturer code</Type>
-          <Signed>false</Signed>
-          <FieldType>MANUFACTURER</FieldType>
-          <EnumValues>
-            <EnumPair Value='69' Name='ARKS Enterprises, Inc.' />
-            <EnumPair Value='78' Name='FW Murphy/Enovation Controls' />
-            <EnumPair Value='80' Name='Twin Disc' />
-            <EnumPair Value='85' Name='Kohler Power Systems' />
-            <EnumPair Value='88' Name='Hemisphere GPS Inc' />
-            <EnumPair Value='116' Name='BEP Marine' />
-            <EnumPair Value='135' Name='Airmar' />
-            <EnumPair Value='137' Name='Maretron' />
-            <EnumPair Value='140' Name='Lowrance' />
-            <EnumPair Value='144' Name='Mercury Marine' />
-            <EnumPair Value='147' Name='Nautibus Electronic GmbH' />
-            <EnumPair Value='148' Name='Blue Water Data' />
-            <EnumPair Value='154' Name='Westerbeke' />
-            <EnumPair Value='161' Name='Offshore Systems (UK) Ltd.' />
-            <EnumPair Value='163' Name='Evinrude/BRP' />
-            <EnumPair Value='165' Name='CPAC Systems AB' />
-            <EnumPair Value='168' Name='Xantrex Technology Inc.' />
-            <EnumPair Value='172' Name='Yanmar Marine' />
-            <EnumPair Value='174' Name='Volvo Penta' />
-            <EnumPair Value='175' Name='Honda Marine' />
-            <EnumPair Value='176' Name='Carling Technologies Inc. (Moritz Aerospace)' />
-            <EnumPair Value='185' Name='Beede Instruments' />
-            <EnumPair Value='192' Name='Floscan Instrument Co. Inc.' />
-            <EnumPair Value='193' Name='Nobletec' />
-            <EnumPair Value='198' Name='Mystic Valley Communications' />
-            <EnumPair Value='199' Name='Actia' />
-            <EnumPair Value='200' Name='Honda Marine' />
-            <EnumPair Value='201' Name='Disenos Y Technologia' />
-            <EnumPair Value='211' Name='Digital Switching Systems' />
-            <EnumPair Value='215' Name='Xintex/Atena' />
-            <EnumPair Value='224' Name='EMMI NETWORK S.L.' />
-            <EnumPair Value='225' Name='Honda Marine' />
-            <EnumPair Value='228' Name='ZF' />
-            <EnumPair Value='229' Name='Garmin' />
-            <EnumPair Value='233' Name='Yacht Monitoring Solutions' />
-            <EnumPair Value='235' Name='Sailormade Marine Telemetry/Tetra Technology LTD' />
-            <EnumPair Value='243' Name='Eride' />
-            <EnumPair Value='250' Name='Honda Marine' />
-            <EnumPair Value='257' Name='Honda Motor Company LTD' />
-            <EnumPair Value='272' Name='Groco' />
-            <EnumPair Value='273' Name='Actisense' />
-            <EnumPair Value='274' Name='Amphenol LTW Technology' />
-            <EnumPair Value='275' Name='Navico' />
-            <EnumPair Value='283' Name='Hamilton Jet' />
-            <EnumPair Value='285' Name='Sea Recovery' />
-            <EnumPair Value='286' Name='Coelmo SRL Italy' />
-            <EnumPair Value='295' Name='BEP Marine' />
-            <EnumPair Value='304' Name='Empir Bus' />
-            <EnumPair Value='305' Name='NovAtel' />
-            <EnumPair Value='306' Name='Sleipner Motor AS' />
-            <EnumPair Value='307' Name='MBW Technologies' />
-            <EnumPair Value='311' Name='Fischer Panda' />
-            <EnumPair Value='315' Name='ICOM' />
-            <EnumPair Value='328' Name='Qwerty' />
-            <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
-            <EnumPair Value='345' Name='Korean Maritime University' />
-            <EnumPair Value='351' Name='Thrane and Thrane' />
-            <EnumPair Value='355' Name='Mastervolt' />
-            <EnumPair Value='356' Name='Fischer Panda Generators' />
-            <EnumPair Value='358' Name='Victron Energy' />
-            <EnumPair Value='370' Name='Rolls Royce Marine' />
-            <EnumPair Value='373' Name='Electronic Design' />
-            <EnumPair Value='374' Name='Northern Lights' />
-            <EnumPair Value='378' Name='Glendinning' />
-            <EnumPair Value='381' Name='B &amp; G' />
-            <EnumPair Value='384' Name='Rose Point Navigation Systems' />
-            <EnumPair Value='385' Name='Johnson Outdoors Marine Electronics Inc Geonav' />
-            <EnumPair Value='394' Name='Capi 2' />
-            <EnumPair Value='396' Name='Beyond Measure' />
-            <EnumPair Value='400' Name='Livorsi Marine' />
-            <EnumPair Value='404' Name='ComNav' />
-            <EnumPair Value='419' Name='Fusion Electronics' />
-            <EnumPair Value='421' Name='Standard Horizon' />
-            <EnumPair Value='422' Name='True Heading AB' />
-            <EnumPair Value='426' Name='Egersund Marine Electronics AS' />
-            <EnumPair Value='427' Name='em-trak Marine Electronics' />
-            <EnumPair Value='431' Name='Tohatsu Co, JP' />
-            <EnumPair Value='437' Name='Digital Yacht' />
-            <EnumPair Value='438' Name='Comar Systems Limited' />
-            <EnumPair Value='440' Name='Cummins' />
-            <EnumPair Value='443' Name='VDO (aka Continental-Corporation)' />
-            <EnumPair Value='451' Name='Parker Hannifin aka Village Marine Tech' />
-            <EnumPair Value='459' Name='Alltek Marine Electronics Corp' />
-            <EnumPair Value='460' Name='SAN GIORGIO S.E.I.N' />
-            <EnumPair Value='466' Name='Veethree Electronics &amp; Marine' />
-            <EnumPair Value='467' Name='Humminbird Marine Electronics' />
-            <EnumPair Value='470' Name='SI-TEX Marine Electronics' />
-            <EnumPair Value='471' Name='Sea Cross Marine AB' />
-            <EnumPair Value='475' Name='GME aka Standard Communications Pty LTD' />
-            <EnumPair Value='476' Name='Humminbird Marine Electronics' />
-            <EnumPair Value='478' Name='Ocean Sat BV' />
-            <EnumPair Value='481' Name='Chetco Digitial Instruments' />
-            <EnumPair Value='493' Name='Watcheye' />
-            <EnumPair Value='499' Name='Lcj Capteurs' />
-            <EnumPair Value='502' Name='Attwood Marine' />
-            <EnumPair Value='503' Name='Naviop S.R.L.' />
-            <EnumPair Value='504' Name='Vesper Marine Ltd' />
-            <EnumPair Value='510' Name='Marinesoft Co. LTD' />
-            <EnumPair Value='517' Name='NoLand Engineering' />
-            <EnumPair Value='518' Name='Transas USA' />
-            <EnumPair Value='529' Name='National Instruments Korea' />
-            <EnumPair Value='532' Name='Onwa Marine' />
-            <EnumPair Value='571' Name='Marinecraft (South Korea)' />
-            <EnumPair Value='573' Name='McMurdo Group aka Orolia LTD' />
-            <EnumPair Value='578' Name='Advansea' />
-            <EnumPair Value='579' Name='KVH' />
-            <EnumPair Value='580' Name='San Jose Technology' />
-            <EnumPair Value='583' Name='Yacht Control' />
-            <EnumPair Value='586' Name='Suzuki Motor Corporation' />
-            <EnumPair Value='591' Name='US Coast Guard' />
-            <EnumPair Value='595' Name='Ship Module aka Customware' />
-            <EnumPair Value='600' Name='Aquatic AV' />
-            <EnumPair Value='605' Name='Aventics GmbH' />
-            <EnumPair Value='606' Name='Intellian' />
-            <EnumPair Value='612' Name='SamwonIT' />
-            <EnumPair Value='614' Name='Arlt Tecnologies' />
-            <EnumPair Value='637' Name='Bavaria Yacts' />
-            <EnumPair Value='641' Name='Diverse Yacht Services' />
-            <EnumPair Value='644' Name='Wema U.S.A dba KUS' />
-            <EnumPair Value='645' Name='Garmin' />
-            <EnumPair Value='658' Name='Shenzhen Jiuzhou Himunication' />
-            <EnumPair Value='688' Name='Rockford Corp' />
-            <EnumPair Value='704' Name='JL Audio' />
-            <EnumPair Value='715' Name='Autonnic' />
-            <EnumPair Value='717' Name='Yacht Devices' />
-            <EnumPair Value='734' Name='REAP Systems' />
-            <EnumPair Value='735' Name='Au Electronics Group' />
-            <EnumPair Value='739' Name='LxNav' />
-            <EnumPair Value='743' Name='DaeMyung' />
-            <EnumPair Value='744' Name='Woosung' />
-            <EnumPair Value='773' Name='Clarion US' />
-            <EnumPair Value='776' Name='HMI Systems' />
-            <EnumPair Value='777' Name='Ocean Signal' />
-            <EnumPair Value='778' Name='Seekeeper' />
-            <EnumPair Value='781' Name='Poly Planar' />
-            <EnumPair Value='785' Name='Fischer Panda DE' />
-            <EnumPair Value='795' Name='Broyda Industries' />
-            <EnumPair Value='796' Name='Canadian Automotive' />
-            <EnumPair Value='797' Name='Tides Marine' />
-            <EnumPair Value='798' Name='Lumishore' />
-            <EnumPair Value='799' Name='Still Water Designs and Audio' />
-            <EnumPair Value='802' Name='BJ Technologies (Beneteau)' />
-            <EnumPair Value='803' Name='Gill Sensors' />
-            <EnumPair Value='811' Name='Blue Water Desalination' />
-            <EnumPair Value='815' Name='FLIR' />
-            <EnumPair Value='824' Name='Undheim Systems' />
-            <EnumPair Value='838' Name='TeamSurv' />
-            <EnumPair Value='844' Name='Fell Marine' />
-            <EnumPair Value='847' Name='Oceanvolt' />
-            <EnumPair Value='862' Name='Prospec' />
-            <EnumPair Value='868' Name='Data Panel Corp' />
-            <EnumPair Value='890' Name='L3 Technologies' />
-            <EnumPair Value='894' Name='Rhodan Marine Systems' />
-            <EnumPair Value='896' Name='Nexfour Solutions' />
-            <EnumPair Value='905' Name='ASA Electronics' />
-            <EnumPair Value='909' Name='Marines Co (South Korea)' />
-            <EnumPair Value='911' Name='Nautic-on' />
-            <EnumPair Value='930' Name='Ecotronix' />
-            <EnumPair Value='962' Name='Timbolier Industries' />
-            <EnumPair Value='963' Name='TJC Micro' />
-            <EnumPair Value='968' Name='Cox Powertrain' />
-            <EnumPair Value='969' Name='Blue Seas' />
-            <EnumPair Value='1850' Name='Teleflex Marine (SeaStar Solutions)' />
-            <EnumPair Value='1851' Name='Raymarine' />
-            <EnumPair Value='1852' Name='Navionics' />
-            <EnumPair Value='1853' Name='Japan Radio Co' />
-            <EnumPair Value='1854' Name='Northstar Technologies' />
-            <EnumPair Value='1855' Name='Furuno' />
-            <EnumPair Value='1856' Name='Trimble' />
-            <EnumPair Value='1857' Name='Simrad' />
-            <EnumPair Value='1858' Name='Litton' />
-            <EnumPair Value='1859' Name='Kvasar AB' />
-            <EnumPair Value='1860' Name='MMP' />
-            <EnumPair Value='1861' Name='Vector Cantech' />
-            <EnumPair Value='1862' Name='Yamaha Marine' />
-            <EnumPair Value='1863' Name='Faria Instruments' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Type>Lookup table</Type>
-          <Signed>false</Signed>
-          <FieldType>INDUSTRY</FieldType>
-          <EnumValues>
-            <EnumPair Value='0' Name='Global' />
-            <EnumPair Value='1' Name='Highway' />
-            <EnumPair Value='2' Name='Agriculture' />
-            <EnumPair Value='3' Name='Construction' />
-            <EnumPair Value='4' Name='Marine' />
-            <EnumPair Value='5' Name='Industrial' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -4325,8 +3584,8 @@ limitations under the License.
             <EnumPair Value='14' Name='WP Arrival' />
             <EnumPair Value='15' Name='Boat Speed High' />
             <EnumPair Value='16' Name='Boat Speed Low' />
-            <EnumPair Value='17' Name='Sea Temp High' />
-            <EnumPair Value='18' Name='Sea Temp Low' />
+            <EnumPair Value='17' Name='Sea Temperature High' />
+            <EnumPair Value='18' Name='Sea Temperature Low' />
             <EnumPair Value='19' Name='Pilot Watch' />
             <EnumPair Value='20' Name='Pilot Off Course' />
             <EnumPair Value='21' Name='Pilot Wind Shift' />
@@ -5307,8 +4566,8 @@ limitations under the License.
             <EnumPair Value='14' Name='WP Arrival' />
             <EnumPair Value='15' Name='Boat Speed High' />
             <EnumPair Value='16' Name='Boat Speed Low' />
-            <EnumPair Value='17' Name='Sea Temp High' />
-            <EnumPair Value='18' Name='Sea Temp Low' />
+            <EnumPair Value='17' Name='Sea Temperature High' />
+            <EnumPair Value='18' Name='Sea Temperature Low' />
             <EnumPair Value='19' Name='Pilot Watch' />
             <EnumPair Value='20' Name='Pilot Off Course' />
             <EnumPair Value='21' Name='Pilot Wind Shift' />
@@ -6076,34 +5335,6 @@ limitations under the License.
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <FieldType>INDUSTRY</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>65536</PGN>
-      <Id>unknownFastPacketAddressed</Id>
-      <Description>Unknown fast-packet addressed</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-      </Missing>
-      <Length>255</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>2040</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -10161,280 +9392,6 @@ limitations under the License.
           <Type>Integer</Type>
           <Signed>false</Signed>
           <FieldType>UINT8</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>126720</PGN>
-      <Id>manufacturerProprietaryFastPacketAddressed</Id>
-      <Description>Manufacturer Proprietary fast-packet addressed</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
-      <Length>223</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Manufacturer code</Type>
-          <Signed>false</Signed>
-          <FieldType>MANUFACTURER</FieldType>
-          <EnumValues>
-            <EnumPair Value='69' Name='ARKS Enterprises, Inc.' />
-            <EnumPair Value='78' Name='FW Murphy/Enovation Controls' />
-            <EnumPair Value='80' Name='Twin Disc' />
-            <EnumPair Value='85' Name='Kohler Power Systems' />
-            <EnumPair Value='88' Name='Hemisphere GPS Inc' />
-            <EnumPair Value='116' Name='BEP Marine' />
-            <EnumPair Value='135' Name='Airmar' />
-            <EnumPair Value='137' Name='Maretron' />
-            <EnumPair Value='140' Name='Lowrance' />
-            <EnumPair Value='144' Name='Mercury Marine' />
-            <EnumPair Value='147' Name='Nautibus Electronic GmbH' />
-            <EnumPair Value='148' Name='Blue Water Data' />
-            <EnumPair Value='154' Name='Westerbeke' />
-            <EnumPair Value='161' Name='Offshore Systems (UK) Ltd.' />
-            <EnumPair Value='163' Name='Evinrude/BRP' />
-            <EnumPair Value='165' Name='CPAC Systems AB' />
-            <EnumPair Value='168' Name='Xantrex Technology Inc.' />
-            <EnumPair Value='172' Name='Yanmar Marine' />
-            <EnumPair Value='174' Name='Volvo Penta' />
-            <EnumPair Value='175' Name='Honda Marine' />
-            <EnumPair Value='176' Name='Carling Technologies Inc. (Moritz Aerospace)' />
-            <EnumPair Value='185' Name='Beede Instruments' />
-            <EnumPair Value='192' Name='Floscan Instrument Co. Inc.' />
-            <EnumPair Value='193' Name='Nobletec' />
-            <EnumPair Value='198' Name='Mystic Valley Communications' />
-            <EnumPair Value='199' Name='Actia' />
-            <EnumPair Value='200' Name='Honda Marine' />
-            <EnumPair Value='201' Name='Disenos Y Technologia' />
-            <EnumPair Value='211' Name='Digital Switching Systems' />
-            <EnumPair Value='215' Name='Xintex/Atena' />
-            <EnumPair Value='224' Name='EMMI NETWORK S.L.' />
-            <EnumPair Value='225' Name='Honda Marine' />
-            <EnumPair Value='228' Name='ZF' />
-            <EnumPair Value='229' Name='Garmin' />
-            <EnumPair Value='233' Name='Yacht Monitoring Solutions' />
-            <EnumPair Value='235' Name='Sailormade Marine Telemetry/Tetra Technology LTD' />
-            <EnumPair Value='243' Name='Eride' />
-            <EnumPair Value='250' Name='Honda Marine' />
-            <EnumPair Value='257' Name='Honda Motor Company LTD' />
-            <EnumPair Value='272' Name='Groco' />
-            <EnumPair Value='273' Name='Actisense' />
-            <EnumPair Value='274' Name='Amphenol LTW Technology' />
-            <EnumPair Value='275' Name='Navico' />
-            <EnumPair Value='283' Name='Hamilton Jet' />
-            <EnumPair Value='285' Name='Sea Recovery' />
-            <EnumPair Value='286' Name='Coelmo SRL Italy' />
-            <EnumPair Value='295' Name='BEP Marine' />
-            <EnumPair Value='304' Name='Empir Bus' />
-            <EnumPair Value='305' Name='NovAtel' />
-            <EnumPair Value='306' Name='Sleipner Motor AS' />
-            <EnumPair Value='307' Name='MBW Technologies' />
-            <EnumPair Value='311' Name='Fischer Panda' />
-            <EnumPair Value='315' Name='ICOM' />
-            <EnumPair Value='328' Name='Qwerty' />
-            <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
-            <EnumPair Value='345' Name='Korean Maritime University' />
-            <EnumPair Value='351' Name='Thrane and Thrane' />
-            <EnumPair Value='355' Name='Mastervolt' />
-            <EnumPair Value='356' Name='Fischer Panda Generators' />
-            <EnumPair Value='358' Name='Victron Energy' />
-            <EnumPair Value='370' Name='Rolls Royce Marine' />
-            <EnumPair Value='373' Name='Electronic Design' />
-            <EnumPair Value='374' Name='Northern Lights' />
-            <EnumPair Value='378' Name='Glendinning' />
-            <EnumPair Value='381' Name='B &amp; G' />
-            <EnumPair Value='384' Name='Rose Point Navigation Systems' />
-            <EnumPair Value='385' Name='Johnson Outdoors Marine Electronics Inc Geonav' />
-            <EnumPair Value='394' Name='Capi 2' />
-            <EnumPair Value='396' Name='Beyond Measure' />
-            <EnumPair Value='400' Name='Livorsi Marine' />
-            <EnumPair Value='404' Name='ComNav' />
-            <EnumPair Value='419' Name='Fusion Electronics' />
-            <EnumPair Value='421' Name='Standard Horizon' />
-            <EnumPair Value='422' Name='True Heading AB' />
-            <EnumPair Value='426' Name='Egersund Marine Electronics AS' />
-            <EnumPair Value='427' Name='em-trak Marine Electronics' />
-            <EnumPair Value='431' Name='Tohatsu Co, JP' />
-            <EnumPair Value='437' Name='Digital Yacht' />
-            <EnumPair Value='438' Name='Comar Systems Limited' />
-            <EnumPair Value='440' Name='Cummins' />
-            <EnumPair Value='443' Name='VDO (aka Continental-Corporation)' />
-            <EnumPair Value='451' Name='Parker Hannifin aka Village Marine Tech' />
-            <EnumPair Value='459' Name='Alltek Marine Electronics Corp' />
-            <EnumPair Value='460' Name='SAN GIORGIO S.E.I.N' />
-            <EnumPair Value='466' Name='Veethree Electronics &amp; Marine' />
-            <EnumPair Value='467' Name='Humminbird Marine Electronics' />
-            <EnumPair Value='470' Name='SI-TEX Marine Electronics' />
-            <EnumPair Value='471' Name='Sea Cross Marine AB' />
-            <EnumPair Value='475' Name='GME aka Standard Communications Pty LTD' />
-            <EnumPair Value='476' Name='Humminbird Marine Electronics' />
-            <EnumPair Value='478' Name='Ocean Sat BV' />
-            <EnumPair Value='481' Name='Chetco Digitial Instruments' />
-            <EnumPair Value='493' Name='Watcheye' />
-            <EnumPair Value='499' Name='Lcj Capteurs' />
-            <EnumPair Value='502' Name='Attwood Marine' />
-            <EnumPair Value='503' Name='Naviop S.R.L.' />
-            <EnumPair Value='504' Name='Vesper Marine Ltd' />
-            <EnumPair Value='510' Name='Marinesoft Co. LTD' />
-            <EnumPair Value='517' Name='NoLand Engineering' />
-            <EnumPair Value='518' Name='Transas USA' />
-            <EnumPair Value='529' Name='National Instruments Korea' />
-            <EnumPair Value='532' Name='Onwa Marine' />
-            <EnumPair Value='571' Name='Marinecraft (South Korea)' />
-            <EnumPair Value='573' Name='McMurdo Group aka Orolia LTD' />
-            <EnumPair Value='578' Name='Advansea' />
-            <EnumPair Value='579' Name='KVH' />
-            <EnumPair Value='580' Name='San Jose Technology' />
-            <EnumPair Value='583' Name='Yacht Control' />
-            <EnumPair Value='586' Name='Suzuki Motor Corporation' />
-            <EnumPair Value='591' Name='US Coast Guard' />
-            <EnumPair Value='595' Name='Ship Module aka Customware' />
-            <EnumPair Value='600' Name='Aquatic AV' />
-            <EnumPair Value='605' Name='Aventics GmbH' />
-            <EnumPair Value='606' Name='Intellian' />
-            <EnumPair Value='612' Name='SamwonIT' />
-            <EnumPair Value='614' Name='Arlt Tecnologies' />
-            <EnumPair Value='637' Name='Bavaria Yacts' />
-            <EnumPair Value='641' Name='Diverse Yacht Services' />
-            <EnumPair Value='644' Name='Wema U.S.A dba KUS' />
-            <EnumPair Value='645' Name='Garmin' />
-            <EnumPair Value='658' Name='Shenzhen Jiuzhou Himunication' />
-            <EnumPair Value='688' Name='Rockford Corp' />
-            <EnumPair Value='704' Name='JL Audio' />
-            <EnumPair Value='715' Name='Autonnic' />
-            <EnumPair Value='717' Name='Yacht Devices' />
-            <EnumPair Value='734' Name='REAP Systems' />
-            <EnumPair Value='735' Name='Au Electronics Group' />
-            <EnumPair Value='739' Name='LxNav' />
-            <EnumPair Value='743' Name='DaeMyung' />
-            <EnumPair Value='744' Name='Woosung' />
-            <EnumPair Value='773' Name='Clarion US' />
-            <EnumPair Value='776' Name='HMI Systems' />
-            <EnumPair Value='777' Name='Ocean Signal' />
-            <EnumPair Value='778' Name='Seekeeper' />
-            <EnumPair Value='781' Name='Poly Planar' />
-            <EnumPair Value='785' Name='Fischer Panda DE' />
-            <EnumPair Value='795' Name='Broyda Industries' />
-            <EnumPair Value='796' Name='Canadian Automotive' />
-            <EnumPair Value='797' Name='Tides Marine' />
-            <EnumPair Value='798' Name='Lumishore' />
-            <EnumPair Value='799' Name='Still Water Designs and Audio' />
-            <EnumPair Value='802' Name='BJ Technologies (Beneteau)' />
-            <EnumPair Value='803' Name='Gill Sensors' />
-            <EnumPair Value='811' Name='Blue Water Desalination' />
-            <EnumPair Value='815' Name='FLIR' />
-            <EnumPair Value='824' Name='Undheim Systems' />
-            <EnumPair Value='838' Name='TeamSurv' />
-            <EnumPair Value='844' Name='Fell Marine' />
-            <EnumPair Value='847' Name='Oceanvolt' />
-            <EnumPair Value='862' Name='Prospec' />
-            <EnumPair Value='868' Name='Data Panel Corp' />
-            <EnumPair Value='890' Name='L3 Technologies' />
-            <EnumPair Value='894' Name='Rhodan Marine Systems' />
-            <EnumPair Value='896' Name='Nexfour Solutions' />
-            <EnumPair Value='905' Name='ASA Electronics' />
-            <EnumPair Value='909' Name='Marines Co (South Korea)' />
-            <EnumPair Value='911' Name='Nautic-on' />
-            <EnumPair Value='930' Name='Ecotronix' />
-            <EnumPair Value='962' Name='Timbolier Industries' />
-            <EnumPair Value='963' Name='TJC Micro' />
-            <EnumPair Value='968' Name='Cox Powertrain' />
-            <EnumPair Value='969' Name='Blue Seas' />
-            <EnumPair Value='1850' Name='Teleflex Marine (SeaStar Solutions)' />
-            <EnumPair Value='1851' Name='Raymarine' />
-            <EnumPair Value='1852' Name='Navionics' />
-            <EnumPair Value='1853' Name='Japan Radio Co' />
-            <EnumPair Value='1854' Name='Northstar Technologies' />
-            <EnumPair Value='1855' Name='Furuno' />
-            <EnumPair Value='1856' Name='Trimble' />
-            <EnumPair Value='1857' Name='Simrad' />
-            <EnumPair Value='1858' Name='Litton' />
-            <EnumPair Value='1859' Name='Kvasar AB' />
-            <EnumPair Value='1860' Name='MMP' />
-            <EnumPair Value='1861' Name='Vector Cantech' />
-            <EnumPair Value='1862' Name='Yamaha Marine' />
-            <EnumPair Value='1863' Name='Faria Instruments' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Type>Lookup table</Type>
-          <Signed>false</Signed>
-          <FieldType>INDUSTRY</FieldType>
-          <EnumValues>
-            <EnumPair Value='0' Name='Global' />
-            <EnumPair Value='1' Name='Highway' />
-            <EnumPair Value='2' Name='Agriculture' />
-            <EnumPair Value='3' Name='Construction' />
-            <EnumPair Value='4' Name='Marine' />
-            <EnumPair Value='5' Name='Industrial' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>1768</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>126976</PGN>
-      <Id>unknownFastPacketNonAddressed</Id>
-      <Description>Unknown fast-packet non-addressed</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
-      <Length>255</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>2040</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -16289,7 +15246,7 @@ limitations under the License.
           <Order>15</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLength>2040</BitLength>
+          <BitLength>1784</BitLength>
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII text</Type>
@@ -18023,8 +16980,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>aisRaimFlag</Id>
-          <Name>AIS RAIM flag</Name>
+          <Id>raim</Id>
+          <Name>RAIM</Name>
           <BitLength>1</BitLength>
           <BitOffset>105</BitOffset>
           <BitStart>1</BitStart>
@@ -18428,8 +17385,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>aisRaimFlag</Id>
-          <Name>AIS RAIM Flag</Name>
+          <Id>raim</Id>
+          <Name>RAIM</Name>
           <BitLength>1</BitLength>
           <BitOffset>105</BitOffset>
           <BitStart>1</BitStart>
@@ -21577,7 +20534,7 @@ limitations under the License.
         <Field>
           <Order>2</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
@@ -22273,7 +21230,7 @@ limitations under the License.
           <Order>8</Order>
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
-          <BitLength>2040</BitLength>
+          <BitLength>1784</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Type>Binary data</Type>
@@ -22311,7 +21268,7 @@ limitations under the License.
         <Field>
           <Order>2</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
@@ -24456,7 +23413,7 @@ limitations under the License.
         <Field>
           <Order>2</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
@@ -24558,7 +23515,7 @@ limitations under the License.
         <Field>
           <Order>2</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
@@ -32612,253 +31569,6 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
-      <PGN>130816</PGN>
-      <Id>manufacturerProprietaryFastPacketNonAddressed</Id>
-      <Description>Manufacturer Proprietary fast-packet non-addressed</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
-      <Length>223</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Manufacturer code</Type>
-          <Signed>false</Signed>
-          <FieldType>MANUFACTURER</FieldType>
-          <EnumValues>
-            <EnumPair Value='69' Name='ARKS Enterprises, Inc.' />
-            <EnumPair Value='78' Name='FW Murphy/Enovation Controls' />
-            <EnumPair Value='80' Name='Twin Disc' />
-            <EnumPair Value='85' Name='Kohler Power Systems' />
-            <EnumPair Value='88' Name='Hemisphere GPS Inc' />
-            <EnumPair Value='116' Name='BEP Marine' />
-            <EnumPair Value='135' Name='Airmar' />
-            <EnumPair Value='137' Name='Maretron' />
-            <EnumPair Value='140' Name='Lowrance' />
-            <EnumPair Value='144' Name='Mercury Marine' />
-            <EnumPair Value='147' Name='Nautibus Electronic GmbH' />
-            <EnumPair Value='148' Name='Blue Water Data' />
-            <EnumPair Value='154' Name='Westerbeke' />
-            <EnumPair Value='161' Name='Offshore Systems (UK) Ltd.' />
-            <EnumPair Value='163' Name='Evinrude/BRP' />
-            <EnumPair Value='165' Name='CPAC Systems AB' />
-            <EnumPair Value='168' Name='Xantrex Technology Inc.' />
-            <EnumPair Value='172' Name='Yanmar Marine' />
-            <EnumPair Value='174' Name='Volvo Penta' />
-            <EnumPair Value='175' Name='Honda Marine' />
-            <EnumPair Value='176' Name='Carling Technologies Inc. (Moritz Aerospace)' />
-            <EnumPair Value='185' Name='Beede Instruments' />
-            <EnumPair Value='192' Name='Floscan Instrument Co. Inc.' />
-            <EnumPair Value='193' Name='Nobletec' />
-            <EnumPair Value='198' Name='Mystic Valley Communications' />
-            <EnumPair Value='199' Name='Actia' />
-            <EnumPair Value='200' Name='Honda Marine' />
-            <EnumPair Value='201' Name='Disenos Y Technologia' />
-            <EnumPair Value='211' Name='Digital Switching Systems' />
-            <EnumPair Value='215' Name='Xintex/Atena' />
-            <EnumPair Value='224' Name='EMMI NETWORK S.L.' />
-            <EnumPair Value='225' Name='Honda Marine' />
-            <EnumPair Value='228' Name='ZF' />
-            <EnumPair Value='229' Name='Garmin' />
-            <EnumPair Value='233' Name='Yacht Monitoring Solutions' />
-            <EnumPair Value='235' Name='Sailormade Marine Telemetry/Tetra Technology LTD' />
-            <EnumPair Value='243' Name='Eride' />
-            <EnumPair Value='250' Name='Honda Marine' />
-            <EnumPair Value='257' Name='Honda Motor Company LTD' />
-            <EnumPair Value='272' Name='Groco' />
-            <EnumPair Value='273' Name='Actisense' />
-            <EnumPair Value='274' Name='Amphenol LTW Technology' />
-            <EnumPair Value='275' Name='Navico' />
-            <EnumPair Value='283' Name='Hamilton Jet' />
-            <EnumPair Value='285' Name='Sea Recovery' />
-            <EnumPair Value='286' Name='Coelmo SRL Italy' />
-            <EnumPair Value='295' Name='BEP Marine' />
-            <EnumPair Value='304' Name='Empir Bus' />
-            <EnumPair Value='305' Name='NovAtel' />
-            <EnumPair Value='306' Name='Sleipner Motor AS' />
-            <EnumPair Value='307' Name='MBW Technologies' />
-            <EnumPair Value='311' Name='Fischer Panda' />
-            <EnumPair Value='315' Name='ICOM' />
-            <EnumPair Value='328' Name='Qwerty' />
-            <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
-            <EnumPair Value='345' Name='Korean Maritime University' />
-            <EnumPair Value='351' Name='Thrane and Thrane' />
-            <EnumPair Value='355' Name='Mastervolt' />
-            <EnumPair Value='356' Name='Fischer Panda Generators' />
-            <EnumPair Value='358' Name='Victron Energy' />
-            <EnumPair Value='370' Name='Rolls Royce Marine' />
-            <EnumPair Value='373' Name='Electronic Design' />
-            <EnumPair Value='374' Name='Northern Lights' />
-            <EnumPair Value='378' Name='Glendinning' />
-            <EnumPair Value='381' Name='B &amp; G' />
-            <EnumPair Value='384' Name='Rose Point Navigation Systems' />
-            <EnumPair Value='385' Name='Johnson Outdoors Marine Electronics Inc Geonav' />
-            <EnumPair Value='394' Name='Capi 2' />
-            <EnumPair Value='396' Name='Beyond Measure' />
-            <EnumPair Value='400' Name='Livorsi Marine' />
-            <EnumPair Value='404' Name='ComNav' />
-            <EnumPair Value='419' Name='Fusion Electronics' />
-            <EnumPair Value='421' Name='Standard Horizon' />
-            <EnumPair Value='422' Name='True Heading AB' />
-            <EnumPair Value='426' Name='Egersund Marine Electronics AS' />
-            <EnumPair Value='427' Name='em-trak Marine Electronics' />
-            <EnumPair Value='431' Name='Tohatsu Co, JP' />
-            <EnumPair Value='437' Name='Digital Yacht' />
-            <EnumPair Value='438' Name='Comar Systems Limited' />
-            <EnumPair Value='440' Name='Cummins' />
-            <EnumPair Value='443' Name='VDO (aka Continental-Corporation)' />
-            <EnumPair Value='451' Name='Parker Hannifin aka Village Marine Tech' />
-            <EnumPair Value='459' Name='Alltek Marine Electronics Corp' />
-            <EnumPair Value='460' Name='SAN GIORGIO S.E.I.N' />
-            <EnumPair Value='466' Name='Veethree Electronics &amp; Marine' />
-            <EnumPair Value='467' Name='Humminbird Marine Electronics' />
-            <EnumPair Value='470' Name='SI-TEX Marine Electronics' />
-            <EnumPair Value='471' Name='Sea Cross Marine AB' />
-            <EnumPair Value='475' Name='GME aka Standard Communications Pty LTD' />
-            <EnumPair Value='476' Name='Humminbird Marine Electronics' />
-            <EnumPair Value='478' Name='Ocean Sat BV' />
-            <EnumPair Value='481' Name='Chetco Digitial Instruments' />
-            <EnumPair Value='493' Name='Watcheye' />
-            <EnumPair Value='499' Name='Lcj Capteurs' />
-            <EnumPair Value='502' Name='Attwood Marine' />
-            <EnumPair Value='503' Name='Naviop S.R.L.' />
-            <EnumPair Value='504' Name='Vesper Marine Ltd' />
-            <EnumPair Value='510' Name='Marinesoft Co. LTD' />
-            <EnumPair Value='517' Name='NoLand Engineering' />
-            <EnumPair Value='518' Name='Transas USA' />
-            <EnumPair Value='529' Name='National Instruments Korea' />
-            <EnumPair Value='532' Name='Onwa Marine' />
-            <EnumPair Value='571' Name='Marinecraft (South Korea)' />
-            <EnumPair Value='573' Name='McMurdo Group aka Orolia LTD' />
-            <EnumPair Value='578' Name='Advansea' />
-            <EnumPair Value='579' Name='KVH' />
-            <EnumPair Value='580' Name='San Jose Technology' />
-            <EnumPair Value='583' Name='Yacht Control' />
-            <EnumPair Value='586' Name='Suzuki Motor Corporation' />
-            <EnumPair Value='591' Name='US Coast Guard' />
-            <EnumPair Value='595' Name='Ship Module aka Customware' />
-            <EnumPair Value='600' Name='Aquatic AV' />
-            <EnumPair Value='605' Name='Aventics GmbH' />
-            <EnumPair Value='606' Name='Intellian' />
-            <EnumPair Value='612' Name='SamwonIT' />
-            <EnumPair Value='614' Name='Arlt Tecnologies' />
-            <EnumPair Value='637' Name='Bavaria Yacts' />
-            <EnumPair Value='641' Name='Diverse Yacht Services' />
-            <EnumPair Value='644' Name='Wema U.S.A dba KUS' />
-            <EnumPair Value='645' Name='Garmin' />
-            <EnumPair Value='658' Name='Shenzhen Jiuzhou Himunication' />
-            <EnumPair Value='688' Name='Rockford Corp' />
-            <EnumPair Value='704' Name='JL Audio' />
-            <EnumPair Value='715' Name='Autonnic' />
-            <EnumPair Value='717' Name='Yacht Devices' />
-            <EnumPair Value='734' Name='REAP Systems' />
-            <EnumPair Value='735' Name='Au Electronics Group' />
-            <EnumPair Value='739' Name='LxNav' />
-            <EnumPair Value='743' Name='DaeMyung' />
-            <EnumPair Value='744' Name='Woosung' />
-            <EnumPair Value='773' Name='Clarion US' />
-            <EnumPair Value='776' Name='HMI Systems' />
-            <EnumPair Value='777' Name='Ocean Signal' />
-            <EnumPair Value='778' Name='Seekeeper' />
-            <EnumPair Value='781' Name='Poly Planar' />
-            <EnumPair Value='785' Name='Fischer Panda DE' />
-            <EnumPair Value='795' Name='Broyda Industries' />
-            <EnumPair Value='796' Name='Canadian Automotive' />
-            <EnumPair Value='797' Name='Tides Marine' />
-            <EnumPair Value='798' Name='Lumishore' />
-            <EnumPair Value='799' Name='Still Water Designs and Audio' />
-            <EnumPair Value='802' Name='BJ Technologies (Beneteau)' />
-            <EnumPair Value='803' Name='Gill Sensors' />
-            <EnumPair Value='811' Name='Blue Water Desalination' />
-            <EnumPair Value='815' Name='FLIR' />
-            <EnumPair Value='824' Name='Undheim Systems' />
-            <EnumPair Value='838' Name='TeamSurv' />
-            <EnumPair Value='844' Name='Fell Marine' />
-            <EnumPair Value='847' Name='Oceanvolt' />
-            <EnumPair Value='862' Name='Prospec' />
-            <EnumPair Value='868' Name='Data Panel Corp' />
-            <EnumPair Value='890' Name='L3 Technologies' />
-            <EnumPair Value='894' Name='Rhodan Marine Systems' />
-            <EnumPair Value='896' Name='Nexfour Solutions' />
-            <EnumPair Value='905' Name='ASA Electronics' />
-            <EnumPair Value='909' Name='Marines Co (South Korea)' />
-            <EnumPair Value='911' Name='Nautic-on' />
-            <EnumPair Value='930' Name='Ecotronix' />
-            <EnumPair Value='962' Name='Timbolier Industries' />
-            <EnumPair Value='963' Name='TJC Micro' />
-            <EnumPair Value='968' Name='Cox Powertrain' />
-            <EnumPair Value='969' Name='Blue Seas' />
-            <EnumPair Value='1850' Name='Teleflex Marine (SeaStar Solutions)' />
-            <EnumPair Value='1851' Name='Raymarine' />
-            <EnumPair Value='1852' Name='Navionics' />
-            <EnumPair Value='1853' Name='Japan Radio Co' />
-            <EnumPair Value='1854' Name='Northstar Technologies' />
-            <EnumPair Value='1855' Name='Furuno' />
-            <EnumPair Value='1856' Name='Trimble' />
-            <EnumPair Value='1857' Name='Simrad' />
-            <EnumPair Value='1858' Name='Litton' />
-            <EnumPair Value='1859' Name='Kvasar AB' />
-            <EnumPair Value='1860' Name='MMP' />
-            <EnumPair Value='1861' Name='Vector Cantech' />
-            <EnumPair Value='1862' Name='Yamaha Marine' />
-            <EnumPair Value='1863' Name='Faria Instruments' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Type>Lookup table</Type>
-          <Signed>false</Signed>
-          <FieldType>INDUSTRY</FieldType>
-          <EnumValues>
-            <EnumPair Value='0' Name='Global' />
-            <EnumPair Value='1' Name='Highway' />
-            <EnumPair Value='2' Name='Agriculture' />
-            <EnumPair Value='3' Name='Construction' />
-            <EnumPair Value='4' Name='Marine' />
-            <EnumPair Value='5' Name='Industrial' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>1768</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Binary data</Type>
-          <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
       <PGN>130817</PGN>
       <Id>navicoProductInformation</Id>
       <Description>Navico: Product Information</Description>
@@ -32881,6 +31591,147 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
+          <Type>Manufacturer code</Type>
+          <Signed>false</Signed>
+          <FieldType>MANUFACTURER</FieldType>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Type>Binary data</Type>
+          <Signed>false</Signed>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Signed>false</Signed>
+          <FieldType>INDUSTRY</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>productCode</Id>
+          <Name>Product Code</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Signed>false</Signed>
+          <FieldType>UINT16</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>model</Id>
+          <Name>Model</Name>
+          <BitLength>256</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII text</Type>
+          <Signed>false</Signed>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>288</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Signed>false</Signed>
+          <FieldType>UINT8</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>296</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Signed>false</Signed>
+          <FieldType>UINT8</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>c</Id>
+          <Name>C</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>304</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Signed>false</Signed>
+          <FieldType>UINT8</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>firmwareVersion</Id>
+          <Name>Firmware version</Name>
+          <BitLength>80</BitLength>
+          <BitOffset>312</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII text</Type>
+          <Signed>false</Signed>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>firmwareDate</Id>
+          <Name>Firmware date</Name>
+          <BitLength>256</BitLength>
+          <BitOffset>392</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII text</Type>
+          <Signed>false</Signed>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>firmwareTime</Id>
+          <Name>Firmware time</Name>
+          <BitLength>256</BitLength>
+          <BitOffset>648</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII text</Type>
+          <Signed>false</Signed>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130817</PGN>
+      <Id>lowranceProductInformation</Id>
+      <Description>Lowrance: Product Information</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>14</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Lowrance</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>140</Match>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
           <FieldType>MANUFACTURER</FieldType>
@@ -37583,7 +36434,7 @@ limitations under the License.
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -37862,7 +36713,7 @@ limitations under the License.
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -38304,7 +37155,7 @@ limitations under the License.
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -38497,7 +37348,7 @@ limitations under the License.
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -38638,7 +37489,7 @@ limitations under the License.
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -38778,7 +37629,7 @@ limitations under the License.
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -39741,7 +38592,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>text</Id>
           <Name>Text</Name>
-          <BitLength>2040</BitLength>
+          <BitLength>1784</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII text</Type>
@@ -40062,7 +38913,7 @@ limitations under the License.
             <EnumPair Value='1' Name='Format Code' />
             <EnumPair Value='2' Name='Factory EEPROM' />
             <EnumPair Value='3' Name='User EEPROM' />
-            <EnumPair Value='4' Name='Water Temp Sensor' />
+            <EnumPair Value='4' Name='Water Temperature Sensor' />
             <EnumPair Value='5' Name='Sonar Transceiver' />
             <EnumPair Value='6' Name='Speed sensor' />
             <EnumPair Value='7' Name='Internal temperature sensor' />

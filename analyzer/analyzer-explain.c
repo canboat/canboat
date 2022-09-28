@@ -343,6 +343,11 @@ static void explainPGNXML(Pgn pgn)
   unsigned bitOffset     = 0;
   bool     showBitOffset = true;
 
+  if (pgn.fallback && doV1)
+  {
+    return;
+  }
+
   printf("    <PGNInfo>\n"
          "      <PGN>%u</PGN>\n",
          pgn.pgn);
@@ -354,6 +359,10 @@ static void explainPGNXML(Pgn pgn)
   }
   printXML(6, "Type", (pgn.type == PACKET_ISO11783 ? "ISO" : (pgn.type == PACKET_FAST ? "Fast" : "Single")));
   printXML(6, "Complete", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));
+  if (pgn.fallback)
+  {
+    printXML(6, "Fallback", "true");
+  }
 
   if (pgn.complete != PACKET_COMPLETE)
   {
@@ -585,7 +594,7 @@ static void explain(void)
 
 static void explainMissingXML(void)
 {
-  printf("  <Missing>\n");
+  printf("  <MissingEnumerations>\n");
   printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
          "Fields",
          "The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect");
@@ -601,7 +610,7 @@ static void explainMissingXML(void)
   printf(
       "    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "SampleData", "The PGN has not been seen in any logfiles yet");
 
-  printf("  </Missing>\n");
+  printf("  </MissingEnumerations>\n");
 }
 
 static void explainFieldTypesXML(void)
@@ -741,7 +750,7 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
   }
 
   printf("  <PGNs>\n");
-  for (i = 1; i < ARRAY_SIZE(pgnList); i++)
+  for (i = 0; i < ARRAY_SIZE(pgnList); i++)
   {
     int pgn = pgnList[i].pgn;
     if ((normal && pgn < ACTISENSE_BEM) || (actisense && pgn >= ACTISENSE_BEM && pgn < IKONVERT_BEM)

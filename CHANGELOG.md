@@ -45,12 +45,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - PGN 130836 "Maretron Proprietary Switch Status Counter" renamed to "Maretron: Switch Status Counter".
   - PGN 130837 "Maretron Proprietary Switch Status Timer" renamed to "Maretron: Switch Status Timer" and
     period fields changed from "decimal" to "time".
+- The algorithm for recombining frames into a full fast-packet PGN has been refactored. It now handles out-of-order
+  data as produced by the YDGW-02. Some tests have been added to verify that this works.
 
 Issues resolved:
 
 - #305: Print reserved fields only when they are not all ones.
 - #304: Print spare fields only when they are not all zeroes.
 - #303: Allow lookups to use the values for "Error" and "Unknown".
+- #298: Lookup values should say "Temperature", not just "Temp".
+- #293: Unify field names for "RAIM", "AIS RAIM Flag" and "AIS RAIM flag" as "RAIM".
+- #292: Reactive power unit is "VAR", not "var".
+- #291: Units should never contain "seconds".
+- #289: Unify spelling of "Repeat Indicator" to have capital I.
 - #267: Print User ID as string field, always with 9 digits.
 - #283: Enumerations in pgns-v2.json use names for all attributes.
 - #285: Fix `SHORT_TIME` field printing incorrect values.

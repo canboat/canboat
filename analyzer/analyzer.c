@@ -49,18 +49,18 @@ enum MultiPackets multiPackets = MULTIPACKETS_SEPARATE;
 
 typedef struct
 {
-  size_t   lastFastPacket;
   size_t   size;
-  size_t   allocSize;
-  uint8_t *data;
+  uint8_t  data[FASTPACKET_MAX_SIZE];
+  uint32_t frames;    // Bit is one when frame is received
+  uint32_t allFrames; // Bit is one when frame needs to be present
+  int      pgn;
+  int      src;
+  bool     used;
 } Packet;
 
-typedef struct
-{
-  Packet packetList[ARRAY_SIZE(pgnList)];
-} DevicePackets;
+#define REASSEMBLY_BUFFER_SIZE (64)
 
-DevicePackets *device[256];
+Packet reassemblyBuffer[REASSEMBLY_BUFFER_SIZE];
 
 bool       showRaw       = false;
 bool       showData      = false;
@@ -120,6 +120,7 @@ static void usage(char **argv, char **av)
   printf("     -raw              Print raw bytes (obsolete, use -data)\n");
   printf("     -data             Print the PGN three times: in hex, ascii and analyzed\n");
   printf("     -debug            Print raw value per field\n");
+  printf("     -fixtime str      Print str as timestamp in logging\n");
   printf("\n");
   exit(1);
 }
@@ -213,6 +214,12 @@ int main(int argc, char **argv)
     {
       showData = true;
     }
+    else if (ac > 2 && strcasecmp(av[1], "-fixtime") == 0)
+    {
+      setFixedTimestamp(av[2]);
+      ac--;
+      av++;
+    }
     else if (ac > 2 && strcasecmp(av[1], "-src") == 0)
     {
       onlySrc = strtol(av[2], 0, 10);
@@ -270,7 +277,7 @@ int main(int argc, char **argv)
   {
     RawMessage m;
 
-    if (*msg == 0 || *msg == '\n' || *msg == '#')
+    if (*msg == 0 || *msg == '\r' || *msg == '\n' || *msg == '#')
     {
       continue;
     }
@@ -328,7 +335,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      logError("Unknown message error %d: %s\n", r, msg);
+      logError("Unknown message error %d: '%s'\n", r, msg);
     }
   }
 
@@ -384,11 +391,11 @@ static enum RawFormats detectFormat(const char *msg)
     }
     if (len > 8)
     {
-      logInfo("Detected normal format with all data on one line\n");
+      logInfo("Detected normal format with all frames on one line\n");
       multiPackets = MULTIPACKETS_COALESCED;
       return RAWFORMAT_FAST;
     }
-    logInfo("Assuming normal format with one line per packet\n");
+    logInfo("Assuming normal format with one line per frame\n");
     multiPackets = MULTIPACKETS_SEPARATE;
     return RAWFORMAT_PLAIN;
   }
@@ -398,7 +405,7 @@ static enum RawFormats detectFormat(const char *msg)
     char e;
     if (sscanf(msg, "%d:%d:%d.%d %c %02X ", &a, &b, &c, &d, &e, &f) == 6 && (e == 'R' || e == 'T'))
     {
-      logInfo("Detected YDWG-02 protocol with one line per packet\n");
+      logInfo("Detected YDWG-02 protocol with one line per frame\n");
       multiPackets = MULTIPACKETS_SEPARATE;
       return RAWFORMAT_YDWG02;
     }
@@ -542,125 +549,12 @@ void setSystemClock(void)
 #endif
 }
 
-static void printPacket(RawMessage *msg)
-{
-  size_t  fastPacketIndex;
-  size_t  bucket;
-  Packet *packet;
-  Pgn    *pgn;
-
-  pgn = getMatchingPgn(msg->pgn, msg->data, msg->len);
-  if (!pgn)
-  {
-    pgn = pgnList; // the first entry is the "catch all" PGN description
-  }
-
-  if (!device[msg->src])
-  {
-    heapSize += sizeof(DevicePackets);
-    logDebug("New device at address %u (heap %zu bytes)\n", msg->src, heapSize);
-    device[msg->src] = calloc(1, sizeof(DevicePackets));
-    if (!device[msg->src])
-    {
-      die("Out of memory\n");
-    }
-  }
-  packet = &(device[msg->src]->packetList[pgn - pgnList]);
-
-  if (!packet->data)
-  {
-    packet->allocSize = max(max(pgn->size, 8) + FASTPACKET_BUCKET_N_SIZE, msg->len);
-    heapSize += packet->allocSize;
-    logDebug("New PGN %u for device %u (heap %zu bytes)\n", pgn->pgn, msg->src, heapSize);
-    packet->data = malloc(packet->allocSize);
-    if (!packet->data)
-    {
-      die("Out of memory\n");
-    }
-  }
-
-  if (msg->len > 0x8 || multiPackets == MULTIPACKETS_COALESCED)
-  {
-    if (packet->allocSize < msg->len)
-    {
-      heapSize += msg->len - packet->allocSize;
-      logDebug("Resizing buffer for PGN %u device %u to accommodate %u bytes (heap %zu bytes)\n",
-               pgn->pgn,
-               msg->src,
-               msg->len,
-               heapSize);
-      packet->data = realloc(packet->data, msg->len);
-      if (!packet->data)
-      {
-        die("Out of memory\n");
-      }
-      packet->allocSize = msg->len;
-    }
-    memcpy(packet->data, msg->data, msg->len);
-    packet->size = msg->len;
-  }
-  else if (pgn->type == PACKET_FAST)
-  {
-    fastPacketIndex = msg->data[FASTPACKET_INDEX];
-    bucket          = fastPacketIndex & FASTPACKET_MAX_INDEX;
-
-    if (bucket == 0)
-    {
-      size_t newSize = ((size_t) msg->data[FASTPACKET_SIZE]) + FASTPACKET_BUCKET_N_SIZE;
-
-      if (packet->allocSize < newSize)
-      {
-        heapSize += newSize - packet->allocSize;
-        logDebug("Resizing buffer for PGN %u device %u to accommodate %zu bytes (heap %zu bytes)\n",
-                 pgn->pgn,
-                 msg->src,
-                 newSize,
-                 heapSize);
-        packet->data = realloc(packet->data, newSize);
-        if (!packet->data)
-        {
-          die("Out of memory\n");
-        }
-        packet->allocSize = newSize;
-      }
-      packet->size = msg->data[FASTPACKET_SIZE];
-      memcpy(packet->data, msg->data + FASTPACKET_BUCKET_0_OFFSET, FASTPACKET_BUCKET_0_SIZE);
-    }
-    else
-    {
-      if (packet->lastFastPacket + 1 != fastPacketIndex)
-      {
-        logError("PGN %u malformed packet from %u received; expected %zu but got %zu\n",
-                 pgn->pgn,
-                 msg->src,
-                 packet->lastFastPacket + 1,
-                 fastPacketIndex);
-        return;
-      }
-      memcpy(packet->data + FASTPACKET_BUCKET_0_SIZE + FASTPACKET_BUCKET_N_SIZE * (bucket - 1),
-             msg->data + FASTPACKET_BUCKET_N_OFFSET,
-             FASTPACKET_BUCKET_N_SIZE);
-    }
-    packet->lastFastPacket = fastPacketIndex;
-
-    if (FASTPACKET_BUCKET_0_SIZE + FASTPACKET_BUCKET_N_SIZE * bucket < packet->size)
-    {
-      /* Packet is not complete yet */
-      return;
-    }
-  }
-  else
-  {
-    packet->size = msg->len;
-    memcpy(packet->data, msg->data, msg->len);
-  }
-
-  logDebug("printPacket size=%zu len=%zu\n", packet->size, msg->len);
-  printPgn(msg, packet->data, packet->size, showData, showJson);
-}
-
 static void printCanFormat(RawMessage *msg)
 {
+  Pgn    *pgn;
+  size_t  buffer;
+  Packet *p;
+
   if (onlySrc >= 0 && onlySrc != msg->src)
   {
     return;
@@ -670,7 +564,94 @@ static void printCanFormat(RawMessage *msg)
     return;
   }
 
-  printPacket(msg);
+  pgn = searchForPgn(msg->pgn);
+  if (multiPackets == MULTIPACKETS_SEPARATE && pgn == NULL)
+  {
+    pgn = searchForUnknownPgn(msg->pgn);
+  }
+  if (multiPackets == MULTIPACKETS_COALESCED || !pgn || pgn->type != PACKET_FAST)
+  {
+    // No reassembly needed
+    printPgn(msg, msg->data, msg->len, showData, showJson);
+    return;
+  }
+
+  // Fast packet requires re-asssembly
+  // We only get here if we know for sure that the PGN is fast-packet
+  // Possibly it is of unknown length when the PGN is unknown.
+
+  for (buffer = 0; buffer < REASSEMBLY_BUFFER_SIZE; buffer++)
+  {
+    p = &reassemblyBuffer[buffer];
+
+    if (p->used && p->pgn == msg->pgn && p->src == msg->src)
+    {
+      // Found existing slot
+      break;
+    }
+  }
+  if (buffer == REASSEMBLY_BUFFER_SIZE)
+  {
+    // Find a free slot
+    for (buffer = 0; buffer < REASSEMBLY_BUFFER_SIZE; buffer++)
+    {
+      p = &reassemblyBuffer[buffer];
+      if (!p->used)
+      {
+        break;
+      }
+    }
+    if (buffer == REASSEMBLY_BUFFER_SIZE)
+    {
+      logError("Out of reassembly buffers; ignoring PGN %u\n", msg->pgn);
+      return;
+    }
+    p->used   = true;
+    p->src    = msg->src;
+    p->pgn    = msg->pgn;
+    p->frames = 0;
+  }
+
+  {
+    // YDWG can receive frames out of order, so handle this.
+    uint32_t frame    = msg->data[0] & 0x1f;
+    uint32_t seq      = msg->data[0] & 0xe0;
+    size_t   idx      = (frame == 0) ? 0 : FASTPACKET_BUCKET_0_SIZE + (frame - 1) * FASTPACKET_BUCKET_N_SIZE;
+    size_t   frameLen = (frame == 0) ? FASTPACKET_BUCKET_0_SIZE : FASTPACKET_BUCKET_N_SIZE;
+    size_t   msgIdx   = (frame == 0) ? FASTPACKET_BUCKET_0_OFFSET : FASTPACKET_BUCKET_N_OFFSET;
+
+    if ((p->frames & (1 << frame)) != 0)
+    {
+      logError("Received incomplete fast packet PGN %u from source %u\n", msg->pgn, msg->src);
+      p->frames = 0;
+    }
+
+    if (frame == 0 && p->frames == 0)
+    {
+      p->size      = msg->data[1];
+      p->allFrames = (1 << (1 + (p->size / 7))) - 1;
+    }
+
+    memcpy(&p->data[idx], &msg->data[msgIdx], frameLen);
+    p->frames |= 1 << frame;
+
+    logDebug("Using buffer %u for reassembly of PGN %u: size %zu frame %u sequence %u idx=%zu frames=%x mask=%x\n",
+             buffer,
+             msg->pgn,
+             p->size,
+             frame,
+             seq,
+             idx,
+             p->frames,
+             p->allFrames);
+    if (p->frames == p->allFrames)
+    {
+      // Received all data
+      printPgn(msg, p->data, p->size, showData, showJson);
+      p->used   = false;
+      p->frames = 0;
+    }
+  }
 }
 
 static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
@@ -847,14 +828,14 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
   uint32_t variableFields[2];     // How many variable fields per repetition, indexed by group
   size_t   variableFieldStart;
 
-  if (!msg)
+  if (msg == NULL)
   {
     return false;
   }
   pgn = getMatchingPgn(msg->pgn, dataStart, length);
   if (!pgn)
   {
-    pgn = pgnList; // the first entry is the "catch all" PGN description
+    logAbort("No PGN definition found for PGN %u\n", msg->pgn);
   }
 
   if (showData)

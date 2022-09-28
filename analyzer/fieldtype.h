@@ -350,7 +350,6 @@ FieldType fieldTypeList[] = {
     {.name                = "CONCENTRATION_UINT16_PPM",
      .description         = "Concentration of one substance in another",
      .encodingDescription = "Expressed in parts per million",
-     .comment             = "",
      .resolution          = 1,
      .unit                = "ppm",
      .baseFieldType       = "UINT16"},
@@ -797,7 +796,7 @@ FieldType fieldTypeList[] = {
     {.name                = "RESERVED",
      .description         = "Reserved field",
      .encodingDescription = "All reserved bits shall be 1",
-     .comment             = "",
+     .comment             = "NMEA reserved for future expansion and/or to align next data on byte boundary",
      .pf                  = fieldPrintReserved,
      .baseFieldType       = "BINARY"},
 

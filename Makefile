@@ -32,7 +32,7 @@ all:	bin man1 compile
 
 compile:
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
-	$(MAKE) -C analyzer json
+	$(MAKE) -C analyzer tests
 	$(MAKE) -C dbc-exporter
 
 bin:	rel/$(PLATFORM)

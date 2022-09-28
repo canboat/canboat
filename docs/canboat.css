@@ -21,6 +21,23 @@ table td
     padding:5px;
 }
 
+table td .repeating
+{
+    border:  3px dotted #000000;
+    padding: 3px;
+    background-color: #777777;
+}
+
+.repeating
+{
+    font-style: italic;
+}
+
+.startrepeating
+{
+    border-top: 3px solid #000000;
+}
+
 table td:first-child
 {
     border-left:0px solid #000000;

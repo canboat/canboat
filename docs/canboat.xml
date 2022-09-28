@@ -450,7 +450,6 @@ limitations under the License.
     <FieldType Name="CONCENTRATION_UINT16_PPM">
       <Description>Concentration of one substance in another</Description>
       <EncodingDescription>Expressed in parts per million</EncodingDescription>
-      <Comment></Comment>
       <BaseFieldType>UINT16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>ppm</Unit>
@@ -1191,7 +1190,7 @@ limitations under the License.
     <FieldType Name="RESERVED">
       <Description>Reserved field</Description>
       <EncodingDescription>All reserved bits shall be 1</EncodingDescription>
-      <Comment></Comment>
+      <Comment>NMEA reserved for future expansion and/or to align next data on byte boundary</Comment>
       <BaseFieldType>BINARY</BaseFieldType>
     </FieldType>
     <FieldType Name="SPARE">
@@ -1215,13 +1214,13 @@ limitations under the License.
       <EncodingDescription>The definition of the field is that of the reference PGN and reference field, this is totally variable.</EncodingDescription>
     </FieldType>
   </FieldTypes>
-  <Missing>
+  <MissingEnumerations>
     <MissingAttribute Name="Fields">The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</MissingAttribute>
     <MissingAttribute Name="FieldLengths">The length of one or more fields is likely incorrect</MissingAttribute>
     <MissingAttribute Name="Resolution">The resolution of one or more fields is likely incorrect</MissingAttribute>
     <MissingAttribute Name="Lookups">One or more of the lookup fields contain missing or incorrect values</MissingAttribute>
     <MissingAttribute Name="SampleData">The PGN has not been seen in any logfiles yet</MissingAttribute>
-  </Missing>
+  </MissingEnumerations>
   <LookupEnumerations>
     <LookupEnumeration Name='INDUSTRY_CODE' MaxValue='7'>
       <EnumPair Value='0' Name='Global' />
@@ -1836,8 +1835,8 @@ limitations under the License.
       <EnumPair Value='14' Name='WP Arrival' />
       <EnumPair Value='15' Name='Boat Speed High' />
       <EnumPair Value='16' Name='Boat Speed Low' />
-      <EnumPair Value='17' Name='Sea Temp High' />
-      <EnumPair Value='18' Name='Sea Temp Low' />
+      <EnumPair Value='17' Name='Sea Temperature High' />
+      <EnumPair Value='18' Name='Sea Temperature Low' />
       <EnumPair Value='19' Name='Pilot Watch' />
       <EnumPair Value='20' Name='Pilot Off Course' />
       <EnumPair Value='21' Name='Pilot Wind Shift' />
@@ -2584,7 +2583,7 @@ limitations under the License.
       <EnumPair Value='1' Name='Format Code' />
       <EnumPair Value='2' Name='Factory EEPROM' />
       <EnumPair Value='3' Name='User EEPROM' />
-      <EnumPair Value='4' Name='Water Temp Sensor' />
+      <EnumPair Value='4' Name='Water Temperature Sensor' />
       <EnumPair Value='5' Name='Sonar Transceiver' />
       <EnumPair Value='6' Name='Speed sensor' />
       <EnumPair Value='7' Name='Internal temperature sensor' />
@@ -2759,6 +2758,34 @@ limitations under the License.
     </LookupBitEnumeration>
   </LookupBitEnumerations>
   <PGNs>
+    <PGNInfo>
+      <PGN>0</PGN>
+      <Id>0xe8000xeeffUnknownSingleFrameAddressed</Id>
+      <Description>0xE800-0xEEFF: Unknown single-frame addressed</Description>
+      <Explanation>PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to 0xEFFF (59392 - 61183).</Explanation>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Fallback>true</Fallback>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
     <PGNInfo>
       <PGN>59392</PGN>
       <Id>isoAcknowledgement</Id>
@@ -3308,6 +3335,66 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>61184</PGN>
+      <Id>0xef000xefffManufacturerProprietarySingleFrameAddressed</Id>
+      <Description>0xEF00-0xEFFF: Manufacturer Proprietary single-frame addressed</Description>
+      <Explanation>Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN range 0xEF00 to 0xEFFF (61184 - 61439).</Explanation>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Fallback>true</Fallback>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>MANUFACTURER</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Signed>false</Signed>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Signed>false</Signed>
+          <FieldType>INDUSTRY</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>61184</PGN>
       <Id>seatalkWirelessKeypadLightControl</Id>
       <Description>Seatalk: Wireless Keypad Light Control</Description>
       <Type>Single</Type>
@@ -3549,71 +3636,13 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
-      <PGN>61184</PGN>
-      <Id>manufacturerProprietarySingleFrameAddressed</Id>
-      <Description>Manufacturer Proprietary single-frame addressed</Description>
-      <Explanation>This definition is used for manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN range 0EF00 to 0xEFFF (61184 - 61439) for which no reverse-engineered definition is available.</Explanation>
-      <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
-      <Length>8</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Signed>false</Signed>
-          <FieldType>MANUFACTURER</FieldType>
-          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Signed>false</Signed>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Signed>false</Signed>
-          <FieldType>INDUSTRY</FieldType>
-          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
       <PGN>61440</PGN>
-      <Id>unknownSingleFrameNonAddressed</Id>
-      <Description>Unknown single-frame non-addressed</Description>
-      <Explanation>This definition is used for manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to 0xFEFF (61440 - 65279) for which no reverse-engineered definition is available.</Explanation>
+      <Id>0xf0000xfeffUnknownSingleFrameNonAddressed</Id>
+      <Description>0xF000-0xFEFF: Unknown single-frame non-addressed</Description>
+      <Explanation>PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to 0xFEFF (61440 - 65279).</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
+      <Fallback>true</Fallback>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
@@ -4175,7 +4204,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>var</Unit>
+          <Unit>VAR</Unit>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
           <FieldType>POWER_INT32_OFFSET</FieldType>
@@ -4312,7 +4341,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>var</Unit>
+          <Unit>VAR</Unit>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
           <FieldType>POWER_INT32_OFFSET</FieldType>
@@ -4485,7 +4514,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>var</Unit>
+          <Unit>VAR</Unit>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
           <FieldType>POWER_INT32_OFFSET</FieldType>
@@ -4622,7 +4651,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>var</Unit>
+          <Unit>VAR</Unit>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
           <FieldType>POWER_INT32_OFFSET</FieldType>
@@ -4759,7 +4788,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>var</Unit>
+          <Unit>VAR</Unit>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
           <FieldType>POWER_INT32_OFFSET</FieldType>
@@ -4896,7 +4925,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>var</Unit>
+          <Unit>VAR</Unit>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
           <FieldType>POWER_INT32_OFFSET</FieldType>
@@ -5149,6 +5178,65 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>65280</PGN>
+      <Id>manufacturerProprietarySingleFrameNonAddressed</Id>
+      <Description>Manufacturer Proprietary single-frame non-addressed</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Fallback>true</Fallback>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>MANUFACTURER</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Signed>false</Signed>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Signed>false</Signed>
+          <FieldType>INDUSTRY</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65280</PGN>
       <Id>furunoHeave</Id>
       <Description>Furuno: Heave</Description>
       <Type>Single</Type>
@@ -5216,64 +5304,6 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Signed>false</Signed>
           <FieldType>RESERVED</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>65280</PGN>
-      <Id>manufacturerProprietarySingleFrameNonAddressed</Id>
-      <Description>Manufacturer Proprietary single-frame non-addressed</Description>
-      <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
-      <Length>8</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Signed>false</Signed>
-          <FieldType>MANUFACTURER</FieldType>
-          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Signed>false</Signed>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Signed>false</Signed>
-          <FieldType>INDUSTRY</FieldType>
-          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -7292,24 +7322,26 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>65536</PGN>
-      <Id>unknownFastPacketAddressed</Id>
-      <Description>Unknown fast-packet addressed</Description>
+      <Id>0x100000x1eeffUnknownFastPacketAddressed</Id>
+      <Description>0x10000 - 0x1EEFF: Unknown fast-packet addressed</Description>
+      <Explanation>PGNs in PDU1 (addressed) fast-packet PGN range 0x10000 to 0x1EEFF (65536 - 126719).</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
+      <Fallback>true</Fallback>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Lookups</MissingAttribute>
       </Missing>
-      <Length>255</Length>
+      <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>2040</BitLength>
+          <BitLength>1784</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
@@ -8102,6 +8134,66 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Signed>false</Signed>
           <FieldType>PGN</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>0x1ef000x1efffUnknownManufacturerProprietaryFastPacketAddressed</Id>
+      <Description>0x1EF00-0x1EFFF: Unknown Manufacturer Proprietary fast-packet addressed</Description>
+      <Explanation>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975).</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Fallback>true</Fallback>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>0</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>MANUFACTURER</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Signed>false</Signed>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Signed>false</Signed>
+          <FieldType>INDUSTRY</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>1768</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -10337,11 +10429,13 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
-      <PGN>126720</PGN>
-      <Id>manufacturerProprietaryFastPacketAddressed</Id>
-      <Description>Manufacturer Proprietary fast-packet addressed</Description>
-      <Type>Fast</Type>
+      <PGN>126976</PGN>
+      <Id>0x1f0000x1feffUnknownMixedSingleFastPacketNonAddressed</Id>
+      <Description>0x1F000-0x1FEFF: Unknown mixed single/fast packet non-addressed</Description>
+      <Explanation>PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815).</Explanation>
+      <Type>Single</Type>
       <Complete>false</Complete>
+      <Fallback>true</Fallback>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
@@ -10352,67 +10446,9 @@ limitations under the License.
       <Fields>
         <Field>
           <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Signed>false</Signed>
-          <FieldType>MANUFACTURER</FieldType>
-          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Signed>false</Signed>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Signed>false</Signed>
-          <FieldType>INDUSTRY</FieldType>
-          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>4</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>1768</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>126976</PGN>
-      <Id>unknownFastPacketNonAddressed</Id>
-      <Description>Unknown fast-packet non-addressed</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
-      <Length>255</Length>
-      <RepeatingFields>0</RepeatingFields>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>2040</BitLength>
+          <BitLength>1784</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
@@ -15432,7 +15468,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>15</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLength>2040</BitLength>
+          <BitLength>1784</BitLength>
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
@@ -16889,8 +16925,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>aisRaimFlag</Id>
-          <Name>AIS RAIM flag</Name>
+          <Id>raim</Id>
+          <Name>RAIM</Name>
           <BitLength>1</BitLength>
           <BitOffset>105</BitOffset>
           <BitStart>1</BitStart>
@@ -17187,8 +17223,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>aisRaimFlag</Id>
-          <Name>AIS RAIM Flag</Name>
+          <Id>raim</Id>
+          <Name>RAIM</Name>
           <BitLength>1</BitLength>
           <BitOffset>105</BitOffset>
           <BitStart>1</BitStart>
@@ -19972,7 +20008,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <Field>
           <Order>2</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
@@ -20513,7 +20549,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>8</Order>
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
-          <BitLength>2040</BitLength>
+          <BitLength>1784</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
@@ -20549,7 +20585,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <Field>
           <Order>2</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
@@ -22308,7 +22344,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <Field>
           <Order>2</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
@@ -22391,7 +22427,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <Field>
           <Order>2</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
@@ -27032,6 +27068,34 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130816</PGN>
+      <Id>0x1ff000x1ffffUnknownManufacturerSpecificFastPacketNonAddressed</Id>
+      <Description>0x1FF00-0x1FFFF: Unknown Manufacturer Specific fast-packet non-addressed</Description>
+      <Explanation>This definition is used for Manufacturer Specific PGNs in PDU2 (non-addressed) fast-packet PGN range 0x1FF00 to 0x1FFFF (130816 - 131071) for which no reverse-engineered definition is available.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Fallback>true</Fallback>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>223</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>1784</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130816</PGN>
       <Id>sonichubInit2</Id>
       <Description>SonicHub: Init #2</Description>
       <Type>Fast</Type>
@@ -29226,6 +29290,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Manufacturer Proprietary fast-packet non-addressed</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
+      <Fallback>true</Fallback>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
@@ -29301,6 +29366,136 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Match>275</Match>
+          <Signed>false</Signed>
+          <FieldType>MANUFACTURER</FieldType>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Signed>false</Signed>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Signed>false</Signed>
+          <FieldType>INDUSTRY</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>productCode</Id>
+          <Name>Product Code</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>UINT16</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>model</Id>
+          <Name>Model</Name>
+          <BitLength>256</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>288</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>UINT8</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>296</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>UINT8</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>c</Id>
+          <Name>C</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>304</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>UINT8</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>firmwareVersion</Id>
+          <Name>Firmware version</Name>
+          <BitLength>80</BitLength>
+          <BitOffset>312</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>firmwareDate</Id>
+          <Name>Firmware date</Name>
+          <BitLength>256</BitLength>
+          <BitOffset>392</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>firmwareTime</Id>
+          <Name>Firmware time</Name>
+          <BitLength>256</BitLength>
+          <BitOffset>648</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130817</PGN>
+      <Id>lowranceProductInformation</Id>
+      <Description>Lowrance: Product Information</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>14</Length>
+      <RepeatingFields>0</RepeatingFields>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Lowrance</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>140</Match>
           <Signed>false</Signed>
           <FieldType>MANUFACTURER</FieldType>
         </Field>
@@ -33612,7 +33807,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -33865,7 +34060,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -34232,7 +34427,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -34408,7 +34603,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -34534,7 +34729,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -34660,7 +34855,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <Field>
           <Order>5</Order>
           <Id>repeatIndicator</Id>
-          <Name>Repeat indicator</Name>
+          <Name>Repeat Indicator</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
           <BitStart>6</BitStart>
@@ -35503,7 +35698,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>7</Order>
           <Id>text</Id>
           <Name>Text</Name>
-          <BitLength>2040</BitLength>
+          <BitLength>1784</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>

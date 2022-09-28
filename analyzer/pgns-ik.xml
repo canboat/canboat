@@ -31,7 +31,7 @@ limitations under the License.
       <PGN>262400</PGN>
       <Id>ikonvertNetworkStatus</Id>
       <Description>iKonvert: Network status</Description>
-      <Type>Fast</Type>
+      <Type>Single</Type>
       <Complete>true</Complete>
       <Length>15</Length>
       <RepeatingFields>0</RepeatingFields>

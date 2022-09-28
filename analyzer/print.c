@@ -155,7 +155,7 @@ static bool extractNumberNotEmpty(const Field *field,
     return false;
   }
 
-  if (*maxValue >= 3)
+  if (*maxValue >= 7)
   {
     reserved = 2; /* DATAFIELD_ERROR and DATAFIELD_UNKNOWN */
   }

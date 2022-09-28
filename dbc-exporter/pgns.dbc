@@ -1,4 +1,4 @@
-VERSION "Canboat export 2022-09-26T21:44:28.391509"
+VERSION "Canboat export 2022-09-28T14:56:01.320514"
 
 
 NS_ : 
@@ -61,12 +61,6 @@ BO_ 2565734654 PGN_60928_isoAddressClaim: 8 Vector__XXX
  SG_ manufacturerCode : 21|11@1+ (1,0) [0|0] "" Vector__XXX
  SG_ uniqueNumber : 0|21@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2565865726 PGN_61440_unknownSingleFrameNonA: 8 Vector__XXX
- SG_ data : 16|48@1+ (1,0) [0|0] "" Vector__XXX
- SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2566777342 PGN_65001_bus1PhaseCBasicAcQuant: 8 Vector__XXX
  SG_ acFrequency : 32|16@1+ (0.0078125,0) [0|0] "Hz" Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
@@ -124,7 +118,7 @@ BO_ 2566779902 PGN_65011_utilityPhaseBBasicAcQu: 8 Vector__XXX
 BO_ 2566780158 PGN_65012_utilityPhaseAAcReactiv: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1+ (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566780414 PGN_65013_utilityPhaseAAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
@@ -139,7 +133,7 @@ BO_ 2566780670 PGN_65014_utilityPhaseABasicAcQu: 8 Vector__XXX
 BO_ 2566780926 PGN_65015_utilityTotalAcReactive: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1+ (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566781182 PGN_65016_utilityTotalAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
@@ -158,7 +152,7 @@ BO_ 2566781694 PGN_65018_generatorTotalAcEnergy: 8 Vector__XXX
 BO_ 2566781950 PGN_65019_generatorPhaseCAcReact: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1+ (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566782206 PGN_65020_generatorPhaseCAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
@@ -173,7 +167,7 @@ BO_ 2566782462 PGN_65021_generatorPhaseCBasicAc: 8 Vector__XXX
 BO_ 2566782718 PGN_65022_generatorPhaseBAcReact: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1+ (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566782974 PGN_65023_generatorPhaseBAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
@@ -188,7 +182,7 @@ BO_ 2566783230 PGN_65024_generatorPhaseBBasicAc: 8 Vector__XXX
 BO_ 2566783486 PGN_65025_generatorPhaseAAcReact: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1+ (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566783742 PGN_65026_generatorPhaseAAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
@@ -203,7 +197,7 @@ BO_ 2566783998 PGN_65027_generatorPhaseABasicAc: 8 Vector__XXX
 BO_ 2566784254 PGN_65028_generatorTotalAcReacti: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|32@1+ (1,0) [0|0] "var" Vector__XXX
+ SG_ reactivePower : 0|32@1+ (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566784510 PGN_65029_generatorTotalAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
@@ -214,6 +208,13 @@ BO_ 2566784766 PGN_65030_generatorAverageBasicA: 8 Vector__XXX
  SG_ acFrequency : 32|16@1+ (0.0078125,0) [0|0] "Hz" Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
+
+BO_ 2566848766 PGN_65280_furunoHeave: 8 Vector__XXX
+ SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ heave : 16|32@1- (0.001,0) [0|0] "m" Vector__XXX
+ SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566849790 PGN_65284_maretronProprietaryDcB: 8 Vector__XXX
  SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
@@ -374,15 +375,7 @@ BO_ 2566899966 PGN_65480_simnetAutopilotMode: 8 Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2566914302 PGN_65536_unknownFastPacketAddre: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2582511870 PGN_126464_pgnListTransmitAndRec: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2582642942 PGN_126976_unknownFastPacketNonA: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -1181,10 +1174,6 @@ BO_ 2583567102 PGN_130586_zoneConfiguration: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2583626238 PGN_130817_navicoProductInformat: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2583626494 PGN_130818_simnetReprogramData: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1278,7 +1267,6 @@ CM_ SG_ 2565734654 deviceFunction "ISO Function";
 CM_ SG_ 2565734654 deviceInstanceUpper "ISO Function Instance";
 CM_ SG_ 2565734654 deviceInstanceLower "ISO ECU Instance";
 CM_ SG_ 2565734654 uniqueNumber "ISO Identity Number";
-CM_ BO_ 2565865726 "Unknown single-frame non-addressed";
 CM_ BO_ 2566777342 "Bus #1 Phase C Basic AC Quantities";
 CM_ BO_ 2566777598 "Bus #1 Phase B Basic AC Quantities";
 CM_ BO_ 2566777854 "Bus #1 Phase A Basic AC Quantities";
@@ -1309,6 +1297,9 @@ CM_ BO_ 2566783998 "Generator Phase A Basic AC Quantities";
 CM_ BO_ 2566784254 "Generator Total AC Reactive Power";
 CM_ BO_ 2566784510 "Generator Total AC Power";
 CM_ BO_ 2566784766 "Generator Average Basic AC Quantities";
+CM_ BO_ 2566848766 "Furuno: Heave";
+CM_ SG_ 2566848766 industryCode "Marine Industry";
+CM_ SG_ 2566848766 manufacturerCode "Furuno";
 CM_ BO_ 2566849790 "Maretron: Proprietary DC Breaker Current";
 CM_ SG_ 2566849790 industryCode "Marine Industry";
 CM_ SG_ 2566849790 manufacturerCode "Maretron";
@@ -1372,9 +1363,7 @@ CM_ SG_ 2566882046 manufacturerCode "Airmar";
 CM_ BO_ 2566899966 "Simnet: Autopilot Mode";
 CM_ SG_ 2566899966 industryCode "Marine Industry";
 CM_ SG_ 2566899966 manufacturerCode "Simrad";
-CM_ BO_ 2566914302 "Unknown fast-packet addressed";
 CM_ BO_ 2582511870 "PGN List (Transmit and Receive)";
-CM_ BO_ 2582642942 "Unknown fast-packet non-addressed";
 CM_ BO_ 2582644734 "Alert";
 CM_ BO_ 2582644990 "Alert Response";
 CM_ BO_ 2582645246 "Alert Text";
@@ -1530,7 +1519,6 @@ CM_ BO_ 2583566334 "Available Audio EQ presets";
 CM_ BO_ 2583566590 "Available Bluetooth addresses";
 CM_ BO_ 2583566846 "Bluetooth source status";
 CM_ BO_ 2583567102 "Zone Configuration";
-CM_ BO_ 2583626238 "Navico: Product Information";
 CM_ BO_ 2583626494 "Simnet: Reprogram Data";
 CM_ BO_ 2583626750 "Simnet: Request Reprogram";
 CM_ BO_ 2583627262 "Furuno: Unknown";
@@ -1558,7 +1546,6 @@ BA_DEF_DEF_  "SystemMessageLongSymbol" "";
 BA_DEF_DEF_  "SystemSignalLongSymbol" "";
 BA_DEF_DEF_  "GenMsgCycleTime" 0;
 BA_ "SystemMessageLongSymbol" BO_ 2565538046 "PGN_60160_isoTransportProtocolDataTransfer";
-BA_ "SystemMessageLongSymbol" BO_ 2565865726 "PGN_61440_unknownSingleFrameNonAddressed";
 BA_ "SystemMessageLongSymbol" BO_ 2566777342 "PGN_65001_bus1PhaseCBasicAcQuantities";
 BA_ "SystemMessageLongSymbol" BO_ 2566777598 "PGN_65002_bus1PhaseBBasicAcQuantities";
 BA_ "SystemMessageLongSymbol" BO_ 2566777854 "PGN_65003_bus1PhaseABasicAcQuantities";
@@ -1589,9 +1576,7 @@ BA_ "SystemMessageLongSymbol" BO_ 2566856958 "PGN_65312_navicoWirelessSignalStat
 BA_ "SystemMessageLongSymbol" BO_ 2566869246 "PGN_65360_seatalkPilotLockedHeading";
 BA_ "SystemMessageLongSymbol" BO_ 2566881534 "PGN_65408_airmarDepthQualityFactor";
 BA_ "SystemMessageLongSymbol" BO_ 2566882046 "PGN_65410_airmarDeviceInformation";
-BA_ "SystemMessageLongSymbol" BO_ 2566914302 "PGN_65536_unknownFastPacketAddressed";
 BA_ "SystemMessageLongSymbol" BO_ 2582511870 "PGN_126464_pgnListTransmitAndReceive";
-BA_ "SystemMessageLongSymbol" BO_ 2582642942 "PGN_126976_unknownFastPacketNonAddressed";
 BA_ "SystemMessageLongSymbol" BO_ 2582648574 "PGN_126998_configurationInformation";
 BA_ "SystemMessageLongSymbol" BO_ 2582708734 "PGN_127233_manOverboardNotification";
 BA_ "SystemMessageLongSymbol" BO_ 2582774014 "PGN_127488_engineParametersRapidUpdate";
@@ -1654,7 +1639,6 @@ BA_ "SystemMessageLongSymbol" BO_ 2583565566 "PGN_130580_systemConfigurationDepr
 BA_ "SystemMessageLongSymbol" BO_ 2583565822 "PGN_130581_zoneConfigurationDeprecated";
 BA_ "SystemMessageLongSymbol" BO_ 2583566334 "PGN_130583_availableAudioEqPresets";
 BA_ "SystemMessageLongSymbol" BO_ 2583566590 "PGN_130584_availableBluetoothAddresses";
-BA_ "SystemMessageLongSymbol" BO_ 2583626238 "PGN_130817_navicoProductInformation";
 BA_ "SystemMessageLongSymbol" BO_ 2583626750 "PGN_130819_simnetRequestReprogram";
 BA_ "SystemMessageLongSymbol" BO_ 2583627774 "PGN_130823_maretronProprietaryTemperatureHighRange";
 BA_ "SystemMessageLongSymbol" BO_ 2583629822 "PGN_130831_suzukiEngineAndStorageDeviceConfig";
@@ -1670,7 +1654,6 @@ BA_ "SystemMessageLongSymbol" BO_ 2583642366 "PGN_130880_airmarAdditionalWeather
 VAL_ 2565341438 control 0 "ACK" 1 "NAK" 2 "Access Denied" 3 "Address Busy" ;
 VAL_ 2565734654 industryGroup 0 "Global" 1 "Highway" 2 "Agriculture" 3 "Construction" 4 "Marine" 5 "Industrial" ;
 VAL_ 2565734654 deviceClass 0 "Reserved for 2000 Use" 10 "System tools" 20 "Safety systems" 25 "Internetwork device" 30 "Electrical Distribution" 35 "Electrical Generation" 40 "Steering and Control surfaces" 50 "Propulsion" 60 "Navigation" 70 "Communication" 75 "Sensor Communication Interface" 80 "Instrumentation/general systems" 85 "External Environment" 90 "Internal Environment" 100 "Deck + cargo + fishing equipment systems" 120 "Display" 125 "Entertainment" ;
-VAL_ 2565865726 industryCode 0 "Global" 1 "Highway" 2 "Agriculture" 3 "Construction" 4 "Marine" 5 "Industrial" ;
 VAL_ 2566778622 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566779390 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566780158 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
@@ -1680,10 +1663,10 @@ VAL_ 2566782718 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566783486 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566784254 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566850814 alarmGroup 0 "Instrument" 1 "Autopilot" 2 "Radar" 3 "Chart Plotter" 4 "AIS" ;
-VAL_ 2566850814 alarmId 0 "No Alarm" 1 "Shallow Depth" 2 "Deep Depth" 3 "Shallow Anchor" 4 "Deep Anchor" 5 "Off Course" 6 "AWA High" 7 "AWA Low" 8 "AWS High" 9 "AWS Low" 10 "TWA High" 11 "TWA Low" 12 "TWS High" 13 "TWS Low" 14 "WP Arrival" 15 "Boat Speed High" 16 "Boat Speed Low" 17 "Sea Temp High" 18 "Sea Temp Low" 19 "Pilot Watch" 20 "Pilot Off Course" 21 "Pilot Wind Shift" 22 "Pilot Low Battery" 23 "Pilot Last Minute Of Watch" 24 "Pilot No NMEA Data" 25 "Pilot Large XTE" 26 "Pilot NMEA DataError" 27 "Pilot CU Disconnected" 28 "Pilot Auto Release" 29 "Pilot Way Point Advance" 30 "Pilot Drive Stopped" 31 "Pilot Type Unspecified" 32 "Pilot Calibration Required" 33 "Pilot Last Heading" 34 "Pilot No Pilot" 35 "Pilot Route Complete" 36 "Pilot Variable Text" 37 "GPS Failure" 38 "MOB" 39 "Seatalk1 Anchor" 40 "Pilot Swapped Motor Power" 41 "Pilot Standby Too Fast To Fish" 42 "Pilot No GPS Fix" 43 "Pilot No GPS COG" 44 "Pilot Start Up" 45 "Pilot Too Slow" 46 "Pilot No Compass" 47 "Pilot Rate Gyro Fault" 48 "Pilot Current Limit" 49 "Pilot Way Point Advance Port" 50 "Pilot Way Point Advance Stbd" 51 "Pilot No Wind Data" 52 "Pilot No Speed Data" 53 "Pilot Seatalk Fail1" 54 "Pilot Seatalk Fail2" 55 "Pilot Warning Too Fast To Fish" 56 "Pilot Auto Dockside Fail" 57 "Pilot Turn Too Fast" 58 "Pilot No Nav Data" 59 "Pilot Lost Waypoint Data" 60 "Pilot EEPROM Corrupt" 61 "Pilot Rudder Feedback Fail" 62 "Pilot Autolearn Fail1" 63 "Pilot Autolearn Fail2" 64 "Pilot Autolearn Fail3" 65 "Pilot Autolearn Fail4" 66 "Pilot Autolearn Fail5" 67 "Pilot Autolearn Fail6" 68 "Pilot Warning Cal Required" 69 "Pilot Warning OffCourse" 70 "Pilot Warning XTE" 71 "Pilot Warning Wind Shift" 72 "Pilot Warning Drive Short" 73 "Pilot Warning Clutch Short" 74 "Pilot Warning Solenoid Short" 75 "Pilot Joystick Fault" 76 "Pilot No Joystick Data" 77 "not assigned" 78 "not assigned" 79 "not assigned" 80 "Pilot Invalid Command" 81 "AIS TX Malfunction" 82 "AIS Antenna VSWR fault" 83 "AIS Rx channel 1 malfunction" 84 "AIS Rx channel 2 malfunction" 85 "AIS No sensor position in use" 86 "AIS No valid SOG information" 87 "AIS No valid COG information" 88 "AIS 12V alarm" 89 "AIS 6V alarm" 90 "AIS Noise threshold exceeded channel A" 91 "AIS Noise threshold exceeded channel B" 92 "AIS Transmitter PA fault" 93 "AIS 3V3 alarm" 94 "AIS Rx channel 70 malfunction" 95 "AIS Heading lost/invalid" 96 "AIS internal GPS lost" 97 "AIS No sensor position" 98 "AIS Lock failure" 99 "AIS Internal GGA timeout" 100 "AIS Protocol stack restart" 101 "Pilot No IPS communications" 102 "Pilot Power-On or Sleep-Switch Reset While Engaged" 103 "Pilot Unexpected Reset While Engaged" 104 "AIS Dangerous Target" 105 "AIS Lost Target" 106 "AIS Safety Related Message (used to silence)" 107 "AIS Connection Lost" 108 "No Fix" ;
+VAL_ 2566850814 alarmId 0 "No Alarm" 1 "Shallow Depth" 2 "Deep Depth" 3 "Shallow Anchor" 4 "Deep Anchor" 5 "Off Course" 6 "AWA High" 7 "AWA Low" 8 "AWS High" 9 "AWS Low" 10 "TWA High" 11 "TWA Low" 12 "TWS High" 13 "TWS Low" 14 "WP Arrival" 15 "Boat Speed High" 16 "Boat Speed Low" 17 "Sea Temperature High" 18 "Sea Temperature Low" 19 "Pilot Watch" 20 "Pilot Off Course" 21 "Pilot Wind Shift" 22 "Pilot Low Battery" 23 "Pilot Last Minute Of Watch" 24 "Pilot No NMEA Data" 25 "Pilot Large XTE" 26 "Pilot NMEA DataError" 27 "Pilot CU Disconnected" 28 "Pilot Auto Release" 29 "Pilot Way Point Advance" 30 "Pilot Drive Stopped" 31 "Pilot Type Unspecified" 32 "Pilot Calibration Required" 33 "Pilot Last Heading" 34 "Pilot No Pilot" 35 "Pilot Route Complete" 36 "Pilot Variable Text" 37 "GPS Failure" 38 "MOB" 39 "Seatalk1 Anchor" 40 "Pilot Swapped Motor Power" 41 "Pilot Standby Too Fast To Fish" 42 "Pilot No GPS Fix" 43 "Pilot No GPS COG" 44 "Pilot Start Up" 45 "Pilot Too Slow" 46 "Pilot No Compass" 47 "Pilot Rate Gyro Fault" 48 "Pilot Current Limit" 49 "Pilot Way Point Advance Port" 50 "Pilot Way Point Advance Stbd" 51 "Pilot No Wind Data" 52 "Pilot No Speed Data" 53 "Pilot Seatalk Fail1" 54 "Pilot Seatalk Fail2" 55 "Pilot Warning Too Fast To Fish" 56 "Pilot Auto Dockside Fail" 57 "Pilot Turn Too Fast" 58 "Pilot No Nav Data" 59 "Pilot Lost Waypoint Data" 60 "Pilot EEPROM Corrupt" 61 "Pilot Rudder Feedback Fail" 62 "Pilot Autolearn Fail1" 63 "Pilot Autolearn Fail2" 64 "Pilot Autolearn Fail3" 65 "Pilot Autolearn Fail4" 66 "Pilot Autolearn Fail5" 67 "Pilot Autolearn Fail6" 68 "Pilot Warning Cal Required" 69 "Pilot Warning OffCourse" 70 "Pilot Warning XTE" 71 "Pilot Warning Wind Shift" 72 "Pilot Warning Drive Short" 73 "Pilot Warning Clutch Short" 74 "Pilot Warning Solenoid Short" 75 "Pilot Joystick Fault" 76 "Pilot No Joystick Data" 77 "not assigned" 78 "not assigned" 79 "not assigned" 80 "Pilot Invalid Command" 81 "AIS TX Malfunction" 82 "AIS Antenna VSWR fault" 83 "AIS Rx channel 1 malfunction" 84 "AIS Rx channel 2 malfunction" 85 "AIS No sensor position in use" 86 "AIS No valid SOG information" 87 "AIS No valid COG information" 88 "AIS 12V alarm" 89 "AIS 6V alarm" 90 "AIS Noise threshold exceeded channel A" 91 "AIS Noise threshold exceeded channel B" 92 "AIS Transmitter PA fault" 93 "AIS 3V3 alarm" 94 "AIS Rx channel 70 malfunction" 95 "AIS Heading lost/invalid" 96 "AIS internal GPS lost" 97 "AIS No sensor position" 98 "AIS Lock failure" 99 "AIS Internal GGA timeout" 100 "AIS Protocol stack restart" 101 "Pilot No IPS communications" 102 "Pilot Power-On or Sleep-Switch Reset While Engaged" 103 "Pilot Unexpected Reset While Engaged" 104 "AIS Dangerous Target" 105 "AIS Lost Target" 106 "AIS Safety Related Message (used to silence)" 107 "AIS Connection Lost" 108 "No Fix" ;
 VAL_ 2566850814 alarmStatus 0 "Alarm condition not met" 1 "Alarm condition met and not silenced" 2 "Alarm condition met and silenced" ;
 VAL_ 2566869502 alarmGroup 0 "Instrument" 1 "Autopilot" 2 "Radar" 3 "Chart Plotter" 4 "AIS" ;
-VAL_ 2566869502 alarmId 0 "No Alarm" 1 "Shallow Depth" 2 "Deep Depth" 3 "Shallow Anchor" 4 "Deep Anchor" 5 "Off Course" 6 "AWA High" 7 "AWA Low" 8 "AWS High" 9 "AWS Low" 10 "TWA High" 11 "TWA Low" 12 "TWS High" 13 "TWS Low" 14 "WP Arrival" 15 "Boat Speed High" 16 "Boat Speed Low" 17 "Sea Temp High" 18 "Sea Temp Low" 19 "Pilot Watch" 20 "Pilot Off Course" 21 "Pilot Wind Shift" 22 "Pilot Low Battery" 23 "Pilot Last Minute Of Watch" 24 "Pilot No NMEA Data" 25 "Pilot Large XTE" 26 "Pilot NMEA DataError" 27 "Pilot CU Disconnected" 28 "Pilot Auto Release" 29 "Pilot Way Point Advance" 30 "Pilot Drive Stopped" 31 "Pilot Type Unspecified" 32 "Pilot Calibration Required" 33 "Pilot Last Heading" 34 "Pilot No Pilot" 35 "Pilot Route Complete" 36 "Pilot Variable Text" 37 "GPS Failure" 38 "MOB" 39 "Seatalk1 Anchor" 40 "Pilot Swapped Motor Power" 41 "Pilot Standby Too Fast To Fish" 42 "Pilot No GPS Fix" 43 "Pilot No GPS COG" 44 "Pilot Start Up" 45 "Pilot Too Slow" 46 "Pilot No Compass" 47 "Pilot Rate Gyro Fault" 48 "Pilot Current Limit" 49 "Pilot Way Point Advance Port" 50 "Pilot Way Point Advance Stbd" 51 "Pilot No Wind Data" 52 "Pilot No Speed Data" 53 "Pilot Seatalk Fail1" 54 "Pilot Seatalk Fail2" 55 "Pilot Warning Too Fast To Fish" 56 "Pilot Auto Dockside Fail" 57 "Pilot Turn Too Fast" 58 "Pilot No Nav Data" 59 "Pilot Lost Waypoint Data" 60 "Pilot EEPROM Corrupt" 61 "Pilot Rudder Feedback Fail" 62 "Pilot Autolearn Fail1" 63 "Pilot Autolearn Fail2" 64 "Pilot Autolearn Fail3" 65 "Pilot Autolearn Fail4" 66 "Pilot Autolearn Fail5" 67 "Pilot Autolearn Fail6" 68 "Pilot Warning Cal Required" 69 "Pilot Warning OffCourse" 70 "Pilot Warning XTE" 71 "Pilot Warning Wind Shift" 72 "Pilot Warning Drive Short" 73 "Pilot Warning Clutch Short" 74 "Pilot Warning Solenoid Short" 75 "Pilot Joystick Fault" 76 "Pilot No Joystick Data" 77 "not assigned" 78 "not assigned" 79 "not assigned" 80 "Pilot Invalid Command" 81 "AIS TX Malfunction" 82 "AIS Antenna VSWR fault" 83 "AIS Rx channel 1 malfunction" 84 "AIS Rx channel 2 malfunction" 85 "AIS No sensor position in use" 86 "AIS No valid SOG information" 87 "AIS No valid COG information" 88 "AIS 12V alarm" 89 "AIS 6V alarm" 90 "AIS Noise threshold exceeded channel A" 91 "AIS Noise threshold exceeded channel B" 92 "AIS Transmitter PA fault" 93 "AIS 3V3 alarm" 94 "AIS Rx channel 70 malfunction" 95 "AIS Heading lost/invalid" 96 "AIS internal GPS lost" 97 "AIS No sensor position" 98 "AIS Lock failure" 99 "AIS Internal GGA timeout" 100 "AIS Protocol stack restart" 101 "Pilot No IPS communications" 102 "Pilot Power-On or Sleep-Switch Reset While Engaged" 103 "Pilot Unexpected Reset While Engaged" 104 "AIS Dangerous Target" 105 "AIS Lost Target" 106 "AIS Safety Related Message (used to silence)" 107 "AIS Connection Lost" 108 "No Fix" ;
+VAL_ 2566869502 alarmId 0 "No Alarm" 1 "Shallow Depth" 2 "Deep Depth" 3 "Shallow Anchor" 4 "Deep Anchor" 5 "Off Course" 6 "AWA High" 7 "AWA Low" 8 "AWS High" 9 "AWS Low" 10 "TWA High" 11 "TWA Low" 12 "TWS High" 13 "TWS Low" 14 "WP Arrival" 15 "Boat Speed High" 16 "Boat Speed Low" 17 "Sea Temperature High" 18 "Sea Temperature Low" 19 "Pilot Watch" 20 "Pilot Off Course" 21 "Pilot Wind Shift" 22 "Pilot Low Battery" 23 "Pilot Last Minute Of Watch" 24 "Pilot No NMEA Data" 25 "Pilot Large XTE" 26 "Pilot NMEA DataError" 27 "Pilot CU Disconnected" 28 "Pilot Auto Release" 29 "Pilot Way Point Advance" 30 "Pilot Drive Stopped" 31 "Pilot Type Unspecified" 32 "Pilot Calibration Required" 33 "Pilot Last Heading" 34 "Pilot No Pilot" 35 "Pilot Route Complete" 36 "Pilot Variable Text" 37 "GPS Failure" 38 "MOB" 39 "Seatalk1 Anchor" 40 "Pilot Swapped Motor Power" 41 "Pilot Standby Too Fast To Fish" 42 "Pilot No GPS Fix" 43 "Pilot No GPS COG" 44 "Pilot Start Up" 45 "Pilot Too Slow" 46 "Pilot No Compass" 47 "Pilot Rate Gyro Fault" 48 "Pilot Current Limit" 49 "Pilot Way Point Advance Port" 50 "Pilot Way Point Advance Stbd" 51 "Pilot No Wind Data" 52 "Pilot No Speed Data" 53 "Pilot Seatalk Fail1" 54 "Pilot Seatalk Fail2" 55 "Pilot Warning Too Fast To Fish" 56 "Pilot Auto Dockside Fail" 57 "Pilot Turn Too Fast" 58 "Pilot No Nav Data" 59 "Pilot Lost Waypoint Data" 60 "Pilot EEPROM Corrupt" 61 "Pilot Rudder Feedback Fail" 62 "Pilot Autolearn Fail1" 63 "Pilot Autolearn Fail2" 64 "Pilot Autolearn Fail3" 65 "Pilot Autolearn Fail4" 66 "Pilot Autolearn Fail5" 67 "Pilot Autolearn Fail6" 68 "Pilot Warning Cal Required" 69 "Pilot Warning OffCourse" 70 "Pilot Warning XTE" 71 "Pilot Warning Wind Shift" 72 "Pilot Warning Drive Short" 73 "Pilot Warning Clutch Short" 74 "Pilot Warning Solenoid Short" 75 "Pilot Joystick Fault" 76 "Pilot No Joystick Data" 77 "not assigned" 78 "not assigned" 79 "not assigned" 80 "Pilot Invalid Command" 81 "AIS TX Malfunction" 82 "AIS Antenna VSWR fault" 83 "AIS Rx channel 1 malfunction" 84 "AIS Rx channel 2 malfunction" 85 "AIS No sensor position in use" 86 "AIS No valid SOG information" 87 "AIS No valid COG information" 88 "AIS 12V alarm" 89 "AIS 6V alarm" 90 "AIS Noise threshold exceeded channel A" 91 "AIS Noise threshold exceeded channel B" 92 "AIS Transmitter PA fault" 93 "AIS 3V3 alarm" 94 "AIS Rx channel 70 malfunction" 95 "AIS Heading lost/invalid" 96 "AIS internal GPS lost" 97 "AIS No sensor position" 98 "AIS Lock failure" 99 "AIS Internal GGA timeout" 100 "AIS Protocol stack restart" 101 "Pilot No IPS communications" 102 "Pilot Power-On or Sleep-Switch Reset While Engaged" 103 "Pilot Unexpected Reset While Engaged" 104 "AIS Dangerous Target" 105 "AIS Lost Target" 106 "AIS Safety Related Message (used to silence)" 107 "AIS Connection Lost" 108 "No Fix" ;
 VAL_ 2566881534 depthQualityFactor 0 "Depth unlocked" 1 "Quality 10%" 2 "Quality 20%" 3 "Quality 30%" 4 "Quality 40%" 5 "Quality 50%" 6 "Quality 60%" 7 "Quality 70%" 8 "Quality 80%" 9 "Quality 90%" 10 "Quality 100%" ;
 VAL_ 2582647038 source 0 "GPS" 1 "GLONASS" 2 "Radio Station" 3 "Local Cesium clock" 4 "Local Rubidium clock" 5 "Local Crystal clock" ;
 VAL_ 2582647294 equipmentStatus 0 "Operational" 1 "Fault" ;

@@ -39,9 +39,18 @@ Pgn *searchForPgn(int pgn)
     mid = (start + end) / 2;
     if (pgn == pgnList[mid].pgn)
     {
+      // Return the first one, unless it is the catch-all
       while (mid > 0 && pgn == pgnList[mid - 1].pgn)
       {
         mid--;
+      }
+      if (pgnList[mid].fallback)
+      {
+        mid++;
+        if (pgn != pgnList[mid].pgn)
+        {
+          return NULL;
+        }
       }
       return &pgnList[mid];
     }
@@ -54,52 +63,65 @@ Pgn *searchForPgn(int pgn)
       start = mid + 1;
     }
   }
-  return 0;
+  return NULL;
 }
 
 /**
- * Return the last Pgn entry for which unknown == true && prn is smaller than requested.
+ * Return the last Pgn entry for which fallback == true && prn is smaller than requested.
  * This is slower, but is not used often.
  */
-static Pgn *searchForUnknownPgn(int pgnId)
+Pgn *searchForUnknownPgn(int pgnId)
 {
-  Pgn *unknown = pgnList;
+  Pgn *fallback = pgnList;
   Pgn *pgn;
 
   for (pgn = pgnList; pgn < pgnList + pgnListSize; pgn++)
   {
-    if (pgn->unknownPgn)
+    if (pgn->fallback)
     {
-      unknown = pgn;
+      fallback = pgn;
     }
     if (pgn->pgn > pgnId)
     {
       break;
     }
   }
-  return unknown;
+  if (fallback == NULL)
+  {
+    logAbort("Cannot find catch-all PGN definition for PGN %d; internal definition error\n", pgnId);
+  }
+  logDebug("Found catch-all PGN %u for PGN %d\n", fallback->pgn, pgnId);
+  return fallback;
 }
 
+/*
+ * Return the best match for this pgnId.
+ * If all else fails, return an 'fallback' match-all PGN that
+ * matches the fast/single frame, PDU1/PDU2 and proprietary/generic range.
+ */
 Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
 {
   Pgn *pgn = searchForPgn(pgnId);
   int  prn;
   int  i;
 
-  if (!pgn)
+  if (pgn == NULL)
   {
     pgn = searchForUnknownPgn(pgnId);
-  }
-
-  prn = pgn->pgn;
-
-  if (pgn == pgnList + pgnListSize - 1 || pgn[1].pgn != prn)
-  {
-    // Don't bother complex search if there is only one PGN with this PRN.
+    logDebug("getMatchingPgn: Unknown PGN %u -> fallback %u\n", pgnId, (pgn != NULL) ? pgn->pgn : 0);
     return pgn;
   }
 
-  for (; pgn->pgn == prn; pgn++) // we never get here for the last pgn, so no need to check for end of list
+  if (!IS_PGN_PROPRIETARY(pgnId))
+  {
+    logDebug("PGN %u is not manufacturer specific, returning '%s'\n", pgnId, pgn->description);
+    return pgn;
+  }
+
+  // Here if we have a PGN but it must be matched to the list of match fields.
+  // This might end up without a solution, in that case return the catch-all fallback PGN.
+
+  for (prn = pgn->pgn; pgn->pgn == prn; pgn++)
   {
     int      startBit = 0;
     uint8_t *data     = dataStart;
@@ -107,18 +129,7 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
     bool matchedFixedField = true;
     bool hasFixedField     = false;
 
-    /* There is a next index that we can use as well. We do so if the 'fixed' fields don't match */
-
-    if (!pgn->fieldCount)
-    {
-      logError("Internal error: %p PGN %d offset %u '%s' has no fields\n", pgn, prn, (unsigned) (pgn - pgnList), pgn->description);
-      for (i = 0; pgn->fieldList[i].name; i++)
-      {
-        logInfo("Field %d: %s\n", i, pgn->fieldList[i].name);
-      }
-      // exit(2);
-      pgn->fieldCount = i;
-    }
+    logDebug("PGN %u matching with manufacturer specific '%s'\n", prn, pgn->description);
 
     // Iterate over fields
     for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
@@ -135,9 +146,11 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
         desiredValue  = strtol(field->unit + 1, 0, 10);
         if (!extractNumber(field, data, length, startBit, field->size, &value, &maxValue) || value != desiredValue)
         {
+          logDebug("PGN %u field '%s' value %" PRId64 " does not match %" PRId64 "\n", prn, field->name, value, desiredValue);
           matchedFixedField = false;
           break;
         }
+        logDebug("PGN %u field '%s' value %" PRId64 " matches %" PRId64 "\n", prn, field->name, value, desiredValue);
       }
       startBit += bits;
       data += startBit / 8;
@@ -151,10 +164,12 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
     }
     if (matchedFixedField)
     {
+      logDebug("PGN %u selected manufacturer specific '%s'\n", prn, pgn->description);
       return pgn;
     }
   }
-  return 0;
+
+  return searchForUnknownPgn(pgnId);
 }
 
 void checkPgnList(void)
@@ -171,7 +186,7 @@ void checkPgnList(void)
       logError("Internal error: PGN %d is not sorted correctly\n", pgnList[i].pgn);
       exit(2);
     }
-    if (pgnList[i].pgn == prn)
+    if (pgnList[i].pgn == prn || pgnList[i].fallback)
     {
       continue;
     }

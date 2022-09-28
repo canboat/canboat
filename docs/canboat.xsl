@@ -24,109 +24,163 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="ConvertDecToHex">
+    <xsl:param name="n" />
+    <xsl:if test="$n > 0">
+      <xsl:call-template name="ConvertDecToHex">
+        <xsl:with-param name="n" select="floor($n div 16)" />
+      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="$n mod 16 = 10">A</xsl:when>
+        <xsl:when test="$n mod 16 = 11">B</xsl:when>
+        <xsl:when test="$n mod 16 = 12">C</xsl:when>
+        <xsl:when test="$n mod 16 = 13">D</xsl:when>
+        <xsl:when test="$n mod 16 = 14">E</xsl:when>
+        <xsl:when test="$n mod 16 = 15">F</xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$n mod 16" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template name="pgn-list">
     <h2 id='pgn-list'>PGN list</h2>
     <xsl:for-each select="/PGNDefinitions/PGNs/*">
-      <h3>
-        <xsl:attribute name="id">
-          <xsl:value-of select="concat('pgn-', PGN)"/>
-        </xsl:attribute>
-        PGN <xsl:value-of select="PGN/."/>
-        - <xsl:value-of select="Description/text()"/>
-      </h3>
-        <p>
-          <xsl:value-of select="Explanation/."/>
-        </p>
-        <p>
-          <xsl:choose>
-            <xsl:when test="Complete = 'false'">
-              This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-              <ul>
-                <xsl:for-each select="Missing">
-                  <li>
-                    <xsl:value-of select="key('Missing', MissingAttribute)/."/>
-                  </li>
+      <xsl:choose>
+        <xsl:when test="./Fallback = 'true'">
+          <h2>
+            <xsl:value-of select="Description/text()"/>
+          </h2>
+          <p>
+            <xsl:value-of select="Explanation/."/>
+          </p>
+        </xsl:when>
+        <xsl:otherwise>
+          <h3>
+            <xsl:attribute name="id">
+              <xsl:value-of select="concat('pgn-', PGN)"/>
+            </xsl:attribute>
+            <xsl:text>0x</xsl:text>
+            <xsl:call-template name="ConvertDecToHex">
+              <xsl:with-param name="n" select="PGN/." />
+            </xsl:call-template>:
+            PGN <xsl:value-of select="PGN/."/>
+            - <xsl:value-of select="Description/text()"/>
+          </h3>
+          <xsl:if test="boolean(normalize-space(Fields/Field/Match))">
+            <p>
+              This PGN description applies when the following field(s) match:
+              <table>
+                <xsl:for-each select="Fields/Field/Match">
+                  <tr><td><xsl:value-of select="../Name"/></td><td><xsl:value-of select="."/></td></tr>
                 </xsl:for-each>
-              </ul>
-            </xsl:when>
-            <xsl:otherwise>
-              This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
-            </xsl:otherwise>
-          </xsl:choose>
-        </p>
-        <p>
-          This <xsl:value-of select="Type"/> PGN contains <xsl:value-of select="Length"/> bytes.
-        </p>
-        <table>
-        <tr>
-          <th> Order </th>
-          <th> Name </th>
-          <th> Description </th>
-          <th> Size (bits) </th>
-          <th> Type </th>
-          <th> Unit </th>
-          <th> Lookup </th>
-        </tr>
-        <xsl:for-each select="Fields/*">
-          <xsl:variable name="resolution">
-            <xsl:value-of select="Resolution"/>
-          </xsl:variable>
-          <xsl:variable name="notone">
+              </table>
+            </p>
+          </xsl:if>
+          <p>
+            <xsl:value-of select="Explanation/."/>
+          </p>
+          <p>
             <xsl:choose>
-              <xsl:when test="$resolution = '1'"/>
+              <xsl:when test="Complete = 'false'">
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul>
+                  <xsl:for-each select="Missing/*">
+                    <li>
+                      <xsl:value-of select="key('Missing', .)/."/>
+                    </li>
+                  </xsl:for-each>
+                </ul>
+              </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="$resolution"/><xsl:text> </xsl:text>
+                This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
               </xsl:otherwise>
             </xsl:choose>
-          </xsl:variable>
-          <tr>
-            <td> <xsl:value-of select="Order"/> </td>
-            <td> <xsl:value-of select="Name"/> </td>
-            <td>
-              <xsl:call-template name="replace-subscript">
-                <xsl:with-param name="text">
-                  <xsl:value-of select="Description"/>
-                </xsl:with-param>
-              </xsl:call-template>
-            </td>
-            <td> <xsl:value-of select="BitLength"/> </td>
-            <td>
-              <a>
-                <xsl:attribute name="href">
-                  <xsl:value-of select="concat('#ft-', FieldType)"/>
-                </xsl:attribute>
-                <xsl:value-of select="FieldType"/>
-              </a>
-            </td>
-            <td>
-              <xsl:value-of select="$notone"/>
-              <xsl:value-of select="Unit"/>
-            </td>
-            <td>
-              <xsl:choose>
-                <xsl:when test="LookupEnumeration">
+          </p>
+          <xsl:variable name="repeating" select="RepeatingFields"/>
+          <xsl:variable name="fieldCount" select="count(Fields/*)"/>
+          <xsl:variable name="startRepeat" select="$fieldCount - $repeating"/>
+          <p>
+            This <xsl:value-of select="Type"/> PGN contains <xsl:value-of select="Length"/> bytes and <xsl:value-of select="$fieldCount"/> fields.
+            <xsl:if test="$repeating > 0">
+              The last <xsl:value-of select="$repeating"/> fields starting at field <xsl:value-of select="$startRepeat"/> repeat until the data is exhausted.
+            </xsl:if>
+          </p>
+          <table>
+            <tr>
+              <th> Order </th>
+              <th> Name </th>
+              <th> Description </th>
+              <th> Size (bits) </th>
+              <th> Type </th>
+              <th> Unit </th>
+              <th> Lookup </th>
+            </tr>
+            <xsl:for-each select="Fields/*">
+              <xsl:variable name="resolution" select="Resolution"/>
+              <xsl:variable name="notone">
+                <xsl:choose>
+                  <xsl:when test="$resolution = '1'"/>
+                  <xsl:otherwise>
+                    <xsl:value-of select="$resolution"/><xsl:text> </xsl:text>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:variable>
+              <tr>
+                <xsl:if test="Order = $startRepeat + 1">
+                  <xsl:attribute name="class">startrepeating</xsl:attribute>
+                </xsl:if>
+                <td>
+                  <xsl:if test="Order > $startRepeat">
+                    <xsl:attribute name="class">repeating</xsl:attribute>
+                  </xsl:if>
+                  <xsl:value-of select="Order"/>
+                </td>
+                <td> <xsl:value-of select="Name"/> </td>
+                <td>
+                  <xsl:call-template name="replace-subscript">
+                    <xsl:with-param name="text">
+                      <xsl:value-of select="Description"/>
+                    </xsl:with-param>
+                  </xsl:call-template>
+                </td>
+                <td> <xsl:value-of select="BitLength"/> </td>
+                <td>
                   <a>
                     <xsl:attribute name="href">
-                      <xsl:value-of select="concat('#lookup-', LookupEnumeration)"/>
+                      <xsl:value-of select="concat('#ft-', FieldType)"/>
                     </xsl:attribute>
-                    <xsl:value-of select="LookupEnumeration"/>
+                    <xsl:value-of select="FieldType"/>
                   </a>
-                </xsl:when>
-              </xsl:choose>
-              <xsl:choose>
-                <xsl:when test="LookupBitEnumeration">
-                  <a>
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="concat('#lookupbit-', LookupBitEnumeration)"/>
-                    </xsl:attribute>
-                    <xsl:value-of select="LookupBitEnumeration"/>
-                  </a>
-                </xsl:when>
-              </xsl:choose>
-            </td>
-          </tr>
-        </xsl:for-each>
-      </table>
+                </td>
+                <td>
+                  <xsl:value-of select="$notone"/>
+                  <xsl:value-of select="Unit"/>
+                </td>
+                <td>
+                  <xsl:if test="LookupEnumeration">
+                    <a>
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="concat('#lookup-', LookupEnumeration)"/>
+                      </xsl:attribute>
+                      <xsl:value-of select="LookupEnumeration"/>
+                    </a>
+                  </xsl:if>
+                  <xsl:if test="LookupBitEnumeration">
+                    <a>
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="concat('#lookupbit-', LookupBitEnumeration)"/>
+                      </xsl:attribute>
+                      <xsl:value-of select="LookupBitEnumeration"/>
+                    </a>
+                  </xsl:if>
+                </td>
+              </tr>
+            </xsl:for-each>
+          </table>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:for-each>
   </xsl:template>
 
@@ -266,9 +320,7 @@
 
   <xsl:template match="/">
 
-    <xsl:variable name="license">
-      <xsl:value-of select="/PGNDefinitions/License/text()"/>
-    </xsl:variable>
+    <xsl:variable name="license" select="/PGNDefinitions/License/text()"/>
 
     <html lang="en">
       <head>

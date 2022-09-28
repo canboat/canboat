@@ -64,19 +64,23 @@ $(IKXMLFILE): $(ANALYZER_EXPLAIN_DEP)
 	$(ANALYZER_EXPLAIN) -explain-ik-xml -camel -v1 >$(IKXMLFILE)
 
 $(JSONFILE): $(XMLFILE) pgns2json.xslt
-	xsltproc pgns2json.xslt $(XMLFILE) >$(JSONFILE)
+	xsltproc pgns2json.xslt $(XMLFILE) >$(@)
+	python3 validate-json.py $(@)
 
-$(JSON2FILE): $(XML2FILE) pgns2json.xslt
-	xsltproc pgns2json.xslt $(XML2FILE) >$(JSON2FILE)
+$(JSON2FILE): $(XML2FILE) canboat2json.xslt
+	xsltproc canboat2json.xslt $(XML2FILE) >$(@)
+	python3 validate-json.py $(@)
 
 $(NGTJSONFILE): $(NGTXMLFILE) pgns2json.xslt
-	xsltproc pgns2json.xslt $(NGTXMLFILE) >$(NGTJSONFILE)
+	xsltproc pgns2json.xslt $(NGTXMLFILE) >$(@)
+	python3 validate-json.py $(@)
 
 $(IKJSONFILE): $(IKXMLFILE) pgns2json.xslt
-	xsltproc pgns2json.xslt $(IKXMLFILE) >$(IKJSONFILE)
+	xsltproc pgns2json.xslt $(IKXMLFILE) >$(@)
+	python3 validate-json.py $(@)
 
 $(NPMFILE): ../common/version.h $(ANALYZER)
-	./fixup-version.sh $(ANALYZER) $(NPMFILE)
+	python3 fixup-version.py $(ANALYZER) $(NPMFILE)
 
 json: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE) $(NPMFILE)
 
@@ -85,5 +89,10 @@ clean:
 	-rm -f $(XMLFILE)
 	-rm -f $(JSONFILE)
 
+tests:	json
+	(cd tests; make tests)
+
 webserver:
 	cd ../docs; python3 -m http.server --cgi 8080
+
+.PHONY:	tests

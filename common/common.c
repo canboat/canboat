@@ -27,6 +27,7 @@ static const char *logLevels[] = {"FATAL", "ERROR", "INFO", "DEBUG"};
 static LogLevel logLevel = LOGLEVEL_INFO;
 
 static char *progName;
+static char  fixedTimestamp[DATE_LENGTH];
 
 #ifndef WIN32
 
@@ -63,6 +64,11 @@ const char *now(char str[DATE_LENGTH])
 {
   uint64_t now = getNow();
 
+  if (fixedTimestamp[0] != '\0')
+  {
+    return (const char *) fixedTimestamp;
+  }
+
   storeTimestamp(str, now);
   return (const char *) str;
 }
@@ -74,6 +80,11 @@ const char *now(char str[DATE_LENGTH])
   struct _timeb timebuffer;
   struct tm     tm;
   size_t        len;
+
+  if (fixedTimestamp[0] != '\0')
+  {
+    return (const char *) fixedTimestamp;
+  }
 
   _ftime_s(&timebuffer);
   gmtime_s(&tm, &timebuffer.time);
@@ -192,6 +203,12 @@ void setProgName(char *name)
   {
     progName++;
   }
+}
+
+void setFixedTimestamp(char *fixedStr)
+{
+  strncpy(fixedTimestamp, fixedStr, sizeof(fixedTimestamp) - 1);
+  logInfo("Timestamp fixed\n");
 }
 
 static void sbReserve(StringBuffer *const sb, size_t len)

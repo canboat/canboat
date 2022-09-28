@@ -126,7 +126,7 @@ limitations under the License.
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="MissingDef">
+  <xs:complexType name="MissingEnumerations">
     <xs:sequence>
       <xs:element name="MissingAttribute" maxOccurs="unbounded" minOccurs="0">
         <xs:complexType>
@@ -148,6 +148,7 @@ limitations under the License.
       <xs:element type="xs:string" name="Explanation" minOccurs="0"/>
       <xs:element type="xs:string" name="Type"/>
       <xs:element type="xs:string" name="Complete"/>
+      <xs:element type="xs:string" name="Fallback" minOccurs="0"/>
       <xs:element type="Missing" name="Missing" minOccurs="0"/>
       <xs:element type="xs:short" name="Length"/>
       <xs:element type="xs:byte" name="RepeatingFields" minOccurs="0"/>
@@ -171,7 +172,7 @@ limitations under the License.
       <xs:element type="xs:string" name="Version"/>
       <xs:element type="xs:string" name="Copyright"/>
       <xs:element type="FieldTypes" name="FieldTypes"/>
-      <xs:element type="MissingDef" name="Missing"/>
+      <xs:element type="MissingEnumerations" name="MissingEnumerations"/>
       <xs:element type="LookupEnumerations" name="LookupEnumerations"/>
       <xs:element type="LookupBitEnumerations" name="LookupBitEnumerations"/>
       <xs:element type="PGNs" name="PGNs"/>

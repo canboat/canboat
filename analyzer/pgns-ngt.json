@@ -68,7 +68,7 @@
         "PGN":262384,
         "Id":"actisenseStartupStatus",
         "Description":"Actisense: Startup status",
-        "Type":"Fast",
+        "Type":"Single",
         "Complete":false,
         "Missing":[
           "Fields",
@@ -151,7 +151,7 @@
         "PGN":262386,
         "Id":"actisenseSystemStatus",
         "Description":"Actisense: System status",
-        "Type":"Fast",
+        "Type":"Single",
         "Complete":false,
         "Missing":[
           "Fields",
@@ -424,7 +424,7 @@
         "PGN":262388,
         "Id":"actisense",
         "Description":"Actisense: ?",
-        "Type":"Fast",
+        "Type":"Single",
         "Complete":false,
         "Missing":[
           "Fields",

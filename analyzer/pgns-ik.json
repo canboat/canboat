@@ -9,7 +9,7 @@
         "PGN":262400,
         "Id":"ikonvertNetworkStatus",
         "Description":"iKonvert: Network status",
-        "Type":"Fast",
+        "Type":"Single",
         "Complete":true,
         "Length":15,
         "RepeatingFields":0,

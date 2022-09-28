@@ -217,6 +217,14 @@ extern void fillFieldType(void)
         fixupUnit(f);
       }
     }
+    if (pgnList[i].type == PACKET_FAST && !ALLOW_PGN_FAST_PACKET(pgn))
+    {
+      logAbort("PGN %u '%s' is outside fast-packet range\n", pgn, pgnList[i].description);
+    }
+    if (pgnList[i].type != PACKET_FAST && !ALLOW_PGN_SINGLE_FRAME(pgn))
+    {
+      logError("PGN %u '%s' is outside single-frame range\n", pgn, pgnList[i].description);
+    }
   }
 
   logDebug("Filled all fieldtypes\n");
