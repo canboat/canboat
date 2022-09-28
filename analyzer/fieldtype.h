@@ -136,7 +136,7 @@ FieldType fieldTypeList[] = {
     {.name = "UINT64", .description = "64 bit unsigned integer", .size = 64, .hasSign = False, .baseFieldType = "UNSIGNED_INTEGER"},
 
     {.name        = "UNSIGNED_FIXED_POINT_NUMBER",
-     .description = "An unsigned numeric value where the Least Boolificant Bit does not encode the integer value 1",
+     .description = "An unsigned numeric value where the Least Significant Bit does not encode the integer value 1",
      .encodingDescription
      = "The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are "
        "always present. Together, this gives sufficient information to represent a fixed point number in a particular range where "
@@ -145,7 +145,7 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "NUMBER"},
 
     {.name        = "SIGNED_FIXED_POINT_NUMBER",
-     .description = "A signed numeric value where the Least Boolificant Bit does not encode the integer value 1",
+     .description = "A signed numeric value where the Least Significant Bit does not encode the integer value 1",
      .encodingDescription
      = "The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are "
        "always present. Together, this gives sufficient information to represent a fixed point number in a particular range where "
