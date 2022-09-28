@@ -8091,7 +8091,7 @@
             "BitLength":2,
             "Condition":"PGNIsProprietary",
             "Signed":false,
-            "FieldType":"BINARY"
+            "FieldType":"RESERVED"
           },
           {
             "Order":5,
@@ -8209,7 +8209,7 @@
             "BitLength":2,
             "Condition":"PGNIsProprietary",
             "Signed":false,
-            "FieldType":"BINARY"
+            "FieldType":"RESERVED"
           },
           {
             "Order":5,
@@ -8335,7 +8335,7 @@
             "BitLength":2,
             "Condition":"PGNIsProprietary",
             "Signed":false,
-            "FieldType":"BINARY"
+            "FieldType":"RESERVED"
           },
           {
             "Order":5,
@@ -8461,7 +8461,7 @@
             "BitLength":2,
             "Condition":"PGNIsProprietary",
             "Signed":false,
-            "FieldType":"BINARY"
+            "FieldType":"RESERVED"
           },
           {
             "Order":5,
@@ -10926,13 +10926,13 @@
           },
           {
             "Order":16,
-            "Id":"nmeaReserved",
-            "Name":"NMEA Reserved",
+            "Id":"reserved",
+            "Name":"Reserved",
             "BitLength":2,
             "BitOffset":134,
             "BitStart":6,
             "Signed":false,
-            "FieldType":"BINARY"
+            "FieldType":"RESERVED"
           },
           {
             "Order":17,
@@ -11113,13 +11113,13 @@
           },
           {
             "Order":12,
-            "Id":"nmeaReserved",
-            "Name":"NMEA Reserved",
+            "Id":"reserved",
+            "Name":"Reserved",
             "BitLength":6,
             "BitOffset":194,
             "BitStart":2,
             "Signed":false,
-            "FieldType":"BINARY"
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -19452,13 +19452,13 @@
           },
           {
             "Order":6,
-            "Id":"reservedBits",
-            "Name":"Reserved Bits",
+            "Id":"reserved",
+            "Name":"Reserved",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"BINARY"
+            "FieldType":"RESERVED"
           },
           {
             "Order":7,
@@ -20109,12 +20109,11 @@
             "Order":8,
             "Id":"reserved",
             "Name":"Reserved",
-            "Description":"NMEA reserved to align next data on byte boundary",
             "BitLength":6,
             "BitOffset":106,
             "BitStart":2,
             "Signed":false,
-            "FieldType":"BINARY"
+            "FieldType":"RESERVED"
           },
           {
             "Order":9,
@@ -20165,12 +20164,11 @@
             "Order":13,
             "Id":"reserved",
             "Name":"Reserved",
-            "Description":"NMEA reserved to align next data on byte boundary",
             "BitLength":4,
             "BitOffset":184,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"BINARY"
+            "FieldType":"RESERVED"
           },
           {
             "Order":14,

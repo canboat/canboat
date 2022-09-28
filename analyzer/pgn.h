@@ -102,6 +102,11 @@ typedef struct
     .name = "Reserved", .size = (len), .resolution = 1, .fieldType = "RESERVED" \
   }
 
+#define RESERVED_PROP_FIELD(len, desc)                                                                                    \
+  {                                                                                                                       \
+    .name = "Reserved", .size = (len), .resolution = 1, .description = desc, .fieldType = "RESERVED", .proprietary = true \
+  }
+
 #define BINARY_FIELD(nam, len, desc)                                                        \
   {                                                                                         \
     .name = nam, .size = (len), .resolution = 1, .description = desc, .fieldType = "BINARY" \
@@ -368,9 +373,9 @@ typedef struct
 
 #define MANUFACTURER_FIELDS MANUFACTURER_FIELD(NULL, NULL, false), RESERVED_FIELD(2), INDUSTRY_FIELD(NULL, NULL, false)
 
-#define MANUFACTURER_PROPRIETARY_FIELDS                                                    \
-  MANUFACTURER_FIELD(NULL, "Only in PGN when PRN is proprietary", true),                   \
-      BINARY_UNIT_FIELD("Reserved", 2, NULL, "Only in PGN when PRN is proprietary", true), \
+#define MANUFACTURER_PROPRIETARY_FIELDS                                  \
+  MANUFACTURER_FIELD(NULL, "Only in PGN when PRN is proprietary", true), \
+      RESERVED_PROP_FIELD(2, "Only in PGN when PRN is proprietary"),     \
       INDUSTRY_FIELD(NULL, "Only in PGN when PRN is proprietary", true)
 
 #define INTEGER_DESC_FIELD(nam, len, desc)                         \
@@ -2223,7 +2228,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Temporary Silence Support", 1, YES_NO),
       LOOKUP_FIELD("Acknowledge Support", 1, YES_NO),
       LOOKUP_FIELD("Escalation Support", 1, YES_NO),
-      BINARY_FIELD("NMEA Reserved", 2, NULL),
+      RESERVED_FIELD(2),
       SIMPLE_FIELD("Acknowledge Source Network ID NAME", BYTES(8)),
       LOOKUP_FIELD("Trigger Condition", 4, ALERT_TRIGGER_CONDITION),
       LOOKUP_FIELD("Threshold Status", 4, ALERT_THRESHOLD_STATUS),
@@ -2249,7 +2254,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert Occurrence Number"),
       SIMPLE_FIELD("Acknowledge Source Network ID NAME", BYTES(8)),
       LOOKUP_FIELD("Response Command", 2, ALERT_RESPONSE_COMMAND),
-      BINARY_FIELD("NMEA Reserved", 6, NULL),
+      RESERVED_FIELD(6),
       END_OF_FIELDS}}
 
     ,
@@ -3759,7 +3764,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Reference Station Type", BYTES(2)),
       UINT8_FIELD("Time of corrections"),
       UINT8_FIELD("Station Health"),
-      BINARY_FIELD("Reserved Bits", BYTES(1), NULL),
+      RESERVED_FIELD(BYTES(1)),
       UINT8_FIELD("Satellite ID"),
       UINT8_FIELD("PRC"),
       UINT8_FIELD("RRC"),
@@ -3862,14 +3867,14 @@ Pgn pgnList[] = {
       LATITUDE_I32_FIELD("Latitude"),
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
       LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
-      BINARY_FIELD("Reserved", 6, "NMEA reserved to align next data on byte boundary"),
+      RESERVED_FIELD(6),
       TIME_FIELD("Position Time"),
       BINARY_FIELD("Communication State",
                    19,
                    "Information used by the TDMA slot allocation algorithm and synchronization information"),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       DATE_FIELD("Position Date"),
-      BINARY_FIELD("Reserved", 4, "NMEA reserved to align next data on byte boundary"),
+      RESERVED_FIELD(4),
       LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
       BINARY_FIELD("Spare", BYTES(1), NULL),
       END_OF_FIELDS}}

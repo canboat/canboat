@@ -7664,7 +7664,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <Condition>PGNIsProprietary</Condition>
           <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -7782,7 +7782,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <Condition>PGNIsProprietary</Condition>
           <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -7908,7 +7908,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <Condition>PGNIsProprietary</Condition>
           <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -8034,7 +8034,7 @@ limitations under the License.
           <BitLength>2</BitLength>
           <Condition>PGNIsProprietary</Condition>
           <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -10625,13 +10625,13 @@ limitations under the License.
         </Field>
         <Field>
           <Order>16</Order>
-          <Id>nmeaReserved</Id>
-          <Name>NMEA Reserved</Name>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>134</BitOffset>
           <BitStart>6</BitStart>
           <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>17</Order>
@@ -10812,13 +10812,13 @@ limitations under the License.
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>nmeaReserved</Id>
-          <Name>NMEA Reserved</Name>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>194</BitOffset>
           <BitStart>2</BitStart>
           <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -19224,13 +19224,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reservedBits</Id>
-          <Name>Reserved Bits</Name>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -19900,12 +19900,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>8</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>NMEA reserved to align next data on byte boundary</Description>
           <BitLength>6</BitLength>
           <BitOffset>106</BitOffset>
           <BitStart>2</BitStart>
           <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -19956,12 +19955,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>13</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <Description>NMEA reserved to align next data on byte boundary</Description>
           <BitLength>4</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>14</Order>
