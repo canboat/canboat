@@ -9,7 +9,7 @@ For this reason we have reverse engineered the NMEA 2000 database by network obs
 ## Quick reference
 
 If you just want to know how the NMEA 2000 protocol works, with an explanation of all reverse engineered data, please go to the
-[canboat.xml](https://github.com/canboat/canboat/docs/canboat.xml) page.
+[documentation](https://canboat.github.io/canboat) page.
 
 To use the programs included in this project you may need a supported CAN interface. This can be a marketed-as-such NMEA 2000 Gateway or a non NMEA specific CAN interface. 
 
