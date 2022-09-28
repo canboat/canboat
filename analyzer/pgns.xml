@@ -1278,8 +1278,9 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Units>kWh</Units>
+          <Units>J</Units>
           <Type>Integer</Type>
+          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY</FieldType>
         </Field>
@@ -1290,8 +1291,9 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>kWh</Units>
+          <Units>J</Units>
           <Type>Integer</Type>
+          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY</FieldType>
         </Field>
@@ -1894,8 +1896,9 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Units>kWh</Units>
+          <Units>J</Units>
           <Type>Integer</Type>
+          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY</FieldType>
         </Field>
@@ -1906,8 +1909,9 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>kWh</Units>
+          <Units>J</Units>
           <Type>Integer</Type>
+          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY</FieldType>
         </Field>
@@ -3152,7 +3156,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -4269,8 +4273,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -4281,8 +4285,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -4368,8 +4372,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -4380,8 +4384,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -4462,8 +4466,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -4474,8 +4478,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -5254,7 +5258,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -8075,8 +8079,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -8088,8 +8092,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -8101,8 +8105,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -8918,7 +8922,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <FieldType>FIX16</FieldType>
@@ -10552,8 +10556,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -10762,8 +10766,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -10774,8 +10778,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -10786,8 +10790,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -10798,8 +10802,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -10810,8 +10814,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -10822,8 +10826,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -10834,8 +10838,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg/s</Units>
-          <Resolution>0.00179049</Resolution>
+          <Units>rad/s</Units>
+          <Resolution>3.125e-05</Resolution>
           <Signed>true</Signed>
           <FieldType>ROTATION_FIX16</FieldType>
         </Field>
@@ -10857,8 +10861,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -10918,8 +10922,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -10930,8 +10934,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -10975,8 +10979,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -10987,8 +10991,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -10999,8 +11003,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11060,8 +11064,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg/s</Units>
-          <Resolution>1.79049e-06</Resolution>
+          <Units>rad/s</Units>
+          <Resolution>3.125e-08</Resolution>
           <Signed>true</Signed>
           <FieldType>ROTATION_FIX32</FieldType>
         </Field>
@@ -11155,8 +11159,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11167,8 +11171,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11179,8 +11183,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11258,8 +11262,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11308,8 +11312,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Pa</Units>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -11368,8 +11372,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Pa</Units>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -11380,7 +11384,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
@@ -11393,7 +11397,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -11442,8 +11446,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Pa</Units>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -11454,8 +11458,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.01</Resolution>
+          <Units>Pa</Units>
+          <Resolution>1000</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_KPA</FieldType>
         </Field>
@@ -11604,8 +11608,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Pa</Units>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -11616,7 +11620,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
@@ -13313,7 +13317,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Units>Ah</Units>
+          <Units>C</Units>
+          <Resolution>3600</Resolution>
           <Signed>false</Signed>
           <FieldType>ELECTRIC_CHARGE_UFIX16_AH</FieldType>
         </Field>
@@ -13495,7 +13500,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -13701,7 +13706,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -14007,7 +14012,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>Ah</Units>
+          <Units>C</Units>
+          <Resolution>3600</Resolution>
           <Signed>false</Signed>
           <FieldType>ELECTRIC_CHARGE_UFIX16_AH</FieldType>
         </Field>
@@ -14516,8 +14522,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -14659,8 +14665,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -14734,7 +14740,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -14822,7 +14828,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -15164,8 +15170,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -15188,8 +15194,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -15791,8 +15797,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -15953,8 +15959,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -16409,8 +16415,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -16465,8 +16471,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -16477,8 +16483,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg/s</Units>
-          <Resolution>0.00179049</Resolution>
+          <Units>rad/s</Units>
+          <Resolution>3.125e-05</Resolution>
           <Signed>true</Signed>
           <FieldType>ROTATION_FIX16</FieldType>
         </Field>
@@ -16698,8 +16704,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -16754,8 +16760,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -17017,8 +17023,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -17134,8 +17140,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -18067,8 +18073,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -18079,8 +18085,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -18349,8 +18355,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -18515,8 +18521,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -18918,8 +18924,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -18930,8 +18936,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -21371,8 +21377,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -25024,8 +25030,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -25087,7 +25093,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -25100,7 +25106,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -25113,8 +25119,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Pa</Units>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -25202,7 +25208,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -25228,8 +25234,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Pa</Units>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -25302,7 +25308,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -25315,7 +25321,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -25457,8 +25463,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>1e-06</Resolution>
+          <Units>Pa</Units>
+          <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <FieldType>PRESSURE_FIX32_DPA</FieldType>
         </Field>
@@ -25524,8 +25530,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>1e-06</Resolution>
+          <Units>Pa</Units>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX32_DPA</FieldType>
         </Field>
@@ -25598,7 +25604,7 @@ limitations under the License.
           <BitLength>24</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.001</Resolution>
           <Signed>false</Signed>
@@ -25611,7 +25617,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
@@ -25876,7 +25882,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -26021,8 +26027,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -26033,7 +26039,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -26165,8 +26171,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -26218,8 +26224,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Pa</Units>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -26230,7 +26236,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -26362,8 +26368,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -26437,8 +26443,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Pa</Units>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -26460,7 +26466,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>240</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -26473,7 +26479,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>256</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -26747,7 +26753,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -26760,8 +26766,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Pa</Units>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -26772,8 +26778,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.001</Resolution>
+          <Units>Pa</Units>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -26784,8 +26790,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.01</Resolution>
+          <Units>Pa</Units>
+          <Resolution>1000</Resolution>
           <Signed>true</Signed>
           <FieldType>PRESSURE_FIX16_KPA</FieldType>
         </Field>
@@ -26796,8 +26802,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Units>bar</Units>
-          <Resolution>0.01</Resolution>
+          <Units>Pa</Units>
+          <Resolution>1000</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_KPA</FieldType>
         </Field>
@@ -28138,8 +28144,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -28162,8 +28168,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -28186,8 +28192,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -35075,7 +35081,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
@@ -35088,7 +35094,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
@@ -37003,8 +37009,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -37015,8 +37021,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -37027,8 +37033,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -37209,8 +37215,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -37543,8 +37549,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -38065,8 +38071,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -38483,8 +38489,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Units>deg</Units>
-          <Resolution>0.00572958</Resolution>
+          <Units>rad</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -38669,7 +38675,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -38682,7 +38688,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -38695,7 +38701,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -38773,7 +38779,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -38786,7 +38792,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
@@ -38799,7 +38805,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Units>C</Units>
+          <Units>K</Units>
           <Type>Temperature</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>

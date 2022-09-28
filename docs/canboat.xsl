@@ -100,17 +100,20 @@
           </p>
           <xsl:variable name="repeating" select="RepeatingFields"/>
           <xsl:variable name="fieldCount" select="count(Fields/*)"/>
-          <xsl:variable name="startRepeat" select="$fieldCount - $repeating"/>
+          <xsl:variable name="startRepeat" select="$fieldCount - $repeating + 1"/>
           <p>
-            This <xsl:value-of select="Type"/> PGN contains <xsl:value-of select="Length"/> bytes and <xsl:value-of select="$fieldCount"/> fields.
+            This
+            <xsl:if test="Type = 'Single'"> single-frame </xsl:if>
+            <xsl:if test="Type = 'Fast'"> fast-packet </xsl:if>
+            PGN contains <xsl:value-of select="Length"/> bytes and <xsl:value-of select="$fieldCount"/> fields.
             <xsl:if test="$repeating > 0">
               The last <xsl:value-of select="$repeating"/> fields starting at field <xsl:value-of select="$startRepeat"/> repeat until the data is exhausted.
             </xsl:if>
           </p>
           <table>
             <tr>
-              <th> Order </th>
-              <th> Name </th>
+              <th> Field # </th>
+              <th> Field Name </th>
               <th> Description </th>
               <th> Size (bits) </th>
               <th> Type </th>
@@ -128,11 +131,11 @@
                 </xsl:choose>
               </xsl:variable>
               <tr>
-                <xsl:if test="Order = $startRepeat + 1">
+                <xsl:if test="Order = $startRepeat">
                   <xsl:attribute name="class">startrepeating</xsl:attribute>
                 </xsl:if>
                 <td>
-                  <xsl:if test="Order > $startRepeat">
+                  <xsl:if test="Order >= $startRepeat">
                     <xsl:attribute name="class">repeating</xsl:attribute>
                   </xsl:if>
                   <xsl:value-of select="Order"/>

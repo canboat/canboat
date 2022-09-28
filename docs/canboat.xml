@@ -3899,7 +3899,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kWh</Unit>
+          <Unit>J</Unit>
+          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY</FieldType>
         </Field>
@@ -3910,7 +3911,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kWh</Unit>
+          <Unit>J</Unit>
+          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY</FieldType>
         </Field>
@@ -4481,7 +4483,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kWh</Unit>
+          <Unit>J</Unit>
+          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY</FieldType>
         </Field>
@@ -4492,7 +4495,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kWh</Unit>
+          <Unit>J</Unit>
+          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY</FieldType>
         </Field>
@@ -5511,7 +5515,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -6439,8 +6443,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -6451,8 +6455,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -6533,8 +6537,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -6545,8 +6549,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -6622,8 +6626,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -6634,8 +6638,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -7241,7 +7245,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -9213,8 +9217,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -9226,8 +9230,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -9239,8 +9243,8 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -9989,7 +9993,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <FieldType>FIX16</FieldType>
@@ -11435,8 +11439,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -11599,8 +11603,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11611,8 +11615,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -11623,8 +11627,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -11635,8 +11639,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -11647,8 +11651,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -11659,8 +11663,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11671,8 +11675,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg/s</Unit>
-          <Resolution>0.00179049</Resolution>
+          <Unit>rad/s</Unit>
+          <Resolution>3.125e-05</Resolution>
           <Signed>true</Signed>
           <FieldType>ROTATION_FIX16</FieldType>
         </Field>
@@ -11694,8 +11698,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -11748,8 +11752,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11760,8 +11764,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11803,8 +11807,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -11815,8 +11819,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11827,8 +11831,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11881,8 +11885,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg/s</Unit>
-          <Resolution>1.79049e-06</Resolution>
+          <Unit>rad/s</Unit>
+          <Resolution>3.125e-08</Resolution>
           <Signed>true</Signed>
           <FieldType>ROTATION_FIX32</FieldType>
         </Field>
@@ -11972,8 +11976,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11984,8 +11988,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -11996,8 +12000,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -12061,8 +12065,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -12107,8 +12111,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.001</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -12161,8 +12165,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.001</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -12173,7 +12177,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE_HIGH</FieldType>
@@ -12185,7 +12189,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -12232,8 +12236,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.001</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -12244,8 +12248,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.01</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>1000</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_KPA</FieldType>
         </Field>
@@ -12353,8 +12357,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.001</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -12365,7 +12369,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE_HIGH</FieldType>
@@ -13766,7 +13770,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>Ah</Unit>
+          <Unit>C</Unit>
+          <Resolution>3600</Resolution>
           <Signed>false</Signed>
           <FieldType>ELECTRIC_CHARGE_UFIX16_AH</FieldType>
         </Field>
@@ -13917,7 +13922,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -14100,7 +14105,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -14364,7 +14369,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>Ah</Unit>
+          <Unit>C</Unit>
+          <Resolution>3600</Resolution>
           <Signed>false</Signed>
           <FieldType>ELECTRIC_CHARGE_UFIX16_AH</FieldType>
         </Field>
@@ -14817,8 +14823,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -14937,8 +14943,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -15002,7 +15008,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -15079,7 +15085,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -15386,8 +15392,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -15410,8 +15416,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -15928,8 +15934,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -16080,8 +16086,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -16464,8 +16470,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -16511,8 +16517,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -16523,8 +16529,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg/s</Unit>
-          <Resolution>0.00179049</Resolution>
+          <Unit>rad/s</Unit>
+          <Resolution>3.125e-05</Resolution>
           <Signed>true</Signed>
           <FieldType>ROTATION_FIX16</FieldType>
         </Field>
@@ -16696,8 +16702,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -16743,8 +16749,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -16952,8 +16958,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -17017,8 +17023,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -17786,8 +17792,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -17798,8 +17804,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -18044,8 +18050,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -18196,8 +18202,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -18543,8 +18549,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -18555,8 +18561,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -20665,8 +20671,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -23774,8 +23780,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -23828,7 +23834,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -23840,7 +23846,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -23852,8 +23858,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.001</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -23917,7 +23923,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -23941,8 +23947,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.001</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -23995,7 +24001,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -24007,7 +24013,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -24127,8 +24133,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>1e-06</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <FieldType>PRESSURE_FIX32_DPA</FieldType>
         </Field>
@@ -24181,8 +24187,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>1e-06</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX32_DPA</FieldType>
         </Field>
@@ -24235,7 +24241,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>24</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.001</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE_UFIX24</FieldType>
@@ -24247,7 +24253,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE_HIGH</FieldType>
@@ -24483,7 +24489,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -24620,8 +24626,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -24632,7 +24638,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -24756,8 +24762,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -24801,8 +24807,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.001</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -24813,7 +24819,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -24937,8 +24943,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -25002,8 +25008,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.001</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -25025,7 +25031,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>240</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -25037,7 +25043,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>256</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -25249,7 +25255,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -25261,8 +25267,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.001</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -25273,8 +25279,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.001</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_HPA</FieldType>
         </Field>
@@ -25285,8 +25291,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.01</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>1000</Resolution>
           <Signed>true</Signed>
           <FieldType>PRESSURE_FIX16_KPA</FieldType>
         </Field>
@@ -25297,8 +25303,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>bar</Unit>
-          <Resolution>0.01</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>1000</Resolution>
           <Signed>false</Signed>
           <FieldType>PRESSURE_UFIX16_KPA</FieldType>
         </Field>
@@ -26254,8 +26260,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -26278,8 +26284,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -26302,8 +26308,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -32547,7 +32553,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE_HIGH</FieldType>
@@ -32559,7 +32565,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE_HIGH</FieldType>
@@ -34282,8 +34288,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -34294,8 +34300,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -34306,8 +34312,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -34472,8 +34478,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -34774,8 +34780,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <FieldType>ANGLE_FIX16</FieldType>
         </Field>
@@ -35226,8 +35232,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -35596,8 +35602,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.00572958</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>ANGLE_UFIX16</FieldType>
         </Field>
@@ -35770,7 +35776,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -35782,7 +35788,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -35794,7 +35800,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -35867,7 +35873,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -35879,7 +35885,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>
@@ -35891,7 +35897,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
+          <Unit>K</Unit>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <FieldType>TEMPERATURE</FieldType>

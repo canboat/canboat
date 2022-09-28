@@ -1,4 +1,4 @@
-VERSION "Canboat export 2022-09-28T17:00:16.512650"
+VERSION "Canboat export 2022-09-28T18:00:00.544523"
 
 
 NS_ : 
@@ -82,8 +82,8 @@ BO_ 2566778110 PGN_65004_bus1AverageBasicAcQuan: 8 Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
 BO_ 2566778366 PGN_65005_utilityTotalAcEnergy: 8 Vector__XXX
- SG_ totalEnergyImport : 32|32@1+ (1,0) [0|0] "kWh" Vector__XXX
- SG_ totalEnergyExport : 0|32@1+ (1,0) [0|0] "kWh" Vector__XXX
+ SG_ totalEnergyImport : 32|32@1+ (3600000.0,0) [0|0] "J" Vector__XXX
+ SG_ totalEnergyExport : 0|32@1+ (3600000.0,0) [0|0] "J" Vector__XXX
 
 BO_ 2566778622 PGN_65006_utilityPhaseCAcReactiv: 8 Vector__XXX
  SG_ powerFactorLagging : 32|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -146,8 +146,8 @@ BO_ 2566781438 PGN_65017_utilityAverageBasicAcQ: 8 Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
 BO_ 2566781694 PGN_65018_generatorTotalAcEnergy: 8 Vector__XXX
- SG_ totalEnergyImport : 32|32@1+ (1,0) [0|0] "kWh" Vector__XXX
- SG_ totalEnergyExport : 0|32@1+ (1,0) [0|0] "kWh" Vector__XXX
+ SG_ totalEnergyImport : 32|32@1+ (3600000.0,0) [0|0] "J" Vector__XXX
+ SG_ totalEnergyExport : 0|32@1+ (3600000.0,0) [0|0] "J" Vector__XXX
 
 BO_ 2566781950 PGN_65019_generatorPhaseCAcReact: 8 Vector__XXX
  SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -284,16 +284,16 @@ BO_ 2566864382 PGN_65341_simnetAutopilotMode: 8 Vector__XXX
 
 BO_ 2566865406 PGN_65345_seatalkPilotWindDatum: 8 Vector__XXX
  SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ rollingAverageWindAngle : 32|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
- SG_ windDatum : 16|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ rollingAverageWindAngle : 32|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ windDatum : 16|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566868990 PGN_65359_seatalkPilotHeading: 8 Vector__XXX
  SG_ reserved_1 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ headingMagnetic : 40|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
- SG_ headingTrue : 24|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ headingMagnetic : 40|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ headingTrue : 24|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ sid : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -301,8 +301,8 @@ BO_ 2566868990 PGN_65359_seatalkPilotHeading: 8 Vector__XXX
 
 BO_ 2566869246 PGN_65360_seatalkPilotLockedHead: 8 Vector__XXX
  SG_ reserved_1 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ targetHeadingMagnetic : 40|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
- SG_ targetHeadingTrue : 24|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ targetHeadingMagnetic : 40|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ targetHeadingTrue : 24|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ sid : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -364,7 +364,7 @@ BO_ 2566881790 PGN_65409_airmarSpeedPulseCount: 8 Vector__XXX
 BO_ 2566882046 PGN_65410_airmarDeviceInformatio: 8 Vector__XXX
  SG_ reserved_1 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ supplyVoltage : 40|16@1+ (0.01,0) [0|0] "V" Vector__XXX
- SG_ internalDeviceTemperature : 24|16@1+ (0.01,0) [0|0] "C" Vector__XXX
+ SG_ internalDeviceTemperature : 24|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ sid : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -436,8 +436,8 @@ BO_ 2582709758 PGN_127237_headingTrackControl: 8 Vector__XXX
 
 BO_ 2582711806 PGN_127245_rudder: 8 Vector__XXX
  SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ position : 32|16@1- (0.00572958,0) [0|0] "deg" Vector__XXX
- SG_ angleOrder : 16|16@1- (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ position : 32|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ angleOrder : 16|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ reserved : 11|5@1+ (1,0) [0|0] "" Vector__XXX
  SG_ directionOrder : 8|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -445,14 +445,14 @@ BO_ 2582711806 PGN_127245_rudder: 8 Vector__XXX
 BO_ 2582713086 PGN_127250_vesselHeading: 8 Vector__XXX
  SG_ reserved : 58|6@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reference : 56|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ variation : 40|16@1- (0.00572958,0) [0|0] "deg" Vector__XXX
- SG_ deviation : 24|16@1- (0.00572958,0) [0|0] "deg" Vector__XXX
- SG_ heading : 8|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ variation : 40|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ deviation : 24|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ heading : 8|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582713342 PGN_127251_rateOfTurn: 8 Vector__XXX
  SG_ reserved : 40|24@1+ (1,0) [0|0] "" Vector__XXX
- SG_ rate : 8|32@1- (1.79049e-06,0) [0|0] "deg/s" Vector__XXX
+ SG_ rate : 8|32@1- (3.125e-08,0) [0|0] "rad/s" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582713598 PGN_127252_heave: 8 Vector__XXX
@@ -461,13 +461,13 @@ BO_ 2582713598 PGN_127252_heave: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582714878 PGN_127257_attitude: 8 Vector__XXX
- SG_ roll : 40|16@1- (0.00572958,0) [0|0] "deg" Vector__XXX
- SG_ pitch : 24|16@1- (0.00572958,0) [0|0] "deg" Vector__XXX
- SG_ yaw : 8|16@1- (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ roll : 40|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ pitch : 24|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ yaw : 8|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582715134 PGN_127258_magneticVariation: 8 Vector__XXX
- SG_ variation : 32|16@1- (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ variation : 32|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ ageOfService : 16|16@1+ (1,0) [0|0] "days" Vector__XXX
  SG_ reserved : 12|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ source : 8|4@1+ (1,0) [0|0] "" Vector__XXX
@@ -476,7 +476,7 @@ BO_ 2582715134 PGN_127258_magneticVariation: 8 Vector__XXX
 BO_ 2582774014 PGN_127488_engineParametersRapid: 8 Vector__XXX
  SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ tiltTrim : 40|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ boostPressure : 24|16@1+ (0.001,0) [0|0] "bar" Vector__XXX
+ SG_ boostPressure : 24|16@1+ (100,0) [0|0] "Pa" Vector__XXX
  SG_ speed : 8|16@1+ (0.25,0) [0|0] "rpm" Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -487,8 +487,8 @@ BO_ 2582774270 PGN_127489_engineParametersDynam: 8 Vector__XXX
 BO_ 2582775294 PGN_127493_transmissionParameter: 8 Vector__XXX
  SG_ reserved_1 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ discreteStatus1 : 48|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ oilTemperature : 32|16@1+ (0.1,0) [0|0] "C" Vector__XXX
- SG_ oilPressure : 16|16@1+ (0.001,0) [0|0] "bar" Vector__XXX
+ SG_ oilTemperature : 32|16@1+ (0.1,0) [0|0] "K" Vector__XXX
+ SG_ oilPressure : 16|16@1+ (100,0) [0|0] "Pa" Vector__XXX
  SG_ reserved : 10|6@1+ (1,0) [0|0] "" Vector__XXX
  SG_ transmissionGear : 8|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -596,7 +596,7 @@ BO_ 2582778878 PGN_127507_chargerStatus: 8 Vector__XXX
 
 BO_ 2582779134 PGN_127508_batteryStatus: 8 Vector__XXX
  SG_ sid : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ temperature : 40|16@1+ (0.01,0) [0|0] "C" Vector__XXX
+ SG_ temperature : 40|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ current : 24|16@1- (0.1,0) [0|0] "A" Vector__XXX
  SG_ voltage : 8|16@1+ (0.01,0) [0|0] "V" Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -677,11 +677,11 @@ BO_ 2582841342 PGN_127751_dcVoltageCurrent: 8 Vector__XXX
 
 BO_ 2582905086 PGN_128000_leewayAngle: 8 Vector__XXX
  SG_ reserved : 24|40@1+ (1,0) [0|0] "" Vector__XXX
- SG_ leewayAngle : 8|16@1- (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ leewayAngle : 8|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582906622 PGN_128006_thrusterControlStatus: 8 Vector__XXX
- SG_ azimuthControl : 48|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ azimuthControl : 48|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ commandTimeout : 40|8@1+ (0.005,0) [0|0] "s" Vector__XXX
  SG_ controlEvents : 32|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ speedControl : 24|8@1+ (1,0) [0|0] "%" Vector__XXX
@@ -693,7 +693,7 @@ BO_ 2582906622 PGN_128006_thrusterControlStatus: 8 Vector__XXX
 
 BO_ 2582906878 PGN_128007_thrusterInformation: 8 Vector__XXX
  SG_ maximumRotationalSpeed : 48|16@1+ (0.25,0) [0|0] "rpm" Vector__XXX
- SG_ maximumTemperatureRating : 32|16@1+ (0.01,0) [0|0] "C" Vector__XXX
+ SG_ maximumTemperatureRating : 32|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ powerRating : 16|16@1+ (1,0) [0|0] "W" Vector__XXX
  SG_ reserved : 12|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ motorType : 8|4@1+ (1,0) [0|0] "" Vector__XXX
@@ -701,7 +701,7 @@ BO_ 2582906878 PGN_128007_thrusterInformation: 8 Vector__XXX
 
 BO_ 2582907134 PGN_128008_thrusterMotorStatus: 8 Vector__XXX
  SG_ operatingTime : 48|16@1+ (60,0) [0|0] "s" Vector__XXX
- SG_ temperature : 32|16@1+ (0.01,0) [0|0] "C" Vector__XXX
+ SG_ temperature : 32|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ current : 24|8@1+ (1,0) [0|0] "A" Vector__XXX
  SG_ motorEvents : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ identifier : 8|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -764,7 +764,7 @@ BO_ 2583167486 PGN_129025_positionRapidUpdate: 8 Vector__XXX
 BO_ 2583167742 PGN_129026_cogSogRapidUpdate: 8 Vector__XXX
  SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sog : 32|16@1+ (0.01,0) [0|0] "m/s" Vector__XXX
- SG_ cog : 16|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ cog : 16|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ reserved : 10|6@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cogReference : 8|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -777,7 +777,7 @@ BO_ 2583167998 PGN_129027_positionDeltaRapidUpd: 8 Vector__XXX
 
 BO_ 2583168254 PGN_129028_altitudeDeltaRapidUpd: 8 Vector__XXX
  SG_ altitudeDelta : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ cog : 32|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ cog : 32|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ reserved : 28|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ direction : 26|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ gnssQuality : 24|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -835,7 +835,7 @@ BO_ 2583234046 PGN_129285_navigationRouteWpInfo: 8 Vector__XXX
 
 BO_ 2583235582 PGN_129291_setDriftRapidUpdate: 8 Vector__XXX
  SG_ drift : 32|16@1+ (0.01,0) [0|0] "m/s" Vector__XXX
- SG_ set : 16|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ set : 16|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ reserved : 10|6@1+ (1,0) [0|0] "" Vector__XXX
  SG_ setReference : 8|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1026,28 +1026,28 @@ BO_ 2583436030 PGN_130074_routeAndWpServiceWpLi: 8 Vector__XXX
 BO_ 2583495422 PGN_130306_windData: 8 Vector__XXX
  SG_ reserved : 43|21@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reference : 40|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ windAngle : 24|16@1+ (0.00572958,0) [0|0] "deg" Vector__XXX
+ SG_ windAngle : 24|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ windSpeed : 8|16@1+ (0.01,0) [0|0] "m/s" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583496446 PGN_130310_environmentalParamete: 8 Vector__XXX
  SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ atmosphericPressure : 40|16@1+ (0.001,0) [0|0] "bar" Vector__XXX
- SG_ outsideAmbientAirTemperature : 24|16@1+ (0.01,0) [0|0] "C" Vector__XXX
- SG_ waterTemperature : 8|16@1+ (0.01,0) [0|0] "C" Vector__XXX
+ SG_ atmosphericPressure : 40|16@1+ (100,0) [0|0] "Pa" Vector__XXX
+ SG_ outsideAmbientAirTemperature : 24|16@1+ (0.01,0) [0|0] "K" Vector__XXX
+ SG_ waterTemperature : 8|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583496702 PGN_130311_environmentalParamete: 8 Vector__XXX
- SG_ atmosphericPressure : 48|16@1+ (0.001,0) [0|0] "bar" Vector__XXX
+ SG_ atmosphericPressure : 48|16@1+ (100,0) [0|0] "Pa" Vector__XXX
  SG_ humidity : 32|16@1+ (0.004,0) [0|0] "%" Vector__XXX
- SG_ temperature : 16|16@1+ (0.01,0) [0|0] "C" Vector__XXX
+ SG_ temperature : 16|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ humiditySource : 14|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ temperatureSource : 8|6@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583496958 PGN_130312_temperature: 8 Vector__XXX
- SG_ setTemperature : 40|16@1+ (0.01,0) [0|0] "C" Vector__XXX
- SG_ actualTemperature : 24|16@1+ (0.01,0) [0|0] "C" Vector__XXX
+ SG_ setTemperature : 40|16@1+ (0.01,0) [0|0] "K" Vector__XXX
+ SG_ actualTemperature : 24|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ source : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1060,20 +1060,20 @@ BO_ 2583497214 PGN_130313_humidity: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583497470 PGN_130314_actualPressure: 8 Vector__XXX
- SG_ pressure : 24|32@1- (1e-06,0) [0|0] "bar" Vector__XXX
+ SG_ pressure : 24|32@1- (0.1,0) [0|0] "Pa" Vector__XXX
  SG_ source : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583497726 PGN_130315_setPressure: 8 Vector__XXX
- SG_ pressure : 24|32@1+ (1e-06,0) [0|0] "bar" Vector__XXX
+ SG_ pressure : 24|32@1+ (0.1,0) [0|0] "Pa" Vector__XXX
  SG_ source : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583497982 PGN_130316_temperatureExtendedRa: 8 Vector__XXX
- SG_ setTemperature : 48|16@1+ (0.1,0) [0|0] "C" Vector__XXX
- SG_ temperature : 24|24@1+ (0.001,0) [0|0] "C" Vector__XXX
+ SG_ setTemperature : 48|16@1+ (0.1,0) [0|0] "K" Vector__XXX
+ SG_ temperature : 24|24@1+ (0.001,0) [0|0] "K" Vector__XXX
  SG_ source : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX

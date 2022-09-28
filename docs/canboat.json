@@ -4477,7 +4477,8 @@
             "BitLength":32,
             "BitOffset":0,
             "BitStart":0,
-            "Unit":"kWh",
+            "Unit":"J",
+            "Resolution":3.6e+06,
             "Signed":false,
             "FieldType":"ENERGY"
           },
@@ -4488,7 +4489,8 @@
             "BitLength":32,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"kWh",
+            "Unit":"J",
+            "Resolution":3.6e+06,
             "Signed":false,
             "FieldType":"ENERGY"
           }
@@ -5058,7 +5060,8 @@
             "BitLength":32,
             "BitOffset":0,
             "BitStart":0,
-            "Unit":"kWh",
+            "Unit":"J",
+            "Resolution":3.6e+06,
             "Signed":false,
             "FieldType":"ENERGY"
           },
@@ -5069,7 +5072,8 @@
             "BitLength":32,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"kWh",
+            "Unit":"J",
+            "Resolution":3.6e+06,
             "Signed":false,
             "FieldType":"ENERGY"
           }
@@ -6026,7 +6030,7 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -6919,8 +6923,8 @@
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -6931,8 +6935,8 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -7010,8 +7014,8 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -7022,8 +7026,8 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -7099,8 +7103,8 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -7111,8 +7115,8 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -7703,7 +7707,7 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -9550,8 +9554,8 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -9563,8 +9567,8 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -9576,8 +9580,8 @@
             "BitLength":16,
             "BitOffset":56,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           }
@@ -10322,7 +10326,7 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.001,
             "Signed":true,
             "FieldType":"FIX16"
@@ -11718,8 +11722,8 @@
             "BitLength":16,
             "BitOffset":208,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -11882,8 +11886,8 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -11894,8 +11898,8 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -11906,8 +11910,8 @@
             "BitLength":16,
             "BitOffset":56,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -11918,8 +11922,8 @@
             "BitLength":16,
             "BitOffset":72,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -11930,8 +11934,8 @@
             "BitLength":16,
             "BitOffset":88,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -11942,8 +11946,8 @@
             "BitLength":16,
             "BitOffset":104,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -11954,8 +11958,8 @@
             "BitLength":16,
             "BitOffset":120,
             "BitStart":0,
-            "Unit":"deg/s",
-            "Resolution":0.00179049,
+            "Unit":"rad/s",
+            "Resolution":3.125e-05,
             "Signed":true,
             "FieldType":"ROTATION_FIX16"
           },
@@ -11977,8 +11981,8 @@
             "BitLength":16,
             "BitOffset":152,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           }
@@ -12031,8 +12035,8 @@
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -12043,8 +12047,8 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -12086,8 +12090,8 @@
             "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -12098,8 +12102,8 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -12110,8 +12114,8 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -12164,8 +12168,8 @@
             "BitLength":32,
             "BitOffset":8,
             "BitStart":0,
-            "Unit":"deg/s",
-            "Resolution":1.79049e-06,
+            "Unit":"rad/s",
+            "Resolution":3.125e-08,
             "Signed":true,
             "FieldType":"ROTATION_FIX32"
           },
@@ -12252,8 +12256,8 @@
             "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -12264,8 +12268,8 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -12276,8 +12280,8 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           }
@@ -12341,8 +12345,8 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           }
@@ -12387,8 +12391,8 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.001,
+            "Unit":"Pa",
+            "Resolution":100,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_HPA"
           },
@@ -12441,8 +12445,8 @@
             "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.001,
+            "Unit":"Pa",
+            "Resolution":100,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_HPA"
           },
@@ -12453,7 +12457,7 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.1,
             "Signed":false,
             "FieldType":"TEMPERATURE_HIGH"
@@ -12465,7 +12469,7 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -12512,8 +12516,8 @@
             "BitLength":16,
             "BitOffset":120,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.001,
+            "Unit":"Pa",
+            "Resolution":100,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_HPA"
           },
@@ -12524,8 +12528,8 @@
             "BitLength":16,
             "BitOffset":136,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.01,
+            "Unit":"Pa",
+            "Resolution":1000,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_KPA"
           },
@@ -12633,8 +12637,8 @@
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.001,
+            "Unit":"Pa",
+            "Resolution":100,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_HPA"
           },
@@ -12645,7 +12649,7 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.1,
             "Signed":false,
             "FieldType":"TEMPERATURE_HIGH"
@@ -14046,7 +14050,8 @@
             "BitLength":16,
             "BitOffset":72,
             "BitStart":0,
-            "Unit":"Ah",
+            "Unit":"C",
+            "Resolution":3600,
             "Signed":false,
             "FieldType":"ELECTRIC_CHARGE_UFIX16_AH"
           }
@@ -14197,7 +14202,7 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -14377,7 +14382,7 @@
             "BitLength":16,
             "BitOffset":56,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -14632,7 +14637,8 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"Ah",
+            "Unit":"C",
+            "Resolution":3600,
             "Signed":false,
             "FieldType":"ELECTRIC_CHARGE_UFIX16_AH"
           },
@@ -15082,8 +15088,8 @@
             "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -15202,8 +15208,8 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           }
@@ -15267,7 +15273,7 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -15344,7 +15350,7 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -15650,8 +15656,8 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -15674,8 +15680,8 @@
             "BitLength":16,
             "BitOffset":72,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -16192,8 +16198,8 @@
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -16342,8 +16348,8 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -16726,8 +16732,8 @@
             "BitLength":16,
             "BitOffset":112,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -16773,8 +16779,8 @@
             "BitLength":16,
             "BitOffset":168,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -16785,8 +16791,8 @@
             "BitLength":16,
             "BitOffset":184,
             "BitStart":0,
-            "Unit":"deg/s",
-            "Resolution":0.00179049,
+            "Unit":"rad/s",
+            "Resolution":3.125e-05,
             "Signed":true,
             "FieldType":"ROTATION_FIX16"
           },
@@ -16958,8 +16964,8 @@
             "BitLength":16,
             "BitOffset":112,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -17005,8 +17011,8 @@
             "BitLength":16,
             "BitOffset":168,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -17214,8 +17220,8 @@
             "BitLength":16,
             "BitOffset":112,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -17279,8 +17285,8 @@
             "BitLength":16,
             "BitOffset":168,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -18048,8 +18054,8 @@
             "BitLength":16,
             "BitOffset":96,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -18060,8 +18066,8 @@
             "BitLength":16,
             "BitOffset":112,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -18305,8 +18311,8 @@
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -18449,8 +18455,8 @@
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -18792,8 +18798,8 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -18804,8 +18810,8 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -20870,8 +20876,8 @@
             "BitLength":16,
             "BitOffset":112,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -23891,8 +23897,8 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -23945,7 +23951,7 @@
             "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -23957,7 +23963,7 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -23969,8 +23975,8 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.001,
+            "Unit":"Pa",
+            "Resolution":100,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_HPA"
           },
@@ -24034,7 +24040,7 @@
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -24058,8 +24064,8 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.001,
+            "Unit":"Pa",
+            "Resolution":100,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_HPA"
           }
@@ -24112,7 +24118,7 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -24124,7 +24130,7 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -24244,8 +24250,8 @@
             "BitLength":32,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":1e-06,
+            "Unit":"Pa",
+            "Resolution":0.1,
             "Signed":true,
             "FieldType":"PRESSURE_FIX32_DPA"
           }
@@ -24298,8 +24304,8 @@
             "BitLength":32,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":1e-06,
+            "Unit":"Pa",
+            "Resolution":0.1,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX32_DPA"
           }
@@ -24352,7 +24358,7 @@
             "BitLength":24,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.001,
             "Signed":false,
             "FieldType":"TEMPERATURE_UFIX24"
@@ -24364,7 +24370,7 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.1,
             "Signed":false,
             "FieldType":"TEMPERATURE_HIGH"
@@ -24599,7 +24605,7 @@
             "BitLength":16,
             "BitOffset":152,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -24732,8 +24738,8 @@
             "BitLength":16,
             "BitOffset":168,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -24744,7 +24750,7 @@
             "BitLength":16,
             "BitOffset":184,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -24864,8 +24870,8 @@
             "BitLength":16,
             "BitOffset":136,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -24909,8 +24915,8 @@
             "BitLength":16,
             "BitOffset":176,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.001,
+            "Unit":"Pa",
+            "Resolution":100,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_HPA"
           },
@@ -24921,7 +24927,7 @@
             "BitLength":16,
             "BitOffset":192,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -25041,8 +25047,8 @@
             "BitLength":16,
             "BitOffset":136,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -25106,8 +25112,8 @@
             "BitLength":16,
             "BitOffset":208,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.001,
+            "Unit":"Pa",
+            "Resolution":100,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_HPA"
           },
@@ -25129,7 +25135,7 @@
             "BitLength":16,
             "BitOffset":240,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -25141,7 +25147,7 @@
             "BitLength":16,
             "BitOffset":256,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -25349,7 +25355,7 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -25361,8 +25367,8 @@
             "BitLength":16,
             "BitOffset":64,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.001,
+            "Unit":"Pa",
+            "Resolution":100,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_HPA"
           },
@@ -25373,8 +25379,8 @@
             "BitLength":16,
             "BitOffset":80,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.001,
+            "Unit":"Pa",
+            "Resolution":100,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_HPA"
           },
@@ -25385,8 +25391,8 @@
             "BitLength":16,
             "BitOffset":96,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.01,
+            "Unit":"Pa",
+            "Resolution":1000,
             "Signed":true,
             "FieldType":"PRESSURE_FIX16_KPA"
           },
@@ -25397,8 +25403,8 @@
             "BitLength":16,
             "BitOffset":112,
             "BitStart":0,
-            "Unit":"bar",
-            "Resolution":0.01,
+            "Unit":"Pa",
+            "Resolution":1000,
             "Signed":false,
             "FieldType":"PRESSURE_UFIX16_KPA"
           },
@@ -26322,8 +26328,8 @@
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -26346,8 +26352,8 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -26370,8 +26376,8 @@
             "BitLength":16,
             "BitOffset":80,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -32357,7 +32363,7 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.1,
             "Signed":false,
             "FieldType":"TEMPERATURE_HIGH"
@@ -32369,7 +32375,7 @@
             "BitLength":16,
             "BitOffset":56,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.1,
             "Signed":false,
             "FieldType":"TEMPERATURE_HIGH"
@@ -34030,8 +34036,8 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -34042,8 +34048,8 @@
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -34054,8 +34060,8 @@
             "BitLength":16,
             "BitOffset":64,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           }
@@ -34213,8 +34219,8 @@
             "BitLength":16,
             "BitOffset":80,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -34504,8 +34510,8 @@
             "BitLength":16,
             "BitOffset":80,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":true,
             "FieldType":"ANGLE_FIX16"
           },
@@ -34942,8 +34948,8 @@
             "BitLength":16,
             "BitOffset":72,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -35303,8 +35309,8 @@
             "BitLength":16,
             "BitOffset":72,
             "BitStart":0,
-            "Unit":"deg",
-            "Resolution":0.00572958,
+            "Unit":"rad",
+            "Resolution":0.0001,
             "Signed":false,
             "FieldType":"ANGLE_UFIX16"
           },
@@ -35469,7 +35475,7 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -35481,7 +35487,7 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -35493,7 +35499,7 @@
             "BitLength":16,
             "BitOffset":56,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -35562,7 +35568,7 @@
             "BitLength":16,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -35574,7 +35580,7 @@
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
@@ -35586,7 +35592,7 @@
             "BitLength":16,
             "BitOffset":56,
             "BitStart":0,
-            "Unit":"C",
+            "Unit":"K",
             "Resolution":0.01,
             "Signed":false,
             "FieldType":"TEMPERATURE"
