@@ -412,6 +412,7 @@ limitations under the License.
       <EncodingDescription>This has a higher range but lower precision than TEMPERATURE</EncodingDescription>
       <BaseFieldType>TEMPERATURE</BaseFieldType>
       <Bits>16</Bits>
+      <Unit>K</Unit>
       <Signed>false</Signed>
       <Resolution>0.1</Resolution>
       <RangeMin>0</RangeMin>
@@ -422,6 +423,7 @@ limitations under the License.
       <EncodingDescription>This has a higher range and higher precision than TEMPERATURE (but uses three bytes)</EncodingDescription>
       <BaseFieldType>TEMPERATURE</BaseFieldType>
       <Bits>24</Bits>
+      <Unit>K</Unit>
       <Signed>false</Signed>
       <Resolution>0.001</Resolution>
       <RangeMin>0</RangeMin>

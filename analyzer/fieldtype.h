@@ -330,6 +330,7 @@ FieldType fieldTypeList[] = {
      .description         = "Temperature, high range",
      .encodingDescription = "This has a higher range but lower precision than TEMPERATURE",
      .resolution          = 0.1,
+     .unit                = "K",
      .baseFieldType       = "TEMPERATURE"},
 
     {.name                = "TEMPERATURE_UFIX24",
@@ -337,6 +338,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "This has a higher range and higher precision than TEMPERATURE (but uses three bytes)",
      .size                = 24,
      .resolution          = 0.001,
+     .unit                = "K",
      .baseFieldType       = "TEMPERATURE"},
 
     {.name          = "TEMPERATURE_DELTA_FIX16",
