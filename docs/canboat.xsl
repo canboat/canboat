@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="1.0" exclude-result-prefixes="xs">
 
-  <xsl:key name="Missing" match="/PGNDefinitions/Missing/MissingAttribute" use="@Name" />
+  <xsl:key name="Missing" match="/PGNDefinitions/MissingEnumerations/MissingAttribute" use="@Name" />
 
   <!--
     Some fields contain "word~text~" where text should be rendered
