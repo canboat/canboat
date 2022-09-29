@@ -1062,7 +1062,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -5306,7 +5306,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -5536,8 +5536,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>OfParameters</Id>
-          <Name># of Parameters</Name>
+          <Id>numberOfParameters</Id>
+          <Name>Number of Parameters</Name>
           <Description>How many parameter pairs will follow</Description>
           <BitLength>8</BitLength>
           <BitOffset>80</BitOffset>
@@ -5639,15 +5639,15 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>OfParameters</Id>
-          <Name># of Parameters</Name>
+          <Id>numberOfParameters</Id>
+          <Name>Number of Parameters</Name>
           <Description>How many parameter pairs will follow</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -5746,14 +5746,14 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>OfParameters</Id>
-          <Name># of Parameters</Name>
+          <Id>numberOfParameters</Id>
+          <Name>Number of Parameters</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -6050,21 +6050,21 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>OfSelectionPairs</Id>
-          <Name># of Selection Pairs</Name>
+          <Id>numberOfSelectionPairs</Id>
+          <Name>Number of Selection Pairs</Name>
           <BitLength>8</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>OfParameters</Id>
-          <Name># of Parameters</Name>
+          <Id>numberOfParameters</Id>
+          <Name>Number of Parameters</Name>
           <BitLength>8</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -6362,21 +6362,21 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>OfSelectionPairs</Id>
-          <Name># of Selection Pairs</Name>
+          <Id>numberOfSelectionPairs</Id>
+          <Name>Number of Selection Pairs</Name>
           <BitLength>8</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>OfParameters</Id>
-          <Name># of Parameters</Name>
+          <Id>numberOfParameters</Id>
+          <Name>Number of Parameters</Name>
           <BitLength>8</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -6682,21 +6682,21 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>OfSelectionPairs</Id>
-          <Name># of Selection Pairs</Name>
+          <Id>numberOfSelectionPairs</Id>
+          <Name>Number of Selection Pairs</Name>
           <BitLength>8</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>OfParameters</Id>
-          <Name># of Parameters</Name>
+          <Id>numberOfParameters</Id>
+          <Name>Number of Parameters</Name>
           <BitLength>8</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -7002,21 +7002,21 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>OfSelectionPairs</Id>
-          <Name># of Selection Pairs</Name>
+          <Id>numberOfSelectionPairs</Id>
+          <Name>Number of Selection Pairs</Name>
           <BitLength>8</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>OfParameters</Id>
-          <Name># of Parameters</Name>
+          <Id>numberOfParameters</Id>
+          <Name>Number of Parameters</Name>
           <BitLength>8</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -9544,7 +9544,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -9556,7 +9556,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -9646,7 +9646,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -9947,7 +9947,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -10109,7 +10109,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -10438,30 +10438,30 @@ limitations under the License.
           <Order>1</Order>
           <Id>nmea2000Version</Id>
           <Name>NMEA 2000 Version</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Resolution>0.001</Resolution>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>VERSION</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>productCode</Id>
           <Name>Product Code</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>modelId</Id>
           <Name>Model ID</Name>
           <BitLength>256</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII text</Type>
           <Signed>false</Signed>
@@ -10472,7 +10472,7 @@ limitations under the License.
           <Id>softwareVersionCode</Id>
           <Name>Software Version Code</Name>
           <BitLength>256</BitLength>
-          <BitOffset>288</BitOffset>
+          <BitOffset>280</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII text</Type>
           <Signed>false</Signed>
@@ -10483,7 +10483,7 @@ limitations under the License.
           <Id>modelVersion</Id>
           <Name>Model Version</Name>
           <BitLength>256</BitLength>
-          <BitOffset>544</BitOffset>
+          <BitOffset>536</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII text</Type>
           <Signed>false</Signed>
@@ -10494,7 +10494,7 @@ limitations under the License.
           <Id>modelSerialCode</Id>
           <Name>Model Serial Code</Name>
           <BitLength>256</BitLength>
-          <BitOffset>800</BitOffset>
+          <BitOffset>792</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII text</Type>
           <Signed>false</Signed>
@@ -10505,7 +10505,7 @@ limitations under the License.
           <Id>certificationLevel</Id>
           <Name>Certification Level</Name>
           <BitLength>8</BitLength>
-          <BitOffset>1056</BitOffset>
+          <BitOffset>1048</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
@@ -10516,7 +10516,7 @@ limitations under the License.
           <Id>loadEquivalency</Id>
           <Name>Load Equivalency</Name>
           <BitLength>8</BitLength>
-          <BitOffset>1064</BitOffset>
+          <BitOffset>1056</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
@@ -13491,12 +13491,14 @@ limitations under the License.
           <Order>6</Order>
           <Id>timeRemaining</Id>
           <Name>Time Remaining</Name>
+          <Description>Time remaining at current rate of discharge</Description>
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Units>s</Units>
+          <Resolution>60</Resolution>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>TIME_UFIX16_MIN</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -13512,8 +13514,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>ampHours</Id>
-          <Name>Amp Hours</Name>
+          <Id>remainingCapacity</Id>
+          <Name>Remaining capacity</Name>
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -13643,9 +13645,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Units>s</Units>
+          <Resolution>60</Resolution>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>TIME_UFIX16_MIN</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -13814,11 +13817,9 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>13</Length>
+      <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -13850,9 +13851,13 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>4</Order>
@@ -13869,81 +13874,106 @@ limitations under the License.
           <Order>5</Order>
           <Id>chargeCurrentLimit</Id>
           <Name>Charge Current Limit</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Units>A</Units>
-          <Resolution>0.1</Resolution>
+          <Units>%</Units>
+          <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>CURRENT_UFIX16_DA</FieldType>
+          <FieldType>PERCENTAGE_UINT8</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>chargingAlgorithm</Id>
           <Name>Charging Algorithm</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>4</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <EnumValues>
+            <EnumPair Value='0' Name='Trickle' />
+            <EnumPair Value='1' Name='Constant voltage / Constant current' />
+            <EnumPair Value='2' Name='2 stage (no float)' />
+            <EnumPair Value='3' Name='3 stage' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>chargerMode</Id>
           <Name>Charger Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <BitLength>4</BitLength>
+          <BitOffset>36</BitOffset>
+          <BitStart>4</BitStart>
+          <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <EnumValues>
+            <EnumPair Value='0' Name='Standalone' />
+            <EnumPair Value='1' Name='Primary' />
+            <EnumPair Value='2' Name='Secondary' />
+            <EnumPair Value='3' Name='Echo' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>estimatedTemperature</Id>
           <Name>Estimated Temperature</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>56</BitOffset>
+          <Description>If there is no battery temperature sensor the charger will use this field to steer the charging algorithm</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Units>K</Units>
-          <Type>Temperature</Type>
-          <Resolution>0.01</Resolution>
+          <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <FieldType>TEMPERATURE</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <EnumValues>
+            <EnumPair Value='0' Name='Cold' />
+            <EnumPair Value='1' Name='Warm' />
+            <EnumPair Value='2' Name='Hot' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>equalizeOneTimeEnableDisable</Id>
           <Name>Equalize One Time Enable/Disable</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <BitLength>2</BitLength>
+          <BitOffset>44</BitOffset>
+          <BitStart>4</BitStart>
+          <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>overChargeEnableDisable</Id>
           <Name>Over Charge Enable/Disable</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>76</BitOffset>
-          <BitStart>4</BitStart>
-          <Type>Integer</Type>
+          <BitLength>2</BitLength>
+          <BitOffset>46</BitOffset>
+          <BitStart>6</BitStart>
+          <Type>Lookup table</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>11</Order>
           <Id>equalizeTime</Id>
           <Name>Equalize Time</Name>
           <BitLength>16</BitLength>
-          <BitOffset>80</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Units>s</Units>
+          <Resolution>60</Resolution>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>TIME_UFIX16_MIN</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -18335,7 +18365,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT32</FieldType>
         </Field>
         <Field>
           <Order>12</Order>
@@ -18346,7 +18376,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT32</FieldType>
         </Field>
         <Field>
           <Order>13</Order>
@@ -18406,7 +18436,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -18417,7 +18447,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -18428,7 +18458,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -18439,7 +18469,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -18499,7 +18529,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>11</Order>
@@ -18687,7 +18717,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT32</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -18819,7 +18849,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT32</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
@@ -18830,7 +18860,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT32</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -19457,7 +19487,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -19748,7 +19778,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -19853,7 +19883,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -19864,7 +19894,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -21327,7 +21357,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT32</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -21412,7 +21442,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT32</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -21464,7 +21494,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -22982,7 +23012,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>14</Order>
@@ -23303,7 +23333,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>21</Order>
@@ -23599,7 +23629,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>21</Order>
@@ -24143,7 +24173,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>11</Order>
@@ -24154,7 +24184,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>12</Order>
@@ -24165,7 +24195,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -24377,7 +24407,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -24432,7 +24462,7 @@ limitations under the License.
           <BitStart>6</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -24482,7 +24512,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -24602,7 +24632,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -24696,7 +24726,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -24740,7 +24770,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -24812,7 +24842,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -24906,7 +24936,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -24989,7 +25019,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -25061,7 +25091,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -25105,7 +25135,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -25155,7 +25185,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -26664,7 +26694,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>13</Order>
@@ -26675,7 +26705,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>14</Order>
@@ -32679,7 +32709,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -32741,7 +32771,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
@@ -32752,7 +32782,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>11</Order>
@@ -32763,7 +32793,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>12</Order>
@@ -32774,7 +32804,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>13</Order>
@@ -32809,7 +32839,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -35587,7 +35617,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -35609,7 +35639,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -35719,7 +35749,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -35730,7 +35760,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -37545,7 +37575,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -37568,7 +37598,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -37740,7 +37770,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -37764,7 +37794,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -37882,7 +37912,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -37905,7 +37935,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -38100,7 +38130,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -38220,7 +38250,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -38253,7 +38283,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -38343,7 +38373,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -38496,7 +38526,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -38629,7 +38659,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -38664,7 +38694,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -38675,7 +38705,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -38686,7 +38716,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -38764,7 +38794,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -38918,7 +38948,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
         <Field>
           <Order>5</Order>

@@ -2866,6 +2866,16 @@
         ]
       },
       {
+        "Name":"CHARGING_ALGORITHM",
+        "MaxValue":15,
+        "EnumValues":[
+          {"Name":"Trickle", "Value":0},
+          {"Name":"Constant voltage / Constant current", "Value":1},
+          {"Name":"2 stage (no float)", "Value":2},
+          {"Name":"3 stage", "Value":3}
+        ]
+      },
+      {
         "Name":"CHARGER_MODE",
         "MaxValue":15,
         "EnumValues":[
@@ -3425,6 +3435,15 @@
           {"Name":"7", "Value":7},
           {"Name":"Leave unchanged", "Value":8},
           {"Name":"Reset to default", "Value":9}
+        ]
+      },
+      {
+        "Name":"DEVICE_TEMP_STATE",
+        "MaxValue":15,
+        "EnumValues":[
+          {"Name":"Cold", "Value":0},
+          {"Name":"Warm", "Value":1},
+          {"Name":"Hot", "Value":2}
         ]
       }
     ],
@@ -4340,7 +4359,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":5,
@@ -7780,7 +7799,7 @@
             "BitOffset":40,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":7,
@@ -7992,8 +8011,8 @@
           },
           {
             "Order":5,
-            "Id":"OfParameters",
-            "Name":"# of Parameters",
+            "Id":"numberOfParameters",
+            "Name":"Number of Parameters",
             "Description":"How many parameter pairs will follow",
             "BitLength":8,
             "BitOffset":80,
@@ -8080,14 +8099,14 @@
           },
           {
             "Order":5,
-            "Id":"OfParameters",
-            "Name":"# of Parameters",
+            "Id":"numberOfParameters",
+            "Name":"Number of Parameters",
             "Description":"How many parameter pairs will follow",
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":6,
@@ -8169,13 +8188,13 @@
           },
           {
             "Order":5,
-            "Id":"OfParameters",
-            "Name":"# of Parameters",
+            "Id":"numberOfParameters",
+            "Name":"Number of Parameters",
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":6,
@@ -8271,19 +8290,19 @@
           },
           {
             "Order":7,
-            "Id":"OfSelectionPairs",
-            "Name":"# of Selection Pairs",
+            "Id":"numberOfSelectionPairs",
+            "Name":"Number of Selection Pairs",
             "BitLength":8,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":8,
-            "Id":"OfParameters",
-            "Name":"# of Parameters",
+            "Id":"numberOfParameters",
+            "Name":"Number of Parameters",
             "BitLength":8,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":9,
@@ -8390,19 +8409,19 @@
           },
           {
             "Order":7,
-            "Id":"OfSelectionPairs",
-            "Name":"# of Selection Pairs",
+            "Id":"numberOfSelectionPairs",
+            "Name":"Number of Selection Pairs",
             "BitLength":8,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":8,
-            "Id":"OfParameters",
-            "Name":"# of Parameters",
+            "Id":"numberOfParameters",
+            "Name":"Number of Parameters",
             "BitLength":8,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":9,
@@ -8517,19 +8536,19 @@
           },
           {
             "Order":7,
-            "Id":"OfSelectionPairs",
-            "Name":"# of Selection Pairs",
+            "Id":"numberOfSelectionPairs",
+            "Name":"Number of Selection Pairs",
             "BitLength":8,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":8,
-            "Id":"OfParameters",
-            "Name":"# of Parameters",
+            "Id":"numberOfParameters",
+            "Name":"Number of Parameters",
             "BitLength":8,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":9,
@@ -8644,19 +8663,19 @@
           },
           {
             "Order":7,
-            "Id":"OfSelectionPairs",
-            "Name":"# of Selection Pairs",
+            "Id":"numberOfSelectionPairs",
+            "Name":"Number of Selection Pairs",
             "BitLength":8,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":8,
-            "Id":"OfParameters",
-            "Name":"# of Parameters",
+            "Id":"numberOfParameters",
+            "Name":"Number of Parameters",
             "BitLength":8,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":9,
@@ -10909,7 +10928,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":6,
@@ -10920,7 +10939,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":7,
@@ -10995,7 +11014,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":6,
@@ -11229,7 +11248,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":6,
@@ -11365,7 +11384,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":6,
@@ -11631,28 +11650,29 @@
             "Order":1,
             "Id":"nmea2000Version",
             "Name":"NMEA 2000 Version",
-            "BitLength":16,
+            "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
+            "Resolution":0.001,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"VERSION"
           },
           {
             "Order":2,
             "Id":"productCode",
             "Name":"Product Code",
             "BitLength":16,
-            "BitOffset":16,
+            "BitOffset":8,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":3,
             "Id":"modelId",
             "Name":"Model ID",
             "BitLength":256,
-            "BitOffset":32,
+            "BitOffset":24,
             "BitStart":0,
             "Signed":false,
             "FieldType":"STRING_FIX"
@@ -11662,7 +11682,7 @@
             "Id":"softwareVersionCode",
             "Name":"Software Version Code",
             "BitLength":256,
-            "BitOffset":288,
+            "BitOffset":280,
             "BitStart":0,
             "Signed":false,
             "FieldType":"STRING_FIX"
@@ -11672,7 +11692,7 @@
             "Id":"modelVersion",
             "Name":"Model Version",
             "BitLength":256,
-            "BitOffset":544,
+            "BitOffset":536,
             "BitStart":0,
             "Signed":false,
             "FieldType":"STRING_FIX"
@@ -11682,7 +11702,7 @@
             "Id":"modelSerialCode",
             "Name":"Model Serial Code",
             "BitLength":256,
-            "BitOffset":800,
+            "BitOffset":792,
             "BitStart":0,
             "Signed":false,
             "FieldType":"STRING_FIX"
@@ -11692,7 +11712,7 @@
             "Id":"certificationLevel",
             "Name":"Certification Level",
             "BitLength":8,
-            "BitOffset":1056,
+            "BitOffset":1048,
             "BitStart":0,
             "Signed":false,
             "FieldType":"UINT8"
@@ -11702,7 +11722,7 @@
             "Id":"loadEquivalency",
             "Name":"Load Equivalency",
             "BitLength":8,
-            "BitOffset":1064,
+            "BitOffset":1056,
             "BitStart":0,
             "Signed":false,
             "FieldType":"UINT8"
@@ -14233,11 +14253,14 @@
             "Order":6,
             "Id":"timeRemaining",
             "Name":"Time Remaining",
+            "Description":"Time remaining at current rate of discharge",
             "BitLength":16,
             "BitOffset":40,
             "BitStart":0,
+            "Unit":"s",
+            "Resolution":60,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"TIME_UFIX16_MIN"
           },
           {
             "Order":7,
@@ -14253,8 +14276,8 @@
           },
           {
             "Order":8,
-            "Id":"ampHours",
-            "Name":"Amp Hours",
+            "Id":"remainingCapacity",
+            "Name":"Remaining capacity",
             "BitLength":16,
             "BitOffset":72,
             "BitStart":0,
@@ -14356,8 +14379,10 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
+            "Unit":"s",
+            "Resolution":60,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"TIME_UFIX16_MIN"
           }
         ]
       },
@@ -14509,9 +14534,9 @@
         "Description":"Charger Configuration Status",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution"
+        "Missing":["SampleData"
         ],
-        "Length":13,
+        "Length":8,
         "RepeatingFields":0,
         "TransmissionIrregular":true,
         "Fields":[
@@ -14543,7 +14568,8 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
           },
           {
             "Order":4,
@@ -14559,75 +14585,80 @@
             "Order":5,
             "Id":"chargeCurrentLimit",
             "Name":"Charge Current Limit",
-            "BitLength":16,
+            "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
-            "Unit":"A",
-            "Resolution":0.1,
+            "Unit":"%",
             "Signed":false,
-            "FieldType":"CURRENT_UFIX16_DA"
+            "FieldType":"PERCENTAGE_UINT8"
           },
           {
             "Order":6,
             "Id":"chargingAlgorithm",
             "Name":"Charging Algorithm",
-            "BitLength":8,
-            "BitOffset":40,
+            "BitLength":4,
+            "BitOffset":32,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UINT8"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"CHARGING_ALGORITHM"
           },
           {
             "Order":7,
             "Id":"chargerMode",
             "Name":"Charger Mode",
-            "BitLength":8,
-            "BitOffset":48,
-            "BitStart":0,
+            "BitLength":4,
+            "BitOffset":36,
+            "BitStart":4,
             "Signed":false,
-            "FieldType":"UINT8"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"CHARGER_MODE"
           },
           {
             "Order":8,
             "Id":"estimatedTemperature",
             "Name":"Estimated Temperature",
-            "BitLength":16,
-            "BitOffset":56,
+            "Description":"If there is no battery temperature sensor the charger will use this field to steer the charging algorithm",
+            "BitLength":4,
+            "BitOffset":40,
             "BitStart":0,
-            "Unit":"K",
-            "Resolution":0.01,
             "Signed":false,
-            "FieldType":"TEMPERATURE"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"DEVICE_TEMP_STATE"
           },
           {
             "Order":9,
             "Id":"equalizeOneTimeEnableDisable",
             "Name":"Equalize One Time Enable/Disable",
-            "BitLength":4,
-            "BitOffset":72,
-            "BitStart":0,
+            "BitLength":2,
+            "BitOffset":44,
+            "BitStart":4,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
           },
           {
             "Order":10,
             "Id":"overChargeEnableDisable",
             "Name":"Over Charge Enable/Disable",
-            "BitLength":4,
-            "BitOffset":76,
-            "BitStart":4,
+            "BitLength":2,
+            "BitOffset":46,
+            "BitStart":6,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
           },
           {
             "Order":11,
             "Id":"equalizeTime",
             "Name":"Equalize Time",
             "BitLength":16,
-            "BitOffset":80,
+            "BitOffset":48,
             "BitStart":0,
+            "Unit":"s",
+            "Resolution":60,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"TIME_UFIX16_MIN"
           }
         ]
       },
@@ -18337,7 +18368,7 @@
             "BitOffset":128,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT32"
           },
           {
             "Order":12,
@@ -18347,7 +18378,7 @@
             "BitOffset":160,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT32"
           },
           {
             "Order":13,
@@ -18405,7 +18436,7 @@
             "BitOffset":0,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":2,
@@ -18415,7 +18446,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":3,
@@ -18425,7 +18456,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":4,
@@ -18435,7 +18466,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":5,
@@ -18489,7 +18520,7 @@
             "Name":"WP ID",
             "BitLength":16,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":11,
@@ -18654,7 +18685,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT32"
           }
         ]
       },
@@ -18764,7 +18795,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT32"
           },
           {
             "Order":10,
@@ -18774,7 +18805,7 @@
             "BitOffset":104,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT32"
           }
         ]
       },
@@ -19339,7 +19370,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":3,
@@ -19601,7 +19632,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":3,
@@ -19695,7 +19726,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":3,
@@ -19705,7 +19736,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":4,
@@ -20920,7 +20951,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT32"
           },
           {
             "Order":8,
@@ -20995,7 +21026,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT32"
           },
           {
             "Order":4,
@@ -21036,7 +21067,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":8,
@@ -22301,7 +22332,7 @@
             "BitOffset":182,
             "BitStart":6,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT8"
           },
           {
             "Order":14,
@@ -22546,7 +22577,7 @@
             "Name":"DSC Equipment Assigned Message ID",
             "BitLength":16,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":21,
@@ -22766,7 +22797,7 @@
             "Name":"DSC Equipment Assigned Message ID",
             "BitLength":16,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":21,
@@ -23189,7 +23220,7 @@
             "BitOffset":152,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":11,
@@ -23199,7 +23230,7 @@
             "BitOffset":168,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":12,
@@ -23209,7 +23240,7 @@
             "BitOffset":184,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -23400,7 +23431,7 @@
             "BitOffset":136,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":8,
@@ -23450,7 +23481,7 @@
             "BitOffset":166,
             "BitStart":6,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -23494,7 +23525,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":4,
@@ -23602,7 +23633,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":4,
@@ -23686,7 +23717,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":4,
@@ -23726,7 +23757,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":8,
@@ -23790,7 +23821,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":4,
@@ -23874,7 +23905,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":4,
@@ -23948,7 +23979,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":4,
@@ -24012,7 +24043,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":4,
@@ -24052,7 +24083,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -24096,7 +24127,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":4,
@@ -25412,7 +25443,7 @@
             "BitOffset":176,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":13,
@@ -25422,7 +25453,7 @@
             "BitOffset":192,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":14,
@@ -30314,7 +30345,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":6,
@@ -30355,7 +30386,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":10,
@@ -30365,7 +30396,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":11,
@@ -30375,7 +30406,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":12,
@@ -30385,7 +30416,7 @@
             "BitOffset":104,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":13,
@@ -30419,7 +30450,7 @@
             "BitOffset":168,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -32861,7 +32892,7 @@
             "BitOffset":32,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":7,
@@ -32881,7 +32912,7 @@
             "BitOffset":56,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -32978,7 +33009,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":9,
@@ -32988,7 +33019,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -34542,7 +34573,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":9,
@@ -34564,7 +34595,7 @@
             "BitOffset":96,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -34711,7 +34742,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":9,
@@ -34733,7 +34764,7 @@
             "BitOffset":96,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -34833,7 +34864,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":9,
@@ -34855,7 +34886,7 @@
             "BitOffset":96,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -35014,7 +35045,7 @@
             "BitOffset":88,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -35118,7 +35149,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":5,
@@ -35148,7 +35179,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":8,
@@ -35229,7 +35260,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":6,
@@ -35350,7 +35381,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":5,
@@ -35469,7 +35500,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":5,
@@ -35501,7 +35532,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":8,
@@ -35511,7 +35542,7 @@
             "BitOffset":64,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":9,
@@ -35521,7 +35552,7 @@
             "BitOffset":80,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           }
         ]
       },
@@ -35590,7 +35621,7 @@
             "BitOffset":24,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":6,
@@ -35711,7 +35742,7 @@
             "BitOffset":16,
             "BitStart":0,
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"
+            "FieldType":"UINT16"
           },
           {
             "Order":5,

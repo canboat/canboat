@@ -65,7 +65,7 @@
             "BitStart":0,
             "Type":"Integer",
             "Signed":false,
-            "FieldType":"UNSIGNED_INTEGER"}]},
+            "FieldType":"UINT16"}]},
       {
         "PGN":262384,
         "Id":"actisenseStartupStatus",

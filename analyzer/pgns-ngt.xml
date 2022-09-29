@@ -92,7 +92,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UNSIGNED_INTEGER</FieldType>
+          <FieldType>UINT16</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

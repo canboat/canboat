@@ -99,6 +99,8 @@
             </xsl:choose>
           </p>
           <xsl:variable name="repeating" select="RepeatingFields"/>
+          <xsl:variable name="repeatingSet1" select="RepeatingFieldSet1"/>
+          <xsl:variable name="repeatingSet2" select="RepeatingFieldSet2"/>
           <xsl:variable name="fieldCount" select="count(Fields/*)"/>
           <xsl:variable name="startRepeat" select="$fieldCount - $repeating + 1"/>
           <p>
