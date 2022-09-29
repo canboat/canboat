@@ -106,14 +106,14 @@
       },
     {
         "Name":"UNSIGNED_FIXED_POINT_NUMBER",
-      "Description":"An unsigned numeric value where the Least Boolificant Bit does not encode the integer value 1",
+      "Description":"An unsigned numeric value where the Least Significant Bit does not encode the integer value 1",
       "EncodingDescription":"The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.",
       "BaseFieldType":"NUMBER",
       "Signed":false
       },
     {
         "Name":"SIGNED_FIXED_POINT_NUMBER",
-      "Description":"A signed numeric value where the Least Boolificant Bit does not encode the integer value 1",
+      "Description":"A signed numeric value where the Least Significant Bit does not encode the integer value 1",
       "EncodingDescription":"The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.",
       "BaseFieldType":"NUMBER",
       "Signed":true
@@ -313,7 +313,7 @@
     {
         "Name":"GEO_FIX32",
       "Description":"Geographical latitude or longitude",
-      "EncodingDescription":"The `Resolution` for this field is 1.0e-7, so the precision is 1/10 millionth of a degree, or about 1 cm when we refer to an Earth position",
+      "EncodingDescription":"The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 cm when we refer to an Earth position",
       "BaseFieldType":"FIX32",
       "Bits":32,
       "Unit":"deg",
@@ -324,8 +324,8 @@
       },
     {
         "Name":"GEO_FIX64",
-      "Description":"Geographical latitude or longitude, high precision",
-      "EncodingDescription":"The `Resolution` for this field is 1.0e-16, so the precision is about 0.01 nm (nanometer) when we refer to an Earth position",
+      "Description":"Geographical latitude or longitude, high resolution",
+      "EncodingDescription":"The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we refer to an Earth position",
       "BaseFieldType":"FIX64",
       "Bits":64,
       "Unit":"deg",
@@ -336,7 +336,7 @@
       },
     {
         "Name":"LENGTH_UFIX8_DAM",
-      "Description":"Length, in decameter precision",
+      "Description":"Length, in decameter resolution",
       "BaseFieldType":"UFIX8",
       "Bits":8,
       "Unit":"m",
@@ -347,7 +347,7 @@
       },
     {
         "Name":"LENGTH_UFIX16_DM",
-      "Description":"Length, in decimeter precision",
+      "Description":"Length, in decimeter resolution",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"m",
@@ -358,7 +358,7 @@
       },
     {
         "Name":"LENGTH_UFIX32_CM",
-      "Description":"Length, in centimeter precision",
+      "Description":"Length, in centimeter resolution",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"m",
@@ -369,7 +369,7 @@
       },
     {
         "Name":"LENGTH_UFIX32_M",
-      "Description":"Length, in meter precision",
+      "Description":"Length, in meter resolution",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"m",
@@ -379,7 +379,7 @@
       },
     {
         "Name":"LENGTH_UFIX32_CM",
-      "Description":"Length, in centimeter precision",
+      "Description":"Length, in centimeter resolution",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"m",
@@ -390,7 +390,7 @@
       },
     {
         "Name":"LENGTH_UFIX32_MM",
-      "Description":"Length, in millimeter precision",
+      "Description":"Length, in millimeter resolution",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"m",
@@ -413,7 +413,7 @@
     {
         "Name":"TEMPERATURE_HIGH",
       "Description":"Temperature, high range",
-      "EncodingDescription":"This has a higher range but lower precision than TEMPERATURE",
+      "EncodingDescription":"This has a higher range but lower resolution than TEMPERATURE",
       "BaseFieldType":"TEMPERATURE",
       "Bits":16,
       "Unit":"K",
@@ -424,8 +424,8 @@
       },
     {
         "Name":"TEMPERATURE_UFIX24",
-      "Description":"Temperature, high precision",
-      "EncodingDescription":"This has a higher range and higher precision than TEMPERATURE (but uses three bytes)",
+      "Description":"Temperature, high resolution",
+      "EncodingDescription":"This has a higher range and higher resolution than TEMPERATURE (but uses three bytes)",
       "BaseFieldType":"TEMPERATURE",
       "Bits":24,
       "Unit":"K",
@@ -491,7 +491,7 @@
     {
         "Name":"TIME",
       "Description":"Time",
-      "EncodingDescription":"Time since midnight.",
+      "EncodingDescription":"When indicating a wall clock time, this is the amount of time passed since midnight",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"s",
@@ -501,20 +501,18 @@
       "RangeMax":429496.7293
       },
     {
-        "Name":"SHORT_TIME",
-      "Description":"Time, low range",
-      "EncodingDescription":"This encodes an elapsed time interval with a precision of 0.1 milliseconds.",
+        "Name":"TIME_UFIX16_S",
+      "Description":"Time delta, 16 bits with 1 second resolution",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"s",
       "Signed":false,
-      "Resolution":0.0001,
       "RangeMin":0,
-      "RangeMax":6.5533
+      "RangeMax":65533
       },
     {
         "Name":"TIME_UFIX8_5MS",
-      "Description":"Time delta, 8 bits with 5 millisecond precision",
+      "Description":"Time delta, 8 bits with 5 millisecond resolution",
       "BaseFieldType":"UFIX8",
       "Bits":8,
       "Unit":"s",
@@ -525,7 +523,7 @@
       },
     {
         "Name":"TIME_UFIX8_P12S",
-      "Description":"Time delta, 8 bits with 2^12 second precision",
+      "Description":"Time delta, 8 bits with 2^12 second resolution",
       "BaseFieldType":"UFIX8",
       "Bits":8,
       "Unit":"s",
@@ -536,7 +534,7 @@
       },
     {
         "Name":"TIME_UFIX16_MS",
-      "Description":"Time delta, 16 bits with millisecond precision",
+      "Description":"Time delta, 16 bits with millisecond resolution",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"s",
@@ -547,7 +545,7 @@
       },
     {
         "Name":"TIME_UFIX16_CS",
-      "Description":"Time delta, 16 bits with centisecond precision",
+      "Description":"Time delta, 16 bits with centisecond resolution",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"s",
@@ -558,7 +556,7 @@
       },
     {
         "Name":"TIME_UFIX16_MIN",
-      "Description":"Time delta, 16 bits with minute precision",
+      "Description":"Time delta, 16 bits with minute resolution",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"s",
@@ -569,7 +567,7 @@
       },
     {
         "Name":"TIME_UFIX24_MS",
-      "Description":"Time delta, 24 bits with millisecond precision",
+      "Description":"Time delta, 24 bits with millisecond resolution",
       "BaseFieldType":"UFIX24",
       "Bits":24,
       "Unit":"s",
@@ -580,7 +578,7 @@
       },
     {
         "Name":"TIME_UFIX32_S",
-      "Description":"Time delta, 32 bits with second precision",
+      "Description":"Time delta, 32 bits with second resolution",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"s",
@@ -590,7 +588,7 @@
       },
     {
         "Name":"TIME_UFIX32_MS",
-      "Description":"Time delta, 32 bits with millisecond precision",
+      "Description":"Time delta, 32 bits with millisecond resolution",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"s",
@@ -903,7 +901,7 @@
       },
     {
         "Name":"PRESSURE_UFIX16_HPA",
-      "Description":"Pressure, 16 bit unsigned in hectopascal precision",
+      "Description":"Pressure, 16 bit unsigned in hectopascal resolution",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"Pa",
@@ -914,7 +912,7 @@
       },
     {
         "Name":"PRESSURE_UFIX16_KPA",
-      "Description":"Pressure, 16 bit unsigned in kilopascal precision.",
+      "Description":"Pressure, 16 bit unsigned in kilopascal resolution.",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"Pa",
@@ -925,7 +923,7 @@
       },
     {
         "Name":"PRESSURE_RATE_FIX16_PA",
-      "Description":"Pressure change rate, 16 bit signed in pascal precision.",
+      "Description":"Pressure change rate, 16 bit signed in pascal resolution.",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"Pa/hr",
@@ -936,7 +934,7 @@
       },
     {
         "Name":"PRESSURE_FIX16_KPA",
-      "Description":"Pressure, 16 bit signed in kilopascal precision.",
+      "Description":"Pressure, 16 bit signed in kilopascal resolution.",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"Pa",
@@ -947,7 +945,7 @@
       },
     {
         "Name":"PRESSURE_UFIX32_DPA",
-      "Description":"Pressure, 32 bit unsigned in decipascal precision.",
+      "Description":"Pressure, 32 bit unsigned in decipascal resolution.",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"Pa",
@@ -958,7 +956,7 @@
       },
     {
         "Name":"PRESSURE_FIX32_DPA",
-      "Description":"Pressure, 32 bit signed in decipascal precision.",
+      "Description":"Pressure, 32 bit signed in decipascal resolution.",
       "BaseFieldType":"FIX32",
       "Bits":32,
       "Unit":"Pa",
@@ -989,7 +987,7 @@
       },
     {
         "Name":"SPEED_FIX16_MM",
-      "Description":"Speed, with millimeter precision",
+      "Description":"Speed, with millimeter resolution",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"m/s",
@@ -1000,7 +998,7 @@
       },
     {
         "Name":"SPEED_FIX16_CM",
-      "Description":"Speed, with centimeter precision",
+      "Description":"Speed, with centimeter resolution",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"m/s",
@@ -1011,7 +1009,7 @@
       },
     {
         "Name":"SPEED_UFIX16_CM",
-      "Description":"Speed, unsigned, with centimeter precision",
+      "Description":"Speed, unsigned, with centimeter resolution",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"m/s",
@@ -1022,7 +1020,7 @@
       },
     {
         "Name":"SPEED_UFIX16_DM",
-      "Description":"Speed, unsigned, with decimeter precision",
+      "Description":"Speed, unsigned, with decimeter resolution",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"m/s",
@@ -1033,7 +1031,7 @@
       },
     {
         "Name":"DISTANCE_FIX16_M",
-      "Description":"Distance, with meter precision",
+      "Description":"Distance, with meter resolution",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"m",
@@ -1043,7 +1041,7 @@
       },
     {
         "Name":"DISTANCE_FIX16_CM",
-      "Description":"Distance, with centimeter precision",
+      "Description":"Distance, with centimeter resolution",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"m",
@@ -1054,7 +1052,7 @@
       },
     {
         "Name":"DISTANCE_FIX16_MM",
-      "Description":"Distance, with millimeter precision",
+      "Description":"Distance, with millimeter resolution",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"m",
@@ -1065,7 +1063,7 @@
       },
     {
         "Name":"DISTANCE_FIX32_MM",
-      "Description":"Distance, high range, with millimeter precision",
+      "Description":"Distance, high range, with millimeter resolution",
       "BaseFieldType":"FIX32",
       "Bits":32,
       "Unit":"m",
@@ -1076,7 +1074,7 @@
       },
     {
         "Name":"DISTANCE_FIX32_CM",
-      "Description":"Distance, high range, with centimeter precision",
+      "Description":"Distance, high range, with centimeter resolution",
       "BaseFieldType":"FIX32",
       "Bits":32,
       "Unit":"m",
@@ -25522,7 +25520,7 @@
             "BitStart":0,
             "Unit":"s",
             "Signed":false,
-            "FieldType":"SHORT_TIME"
+            "FieldType":"TIME_UFIX16_S"
           },
           {
             "Order":7,
@@ -25533,7 +25531,7 @@
             "BitStart":0,
             "Unit":"s",
             "Signed":false,
-            "FieldType":"SHORT_TIME"
+            "FieldType":"TIME_UFIX16_S"
           },
           {
             "Order":8,

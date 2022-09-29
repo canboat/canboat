@@ -24277,7 +24277,7 @@
             "BitStart":0,
             "Units":"s",
             "Signed":false,
-            "FieldType":"SHORT_TIME"},
+            "FieldType":"TIME_UFIX16_S"},
           {
             "Order":7,
             "Id":"trackTime",
@@ -24287,7 +24287,7 @@
             "BitStart":0,
             "Units":"s",
             "Signed":false,
-            "FieldType":"SHORT_TIME"},
+            "FieldType":"TIME_UFIX16_S"},
           {
             "Order":8,
             "Id":"repeatStatus",

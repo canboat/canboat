@@ -136,13 +136,13 @@ limitations under the License.
       <RangeMax>1.844674407370955e+19</RangeMax>
     </FieldType>
     <FieldType Name="UNSIGNED_FIXED_POINT_NUMBER">
-      <Description>An unsigned numeric value where the Least Boolificant Bit does not encode the integer value 1</Description>
+      <Description>An unsigned numeric value where the Least Significant Bit does not encode the integer value 1</Description>
       <EncodingDescription>The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.</EncodingDescription>
       <BaseFieldType>NUMBER</BaseFieldType>
       <Signed>false</Signed>
     </FieldType>
     <FieldType Name="SIGNED_FIXED_POINT_NUMBER">
-      <Description>A signed numeric value where the Least Boolificant Bit does not encode the integer value 1</Description>
+      <Description>A signed numeric value where the Least Significant Bit does not encode the integer value 1</Description>
       <EncodingDescription>The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.</EncodingDescription>
       <BaseFieldType>NUMBER</BaseFieldType>
       <Signed>true</Signed>
@@ -318,7 +318,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="GEO_FIX32">
       <Description>Geographical latitude or longitude</Description>
-      <EncodingDescription>The `Resolution` for this field is 1.0e-7, so the precision is 1/10 millionth of a degree, or about 1 cm when we refer to an Earth position</EncodingDescription>
+      <EncodingDescription>The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 cm when we refer to an Earth position</EncodingDescription>
       <BaseFieldType>FIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>deg</Unit>
@@ -328,8 +328,8 @@ limitations under the License.
       <RangeMax>214.7483645</RangeMax>
     </FieldType>
     <FieldType Name="GEO_FIX64">
-      <Description>Geographical latitude or longitude, high precision</Description>
-      <EncodingDescription>The `Resolution` for this field is 1.0e-16, so the precision is about 0.01 nm (nanometer) when we refer to an Earth position</EncodingDescription>
+      <Description>Geographical latitude or longitude, high resolution</Description>
+      <EncodingDescription>The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we refer to an Earth position</EncodingDescription>
       <BaseFieldType>FIX64</BaseFieldType>
       <Bits>64</Bits>
       <Unit>deg</Unit>
@@ -339,7 +339,7 @@ limitations under the License.
       <RangeMax>922.3372036854776</RangeMax>
     </FieldType>
     <FieldType Name="LENGTH_UFIX8_DAM">
-      <Description>Length, in decameter precision</Description>
+      <Description>Length, in decameter resolution</Description>
       <BaseFieldType>UFIX8</BaseFieldType>
       <Bits>8</Bits>
       <Unit>m</Unit>
@@ -349,7 +349,7 @@ limitations under the License.
       <RangeMax>2530</RangeMax>
     </FieldType>
     <FieldType Name="LENGTH_UFIX16_DM">
-      <Description>Length, in decimeter precision</Description>
+      <Description>Length, in decimeter resolution</Description>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m</Unit>
@@ -359,7 +359,7 @@ limitations under the License.
       <RangeMax>6553.3</RangeMax>
     </FieldType>
     <FieldType Name="LENGTH_UFIX32_CM">
-      <Description>Length, in centimeter precision</Description>
+      <Description>Length, in centimeter resolution</Description>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -369,7 +369,7 @@ limitations under the License.
       <RangeMax>42949672.93</RangeMax>
     </FieldType>
     <FieldType Name="LENGTH_UFIX32_M">
-      <Description>Length, in meter precision</Description>
+      <Description>Length, in meter resolution</Description>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -378,7 +378,7 @@ limitations under the License.
       <RangeMax>4294967293</RangeMax>
     </FieldType>
     <FieldType Name="LENGTH_UFIX32_CM">
-      <Description>Length, in centimeter precision</Description>
+      <Description>Length, in centimeter resolution</Description>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -388,7 +388,7 @@ limitations under the License.
       <RangeMax>42949672.93</RangeMax>
     </FieldType>
     <FieldType Name="LENGTH_UFIX32_MM">
-      <Description>Length, in millimeter precision</Description>
+      <Description>Length, in millimeter resolution</Description>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -409,7 +409,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="TEMPERATURE_HIGH">
       <Description>Temperature, high range</Description>
-      <EncodingDescription>This has a higher range but lower precision than TEMPERATURE</EncodingDescription>
+      <EncodingDescription>This has a higher range but lower resolution than TEMPERATURE</EncodingDescription>
       <BaseFieldType>TEMPERATURE</BaseFieldType>
       <Bits>16</Bits>
       <Unit>K</Unit>
@@ -419,8 +419,8 @@ limitations under the License.
       <RangeMax>6553.3</RangeMax>
     </FieldType>
     <FieldType Name="TEMPERATURE_UFIX24">
-      <Description>Temperature, high precision</Description>
-      <EncodingDescription>This has a higher range and higher precision than TEMPERATURE (but uses three bytes)</EncodingDescription>
+      <Description>Temperature, high resolution</Description>
+      <EncodingDescription>This has a higher range and higher resolution than TEMPERATURE (but uses three bytes)</EncodingDescription>
       <BaseFieldType>TEMPERATURE</BaseFieldType>
       <Bits>24</Bits>
       <Unit>K</Unit>
@@ -480,7 +480,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="TIME">
       <Description>Time</Description>
-      <EncodingDescription>Time since midnight.</EncodingDescription>
+      <EncodingDescription>When indicating a wall clock time, this is the amount of time passed since midnight</EncodingDescription>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>s</Unit>
@@ -489,19 +489,17 @@ limitations under the License.
       <RangeMin>0</RangeMin>
       <RangeMax>429496.7293</RangeMax>
     </FieldType>
-    <FieldType Name="SHORT_TIME">
-      <Description>Time, low range</Description>
-      <EncodingDescription>This encodes an elapsed time interval with a precision of 0.1 milliseconds.</EncodingDescription>
+    <FieldType Name="TIME_UFIX16_S">
+      <Description>Time delta, 16 bits with 1 second resolution</Description>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>s</Unit>
       <Signed>false</Signed>
-      <Resolution>0.0001</Resolution>
       <RangeMin>0</RangeMin>
-      <RangeMax>6.5533</RangeMax>
+      <RangeMax>65533</RangeMax>
     </FieldType>
     <FieldType Name="TIME_UFIX8_5MS">
-      <Description>Time delta, 8 bits with 5 millisecond precision</Description>
+      <Description>Time delta, 8 bits with 5 millisecond resolution</Description>
       <BaseFieldType>UFIX8</BaseFieldType>
       <Bits>8</Bits>
       <Unit>s</Unit>
@@ -511,7 +509,7 @@ limitations under the License.
       <RangeMax>12.65</RangeMax>
     </FieldType>
     <FieldType Name="TIME_UFIX8_P12S">
-      <Description>Time delta, 8 bits with 2^12 second precision</Description>
+      <Description>Time delta, 8 bits with 2^12 second resolution</Description>
       <BaseFieldType>UFIX8</BaseFieldType>
       <Bits>8</Bits>
       <Unit>s</Unit>
@@ -521,7 +519,7 @@ limitations under the License.
       <RangeMax>1036288</RangeMax>
     </FieldType>
     <FieldType Name="TIME_UFIX16_MS">
-      <Description>Time delta, 16 bits with millisecond precision</Description>
+      <Description>Time delta, 16 bits with millisecond resolution</Description>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>s</Unit>
@@ -531,7 +529,7 @@ limitations under the License.
       <RangeMax>65.533</RangeMax>
     </FieldType>
     <FieldType Name="TIME_UFIX16_CS">
-      <Description>Time delta, 16 bits with centisecond precision</Description>
+      <Description>Time delta, 16 bits with centisecond resolution</Description>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>s</Unit>
@@ -541,7 +539,7 @@ limitations under the License.
       <RangeMax>655.33</RangeMax>
     </FieldType>
     <FieldType Name="TIME_UFIX16_MIN">
-      <Description>Time delta, 16 bits with minute precision</Description>
+      <Description>Time delta, 16 bits with minute resolution</Description>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>s</Unit>
@@ -551,7 +549,7 @@ limitations under the License.
       <RangeMax>3931980</RangeMax>
     </FieldType>
     <FieldType Name="TIME_UFIX24_MS">
-      <Description>Time delta, 24 bits with millisecond precision</Description>
+      <Description>Time delta, 24 bits with millisecond resolution</Description>
       <BaseFieldType>UFIX24</BaseFieldType>
       <Bits>24</Bits>
       <Unit>s</Unit>
@@ -561,7 +559,7 @@ limitations under the License.
       <RangeMax>16777.213</RangeMax>
     </FieldType>
     <FieldType Name="TIME_UFIX32_S">
-      <Description>Time delta, 32 bits with second precision</Description>
+      <Description>Time delta, 32 bits with second resolution</Description>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>s</Unit>
@@ -570,7 +568,7 @@ limitations under the License.
       <RangeMax>4294967293</RangeMax>
     </FieldType>
     <FieldType Name="TIME_UFIX32_MS">
-      <Description>Time delta, 32 bits with millisecond precision</Description>
+      <Description>Time delta, 32 bits with millisecond resolution</Description>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>s</Unit>
@@ -853,7 +851,7 @@ limitations under the License.
       <RangeMax>16383.25</RangeMax>
     </FieldType>
     <FieldType Name="PRESSURE_UFIX16_HPA">
-      <Description>Pressure, 16 bit unsigned in hectopascal precision</Description>
+      <Description>Pressure, 16 bit unsigned in hectopascal resolution</Description>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Pa</Unit>
@@ -863,7 +861,7 @@ limitations under the License.
       <RangeMax>6553300</RangeMax>
     </FieldType>
     <FieldType Name="PRESSURE_UFIX16_KPA">
-      <Description>Pressure, 16 bit unsigned in kilopascal precision.</Description>
+      <Description>Pressure, 16 bit unsigned in kilopascal resolution.</Description>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Pa</Unit>
@@ -873,7 +871,7 @@ limitations under the License.
       <RangeMax>65533000</RangeMax>
     </FieldType>
     <FieldType Name="PRESSURE_RATE_FIX16_PA">
-      <Description>Pressure change rate, 16 bit signed in pascal precision.</Description>
+      <Description>Pressure change rate, 16 bit signed in pascal resolution.</Description>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Pa/hr</Unit>
@@ -883,7 +881,7 @@ limitations under the License.
       <RangeMax>32765000</RangeMax>
     </FieldType>
     <FieldType Name="PRESSURE_FIX16_KPA">
-      <Description>Pressure, 16 bit signed in kilopascal precision.</Description>
+      <Description>Pressure, 16 bit signed in kilopascal resolution.</Description>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Pa</Unit>
@@ -893,7 +891,7 @@ limitations under the License.
       <RangeMax>32765000</RangeMax>
     </FieldType>
     <FieldType Name="PRESSURE_UFIX32_DPA">
-      <Description>Pressure, 32 bit unsigned in decipascal precision.</Description>
+      <Description>Pressure, 32 bit unsigned in decipascal resolution.</Description>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>Pa</Unit>
@@ -903,7 +901,7 @@ limitations under the License.
       <RangeMax>429496729.3</RangeMax>
     </FieldType>
     <FieldType Name="PRESSURE_FIX32_DPA">
-      <Description>Pressure, 32 bit signed in decipascal precision.</Description>
+      <Description>Pressure, 32 bit signed in decipascal resolution.</Description>
       <BaseFieldType>FIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>Pa</Unit>
@@ -931,7 +929,7 @@ limitations under the License.
       <Signed>false</Signed>
     </FieldType>
     <FieldType Name="SPEED_FIX16_MM">
-      <Description>Speed, with millimeter precision</Description>
+      <Description>Speed, with millimeter resolution</Description>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m/s</Unit>
@@ -941,7 +939,7 @@ limitations under the License.
       <RangeMax>32.765</RangeMax>
     </FieldType>
     <FieldType Name="SPEED_FIX16_CM">
-      <Description>Speed, with centimeter precision</Description>
+      <Description>Speed, with centimeter resolution</Description>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m/s</Unit>
@@ -951,7 +949,7 @@ limitations under the License.
       <RangeMax>327.65</RangeMax>
     </FieldType>
     <FieldType Name="SPEED_UFIX16_CM">
-      <Description>Speed, unsigned, with centimeter precision</Description>
+      <Description>Speed, unsigned, with centimeter resolution</Description>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m/s</Unit>
@@ -961,7 +959,7 @@ limitations under the License.
       <RangeMax>655.33</RangeMax>
     </FieldType>
     <FieldType Name="SPEED_UFIX16_DM">
-      <Description>Speed, unsigned, with decimeter precision</Description>
+      <Description>Speed, unsigned, with decimeter resolution</Description>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m/s</Unit>
@@ -971,7 +969,7 @@ limitations under the License.
       <RangeMax>6553.3</RangeMax>
     </FieldType>
     <FieldType Name="DISTANCE_FIX16_M">
-      <Description>Distance, with meter precision</Description>
+      <Description>Distance, with meter resolution</Description>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m</Unit>
@@ -980,7 +978,7 @@ limitations under the License.
       <RangeMax>32765</RangeMax>
     </FieldType>
     <FieldType Name="DISTANCE_FIX16_CM">
-      <Description>Distance, with centimeter precision</Description>
+      <Description>Distance, with centimeter resolution</Description>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m</Unit>
@@ -990,7 +988,7 @@ limitations under the License.
       <RangeMax>327.65</RangeMax>
     </FieldType>
     <FieldType Name="DISTANCE_FIX16_MM">
-      <Description>Distance, with millimeter precision</Description>
+      <Description>Distance, with millimeter resolution</Description>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m</Unit>
@@ -1000,7 +998,7 @@ limitations under the License.
       <RangeMax>32.765</RangeMax>
     </FieldType>
     <FieldType Name="DISTANCE_FIX32_MM">
-      <Description>Distance, high range, with millimeter precision</Description>
+      <Description>Distance, high range, with millimeter resolution</Description>
       <BaseFieldType>FIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -1010,7 +1008,7 @@ limitations under the License.
       <RangeMax>2147483.645</RangeMax>
     </FieldType>
     <FieldType Name="DISTANCE_FIX32_CM">
-      <Description>Distance, high range, with centimeter precision</Description>
+      <Description>Distance, high range, with centimeter resolution</Description>
       <BaseFieldType>FIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -25426,7 +25424,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Signed>false</Signed>
-          <FieldType>SHORT_TIME</FieldType>
+          <FieldType>TIME_UFIX16_S</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -25437,7 +25435,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Signed>false</Signed>
-          <FieldType>SHORT_TIME</FieldType>
+          <FieldType>TIME_UFIX16_S</FieldType>
         </Field>
         <Field>
           <Order>8</Order>

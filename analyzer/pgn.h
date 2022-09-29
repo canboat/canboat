@@ -513,9 +513,9 @@ typedef struct
     .name = nam, .size = BYTES(4), .resolution = 0.1, .unit = "L", .fieldType = "VOLUME_UFIX32_DL" \
   }
 
-#define SHORT_TIME_FIELD(nam)                                                              \
-  {                                                                                        \
-    .name = nam, .size = BYTES(2), .resolution = 1, .unit = "s", .fieldType = "SHORT_TIME" \
+#define TIME_UFIX16_S_FIELD(nam)                                                              \
+  {                                                                                           \
+    .name = nam, .size = BYTES(2), .resolution = 1, .unit = "s", .fieldType = "TIME_UFIX16_S" \
   }
 
 #define TIME_FIX32_MS_FIELD(nam, desc)                                                                              \
@@ -4778,8 +4778,8 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("Number", "Source number per type"),
       UINT32_DESC_FIELD("ID", "Unique file ID"),
       LOOKUP_FIELD("Play status", BYTES(1), ENTERTAINMENT_PLAY_STATUS),
-      SHORT_TIME_FIELD("Elapsed Track Time"),
-      SHORT_TIME_FIELD("Track Time"),
+      TIME_UFIX16_S_FIELD("Elapsed Track Time"),
+      TIME_UFIX16_S_FIELD("Track Time"),
       LOOKUP_FIELD("Repeat Status", 4, ENTERTAINMENT_REPEAT_STATUS),
       LOOKUP_FIELD("Shuffle Status", 4, ENTERTAINMENT_SHUFFLE_STATUS),
       UINT8_DESC_FIELD("Save Favorite Number", "Used to command AV to save current station as favorite"),

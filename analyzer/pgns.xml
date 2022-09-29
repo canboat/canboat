@@ -26986,7 +26986,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>s</Units>
           <Signed>false</Signed>
-          <FieldType>SHORT_TIME</FieldType>
+          <FieldType>TIME_UFIX16_S</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -26997,7 +26997,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>s</Units>
           <Signed>false</Signed>
-          <FieldType>SHORT_TIME</FieldType>
+          <FieldType>TIME_UFIX16_S</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
