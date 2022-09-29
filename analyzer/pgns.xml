@@ -1282,7 +1282,7 @@ limitations under the License.
           <Type>Integer</Type>
           <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
-          <FieldType>ENERGY</FieldType>
+          <FieldType>ENERGY_UINT32</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -1295,7 +1295,7 @@ limitations under the License.
           <Type>Integer</Type>
           <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
-          <FieldType>ENERGY</FieldType>
+          <FieldType>ENERGY_UINT32</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -1900,7 +1900,7 @@ limitations under the License.
           <Type>Integer</Type>
           <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
-          <FieldType>ENERGY</FieldType>
+          <FieldType>ENERGY_UINT32</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -1913,7 +1913,7 @@ limitations under the License.
           <Type>Integer</Type>
           <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
-          <FieldType>ENERGY</FieldType>
+          <FieldType>ENERGY_UINT32</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

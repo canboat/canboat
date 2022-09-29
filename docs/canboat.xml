@@ -52,14 +52,17 @@ limitations under the License.
     <FieldType Name="NUMBER">
       <Description>Number</Description>
       <EncodingDescription>Binary numbers are little endian. Number fields that use two or three bits use one special encoding, for the maximum value.  When present, this means that the field is not present. Number fields that use four bits or more use two special encodings. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Binary_number</URL>
     </FieldType>
     <FieldType Name="INTEGER">
       <Description>Integral number</Description>
+      <URL>https://en.wikipedia.org/wiki/Integer_%28computer_science%29</URL>
       <BaseFieldType>NUMBER</BaseFieldType>
       <Signed>true</Signed>
     </FieldType>
     <FieldType Name="UNSIGNED_INTEGER">
       <Description>Unsigned integral number</Description>
+      <URL>https://en.wikipedia.org/wiki/Integer_%28computer_science%29</URL>
       <BaseFieldType>NUMBER</BaseFieldType>
       <Signed>false</Signed>
     </FieldType>
@@ -138,12 +141,14 @@ limitations under the License.
     <FieldType Name="UNSIGNED_FIXED_POINT_NUMBER">
       <Description>An unsigned numeric value where the Least Significant Bit does not encode the integer value 1</Description>
       <EncodingDescription>The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Fixed-point_arithmetic</URL>
       <BaseFieldType>NUMBER</BaseFieldType>
       <Signed>false</Signed>
     </FieldType>
     <FieldType Name="SIGNED_FIXED_POINT_NUMBER">
       <Description>A signed numeric value where the Least Significant Bit does not encode the integer value 1</Description>
       <EncodingDescription>The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Fixed-point_arithmetic</URL>
       <BaseFieldType>NUMBER</BaseFieldType>
       <Signed>true</Signed>
     </FieldType>
@@ -202,12 +207,15 @@ limitations under the License.
       <Signed>false</Signed>
     </FieldType>
     <FieldType Name="FLOAT">
-      <Description>32 bit floating point number</Description>
+      <Description>32 bit IEEE-754 floating point number</Description>
+      <URL>https://en.wikipedia.org/wiki/IEEE_754</URL>
       <Bits>32</Bits>
       <Signed>true</Signed>
     </FieldType>
     <FieldType Name="DECIMAL">
-      <Description>Binary Coded Decimal number</Description>
+      <Description>A unsigned numeric value represented with 2 decimal digits per byte</Description>
+      <EncodingDescription>Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number with an odd number of digits will have 0 as the first digit in the first byte.</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Binary-coded_decimal</URL>
       <Bits>32</Bits>
       <Signed>false</Signed>
     </FieldType>
@@ -241,11 +249,6 @@ limitations under the License.
       <RangeMin>0</RangeMin>
       <RangeMax>6</RangeMax>
     </FieldType>
-    <FieldType Name="DECIMAL">
-      <Description>A unsigned numeric value represented with 2 decimal digits per byte</Description>
-      <EncodingDescription>Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number with an odd number of digits will have 0 as the first digit in the first byte.</EncodingDescription>
-      <Signed>false</Signed>
-    </FieldType>
     <FieldType Name="VERSION">
       <Description>Version</Description>
       <BaseFieldType>UFIX16</BaseFieldType>
@@ -257,7 +260,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="DILUTION_OF_PRECISION_FIX16">
       <Description>Dilution of precision</Description>
-      <Comment>See https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)</Comment>
+      <URL>https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Signed>true</Signed>
@@ -267,7 +270,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="DILUTION_OF_PRECISION_UFIX16">
       <Description>Dilution of precision</Description>
-      <Comment>See https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)</Comment>
+      <URL>https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Signed>false</Signed>
@@ -277,7 +280,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="SIGNALTONOISERATIO_UFIX16">
       <Description>Signal-to-noise ratio</Description>
-      <Comment>See https://en.wikipedia.org/wiki/Signal-to-noise_ratio</Comment>
+      <URL>https://en.wikipedia.org/wiki/Signal-to-noise_ratio</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>dB</Unit>
@@ -287,7 +290,8 @@ limitations under the License.
       <RangeMax>655.33</RangeMax>
     </FieldType>
     <FieldType Name="ANGLE_FIX16">
-      <Description>Angular rotation</Description>
+      <Description>Angle</Description>
+      <URL>https://en.wikipedia.org/wiki/Ship_motions</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>rad</Unit>
@@ -297,7 +301,8 @@ limitations under the License.
       <RangeMax>32.765</RangeMax>
     </FieldType>
     <FieldType Name="ANGLE_FIX16_DDEG">
-      <Description>Angular rotation</Description>
+      <Description>Angle</Description>
+      <URL>https://en.wikipedia.org/wiki/Ship_motions</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>deg</Unit>
@@ -307,7 +312,8 @@ limitations under the License.
       <RangeMax>3276.5</RangeMax>
     </FieldType>
     <FieldType Name="ANGLE_UFIX16">
-      <Description>Angular rotation</Description>
+      <Description>Angle</Description>
+      <URL>https://en.wikipedia.org/wiki/Ship_motions</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>rad</Unit>
@@ -319,6 +325,7 @@ limitations under the License.
     <FieldType Name="GEO_FIX32">
       <Description>Geographical latitude or longitude</Description>
       <EncodingDescription>The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 cm when we refer to an Earth position</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Geographic_coordinate_system</URL>
       <BaseFieldType>FIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>deg</Unit>
@@ -330,6 +337,7 @@ limitations under the License.
     <FieldType Name="GEO_FIX64">
       <Description>Geographical latitude or longitude, high resolution</Description>
       <EncodingDescription>The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we refer to an Earth position</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Geographic_coordinate_system</URL>
       <BaseFieldType>FIX64</BaseFieldType>
       <Bits>64</Bits>
       <Unit>deg</Unit>
@@ -340,6 +348,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="LENGTH_UFIX8_DAM">
       <Description>Length, in decameter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
       <BaseFieldType>UFIX8</BaseFieldType>
       <Bits>8</Bits>
       <Unit>m</Unit>
@@ -350,6 +359,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="LENGTH_UFIX16_DM">
       <Description>Length, in decimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m</Unit>
@@ -360,6 +370,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="LENGTH_UFIX32_CM">
       <Description>Length, in centimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -370,6 +381,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="LENGTH_UFIX32_M">
       <Description>Length, in meter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -379,6 +391,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="LENGTH_UFIX32_CM">
       <Description>Length, in centimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -389,6 +402,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="LENGTH_UFIX32_MM">
       <Description>Length, in millimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -397,8 +411,74 @@ limitations under the License.
       <RangeMin>0</RangeMin>
       <RangeMax>4294967.293000001</RangeMax>
     </FieldType>
+    <FieldType Name="LENGTH_UFIX8_DAM">
+      <Description>Length, byte, unsigned decameters</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
+      <BaseFieldType>UFIX8</BaseFieldType>
+      <Bits>8</Bits>
+      <Unit>m</Unit>
+      <Signed>false</Signed>
+      <Resolution>10</Resolution>
+      <RangeMin>0</RangeMin>
+      <RangeMax>2530</RangeMax>
+    </FieldType>
+    <FieldType Name="LENGTH_UFIX16_CM">
+      <Description>Length, unsigned centimeters</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
+      <BaseFieldType>UFIX16</BaseFieldType>
+      <Bits>16</Bits>
+      <Unit>m</Unit>
+      <Signed>false</Signed>
+      <Resolution>0.01</Resolution>
+      <RangeMin>0</RangeMin>
+      <RangeMax>655.33</RangeMax>
+    </FieldType>
+    <FieldType Name="LENGTH_UFIX16_DM">
+      <Description>Length, unsigned decimeters</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
+      <BaseFieldType>UFIX16</BaseFieldType>
+      <Bits>16</Bits>
+      <Unit>m</Unit>
+      <Signed>false</Signed>
+      <Resolution>0.1</Resolution>
+      <RangeMin>0</RangeMin>
+      <RangeMax>6553.3</RangeMax>
+    </FieldType>
+    <FieldType Name="LENGTH_UFIX32_MM">
+      <Description>Length, high range, unsigned millimeters</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
+      <BaseFieldType>UFIX32</BaseFieldType>
+      <Bits>32</Bits>
+      <Unit>m</Unit>
+      <Signed>false</Signed>
+      <Resolution>0.001</Resolution>
+      <RangeMin>0</RangeMin>
+      <RangeMax>4294967.293000001</RangeMax>
+    </FieldType>
+    <FieldType Name="LENGTH_UFIX32_CM">
+      <Description>Length, high range, unsigned centimeters</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
+      <BaseFieldType>UFIX32</BaseFieldType>
+      <Bits>32</Bits>
+      <Unit>m</Unit>
+      <Signed>false</Signed>
+      <Resolution>0.01</Resolution>
+      <RangeMin>0</RangeMin>
+      <RangeMax>42949672.93</RangeMax>
+    </FieldType>
+    <FieldType Name="LENGTH_UFIX32_M">
+      <Description>Length, high range, meters</Description>
+      <URL>https://en.wikipedia.org/wiki/Length</URL>
+      <BaseFieldType>UFIX32</BaseFieldType>
+      <Bits>32</Bits>
+      <Unit>m</Unit>
+      <Signed>false</Signed>
+      <RangeMin>0</RangeMin>
+      <RangeMax>4294967293</RangeMax>
+    </FieldType>
     <FieldType Name="TEMPERATURE">
       <Description>Temperature</Description>
+      <URL>https://en.wikipedia.org/wiki/Temperature</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>K</Unit>
@@ -410,7 +490,8 @@ limitations under the License.
     <FieldType Name="TEMPERATURE_HIGH">
       <Description>Temperature, high range</Description>
       <EncodingDescription>This has a higher range but lower resolution than TEMPERATURE</EncodingDescription>
-      <BaseFieldType>TEMPERATURE</BaseFieldType>
+      <URL>https://en.wikipedia.org/wiki/Temperature</URL>
+      <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>K</Unit>
       <Signed>false</Signed>
@@ -421,7 +502,8 @@ limitations under the License.
     <FieldType Name="TEMPERATURE_UFIX24">
       <Description>Temperature, high resolution</Description>
       <EncodingDescription>This has a higher range and higher resolution than TEMPERATURE (but uses three bytes)</EncodingDescription>
-      <BaseFieldType>TEMPERATURE</BaseFieldType>
+      <URL>https://en.wikipedia.org/wiki/Temperature</URL>
+      <BaseFieldType>UFIX24</BaseFieldType>
       <Bits>24</Bits>
       <Unit>K</Unit>
       <Signed>false</Signed>
@@ -431,6 +513,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="TEMPERATURE_DELTA_FIX16">
       <Description>Temperature difference</Description>
+      <URL>https://en.wikipedia.org/wiki/Temperature</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>K</Unit>
@@ -441,6 +524,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="VOLUMETRIC_FLOW">
       <Description>Volumetric flow</Description>
+      <URL>https://en.wikipedia.org/wiki/Volumetric_flow_rate</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>L/h</Unit>
@@ -450,8 +534,9 @@ limitations under the License.
       <RangeMax>3276.5</RangeMax>
     </FieldType>
     <FieldType Name="CONCENTRATION_UINT16_PPM">
-      <Description>Concentration of one substance in another</Description>
+      <Description>Concentration of one substance in another, in this context usually the amount of salts in water</Description>
       <EncodingDescription>Expressed in parts per million</EncodingDescription>
+      <URL>https://www.engineeringtoolbox.com/water-salinity-d_1251.html</URL>
       <BaseFieldType>UINT16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>ppm</Unit>
@@ -620,6 +705,7 @@ limitations under the License.
     <FieldType Name="VOLTAGE_UFIX16">
       <Description>Voltage</Description>
       <EncodingDescription>Various resolutions are used, ranging from 0.01 V to 1 V.</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Voltage</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>V</Unit>
@@ -628,6 +714,7 @@ limitations under the License.
     <FieldType Name="VOLTAGE_INT16">
       <Description>Voltage, signed</Description>
       <EncodingDescription>Various resolutions are used, ranging from 0.01 V to 1 V.</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Voltage</URL>
       <BaseFieldType>INT16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>V</Unit>
@@ -637,12 +724,14 @@ limitations under the License.
     </FieldType>
     <FieldType Name="CURRENT">
       <Description>Electrical current</Description>
+      <URL>https://en.wikipedia.org/wiki/Electric_current</URL>
       <BaseFieldType>UNSIGNED_FIXED_POINT_NUMBER</BaseFieldType>
       <Unit>A</Unit>
       <Signed>false</Signed>
     </FieldType>
     <FieldType Name="CURRENT_UFIX8_A">
       <Description>Electrical current</Description>
+      <URL>https://en.wikipedia.org/wiki/Electric_current</URL>
       <BaseFieldType>UFIX8</BaseFieldType>
       <Bits>8</Bits>
       <Unit>A</Unit>
@@ -652,6 +741,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="CURRENT_UFIX16_A">
       <Description>Electrical current</Description>
+      <URL>https://en.wikipedia.org/wiki/Electric_current</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>A</Unit>
@@ -661,6 +751,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="CURRENT_UFIX16_DA">
       <Description>Electrical current</Description>
+      <URL>https://en.wikipedia.org/wiki/Electric_current</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>A</Unit>
@@ -671,6 +762,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="CURRENT_FIX16_DA">
       <Description>Electrical current</Description>
+      <URL>https://en.wikipedia.org/wiki/Electric_current</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>A</Unit>
@@ -681,6 +773,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="CURRENT_FIX24_CA">
       <Description>Electrical current</Description>
+      <URL>https://en.wikipedia.org/wiki/Electric_current</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>A</Unit>
@@ -690,7 +783,8 @@ limitations under the License.
       <RangeMax>327.65</RangeMax>
     </FieldType>
     <FieldType Name="ELECTRIC_CHARGE_UFIX16_AH">
-      <Description>Electrical current</Description>
+      <Description>Electrical charge</Description>
+      <URL>https://en.wikipedia.org/wiki/Electric_charge</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>C</Unit>
@@ -700,7 +794,8 @@ limitations under the License.
       <RangeMax>235918800</RangeMax>
     </FieldType>
     <FieldType Name="PEUKERT_EXPONENT">
-      <Description>Electrical current</Description>
+      <Description>Effect of discharge rate on usable battery capacity</Description>
+      <URL>https://en.wikipedia.org/wiki/Peukert's_law</URL>
       <BaseFieldType>UFIX8</BaseFieldType>
       <Bits>8</Bits>
       <Offset>1</Offset>
@@ -711,12 +806,14 @@ limitations under the License.
     </FieldType>
     <FieldType Name="CURRENT_SIGNED">
       <Description>Electrical current, signed</Description>
+      <URL>https://en.wikipedia.org/wiki/Electric_current</URL>
       <BaseFieldType>SIGNED_FIXED_POINT_NUMBER</BaseFieldType>
       <Unit>A</Unit>
       <Signed>true</Signed>
     </FieldType>
-    <FieldType Name="ENERGY">
-      <Description>Electrical energy consumption</Description>
+    <FieldType Name="ENERGY_UINT32">
+      <Description>Electrical energy</Description>
+      <URL>https://en.wikipedia.org/wiki/Electrical_energy</URL>
       <BaseFieldType>UINT32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>kWh</Unit>
@@ -725,8 +822,9 @@ limitations under the License.
       <RangeMax>4294967293</RangeMax>
     </FieldType>
     <FieldType Name="POWER_INT32_OFFSET">
-      <Description>Electrical energy consumption</Description>
+      <Description>Electrical power</Description>
       <EncodingDescription>This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000. Depending on the field it represents either real power in W, active power in VA or reactive power in VAR.</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Electrical_energy</URL>
       <BaseFieldType>INT32</BaseFieldType>
       <Bits>32</Bits>
       <Offset>-2000000000</Offset>
@@ -736,6 +834,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="POWER_UINT16">
       <Description>Electrical power, either DC or AC Real power, in Watts</Description>
+      <URL>https://en.wikipedia.org/wiki/Electrical_energy</URL>
       <BaseFieldType>UINT16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>W</Unit>
@@ -745,6 +844,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="POWER_UINT16_VAR">
       <Description>Electrical power, AC reactive</Description>
+      <URL>https://en.wikipedia.org/wiki/Electrical_energy</URL>
       <BaseFieldType>UINT16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>VAR</Unit>
@@ -754,6 +854,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="POWER_INT32">
       <Description>Electrical power, either DC or AC Real power, in Watts</Description>
+      <URL>https://en.wikipedia.org/wiki/Electrical_energy</URL>
       <BaseFieldType>INT32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>W</Unit>
@@ -763,6 +864,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="POWER_UINT32">
       <Description>Electrical power, DC or AC Real power, in Watts</Description>
+      <URL>https://en.wikipedia.org/wiki/Electrical_energy</URL>
       <BaseFieldType>UINT32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>W</Unit>
@@ -772,6 +874,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="POWER_UINT32_VA">
       <Description>Electrical power, AC active power in VA.</Description>
+      <URL>https://en.wikipedia.org/wiki/Electrical_energy</URL>
       <BaseFieldType>UINT32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>VA</Unit>
@@ -781,6 +884,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="POWER_UINT32_VAR">
       <Description>Electrical power, AC reactive power in VAR.</Description>
+      <URL>https://en.wikipedia.org/wiki/Electrical_energy</URL>
       <BaseFieldType>UINT32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>VAR</Unit>
@@ -819,6 +923,7 @@ limitations under the License.
       <Description>Rotational speed</Description>
       <EncodingDescription>Angular rotation in rad/s, in 1/32th of a thousandth radian</EncodingDescription>
       <Comment>Whoever came up with 1/32th of 1/1000 of a radian?</Comment>
+      <URL>https://en.wikipedia.org/wiki/Angular_velocity</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>rad/s</Unit>
@@ -831,6 +936,7 @@ limitations under the License.
       <Description>Rotational speed, high resolution</Description>
       <EncodingDescription>Angular rotation in rad/s, in 1/32th of a millionth radian</EncodingDescription>
       <Comment>Whoever came up with 1/32th of 1e-6 of a radian?</Comment>
+      <URL>https://en.wikipedia.org/wiki/Angular_velocity</URL>
       <BaseFieldType>FIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>rad/s</Unit>
@@ -842,6 +948,7 @@ limitations under the License.
     <FieldType Name="ROTATION_UFIX16_RPM">
       <Description>Rotational speed, RPM</Description>
       <EncodingDescription>Angular rotation in 0.25 rpm</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Angular_velocity</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>rpm</Unit>
@@ -852,6 +959,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="PRESSURE_UFIX16_HPA">
       <Description>Pressure, 16 bit unsigned in hectopascal resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Pressure</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Pa</Unit>
@@ -862,6 +970,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="PRESSURE_UFIX16_KPA">
       <Description>Pressure, 16 bit unsigned in kilopascal resolution.</Description>
+      <URL>https://en.wikipedia.org/wiki/Pressure</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Pa</Unit>
@@ -872,6 +981,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="PRESSURE_RATE_FIX16_PA">
       <Description>Pressure change rate, 16 bit signed in pascal resolution.</Description>
+      <URL>https://en.wikipedia.org/wiki/Pressure</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Pa/hr</Unit>
@@ -882,6 +992,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="PRESSURE_FIX16_KPA">
       <Description>Pressure, 16 bit signed in kilopascal resolution.</Description>
+      <URL>https://en.wikipedia.org/wiki/Pressure</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Pa</Unit>
@@ -892,6 +1003,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="PRESSURE_UFIX32_DPA">
       <Description>Pressure, 32 bit unsigned in decipascal resolution.</Description>
+      <URL>https://en.wikipedia.org/wiki/Pressure</URL>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>Pa</Unit>
@@ -902,6 +1014,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="PRESSURE_FIX32_DPA">
       <Description>Pressure, 32 bit signed in decipascal resolution.</Description>
+      <URL>https://en.wikipedia.org/wiki/Pressure</URL>
       <BaseFieldType>FIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>Pa</Unit>
@@ -912,6 +1025,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="RADIO_FREQUENCY_UFIX32">
       <Description>Radio frequency</Description>
+      <URL>https://en.wikipedia.org/wiki/Radio_frequency</URL>
       <BaseFieldType>UFIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>Hz</Unit>
@@ -923,6 +1037,7 @@ limitations under the License.
     <FieldType Name="FREQUENCY_UFIX16">
       <Description>frequency</Description>
       <EncodingDescription>Various resolutions are used, ranging from 0.01 Hz to 1 Hz</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/Radio_frequency</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Hz</Unit>
@@ -930,6 +1045,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="SPEED_FIX16_MM">
       <Description>Speed, with millimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Speed</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m/s</Unit>
@@ -940,6 +1056,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="SPEED_FIX16_CM">
       <Description>Speed, with centimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Speed</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m/s</Unit>
@@ -950,6 +1067,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="SPEED_UFIX16_CM">
       <Description>Speed, unsigned, with centimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Speed</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m/s</Unit>
@@ -960,6 +1078,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="SPEED_UFIX16_DM">
       <Description>Speed, unsigned, with decimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Speed</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m/s</Unit>
@@ -970,6 +1089,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="DISTANCE_FIX16_M">
       <Description>Distance, with meter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Distance</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m</Unit>
@@ -979,6 +1099,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="DISTANCE_FIX16_CM">
       <Description>Distance, with centimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Distance</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m</Unit>
@@ -989,6 +1110,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="DISTANCE_FIX16_MM">
       <Description>Distance, with millimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Distance</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>m</Unit>
@@ -999,6 +1121,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="DISTANCE_FIX32_MM">
       <Description>Distance, high range, with millimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Distance</URL>
       <BaseFieldType>FIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -1009,6 +1132,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="DISTANCE_FIX32_CM">
       <Description>Distance, high range, with centimeter resolution</Description>
+      <URL>https://en.wikipedia.org/wiki/Distance</URL>
       <BaseFieldType>FIX32</BaseFieldType>
       <Bits>32</Bits>
       <Unit>m</Unit>
@@ -1019,6 +1143,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="DISTANCE_FIX64">
       <Description>Distance</Description>
+      <URL>https://en.wikipedia.org/wiki/Distance</URL>
       <BaseFieldType>FIX64</BaseFieldType>
       <Bits>64</Bits>
       <Unit>m</Unit>
@@ -1026,65 +1151,6 @@ limitations under the License.
       <Resolution>1e-06</Resolution>
       <RangeMin>-9223372036854.775</RangeMin>
       <RangeMax>9223372036854.775</RangeMax>
-    </FieldType>
-    <FieldType Name="LENGTH_UFIX8_DAM">
-      <Description>Length, byte, unsigned decameters</Description>
-      <BaseFieldType>UFIX8</BaseFieldType>
-      <Bits>8</Bits>
-      <Unit>m</Unit>
-      <Signed>false</Signed>
-      <Resolution>10</Resolution>
-      <RangeMin>0</RangeMin>
-      <RangeMax>2530</RangeMax>
-    </FieldType>
-    <FieldType Name="LENGTH_UFIX16_CM">
-      <Description>Length, unsigned centimeters</Description>
-      <BaseFieldType>UFIX16</BaseFieldType>
-      <Bits>16</Bits>
-      <Unit>m</Unit>
-      <Signed>false</Signed>
-      <Resolution>0.01</Resolution>
-      <RangeMin>0</RangeMin>
-      <RangeMax>655.33</RangeMax>
-    </FieldType>
-    <FieldType Name="LENGTH_UFIX16_DM">
-      <Description>Length, unsigned decimeters</Description>
-      <BaseFieldType>UFIX16</BaseFieldType>
-      <Bits>16</Bits>
-      <Unit>m</Unit>
-      <Signed>false</Signed>
-      <Resolution>0.1</Resolution>
-      <RangeMin>0</RangeMin>
-      <RangeMax>6553.3</RangeMax>
-    </FieldType>
-    <FieldType Name="LENGTH_UFIX32_MM">
-      <Description>Length, high range, unsigned millimeters</Description>
-      <BaseFieldType>UFIX32</BaseFieldType>
-      <Bits>32</Bits>
-      <Unit>m</Unit>
-      <Signed>false</Signed>
-      <Resolution>0.001</Resolution>
-      <RangeMin>0</RangeMin>
-      <RangeMax>4294967.293000001</RangeMax>
-    </FieldType>
-    <FieldType Name="LENGTH_UFIX32_CM">
-      <Description>Length, high range, unsigned centimeters</Description>
-      <BaseFieldType>UFIX32</BaseFieldType>
-      <Bits>32</Bits>
-      <Unit>m</Unit>
-      <Signed>false</Signed>
-      <Resolution>0.01</Resolution>
-      <RangeMin>0</RangeMin>
-      <RangeMax>42949672.93</RangeMax>
-    </FieldType>
-    <FieldType Name="LENGTH_UFIX32_M">
-      <Description>Length, high range, meters</Description>
-      <BaseFieldType>UFIX32</BaseFieldType>
-      <Bits>32</Bits>
-      <Unit>m</Unit>
-      <Signed>false</Signed>
-      <RangeMin>0</RangeMin>
-      <RangeMax>4294967293</RangeMax>
     </FieldType>
     <FieldType Name="GAIN_FIX16">
       <Description>Gain</Description>
@@ -1097,6 +1163,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="MAGNETIC_FIELD_FIX16">
       <Description>Magnetic field</Description>
+      <URL>https://en.wikipedia.org/wiki/Magnetic_field</URL>
       <BaseFieldType>FIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Tesla</Unit>
@@ -1104,12 +1171,6 @@ limitations under the License.
       <Resolution>0.01</Resolution>
       <RangeMin>-327.67</RangeMin>
       <RangeMax>327.65</RangeMax>
-    </FieldType>
-    <FieldType Name="ELAPSED">
-      <Description>Elapsed time</Description>
-      <BaseFieldType>SIGNED_FIXED_POINT_NUMBER</BaseFieldType>
-      <Unit>s</Unit>
-      <Signed>false</Signed>
     </FieldType>
     <FieldType Name="INSTANCE">
       <Description>Instance</Description>
@@ -1130,6 +1191,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="POWER_FACTOR_UFIX16">
       <Description>Power Factor</Description>
+      <URL>https://en.wikipedia.org/wiki/Power_factor</URL>
       <BaseFieldType>UFIX16</BaseFieldType>
       <Bits>16</Bits>
       <Unit>Cos Phi</Unit>
@@ -1140,6 +1202,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="POWER_FACTOR_UFIX8">
       <Description>Power Factor</Description>
+      <URL>https://en.wikipedia.org/wiki/Power_factor</URL>
       <BaseFieldType>UFIX8</BaseFieldType>
       <Bits>8</Bits>
       <Unit>Cos Phi</Unit>
@@ -1151,12 +1214,14 @@ limitations under the License.
     <FieldType Name="SIGNED_ALMANAC_PARAMETER">
       <Description>Almanac parameter, signed</Description>
       <EncodingDescription>These encode various almanac parameters consisting of differing sizes and sign. They are all using an interesting resolution/scale, which is always a number of bits that the value is shifted left or right. This is reflected by resolution field containing some factor of 2^n or 2^-n.</EncodingDescription>
+      <URL>https://www.gps.gov/technical/icwg/IS-GPS-200N.pdf</URL>
       <BaseFieldType>SIGNED_FIXED_POINT_NUMBER</BaseFieldType>
       <Signed>true</Signed>
     </FieldType>
     <FieldType Name="UNSIGNED_ALMANAC_PARAMETER">
       <Description>Almanac parameter, unsigned</Description>
       <EncodingDescription>These encode various almanac parameters consisting of differing sizes and sign. They are all using an interesting resolution/scale, which is always a number of bits that the value is shifted left or right. This is reflected by resolution field containing some factor of 2^n or 2^-n.</EncodingDescription>
+      <URL>https://www.gps.gov/technical/icwg/IS-GPS-200N.pdf</URL>
       <BaseFieldType>UNSIGNED_FIXED_POINT_NUMBER</BaseFieldType>
       <Signed>false</Signed>
     </FieldType>
@@ -1201,7 +1266,8 @@ limitations under the License.
     </FieldType>
     <FieldType Name="MMSI">
       <Description>MMSI</Description>
-      <EncodingDescription>The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string</EncodingDescription>
+      <EncodingDescription>The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.</EncodingDescription>
+      <URL>https://navcen.uscg.gov/maritime-mobile-service-identity</URL>
       <BaseFieldType>UINT32</BaseFieldType>
       <Bits>32</Bits>
       <Signed>false</Signed>
@@ -3902,7 +3968,7 @@ limitations under the License.
           <Unit>J</Unit>
           <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
-          <FieldType>ENERGY</FieldType>
+          <FieldType>ENERGY_UINT32</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -3914,7 +3980,7 @@ limitations under the License.
           <Unit>J</Unit>
           <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
-          <FieldType>ENERGY</FieldType>
+          <FieldType>ENERGY_UINT32</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -4486,7 +4552,7 @@ limitations under the License.
           <Unit>J</Unit>
           <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
-          <FieldType>ENERGY</FieldType>
+          <FieldType>ENERGY_UINT32</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -4498,7 +4564,7 @@ limitations under the License.
           <Unit>J</Unit>
           <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
-          <FieldType>ENERGY</FieldType>
+          <FieldType>ENERGY_UINT32</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

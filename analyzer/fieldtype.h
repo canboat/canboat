@@ -64,6 +64,7 @@ struct FieldType
   const char *description;         // English description, shortish
   const char *encodingDescription; // How the value is encoded
   const char *comment;             // Other observations
+  const char *url;                 // Website explaining this
   uint32_t    size;                // Size in bits
   Bool        variableSize;        // True if size varies per instance of PGN
   char       *baseFieldType;       // Some field types are variations of others
@@ -101,13 +102,15 @@ FieldType fieldTypeList[] = {
        "encodings. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that "
        "the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive "
        "value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
-     .pf = fieldPrintNumber},
+     .url = "https://en.wikipedia.org/wiki/Binary_number",
+     .pf  = fieldPrintNumber},
 
     {.name          = "INTEGER",
      .description   = "Integral number",
      .resolution    = 1,
      .hasSign       = True,
      .baseFieldType = "NUMBER",
+     .url           = "https://en.wikipedia.org/wiki/Integer_%28computer_science%29",
      .v1Type        = "Integer"},
 
     {.name          = "UNSIGNED_INTEGER",
@@ -115,6 +118,7 @@ FieldType fieldTypeList[] = {
      .resolution    = 1,
      .hasSign       = False,
      .baseFieldType = "NUMBER",
+     .url           = "https://en.wikipedia.org/wiki/Integer_%28computer_science%29",
      .v1Type        = "Integer"},
 
     {.name = "INT8", .description = "8 bit signed integer", .size = 8, .hasSign = True, .baseFieldType = "INTEGER"},
@@ -142,6 +146,7 @@ FieldType fieldTypeList[] = {
        "always present. Together, this gives sufficient information to represent a fixed point number in a particular range where "
        "non-integral values can be encoded without requiring four or eight bytes for a floating point number.",
      .hasSign       = False,
+     .url           = "https://en.wikipedia.org/wiki/Fixed-point_arithmetic",
      .baseFieldType = "NUMBER"},
 
     {.name        = "SIGNED_FIXED_POINT_NUMBER",
@@ -151,6 +156,7 @@ FieldType fieldTypeList[] = {
        "always present. Together, this gives sufficient information to represent a fixed point number in a particular range where "
        "non-integral values can be encoded without requiring four or eight bytes for a floating point number.",
      .hasSign       = True,
+     .url           = "https://en.wikipedia.org/wiki/Fixed-point_arithmetic",
      .baseFieldType = "NUMBER"},
 
     {.name = "FIX8", .description = "8 bit signed fixed point number", .size = 8, .baseFieldType = "SIGNED_FIXED_POINT_NUMBER"},
@@ -186,9 +192,21 @@ FieldType fieldTypeList[] = {
      .size          = 64,
      .baseFieldType = "UNSIGNED_FIXED_POINT_NUMBER"},
 
-    {.name = "FLOAT", .description = "32 bit floating point number", .size = 32, .hasSign = True, .pf = fieldPrintFloat},
+    {.name        = "FLOAT",
+     .description = "32 bit IEEE-754 floating point number",
+     .size        = 32,
+     .hasSign     = True,
+     .url         = "https://en.wikipedia.org/wiki/IEEE_754",
+     .pf          = fieldPrintFloat},
 
-    {.name = "DECIMAL", .description = "Binary Coded Decimal number", .size = 32, .hasSign = False, .pf = fieldPrintDecimal},
+    {.name                = "DECIMAL",
+     .description         = "A unsigned numeric value represented with 2 decimal digits per byte",
+     .encodingDescription = "Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number "
+                            "with an odd number of digits will have 0 as the first digit in the first byte.",
+     .size                = 32,
+     .hasSign             = False,
+     .url                 = "https://en.wikipedia.org/wiki/Binary-coded_decimal",
+     .pf                  = fieldPrintDecimal},
 
     {.name                = "LOOKUP",
      .description         = "Number value where each value encodes for a distinct meaning",
@@ -217,44 +235,48 @@ FieldType fieldTypeList[] = {
 
     {.name = "INDUSTRY", .description = "Industry", .size = 3, .pf = fieldPrintLookup, .baseFieldType = "LOOKUP"},
 
-    {.name                = "DECIMAL",
-     .description         = "A unsigned numeric value represented with 2 decimal digits per byte",
-     .encodingDescription = "Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number "
-                            "with an odd number of digits will have 0 as the first digit in the first byte.",
-     .hasSign             = False,
-     .pf                  = fieldPrintDecimal},
-
     {.name = "VERSION", .description = "Version", .resolution = 0.001, .pf = fieldPrintNumber, .baseFieldType = "UFIX16"},
 
     // Specific typed numeric fields
 
     {.name          = "DILUTION_OF_PRECISION_FIX16",
      .description   = "Dilution of precision",
-     .comment       = "See https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
+     .url           = "https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
      .resolution    = 0.01,
      .baseFieldType = "FIX16"},
 
     {.name          = "DILUTION_OF_PRECISION_UFIX16",
      .description   = "Dilution of precision",
-     .comment       = "See https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
+     .url           = "https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
      .resolution    = 0.01,
      .baseFieldType = "UFIX16"},
 
     {.name          = "SIGNALTONOISERATIO_UFIX16",
      .description   = "Signal-to-noise ratio",
-     .comment       = "See https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
+     .url           = "https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
      .resolution    = 0.01,
      .unit          = "dB",
      .baseFieldType = "UFIX16"},
 
-    {.name = "ANGLE_FIX16", .description = "Angular rotation", .resolution = 0.001, .unit = "rad", .baseFieldType = "FIX16"},
-    {.name = "ANGLE_FIX16_DDEG", .description = "Angular rotation", .resolution = 0.1, .unit = "deg", .baseFieldType = "FIX16"},
-
-    {.name          = "ANGLE_UFIX16",
-     .description   = "Angular rotation",
+    {.name          = "ANGLE_FIX16",
+     .description   = "Angle",
      .resolution    = 0.001,
      .unit          = "rad",
-     .pf            = fieldPrintNumber,
+     .url           = "https://en.wikipedia.org/wiki/Ship_motions",
+     .baseFieldType = "FIX16"},
+
+    {.name          = "ANGLE_FIX16_DDEG",
+     .description   = "Angle",
+     .resolution    = 0.1,
+     .unit          = "deg",
+     .url           = "https://en.wikipedia.org/wiki/Ship_motions",
+     .baseFieldType = "FIX16"},
+
+    {.name          = "ANGLE_UFIX16",
+     .description   = "Angle",
+     .resolution    = 0.001,
+     .unit          = "rad",
+     .url           = "https://en.wikipedia.org/wiki/Ship_motions",
      .baseFieldType = "UFIX16"},
 
     {.name        = "GEO_FIX32",
@@ -264,6 +286,7 @@ FieldType fieldTypeList[] = {
        "cm when we refer to an Earth position",
      .resolution    = 1.0e-7,
      .unit          = "deg",
+     .url           = "https://en.wikipedia.org/wiki/Geographic_coordinate_system",
      .pf            = fieldPrintLatLon,
      .baseFieldType = "FIX32",
      .v1Type        = "Lat/Lon"},
@@ -274,6 +297,7 @@ FieldType fieldTypeList[] = {
                             "refer to an Earth position",
      .resolution          = 1.0e-16,
      .unit                = "deg",
+     .url                 = "https://en.wikipedia.org/wiki/Geographic_coordinate_system",
      .pf                  = fieldPrintLatLon,
      .baseFieldType       = "FIX64",
      .v1Type              = "Lat/Lon"},
@@ -282,48 +306,91 @@ FieldType fieldTypeList[] = {
      .description   = "Length, in decameter resolution",
      .resolution    = 10,
      .unit          = "m",
-     .pf            = fieldPrintNumber,
+     .url           = "https://en.wikipedia.org/wiki/Length",
      .baseFieldType = "UFIX8"},
 
     {.name          = "LENGTH_UFIX16_DM",
      .description   = "Length, in decimeter resolution",
      .resolution    = 0.1,
      .unit          = "m",
-     .pf            = fieldPrintNumber,
+     .url           = "https://en.wikipedia.org/wiki/Length",
      .baseFieldType = "UFIX16"},
 
     {.name          = "LENGTH_UFIX32_CM",
      .description   = "Length, in centimeter resolution",
      .resolution    = 0.01,
      .unit          = "m",
-     .pf            = fieldPrintNumber,
+     .url           = "https://en.wikipedia.org/wiki/Length",
      .baseFieldType = "UFIX32"},
 
     {.name          = "LENGTH_UFIX32_M",
      .description   = "Length, in meter resolution",
      .resolution    = 1,
      .unit          = "m",
-     .pf            = fieldPrintNumber,
+     .url           = "https://en.wikipedia.org/wiki/Length",
      .baseFieldType = "UFIX32"},
 
     {.name          = "LENGTH_UFIX32_CM",
      .description   = "Length, in centimeter resolution",
      .resolution    = 0.01,
      .unit          = "m",
-     .pf            = fieldPrintNumber,
+     .url           = "https://en.wikipedia.org/wiki/Length",
      .baseFieldType = "UFIX32"},
 
     {.name          = "LENGTH_UFIX32_MM",
      .description   = "Length, in millimeter resolution",
      .resolution    = 0.001,
      .unit          = "m",
-     .pf            = fieldPrintNumber,
+     .url           = "https://en.wikipedia.org/wiki/Length",
+     .baseFieldType = "UFIX32"},
+
+    {.name          = "LENGTH_UFIX8_DAM",
+     .description   = "Length, byte, unsigned decameters",
+     .resolution    = 10.,
+     .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Length",
+     .baseFieldType = "UFIX8"},
+
+    {.name          = "LENGTH_UFIX16_CM",
+     .description   = "Length, unsigned centimeters",
+     .resolution    = 0.01,
+     .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Length",
+     .baseFieldType = "UFIX16"},
+
+    {.name          = "LENGTH_UFIX16_DM",
+     .description   = "Length, unsigned decimeters",
+     .resolution    = 0.1,
+     .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Length",
+     .baseFieldType = "UFIX16"},
+
+    {.name          = "LENGTH_UFIX32_MM",
+     .description   = "Length, high range, unsigned millimeters",
+     .resolution    = 0.001,
+     .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Length",
+     .baseFieldType = "UFIX32"},
+
+    {.name          = "LENGTH_UFIX32_CM",
+     .description   = "Length, high range, unsigned centimeters",
+     .resolution    = 0.01,
+     .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Length",
+     .baseFieldType = "UFIX32"},
+
+    {.name          = "LENGTH_UFIX32_M",
+     .description   = "Length, high range, meters",
+     .resolution    = 1.,
+     .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Length",
      .baseFieldType = "UFIX32"},
 
     {.name          = "TEMPERATURE",
      .description   = "Temperature",
      .resolution    = 0.01,
      .unit          = "K",
+     .url           = "https://en.wikipedia.org/wiki/Temperature",
      .baseFieldType = "UFIX16",
      .v1Type        = "Temperature"},
 
@@ -332,28 +399,38 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "This has a higher range but lower resolution than TEMPERATURE",
      .resolution          = 0.1,
      .unit                = "K",
-     .baseFieldType       = "TEMPERATURE"},
+     .url                 = "https://en.wikipedia.org/wiki/Temperature",
+     .baseFieldType       = "UFIX16",
+     .v1Type              = "Temperature"},
 
     {.name                = "TEMPERATURE_UFIX24",
      .description         = "Temperature, high resolution",
      .encodingDescription = "This has a higher range and higher resolution than TEMPERATURE (but uses three bytes)",
-     .size                = 24,
      .resolution          = 0.001,
      .unit                = "K",
-     .baseFieldType       = "TEMPERATURE"},
+     .url                 = "https://en.wikipedia.org/wiki/Temperature",
+     .baseFieldType       = "UFIX24",
+     .v1Type              = "Temperature"},
 
     {.name          = "TEMPERATURE_DELTA_FIX16",
      .description   = "Temperature difference",
      .resolution    = 0.001,
      .unit          = "K",
+     .url           = "https://en.wikipedia.org/wiki/Temperature",
      .baseFieldType = "FIX16"},
 
-    {.name = "VOLUMETRIC_FLOW", .description = "Volumetric flow", .resolution = 0.1, .unit = "L/h", .baseFieldType = "FIX16"},
+    {.name          = "VOLUMETRIC_FLOW",
+     .description   = "Volumetric flow",
+     .resolution    = 0.1,
+     .unit          = "L/h",
+     .url           = "https://en.wikipedia.org/wiki/Volumetric_flow_rate",
+     .baseFieldType = "FIX16"},
 
     {.name                = "CONCENTRATION_UINT16_PPM",
-     .description         = "Concentration of one substance in another",
+     .description         = "Concentration of one substance in another, in this context usually the amount of salts in water",
      .encodingDescription = "Expressed in parts per million",
      .resolution          = 1,
+     .url                 = "https://www.engineeringtoolbox.com/water-salinity-d_1251.html",
      .unit                = "ppm",
      .baseFieldType       = "UINT16"},
 
@@ -464,75 +541,127 @@ FieldType fieldTypeList[] = {
      .description         = "Voltage",
      .encodingDescription = "Various resolutions are used, ranging from 0.01 V to 1 V.",
      .unit                = "V",
+     .url                 = "https://en.wikipedia.org/wiki/Voltage",
      .baseFieldType       = "UFIX16"},
 
     {.name                = "VOLTAGE_INT16",
      .description         = "Voltage, signed",
      .encodingDescription = "Various resolutions are used, ranging from 0.01 V to 1 V.",
      .unit                = "V",
+     .url                 = "https://en.wikipedia.org/wiki/Voltage",
      .baseFieldType       = "INT16"},
 
     {.name          = "CURRENT",
      .description   = "Electrical current",
      .hasSign       = False,
      .unit          = "A",
+     .url           = "https://en.wikipedia.org/wiki/Electric_current",
      .baseFieldType = "UNSIGNED_FIXED_POINT_NUMBER"},
 
-    {.name = "CURRENT_UFIX8_A", .description = "Electrical current", .resolution = 1, .unit = "A", .baseFieldType = "UFIX8"},
-
-    {.name = "CURRENT_UFIX16_A", .description = "Electrical current", .resolution = 1, .unit = "A", .baseFieldType = "UFIX16"},
-
-    {.name = "CURRENT_UFIX16_DA", .description = "Electrical current", .resolution = .1, .unit = "A", .baseFieldType = "UFIX16"},
-
-    {.name = "CURRENT_FIX16_DA", .description = "Electrical current", .resolution = .1, .unit = "A", .baseFieldType = "FIX16"},
-
-    {.name = "CURRENT_FIX24_CA", .description = "Electrical current", .resolution = .01, .unit = "A", .baseFieldType = "FIX16"},
-
-    {.name          = "ELECTRIC_CHARGE_UFIX16_AH",
+    {.name          = "CURRENT_UFIX8_A",
      .description   = "Electrical current",
-     .resolution    = 3600,
-     .unit          = "C",
+     .resolution    = 1,
+     .unit          = "A",
+     .url           = "https://en.wikipedia.org/wiki/Electric_current",
+     .baseFieldType = "UFIX8"},
+
+    {.name          = "CURRENT_UFIX16_A",
+     .description   = "Electrical current",
+     .resolution    = 1,
+     .unit          = "A",
+     .url           = "https://en.wikipedia.org/wiki/Electric_current",
      .baseFieldType = "UFIX16"},
 
-    {.name = "PEUKERT_EXPONENT", .description = "Electrical current", .resolution = 0.002, .offset = 1, .baseFieldType = "UFIX8"},
+    {.name          = "CURRENT_UFIX16_DA",
+     .description   = "Electrical current",
+     .resolution    = .1,
+     .unit          = "A",
+     .url           = "https://en.wikipedia.org/wiki/Electric_current",
+     .baseFieldType = "UFIX16"},
+
+    {.name          = "CURRENT_FIX16_DA",
+     .description   = "Electrical current",
+     .resolution    = .1,
+     .unit          = "A",
+     .url           = "https://en.wikipedia.org/wiki/Electric_current",
+     .baseFieldType = "FIX16"},
+
+    {.name          = "CURRENT_FIX24_CA",
+     .description   = "Electrical current",
+     .resolution    = .01,
+     .unit          = "A",
+     .url           = "https://en.wikipedia.org/wiki/Electric_current",
+     .baseFieldType = "FIX16"},
+
+    {.name          = "ELECTRIC_CHARGE_UFIX16_AH",
+     .description   = "Electrical charge",
+     .resolution    = 3600,
+     .unit          = "C",
+     .url           = "https://en.wikipedia.org/wiki/Electric_charge",
+     .baseFieldType = "UFIX16"},
+
+    {.name          = "PEUKERT_EXPONENT",
+     .description   = "Effect of discharge rate on usable battery capacity",
+     .resolution    = 0.002,
+     .offset        = 1,
+     .url           = "https://en.wikipedia.org/wiki/Peukert's_law",
+     .baseFieldType = "UFIX8"},
 
     {.name          = "CURRENT_SIGNED",
      .description   = "Electrical current, signed",
      .unit          = "A",
+     .url           = "https://en.wikipedia.org/wiki/Electric_current",
      .baseFieldType = "SIGNED_FIXED_POINT_NUMBER"},
 
-    {.name = "ENERGY", .description = "Electrical energy consumption", .unit = "kWh", .baseFieldType = "UINT32"},
+    {.name          = "ENERGY_UINT32",
+     .description   = "Electrical energy",
+     .unit          = "kWh",
+     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
+     .baseFieldType = "UINT32"},
 
     {.name        = "POWER_INT32_OFFSET",
-     .description = "Electrical energy consumption",
+     .description = "Electrical power",
      .encodingDescription
      = "This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000. Depending on "
        "the field it represents either real power in W, active power in VA or reactive power in VAR.",
      .offset        = -2000000000,
+     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
      .baseFieldType = "INT32"},
 
     {.name          = "POWER_UINT16",
      .description   = "Electrical power, either DC or AC Real power, in Watts",
      .unit          = "W",
+     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
      .baseFieldType = "UINT16"},
 
-    {.name = "POWER_UINT16_VAR", .description = "Electrical power, AC reactive", .unit = "VAR", .baseFieldType = "UINT16"},
+    {.name          = "POWER_UINT16_VAR",
+     .description   = "Electrical power, AC reactive",
+     .unit          = "VAR",
+     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
+     .baseFieldType = "UINT16"},
 
     {.name          = "POWER_INT32",
      .description   = "Electrical power, either DC or AC Real power, in Watts",
      .unit          = "W",
+     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
      .baseFieldType = "INT32"},
 
     {.name          = "POWER_UINT32",
      .description   = "Electrical power, DC or AC Real power, in Watts",
      .unit          = "W",
+     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
      .baseFieldType = "UINT32"},
 
-    {.name = "POWER_UINT32_VA", .description = "Electrical power, AC active power in VA.", .unit = "VA", .baseFieldType = "UINT32"},
+    {.name          = "POWER_UINT32_VA",
+     .description   = "Electrical power, AC active power in VA.",
+     .unit          = "VA",
+     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
+     .baseFieldType = "UINT32"},
 
     {.name          = "POWER_UINT32_VAR",
      .description   = "Electrical power, AC reactive power in VAR.",
      .unit          = "VAR",
+     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
      .baseFieldType = "UINT32"},
 
     {.name = "PERCENTAGE_UINT8", .description = "Percentage, unsigned", .unit = "%", .baseFieldType = "UINT8"},
@@ -547,6 +676,7 @@ FieldType fieldTypeList[] = {
      .comment             = "Whoever came up with 1/32th of 1/1000 of a radian?",
      .resolution          = (1e-3 / 32.0),
      .unit                = "rad/s",
+     .url                 = "https://en.wikipedia.org/wiki/Angular_velocity",
      .baseFieldType       = "FIX16"},
 
     {.name                = "ROTATION_FIX32",
@@ -555,6 +685,7 @@ FieldType fieldTypeList[] = {
      .comment             = "Whoever came up with 1/32th of 1e-6 of a radian?",
      .resolution          = (1e-6 / 32.0),
      .unit                = "rad/s",
+     .url                 = "https://en.wikipedia.org/wiki/Angular_velocity",
      .baseFieldType       = "FIX32"},
 
     {.name                = "ROTATION_UFIX16_RPM",
@@ -562,143 +693,134 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "Angular rotation in 0.25 rpm",
      .resolution          = 0.25,
      .unit                = "rpm",
+     .url                 = "https://en.wikipedia.org/wiki/Angular_velocity",
      .baseFieldType       = "UFIX16"},
 
     {.name          = "PRESSURE_UFIX16_HPA",
      .description   = "Pressure, 16 bit unsigned in hectopascal resolution",
      .resolution    = 100,
      .unit          = "Pa",
+     .url           = "https://en.wikipedia.org/wiki/Pressure",
      .baseFieldType = "UFIX16"},
 
     {.name          = "PRESSURE_UFIX16_KPA",
      .description   = "Pressure, 16 bit unsigned in kilopascal resolution.",
      .resolution    = 1000,
      .unit          = "Pa",
+     .url           = "https://en.wikipedia.org/wiki/Pressure",
      .baseFieldType = "UFIX16"},
 
     {.name          = "PRESSURE_RATE_FIX16_PA",
      .description   = "Pressure change rate, 16 bit signed in pascal resolution.",
      .resolution    = 1000,
      .unit          = "Pa/hr",
+     .url           = "https://en.wikipedia.org/wiki/Pressure",
      .baseFieldType = "FIX16"},
 
     {.name          = "PRESSURE_FIX16_KPA",
      .description   = "Pressure, 16 bit signed in kilopascal resolution.",
      .resolution    = 1000,
      .unit          = "Pa",
+     .url           = "https://en.wikipedia.org/wiki/Pressure",
      .baseFieldType = "FIX16"},
 
     {.name          = "PRESSURE_UFIX32_DPA",
      .description   = "Pressure, 32 bit unsigned in decipascal resolution.",
      .resolution    = 0.1,
      .unit          = "Pa",
+     .url           = "https://en.wikipedia.org/wiki/Pressure",
      .baseFieldType = "UFIX32"},
 
     {.name          = "PRESSURE_FIX32_DPA",
      .description   = "Pressure, 32 bit signed in decipascal resolution.",
      .resolution    = 0.1,
      .unit          = "Pa",
+     .url           = "https://en.wikipedia.org/wiki/Pressure",
      .baseFieldType = "FIX32"},
 
-    {.name = "RADIO_FREQUENCY_UFIX32", .description = "Radio frequency", .resolution = 10, .unit = "Hz", .baseFieldType = "UFIX32"},
+    {.name          = "RADIO_FREQUENCY_UFIX32",
+     .description   = "Radio frequency",
+     .resolution    = 10,
+     .unit          = "Hz",
+     .url           = "https://en.wikipedia.org/wiki/Radio_frequency",
+     .baseFieldType = "UFIX32"},
 
     {.name                = "FREQUENCY_UFIX16",
      .description         = "frequency",
      .encodingDescription = "Various resolutions are used, ranging from 0.01 Hz to 1 Hz",
      .unit                = "Hz",
+     .url                 = "https://en.wikipedia.org/wiki/Radio_frequency",
      .baseFieldType       = "UFIX16"},
 
     {.name          = "SPEED_FIX16_MM",
      .description   = "Speed, with millimeter resolution",
      .resolution    = 0.001,
      .unit          = "m/s",
+     .url           = "https://en.wikipedia.org/wiki/Speed",
      .baseFieldType = "FIX16"},
 
     {.name          = "SPEED_FIX16_CM",
      .description   = "Speed, with centimeter resolution",
      .resolution    = 0.01,
      .unit          = "m/s",
+     .url           = "https://en.wikipedia.org/wiki/Speed",
      .baseFieldType = "FIX16"},
 
     {.name          = "SPEED_UFIX16_CM",
      .description   = "Speed, unsigned, with centimeter resolution",
      .resolution    = 0.01,
      .unit          = "m/s",
+     .url           = "https://en.wikipedia.org/wiki/Speed",
      .baseFieldType = "UFIX16"},
 
     {.name          = "SPEED_UFIX16_DM",
      .description   = "Speed, unsigned, with decimeter resolution",
      .resolution    = 0.1,
      .unit          = "m/s",
+     .url           = "https://en.wikipedia.org/wiki/Speed",
      .baseFieldType = "UFIX16"},
 
     {.name          = "DISTANCE_FIX16_M",
      .description   = "Distance, with meter resolution",
      .resolution    = 1,
      .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Distance",
      .baseFieldType = "FIX16"},
 
     {.name          = "DISTANCE_FIX16_CM",
      .description   = "Distance, with centimeter resolution",
      .resolution    = 0.01,
      .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Distance",
      .baseFieldType = "FIX16"},
 
     {.name          = "DISTANCE_FIX16_MM",
      .description   = "Distance, with millimeter resolution",
      .resolution    = 0.001,
      .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Distance",
      .baseFieldType = "FIX16"},
 
     {.name          = "DISTANCE_FIX32_MM",
      .description   = "Distance, high range, with millimeter resolution",
      .resolution    = 0.001,
      .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Distance",
      .baseFieldType = "FIX32"},
 
     {.name          = "DISTANCE_FIX32_CM",
      .description   = "Distance, high range, with centimeter resolution",
      .resolution    = 0.01,
      .unit          = "m",
+     .url           = "https://en.wikipedia.org/wiki/Distance",
      .baseFieldType = "FIX32"},
 
-    {.name = "DISTANCE_FIX64", .description = "Distance", .resolution = 1e-6, .unit = "m", .baseFieldType = "FIX64"},
-
-    {.name          = "LENGTH_UFIX8_DAM",
-     .description   = "Length, byte, unsigned decameters",
-     .resolution    = 10.,
+    {.name          = "DISTANCE_FIX64",
+     .description   = "Distance",
+     .resolution    = 1e-6,
      .unit          = "m",
-     .baseFieldType = "UFIX8"},
-
-    {.name          = "LENGTH_UFIX16_CM",
-     .description   = "Length, unsigned centimeters",
-     .resolution    = 0.01,
-     .unit          = "m",
-     .baseFieldType = "UFIX16"},
-
-    {.name          = "LENGTH_UFIX16_DM",
-     .description   = "Length, unsigned decimeters",
-     .resolution    = 0.1,
-     .unit          = "m",
-     .baseFieldType = "UFIX16"},
-
-    {.name          = "LENGTH_UFIX32_MM",
-     .description   = "Length, high range, unsigned millimeters",
-     .resolution    = 0.001,
-     .unit          = "m",
-     .baseFieldType = "UFIX32"},
-
-    {.name          = "LENGTH_UFIX32_CM",
-     .description   = "Length, high range, unsigned centimeters",
-     .resolution    = 0.01,
-     .unit          = "m",
-     .baseFieldType = "UFIX32"},
-
-    {.name          = "LENGTH_UFIX32_M",
-     .description   = "Length, high range, meters",
-     .resolution    = 1.,
-     .unit          = "m",
-     .baseFieldType = "UFIX32"},
+     .url           = "https://en.wikipedia.org/wiki/Distance",
+     .baseFieldType = "FIX64"},
 
     {.name = "GAIN_FIX16", .description = "Gain", .resolution = 0.01, .baseFieldType = "FIX16"},
 
@@ -706,14 +828,8 @@ FieldType fieldTypeList[] = {
      .description   = "Magnetic field",
      .resolution    = 0.01,
      .unit          = "Tesla",
+     .url           = "https://en.wikipedia.org/wiki/Magnetic_field",
      .baseFieldType = "FIX16"},
-
-    {.name          = "ELAPSED",
-     .description   = "Elapsed time",
-     .hasSign       = False,
-     .unit          = "s",
-     .pf            = fieldPrintNumber,
-     .baseFieldType = "SIGNED_FIXED_POINT_NUMBER"},
 
     {.name          = "INSTANCE",
      .description   = "Instance",
@@ -726,15 +842,22 @@ FieldType fieldTypeList[] = {
      .description   = "Power Factor",
      .resolution    = 1 / 16384.,
      .unit          = "Cos Phi",
+     .url           = "https://en.wikipedia.org/wiki/Power_factor",
      .baseFieldType = "UFIX16"},
 
-    {.name = "POWER_FACTOR_UFIX8", .description = "Power Factor", .resolution = 0.01, .unit = "Cos Phi", .baseFieldType = "UFIX8"},
+    {.name          = "POWER_FACTOR_UFIX8",
+     .description   = "Power Factor",
+     .resolution    = 0.01,
+     .unit          = "Cos Phi",
+     .url           = "https://en.wikipedia.org/wiki/Power_factor",
+     .baseFieldType = "UFIX8"},
 
     {.name                = "SIGNED_ALMANAC_PARAMETER",
      .description         = "Almanac parameter, signed",
      .encodingDescription = "These encode various almanac parameters consisting of differing sizes and sign. They are all using an "
                             "interesting resolution/scale, which is always a number of bits that the value is shifted left or "
                             "right. This is reflected by resolution field containing some factor of 2^n or 2^-n.",
+     .url                 = "https://www.gps.gov/technical/icwg/IS-GPS-200N.pdf",
      .baseFieldType       = "SIGNED_FIXED_POINT_NUMBER"},
 
     {.name                = "UNSIGNED_ALMANAC_PARAMETER",
@@ -742,6 +865,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "These encode various almanac parameters consisting of differing sizes and sign. They are all using an "
                             "interesting resolution/scale, which is always a number of bits that the value is shifted left or "
                             "right. This is reflected by resolution field containing some factor of 2^n or 2^-n.",
+     .url                 = "https://www.gps.gov/technical/icwg/IS-GPS-200N.pdf",
      .baseFieldType       = "UNSIGNED_FIXED_POINT_NUMBER"},
 
     // Stringy types
@@ -813,7 +937,9 @@ FieldType fieldTypeList[] = {
     {.name        = "MMSI",
      .description = "MMSI",
      .encodingDescription
-     = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string",
+     = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. "
+       "The first three or four digits are special, see the USCG link for a detailed explanation.",
+     .url           = "https://navcen.uscg.gov/maritime-mobile-service-identity",
      .format        = "\"%09u\"",
      .baseFieldType = "UINT32",
      .rangeMinText  = "000000000",

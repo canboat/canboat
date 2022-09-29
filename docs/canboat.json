@@ -9,17 +9,20 @@
     {
         "Name":"NUMBER",
       "Description":"Number",
-      "EncodingDescription":"Binary numbers are little endian. Number fields that use two or three bits use one special encoding, for the maximum value.  When present, this means that the field is not present. Number fields that use four bits or more use two special encodings. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value."
+      "EncodingDescription":"Binary numbers are little endian. Number fields that use two or three bits use one special encoding, for the maximum value.  When present, this means that the field is not present. Number fields that use four bits or more use two special encodings. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
+      "URL":"https://en.wikipedia.org/wiki/Binary_number"
       },
     {
         "Name":"INTEGER",
       "Description":"Integral number",
+      "URL":"https://en.wikipedia.org/wiki/Integer_%28computer_science%29",
       "BaseFieldType":"NUMBER",
       "Signed":true
       },
     {
         "Name":"UNSIGNED_INTEGER",
       "Description":"Unsigned integral number",
+      "URL":"https://en.wikipedia.org/wiki/Integer_%28computer_science%29",
       "BaseFieldType":"NUMBER",
       "Signed":false
       },
@@ -108,6 +111,7 @@
         "Name":"UNSIGNED_FIXED_POINT_NUMBER",
       "Description":"An unsigned numeric value where the Least Significant Bit does not encode the integer value 1",
       "EncodingDescription":"The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.",
+      "URL":"https://en.wikipedia.org/wiki/Fixed-point_arithmetic",
       "BaseFieldType":"NUMBER",
       "Signed":false
       },
@@ -115,6 +119,7 @@
         "Name":"SIGNED_FIXED_POINT_NUMBER",
       "Description":"A signed numeric value where the Least Significant Bit does not encode the integer value 1",
       "EncodingDescription":"The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.",
+      "URL":"https://en.wikipedia.org/wiki/Fixed-point_arithmetic",
       "BaseFieldType":"NUMBER",
       "Signed":true
       },
@@ -183,13 +188,16 @@
       },
     {
         "Name":"FLOAT",
-      "Description":"32 bit floating point number",
+      "Description":"32 bit IEEE-754 floating point number",
+      "URL":"https://en.wikipedia.org/wiki/IEEE_754",
       "Bits":32,
       "Signed":true
       },
     {
         "Name":"DECIMAL",
-      "Description":"Binary Coded Decimal number",
+      "Description":"A unsigned numeric value represented with 2 decimal digits per byte",
+      "EncodingDescription":"Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number with an odd number of digits will have 0 as the first digit in the first byte.",
+      "URL":"https://en.wikipedia.org/wiki/Binary-coded_decimal",
       "Bits":32,
       "Signed":false
       },
@@ -228,12 +236,6 @@
       "RangeMax":6
       },
     {
-        "Name":"DECIMAL",
-      "Description":"A unsigned numeric value represented with 2 decimal digits per byte",
-      "EncodingDescription":"Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number with an odd number of digits will have 0 as the first digit in the first byte.",
-      "Signed":false
-      },
-    {
         "Name":"VERSION",
       "Description":"Version",
       "BaseFieldType":"UFIX16",
@@ -246,7 +248,7 @@
     {
         "Name":"DILUTION_OF_PRECISION_FIX16",
       "Description":"Dilution of precision",
-      "Comment":"See https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
+      "URL":"https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Signed":true,
@@ -257,7 +259,7 @@
     {
         "Name":"DILUTION_OF_PRECISION_UFIX16",
       "Description":"Dilution of precision",
-      "Comment":"See https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
+      "URL":"https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Signed":false,
@@ -268,7 +270,7 @@
     {
         "Name":"SIGNALTONOISERATIO_UFIX16",
       "Description":"Signal-to-noise ratio",
-      "Comment":"See https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
+      "URL":"https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"dB",
@@ -279,7 +281,8 @@
       },
     {
         "Name":"ANGLE_FIX16",
-      "Description":"Angular rotation",
+      "Description":"Angle",
+      "URL":"https://en.wikipedia.org/wiki/Ship_motions",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"rad",
@@ -290,7 +293,8 @@
       },
     {
         "Name":"ANGLE_FIX16_DDEG",
-      "Description":"Angular rotation",
+      "Description":"Angle",
+      "URL":"https://en.wikipedia.org/wiki/Ship_motions",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"deg",
@@ -301,7 +305,8 @@
       },
     {
         "Name":"ANGLE_UFIX16",
-      "Description":"Angular rotation",
+      "Description":"Angle",
+      "URL":"https://en.wikipedia.org/wiki/Ship_motions",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"rad",
@@ -314,6 +319,7 @@
         "Name":"GEO_FIX32",
       "Description":"Geographical latitude or longitude",
       "EncodingDescription":"The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 cm when we refer to an Earth position",
+      "URL":"https://en.wikipedia.org/wiki/Geographic_coordinate_system",
       "BaseFieldType":"FIX32",
       "Bits":32,
       "Unit":"deg",
@@ -326,6 +332,7 @@
         "Name":"GEO_FIX64",
       "Description":"Geographical latitude or longitude, high resolution",
       "EncodingDescription":"The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we refer to an Earth position",
+      "URL":"https://en.wikipedia.org/wiki/Geographic_coordinate_system",
       "BaseFieldType":"FIX64",
       "Bits":64,
       "Unit":"deg",
@@ -337,6 +344,7 @@
     {
         "Name":"LENGTH_UFIX8_DAM",
       "Description":"Length, in decameter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Length",
       "BaseFieldType":"UFIX8",
       "Bits":8,
       "Unit":"m",
@@ -348,6 +356,7 @@
     {
         "Name":"LENGTH_UFIX16_DM",
       "Description":"Length, in decimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Length",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"m",
@@ -359,6 +368,7 @@
     {
         "Name":"LENGTH_UFIX32_CM",
       "Description":"Length, in centimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Length",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"m",
@@ -370,6 +380,7 @@
     {
         "Name":"LENGTH_UFIX32_M",
       "Description":"Length, in meter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Length",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"m",
@@ -380,6 +391,7 @@
     {
         "Name":"LENGTH_UFIX32_CM",
       "Description":"Length, in centimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Length",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"m",
@@ -391,6 +403,7 @@
     {
         "Name":"LENGTH_UFIX32_MM",
       "Description":"Length, in millimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Length",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"m",
@@ -400,8 +413,80 @@
       "RangeMax":4294967.293000001
       },
     {
+        "Name":"LENGTH_UFIX8_DAM",
+      "Description":"Length, byte, unsigned decameters",
+      "URL":"https://en.wikipedia.org/wiki/Length",
+      "BaseFieldType":"UFIX8",
+      "Bits":8,
+      "Unit":"m",
+      "Signed":false,
+      "Resolution":10,
+      "RangeMin":0,
+      "RangeMax":2530
+      },
+    {
+        "Name":"LENGTH_UFIX16_CM",
+      "Description":"Length, unsigned centimeters",
+      "URL":"https://en.wikipedia.org/wiki/Length",
+      "BaseFieldType":"UFIX16",
+      "Bits":16,
+      "Unit":"m",
+      "Signed":false,
+      "Resolution":0.01,
+      "RangeMin":0,
+      "RangeMax":655.33
+      },
+    {
+        "Name":"LENGTH_UFIX16_DM",
+      "Description":"Length, unsigned decimeters",
+      "URL":"https://en.wikipedia.org/wiki/Length",
+      "BaseFieldType":"UFIX16",
+      "Bits":16,
+      "Unit":"m",
+      "Signed":false,
+      "Resolution":0.1,
+      "RangeMin":0,
+      "RangeMax":6553.3
+      },
+    {
+        "Name":"LENGTH_UFIX32_MM",
+      "Description":"Length, high range, unsigned millimeters",
+      "URL":"https://en.wikipedia.org/wiki/Length",
+      "BaseFieldType":"UFIX32",
+      "Bits":32,
+      "Unit":"m",
+      "Signed":false,
+      "Resolution":0.001,
+      "RangeMin":0,
+      "RangeMax":4294967.293000001
+      },
+    {
+        "Name":"LENGTH_UFIX32_CM",
+      "Description":"Length, high range, unsigned centimeters",
+      "URL":"https://en.wikipedia.org/wiki/Length",
+      "BaseFieldType":"UFIX32",
+      "Bits":32,
+      "Unit":"m",
+      "Signed":false,
+      "Resolution":0.01,
+      "RangeMin":0,
+      "RangeMax":42949672.93
+      },
+    {
+        "Name":"LENGTH_UFIX32_M",
+      "Description":"Length, high range, meters",
+      "URL":"https://en.wikipedia.org/wiki/Length",
+      "BaseFieldType":"UFIX32",
+      "Bits":32,
+      "Unit":"m",
+      "Signed":false,
+      "RangeMin":0,
+      "RangeMax":4294967293
+      },
+    {
         "Name":"TEMPERATURE",
       "Description":"Temperature",
+      "URL":"https://en.wikipedia.org/wiki/Temperature",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"K",
@@ -414,7 +499,8 @@
         "Name":"TEMPERATURE_HIGH",
       "Description":"Temperature, high range",
       "EncodingDescription":"This has a higher range but lower resolution than TEMPERATURE",
-      "BaseFieldType":"TEMPERATURE",
+      "URL":"https://en.wikipedia.org/wiki/Temperature",
+      "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"K",
       "Signed":false,
@@ -426,7 +512,8 @@
         "Name":"TEMPERATURE_UFIX24",
       "Description":"Temperature, high resolution",
       "EncodingDescription":"This has a higher range and higher resolution than TEMPERATURE (but uses three bytes)",
-      "BaseFieldType":"TEMPERATURE",
+      "URL":"https://en.wikipedia.org/wiki/Temperature",
+      "BaseFieldType":"UFIX24",
       "Bits":24,
       "Unit":"K",
       "Signed":false,
@@ -437,6 +524,7 @@
     {
         "Name":"TEMPERATURE_DELTA_FIX16",
       "Description":"Temperature difference",
+      "URL":"https://en.wikipedia.org/wiki/Temperature",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"K",
@@ -448,6 +536,7 @@
     {
         "Name":"VOLUMETRIC_FLOW",
       "Description":"Volumetric flow",
+      "URL":"https://en.wikipedia.org/wiki/Volumetric_flow_rate",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"L/h",
@@ -458,8 +547,9 @@
       },
     {
         "Name":"CONCENTRATION_UINT16_PPM",
-      "Description":"Concentration of one substance in another",
+      "Description":"Concentration of one substance in another, in this context usually the amount of salts in water",
       "EncodingDescription":"Expressed in parts per million",
+      "URL":"https://www.engineeringtoolbox.com/water-salinity-d_1251.html",
       "BaseFieldType":"UINT16",
       "Bits":16,
       "Unit":"ppm",
@@ -645,6 +735,7 @@
         "Name":"VOLTAGE_UFIX16",
       "Description":"Voltage",
       "EncodingDescription":"Various resolutions are used, ranging from 0.01 V to 1 V.",
+      "URL":"https://en.wikipedia.org/wiki/Voltage",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"V",
@@ -654,6 +745,7 @@
         "Name":"VOLTAGE_INT16",
       "Description":"Voltage, signed",
       "EncodingDescription":"Various resolutions are used, ranging from 0.01 V to 1 V.",
+      "URL":"https://en.wikipedia.org/wiki/Voltage",
       "BaseFieldType":"INT16",
       "Bits":16,
       "Unit":"V",
@@ -664,6 +756,7 @@
     {
         "Name":"CURRENT",
       "Description":"Electrical current",
+      "URL":"https://en.wikipedia.org/wiki/Electric_current",
       "BaseFieldType":"UNSIGNED_FIXED_POINT_NUMBER",
       "Unit":"A",
       "Signed":false
@@ -671,6 +764,7 @@
     {
         "Name":"CURRENT_UFIX8_A",
       "Description":"Electrical current",
+      "URL":"https://en.wikipedia.org/wiki/Electric_current",
       "BaseFieldType":"UFIX8",
       "Bits":8,
       "Unit":"A",
@@ -681,6 +775,7 @@
     {
         "Name":"CURRENT_UFIX16_A",
       "Description":"Electrical current",
+      "URL":"https://en.wikipedia.org/wiki/Electric_current",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"A",
@@ -691,6 +786,7 @@
     {
         "Name":"CURRENT_UFIX16_DA",
       "Description":"Electrical current",
+      "URL":"https://en.wikipedia.org/wiki/Electric_current",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"A",
@@ -702,6 +798,7 @@
     {
         "Name":"CURRENT_FIX16_DA",
       "Description":"Electrical current",
+      "URL":"https://en.wikipedia.org/wiki/Electric_current",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"A",
@@ -713,6 +810,7 @@
     {
         "Name":"CURRENT_FIX24_CA",
       "Description":"Electrical current",
+      "URL":"https://en.wikipedia.org/wiki/Electric_current",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"A",
@@ -723,7 +821,8 @@
       },
     {
         "Name":"ELECTRIC_CHARGE_UFIX16_AH",
-      "Description":"Electrical current",
+      "Description":"Electrical charge",
+      "URL":"https://en.wikipedia.org/wiki/Electric_charge",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"C",
@@ -734,7 +833,8 @@
       },
     {
         "Name":"PEUKERT_EXPONENT",
-      "Description":"Electrical current",
+      "Description":"Effect of discharge rate on usable battery capacity",
+      "URL":"https://en.wikipedia.org/wiki/Peukert's_law",
       "BaseFieldType":"UFIX8",
       "Bits":8,
       "Offset":1,
@@ -746,13 +846,15 @@
     {
         "Name":"CURRENT_SIGNED",
       "Description":"Electrical current, signed",
+      "URL":"https://en.wikipedia.org/wiki/Electric_current",
       "BaseFieldType":"SIGNED_FIXED_POINT_NUMBER",
       "Unit":"A",
       "Signed":true
       },
     {
-        "Name":"ENERGY",
-      "Description":"Electrical energy consumption",
+        "Name":"ENERGY_UINT32",
+      "Description":"Electrical energy",
+      "URL":"https://en.wikipedia.org/wiki/Electrical_energy",
       "BaseFieldType":"UINT32",
       "Bits":32,
       "Unit":"kWh",
@@ -762,8 +864,9 @@
       },
     {
         "Name":"POWER_INT32_OFFSET",
-      "Description":"Electrical energy consumption",
+      "Description":"Electrical power",
       "EncodingDescription":"This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000. Depending on the field it represents either real power in W, active power in VA or reactive power in VAR.",
+      "URL":"https://en.wikipedia.org/wiki/Electrical_energy",
       "BaseFieldType":"INT32",
       "Bits":32,
       "Offset":-2000000000,
@@ -774,6 +877,7 @@
     {
         "Name":"POWER_UINT16",
       "Description":"Electrical power, either DC or AC Real power, in Watts",
+      "URL":"https://en.wikipedia.org/wiki/Electrical_energy",
       "BaseFieldType":"UINT16",
       "Bits":16,
       "Unit":"W",
@@ -784,6 +888,7 @@
     {
         "Name":"POWER_UINT16_VAR",
       "Description":"Electrical power, AC reactive",
+      "URL":"https://en.wikipedia.org/wiki/Electrical_energy",
       "BaseFieldType":"UINT16",
       "Bits":16,
       "Unit":"VAR",
@@ -794,6 +899,7 @@
     {
         "Name":"POWER_INT32",
       "Description":"Electrical power, either DC or AC Real power, in Watts",
+      "URL":"https://en.wikipedia.org/wiki/Electrical_energy",
       "BaseFieldType":"INT32",
       "Bits":32,
       "Unit":"W",
@@ -804,6 +910,7 @@
     {
         "Name":"POWER_UINT32",
       "Description":"Electrical power, DC or AC Real power, in Watts",
+      "URL":"https://en.wikipedia.org/wiki/Electrical_energy",
       "BaseFieldType":"UINT32",
       "Bits":32,
       "Unit":"W",
@@ -814,6 +921,7 @@
     {
         "Name":"POWER_UINT32_VA",
       "Description":"Electrical power, AC active power in VA.",
+      "URL":"https://en.wikipedia.org/wiki/Electrical_energy",
       "BaseFieldType":"UINT32",
       "Bits":32,
       "Unit":"VA",
@@ -824,6 +932,7 @@
     {
         "Name":"POWER_UINT32_VAR",
       "Description":"Electrical power, AC reactive power in VAR.",
+      "URL":"https://en.wikipedia.org/wiki/Electrical_energy",
       "BaseFieldType":"UINT32",
       "Bits":32,
       "Unit":"VAR",
@@ -866,6 +975,7 @@
       "Description":"Rotational speed",
       "EncodingDescription":"Angular rotation in rad/s, in 1/32th of a thousandth radian",
       "Comment":"Whoever came up with 1/32th of 1/1000 of a radian?",
+      "URL":"https://en.wikipedia.org/wiki/Angular_velocity",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"rad/s",
@@ -879,6 +989,7 @@
       "Description":"Rotational speed, high resolution",
       "EncodingDescription":"Angular rotation in rad/s, in 1/32th of a millionth radian",
       "Comment":"Whoever came up with 1/32th of 1e-6 of a radian?",
+      "URL":"https://en.wikipedia.org/wiki/Angular_velocity",
       "BaseFieldType":"FIX32",
       "Bits":32,
       "Unit":"rad/s",
@@ -891,6 +1002,7 @@
         "Name":"ROTATION_UFIX16_RPM",
       "Description":"Rotational speed, RPM",
       "EncodingDescription":"Angular rotation in 0.25 rpm",
+      "URL":"https://en.wikipedia.org/wiki/Angular_velocity",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"rpm",
@@ -902,6 +1014,7 @@
     {
         "Name":"PRESSURE_UFIX16_HPA",
       "Description":"Pressure, 16 bit unsigned in hectopascal resolution",
+      "URL":"https://en.wikipedia.org/wiki/Pressure",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"Pa",
@@ -913,6 +1026,7 @@
     {
         "Name":"PRESSURE_UFIX16_KPA",
       "Description":"Pressure, 16 bit unsigned in kilopascal resolution.",
+      "URL":"https://en.wikipedia.org/wiki/Pressure",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"Pa",
@@ -924,6 +1038,7 @@
     {
         "Name":"PRESSURE_RATE_FIX16_PA",
       "Description":"Pressure change rate, 16 bit signed in pascal resolution.",
+      "URL":"https://en.wikipedia.org/wiki/Pressure",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"Pa/hr",
@@ -935,6 +1050,7 @@
     {
         "Name":"PRESSURE_FIX16_KPA",
       "Description":"Pressure, 16 bit signed in kilopascal resolution.",
+      "URL":"https://en.wikipedia.org/wiki/Pressure",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"Pa",
@@ -946,6 +1062,7 @@
     {
         "Name":"PRESSURE_UFIX32_DPA",
       "Description":"Pressure, 32 bit unsigned in decipascal resolution.",
+      "URL":"https://en.wikipedia.org/wiki/Pressure",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"Pa",
@@ -957,6 +1074,7 @@
     {
         "Name":"PRESSURE_FIX32_DPA",
       "Description":"Pressure, 32 bit signed in decipascal resolution.",
+      "URL":"https://en.wikipedia.org/wiki/Pressure",
       "BaseFieldType":"FIX32",
       "Bits":32,
       "Unit":"Pa",
@@ -968,6 +1086,7 @@
     {
         "Name":"RADIO_FREQUENCY_UFIX32",
       "Description":"Radio frequency",
+      "URL":"https://en.wikipedia.org/wiki/Radio_frequency",
       "BaseFieldType":"UFIX32",
       "Bits":32,
       "Unit":"Hz",
@@ -980,6 +1099,7 @@
         "Name":"FREQUENCY_UFIX16",
       "Description":"frequency",
       "EncodingDescription":"Various resolutions are used, ranging from 0.01 Hz to 1 Hz",
+      "URL":"https://en.wikipedia.org/wiki/Radio_frequency",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"Hz",
@@ -988,6 +1108,7 @@
     {
         "Name":"SPEED_FIX16_MM",
       "Description":"Speed, with millimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Speed",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"m/s",
@@ -999,6 +1120,7 @@
     {
         "Name":"SPEED_FIX16_CM",
       "Description":"Speed, with centimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Speed",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"m/s",
@@ -1010,6 +1132,7 @@
     {
         "Name":"SPEED_UFIX16_CM",
       "Description":"Speed, unsigned, with centimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Speed",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"m/s",
@@ -1021,6 +1144,7 @@
     {
         "Name":"SPEED_UFIX16_DM",
       "Description":"Speed, unsigned, with decimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Speed",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"m/s",
@@ -1032,6 +1156,7 @@
     {
         "Name":"DISTANCE_FIX16_M",
       "Description":"Distance, with meter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Distance",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"m",
@@ -1042,6 +1167,7 @@
     {
         "Name":"DISTANCE_FIX16_CM",
       "Description":"Distance, with centimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Distance",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"m",
@@ -1053,6 +1179,7 @@
     {
         "Name":"DISTANCE_FIX16_MM",
       "Description":"Distance, with millimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Distance",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"m",
@@ -1064,6 +1191,7 @@
     {
         "Name":"DISTANCE_FIX32_MM",
       "Description":"Distance, high range, with millimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Distance",
       "BaseFieldType":"FIX32",
       "Bits":32,
       "Unit":"m",
@@ -1075,6 +1203,7 @@
     {
         "Name":"DISTANCE_FIX32_CM",
       "Description":"Distance, high range, with centimeter resolution",
+      "URL":"https://en.wikipedia.org/wiki/Distance",
       "BaseFieldType":"FIX32",
       "Bits":32,
       "Unit":"m",
@@ -1086,6 +1215,7 @@
     {
         "Name":"DISTANCE_FIX64",
       "Description":"Distance",
+      "URL":"https://en.wikipedia.org/wiki/Distance",
       "BaseFieldType":"FIX64",
       "Bits":64,
       "Unit":"m",
@@ -1093,71 +1223,6 @@
       "Resolution":1e-06,
       "RangeMin":-9223372036854.775,
       "RangeMax":9223372036854.775
-      },
-    {
-        "Name":"LENGTH_UFIX8_DAM",
-      "Description":"Length, byte, unsigned decameters",
-      "BaseFieldType":"UFIX8",
-      "Bits":8,
-      "Unit":"m",
-      "Signed":false,
-      "Resolution":10,
-      "RangeMin":0,
-      "RangeMax":2530
-      },
-    {
-        "Name":"LENGTH_UFIX16_CM",
-      "Description":"Length, unsigned centimeters",
-      "BaseFieldType":"UFIX16",
-      "Bits":16,
-      "Unit":"m",
-      "Signed":false,
-      "Resolution":0.01,
-      "RangeMin":0,
-      "RangeMax":655.33
-      },
-    {
-        "Name":"LENGTH_UFIX16_DM",
-      "Description":"Length, unsigned decimeters",
-      "BaseFieldType":"UFIX16",
-      "Bits":16,
-      "Unit":"m",
-      "Signed":false,
-      "Resolution":0.1,
-      "RangeMin":0,
-      "RangeMax":6553.3
-      },
-    {
-        "Name":"LENGTH_UFIX32_MM",
-      "Description":"Length, high range, unsigned millimeters",
-      "BaseFieldType":"UFIX32",
-      "Bits":32,
-      "Unit":"m",
-      "Signed":false,
-      "Resolution":0.001,
-      "RangeMin":0,
-      "RangeMax":4294967.293000001
-      },
-    {
-        "Name":"LENGTH_UFIX32_CM",
-      "Description":"Length, high range, unsigned centimeters",
-      "BaseFieldType":"UFIX32",
-      "Bits":32,
-      "Unit":"m",
-      "Signed":false,
-      "Resolution":0.01,
-      "RangeMin":0,
-      "RangeMax":42949672.93
-      },
-    {
-        "Name":"LENGTH_UFIX32_M",
-      "Description":"Length, high range, meters",
-      "BaseFieldType":"UFIX32",
-      "Bits":32,
-      "Unit":"m",
-      "Signed":false,
-      "RangeMin":0,
-      "RangeMax":4294967293
       },
     {
         "Name":"GAIN_FIX16",
@@ -1172,6 +1237,7 @@
     {
         "Name":"MAGNETIC_FIELD_FIX16",
       "Description":"Magnetic field",
+      "URL":"https://en.wikipedia.org/wiki/Magnetic_field",
       "BaseFieldType":"FIX16",
       "Bits":16,
       "Unit":"Tesla",
@@ -1179,13 +1245,6 @@
       "Resolution":0.01,
       "RangeMin":-327.67,
       "RangeMax":327.65
-      },
-    {
-        "Name":"ELAPSED",
-      "Description":"Elapsed time",
-      "BaseFieldType":"SIGNED_FIXED_POINT_NUMBER",
-      "Unit":"s",
-      "Signed":false
       },
     {
         "Name":"INSTANCE",
@@ -1209,6 +1268,7 @@
     {
         "Name":"POWER_FACTOR_UFIX16",
       "Description":"Power Factor",
+      "URL":"https://en.wikipedia.org/wiki/Power_factor",
       "BaseFieldType":"UFIX16",
       "Bits":16,
       "Unit":"Cos Phi",
@@ -1220,6 +1280,7 @@
     {
         "Name":"POWER_FACTOR_UFIX8",
       "Description":"Power Factor",
+      "URL":"https://en.wikipedia.org/wiki/Power_factor",
       "BaseFieldType":"UFIX8",
       "Bits":8,
       "Unit":"Cos Phi",
@@ -1232,6 +1293,7 @@
         "Name":"SIGNED_ALMANAC_PARAMETER",
       "Description":"Almanac parameter, signed",
       "EncodingDescription":"These encode various almanac parameters consisting of differing sizes and sign. They are all using an interesting resolution/scale, which is always a number of bits that the value is shifted left or right. This is reflected by resolution field containing some factor of 2^n or 2^-n.",
+      "URL":"https://www.gps.gov/technical/icwg/IS-GPS-200N.pdf",
       "BaseFieldType":"SIGNED_FIXED_POINT_NUMBER",
       "Signed":true
       },
@@ -1239,6 +1301,7 @@
         "Name":"UNSIGNED_ALMANAC_PARAMETER",
       "Description":"Almanac parameter, unsigned",
       "EncodingDescription":"These encode various almanac parameters consisting of differing sizes and sign. They are all using an interesting resolution/scale, which is always a number of bits that the value is shifted left or right. This is reflected by resolution field containing some factor of 2^n or 2^-n.",
+      "URL":"https://www.gps.gov/technical/icwg/IS-GPS-200N.pdf",
       "BaseFieldType":"UNSIGNED_FIXED_POINT_NUMBER",
       "Signed":false
       },
@@ -1291,7 +1354,8 @@
     {
         "Name":"MMSI",
       "Description":"MMSI",
-      "EncodingDescription":"The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string",
+      "EncodingDescription":"The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.",
+      "URL":"https://navcen.uscg.gov/maritime-mobile-service-identity",
       "BaseFieldType":"UINT32",
       "Bits":32,
       "Signed":false,
@@ -4480,7 +4544,7 @@
             "Unit":"J",
             "Resolution":3.6e+06,
             "Signed":false,
-            "FieldType":"ENERGY"
+            "FieldType":"ENERGY_UINT32"
           },
           {
             "Order":2,
@@ -4492,7 +4556,7 @@
             "Unit":"J",
             "Resolution":3.6e+06,
             "Signed":false,
-            "FieldType":"ENERGY"
+            "FieldType":"ENERGY_UINT32"
           }
         ]
       },
@@ -5063,7 +5127,7 @@
             "Unit":"J",
             "Resolution":3.6e+06,
             "Signed":false,
-            "FieldType":"ENERGY"
+            "FieldType":"ENERGY_UINT32"
           },
           {
             "Order":2,
@@ -5075,7 +5139,7 @@
             "Unit":"J",
             "Resolution":3.6e+06,
             "Signed":false,
-            "FieldType":"ENERGY"
+            "FieldType":"ENERGY_UINT32"
           }
         ]
       },

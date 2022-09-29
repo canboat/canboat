@@ -633,6 +633,10 @@ static void explainFieldTypesXML(void)
     {
       printf("      <Comment>%s</Comment>\n", ft->comment);
     }
+    if (ft->url != NULL)
+    {
+      printf("      <URL>%s</URL>\n", ft->url);
+    }
     if (ft->baseFieldType != NULL)
     {
       printf("      <BaseFieldType>%s</BaseFieldType>\n", ft->baseFieldType);

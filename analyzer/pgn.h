@@ -592,9 +592,9 @@ typedef struct
     .name = nam, .size = LEN_VARIABLE, .description = desc, .fieldType = "VARIABLE" \
   }
 
-#define ENERGY_FIELD(nam)                                                                \
-  {                                                                                      \
-    .name = nam, .size = BYTES(4), .resolution = 1, .unit = "kWh", .fieldType = "ENERGY" \
+#define ENERGY_UINT32_FIELD(nam)                                                                \
+  {                                                                                             \
+    .name = nam, .size = BYTES(4), .resolution = 1, .unit = "kWh", .fieldType = "ENERGY_UINT32" \
   }
 
 #define POWER_I32_OFFSET_FIELD(nam, unt)                                                                 \
@@ -1092,7 +1092,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {ENERGY_FIELD("Total Energy Export"), ENERGY_FIELD("Total Energy Import"), END_OF_FIELDS}}
+     {ENERGY_UINT32_FIELD("Total Energy Export"), ENERGY_UINT32_FIELD("Total Energy Import"), END_OF_FIELDS}}
 
     ,
     {"Utility Phase C AC Reactive Power",
@@ -1237,7 +1237,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {ENERGY_FIELD("Total Energy Export"), ENERGY_FIELD("Total Energy Import"), END_OF_FIELDS}}
+     {ENERGY_UINT32_FIELD("Total Energy Export"), ENERGY_UINT32_FIELD("Total Energy Import"), END_OF_FIELDS}}
 
     ,
     {"Generator Phase C AC Reactive Power",

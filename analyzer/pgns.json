@@ -1148,7 +1148,7 @@
             "Type":"Integer",
             "Resolution":3.6e+06,
             "Signed":false,
-            "FieldType":"ENERGY"},
+            "FieldType":"ENERGY_UINT32"},
           {
             "Order":2,
             "Id":"totalEnergyImport",
@@ -1160,7 +1160,7 @@
             "Type":"Integer",
             "Resolution":3.6e+06,
             "Signed":false,
-            "FieldType":"ENERGY"}]},
+            "FieldType":"ENERGY_UINT32"}]},
       {
         "PGN":65006,
         "Id":"utilityPhaseCAcReactivePower",
@@ -1697,7 +1697,7 @@
             "Type":"Integer",
             "Resolution":3.6e+06,
             "Signed":false,
-            "FieldType":"ENERGY"},
+            "FieldType":"ENERGY_UINT32"},
           {
             "Order":2,
             "Id":"totalEnergyImport",
@@ -1709,7 +1709,7 @@
             "Type":"Integer",
             "Resolution":3.6e+06,
             "Signed":false,
-            "FieldType":"ENERGY"}]},
+            "FieldType":"ENERGY_UINT32"}]},
       {
         "PGN":65019,
         "Id":"generatorPhaseCAcReactivePower",

@@ -300,6 +300,17 @@
           </p>
         </xsl:when>
       </xsl:choose>
+      <xsl:if test="URL">
+        <p> 
+          External website explanation: 
+          <a>
+            <xsl:attribute name="href">
+              <xsl:value-of select="URL"/>
+            </xsl:attribute>
+            <xsl:value-of select="URL"/>
+          </a>
+        </p>
+      </xsl:if>
       <xsl:choose>
         <xsl:when test="BaseFieldType">
           <p>
