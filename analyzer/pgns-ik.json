@@ -10,7 +10,9 @@
         "Id":"ikonvertNetworkStatus",
         "Description":"iKonvert: Network status",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":15,
         "RepeatingFields":0,
         "Fields":[

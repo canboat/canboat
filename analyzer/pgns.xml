@@ -824,6 +824,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -923,6 +924,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -1009,6 +1011,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -1079,7 +1082,10 @@ limitations under the License.
       <Id>bus1PhaseCBasicAcQuantities</Id>
       <Description>Bus #1 Phase C Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1124,7 +1130,10 @@ limitations under the License.
       <Id>bus1PhaseBBasicAcQuantities</Id>
       <Description>Bus #1 Phase B Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1169,7 +1178,10 @@ limitations under the License.
       <Id>bus1PhaseABasicAcQuantities</Id>
       <Description>Bus #1 Phase A Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1219,6 +1231,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -1267,6 +1280,7 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -1304,7 +1318,10 @@ limitations under the License.
       <Id>utilityPhaseCAcReactivePower</Id>
       <Description>Utility Phase C AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1355,7 +1372,10 @@ limitations under the License.
       <Id>utilityPhaseCAcPower</Id>
       <Description>Utility Phase C AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1392,7 +1412,10 @@ limitations under the License.
       <Id>utilityPhaseCBasicAcQuantities</Id>
       <Description>Utility Phase C Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1448,7 +1471,10 @@ limitations under the License.
       <Id>utilityPhaseBAcReactivePower</Id>
       <Description>Utility Phase B AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1499,7 +1525,10 @@ limitations under the License.
       <Id>utilityPhaseBAcPower</Id>
       <Description>Utility Phase B AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1536,7 +1565,10 @@ limitations under the License.
       <Id>utilityPhaseBBasicAcQuantities</Id>
       <Description>Utility Phase B Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1592,7 +1624,10 @@ limitations under the License.
       <Id>utilityPhaseAAcReactivePower</Id>
       <Description>Utility Phase A AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1644,7 +1679,10 @@ limitations under the License.
       <Id>utilityPhaseAAcPower</Id>
       <Description>Utility Phase A AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1681,7 +1719,10 @@ limitations under the License.
       <Id>utilityPhaseABasicAcQuantities</Id>
       <Description>Utility Phase A Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1737,7 +1778,10 @@ limitations under the License.
       <Id>utilityTotalAcReactivePower</Id>
       <Description>Utility Total AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1789,7 +1833,10 @@ limitations under the License.
       <Id>utilityTotalAcPower</Id>
       <Description>Utility Total AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1826,7 +1873,10 @@ limitations under the License.
       <Id>utilityAverageBasicAcQuantities</Id>
       <Description>Utility Average Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1885,6 +1935,7 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -1922,7 +1973,10 @@ limitations under the License.
       <Id>generatorPhaseCAcReactivePower</Id>
       <Description>Generator Phase C AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -1974,7 +2028,10 @@ limitations under the License.
       <Id>generatorPhaseCAcPower</Id>
       <Description>Generator Phase C AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2011,7 +2068,10 @@ limitations under the License.
       <Id>generatorPhaseCBasicAcQuantities</Id>
       <Description>Generator Phase C Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2067,7 +2127,10 @@ limitations under the License.
       <Id>generatorPhaseBAcReactivePower</Id>
       <Description>Generator Phase B AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2119,7 +2182,10 @@ limitations under the License.
       <Id>generatorPhaseBAcPower</Id>
       <Description>Generator Phase B AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2156,7 +2222,10 @@ limitations under the License.
       <Id>generatorPhaseBBasicAcQuantities</Id>
       <Description>Generator Phase B Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2212,7 +2281,10 @@ limitations under the License.
       <Id>generatorPhaseAAcReactivePower</Id>
       <Description>Generator Phase A AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2264,7 +2336,10 @@ limitations under the License.
       <Id>generatorPhaseAAcPower</Id>
       <Description>Generator Phase A AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2301,7 +2376,10 @@ limitations under the License.
       <Id>generatorPhaseABasicAcQuantities</Id>
       <Description>Generator Phase A Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2357,7 +2435,10 @@ limitations under the License.
       <Id>generatorTotalAcReactivePower</Id>
       <Description>Generator Total AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2409,7 +2490,10 @@ limitations under the License.
       <Id>generatorTotalAcPower</Id>
       <Description>Generator Total AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2446,7 +2530,10 @@ limitations under the License.
       <Id>generatorAverageBasicAcQuantities</Id>
       <Description>Generator Average Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2502,7 +2589,10 @@ limitations under the License.
       <Id>isoCommandedAddress</Id>
       <Description>ISO Commanded Address</Description>
       <Type>ISO</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -2851,6 +2941,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -2922,7 +3013,10 @@ limitations under the License.
       <Id>maretronProprietaryDcBreakerCurrent</Id>
       <Description>Maretron: Proprietary DC Breaker Current</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3015,7 +3109,10 @@ limitations under the License.
       <Id>airmarBootStateAcknowledgment</Id>
       <Description>Airmar: Boot State Acknowledgment</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3079,7 +3176,10 @@ limitations under the License.
       <Id>lowranceTemperature</Id>
       <Description>Lowrance: Temperature</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3175,6 +3275,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3288,7 +3389,10 @@ limitations under the License.
       <Id>airmarBootStateRequest</Id>
       <Description>Airmar: Boot State Request</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3336,7 +3440,10 @@ limitations under the License.
       <Id>airmarAccessLevel</Id>
       <Description>Airmar: Access Level</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3439,6 +3546,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3492,6 +3600,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3723,6 +3832,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3776,6 +3886,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3829,6 +3940,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3882,6 +3994,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3935,6 +4048,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4032,6 +4146,7 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4119,6 +4234,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4172,6 +4288,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4225,6 +4342,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4313,6 +4431,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4407,7 +4526,10 @@ limitations under the License.
       <Id>seatalkPilotLockedHeading</Id>
       <Description>Seatalk: Pilot Locked Heading</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4501,7 +4623,10 @@ limitations under the License.
       <Id>seatalkSilenceAlarm</Id>
       <Description>Seatalk: Silence Alarm</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4705,6 +4830,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4835,6 +4961,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4921,6 +5048,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5018,6 +5146,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5101,7 +5230,10 @@ limitations under the License.
       <Id>airmarSpeedPulseCount</Id>
       <Description>Airmar: Speed Pulse Count</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5199,6 +5331,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5299,6 +5432,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6967,6 +7101,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>21</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7107,6 +7242,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7212,6 +7348,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>7</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7315,6 +7452,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7392,6 +7530,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7480,6 +7619,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7561,6 +7701,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7660,6 +7801,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7781,6 +7923,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>21</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7917,6 +8060,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8017,7 +8161,10 @@ limitations under the License.
       <Id>airmarAttitudeOffset</Id>
       <Description>Airmar: Attitude Offset</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -8120,6 +8267,7 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>24</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8346,6 +8494,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8564,7 +8713,10 @@ limitations under the License.
       <Id>airmarSimulateMode</Id>
       <Description>Airmar: Simulate Mode</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -8651,7 +8803,10 @@ limitations under the License.
       <Id>airmarCalibrateDepth</Id>
       <Description>Airmar: Calibrate Depth</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -8736,7 +8891,10 @@ limitations under the License.
       <Id>airmarCalibrateSpeed</Id>
       <Description>Airmar: Calibrate Speed</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>12</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -8833,7 +8991,10 @@ limitations under the License.
       <Id>airmarCalibrateTemperature</Id>
       <Description>Airmar: Calibrate Temperature</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -8934,7 +9095,10 @@ limitations under the License.
       <Id>airmarSpeedFilter</Id>
       <Description>Airmar: Speed Filter</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -9045,7 +9209,10 @@ limitations under the License.
       <Id>airmarTemperatureFilter</Id>
       <Description>Airmar: Temperature Filter</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -9156,7 +9323,10 @@ limitations under the License.
       <Id>airmarNmea2000Options</Id>
       <Description>Airmar: NMEA 2000 options</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -9248,6 +9418,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>4</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9310,6 +9481,7 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9404,7 +9576,10 @@ limitations under the License.
       <Id>alert</Id>
       <Description>Alert</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>28</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -9702,7 +9877,10 @@ limitations under the License.
       <Id>alertResponse</Id>
       <Description>Alert Response</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>25</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -9861,7 +10039,10 @@ limitations under the License.
       <Id>alertText</Id>
       <Description>Alert Text</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>49</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -10037,6 +10218,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -10051,6 +10233,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -10065,6 +10248,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -10150,7 +10334,10 @@ limitations under the License.
       <Id>heartbeat</Id>
       <Description>Heartbeat</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -10380,7 +10567,10 @@ limitations under the License.
       <Id>manOverboardNotification</Id>
       <Description>Man Overboard Notification</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>35</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11092,6 +11282,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -11846,7 +12037,10 @@ limitations under the License.
       <Id>loadControllerConnectionStateControl</Id>
       <Description>Load Controller Connection State/Control</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11945,7 +12139,10 @@ limitations under the License.
       <Id>binarySwitchBankStatus</Id>
       <Description>Binary Switch Bank Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -12387,7 +12584,10 @@ limitations under the License.
       <Id>switchBankControl</Id>
       <Description>Switch Bank Control</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14129,7 +14329,10 @@ limitations under the License.
       <Id>acPowerCurrentPhaseA</Id>
       <Description>AC Power / Current - Phase A</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14186,7 +14389,10 @@ limitations under the License.
       <Id>acPowerCurrentPhaseB</Id>
       <Description>AC Power / Current - Phase B</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14243,7 +14449,10 @@ limitations under the License.
       <Id>acPowerCurrentPhaseC</Id>
       <Description>AC Power / Current - Phase C</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14300,7 +14509,10 @@ limitations under the License.
       <Id>converterStatus</Id>
       <Description>Converter Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14432,7 +14644,10 @@ limitations under the License.
       <Id>dcVoltageCurrent</Id>
       <Description>DC Voltage/Current</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14500,7 +14715,10 @@ limitations under the License.
       <Id>leewayAngle</Id>
       <Description>Leeway Angle</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14545,7 +14763,10 @@ limitations under the License.
       <Id>thrusterControlStatus</Id>
       <Description>Thruster Control Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14677,7 +14898,10 @@ limitations under the License.
       <Id>thrusterInformation</Id>
       <Description>Thruster Information</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14765,7 +14989,10 @@ limitations under the License.
       <Id>thrusterMotorStatus</Id>
       <Description>Thruster Motor Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15266,7 +15493,10 @@ limitations under the License.
       <Id>windlassControlStatus</Id>
       <Description>Windlass Control Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>7</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15467,7 +15697,10 @@ limitations under the License.
       <Id>anchorWindlassOperatingStatus</Id>
       <Description>Anchor Windlass Operating Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15615,7 +15848,10 @@ limitations under the License.
       <Id>anchorWindlassMonitoringStatus</Id>
       <Description>Anchor Windlass Monitoring Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -23761,6 +23997,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -23776,6 +24013,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25542,7 +25780,10 @@ limitations under the License.
       <Id>temperatureExtendedRange</Id>
       <Description>Temperature Extended Range</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26509,6 +26750,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26518,7 +26760,10 @@ limitations under the License.
       <Id>watermakerInputSettingAndStatus</Id>
       <Description>Watermaker Input Setting and Status</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>24</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -26855,6 +27100,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27143,6 +27389,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27379,6 +27626,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -27549,6 +27797,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27723,6 +27972,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>10</RepeatingFields>
@@ -27958,6 +28208,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -28303,6 +28554,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28407,6 +28659,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>2</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28485,6 +28738,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -28563,6 +28817,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>4</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28676,6 +28931,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -28758,6 +29014,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>3</RepeatingFields>
@@ -28853,6 +29110,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28937,6 +29195,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -29146,6 +29405,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29261,6 +29521,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29424,6 +29685,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29527,6 +29789,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29639,6 +29902,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29764,6 +30028,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29871,6 +30136,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29985,6 +30251,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30148,6 +30415,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30313,6 +30581,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30427,6 +30696,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30541,6 +30811,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30655,6 +30926,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30802,6 +31074,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30905,6 +31178,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31014,7 +31288,10 @@ limitations under the License.
       <Id>sonichubVolume</Id>
       <Description>SonicHub: Volume</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -31128,6 +31405,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31220,6 +31498,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31325,6 +31604,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31439,6 +31719,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31582,6 +31863,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31723,6 +32005,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31864,6 +32147,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31949,6 +32233,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32001,6 +32286,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32087,6 +32373,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32195,6 +32482,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32327,6 +32615,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32534,6 +32823,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32633,6 +32923,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32732,6 +33023,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32831,6 +33123,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32919,6 +33212,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33018,6 +33312,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33118,6 +33413,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33254,6 +33550,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33364,6 +33661,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33463,6 +33761,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33577,6 +33876,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33742,6 +34042,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33918,6 +34219,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>5</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34010,6 +34312,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34132,6 +34435,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34254,6 +34558,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34376,6 +34681,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>5</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34469,6 +34775,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34558,6 +34865,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34647,6 +34955,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34736,6 +35045,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34824,6 +35134,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34982,7 +35293,10 @@ limitations under the License.
       <Id>maretronProprietaryTemperatureHighRange</Id>
       <Description>Maretron: Proprietary Temperature High Range</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -35112,6 +35426,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35199,6 +35514,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35308,6 +35624,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35428,6 +35745,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35482,6 +35800,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35536,6 +35855,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35590,6 +35910,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35644,6 +35965,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35697,6 +36019,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35853,7 +36176,10 @@ limitations under the License.
       <Id>maretronSwitchStatusCounter</Id>
       <Description>Maretron: Switch Status Counter</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>16</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -36012,6 +36338,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -36060,7 +36387,10 @@ limitations under the License.
       <Id>maretronSwitchStatusTimer</Id>
       <Description>Maretron: Switch Status Timer</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -36219,6 +36549,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -36273,6 +36604,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -36327,6 +36659,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -36381,6 +36714,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>29</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -36508,6 +36842,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>29</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -36660,6 +36995,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>37</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -36939,6 +37275,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -37051,6 +37388,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -37104,6 +37442,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -37243,6 +37582,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -37297,6 +37637,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -37438,6 +37779,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -37578,6 +37920,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -37771,6 +38114,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -37825,6 +38169,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -37934,6 +38279,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -38099,6 +38445,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -38231,6 +38578,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -38352,6 +38700,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -38518,6 +38867,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -38616,6 +38966,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>30</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -38720,6 +39071,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -38824,6 +39176,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>

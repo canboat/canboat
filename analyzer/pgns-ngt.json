@@ -10,7 +10,9 @@
         "Id":"actisenseOperatingMode",
         "Description":"Actisense: Operating mode",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -73,7 +75,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":15,
         "RepeatingFields":0,
         "Fields":[
@@ -156,7 +159,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":34,
         "RepeatingFields":0,
         "Fields":[
@@ -429,7 +433,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":17,
         "RepeatingFields":0,
         "Fields":[

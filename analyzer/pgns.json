@@ -738,7 +738,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -827,7 +828,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -904,7 +906,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -967,7 +970,9 @@
         "Id":"bus1PhaseCBasicAcQuantities",
         "Description":"Bus #1 Phase C Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1007,7 +1012,9 @@
         "Id":"bus1PhaseBBasicAcQuantities",
         "Description":"Bus #1 Phase B Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1047,7 +1054,9 @@
         "Id":"bus1PhaseABasicAcQuantities",
         "Description":"Bus #1 Phase A Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1091,7 +1100,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1133,7 +1143,8 @@
         "Type":"Single",
         "Complete":false,
         "Missing":[
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1166,7 +1177,9 @@
         "Id":"utilityPhaseCAcReactivePower",
         "Description":"Utility Phase C AC Reactive Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1211,7 +1224,9 @@
         "Id":"utilityPhaseCAcPower",
         "Description":"Utility Phase C AC Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1244,7 +1259,9 @@
         "Id":"utilityPhaseCBasicAcQuantities",
         "Description":"Utility Phase C Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1294,7 +1311,9 @@
         "Id":"utilityPhaseBAcReactivePower",
         "Description":"Utility Phase B AC Reactive Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1339,7 +1358,9 @@
         "Id":"utilityPhaseBAcPower",
         "Description":"Utility Phase B AC Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1372,7 +1393,9 @@
         "Id":"utilityPhaseBBasicAcQuantities",
         "Description":"Utility Phase B Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1422,7 +1445,9 @@
         "Id":"utilityPhaseAAcReactivePower",
         "Description":"Utility Phase A AC Reactive Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1468,7 +1493,9 @@
         "Id":"utilityPhaseAAcPower",
         "Description":"Utility Phase A AC Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1501,7 +1528,9 @@
         "Id":"utilityPhaseABasicAcQuantities",
         "Description":"Utility Phase A Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1551,7 +1580,9 @@
         "Id":"utilityTotalAcReactivePower",
         "Description":"Utility Total AC Reactive Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1597,7 +1628,9 @@
         "Id":"utilityTotalAcPower",
         "Description":"Utility Total AC Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1630,7 +1663,9 @@
         "Id":"utilityAverageBasicAcQuantities",
         "Description":"Utility Average Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1682,7 +1717,8 @@
         "Type":"Single",
         "Complete":false,
         "Missing":[
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1715,7 +1751,9 @@
         "Id":"generatorPhaseCAcReactivePower",
         "Description":"Generator Phase C AC Reactive Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1761,7 +1799,9 @@
         "Id":"generatorPhaseCAcPower",
         "Description":"Generator Phase C AC Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1794,7 +1834,9 @@
         "Id":"generatorPhaseCBasicAcQuantities",
         "Description":"Generator Phase C Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1844,7 +1886,9 @@
         "Id":"generatorPhaseBAcReactivePower",
         "Description":"Generator Phase B AC Reactive Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1890,7 +1934,9 @@
         "Id":"generatorPhaseBAcPower",
         "Description":"Generator Phase B AC Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1923,7 +1969,9 @@
         "Id":"generatorPhaseBBasicAcQuantities",
         "Description":"Generator Phase B Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -1973,7 +2021,9 @@
         "Id":"generatorPhaseAAcReactivePower",
         "Description":"Generator Phase A AC Reactive Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2019,7 +2069,9 @@
         "Id":"generatorPhaseAAcPower",
         "Description":"Generator Phase A AC Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2052,7 +2104,9 @@
         "Id":"generatorPhaseABasicAcQuantities",
         "Description":"Generator Phase A Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2102,7 +2156,9 @@
         "Id":"generatorTotalAcReactivePower",
         "Description":"Generator Total AC Reactive Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2148,7 +2204,9 @@
         "Id":"generatorTotalAcPower",
         "Description":"Generator Total AC Power",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2181,7 +2239,9 @@
         "Id":"generatorAverageBasicAcQuantities",
         "Description":"Generator Average Basic AC Quantities",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2231,7 +2291,9 @@
         "Id":"isoCommandedAddress",
         "Description":"ISO Commanded Address",
         "Type":"ISO",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -2563,7 +2625,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2627,7 +2690,9 @@
         "Id":"maretronProprietaryDcBreakerCurrent",
         "Description":"Maretron: Proprietary DC Breaker Current",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2711,7 +2776,9 @@
         "Id":"airmarBootStateAcknowledgment",
         "Description":"Airmar: Boot State Acknowledgment",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2768,7 +2835,9 @@
         "Id":"lowranceTemperature",
         "Description":"Lowrance: Temperature",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2855,7 +2924,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "Lookups"],
+          "Lookups",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -2957,7 +3027,9 @@
         "Id":"airmarBootStateRequest",
         "Description":"Airmar: Boot State Request",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3000,7 +3072,9 @@
         "Id":"airmarAccessLevel",
         "Description":"Airmar: Access Level",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3092,7 +3166,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3139,7 +3214,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3356,7 +3432,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3403,7 +3480,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3450,7 +3528,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3497,7 +3576,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3544,7 +3624,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3631,7 +3712,8 @@
         "Type":"Single",
         "Complete":false,
         "Missing":[
-          "Fields"],
+          "Fields",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3709,7 +3791,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3756,7 +3839,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3803,7 +3887,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3882,7 +3967,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -3967,7 +4053,9 @@
         "Id":"seatalkPilotLockedHeading",
         "Description":"Seatalk: Pilot Locked Heading",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4052,7 +4140,9 @@
         "Id":"seatalkSilenceAlarm",
         "Description":"Seatalk: Silence Alarm",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4245,7 +4335,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4362,7 +4453,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4439,7 +4531,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4526,7 +4619,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4601,7 +4695,9 @@
         "Id":"airmarSpeedPulseCount",
         "Description":"Airmar: Speed Pulse Count",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4689,7 +4785,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -4779,7 +4876,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -6342,7 +6440,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":21,
         "RepeatingFields":0,
         "Fields":[
@@ -6468,7 +6567,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -6562,7 +6662,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":7,
         "RepeatingFields":0,
         "Fields":[
@@ -6654,7 +6755,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":3,
         "RepeatingFields":0,
         "Fields":[
@@ -6723,7 +6825,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":3,
         "RepeatingFields":0,
         "Fields":[
@@ -6802,7 +6905,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":3,
         "RepeatingFields":0,
         "Fields":[
@@ -6874,7 +6978,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -6963,7 +7068,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -7072,7 +7178,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":21,
         "RepeatingFields":0,
         "Fields":[
@@ -7195,7 +7302,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -7285,7 +7393,9 @@
         "Id":"airmarAttitudeOffset",
         "Description":"Airmar: Attitude Offset",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -7378,7 +7488,8 @@
         "Type":"Fast",
         "Complete":false,
         "Missing":[
-          "Fields"],
+          "Fields",
+          "Interval"],
         "Length":24,
         "RepeatingFields":0,
         "Fields":[
@@ -7583,7 +7694,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -7781,7 +7893,9 @@
         "Id":"airmarSimulateMode",
         "Description":"Airmar: Simulate Mode",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -7859,7 +7973,9 @@
         "Id":"airmarCalibrateDepth",
         "Description":"Airmar: Calibrate Depth",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -7936,7 +8052,9 @@
         "Id":"airmarCalibrateSpeed",
         "Description":"Airmar: Calibrate Speed",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":12,
         "RepeatingFields":2,
         "Fields":[
@@ -8024,7 +8142,9 @@
         "Id":"airmarCalibrateTemperature",
         "Description":"Airmar: Calibrate Temperature",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":6,
         "RepeatingFields":2,
         "Fields":[
@@ -8115,7 +8235,9 @@
         "Id":"airmarSpeedFilter",
         "Description":"Airmar: Speed Filter",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":2,
         "Fields":[
@@ -8215,7 +8337,9 @@
         "Id":"airmarTemperatureFilter",
         "Description":"Airmar: Temperature Filter",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":2,
         "Fields":[
@@ -8315,7 +8439,9 @@
         "Id":"airmarNmea2000Options",
         "Description":"Airmar: NMEA 2000 options",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":6,
         "RepeatingFields":2,
         "Fields":[
@@ -8397,7 +8523,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":4,
         "RepeatingFields":0,
         "Fields":[
@@ -8452,7 +8579,8 @@
         "Type":"Fast",
         "Complete":false,
         "Missing":[
-          "Lookups"],
+          "Lookups",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -8537,7 +8665,9 @@
         "Id":"alert",
         "Description":"Alert",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":28,
         "RepeatingFields":0,
         "Fields":[
@@ -8801,7 +8931,9 @@
         "Id":"alertResponse",
         "Description":"Alert Response",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":25,
         "RepeatingFields":0,
         "Fields":[
@@ -8943,7 +9075,9 @@
         "Id":"alertText",
         "Description":"Alert Text",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":49,
         "RepeatingFields":0,
         "Fields":[
@@ -9101,7 +9235,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0},
       {
@@ -9113,7 +9248,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0},
       {
@@ -9125,7 +9261,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0},
       {
@@ -9201,7 +9338,9 @@
         "Id":"heartbeat",
         "Description":"Heartbeat",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -9405,7 +9544,9 @@
         "Id":"manOverboardNotification",
         "Description":"Man Overboard Notification",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":35,
         "RepeatingFields":0,
         "Fields":[
@@ -10041,7 +10182,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -10717,7 +10859,9 @@
         "Id":"loadControllerConnectionStateControl",
         "Description":"Load Controller Connection State/Control",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -10806,7 +10950,9 @@
         "Id":"binarySwitchBankStatus",
         "Description":"Binary Switch Bank Status",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -11189,7 +11335,9 @@
         "Id":"switchBankControl",
         "Description":"Switch Bank Control",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -12735,7 +12883,9 @@
         "Id":"acPowerCurrentPhaseA",
         "Description":"AC Power / Current - Phase A",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -12786,7 +12936,9 @@
         "Id":"acPowerCurrentPhaseB",
         "Description":"AC Power / Current - Phase B",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -12837,7 +12989,9 @@
         "Id":"acPowerCurrentPhaseC",
         "Description":"AC Power / Current - Phase C",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -12888,7 +13042,9 @@
         "Id":"converterStatus",
         "Description":"Converter Status",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -13005,7 +13161,9 @@
         "Id":"dcVoltageCurrent",
         "Description":"DC Voltage/Current",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -13066,7 +13224,9 @@
         "Id":"leewayAngle",
         "Description":"Leeway Angle",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -13106,7 +13266,9 @@
         "Id":"thrusterControlStatus",
         "Description":"Thruster Control Status",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -13223,7 +13385,9 @@
         "Id":"thrusterInformation",
         "Description":"Thruster Information",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -13302,7 +13466,9 @@
         "Id":"thrusterMotorStatus",
         "Description":"Thruster Motor Status",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -13751,7 +13917,9 @@
         "Id":"windlassControlStatus",
         "Description":"Windlass Control Status",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":7,
         "RepeatingFields":0,
         "Fields":[
@@ -13928,7 +14096,9 @@
         "Id":"anchorWindlassOperatingStatus",
         "Description":"Anchor Windlass Operating Status",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -14059,7 +14229,9 @@
         "Id":"anchorWindlassMonitoringStatus",
         "Description":"Anchor Windlass Monitoring Status",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -21377,7 +21549,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":0,
         "RepeatingFields":0},
       {
@@ -21390,7 +21563,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":0,
         "RepeatingFields":0},
       {
@@ -22975,7 +23149,9 @@
         "Id":"temperatureExtendedRange",
         "Description":"Temperature Extended Range",
         "Type":"Single",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -23848,7 +24024,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":0,
         "RepeatingFields":0},
       {
@@ -23856,7 +24033,9 @@
         "Id":"watermakerInputSettingAndStatus",
         "Description":"Watermaker Input Setting and Status",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":24,
         "RepeatingFields":0,
         "Fields":[
@@ -24154,7 +24333,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":233,
         "RepeatingFields":0,
         "Fields":[
@@ -24416,7 +24596,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":233,
         "RepeatingFields":0,
         "Fields":[
@@ -24627,7 +24808,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":233,
         "RepeatingFields":2,
         "Fields":[
@@ -24781,7 +24963,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":233,
         "RepeatingFields":0,
         "Fields":[
@@ -24939,7 +25122,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":233,
         "RepeatingFields":10,
         "Fields":[
@@ -25151,7 +25335,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":233,
         "RepeatingFields":2,
         "Fields":[
@@ -25459,7 +25644,8 @@
         "Complete":false,
         "Missing":[
           "FieldLengths",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -25550,7 +25736,8 @@
         "Complete":false,
         "Missing":[
           "FieldLengths",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":2,
         "RepeatingFields":0,
         "Fields":[
@@ -25618,7 +25805,8 @@
         "Complete":false,
         "Missing":[
           "FieldLengths",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":14,
         "RepeatingFields":2,
         "Fields":[
@@ -25687,7 +25875,8 @@
         "Complete":false,
         "Missing":[
           "FieldLengths",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":4,
         "RepeatingFields":0,
         "Fields":[
@@ -25787,7 +25976,8 @@
         "Complete":false,
         "Missing":[
           "FieldLengths",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":233,
         "RepeatingFields":2,
         "Fields":[
@@ -25860,7 +26050,8 @@
         "Complete":false,
         "Missing":[
           "FieldLengths",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":233,
         "RepeatingFields":3,
         "Fields":[
@@ -25944,7 +26135,8 @@
         "Complete":false,
         "Missing":[
           "FieldLengths",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":233,
         "RepeatingFields":0,
         "Fields":[
@@ -26017,7 +26209,8 @@
         "Complete":false,
         "Missing":[
           "FieldLengths",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":14,
         "RepeatingFields":2,
         "Fields":[
@@ -26206,7 +26399,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -26309,7 +26503,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -26455,7 +26650,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -26547,7 +26743,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -26647,7 +26844,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -26759,7 +26957,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -26854,7 +27053,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -26956,7 +27156,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -27102,7 +27303,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -27250,7 +27452,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -27352,7 +27555,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -27454,7 +27658,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -27556,7 +27761,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -27688,7 +27894,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -27780,7 +27987,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -27878,7 +28086,9 @@
         "Id":"sonichubVolume",
         "Description":"SonicHub: Volume",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -27980,7 +28190,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -28062,7 +28273,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -28156,7 +28368,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -28258,7 +28471,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":64,
         "RepeatingFields":0,
         "Fields":[
@@ -28387,7 +28601,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -28514,7 +28729,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -28641,7 +28857,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":223,
         "RepeatingFields":0,
         "Fields":[
@@ -28717,7 +28934,8 @@
         "Complete":false,
         "Missing":[
           "FieldLengths",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -28763,7 +28981,8 @@
         "Complete":false,
         "Missing":[
           "FieldLengths",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -28840,7 +29059,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -28937,7 +29157,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":13,
         "RepeatingFields":0,
         "Fields":[
@@ -29056,7 +29277,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":23,
         "RepeatingFields":0,
         "Fields":[
@@ -29244,7 +29466,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -29333,7 +29556,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -29422,7 +29646,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -29511,7 +29736,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -29590,7 +29816,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -29679,7 +29906,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -29769,7 +29997,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -29891,7 +30120,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -29990,7 +30220,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -30079,7 +30310,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":6,
         "RepeatingFields":0,
         "Fields":[
@@ -30181,7 +30413,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":23,
         "RepeatingFields":0,
         "Fields":[
@@ -30330,7 +30563,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":23,
         "RepeatingFields":0,
         "Fields":[
@@ -30488,7 +30722,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":5,
         "RepeatingFields":0,
         "Fields":[
@@ -30570,7 +30805,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -30680,7 +30916,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -30790,7 +31027,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -30900,7 +31138,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":5,
         "RepeatingFields":0,
         "Fields":[
@@ -30983,7 +31222,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -31063,7 +31303,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -31143,7 +31384,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -31223,7 +31465,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":32,
         "RepeatingFields":0,
         "Fields":[
@@ -31302,7 +31545,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -31445,7 +31689,9 @@
         "Id":"maretronProprietaryTemperatureHighRange",
         "Description":"Maretron: Proprietary Temperature High Range",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -31563,7 +31809,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -31641,7 +31888,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -31739,7 +31987,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":10,
         "RepeatingFields":0,
         "Fields":[
@@ -31847,7 +32096,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -31895,7 +32145,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -31943,7 +32194,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -31991,7 +32243,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -32039,7 +32292,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -32086,7 +32340,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -32227,7 +32482,9 @@
         "Id":"maretronSwitchStatusCounter",
         "Description":"Maretron: Switch Status Counter",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":16,
         "RepeatingFields":0,
         "Fields":[
@@ -32370,7 +32627,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -32413,7 +32671,9 @@
         "Id":"maretronSwitchStatusTimer",
         "Description":"Maretron: Switch Status Timer",
         "Type":"Fast",
-        "Complete":true,
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":23,
         "RepeatingFields":0,
         "Fields":[
@@ -32556,7 +32816,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -32604,7 +32865,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -32652,7 +32914,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -32700,7 +32963,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":29,
         "RepeatingFields":0,
         "Fields":[
@@ -32814,7 +33078,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":29,
         "RepeatingFields":0,
         "Fields":[
@@ -32951,7 +33216,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":37,
         "RepeatingFields":0,
         "Fields":[
@@ -33207,7 +33473,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -33308,7 +33575,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -33355,7 +33623,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -33480,7 +33749,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -33528,7 +33798,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -33655,7 +33926,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -33781,7 +34053,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":14,
         "RepeatingFields":0,
         "Fields":[
@@ -33955,7 +34228,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -34003,7 +34277,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":0,
         "RepeatingFields":0,
         "Fields":[
@@ -34101,7 +34376,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -34250,7 +34526,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -34369,7 +34646,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -34478,7 +34756,8 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution"],
+          "Resolution",
+          "Interval"],
         "Length":12,
         "RepeatingFields":0,
         "Fields":[
@@ -34628,7 +34907,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[
@@ -34716,7 +34996,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":30,
         "RepeatingFields":0,
         "Fields":[
@@ -34810,7 +35091,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":9,
         "RepeatingFields":0,
         "Fields":[
@@ -34904,7 +35186,8 @@
           "Fields",
           "FieldLengths",
           "Resolution",
-          "SampleData"],
+          "SampleData",
+          "Interval"],
         "Length":8,
         "RepeatingFields":0,
         "Fields":[

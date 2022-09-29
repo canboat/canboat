@@ -109,6 +109,12 @@
             <xsl:if test="$repeating > 0">
               The last <xsl:value-of select="$repeating"/> fields starting at field <xsl:value-of select="$startRepeat"/> repeat until the data is exhausted.
             </xsl:if>
+            <xsl:if test="TransmissionInterval">
+              It is normally transmitted every <xsl:value-of select="TransmissionInterval"/> milliseconds.
+            </xsl:if>
+            <xsl:if test="TransmissionIrregular = 'true'">
+              It is not transmitted at a regular interval, but when data is available or it is requested.
+            </xsl:if>
           </p>
           <table>
             <tr>

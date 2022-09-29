@@ -1286,6 +1286,7 @@ limitations under the License.
     <MissingAttribute Name="Resolution">The resolution of one or more fields is likely incorrect</MissingAttribute>
     <MissingAttribute Name="Lookups">One or more of the lookup fields contain missing or incorrect values</MissingAttribute>
     <MissingAttribute Name="SampleData">The PGN has not been seen in any logfiles yet</MissingAttribute>
+    <MissingAttribute Name="Interval">The transmission interval is not known</MissingAttribute>
   </MissingEnumerations>
   <LookupEnumerations>
     <LookupEnumeration Name='INDUSTRY_CODE' MaxValue='7'>
@@ -2836,6 +2837,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -2861,6 +2863,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -2915,6 +2918,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -2937,6 +2941,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -2969,6 +2974,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3036,6 +3042,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3102,6 +3109,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3168,6 +3176,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3234,6 +3243,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3288,6 +3298,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3411,6 +3422,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3469,6 +3481,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3561,6 +3574,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3641,6 +3655,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3713,6 +3728,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3766,7 +3782,10 @@ limitations under the License.
       <Id>bus1PhaseCBasicAcQuantities</Id>
       <Description>Bus #1 Phase C Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3811,7 +3830,10 @@ limitations under the License.
       <Id>bus1PhaseBBasicAcQuantities</Id>
       <Description>Bus #1 Phase B Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3856,7 +3878,10 @@ limitations under the License.
       <Id>bus1PhaseABasicAcQuantities</Id>
       <Description>Bus #1 Phase A Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -3906,6 +3931,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3954,6 +3980,7 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -3989,7 +4016,10 @@ limitations under the License.
       <Id>utilityPhaseCAcReactivePower</Id>
       <Description>Utility Phase C AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4034,7 +4064,10 @@ limitations under the License.
       <Id>utilityPhaseCAcPower</Id>
       <Description>Utility Phase C AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4069,7 +4102,10 @@ limitations under the License.
       <Id>utilityPhaseCBasicAcQuantities</Id>
       <Description>Utility Phase C Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4125,7 +4161,10 @@ limitations under the License.
       <Id>utilityPhaseBAcReactivePower</Id>
       <Description>Utility Phase B AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4170,7 +4209,10 @@ limitations under the License.
       <Id>utilityPhaseBAcPower</Id>
       <Description>Utility Phase B AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4205,7 +4247,10 @@ limitations under the License.
       <Id>utilityPhaseBBasicAcQuantities</Id>
       <Description>Utility Phase B Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4261,7 +4306,10 @@ limitations under the License.
       <Id>utilityPhaseAAcReactivePower</Id>
       <Description>Utility Phase A AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4307,7 +4355,10 @@ limitations under the License.
       <Id>utilityPhaseAAcPower</Id>
       <Description>Utility Phase A AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4342,7 +4393,10 @@ limitations under the License.
       <Id>utilityPhaseABasicAcQuantities</Id>
       <Description>Utility Phase A Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4398,7 +4452,10 @@ limitations under the License.
       <Id>utilityTotalAcReactivePower</Id>
       <Description>Utility Total AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4444,7 +4501,10 @@ limitations under the License.
       <Id>utilityTotalAcPower</Id>
       <Description>Utility Total AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4479,7 +4539,10 @@ limitations under the License.
       <Id>utilityAverageBasicAcQuantities</Id>
       <Description>Utility Average Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4538,6 +4601,7 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -4573,7 +4637,10 @@ limitations under the License.
       <Id>generatorPhaseCAcReactivePower</Id>
       <Description>Generator Phase C AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4619,7 +4686,10 @@ limitations under the License.
       <Id>generatorPhaseCAcPower</Id>
       <Description>Generator Phase C AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4654,7 +4724,10 @@ limitations under the License.
       <Id>generatorPhaseCBasicAcQuantities</Id>
       <Description>Generator Phase C Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4710,7 +4783,10 @@ limitations under the License.
       <Id>generatorPhaseBAcReactivePower</Id>
       <Description>Generator Phase B AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4756,7 +4832,10 @@ limitations under the License.
       <Id>generatorPhaseBAcPower</Id>
       <Description>Generator Phase B AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4791,7 +4870,10 @@ limitations under the License.
       <Id>generatorPhaseBBasicAcQuantities</Id>
       <Description>Generator Phase B Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4847,7 +4929,10 @@ limitations under the License.
       <Id>generatorPhaseAAcReactivePower</Id>
       <Description>Generator Phase A AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4893,7 +4978,10 @@ limitations under the License.
       <Id>generatorPhaseAAcPower</Id>
       <Description>Generator Phase A AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4928,7 +5016,10 @@ limitations under the License.
       <Id>generatorPhaseABasicAcQuantities</Id>
       <Description>Generator Phase A Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -4984,7 +5075,10 @@ limitations under the License.
       <Id>generatorTotalAcReactivePower</Id>
       <Description>Generator Total AC Reactive Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5030,7 +5124,10 @@ limitations under the License.
       <Id>generatorTotalAcPower</Id>
       <Description>Generator Total AC Power</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5065,7 +5162,10 @@ limitations under the License.
       <Id>generatorAverageBasicAcQuantities</Id>
       <Description>Generator Average Basic AC Quantities</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5121,7 +5221,10 @@ limitations under the License.
       <Id>isoCommandedAddress</Id>
       <Description>ISO Commanded Address</Description>
       <Type>ISO</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5257,6 +5360,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5315,6 +5419,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5382,7 +5487,10 @@ limitations under the License.
       <Id>maretronProprietaryDcBreakerCurrent</Id>
       <Description>Maretron: Proprietary DC Breaker Current</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5469,7 +5577,10 @@ limitations under the License.
       <Id>airmarBootStateAcknowledgment</Id>
       <Description>Airmar: Boot State Acknowledgment</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5525,7 +5636,10 @@ limitations under the License.
       <Id>lowranceTemperature</Id>
       <Description>Lowrance: Temperature</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5599,6 +5713,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5703,7 +5818,10 @@ limitations under the License.
       <Id>airmarBootStateRequest</Id>
       <Description>Airmar: Boot State Request</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5748,7 +5866,10 @@ limitations under the License.
       <Id>airmarAccessLevel</Id>
       <Description>Airmar: Access Level</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -5840,6 +5961,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5890,6 +6012,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -5993,6 +6116,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6043,6 +6167,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6093,6 +6218,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6143,6 +6269,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6193,6 +6320,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6283,6 +6411,7 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6364,6 +6493,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6414,6 +6544,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6464,6 +6595,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6548,6 +6680,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6637,7 +6770,10 @@ limitations under the License.
       <Id>seatalkPilotLockedHeading</Id>
       <Description>Seatalk: Pilot Locked Heading</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -6726,7 +6862,10 @@ limitations under the License.
       <Id>seatalkSilenceAlarm</Id>
       <Description>Seatalk: Silence Alarm</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -6808,6 +6947,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -6928,6 +7068,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7008,6 +7149,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7098,6 +7240,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7164,7 +7307,10 @@ limitations under the License.
       <Id>airmarSpeedPulseCount</Id>
       <Description>Airmar: Speed Pulse Count</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -7256,6 +7402,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7350,6 +7497,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7403,6 +7551,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -7428,6 +7577,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>12</Length>
       <RepeatingFields>2</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -7518,6 +7668,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -7605,6 +7756,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -7689,6 +7841,7 @@ limitations under the License.
       <Length>8</Length>
       <RepeatingFieldSet1>2</RepeatingFieldSet1>
       <RepeatingFieldSet2>1</RepeatingFieldSet2>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -7807,6 +7960,7 @@ limitations under the License.
       <Length>8</Length>
       <RepeatingFieldSet1>2</RepeatingFieldSet1>
       <RepeatingFieldSet2>2</RepeatingFieldSet2>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -7933,6 +8087,7 @@ limitations under the License.
       <Length>8</Length>
       <RepeatingFieldSet1>2</RepeatingFieldSet1>
       <RepeatingFieldSet2>2</RepeatingFieldSet2>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -8059,6 +8214,7 @@ limitations under the License.
       <Length>8</Length>
       <RepeatingFieldSet1>2</RepeatingFieldSet1>
       <RepeatingFieldSet2>2</RepeatingFieldSet2>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -8183,6 +8339,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>1</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -8219,6 +8376,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8277,6 +8435,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>21</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8402,6 +8561,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8495,6 +8655,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>7</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8588,6 +8749,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8660,6 +8822,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8742,6 +8905,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>3</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8815,6 +8979,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -8907,6 +9072,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9019,6 +9185,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>21</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9135,6 +9302,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9225,7 +9393,10 @@ limitations under the License.
       <Id>airmarAttitudeOffset</Id>
       <Description>Airmar: Attitude Offset</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -9324,6 +9495,7 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>24</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9529,6 +9701,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -9730,7 +9903,10 @@ limitations under the License.
       <Id>airmarSimulateMode</Id>
       <Description>Airmar: Simulate Mode</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -9808,7 +9984,10 @@ limitations under the License.
       <Id>airmarCalibrateDepth</Id>
       <Description>Airmar: Calibrate Depth</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -9888,7 +10067,10 @@ limitations under the License.
       <Id>airmarCalibrateSpeed</Id>
       <Description>Airmar: Calibrate Speed</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>12</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -9980,7 +10162,10 @@ limitations under the License.
       <Id>airmarCalibrateTemperature</Id>
       <Description>Airmar: Calibrate Temperature</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -10071,7 +10256,10 @@ limitations under the License.
       <Id>airmarSpeedFilter</Id>
       <Description>Airmar: Speed Filter</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -10173,7 +10361,10 @@ limitations under the License.
       <Id>airmarTemperatureFilter</Id>
       <Description>Airmar: Temperature Filter</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -10275,7 +10466,10 @@ limitations under the License.
       <Id>airmarNmea2000Options</Id>
       <Description>Airmar: NMEA 2000 options</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>6</Length>
       <RepeatingFields>2</RepeatingFields>
       <Fields>
@@ -10358,6 +10552,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>4</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -10416,6 +10611,7 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -10510,6 +10706,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -10531,7 +10728,10 @@ limitations under the License.
       <Id>alert</Id>
       <Description>Alert</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>28</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -10763,7 +10963,10 @@ limitations under the License.
       <Id>alertResponse</Id>
       <Description>Alert Response</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>25</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -10897,7 +11100,10 @@ limitations under the License.
       <Id>alertText</Id>
       <Description>Alert Text</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>49</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11032,6 +11238,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -11046,6 +11253,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -11060,6 +11268,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -11073,6 +11282,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11136,7 +11346,10 @@ limitations under the License.
       <Description>Heartbeat</Description>
       <Explanation>Reception of this PGN confirms that a device is still present on the network.  Reception of this PGN may also be used to maintain an address to NAME association table within the receiving device.  The transmission interval may be used by the receiving unit to determine the time-out value for the connection supervision.  The value contained in Field 1 of this PGN reflects the PGN’s current Transmission Interval. Changes to this PGN’s Transmission Interval shall be reflected in Field 1.  The transmission interval can only be changed by using the Request Group Function PGN 126208 with no pairs of request parameters provided. Field 3 of the Request Group Function PGN 126208 may contain values between 1,000ms and 60,000ms.  This PGN cannot be requested by the ISO Request PGN 059904 or Request Group Function PGN 126208. In Request Group Function PGN 126208, setting Field 3 to a value of 0xFFFF FFFF and Field 4 to a value of 0xFFFF: “Transmit now without changing timing variables.” is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for additional context.</Explanation>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11217,6 +11430,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>134</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11309,6 +11523,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>42</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11351,7 +11566,10 @@ If a Request Group Function (PGN 126208) requesting this PGN (127233) is receive
 If the MOB Emitter ID requested is not considered a valid MOB Emitter ID by the receiving device, then the appropriate response would be the Acknowledge Group Function (PGN 126208), containing the error state for PGN error code (Field 3) of “0x3 = Access denied.” And the requested MOB Emitter ID field parameter error code (Field 6) of “0x3 = Requested or command parameter out-of- range;”.
 The Default update rate of this PGN is autonomous, as it is dependant upon notification rates of MOB devices.</Explanation>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>35</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -11563,6 +11781,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>21</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>250</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11779,6 +11998,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11855,6 +12075,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11933,6 +12154,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11978,6 +12200,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -12024,6 +12247,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>7</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12081,6 +12305,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12146,6 +12371,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12212,6 +12438,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12383,6 +12610,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12470,6 +12698,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12528,6 +12757,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12597,6 +12827,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>52</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12648,7 +12879,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>loadControllerConnectionStateControl</Id>
       <Description>Load Controller Connection State/Control</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -12739,7 +12973,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>binarySwitchBankStatus</Id>
       <Description>Binary Switch Bank Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -13068,7 +13305,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>switchBankControl</Id>
       <Description>Switch Bank Control</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -13400,6 +13640,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>56</Length>
       <RepeatingFields>10</RepeatingFields>
+      <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -13544,6 +13785,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>56</Length>
       <RepeatingFields>10</RepeatingFields>
+      <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -13689,6 +13931,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>2500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -13755,6 +13998,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>11</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -13851,6 +14095,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -13946,6 +14191,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -14013,6 +14259,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>4</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -14091,6 +14338,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -14221,6 +14469,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -14317,6 +14566,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -14363,6 +14613,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -14477,6 +14728,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -14545,7 +14797,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>acPowerCurrentPhaseA</Id>
       <Description>AC Power / Current - Phase A</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14599,7 +14854,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>acPowerCurrentPhaseB</Id>
       <Description>AC Power / Current - Phase B</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14653,7 +14911,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>acPowerCurrentPhaseC</Id>
       <Description>AC Power / Current - Phase C</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14707,7 +14968,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>converterStatus</Id>
       <Description>Converter Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14803,7 +15067,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>dcVoltageCurrent</Id>
       <Description>DC Voltage/Current</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14868,7 +15135,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>leewayAngle</Id>
       <Description>Leeway Angle</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -14911,7 +15181,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>thrusterControlStatus</Id>
       <Description>Thruster Control Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15021,7 +15294,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>thrusterInformation</Id>
       <Description>Thruster Information</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15098,7 +15374,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>thrusterMotorStatus</Id>
       <Description>Thruster Motor Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15178,6 +15457,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -15254,6 +15534,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -15314,6 +15595,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -15375,6 +15657,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>27</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -15553,7 +15836,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>windlassControlStatus</Id>
       <Description>Windlass Control Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>7</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15716,7 +16002,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>anchorWindlassOperatingStatus</Id>
       <Description>Anchor Windlass Operating Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15836,7 +16125,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>anchorWindlassMonitoringStatus</Id>
       <Description>Anchor Windlass Monitoring Status</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -15926,6 +16218,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -15961,6 +16254,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>250</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -16040,6 +16334,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -16094,6 +16389,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -16177,6 +16473,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>43</Length>
       <RepeatingFields>3</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -16393,6 +16690,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -16439,6 +16737,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>28</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -16672,6 +16971,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -16928,6 +17228,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>33</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -17226,6 +17527,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>60</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -17488,6 +17790,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>20</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>10000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -17557,6 +17860,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>37</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -17686,6 +17990,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -17761,6 +18066,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>34</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -17941,6 +18247,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>233</Length>
       <RepeatingFields>4</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -18077,6 +18384,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -18149,6 +18457,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -18220,6 +18529,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -18343,6 +18653,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -18467,6 +18778,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -18556,6 +18868,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>233</Length>
       <RepeatingFields>7</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -18690,6 +19003,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -18877,6 +19191,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -18973,6 +19288,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -19089,6 +19405,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -19146,6 +19463,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -19243,6 +19561,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -19370,6 +19689,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -19447,6 +19767,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -19604,6 +19925,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -19751,6 +20073,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -19890,6 +20213,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>26</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20064,6 +20388,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>24</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20294,6 +20619,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20427,6 +20753,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20542,6 +20869,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20641,6 +20969,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20834,6 +21163,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20914,6 +21244,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20992,6 +21323,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -21110,6 +21442,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -21188,6 +21521,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>8</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -21327,6 +21661,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>23</Length>
       <RepeatingFields>3</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -21425,6 +21760,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>4</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -21533,6 +21869,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -21760,6 +22097,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -21959,6 +22297,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -22183,6 +22522,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -22400,6 +22740,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>27</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -22483,6 +22824,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>34</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -22668,6 +23010,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -22683,6 +23026,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -22701,6 +23045,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>9</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -22841,6 +23186,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>6</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -22948,6 +23294,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23088,6 +23435,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>4</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23199,6 +23547,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23286,6 +23635,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>6</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23393,6 +23743,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23480,6 +23831,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23557,6 +23909,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23624,6 +23977,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>2</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23711,6 +24065,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>4</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23816,6 +24171,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23882,6 +24238,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23949,6 +24306,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -24028,6 +24386,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>2000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -24094,6 +24453,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -24160,6 +24520,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>2000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -24214,6 +24575,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -24265,7 +24627,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>temperatureExtendedRange</Id>
       <Description>Temperature Extended Range</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -24334,6 +24699,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>20</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -24468,6 +24834,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>22</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -24592,6 +24959,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -24741,6 +25109,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>30</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -24922,6 +25291,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -25137,6 +25507,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25146,7 +25517,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>watermakerInputSettingAndStatus</Id>
       <Description>Watermaker Input Setting and Status</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>24</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -25422,6 +25796,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25626,6 +26001,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -25796,6 +26172,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -25919,6 +26296,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26022,6 +26400,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>10</RepeatingFields>
@@ -26167,6 +26546,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -26239,6 +26619,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>2</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>200</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -26276,6 +26657,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -26401,6 +26783,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
+      <TransmissionInterval>250</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -26485,6 +26868,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26564,6 +26948,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>2</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26622,6 +27007,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -26689,6 +27075,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>4</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26770,6 +27157,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -26835,6 +27223,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>3</RepeatingFields>
@@ -26919,6 +27308,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>233</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -26987,6 +27377,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>2</RepeatingFields>
@@ -27148,6 +27539,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27175,6 +27567,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27279,6 +27672,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27424,6 +27818,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27517,6 +27912,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27611,6 +28007,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27724,6 +28121,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27818,6 +28216,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -27921,6 +28320,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28066,6 +28466,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28214,6 +28615,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28317,6 +28719,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28420,6 +28823,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28523,6 +28927,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28656,6 +29061,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28749,6 +29155,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -28847,7 +29254,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>sonichubVolume</Id>
       <Description>SonicHub: Volume</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -28950,6 +29360,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29033,6 +29444,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29129,6 +29541,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29232,6 +29645,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>64</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29365,6 +29779,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29423,6 +29838,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29553,6 +29969,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29683,6 +30100,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>223</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29762,6 +30180,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29811,6 +30230,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29891,6 +30311,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -29991,6 +30412,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30113,6 +30535,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30290,6 +30713,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30382,6 +30806,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30474,6 +30899,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30566,6 +30992,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30648,6 +31075,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30740,6 +31168,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30834,6 +31263,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -30958,6 +31388,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31060,6 +31491,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31152,6 +31584,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31255,6 +31688,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31407,6 +31841,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31561,6 +31996,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>5</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31644,6 +32080,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31757,6 +32194,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31870,6 +32308,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -31983,6 +32422,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>5</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32067,6 +32507,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32150,6 +32591,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32233,6 +32675,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32316,6 +32759,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>32</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32398,6 +32842,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32543,7 +32988,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>maretronProprietaryTemperatureHighRange</Id>
       <Description>Maretron: Proprietary Temperature High Range</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -32648,6 +33096,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32729,6 +33178,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32830,6 +33280,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>10</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32941,6 +33392,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -32992,6 +33444,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33043,6 +33496,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33094,6 +33548,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33145,6 +33600,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33195,6 +33651,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33333,7 +33790,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>maretronSwitchStatusCounter</Id>
       <Description>Maretron: Switch Status Counter</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>16</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -33478,6 +33938,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33523,7 +33984,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>maretronSwitchStatusTimer</Id>
       <Description>Maretron: Switch Status Timer</Description>
       <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>23</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
@@ -33671,6 +34135,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33722,6 +34187,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33773,6 +34239,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33824,6 +34291,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>29</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -33937,6 +34405,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>29</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34077,6 +34546,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>37</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34289,6 +34759,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34396,6 +34867,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34446,6 +34918,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34571,6 +35044,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34622,6 +35096,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34748,6 +35223,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -34874,6 +35350,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35036,6 +35513,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35087,6 +35565,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>0</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35189,6 +35668,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35325,6 +35805,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35447,6 +35928,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35559,6 +36041,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>12</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35696,6 +36179,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35787,6 +36271,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>30</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35884,6 +36369,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
       <RepeatingFields>0</RepeatingFields>
@@ -35981,6 +36467,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <RepeatingFields>0</RepeatingFields>

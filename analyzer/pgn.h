@@ -45,7 +45,8 @@ typedef struct
   uint32_t    size; /* Size in bits. All fields are contiguous in message; use 'reserved' fields to fill in empty bits. */
   const char *unit; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) */
   const char *description;
-  int32_t     offset; /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
+
+  int32_t offset;     /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
                        *    of two's complement as used by NMEA 2000.
                        *    See http://en.wikipedia.org/wiki/Offset_binary
                        */
@@ -729,7 +730,8 @@ typedef enum PacketComplete
   PACKET_FIELD_LENGTHS_UNKNOWN = 2,
   PACKET_RESOLUTION_UNKNOWN    = 4,
   PACKET_LOOKUPS_UNKNOWN       = 8,
-  PACKET_NOT_SEEN              = 16
+  PACKET_NOT_SEEN              = 16,
+  PACKET_INTERVAL_UNKNOWN      = 32
 } PacketComplete;
 
 #define PACKET_INCOMPLETE (PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN)
@@ -755,6 +757,7 @@ typedef struct
   char       *camelDescription; /* Filled by C, no need to set in initializers. */
   bool        fallback;         /* true = this is a catch-all for unknown PGNs */
   const char *explanation;      /* Preferably the NMEA 2000 explanation from the NMEA PGN field list */
+  uint16_t    interval;         /* Milliseconds between transmissions, standard. 0 is: not known, UINT16_MAX = never */
 } Pgn;
 
 // Returns the first pgn that matches the given id, or NULL if not found.
@@ -820,6 +823,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(24),
       PGN_FIELD("PGN", "Parameter Group Number of requested information"),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. "
                     "This message is the possible response to acknowledge the reception of a “normal broadcast” message or the "
                     "response to a specific command to indicate compliance or failure."}
@@ -832,6 +836,7 @@ Pgn pgnList[] = {
      3,
      0,
      {PGN_FIELD("PGN", NULL), END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "As defined by ISO, this message has a data length of 3 bytes with no padding added to complete the single "
                     "frame. The appropriate response to this message is based on the PGN being requested, and whether the receiver "
                     "supports the requested PGN."}
@@ -860,6 +865,7 @@ Pgn pgnList[] = {
      8,
      1,
      {UINT8_FIELD("SID"), SIMPLE_FIELD("Data", BYTES(7)), END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have "
                     "9 or more data bytes. This PGN represents a single packet of a multipacket message."}
 
@@ -879,6 +885,7 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("Packets reply", BYTES(1), "packets sent in response to CTS"), // This one is still mysterious to me...
       PGN_FIELD("PGN", NULL),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN’s role in the transport process is to prepare the receiver "
                     "for the fact that this sender wants to transmit a long message. The receiver will respond with CTS."}
@@ -896,6 +903,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       PGN_FIELD("PGN", NULL),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN’s role in the transport process is to signal to the sender "
                     "that the receive is ready to receive a number of frames."}
@@ -913,6 +921,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       PGN_FIELD("PGN", NULL),
       END_OF_FIELDS},
+     .interval = UINT16_MAX,
      .explanation
      = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that "
        "have 9 or more data bytes. This PGN’s role in the transport process is to mark the end of the message."}
@@ -930,6 +939,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       PGN_FIELD("PGN", NULL),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce a broadcast "
                     "of a long message spanning multiple frames."}
@@ -946,6 +956,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       PGN_FIELD("PGN", NULL),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce an abort "
                     "of a long message spanning multiple frames."}
@@ -968,6 +979,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Industry Group", 3, INDUSTRY_CODE),
       RESERVED_FIELD(1),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "This network management message is used to claim network address, reply to devices requesting the claimed "
                     "address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group "
                     "Function. This PGN contains several fields that are requestable, either independently or in any combination."}
@@ -1713,6 +1725,7 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", "Parameter value, variable length"),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "This is the Request variation of this group function PGN. The receiver shall respond by sending the requested "
                     "PGN, at the desired transmission interval."}
 
@@ -1731,6 +1744,7 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", "Parameter value, variable length"),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "This is the Command variation of this group function PGN. This instructs the receiver to modify its internal "
                     "state for the passed parameters. The receiver shall reply with an Acknowledge reply."}
 
@@ -1748,6 +1762,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("# of Parameters", 8),
       LOOKUP_FIELD("Parameter", 4, PARAMETER_FIELD),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will "
                     "attempt to perform the command (change its parameters) and reply positively or negatively."}
 
@@ -1768,6 +1783,7 @@ Pgn pgnList[] = {
       VARIABLE_FIELD("Selection Value", NULL),
       UINT8_FIELD("Parameter"),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "This is the Read Fields variation of this group function PGN. The receiver shall respond by sending a Read "
                     "Reply variation of this PGN, containing the desired values."}
 
@@ -1789,6 +1805,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Parameter"),
       VARIABLE_FIELD("Value", NULL),
       END_OF_FIELDS},
+     .interval = UINT16_MAX,
      .explanation
      = "This is the Read Fields Reply variation of this group function PGN. The receiver is responding to a Read Fields request."}
 
@@ -1810,6 +1827,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Parameter"),
       VARIABLE_FIELD("Value", NULL),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "This is the Write Fields variation of this group function PGN. The receiver shall modify internal state and "
                     "reply with a Write Fields Reply message."}
 
@@ -1831,6 +1849,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Parameter"),
       VARIABLE_FIELD("Value", NULL),
       END_OF_FIELDS},
+     .interval = UINT16_MAX,
      .explanation
      = "This is the Write Fields Reply variation of this group function PGN. The receiver is responding to a Write Fields request."}
 
@@ -1843,7 +1862,8 @@ Pgn pgnList[] = {
      PACKET_FAST,
      8,
      1,
-     {LOOKUP_FIELD("Function Code", BYTES(1), PGN_LIST_FUNCTION), PGN_FIELD("PGN", NULL), END_OF_FIELDS}}
+     {LOOKUP_FIELD("Function Code", BYTES(1), PGN_LIST_FUNCTION), PGN_FIELD("PGN", NULL), END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
@@ -2301,6 +2321,7 @@ Pgn pgnList[] = {
       DATE_FIELD("Date"),
       TIME_FIELD("Time"),
       END_OF_FIELDS},
+     .interval    = 1000,
      .explanation = "The purpose of this PGN is twofold: To provide a regular transmission of UTC time and date. To provide "
                     "synchronism for measurement data."}
 
@@ -2352,6 +2373,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Certification Level"),
       UINT8_FIELD("Load Equivalency"),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "Provides product information onto the network that could be important for determining quality of data coming "
                     "from this product."}
 
@@ -2366,6 +2388,7 @@ Pgn pgnList[] = {
       STRINGLAU_FIELD("Installation Description #2"),
       STRINGLAU_FIELD("Manufacturer Information"),
       END_OF_FIELDS},
+     .interval    = UINT16_MAX,
      .explanation = "Free-form alphanumeric fields describing the installation (e.g., starboard engine room location) of the "
                     "device and installation notes (e.g., calibration data)."}
 
@@ -2451,7 +2474,8 @@ Pgn pgnList[] = {
       ROTATION_FIX16_FIELD("Rate of Turn Order"),
       DISTANCE_FIX16_M_FIELD("Off-Track Limit", NULL),
       ANGLE_U16_FIELD("Vessel Heading", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 250}
 
     /* http://www.maretron.com/support/manuals/RAA100UM_1.0.pdf */
     ,
@@ -2467,7 +2491,8 @@ Pgn pgnList[] = {
       ANGLE_I16_FIELD("Angle Order", NULL),
       ANGLE_I16_FIELD("Position", NULL),
       RESERVED_FIELD(BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 100}
 
     /* NMEA + Simrad AT10 */
     /* http://www.maretron.com/support/manuals/SSC200UM_1.7.pdf */
@@ -2485,7 +2510,8 @@ Pgn pgnList[] = {
       ANGLE_I16_FIELD("Variation", NULL),
       LOOKUP_FIELD("Reference", 2, DIRECTION_REFERENCE),
       RESERVED_FIELD(6),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 100}
 
     /* http://www.maretron.com/support/manuals/SSC200UM_1.7.pdf */
     /* Lengths observed from Simrad RC42 */
@@ -2496,7 +2522,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {UINT8_FIELD("SID"), ROTATION_FIX32_FIELD("Rate"), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS}}
+     {UINT8_FIELD("SID"), ROTATION_FIX32_FIELD("Rate"), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS},
+     .interval = 100}
 
     ,
     {"Heave",
@@ -2518,7 +2545,8 @@ Pgn pgnList[] = {
       ANGLE_I16_FIELD("Yaw", NULL),
       ANGLE_I16_FIELD("Pitch", NULL),
       ANGLE_I16_FIELD("Roll", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     /* NMEA + Simrad AT10 */
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
@@ -2534,7 +2562,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       DATE_FIELD("Age of service"),
       ANGLE_I16_FIELD("Variation", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     /* Engine group PGNs all derived PGN Numbers from              */
     /* http://www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf  */
@@ -2552,7 +2581,8 @@ Pgn pgnList[] = {
       PRESSURE_UFIX16_HPA_FIELD("Boost Pressure"),
       SIMPLE_SIGNED_FIELD("Tilt/Trim", BYTES(1)),
       RESERVED_FIELD(BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 100}
 
     // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
     ,
@@ -2576,7 +2606,8 @@ Pgn pgnList[] = {
       LOOKUP_BITFIELD("Discrete Status 2", BYTES(2), ENGINE_STATUS_2),
       PERCENTAGE_I8_FIELD("Engine Load"),
       PERCENTAGE_U8_FIELD("Engine Torque"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 500}
 
     ,
     {"Transmission Parameters, Dynamic",
@@ -2592,7 +2623,8 @@ Pgn pgnList[] = {
       TEMPERATURE_HIGH_FIELD("Oil temperature"),
       UINT8_FIELD("Discrete Status 1"),
       RESERVED_FIELD(BYTES(1)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 100}
 
     ,
     {"Trip Parameters, Vessel",
@@ -2605,7 +2637,8 @@ Pgn pgnList[] = {
       LENGTH_UFIX32_CM_FIELD("Distance to Empty", NULL),
       VOLUME_UFIX16_L_FIELD("Estimated Fuel Remaining"),
       TIME_UFIX32_MS_FIELD("Trip Run Time", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Trip Parameters, Engine",
@@ -2619,7 +2652,8 @@ Pgn pgnList[] = {
       VOLUMETRIC_FLOW_FIELD("Fuel Rate, Average"),
       VOLUMETRIC_FLOW_FIELD("Fuel Rate, Economy"),
       VOLUMETRIC_FLOW_FIELD("Instantaneous Fuel Economy"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Engine Parameters, Static",
@@ -2632,7 +2666,8 @@ Pgn pgnList[] = {
       ROTATION_UFIX16_RPM_FIELD("Rated Engine Speed", NULL),
       STRING_FIX_FIELD("VIN", BYTES(17)),
       STRING_FIX_FIELD("Software ID", BYTES(32)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Load Controller Connection State/Control",
@@ -2688,6 +2723,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Indicator27", 2, OFF_ON),
       LOOKUP_FIELD("Indicator28", 2, OFF_ON),
       END_OF_FIELDS}},
+
     {"Switch Bank Control",
      127502,
      PACKET_COMPLETE,
@@ -2747,7 +2783,8 @@ Pgn pgnList[] = {
       POWER_U32_FIELD("Real Power"),
       POWER_U32_VAR_FIELD("Reactive Power"),
       POWER_FACTOR_U8_FIELD,
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1500}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
@@ -2769,7 +2806,8 @@ Pgn pgnList[] = {
       POWER_U32_FIELD("Real Power"),
       POWER_U32_VAR_FIELD("Reactive Power"),
       POWER_FACTOR_U8_FIELD,
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1500}
 
     /* http://www.maretron.com/support/manuals/TLA100UM_1.2.pdf */
     /* Observed from EP65R */
@@ -2785,7 +2823,8 @@ Pgn pgnList[] = {
       PERCENTAGE_U16_FIELD("Level"),
       VOLUME_UFIX32_DL_FIELD("Capacity"),
       RESERVED_FIELD(BYTES(1)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 2500}
 
     ,
     {"DC Detailed Status",
@@ -2802,7 +2841,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Time Remaining", BYTES(2)),
       VOLTAGE_FIELD("Ripple Voltage", 0.01),
       ELECTRIC_CHARGE_UFIX16_AH("Amp Hours"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1500}
 
     // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
     ,
@@ -2820,7 +2860,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Equalization Pending", 2, OFF_ON),
       RESERVED_FIELD(4),
       SIMPLE_FIELD("Equalization Time Remaining", BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1500}
 
     ,
     {"Battery Status",
@@ -2834,7 +2875,8 @@ Pgn pgnList[] = {
       CURRENT_FIX16_DA_FIELD("Current"),
       TEMPERATURE_FIELD("Temperature"),
       UINT8_FIELD("SID"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1500}
 
     /* https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf */
     ,
@@ -2850,7 +2892,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Operating State", 4, INVERTER_STATE),
       LOOKUP_FIELD("Inverter Enable", 2, OFF_ON),
       RESERVED_FIELD(2),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1500}
 
     ,
     {"Charger Configuration Status",
@@ -2870,7 +2913,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Equalize One Time Enable/Disable", 4),
       SIMPLE_FIELD("Over Charge Enable/Disable", 4),
       SIMPLE_FIELD("Equalize Time", BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Inverter Configuration Status",
@@ -2887,7 +2931,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Load Sense Enable/Disable"),
       UINT8_FIELD("Load Sense Power Threshold"),
       UINT8_FIELD("Load Sense Interval"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AGS Configuration Status",
@@ -2896,7 +2941,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {INSTANCE_FIELD, UINT8_FIELD("Generator Instance"), UINT8_FIELD("AGS Mode"), END_OF_FIELDS}}
+     {INSTANCE_FIELD, UINT8_FIELD("Generator Instance"), UINT8_FIELD("AGS Mode"), END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     /* #143, @ksltd writes that it is definitely 10 bytes and that
      * nominal voltage is a lookup, Peukert Exponent and Charge Efficiency
@@ -2925,7 +2971,8 @@ Pgn pgnList[] = {
       ELECTRIC_CHARGE_UFIX16_AH("Capacity"),
       PEUKERT_FIELD("Peukert Exponent"),
       PERCENTAGE_U8_FIELD("Charge Efficiency Factor"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AGS Status",
@@ -2940,7 +2987,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Generator State"),
       UINT8_FIELD("Generator On Reason"),
       UINT8_FIELD("Generator Off Reason"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1500}
 
     ,
     {"AC Power / Current - Phase A",
@@ -3084,7 +3132,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Speed Water Referenced Type", BYTES(1), WATER_REFERENCE),
       SIMPLE_FIELD("Speed Direction", 4),
       RESERVED_FIELD(12),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
     ,
@@ -3098,7 +3147,8 @@ Pgn pgnList[] = {
       LENGTH_UFIX32_CM_FIELD("Depth", "Depth below transducer"),
       DISTANCE_FIX16_MM_FIELD("Offset", "Distance between transducer and surface (positive) or keel (negative)"),
       LENGTH_UFIX8_DAM_FIELD("Range", "Max measurement range"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     /* http://www.nmea.org/Assets/nmea-2000-digital-interface-white-paper.pdf */
     ,
@@ -3112,7 +3162,8 @@ Pgn pgnList[] = {
       TIME_FIELD("Time"),
       LENGTH_UFIX32_M_FIELD("Log", "Total cumulative distance"),
       LENGTH_UFIX32_M_FIELD("Trip Log", "Distance since last reset"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Tracked Target Data",
@@ -3136,7 +3187,8 @@ Pgn pgnList[] = {
       TIME_FIX32_MS_FIELD("TCPA", "negative = time elapsed since event, positive = time to go"),
       TIME_FIELD("UTC of Fix"),
       STRING_FIX_FIELD("Name", BYTES(FASTPACKET_MAX_SIZE)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     /* https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf */
@@ -3206,7 +3258,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {LATITUDE_I32_FIELD("Latitude"), LONGITUDE_I32_FIELD("Longitude"), END_OF_FIELDS}}
+     {LATITUDE_I32_FIELD("Latitude"), LONGITUDE_I32_FIELD("Longitude"), END_OF_FIELDS},
+     .interval = 100}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
@@ -3222,7 +3275,8 @@ Pgn pgnList[] = {
       ANGLE_U16_FIELD("COG", NULL),
       SPEED_U16_CM_FIELD("SOG"),
       RESERVED_FIELD(BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 250}
 
     ,
     {"Position Delta, Rapid Update",
@@ -3235,7 +3289,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Time Delta", BYTES(2)),
       SIMPLE_SIGNED_FIELD("Latitude Delta", BYTES(2)),
       SIMPLE_SIGNED_FIELD("Longitude Delta", BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 100}
 
     ,
     {"Altitude Delta, Rapid Update",
@@ -3251,7 +3306,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       ANGLE_U16_FIELD("COG", NULL),
       SIMPLE_SIGNED_FIELD("Altitude Delta", BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 100}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
@@ -3279,7 +3335,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Reference Station Type", 4, GNS),
       SIMPLE_FIELD("Reference Station ID", 12),
       TIME_UFIX16_CS_FIELD("Age of DGNSS Corrections", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Time & Date",
@@ -3288,7 +3345,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {DATE_FIELD("Date"), TIME_FIELD("Time"), TIME_FIX16_MIN_FIELD("Local Offset"), END_OF_FIELDS}}
+     {DATE_FIELD("Date"), TIME_FIELD("Time"), TIME_FIX16_MIN_FIELD("Local Offset"), END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"AIS Class A Position Report",
@@ -3319,7 +3377,8 @@ Pgn pgnList[] = {
       SPARE_FIELD(3),
       RESERVED_FIELD(5),
       UINT8_FIELD("Sequence ID"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Class B Position Report",
@@ -3352,7 +3411,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Can handle Msg 22", 1, YES_NO),
       LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
       LOOKUP_FIELD("AIS communication state", 1, AIS_COMMUNICATION_STATE),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Class B Extended Position Report",
@@ -3387,7 +3447,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
       RESERVED_FIELD(4),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Aids to Navigation (AtoN) Report",
@@ -3419,7 +3480,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(3),
       STRINGLAU_FIELD("AtoN Name"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Datum",
@@ -3440,7 +3502,8 @@ Pgn pgnList[] = {
                             "defined in IHO Publication S-60, Appendices B and C."
                             " First three chars are datum ID as per IHO tables."
                             " Fourth char is local datum subdivision code."),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 10000}
 
     ,
     {"User Datum",
@@ -3475,7 +3538,8 @@ Pgn pgnList[] = {
                             "4 character code from IHO Publication S-60,Appendices B and C."
                             " First three chars are datum ID as per IHO tables."
                             " Fourth char is local datum subdivision code."),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Cross Track Error",
@@ -3490,7 +3554,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Navigation Terminated", 2, YES_NO),
       DISTANCE_FIX32_CM_FIELD("XTE", NULL),
       RESERVED_FIELD(BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Navigation Data",
@@ -3514,7 +3579,8 @@ Pgn pgnList[] = {
       LATITUDE_I32_FIELD("Destination Latitude"),
       LONGITUDE_I32_FIELD("Destination Longitude"),
       SPEED_I16_CM_FIELD("Waypoint Closing Velocity"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Navigation - Route/WP Information",
@@ -3536,7 +3602,8 @@ Pgn pgnList[] = {
       STRINGVAR_FIELD("WP Name"),
       LATITUDE_I32_FIELD("WP Latitude"),
       LONGITUDE_I32_FIELD("WP Longitude"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Set & Drift, Rapid Update",
@@ -3550,7 +3617,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(6),
       ANGLE_U16_FIELD("Set", NULL),
       SPEED_U16_CM_FIELD("Drift"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Navigation - Route / Time to+from Mark",
@@ -3564,7 +3632,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Mark Type", 4, MARK_TYPE),
       RESERVED_FIELD(4),
       SIMPLE_FIELD("Mark ID", BYTES(4)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Bearing and Distance between two Marks",
@@ -3583,7 +3652,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Destination Mark Type", 4, MARK_TYPE),
       SIMPLE_FIELD("Origin Mark ID", BYTES(4)),
       SIMPLE_FIELD("Destination Mark ID", BYTES(4)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     /* Haven't seen this yet (no way to send PGN 059904 yet) so lengths unknown */
@@ -3604,7 +3674,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Max Correction Age", BYTES(2)),
       LENGTH_UFIX16_CM_FIELD("Antenna Altitude for 2D Mode"),
       LOOKUP_FIELD("Use Antenna Altitude for 2D Mode", 2, YES_NO),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
@@ -3621,7 +3692,8 @@ Pgn pgnList[] = {
       DILUTION_OF_PRECISION_FIX16_FIELD("HDOP", "Horizontal dilution of precision"),
       DILUTION_OF_PRECISION_FIX16_FIELD("VDOP", "Vertical dilution of precision"),
       DILUTION_OF_PRECISION_FIX16_FIELD("TDOP", "Time dilution of precision"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"GNSS Sats in View",
@@ -3641,7 +3713,8 @@ Pgn pgnList[] = {
       INT32_FIELD("Range residuals", NULL),
       LOOKUP_FIELD("Status", 4, SATELLITE_STATUS),
       RESERVED_FIELD(4),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"GPS Almanac Data",
@@ -3684,7 +3757,8 @@ Pgn pgnList[] = {
       SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 1", 11, POW2NEG(20), "s", "'a~f0~' in table 20-VI in ICD-GPS-200"),
       SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 2", 11, POW2NEG(38), "s/s", "'a~f1~' in table 20-VI in ICD-GPS-200"),
       RESERVED_FIELD(2),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"GNSS Pseudorange Noise Statistics",
@@ -3701,7 +3775,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("STD of Lat Error"),
       UINT8_FIELD("STD of Lon Error"),
       UINT8_FIELD("STD of Alt Error"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"GNSS RAIM Output",
@@ -3720,7 +3795,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Probability of missed detection"),
       UINT8_FIELD("Estimate of pseudorange bias"),
       UINT8_FIELD("Std Deviation of bias"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"GNSS RAIM Settings",
@@ -3733,7 +3809,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Probability of False Alarm"),
       UINT8_FIELD("Probability of Missed Detection"),
       UINT8_FIELD("Pseudorange Residual Filtering Time Constant"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"GNSS Pseudorange Error Statistics",
@@ -3750,7 +3827,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Std Dev Lat Error"),
       UINT8_FIELD("Std Dev Lon Error"),
       UINT8_FIELD("Std Dev Alt Error"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"DGNSS Corrections",
@@ -3770,7 +3848,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("RRC"),
       UINT8_FIELD("UDRE"),
       UINT8_FIELD("IOD"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"GNSS Differential Correction Receiver Interface",
@@ -3785,7 +3864,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Serial Interface Detection Mode"),
       UINT8_FIELD("Differential Source"),
       UINT8_FIELD("Differential Operation Mode"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"GNSS Differential Correction Receiver Signal",
@@ -3808,7 +3888,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Differential Source"),
       UINT8_FIELD("Time since Last Sat Differential Sync"),
       UINT8_FIELD("Satellite Service ID No."),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"GLONASS Almanac Data",
@@ -3830,7 +3911,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("(delta)inA"),
       UINT8_FIELD("tcA"),
       UINT8_FIELD("tnA"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS DGNSS Broadcast Binary Message",
@@ -3851,7 +3933,8 @@ Pgn pgnList[] = {
       SPARE_FIELD(5),
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS UTC and Date Report",
@@ -3877,7 +3960,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
       BINARY_FIELD("Spare", BYTES(1), NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     /* http://www.navcen.uscg.gov/enav/ais/AIS_messages.htm */
     ,
@@ -3907,7 +3991,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
       RESERVED_FIELD(1),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Addressed Binary Message",
@@ -3928,7 +4013,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(1),
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", BYTES(8), NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Acknowledge",
@@ -3947,7 +4033,8 @@ Pgn pgnList[] = {
       BINARY_FIELD("Sequence Number for ID 1", 2, "reserved"),
       RESERVED_FIELD(6),
       BINARY_FIELD("Sequence Number for ID n", 2, "reserved"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Binary Broadcast Message",
@@ -3964,7 +4051,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(2),
       SIMPLE_FIELD("Number of Bits in Binary Data Field", BYTES(2)),
       BINARY_FIELD("Binary Data", BYTES(FASTPACKET_MAX_SIZE), NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS SAR Aircraft Position Report",
@@ -3991,7 +4079,8 @@ Pgn pgnList[] = {
       BINARY_FIELD("Reserved for Regional Applications", BYTES(1), NULL),
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
       RESERVED_FIELD(7),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Radio Frequency/Mode/Power",
@@ -4006,7 +4095,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Tx Power"),
       UINT8_FIELD("Mode"),
       UINT8_FIELD("Channel Bandwidth"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS UTC/Date Inquiry",
@@ -4021,7 +4111,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(3),
       MMSI_FIELD("Destination ID"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     // Derived from https://navcen.uscg.gov/ais-addressed-safety-related-message12
@@ -4041,7 +4132,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Retransmit flag", 1),
       RESERVED_FIELD(7),
       STRING_FIX_FIELD("Safety Related Text", BYTES(117)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     // Derived from https://www.navcen.uscg.gov/ais-safety-related-broadcast-message14
@@ -4057,7 +4149,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(3),
       STRING_FIX_FIELD("Safety Related Text", BYTES(162)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Interrogation",
@@ -4078,7 +4171,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Message ID B"),
       SIMPLE_FIELD("Slot Offset B", 14),
       RESERVED_FIELD(2),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Assignment Mode Command",
@@ -4095,7 +4189,8 @@ Pgn pgnList[] = {
       MMSI_FIELD("Destination ID"),
       UINT16_FIELD("Offset"),
       UINT16_FIELD("Increment"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Data Link Management Message",
@@ -4113,7 +4208,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Number of Slots"),
       UINT8_FIELD("Timeout"),
       UINT8_FIELD("Increment"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Channel Management",
@@ -4142,7 +4238,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Channel B Bandwidth", 7),
       RESERVED_FIELD(2),
       UINT8_FIELD("Transitional Zone Size"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Class B Group Assignment",
@@ -4168,7 +4265,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(2),
       LOOKUP_FIELD("Reporting Interval", 4, REPORTING_INTERVAL),
       SIMPLE_FIELD("Quiet Time", 4),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     /* http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf */
     /* This is like the worst PGN ever.
@@ -4211,7 +4309,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("DSC Equipment Assigned Message ID", BYTES(2)),
       LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
       STRINGLAU_FIELD("DSC Expansion Field Data"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"DSC Call Information",
@@ -4242,7 +4341,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("DSC Equipment Assigned Message ID", BYTES(2)),
       LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
       STRINGLAU_FIELD("DSC Expansion Field Data"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Class B static data (msg 24 Part A)",
@@ -4258,7 +4358,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(3),
       UINT8_FIELD("Sequence ID"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Class B static data (msg 24 Part B)",
@@ -4283,7 +4384,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(3),
       UINT8_FIELD("Sequence ID"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Label", 130060, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, 0, 0, {END_OF_FIELDS}}
@@ -4300,9 +4402,7 @@ Pgn pgnList[] = {
      9,
      {UINT8_FIELD("Start Database ID"),
       UINT8_FIELD("nItems"),
-      UINT8_FIELD("Number of Databases Available")
-
-          ,
+      UINT8_FIELD("Number of Databases Available"),
       UINT8_FIELD("Database ID"),
       STRING_FIX_FIELD("Database Name", BYTES(8)),
       TIME_FIELD("Database Timestamp"),
@@ -4312,7 +4412,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Number of Routes in Database", BYTES(2)),
       SIMPLE_FIELD("Number of WPs in Database", BYTES(2)),
       SIMPLE_FIELD("Number of Bytes in Database", BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Route and WP Service - Route List",
@@ -4323,16 +4424,15 @@ Pgn pgnList[] = {
      6,
      {UINT8_FIELD("Start Route ID"),
       UINT8_FIELD("nItems"),
-      UINT8_FIELD("Number of Routes in Database")
-
-          ,
+      UINT8_FIELD("Number of Routes in Database"),
       UINT8_FIELD("Database ID"),
       UINT8_FIELD("Route ID"),
       STRING_FIX_FIELD("Route Name", BYTES(8)),
       RESERVED_FIELD(4),
       SIMPLE_FIELD("WP Identification Method", 2),
       SIMPLE_FIELD("Route Status", 2),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Route and WP Service - Route/WP-List Attributes",
@@ -4353,7 +4453,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("WP Identification Method", 2),
       SIMPLE_FIELD("Route Status", 2),
       SIMPLE_FIELD("XTE Limit for the Route", BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Route and WP Service - Route - WP Name & Position",
@@ -4366,14 +4467,13 @@ Pgn pgnList[] = {
       UINT8_FIELD("nItems"),
       SIMPLE_FIELD("Number of WPs in the Route/WP-List", BYTES(2)),
       UINT8_FIELD("Database ID"),
-      UINT8_FIELD("Route ID")
-
-          ,
+      UINT8_FIELD("Route ID"),
       UINT8_FIELD("WP ID"),
       STRING_FIX_FIELD("WP Name", BYTES(8)),
       LATITUDE_I32_FIELD("WP Latitude"),
       LONGITUDE_I32_FIELD("WP Longitude"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Route and WP Service - Route - WP Name",
@@ -4389,7 +4489,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Route ID"),
       UINT8_FIELD("WP ID"),
       STRING_FIX_FIELD("WP Name", BYTES(8)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Route and WP Service - XTE Limit & Navigation Method",
@@ -4400,16 +4501,15 @@ Pgn pgnList[] = {
      6,
      {UINT8_FIELD("Start RPS#"),
       UINT8_FIELD("nItems"),
-      SIMPLE_FIELD("Number of WPs with a specific XTE Limit or Nav. Method", BYTES(2))
-
-          ,
+      SIMPLE_FIELD("Number of WPs with a specific XTE Limit or Nav. Method", BYTES(2)),
       UINT8_FIELD("Database ID"),
       UINT8_FIELD("Route ID"),
       UINT8_FIELD("RPS#"),
       SIMPLE_FIELD("XTE limit in the leg after WP", BYTES(2)),
       SIMPLE_FIELD("Nav. Method in the leg after WP", 4),
       RESERVED_FIELD(4),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Route and WP Service - WP Comment",
@@ -4427,7 +4527,8 @@ Pgn pgnList[] = {
           ,
       UINT8_FIELD("WP ID / RPS#"),
       STRING_FIX_FIELD("Comment", BYTES(8)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Route and WP Service - Route Comment",
@@ -4444,7 +4545,8 @@ Pgn pgnList[] = {
           ,
       UINT8_FIELD("Route ID"),
       STRING_FIX_FIELD("Comment", BYTES(8)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Route and WP Service - Database Comment",
@@ -4460,7 +4562,8 @@ Pgn pgnList[] = {
           ,
       UINT8_FIELD("Database ID"),
       STRING_FIX_FIELD("Comment", BYTES(8)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Route and WP Service - Radius of Turn",
@@ -4478,7 +4581,8 @@ Pgn pgnList[] = {
           ,
       UINT8_FIELD("RPS#"),
       SIMPLE_FIELD("Radius of Turn", BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Route and WP Service - WP List - WP Name & Position",
@@ -4496,7 +4600,8 @@ Pgn pgnList[] = {
       STRING_FIX_FIELD("WP Name", BYTES(8)),
       LATITUDE_I32_FIELD("WP Latitude"),
       LONGITUDE_I32_FIELD("WP Longitude"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     /* http://askjackrabbit.typepad.com/ask_jack_rabbit/page/7/ */
     ,
@@ -4511,7 +4616,8 @@ Pgn pgnList[] = {
       ANGLE_U16_FIELD("Wind Angle", NULL),
       LOOKUP_FIELD("Reference", 3, WIND_REFERENCE),
       RESERVED_FIELD(5 + BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 100}
 
     /* Water temperature, Transducer Measurement */
     ,
@@ -4526,7 +4632,8 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Outside Ambient Air Temperature"),
       PRESSURE_UFIX16_HPA_FIELD("Atmospheric Pressure"),
       RESERVED_FIELD(BYTES(1)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 500}
 
     ,
     {"Environmental Parameters",
@@ -4541,7 +4648,8 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Temperature"),
       PERCENTAGE_U16_FIELD("Humidity"),
       PRESSURE_UFIX16_HPA_FIELD("Atmospheric Pressure"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 500}
 
     ,
     {"Temperature",
@@ -4555,7 +4663,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
       TEMPERATURE_FIELD("Actual Temperature"),
       TEMPERATURE_FIELD("Set Temperature"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 2000}
 
     ,
     {"Humidity",
@@ -4569,7 +4678,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Source", BYTES(1), HUMIDITY_SOURCE),
       PERCENTAGE_U16_FIELD("Actual Humidity"),
       PERCENTAGE_U16_FIELD("Set Humidity"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Actual Pressure",
@@ -4582,7 +4692,8 @@ Pgn pgnList[] = {
       INSTANCE_FIELD,
       LOOKUP_FIELD("Source", BYTES(1), PRESSURE_SOURCE),
       PRESSURE_FIX32_DPA_FIELD("Pressure"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 2000}
 
     ,
     {"Set Pressure",
@@ -4595,7 +4706,8 @@ Pgn pgnList[] = {
       INSTANCE_FIELD,
       LOOKUP_FIELD("Source", BYTES(1), PRESSURE_SOURCE),
       PRESSURE_UFIX32_DPA_FIELD("Pressure"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Temperature Extended Range",
@@ -4629,7 +4741,8 @@ Pgn pgnList[] = {
       LENGTH_UFIX16_CM_FIELD("Tide Level standard deviation"),
       STRINGVAR_FIELD("Station ID"),
       STRINGVAR_FIELD("Station Name"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Salinity Station Data",
@@ -4648,7 +4761,8 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Water Temperature"),
       STRINGVAR_FIELD("Station ID"),
       STRINGVAR_FIELD("Station Name"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Current Station Data",
@@ -4669,7 +4783,8 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Water Temperature"),
       STRINGVAR_FIELD("Station ID"),
       STRINGVAR_FIELD("Station Name"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Meteorological Station Data",
@@ -4693,7 +4808,8 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Ambient Temperature"),
       STRINGVAR_FIELD("Station ID"),
       STRINGVAR_FIELD("Station Name"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Moored Buoy Station Data",
@@ -4720,7 +4836,8 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Air Temperature"),
       TEMPERATURE_FIELD("Water Temperature"),
       STRING_FIX_FIELD("Station ID", BYTES(8)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Payload Mass", 130560, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, 0, 0, {END_OF_FIELDS}}
@@ -4904,7 +5021,8 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      2,
      0,
-     {SIMPLE_SIGNED_FIELD("Port trim tab", BYTES(1)), SIMPLE_SIGNED_FIELD("Starboard trim tab", BYTES(1)), END_OF_FIELDS}}
+     {SIMPLE_SIGNED_FIELD("Port trim tab", BYTES(1)), SIMPLE_SIGNED_FIELD("Starboard trim tab", BYTES(1)), END_OF_FIELDS},
+     .interval = 200}
 
     ,
     {"Direction Data",
@@ -4923,7 +5041,8 @@ Pgn pgnList[] = {
       SPEED_U16_CM_FIELD("Speed through Water"),
       ANGLE_U16_FIELD("Set", NULL),
       SPEED_U16_CM_FIELD("Drift"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1000}
 
     ,
     {"Vessel Speed Components",
@@ -4938,7 +5057,8 @@ Pgn pgnList[] = {
       SPEED_I16_MM_FIELD("Transverse Speed, Ground-referenced"),
       SPEED_I16_MM_FIELD("Stern Speed, Water-referenced"),
       SPEED_I16_MM_FIELD("Stern Speed, Ground-referenced"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 250}
 
     ,
     {"System Configuration",

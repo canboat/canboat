@@ -186,6 +186,15 @@ static void explainPGN(Pgn pgn)
   {
     printf("     The last %u fields repeat until the data is exhausted.\n\n", pgn.repeatingFields);
   }
+  if (pgn.interval != 0 && pgn.interval < UINT16_MAX)
+  {
+    printf("     The PGN is normally transmitted every %u ms\n", pgn.interval);
+  }
+  if (pgn.interval == UINT16_MAX)
+  {
+    printf("     The PGN is transmitted on-demand or when data is available\n");
+  }
+
   for (i = 0; i < ARRAY_SIZE(pgn.fieldList) && pgn.fieldList[i].name; i++)
   {
     Field f = pgn.fieldList[i];
@@ -388,6 +397,10 @@ static void explainPGNXML(Pgn pgn)
     {
       printXML(8, "MissingAttribute", "SampleData");
     }
+    if ((pgn.complete & PACKET_INTERVAL_UNKNOWN) != 0)
+    {
+      printXML(8, "MissingAttribute", "Interval");
+    }
 
     printf("      </Missing>\n");
   }
@@ -402,6 +415,17 @@ static void explainPGNXML(Pgn pgn)
   else
   {
     printf("      <RepeatingFields>%u</RepeatingFields>\n", pgn.repeatingFields);
+  }
+  if (!doV1)
+  {
+    if (pgn.interval != 0 && pgn.interval < UINT16_MAX)
+    {
+      printf("      <TransmissionInterval>%u</TransmissionInterval>\n", pgn.interval);
+    }
+    if (pgn.interval == UINT16_MAX)
+    {
+      printXML(6, "TransmissionIrregular", "true");
+    }
   }
 
   if (pgn.fieldList[0].name)
@@ -609,6 +633,7 @@ static void explainMissingXML(void)
          "One or more of the lookup fields contain missing or incorrect values");
   printf(
       "    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "SampleData", "The PGN has not been seen in any logfiles yet");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "Interval", "The transmission interval is not known");
 
   printf("  </MissingEnumerations>\n");
 }

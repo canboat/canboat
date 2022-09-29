@@ -225,6 +225,10 @@ extern void fillFieldType(void)
     {
       logError("PGN %u '%s' is outside single-frame range\n", pgn, pgnList[i].description);
     }
+    if (pgnList[i].interval == 0)
+    {
+      pgnList[i].complete |= PACKET_INTERVAL_UNKNOWN;
+    }
   }
 
   logDebug("Filled all fieldtypes\n");
