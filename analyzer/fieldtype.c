@@ -169,16 +169,12 @@ extern void fillFieldType(void)
   {
     uint32_t    pgn   = pgnList[i].pgn;
     const char *pname = pgnList[i].description;
+    size_t      j;
 
-    for (size_t j = 0;; j++)
+    for (j = 0; pgnList[i].fieldList[j].name != NULL; j++)
     {
       Field     *f = &pgnList[i].fieldList[j];
       FieldType *ft;
-
-      if (f->name == NULL) // End of field list
-      {
-        break;
-      }
 
       if (f->fieldType == NULL)
       {
@@ -225,10 +221,23 @@ extern void fillFieldType(void)
     {
       logError("PGN %u '%s' is outside single-frame range\n", pgn, pgnList[i].description);
     }
+    if (pgnList[i].repeatingFields != 0 && pgnList[i].repeatingField1 == 0)
+    {
+      logAbort("PGN %u '%s' has no way to determine repeating fields\n", pgn, pgnList[i].description);
+    }
+
     if (pgnList[i].interval == 0)
     {
       pgnList[i].complete |= PACKET_INTERVAL_UNKNOWN;
     }
+
+    if (j == 0 && pgnList[i].complete == PACKET_COMPLETE)
+    {
+      logError("Internal error: PGN %d '%s' does not have fields.\n", pgnList[i].pgn, pgnList[i].description);
+      exit(2);
+    }
+    pgnList[i].fieldCount = j;
+    logDebug("PGN %u has %u fields\n", pgnList[i].pgn, j);
   }
 
   logDebug("Filled all fieldtypes\n");

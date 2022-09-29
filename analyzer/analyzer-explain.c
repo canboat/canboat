@@ -170,11 +170,68 @@ int main(int argc, char **argv)
   exit(1);
 }
 
+/**
+ * Count the number of bits in all fields up to the first
+ * repeating field.
+ * Variable length fields are counted as 0.
+ */
+static unsigned int getMinimalPgnLength(Pgn *pgn, bool *isVariable)
+{
+  // Count all fields until the first repeating field
+  uint32_t     fieldCount      = pgn->fieldCount;
+  uint32_t     repeatingFields = pgn->repeatingFields;
+  unsigned int length          = 0;
+
+  *isVariable = false;
+  if (repeatingFields >= 100)
+  {
+    fieldCount -= repeatingFields / 100 + repeatingFields % 100;
+    *isVariable = true;
+  }
+  else if (repeatingFields > 0)
+  {
+    fieldCount -= repeatingFields;
+    *isVariable = true;
+  }
+
+  logDebug("PGN %u fieldCount=%u (was %u)\n", pgn->pgn, fieldCount, pgn->fieldCount);
+
+  for (uint32_t i = 0; i < fieldCount; i++)
+  {
+    Field *f = &pgn->fieldList[i];
+
+    if (f->size == LEN_VARIABLE)
+    {
+      *isVariable = true;
+    }
+    else
+    {
+      length += f->size;
+    }
+  }
+
+  length /= 8; // Bits to bytes
+  logDebug("PGN %u len=%u\n", pgn->pgn, length);
+  return length;
+}
+
 static void explainPGN(Pgn pgn)
 {
-  int i;
+  int  i;
+  int  len;
+  bool isVariable;
 
-  printf("PGN: %d / %08o / %05X - %u - %s\n\n", pgn.pgn, pgn.pgn, pgn.pgn, pgn.size, pgn.description);
+  printf("PGN: %d / %08o / %05X - %s\n\n", pgn.pgn, pgn.pgn, pgn.pgn, pgn.description);
+
+  len = getMinimalPgnLength(&pgn, &isVariable);
+  if (isVariable)
+  {
+    printf("     The length is variable but at least %d bytes\n", len);
+  }
+  else
+  {
+    printf("     The length is %d bytes\n", len);
+  }
 
   if (pgn.repeatingFields >= 100)
   {
@@ -326,6 +383,17 @@ static void printXML(int indent, const char *element, const char *p)
   }
 }
 
+static void printXMLUnsigned(int indent, const char *element, const unsigned int p)
+{
+  int i;
+
+  for (i = 0; i < indent; i++)
+  {
+    fputs(" ", stdout);
+  }
+  printf("<%s>%u</%s>\n", element, p, element);
+}
+
 static const char *getV1Type(Field *f)
 {
   for (FieldType *ft = f->ft; ft != NULL; ft = ft->baseFieldTypePtr)
@@ -351,6 +419,8 @@ static void explainPGNXML(Pgn pgn)
   int      i;
   unsigned bitOffset     = 0;
   bool     showBitOffset = true;
+  int      len;
+  bool     isVariable;
 
   if (pgn.fallback && doV1)
   {
@@ -405,22 +475,48 @@ static void explainPGNXML(Pgn pgn)
     printf("      </Missing>\n");
   }
 
-  printf("      <Length>%u</Length>\n", pgn.size);
-
-  if (pgn.repeatingFields >= 100)
+  len = getMinimalPgnLength(&pgn, &isVariable);
+  if (!doV1)
   {
-    printf("      <RepeatingFieldSet1>%u</RepeatingFieldSet1>\n", pgn.repeatingFields % 100);
-    printf("      <RepeatingFieldSet2>%u</RepeatingFieldSet2>\n", pgn.repeatingFields / 100);
+    printXMLUnsigned(6, "FieldCount", pgn.fieldCount);
+    if (isVariable)
+    {
+      printXMLUnsigned(6, "MinLength", len);
+    }
+    else
+    {
+      printXMLUnsigned(6, "Length", len);
+    }
   }
   else
   {
-    printf("      <RepeatingFields>%u</RepeatingFields>\n", pgn.repeatingFields);
+    printXMLUnsigned(6, "Length", len);
+  }
+
+  if (pgn.repeatingFields >= 100)
+  {
+    printXMLUnsigned(6, "RepeatingFieldSet1", pgn.repeatingFields % 100);
+    printXMLUnsigned(6, "RepeatingFieldSet1CountField", pgn.repeatingField1);
+    printXMLUnsigned(6, "RepeatingFieldSet2", pgn.repeatingFields / 100);
+    printXMLUnsigned(6, "RepeatingFieldSet2CountField", pgn.repeatingField2);
+  }
+  else if (doV1 || pgn.repeatingFields > 0)
+  {
+    if (pgn.repeatingField1 > 0 && pgn.repeatingField1 < 255)
+    {
+      printXMLUnsigned(6, "RepeatingFieldSet1", pgn.repeatingFields);
+      printXMLUnsigned(6, "RepeatingFieldSet1CountField", pgn.repeatingField1);
+    }
+    else
+    {
+      printXMLUnsigned(6, "RepeatingFields", pgn.repeatingFields);
+    }
   }
   if (!doV1)
   {
     if (pgn.interval != 0 && pgn.interval < UINT16_MAX)
     {
-      printf("      <TransmissionInterval>%u</TransmissionInterval>\n", pgn.interval);
+      printXMLUnsigned(6, "TransmissionInterval", pgn.interval);
     }
     if (pgn.interval == UINT16_MAX)
     {
@@ -457,12 +553,12 @@ static void explainPGNXML(Pgn pgn)
       }
       else
       {
-        printf("          <BitLength>%u</BitLength>\n", f.size);
+        printXMLUnsigned(10, "BitLength", f.size);
       }
       if (showBitOffset)
       {
-        printf("          <BitOffset>%u</BitOffset>\n", bitOffset);
-        printf("          <BitStart>%u</BitStart>\n", bitOffset % 8);
+        printXMLUnsigned(10, "BitOffset", bitOffset);
+        printXMLUnsigned(10, "BitStart", bitOffset % 8);
       }
       bitOffset = bitOffset + f.size;
 
@@ -470,26 +566,26 @@ static void explainPGNXML(Pgn pgn)
       {
         if (doV1)
         {
-          printf("          <Match>proprietary pgn only</Match>\n");
+          printXML(10, "Match", "proprietary pgn only");
         }
         else
         {
-          printf("          <Condition>PGNIsProprietary</Condition>\n");
+          printXML(10, "Condition", "PGNIsProprietary");
         }
       }
       if (f.unit && f.unit[0] == '=')
       {
-        printf("          <Match>%s</Match>\n", &f.unit[1]);
+        printXML(10, "Match", &f.unit[1]);
       }
       else if (f.unit && f.unit[0] != ',')
       {
         if (doV1)
         {
-          printf("          <Units>%s</Units>\n", f.unit);
+          printXML(10, "Units", f.unit);
         }
         else
         {
-          printf("          <Unit>%s</Unit>\n", f.unit);
+          printXML(10, "Unit", f.unit);
         }
       }
 
@@ -499,7 +595,7 @@ static void explainPGNXML(Pgn pgn)
 
         if (s != NULL)
         {
-          printf("          <Type>%s</Type>\n", s);
+          printXML(10, "Type", s);
         }
       }
 
@@ -507,7 +603,7 @@ static void explainPGNXML(Pgn pgn)
       {
         printf("          <Resolution>%g</Resolution>\n", f.resolution);
       }
-      printf("          <Signed>%s</Signed>\n", f.hasSign ? "true" : "false");
+      printXML(10, "Signed", f.hasSign ? "true" : "false");
       if (f.offset != 0)
       {
         printf("          <Offset>%d</Offset>\n", f.offset);
@@ -515,7 +611,7 @@ static void explainPGNXML(Pgn pgn)
 
       if (f.fieldType != NULL)
       {
-        printf("          <FieldType>%s</FieldType>\n", f.fieldType);
+        printXML(10, "FieldType", f.fieldType);
       }
       else
       {
@@ -548,7 +644,7 @@ static void explainPGNXML(Pgn pgn)
           }
           else
           {
-            printf("          <LookupBitEnumeration>%s</LookupBitEnumeration>\n", f.lookupName);
+            printXML(10, "LookupBitEnumeration", f.lookupName);
           }
         }
         else if (!(f.unit && f.unit[0] == '='))
@@ -574,7 +670,7 @@ static void explainPGNXML(Pgn pgn)
           }
           else
           {
-            printf("          <LookupEnumeration>%s</LookupEnumeration>\n", f.lookupName);
+            printXML(10, "LookupEnumeration", f.lookupName);
           }
         }
       }

@@ -23,9 +23,11 @@ ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
 TARGETS=$(ANALYZER) $(ANALYZER_EXPLAIN)
 XMLFILE=pgns.xml
 JSONFILE=pgns.json
+XSL2FILE=../docs/canboat.xsl
 XML2FILE=../docs/canboat.xml
 XSD2FILE=../docs/canboat.xsd
 JSON2FILE=../docs/canboat.json
+HTML2FILE=../docs/canboat.html
 NGTXMLFILE=pgns-ngt.xml
 NGTJSONFILE=pgns-ngt.json
 IKXMLFILE=pgns-ik.xml
@@ -54,8 +56,11 @@ $(XMLFILE): $(ANALYZER_EXPLAIN_DEP)
 	$(ANALYZER_EXPLAIN) -explain-xml -camel -v1 >$(XMLFILE)
 
 $(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE)
-	$(ANALYZER_EXPLAIN) -explain-xml -camel >$(XML2FILE) && xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
+	$(ANALYZER_EXPLAIN) -explain-xml -camel >$(XML2FILE) 
+	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
 
+$(HTML2FILE): $(XSL2FILE) $(XML2FILE)
+	xsltproc $(XSL2FILE) $(XML2FILE) --noout
 
 $(NGTXMLFILE): $(ANALYZER_EXPLAIN_DEP)
 	$(ANALYZER_EXPLAIN) -explain-ngt-xml -camel -v1 >$(NGTXMLFILE)
@@ -82,7 +87,7 @@ $(IKJSONFILE): $(IKXMLFILE) pgns2json.xslt
 $(NPMFILE): ../common/version.h $(ANALYZER)
 	python3 fixup-version.py $(ANALYZER) $(NPMFILE)
 
-json: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE) $(NPMFILE)
+json: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE) $(NPMFILE) $(HTML2FILE)
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

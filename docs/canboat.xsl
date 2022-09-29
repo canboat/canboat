@@ -44,6 +44,59 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template name="getFirstRepeatingField">
+    <xsl:choose>
+      <xsl:when test="RepeatingFields">
+        <xsl:value-of select="FieldCount - RepeatingFields + 1"/>
+      </xsl:when>
+      <xsl:when test="RepeatingFieldSet2">
+        <xsl:value-of select="FieldCount - RepeatingFieldSet2 - RepeatingFieldSet1 + 1"/>
+      </xsl:when>
+      <xsl:when test="RepeatingFieldSet1">
+        <xsl:value-of select="FieldCount - RepeatingFieldSet1 + 1"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="FieldCount + 1"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="HandleRepeatingFields">
+    <!-- 
+      RepeatingFields is generated when there is one set of repeating fields without a repeat count.
+      RepeatingFieldSet1 and RepeatingFieldSet2 only when the PGN has one or two repeating sets with 
+      a field that says how often this is repeated. 
+    -->
+
+    <xsl:choose>
+      <xsl:when test="RepeatingFields">
+        <xsl:variable name="repeating" select="RepeatingFields"/>
+        <xsl:variable name="startRepeat" select="FieldCount - $repeating + 1"/>
+        The last <xsl:value-of select="$repeating"/> fields starting at field <xsl:value-of select="$startRepeat"/> repeat until the data is exhausted.
+      </xsl:when>
+
+      <xsl:when test="RepeatingFieldSet2">
+        <xsl:variable name="repeatingSet1" select="RepeatingFieldSet1"/>
+        <xsl:variable name="repeatingCount1" select="RepeatingFieldSet1CountField"/>
+        <xsl:variable name="repeatingSet2" select="RepeatingFieldSet2"/>
+        <xsl:variable name="repeatingCount2" select="RepeatingFieldSet2CountField"/>
+        <xsl:variable name="startRepeat" select="FieldCount - $repeatingSet1 - $repeatingSet2 + 1"/>
+
+        The <xsl:value-of select="$repeatingSet1"/> fields starting at field <xsl:value-of select="$startRepeat"/> are repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="$repeatingCount1"/>.
+        The <xsl:value-of select="$repeatingSet2"/> fields starting at field <xsl:value-of select="$startRepeat + $repeatingSet1"/> are repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="$repeatingCount2"/>.
+      </xsl:when>
+
+      <xsl:when test="RepeatingFieldSet1">
+        <xsl:variable name="repeatingSet1" select="RepeatingFieldSet1"/>
+        <xsl:variable name="repeatingCount1" select="RepeatingFieldSet1CountField"/>
+        <xsl:variable name="startRepeat" select="FieldCount - $repeatingSet1 + 1"/>
+
+        The <xsl:value-of select="$repeatingSet1"/> fields starting at field <xsl:value-of select="$startRepeat"/> are repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="$repeatingCount1"/>.
+      </xsl:when>
+
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template name="pgn-list">
     <h2 id='pgn-list'>PGN list</h2>
     <xsl:for-each select="/PGNDefinitions/PGNs/*">
@@ -98,19 +151,31 @@
               </xsl:otherwise>
             </xsl:choose>
           </p>
-          <xsl:variable name="repeating" select="RepeatingFields"/>
-          <xsl:variable name="repeatingSet1" select="RepeatingFieldSet1"/>
-          <xsl:variable name="repeatingSet2" select="RepeatingFieldSet2"/>
-          <xsl:variable name="fieldCount" select="count(Fields/*)"/>
-          <xsl:variable name="startRepeat" select="$fieldCount - $repeating + 1"/>
+
+          <xsl:variable name="startRepeat">
+            <xsl:call-template name="getFirstRepeatingField" />
+          </xsl:variable>
           <p>
             This
             <xsl:if test="Type = 'Single'"> single-frame </xsl:if>
             <xsl:if test="Type = 'Fast'"> fast-packet </xsl:if>
-            PGN contains <xsl:value-of select="Length"/> bytes and <xsl:value-of select="$fieldCount"/> fields.
-            <xsl:if test="$repeating > 0">
-              The last <xsl:value-of select="$repeating"/> fields starting at field <xsl:value-of select="$startRepeat"/> repeat until the data is exhausted.
+            PGN is
+            <xsl:if test="MinLength">
+              at least <xsl:value-of select="MinLength"/>
             </xsl:if>
+            <xsl:if test="Length">
+              <xsl:value-of select="Length"/>
+            </xsl:if>
+            bytes long and contains 
+            <xsl:if test="$startRepeat = FieldCount + 1">
+              <xsl:value-of select="FieldCount"/> fields.
+            </xsl:if>
+            <xsl:if test="$startRepeat != FieldCount + 1">
+              at least <xsl:value-of select="$startRepeat + 1"/> fields.
+            </xsl:if>
+
+            <xsl:call-template name="HandleRepeatingFields"/>
+
             <xsl:if test="TransmissionInterval">
               It is normally transmitted every <xsl:value-of select="TransmissionInterval"/> milliseconds.
             </xsl:if>

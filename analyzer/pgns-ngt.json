@@ -13,7 +13,7 @@
         "Complete":false,
         "Missing":[
           "Interval"],
-        "Length":14,
+        "Length":13,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -77,7 +77,7 @@
           "FieldLengths",
           "Resolution",
           "Interval"],
-        "Length":15,
+        "Length":14,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -161,7 +161,7 @@
           "FieldLengths",
           "Resolution",
           "Interval"],
-        "Length":34,
+        "Length":33,
         "RepeatingFields":0,
         "Fields":[
           {
@@ -435,7 +435,7 @@
           "FieldLengths",
           "Resolution",
           "Interval"],
-        "Length":17,
+        "Length":7,
         "RepeatingFields":0,
         "Fields":[
           {

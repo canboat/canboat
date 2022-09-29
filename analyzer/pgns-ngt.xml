@@ -36,7 +36,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>14</Length>
+      <Length>13</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -108,7 +108,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>15</Length>
+      <Length>14</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -202,7 +202,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>34</Length>
+      <Length>33</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
@@ -505,7 +505,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>17</Length>
+      <Length>7</Length>
       <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>

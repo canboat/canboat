@@ -151,10 +151,14 @@ limitations under the License.
       <xs:element type="xs:boolean" name="Complete"/>
       <xs:element type="xs:string" name="Fallback" minOccurs="0"/>
       <xs:element type="Missing" name="Missing" minOccurs="0"/>
-      <xs:element type="xs:short" name="Length"/>
+      <xs:element type="xs:short" name="FieldCount"/>
+      <xs:element type="xs:short" name="MinLength" minOccurs="0"/>
+      <xs:element type="xs:short" name="Length" minOccurs="0"/>
       <xs:element type="xs:byte" name="RepeatingFields" minOccurs="0"/>
       <xs:element type="xs:byte" name="RepeatingFieldSet1" minOccurs="0"/>
+      <xs:element type="xs:byte" name="RepeatingFieldSet1CountField" minOccurs="0"/>
       <xs:element type="xs:byte" name="RepeatingFieldSet2" minOccurs="0"/>
+      <xs:element type="xs:byte" name="RepeatingFieldSet2CountField" minOccurs="0"/>
       <xs:element type="xs:short" name="TransmissionInterval" minOccurs="0"/>
       <xs:element type="xs:boolean" name="TransmissionIrregular" minOccurs="0"/>
       <xs:element type="Fields" name="Fields" minOccurs="0"/>

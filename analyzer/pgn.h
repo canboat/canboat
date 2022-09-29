@@ -746,18 +746,21 @@ typedef enum PacketType
 
 typedef struct
 {
-  char       *description;
-  uint32_t    pgn;
-  uint16_t    complete;        /* Either PACKET_COMPLETE or bit values set for various unknown items */
-  PacketType  type;            /* Single, Fast or ISO11783 */
-  uint32_t    size;            /* (Minimal) size of this PGN. Helps to determine initial malloc */
-  uint32_t    repeatingFields; /* How many fields at the end repeat until the PGN is exhausted? */
+  char      *description;
+  uint32_t   pgn;
+  uint16_t   complete;        /* Either PACKET_COMPLETE or bit values set for various unknown items */
+  PacketType type;            /* Single, Fast or ISO11783 */
+  uint32_t   size;            /* (Minimal) size of this PGN. Helps to determine initial malloc */
+  uint32_t   repeatingFields; /* How many fields at the end repeat until the PGN is exhausted?  If this value is >= 100 it contains
+                                 two sets. */
   Field       fieldList[30]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t    fieldCount;    /* Filled by C, no need to set in initializers. */
   char       *camelDescription; /* Filled by C, no need to set in initializers. */
   bool        fallback;         /* true = this is a catch-all for unknown PGNs */
   const char *explanation;      /* Preferably the NMEA 2000 explanation from the NMEA PGN field list */
   uint16_t    interval;         /* Milliseconds between transmissions, standard. 0 is: not known, UINT16_MAX = never */
+  uint8_t     repeatingField1;  /* Which field explains how often the repeating fields set #1 repeats */
+  uint8_t     repeatingField2;  /* Which field explains how often the repeating fields set #2 repeats */
 } Pgn;
 
 // Returns the first pgn that matches the given id, or NULL if not found.
@@ -799,7 +802,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      8,
      0,
-     {BINARY_FIELD("Data", BYTES(8), ""), END_OF_FIELDS},
+     {BINARY_FIELD("Data", BYTES(8), NULL), END_OF_FIELDS},
      .fallback    = true,
      .explanation = "PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to "
                     "0xEFFF (59392 - 61183)."}
@@ -863,8 +866,8 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
-     1,
-     {UINT8_FIELD("SID"), SIMPLE_FIELD("Data", BYTES(7)), END_OF_FIELDS},
+     0,
+     {UINT8_FIELD("SID"), BINARY_FIELD("Data", BYTES(7), NULL), END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have "
                     "9 or more data bytes. This PGN represents a single packet of a multipacket message."}
@@ -878,7 +881,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
-     1,
+     0,
      {MATCH_FIELD("Group Function Code", BYTES(1), 16, "RTS"),
       SIMPLE_DESC_FIELD("Message size", BYTES(2), "bytes"),
       SIMPLE_DESC_FIELD("Packets", BYTES(1), "packets"),
@@ -896,7 +899,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
-     1,
+     0,
      {MATCH_FIELD("Group Function Code", BYTES(1), 17, "CTS"),
       SIMPLE_DESC_FIELD("Max packets", BYTES(1), "Number of frames that can be sent before another CTS is required"),
       SIMPLE_DESC_FIELD("Next SID", BYTES(1), "Number of next frame to be transmitted"),
@@ -914,7 +917,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
-     1,
+     0,
      {MATCH_FIELD("Group Function Code", BYTES(1), 19, "EOM"),
       SIMPLE_DESC_FIELD("Total message size", BYTES(2), "bytes"),
       SIMPLE_DESC_FIELD("Total number of frames received", BYTES(1), "Total number of of frames received"),
@@ -932,7 +935,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
-     1,
+     0,
      {MATCH_FIELD("Group Function Code", BYTES(1), 32, "BAM"),
       SIMPLE_DESC_FIELD("Message size", BYTES(2), "bytes"),
       SIMPLE_DESC_FIELD("Packets", BYTES(1), "frames"),
@@ -950,7 +953,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      8,
-     1,
+     0,
      {MATCH_FIELD("Group Function Code", BYTES(1), 255, "Abort"),
       BINARY_FIELD("Reason", BYTES(1), NULL),
       RESERVED_FIELD(BYTES(2)),
@@ -1715,26 +1718,27 @@ Pgn pgnList[] = {
      126208,
      PACKET_COMPLETE,
      PACKET_FAST,
-     12,
+     11,
      2,
      {MATCH_FIELD("Function Code", BYTES(1), 0, "Request"),
       PGN_FIELD("PGN", "Requested PGN"),
       TIME_UFIX32_MS_FIELD("Transmission interval", NULL),
       TIME_UFIX16_CS_FIELD("Transmission interval offset", NULL),
-      SIMPLE_DESC_FIELD("Number of Parameters", BYTES(1), "How many parameter pairs will follow"),
+      UINT8_DESC_FIELD("Number of Parameters", "How many parameter pairs will follow"),
       UINT8_DESC_FIELD("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", "Parameter value, variable length"),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This is the Request variation of this group function PGN. The receiver shall respond by sending the requested "
-                    "PGN, at the desired transmission interval."}
+                    "PGN, at the desired transmission interval.",
+     .repeatingField1 = 5}
 
     ,
     {"NMEA - Command group function",
      126208,
      PACKET_COMPLETE,
      PACKET_FAST,
-     8,
+     6,
      2,
      {MATCH_FIELD("Function Code", BYTES(1), 1, "Command"),
       PGN_FIELD("PGN", "Commanded PGN"),
@@ -1746,14 +1750,15 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This is the Command variation of this group function PGN. This instructs the receiver to modify its internal "
-                    "state for the passed parameters. The receiver shall reply with an Acknowledge reply."}
+                    "state for the passed parameters. The receiver shall reply with an Acknowledge reply.",
+     .repeatingField1 = 5}
 
     ,
     {"NMEA - Acknowledge group function",
      126208,
      PACKET_COMPLETE,
      PACKET_FAST,
-     8,
+     6,
      1,
      {MATCH_FIELD("Function Code", BYTES(1), 2, "Acknowledge"),
       PGN_FIELD("PGN", "Commanded PGN"),
@@ -1762,16 +1767,17 @@ Pgn pgnList[] = {
       UINT8_FIELD("Number of Parameters"),
       LOOKUP_FIELD("Parameter", 4, PARAMETER_FIELD),
       END_OF_FIELDS},
-     .interval    = UINT16_MAX,
-     .explanation = "This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will "
-                    "attempt to perform the command (change its parameters) and reply positively or negatively."}
+     .interval        = UINT16_MAX,
+     .explanation     = "This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will "
+                        "attempt to perform the command (change its parameters) and reply positively or negatively.",
+     .repeatingField1 = 5}
 
     ,
     {"NMEA - Read Fields group function",
      126208,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     8,
+     7,
      102,
      {MATCH_FIELD("Function Code", BYTES(1), 3, "Read Fields"),
       PGN_FIELD("PGN", "Commanded PGN"),
@@ -1785,14 +1791,16 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This is the Read Fields variation of this group function PGN. The receiver shall respond by sending a Read "
-                    "Reply variation of this PGN, containing the desired values."}
+                    "Reply variation of this PGN, containing the desired values.",
+     .repeatingField1 = 7,
+     .repeatingField2 = 8}
 
     ,
     {"NMEA - Read Fields reply group function",
      126208,
      PACKET_COMPLETE,
      PACKET_FAST,
-     8,
+     7,
      202,
      {MATCH_FIELD("Function Code", BYTES(1), 4, "Read Fields Reply"),
       PGN_FIELD("PGN", "Commanded PGN"),
@@ -1807,14 +1815,16 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .explanation
-     = "This is the Read Fields Reply variation of this group function PGN. The receiver is responding to a Read Fields request."}
+     = "This is the Read Fields Reply variation of this group function PGN. The receiver is responding to a Read Fields request.",
+     .repeatingField1 = 7,
+     .repeatingField2 = 8}
 
     ,
     {"NMEA - Write Fields group function",
      126208,
      PACKET_COMPLETE,
      PACKET_FAST,
-     8,
+     7,
      202,
      {MATCH_FIELD("Function Code", BYTES(1), 5, "Write Fields"),
       PGN_FIELD("PGN", "Commanded PGN"),
@@ -1829,14 +1839,16 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This is the Write Fields variation of this group function PGN. The receiver shall modify internal state and "
-                    "reply with a Write Fields Reply message."}
+                    "reply with a Write Fields Reply message.",
+     .repeatingField1 = 7,
+     .repeatingField2 = 8}
 
     ,
     {"NMEA - Write Fields reply group function",
      126208,
      PACKET_COMPLETE,
      PACKET_FAST,
-     8,
+     7,
      202,
      {MATCH_FIELD("Function Code", BYTES(1), 6, "Write Fields Reply"),
       PGN_FIELD("PGN", "Commanded PGN"),
@@ -1851,7 +1863,9 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .explanation
-     = "This is the Write Fields Reply variation of this group function PGN. The receiver is responding to a Write Fields request."}
+     = "This is the Write Fields Reply variation of this group function PGN. The receiver is responding to a Write Fields request.",
+     .repeatingField1 = 7,
+     .repeatingField2 = 8}
 
     /************ RESPONSE TO REQUEST PGNS **************/
 
@@ -1860,10 +1874,11 @@ Pgn pgnList[] = {
      126464,
      PACKET_COMPLETE,
      PACKET_FAST,
-     8,
+     1,
      1,
      {LOOKUP_FIELD("Function Code", BYTES(1), PGN_LIST_FUNCTION), PGN_FIELD("PGN", NULL), END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = UINT8_MAX}
 
     /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
@@ -2120,14 +2135,15 @@ Pgn pgnList[] = {
      126720,
      PACKET_COMPLETE,
      PACKET_FAST,
-     12,
+     4,
      2,
      {COMPANY(135),
       MATCH_FIELD("Proprietary ID", BYTES(1), 41, "Calibrate Speed"),
       UINT8_DESC_FIELD("Number of pairs of data points", "actual range is 0 to 25. 254=restore default speed curve"),
       FREQUENCY_FIELD("Input frequency", 0.1),
       SPEED_U16_CM_FIELD("Output speed"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .repeatingField1 = 5}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
@@ -2136,7 +2152,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_FAST,
      6,
-     2,
+     0,
      {COMPANY(135),
       MATCH_FIELD("Proprietary ID", BYTES(1), 42, "Calibrate Temperature"),
       LOOKUP_FIELD("Temperature instance", 2, AIRMAR_TEMPERATURE_INSTANCE),
@@ -2146,34 +2162,64 @@ Pgn pgnList[] = {
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
-    {"Airmar: Speed Filter",
+    {"Airmar: Speed Filter None",
      126720,
      PACKET_COMPLETE,
      PACKET_FAST,
-     8,
-     2,
+     6,
+     0,
      {COMPANY(135),
       MATCH_FIELD("Proprietary ID", BYTES(1), 43, "Speed Filter"),
-      LOOKUP_FIELD("Filter type", 4, AIRMAR_FILTER),
+      MATCH_FIELD("Filter type", 4, 0, "No filter"),
       RESERVED_FIELD(4),
-      TIME_UFIX16_CS_FIELD("Sample interval", NULL),
-      TIME_UFIX16_CS_FIELD("Filter duration", NULL),
+      TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the paddlewheel pulse accumulator"),
       END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
-    {"Airmar: Temperature Filter",
+    {"Airmar: Speed Filter IIR",
      126720,
      PACKET_COMPLETE,
      PACKET_FAST,
      8,
-     2,
+     0,
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 43, "Speed Filter"),
+      MATCH_FIELD("Filter type", 4, 1, "IIR filter"),
+      RESERVED_FIELD(4),
+      TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the paddlewheel pulse accumulator"),
+      TIME_UFIX16_CS_FIELD("Filter duration", "Duration of filter, must be bigger than the sample interval"),
+      END_OF_FIELDS}}
+
+    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+    ,
+    {"Airmar: Temperature Filter None",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     8,
+     0,
      {COMPANY(135),
       MATCH_FIELD("Proprietary ID", BYTES(1), 44, "Temperature Filter"),
-      LOOKUP_FIELD("Filter type", 4, AIRMAR_FILTER),
+      MATCH_FIELD("Filter type", 4, 0, "No filter"),
       RESERVED_FIELD(4),
-      TIME_UFIX16_CS_FIELD("Sample interval", NULL),
-      TIME_UFIX16_CS_FIELD("Filter duration", NULL),
+      TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the water temperature thermistor"),
+      END_OF_FIELDS}}
+
+    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
+    ,
+    {"Airmar: Temperature Filter IIR",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     8,
+     0,
+     {COMPANY(135),
+      MATCH_FIELD("Proprietary ID", BYTES(1), 44, "Temperature Filter"),
+      MATCH_FIELD("Filter type", 4, 1, "IIR filter"),
+      RESERVED_FIELD(4),
+      TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the water temperature thermistor"),
+      TIME_UFIX16_CS_FIELD("Filter duration", "Duration of filter, must be bigger than the sample interval"),
       END_OF_FIELDS}}
 
     /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
@@ -2183,7 +2229,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_FAST,
      6,
-     2,
+     0,
      {COMPANY(135),
       MATCH_FIELD("Proprietary ID", BYTES(1), 46, "NMEA 2000 options"),
       LOOKUP_FIELD("Transmission Interval", 2, AIRMAR_TRANSMISSION_INTERVAL),
@@ -2767,12 +2813,10 @@ Pgn pgnList[] = {
      127503,
      PACKET_COMPLETE,
      PACKET_FAST,
-     2 + 3 * 18,
+     2,
      10,
      {INSTANCE_FIELD,
-      UINT8_FIELD("Number of Lines")
-
-          ,
+      UINT8_FIELD("Number of Lines"),
       SIMPLE_FIELD("Line", 2),
       LOOKUP_FIELD("Acceptability", 2, ACCEPTABILITY),
       RESERVED_FIELD(4),
@@ -2784,15 +2828,16 @@ Pgn pgnList[] = {
       POWER_U32_VAR_FIELD("Reactive Power"),
       POWER_FACTOR_U8_FIELD,
       END_OF_FIELDS},
-     .interval = 1500}
+     .interval        = 1500,
+     .repeatingField1 = 2}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
     {"AC Output Status",
      127504,
      PACKET_COMPLETE,
-     PACKET_SINGLE,
-     2 + 3 * 18,
+     PACKET_FAST,
+     2,
      10,
      {INSTANCE_FIELD,
       UINT8_FIELD("Number of Lines"),
@@ -2807,7 +2852,8 @@ Pgn pgnList[] = {
       POWER_U32_VAR_FIELD("Reactive Power"),
       POWER_FACTOR_U8_FIELD,
       END_OF_FIELDS},
-     .interval = 1500}
+     .interval        = 1500,
+     .repeatingField1 = 2}
 
     /* http://www.maretron.com/support/manuals/TLA100UM_1.2.pdf */
     /* Observed from EP65R */
@@ -3340,7 +3386,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Reference Station ID", 12),
       TIME_UFIX16_CS_FIELD("Age of DGNSS Corrections", NULL),
       END_OF_FIELDS},
-     .interval = 1000}
+     .interval        = 1000,
+     .repeatingField1 = 15}
 
     ,
     {"Time & Date",
@@ -3591,30 +3638,31 @@ Pgn pgnList[] = {
      129285,
      PACKET_COMPLETE,
      PACKET_FAST,
-     233,
+     12,
      4,
      {UINT16_FIELD("Start RPS#"),
       UINT16_FIELD("nItems"),
       UINT16_FIELD("Database ID"),
       UINT16_FIELD("Route ID"),
-      SIMPLE_FIELD("Navigation direction in route", 2),
-      SIMPLE_FIELD("Supplementary Route/WP data available", 2),
-      RESERVED_FIELD(4),
-      STRINGVAR_FIELD("Route Name"),
+      LOOKUP_FIELD("Navigation direction in route", 4, DIRECTION),
+      LOOKUP_FIELD("Supplementary Route/WP data available", 2, OFF_ON),
+      RESERVED_FIELD(2),
+      STRINGLAU_FIELD("Route Name"),
       RESERVED_FIELD(BYTES(1)),
       UINT16_FIELD("WP ID"),
-      STRINGVAR_FIELD("WP Name"),
+      STRINGLAU_FIELD("WP Name"),
       LATITUDE_I32_FIELD("WP Latitude"),
       LONGITUDE_I32_FIELD("WP Longitude"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     ,
     {"Set & Drift, Rapid Update",
      129291,
      PACKET_NOT_SEEN,
      PACKET_SINGLE,
-     8,
+     6,
      0,
      {UINT8_FIELD("SID"),
       LOOKUP_FIELD("Set Reference", 2, DIRECTION_REFERENCE),
@@ -3704,7 +3752,7 @@ Pgn pgnList[] = {
      129540,
      PACKET_COMPLETE,
      PACKET_FAST,
-     233,
+     3,
      7,
      {UINT8_FIELD("SID"),
       LOOKUP_FIELD("Range Residual Mode", 2, RANGE_RESIDUAL_MODE),
@@ -3718,7 +3766,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Status", 4, SATELLITE_STATUS),
       RESERVED_FIELD(4),
       END_OF_FIELDS},
-     .interval = 1000}
+     .interval        = 1000,
+     .repeatingField1 = 4}
 
     ,
     {"GPS Almanac Data",
@@ -4045,8 +4094,8 @@ Pgn pgnList[] = {
      129797,
      PACKET_COMPLETE,
      PACKET_FAST,
-     233,
-     0,
+     8,
+     1,
      {SIMPLE_FIELD("Message ID", 6),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       UINT32_FIELD("Source ID"),
@@ -4054,9 +4103,10 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(2),
       UINT16_FIELD("Number of Bits in Binary Data Field"),
-      BINARY_FIELD("Binary Data", BYTES(FASTPACKET_MAX_SIZE), NULL),
+      BINARY_FIELD("Binary Data", 1, NULL),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 7}
 
     ,
     {"AIS SAR Aircraft Position Report",
@@ -4161,29 +4211,28 @@ Pgn pgnList[] = {
      129803,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     8,
-     8,
+     6,
+     4,
      {SIMPLE_FIELD("Message ID", 6),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       MMSI_FIELD("Source ID"),
+      RESERVED_FIELD(1),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
-      RESERVED_FIELD(3),
+      SPARE_FIELD(2),
       MMSI_FIELD("Destination ID"),
-      UINT8_FIELD("Message ID A"),
-      SIMPLE_FIELD("Slot Offset A", 14),
       RESERVED_FIELD(2),
-      UINT8_FIELD("Message ID B"),
-      SIMPLE_FIELD("Slot Offset B", 14),
-      RESERVED_FIELD(2),
+      SIMPLE_FIELD("Message ID A", 6),
+      SIMPLE_FIELD("Slot Offset A", 16),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 255}
 
     ,
     {"AIS Assignment Mode Command",
      129804,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     23,
+     6,
      3,
      {SIMPLE_FIELD("Message ID", 6),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
@@ -4194,14 +4243,15 @@ Pgn pgnList[] = {
       UINT16_FIELD("Offset"),
       UINT16_FIELD("Increment"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 255}
 
     ,
     {"AIS Data Link Management Message",
      129805,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     8,
+     6,
      4,
      {SIMPLE_FIELD("Message ID", 6),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
@@ -4211,9 +4261,10 @@ Pgn pgnList[] = {
       UINT16_FIELD("Offset"),
       UINT8_FIELD("Number of Slots"),
       UINT8_FIELD("Timeout"),
-      UINT8_FIELD("Increment"),
+      UINT16_FIELD("Increment"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 255}
 
     ,
     {"AIS Channel Management",
@@ -4314,7 +4365,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
       STRINGLAU_FIELD("DSC Expansion Field Data"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 255}
 
     ,
     {"DSC Call Information",
@@ -4346,7 +4398,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
       STRINGLAU_FIELD("DSC Expansion Field Data"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 255}
 
     ,
     {"AIS Class B static data (msg 24 Part A)",
@@ -4402,13 +4455,13 @@ Pgn pgnList[] = {
      130064,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     3,
      9,
      {UINT8_FIELD("Start Database ID"),
       UINT8_FIELD("nItems"),
       UINT8_FIELD("Number of Databases Available"),
       UINT8_FIELD("Database ID"),
-      STRING_FIX_FIELD("Database Name", BYTES(8)),
+      STRINGLAU_FIELD("Database Name"),
       TIME_FIELD("Database Timestamp"),
       DATE_FIELD("Database Datestamp"),
       SIMPLE_FIELD("WP Position Resolution", 6),
@@ -4417,37 +4470,39 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of WPs in Database"),
       UINT16_FIELD("Number of Bytes in Database"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     ,
     {"Route and WP Service - Route List",
      130065,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     3,
      6,
      {UINT8_FIELD("Start Route ID"),
       UINT8_FIELD("nItems"),
       UINT8_FIELD("Number of Routes in Database"),
       UINT8_FIELD("Database ID"),
       UINT8_FIELD("Route ID"),
-      STRING_FIX_FIELD("Route Name", BYTES(8)),
+      STRINGLAU_FIELD("Route Name"),
       RESERVED_FIELD(4),
       SIMPLE_FIELD("WP Identification Method", 2),
       SIMPLE_FIELD("Route Status", 2),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     ,
     {"Route and WP Service - Route/WP-List Attributes",
      130066,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     12,
      0,
      {UINT8_FIELD("Database ID"),
       UINT8_FIELD("Route ID"),
-      STRING_FIX_FIELD("Route/WP-List Name", BYTES(8)),
+      STRINGLAU_FIELD("Route/WP-List Name"),
       TIME_FIELD("Route/WP-List Timestamp"),
       DATE_FIELD("Route/WP-List Datestamp"),
       UINT8_FIELD("Change at Last Timestamp"),
@@ -4465,7 +4520,7 @@ Pgn pgnList[] = {
      130067,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     6,
      4,
      {UINT8_FIELD("Start RPS#"),
       UINT8_FIELD("nItems"),
@@ -4473,18 +4528,19 @@ Pgn pgnList[] = {
       UINT8_FIELD("Database ID"),
       UINT8_FIELD("Route ID"),
       UINT8_FIELD("WP ID"),
-      STRING_FIX_FIELD("WP Name", BYTES(8)),
+      STRINGLAU_FIELD("WP Name"),
       LATITUDE_I32_FIELD("WP Latitude"),
       LONGITUDE_I32_FIELD("WP Longitude"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     ,
     {"Route and WP Service - Route - WP Name",
      130068,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     6,
      2,
      {UINT8_FIELD("Start RPS#"),
       UINT8_FIELD("nItems"),
@@ -4492,16 +4548,17 @@ Pgn pgnList[] = {
       UINT8_FIELD("Database ID"),
       UINT8_FIELD("Route ID"),
       UINT8_FIELD("WP ID"),
-      STRING_FIX_FIELD("WP Name", BYTES(8)),
+      STRINGLAU_FIELD("WP Name"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     ,
     {"Route and WP Service - XTE Limit & Navigation Method",
      130069,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     4,
      6,
      {UINT8_FIELD("Start RPS#"),
       UINT8_FIELD("nItems"),
@@ -4513,87 +4570,84 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Nav. Method in the leg after WP", 4),
       RESERVED_FIELD(4),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     ,
     {"Route and WP Service - WP Comment",
      130070,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     6,
      2,
      {UINT8_FIELD("Start ID"),
       UINT8_FIELD("nItems"),
       UINT16_FIELD("Number of WPs with Comments"),
       UINT8_FIELD("Database ID"),
-      UINT8_FIELD("Route ID")
-
-          ,
+      UINT8_FIELD("Route ID"),
       UINT8_FIELD("WP ID / RPS#"),
-      STRING_FIX_FIELD("Comment", BYTES(8)),
+      STRINGLAU_FIELD("Comment"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     ,
     {"Route and WP Service - Route Comment",
      130071,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     5,
      2,
      {UINT8_FIELD("Start Route ID"),
       UINT8_FIELD("nItems"),
       UINT16_FIELD("Number of Routes with Comments"),
-      UINT8_FIELD("Database ID")
-
-          ,
+      UINT8_FIELD("Database ID"),
       UINT8_FIELD("Route ID"),
-      STRING_FIX_FIELD("Comment", BYTES(8)),
+      STRINGLAU_FIELD("Comment"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     ,
     {"Route and WP Service - Database Comment",
      130072,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     4,
      2,
      {UINT8_FIELD("Start Database ID"),
       UINT8_FIELD("nItems"),
-      UINT16_FIELD("Number of Databases with Comments")
-
-          ,
+      UINT16_FIELD("Number of Databases with Comments"),
       UINT8_FIELD("Database ID"),
-      STRING_FIX_FIELD("Comment", BYTES(8)),
+      STRINGLAU_FIELD("Comment"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     ,
     {"Route and WP Service - Radius of Turn",
      130073,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     6,
      2,
      {UINT8_FIELD("Start RPS#"),
       UINT8_FIELD("nItems"),
       UINT16_FIELD("Number of WPs with a specific Radius of Turn"),
       UINT8_FIELD("Database ID"),
-      UINT8_FIELD("Route ID")
-
-          ,
+      UINT8_FIELD("Route ID"),
       UINT8_FIELD("RPS#"),
       UINT16_FIELD("Radius of Turn"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     ,
     {"Route and WP Service - WP List - WP Name & Position",
      130074,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     8,
+     6,
      4,
      {UINT8_FIELD("Start WP ID"),
       UINT8_FIELD("nItems"),
@@ -4601,11 +4655,12 @@ Pgn pgnList[] = {
       UINT8_FIELD("Database ID"),
       RESERVED_FIELD(BYTES(1)),
       UINT8_FIELD("WP ID"),
-      STRING_FIX_FIELD("WP Name", BYTES(8)),
+      STRINGLAU_FIELD("WP Name"),
       LATITUDE_I32_FIELD("WP Latitude"),
       LONGITUDE_I32_FIELD("WP Longitude"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 2}
 
     /* http://askjackrabbit.typepad.com/ask_jack_rabbit/page/7/ */
     ,
@@ -4743,8 +4798,8 @@ Pgn pgnList[] = {
       LONGITUDE_I32_FIELD("Station Longitude"),
       DISTANCE_FIX16_MM_FIELD("Tide Level", "Relative to MLLW"),
       LENGTH_UFIX16_CM_FIELD("Tide Level standard deviation"),
-      STRINGVAR_FIELD("Station ID"),
-      STRINGVAR_FIELD("Station Name"),
+      STRINGLAU_FIELD("Station ID"),
+      STRINGLAU_FIELD("Station Name"),
       END_OF_FIELDS},
      .interval = 1000}
 
@@ -4763,8 +4818,8 @@ Pgn pgnList[] = {
       LONGITUDE_I32_FIELD("Station Longitude"),
       FLOAT_FIELD("Salinity", "ppt", NULL),
       TEMPERATURE_FIELD("Water Temperature"),
-      STRINGVAR_FIELD("Station ID"),
-      STRINGVAR_FIELD("Station Name"),
+      STRINGLAU_FIELD("Station ID"),
+      STRINGLAU_FIELD("Station Name"),
       END_OF_FIELDS},
      .interval = 1000}
 
@@ -4785,8 +4840,8 @@ Pgn pgnList[] = {
       SPEED_U16_CM_FIELD("Current speed"),
       ANGLE_U16_FIELD("Current flow direction", NULL),
       TEMPERATURE_FIELD("Water Temperature"),
-      STRINGVAR_FIELD("Station ID"),
-      STRINGVAR_FIELD("Station Name"),
+      STRINGLAU_FIELD("Station ID"),
+      STRINGLAU_FIELD("Station Name"),
       END_OF_FIELDS},
      .interval = 1000}
 
@@ -4810,8 +4865,8 @@ Pgn pgnList[] = {
       SPEED_U16_CM_FIELD("Wind Gusts"),
       PRESSURE_UFIX16_HPA_FIELD("Atmospheric Pressure"),
       TEMPERATURE_FIELD("Ambient Temperature"),
-      STRINGVAR_FIELD("Station ID"),
-      STRINGVAR_FIELD("Station Name"),
+      STRINGLAU_FIELD("Station ID"),
+      STRINGLAU_FIELD("Station Name"),
       END_OF_FIELDS},
      .interval = 1000}
 
@@ -4892,7 +4947,7 @@ Pgn pgnList[] = {
      130569,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     233,
+     26,
      0,
      {LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
       LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
@@ -4920,7 +4975,7 @@ Pgn pgnList[] = {
      130570,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     233,
+     20,
      0,
      {LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
       UINT8_DESC_FIELD("Number", "Source number per type"),
@@ -4946,7 +5001,7 @@ Pgn pgnList[] = {
      130571,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     233,
+     14,
      2,
      {
          LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
@@ -4962,7 +5017,8 @@ Pgn pgnList[] = {
          // TODO: Add support for extra fields *after* the repeating fields.
          // The NMEA, in all its wisdom, suddenly feels a repeating field PGN can act to different rules. Sigh.
          // , { "Artist", BYTES(2), RES_STRINGLAU, false, 0, "" }
-     }}
+     },
+     .repeatingField1 = 6}
 
     ,
     {"Library Data Search",
@@ -4987,7 +5043,7 @@ Pgn pgnList[] = {
      130573,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     233,
+     6,
      10,
      {UINT16_DESC_FIELD("ID offset", "First ID in this PGN"),
       UINT16_DESC_FIELD("ID count", "Number of IDs in this PGN"),
@@ -5002,21 +5058,23 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Connected", 2, YES_NO),
       LOOKUP_BITFIELD("Repeat support", 2, ENTERTAINMENT_REPEAT_BITFIELD),
       LOOKUP_BITFIELD("Shuffle support", 2, ENTERTAINMENT_SHUFFLE_BITFIELD),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .repeatingField1 = 2}
 
     ,
     {"Supported Zone Data",
      130574,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     233,
+     3,
      2,
      {UINT8_DESC_FIELD("First zone ID", "First Zone in this PGN"),
       UINT8_DESC_FIELD("Zone count", "Number of Zones in this PGN"),
       UINT8_DESC_FIELD("Total zone count", "Total Zones supported by this device"),
       LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
       STRINGLAU_FIELD("Name"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .repeatingField1 = 2}
 
     ,
     {"Small Craft Status",
@@ -5068,8 +5126,8 @@ Pgn pgnList[] = {
     {"System Configuration",
      130579,
      PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_NOT_SEEN,
-     PACKET_FAST,
-     (48 / 8 + 2),
+     PACKET_SINGLE,
+     8,
      0,
      {LOOKUP_FIELD("Power", 2, YES_NO),
       LOOKUP_FIELD("Default Settings", 2, ENTERTAINMENT_DEFAULT_SETTINGS),
@@ -5097,20 +5155,21 @@ Pgn pgnList[] = {
      130581,
      PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_NOT_SEEN,
      PACKET_FAST,
-     14,
+     3,
      2,
      {UINT8_DESC_FIELD("First zone ID", "First Zone in this PGN"),
       UINT8_DESC_FIELD("Zone count", "Number of Zones in this PGN"),
       UINT8_DESC_FIELD("Total zone count", "Total Zones supported by this device"),
       LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
       STRINGLAU_FIELD("Zone name"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .repeatingField1 = 2}
 
     ,
     {"Zone Volume",
      130582,
      PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_NOT_SEEN,
-     PACKET_FAST,
+     PACKET_SINGLE,
      4,
      0,
      {LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
@@ -5126,21 +5185,22 @@ Pgn pgnList[] = {
      130583,
      PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_NOT_SEEN,
      PACKET_FAST,
-     233,
+     3,
      2,
      {UINT8_DESC_FIELD("First preset", "First preset in this PGN"),
       UINT8_FIELD("Preset count"),
       UINT8_FIELD("Total preset count"),
       LOOKUP_FIELD("Preset type", BYTES(1), ENTERTAINMENT_EQ),
       STRINGLAU_FIELD("Preset name"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .repeatingField1 = 2}
 
     ,
     {"Available Bluetooth addresses",
      130584,
-     PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_NOT_SEEN,
+     PACKET_NOT_SEEN,
      PACKET_FAST,
-     233,
+     3,
      3,
      {UINT8_DESC_FIELD("First address", "First address in this PGN"),
       UINT8_FIELD("Address count"),
@@ -5149,14 +5209,15 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Status", BYTES(1), BLUETOOTH_STATUS),
       STRINGLAU_FIELD("Device name"),
       PERCENTAGE_U8_FIELD("Signal strength"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .repeatingField1 = 2}
 
     ,
     {"Bluetooth source status",
      130585,
      PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_NOT_SEEN,
-     PACKET_FAST,
-     233,
+     PACKET_SINGLE,
+     8,
      0,
      {UINT8_FIELD("Source number"),
       LOOKUP_FIELD("Status", 4, BLUETOOTH_SOURCE_STATUS),
@@ -5171,12 +5232,12 @@ Pgn pgnList[] = {
      PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_NOT_SEEN,
      PACKET_FAST,
      14,
-     2,
+     0,
      {LOOKUP_FIELD("Zone ID", BYTES(1), ENTERTAINMENT_ZONE),
       PERCENTAGE_U8_FIELD("Volume limit"),
       PERCENTAGE_I8_FIELD("Fade"),
       PERCENTAGE_I8_FIELD("Balance"),
-      PERCENTAGE_I8_FIELD("Sub volume"),
+      PERCENTAGE_U8_FIELD("Sub volume"),
       PERCENTAGE_I8_FIELD("EQ - Treble"),
       PERCENTAGE_I8_FIELD("EQ - Mid range"),
       PERCENTAGE_I8_FIELD("EQ - Bass"),

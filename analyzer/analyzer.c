@@ -88,7 +88,6 @@ static uint32_t currentTime = UINT32_MAX;
 static enum RawFormats detectFormat(const char *msg);
 static void            printCanFormat(RawMessage *msg);
 static bool            printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-static void            fillFieldCounts(void);
 static void            printCanRaw(RawMessage *msg);
 
 static void usage(char **argv, char **av)
@@ -268,7 +267,6 @@ int main(int argc, char **argv)
     printf("{\"version\":\"%s\",\"units\":\"%s\"}\n", VERSION, showSI ? "si" : "std");
   }
 
-  fillFieldCounts();
   fillLookups();
   fillFieldType();
   checkPgnList();
@@ -412,28 +410,6 @@ static enum RawFormats detectFormat(const char *msg)
   }
 
   return RAWFORMAT_UNKNOWN;
-}
-
-static void fillFieldCounts(void)
-{
-  size_t i, j;
-
-  for (i = 0; i < ARRAY_SIZE(pgnList); i++)
-  {
-    for (j = 0; pgnList[i].fieldList[j].name && j < ARRAY_SIZE(pgnList[i].fieldList); j++)
-      ;
-    if (j == ARRAY_SIZE(pgnList[i].fieldList))
-    {
-      logError("Internal error: PGN %d '%s' does not have correct fieldlist.\n", pgnList[i].pgn, pgnList[i].description);
-      exit(2);
-    }
-    if (j == 0 && pgnList[i].complete == PACKET_COMPLETE)
-    {
-      logError("Internal error: PGN %d '%s' does not have fields.\n", pgnList[i].pgn, pgnList[i].description);
-      exit(2);
-    }
-    pgnList[i].fieldCount = j;
-  }
 }
 
 static void printCanRaw(RawMessage *msg)
