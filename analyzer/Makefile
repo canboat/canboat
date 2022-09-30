@@ -60,7 +60,7 @@ $(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE)
 	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
 
 $(HTML2FILE): $(XSL2FILE) $(XML2FILE)
-	xsltproc $(XSL2FILE) $(XML2FILE) --noout
+	xsltproc --noout $(XSL2FILE) $(XML2FILE)
 
 $(NGTXMLFILE): $(ANALYZER_EXPLAIN_DEP)
 	$(ANALYZER_EXPLAIN) -explain-ngt-xml -camel -v1 >$(NGTXMLFILE)

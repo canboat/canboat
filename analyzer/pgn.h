@@ -374,10 +374,10 @@ typedef struct
 
 #define MANUFACTURER_FIELDS MANUFACTURER_FIELD(NULL, NULL, false), RESERVED_FIELD(2), INDUSTRY_FIELD(NULL, NULL, false)
 
-#define MANUFACTURER_PROPRIETARY_FIELDS                                  \
-  MANUFACTURER_FIELD(NULL, "Only in PGN when PRN is proprietary", true), \
-      RESERVED_PROP_FIELD(2, "Only in PGN when PRN is proprietary"),     \
-      INDUSTRY_FIELD(NULL, "Only in PGN when PRN is proprietary", true)
+#define MANUFACTURER_PROPRIETARY_FIELDS                                            \
+  MANUFACTURER_FIELD(NULL, "Only in PGN when Commanded PGN is proprietary", true), \
+      RESERVED_PROP_FIELD(2, "Only in PGN when Commanded PGN is proprietary"),     \
+      INDUSTRY_FIELD(NULL, "Only in PGN when Commanded PGN is proprietary", true)
 
 #define INTEGER_DESC_FIELD(nam, len, desc)                         \
   {                                                                \
@@ -796,7 +796,7 @@ Pgn pgnList[] = {
 
     /* PDU1 (addressed) single-frame PGN range 0E800 to 0xEEFF (59392 - 61183) */
 
-    {"0xE800-0xEEFF: Unknown single-frame addressed",
+    {"0xE800-0xEEFF: Standardized single-frame addressed",
      0,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -804,8 +804,9 @@ Pgn pgnList[] = {
      0,
      {BINARY_FIELD("Data", BYTES(8), NULL), END_OF_FIELDS},
      .fallback    = true,
-     .explanation = "PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to "
-                    "0xEFFF (59392 - 61183)."}
+     .explanation = "Standardized PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to "
+                    "0xEE00 (59392 - 60928). "
+                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     /************ Protocol PGNs ************/
     /* http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
@@ -990,18 +991,16 @@ Pgn pgnList[] = {
     /* PDU1 (addressed) single-frame PGN range 0EF00 to 0xEFFF (61184 - 61439) */
 
     ,
-    {"0xEF00-0xEFFF: Manufacturer Proprietary single-frame addressed",
+    {"0xEF00: Manufacturer Proprietary single-frame addressed",
      61184,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      8,
      0,
      {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
-     0,
-     0,
-     true,
-     .explanation = "Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN range 0xEF00 to "
-                    "0xEFFF (61184 - 61439)."}
+     .fallback    = true,
+     .explanation = "Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). "
+                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     /* The following probably have the wrong Proprietary ID */
     ,
@@ -1039,7 +1038,7 @@ Pgn pgnList[] = {
     /* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
 
     ,
-    {"0xF000-0xFEFF: Unknown single-frame non-addressed",
+    {"0xF000-0xFEFF: Standardized single-frame non-addressed",
      61440,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -1048,7 +1047,8 @@ Pgn pgnList[] = {
      {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
      .fallback    = true,
      .explanation = "PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to "
-                    "0xFEFF (61440 - 65279)."}
+                    "0xFEFF (61440 - 65279). "
+                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     /* Maretron ACM 100 manual documents PGN 65001-65030 */
 
@@ -1415,7 +1415,7 @@ Pgn pgnList[] = {
     /* proprietary PDU2 (non addressed) single-frame range 0xFF00 to 0xFFFF (65280 - 65535) */
 
     ,
-    {"Manufacturer Proprietary single-frame non-addressed",
+    {"0xFF00-0xFFFF: Manufacturer Proprietary single-frame non-addressed",
      65280,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -1424,7 +1424,10 @@ Pgn pgnList[] = {
      {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(6), NULL), END_OF_FIELDS},
      0,
      0,
-     true}
+     true,
+     .explanation = "Manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xFF00 to "
+                    "0xFFFF (65280 - 65535). "
+                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     ,
     {"Furuno: Heave",
@@ -1698,9 +1701,10 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Autopilot Mode", 65480, PACKET_INCOMPLETE, PACKET_SINGLE, 0x08, 0, {COMPANY(1857), END_OF_FIELDS}}
 
-    /* PDU1 (addressed) fast-packet PGN range 0x10000 to 0x1EEFF (65536 - 126719) */
+    /* PDU1 (addressed) fast-packet PGN range 0x10000 to 0x1EE00 (65536 - 126464) */
+    /* Only 0x1ED00 and 0x1EE00 seem to be used? */
     ,
-    {"0x10000 - 0x1EEFF: Unknown fast-packet addressed",
+    {"0x1ED00 - 0x1EE00: Standardized fast-packet addressed",
      65536,
      PACKET_INCOMPLETE_LOOKUP,
      PACKET_FAST,
@@ -1708,8 +1712,9 @@ Pgn pgnList[] = {
      0,
      {BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), NULL), END_OF_FIELDS},
      .fallback    = true,
-     .explanation = "PGNs in PDU1 (addressed) fast-packet PGN range 0x10000 to "
-                    "0x1EEFF (65536 - 126719)."}
+     .explanation = "Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to "
+                    "0x1EE00 (65536 - 126464). "
+                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
     /* http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf */
@@ -1791,7 +1796,10 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This is the Read Fields variation of this group function PGN. The receiver shall respond by sending a Read "
-                    "Reply variation of this PGN, containing the desired values.",
+                    "Reply variation of this PGN, containing the desired values."
+                    " This PGN is special as it contains two sets of repeating fields, and the fields that contain the information "
+                    "how many repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if "
+                    "field 2 is for a proprietary PGN",
      .repeatingField1 = 7,
      .repeatingField2 = 8}
 
@@ -1815,7 +1823,10 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .explanation
-     = "This is the Read Fields Reply variation of this group function PGN. The receiver is responding to a Read Fields request.",
+     = "This is the Read Fields Reply variation of this group function PGN. The receiver is responding to a Read Fields request."
+       " This PGN is special as it contains two sets of repeating fields, and the fields that contain the information how many "
+       "repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if field 2 is for a "
+       "proprietary PGN",
      .repeatingField1 = 7,
      .repeatingField2 = 8}
 
@@ -1839,7 +1850,10 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This is the Write Fields variation of this group function PGN. The receiver shall modify internal state and "
-                    "reply with a Write Fields Reply message.",
+                    "reply with a Write Fields Reply message."
+                    " This PGN is special as it contains two sets of repeating fields, and the fields that contain the information "
+                    "how many repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if "
+                    "field 2 is for a proprietary PGN",
      .repeatingField1 = 7,
      .repeatingField2 = 8}
 
@@ -1863,7 +1877,10 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .explanation
-     = "This is the Write Fields Reply variation of this group function PGN. The receiver is responding to a Write Fields request.",
+     = "This is the Write Fields Reply variation of this group function PGN. The receiver is responding to a Write Fields request."
+       " This PGN is special as it contains two sets of repeating fields, and the fields that contain the information how many "
+       "repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if field 2 is for a "
+       "proprietary PGN",
      .repeatingField1 = 7,
      .repeatingField2 = 8}
 
@@ -1883,7 +1900,7 @@ Pgn pgnList[] = {
     /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
     ,
-    {"0x1EF00-0x1EFFF: Unknown Manufacturer Proprietary fast-packet addressed",
+    {"0x1EF00-0x1EFFF: Manufacturer Proprietary fast-packet addressed",
      126720,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -1892,7 +1909,8 @@ Pgn pgnList[] = {
      {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), NULL), END_OF_FIELDS},
      .fallback    = true,
      .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN range 0x1EF00 to "
-                    "0x1EFFF (126720 - 126975)."}
+                    "0x1EFFF (126720 - 126975). "
+                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     ,
     {"Seatalk1: Pilot Mode",
@@ -2261,7 +2279,7 @@ Pgn pgnList[] = {
 
     /* PDU2 (non addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815) */
     ,
-    {"0x1F000-0x1FEFF: Unknown mixed single/fast packet non-addressed",
+    {"0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed",
      126976,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -2269,8 +2287,9 @@ Pgn pgnList[] = {
      0,
      {BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), NULL), END_OF_FIELDS},
      .fallback    = true,
-     .explanation = "PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to "
-                    "0x1FEFF (126976 - 130815)."}
+     .explanation = "Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to "
+                    "0x1FEFF (126976 - 130815). "
+                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     ,
     {"Alert",
@@ -5251,7 +5270,7 @@ Pgn pgnList[] = {
     /* proprietary PDU2 (non addressed) fast packet PGN range 0x1FF00 to 0x1FFFF (130816 - 131071) */
 
     ,
-    {"0x1FF00-0x1FFFF: Unknown Manufacturer Specific fast-packet non-addressed",
+    {"0x1FF00-0x1FFFF: Manufacturer Specific fast-packet non-addressed",
      130816,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -5261,7 +5280,8 @@ Pgn pgnList[] = {
      .fallback = true,
      .explanation
      = "This definition is used for Manufacturer Specific PGNs in PDU2 (non-addressed) fast-packet PGN range 0x1FF00 to "
-       "0x1FFFF (130816 - 131071) for which no reverse-engineered definition is available."}
+       "0x1FFFF (130816 - 131071). "
+       "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     ,
     {"SonicHub: Init #2",
