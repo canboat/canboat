@@ -73,10 +73,10 @@
             <xsl:attribute name="id">
               <xsl:value-of select="concat('pgn-', PGN)"/>
             </xsl:attribute>
-            <xsl:value-of select="Description/text()"/>
+            <xsl:value-of select="Description"/>
           </h2>
           <p>
-            <xsl:value-of select="Explanation/."/>
+            <xsl:value-of select="Explanation"/>
           </p>
         </xsl:when>
         <xsl:otherwise>
@@ -102,7 +102,7 @@
             </p>
           </xsl:if>
           <p>
-            <xsl:value-of select="Explanation/."/>
+            <xsl:value-of select="Explanation"/>
           </p>
           <p>
             <xsl:choose>
@@ -239,6 +239,17 @@
               </tr>
             </xsl:for-each>
           </table>
+          <xsl:if test="URL">
+            <p>
+              Source:
+              <a>
+                <xsl:attribute name="href">
+                  <xsl:value-of select="URL"/>
+                </xsl:attribute>
+                <xsl:value-of select="URL"/>
+              </a>
+            </p>
+          </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:for-each>
@@ -358,8 +369,8 @@
         </xsl:when>
       </xsl:choose>
       <xsl:if test="URL">
-        <p> 
-          External website explanation: 
+        <p>
+          For more information see:
           <a>
             <xsl:attribute name="href">
               <xsl:value-of select="URL"/>
@@ -430,6 +441,41 @@
           <p class='xs'>
             <xsl:value-of select="/PGNDefinitions/Copyright"/>
           </p>
+
+          <h2> Reverse engineering the NMEA 2000 standardized and manufacturer proprietary data </h2>
+
+          <p>
+            In the late 90s a number of marine electronics manufacturers realised that there was a need for a better
+            protocol than NMEA 0183, which did not suit larger networks. The result was the NMEA 2000 standard. This
+            is based on a CAN bus running at 250.000 kbit/s. It allows up to 250 devices on the same bus, although
+            this will probably be overloaded.
+          </p>
+          <p>
+            Unfortunately, the NMEA 2000 standard is using the same "closed" mentality as ISO and other industry standards.
+            This is completely different from the world of computing, where all such protocols are open for use by anyone.
+            In 2008, as I wanted to interface to my brand new NMEA 2000 interface and show the data on this newfangled device
+            called an iPhone, I started reverse engineering the protocol. At the time there was limited info available.
+            This has improved over time; interestingly even the NMEA leaks a lot of information that is publicly available.
+            For instance the list of PGNs and the field <i>names</i> are available at
+            <a href="http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf">http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf</a>.
+          </p>
+          <p>
+            This document will provide a human readable explanation of everything we (as there are now over 20 contributors) have 
+            learned. Right now some basic concepts are not yet explained, but you will find all PGNs, lookup lists, and data types
+            here.
+          </p>
+          <p>
+            If you have data (even if it is just a logfile for a new device) to contribute, please open an issue at
+            <a href="https://github.com/canboat/canboat/issues">https://github.com/canboat/canboat/issues</a> or send
+            a pull request at <a href="https://github.com/canboat/canboat/pulls">https://github.com/canboat/canboat/pulls</a>.
+          </p>
+          <p>
+            <b>Note:</b> It should be obvious that all data below is <i><b>not authoritative</b></i>; it is just our (my)
+            interpretation.
+            If you are a manufacturer and want to create a NMEA 2000 device, become a member and buy the standard!
+          </p>
+
+
 
           <h2 id='frame-header'>ISO-11783 and NMEA2000 header</h2>
 

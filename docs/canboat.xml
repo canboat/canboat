@@ -5592,6 +5592,7 @@ limitations under the License.
       <PGN>65285</PGN>
       <Id>airmarBootStateAcknowledgment</Id>
       <Description>Airmar: Boot State Acknowledgment</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5833,6 +5834,7 @@ limitations under the License.
       <PGN>65286</PGN>
       <Id>airmarBootStateRequest</Id>
       <Description>Airmar: Boot State Request</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5881,6 +5883,7 @@ limitations under the License.
       <PGN>65287</PGN>
       <Id>airmarAccessLevel</Id>
       <Description>Airmar: Access Level</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -7250,6 +7253,7 @@ limitations under the License.
       <PGN>65408</PGN>
       <Id>airmarDepthQualityFactor</Id>
       <Description>Airmar: Depth Quality Factor</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -7322,6 +7326,7 @@ limitations under the License.
       <PGN>65409</PGN>
       <Id>airmarSpeedPulseCount</Id>
       <Description>Airmar: Speed Pulse Count</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -7412,16 +7417,17 @@ limitations under the License.
       <PGN>65410</PGN>
       <Id>airmarDeviceInformation</Id>
       <Description>Airmar: Device Information</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
       <Length>8</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -7589,6 +7595,7 @@ limitations under the License.
       <Id>nmeaRequestGroupFunction</Id>
       <Description>NMEA - Request group function</Description>
       <Explanation>This is the Request variation of this group function PGN. The receiver shall respond by sending the requested PGN, at the desired transmission interval.</Explanation>
+      <URL>http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
@@ -9439,13 +9446,12 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarAttitudeOffset</Id>
       <Description>Airmar: Attitude Offset</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>7</FieldCount>
       <Length>9</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -9538,14 +9544,15 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarCalibrateCompass</Id>
       <Description>Airmar: Calibrate Compass</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>16</FieldCount>
       <Length>24</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -9742,16 +9749,17 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarTrueWindOptions</Id>
       <Description>Airmar: True Wind Options</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>16</FieldCount>
       <Length>23</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -9949,13 +9957,12 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarSimulateMode</Id>
       <Description>Airmar: Simulate Mode</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>6</FieldCount>
       <Length>6</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -10030,13 +10037,12 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarCalibrateDepth</Id>
       <Description>Airmar: Calibrate Depth</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>6</FieldCount>
       <Length>6</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -10113,16 +10119,15 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarCalibrateSpeed</Id>
       <Description>Airmar: Calibrate Speed</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>7</FieldCount>
       <MinLength>4</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>5</RepeatingFieldSet1CountField>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -10211,13 +10216,12 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarCalibrateTemperature</Id>
       <Description>Airmar: Calibrate Temperature</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>7</FieldCount>
       <Length>6</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -10305,13 +10309,12 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarSpeedFilterNone</Id>
       <Description>Airmar: Speed Filter None</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>7</FieldCount>
       <Length>6</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -10400,13 +10403,12 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarSpeedFilterIir</Id>
       <Description>Airmar: Speed Filter IIR</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>8</FieldCount>
       <Length>8</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -10508,13 +10510,12 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarTemperatureFilterNone</Id>
       <Description>Airmar: Temperature Filter None</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>7</FieldCount>
       <Length>6</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -10603,13 +10604,12 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarTemperatureFilterIir</Id>
       <Description>Airmar: Temperature Filter IIR</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>8</FieldCount>
       <Length>8</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -10711,13 +10711,12 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarNmea2000Options</Id>
       <Description>Airmar: NMEA 2000 options</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>6</FieldCount>
       <Length>6</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11591,6 +11590,7 @@ limitations under the License.
       <Id>heartbeat</Id>
       <Description>Heartbeat</Description>
       <Explanation>Reception of this PGN confirms that a device is still present on the network.  Reception of this PGN may also be used to maintain an address to NAME association table within the receiving device.  The transmission interval may be used by the receiving unit to determine the time-out value for the connection supervision.  The value contained in Field 1 of this PGN reflects the PGN’s current Transmission Interval. Changes to this PGN’s Transmission Interval shall be reflected in Field 1.  The transmission interval can only be changed by using the Request Group Function PGN 126208 with no pairs of request parameters provided. Field 3 of the Request Group Function PGN 126208 may contain values between 1,000ms and 60,000ms.  This PGN cannot be requested by the ISO Request PGN 059904 or Request Group Function PGN 126208. In Request Group Function PGN 126208, setting Field 3 to a value of 0xFFFF FFFF and Field 4 to a value of 0xFFFF: “Transmit now without changing timing variables.” is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for additional context.</Explanation>
+      <URL>http://www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -14513,6 +14513,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127509</PGN>
       <Id>inverterStatus</Id>
       <Description>Inverter Status</Description>
+      <URL>https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -15396,6 +15397,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>128000</PGN>
       <Id>leewayAngle</Id>
       <Description>Leeway Angle</Description>
+      <URL>https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -16097,6 +16099,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>128776</PGN>
       <Id>windlassControlStatus</Id>
       <Description>Windlass Control Status</Description>
+      <URL>https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -16263,6 +16266,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>128777</PGN>
       <Id>anchorWindlassOperatingStatus</Id>
       <Description>Anchor Windlass Operating Status</Description>
+      <URL>https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -16386,6 +16390,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>128778</PGN>
       <Id>anchorWindlassMonitoringStatus</Id>
       <Description>Anchor Windlass Monitoring Status</Description>
+      <URL>https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -16512,6 +16517,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129026</PGN>
       <Id>cogSogRapidUpdate</Id>
       <Description>COG &amp; SOG, Rapid Update</Description>
+      <URL>http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -21590,6 +21596,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129801</PGN>
       <Id>aisAddressedSafetyRelatedMessage</Id>
       <Description>AIS Addressed Safety Related Message</Description>
+      <URL>https://navcen.uscg.gov/ais-addressed-safety-related-message12</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -21709,6 +21716,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129802</PGN>
       <Id>aisSafetyRelatedBroadcastMessage</Id>
       <Description>AIS Safety Related Broadcast Message</Description>
+      <URL>https://www.navcen.uscg.gov/ais-safety-related-broadcast-message14</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -22577,6 +22585,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129808</PGN>
       <Id>dscDistressCallInformation</Id>
       <Description>DSC Distress Call Information</Description>
+      <URL>http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -22804,6 +22813,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129808</PGN>
       <Id>dscCallInformation</Id>
       <Description>DSC Call Information</Description>
+      <URL>http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -24427,6 +24437,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130306</PGN>
       <Id>windData</Id>
       <Description>Wind Data</Description>
+      <URL>http://askjackrabbit.typepad.com/ask_jack_rabbit/page/7/</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -25776,6 +25787,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130567</PGN>
       <Id>watermakerInputSettingAndStatus</Id>
       <Description>Watermaker Input Setting and Status</Description>
+      <URL>http://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -26049,6 +26061,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130569</PGN>
       <Id>currentStatusAndFile</Id>
       <Description>Current Status and File</Description>
+      <URL>https://www.nmea.org/Assets/20160725%20corrigenda%20pgn%20130569%20published.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -26254,6 +26267,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130570</PGN>
       <Id>libraryDataFile</Id>
       <Description>Library Data File</Description>
+      <URL>https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -26425,6 +26439,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130571</PGN>
       <Id>libraryDataGroup</Id>
       <Description>Library Data Group</Description>
+      <URL>https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -26560,6 +26575,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130572</PGN>
       <Id>libraryDataSearch</Id>
       <Description>Library Data Search</Description>
+      <URL>https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -26664,6 +26680,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130573</PGN>
       <Id>supportedSourceData</Id>
       <Description>Supported Source Data</Description>
+      <URL>https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -26813,6 +26830,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130574</PGN>
       <Id>supportedZoneData</Id>
       <Description>Supported Zone Data</Description>
+      <URL>https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -36549,6 +36567,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130880</PGN>
       <Id>airmarAdditionalWeatherData</Id>
       <Description>Airmar: Additional Weather Data</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -36647,6 +36666,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130881</PGN>
       <Id>airmarHeaterControl</Id>
       <Description>Airmar: Heater Control</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -36745,6 +36765,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130944</PGN>
       <Id>airmarPost</Id>
       <Description>Airmar: POST</Description>
+      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>

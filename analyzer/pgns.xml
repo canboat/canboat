@@ -5262,7 +5262,6 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <Fields>
@@ -8103,10 +8102,7 @@ limitations under the License.
       <Id>airmarAttitudeOffset</Id>
       <Description>Airmar: Attitude Offset</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>9</Length>
       <Fields>
         <Field>
@@ -8208,7 +8204,6 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>24</Length>
       <Fields>
@@ -8434,7 +8429,6 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>23</Length>
       <Fields>
@@ -8652,10 +8646,7 @@ limitations under the License.
       <Id>airmarSimulateMode</Id>
       <Description>Airmar: Simulate Mode</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>6</Length>
       <Fields>
         <Field>
@@ -8741,10 +8732,7 @@ limitations under the License.
       <Id>airmarCalibrateDepth</Id>
       <Description>Airmar: Calibrate Depth</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>6</Length>
       <Fields>
         <Field>
@@ -8828,10 +8816,7 @@ limitations under the License.
       <Id>airmarCalibrateSpeed</Id>
       <Description>Airmar: Calibrate Speed</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>4</Length>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
@@ -8930,10 +8915,7 @@ limitations under the License.
       <Id>airmarCalibrateTemperature</Id>
       <Description>Airmar: Calibrate Temperature</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>6</Length>
       <Fields>
         <Field>
@@ -9033,10 +9015,7 @@ limitations under the License.
       <Id>airmarSpeedFilterNone</Id>
       <Description>Airmar: Speed Filter None</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>6</Length>
       <Fields>
         <Field>
@@ -9133,10 +9112,7 @@ limitations under the License.
       <Id>airmarSpeedFilterIir</Id>
       <Description>Airmar: Speed Filter IIR</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -9246,10 +9222,7 @@ limitations under the License.
       <Id>airmarTemperatureFilterNone</Id>
       <Description>Airmar: Temperature Filter None</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>6</Length>
       <Fields>
         <Field>
@@ -9346,10 +9319,7 @@ limitations under the License.
       <Id>airmarTemperatureFilterIir</Id>
       <Description>Airmar: Temperature Filter IIR</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -9459,10 +9429,7 @@ limitations under the License.
       <Id>airmarNmea2000Options</Id>
       <Description>Airmar: NMEA 2000 options</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>6</Length>
       <Fields>
         <Field>

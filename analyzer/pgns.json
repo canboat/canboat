@@ -4716,8 +4716,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution",
-          "Interval"],
+          "Resolution"],
         "Length":8,
         "Fields":[
           {
@@ -7335,9 +7334,7 @@
         "Id":"airmarAttitudeOffset",
         "Description":"Airmar: Attitude Offset",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":[
-          "Interval"],
+        "Complete":true,
         "Length":9,
         "Fields":[
           {
@@ -7429,8 +7426,7 @@
         "Type":"Fast",
         "Complete":false,
         "Missing":[
-          "Fields",
-          "Interval"],
+          "Fields"],
         "Length":24,
         "Fields":[
           {
@@ -7634,8 +7630,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution",
-          "Interval"],
+          "Resolution"],
         "Length":23,
         "Fields":[
           {
@@ -7832,9 +7827,7 @@
         "Id":"airmarSimulateMode",
         "Description":"Airmar: Simulate Mode",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":[
-          "Interval"],
+        "Complete":true,
         "Length":6,
         "Fields":[
           {
@@ -7911,9 +7904,7 @@
         "Id":"airmarCalibrateDepth",
         "Description":"Airmar: Calibrate Depth",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":[
-          "Interval"],
+        "Complete":true,
         "Length":6,
         "Fields":[
           {
@@ -7989,9 +7980,7 @@
         "Id":"airmarCalibrateSpeed",
         "Description":"Airmar: Calibrate Speed",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":[
-          "Interval"],
+        "Complete":true,
         "Length":4,
         "RepeatingFieldSet1Size":2,
         "RepeatingFieldSet1StartField":6,
@@ -8081,9 +8070,7 @@
         "Id":"airmarCalibrateTemperature",
         "Description":"Airmar: Calibrate Temperature",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":[
-          "Interval"],
+        "Complete":true,
         "Length":6,
         "Fields":[
           {
@@ -8173,9 +8160,7 @@
         "Id":"airmarSpeedFilterNone",
         "Description":"Airmar: Speed Filter None",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":[
-          "Interval"],
+        "Complete":true,
         "Length":6,
         "Fields":[
           {
@@ -8263,9 +8248,7 @@
         "Id":"airmarSpeedFilterIir",
         "Description":"Airmar: Speed Filter IIR",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":[
-          "Interval"],
+        "Complete":true,
         "Length":8,
         "Fields":[
           {
@@ -8365,9 +8348,7 @@
         "Id":"airmarTemperatureFilterNone",
         "Description":"Airmar: Temperature Filter None",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":[
-          "Interval"],
+        "Complete":true,
         "Length":6,
         "Fields":[
           {
@@ -8455,9 +8436,7 @@
         "Id":"airmarTemperatureFilterIir",
         "Description":"Airmar: Temperature Filter IIR",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":[
-          "Interval"],
+        "Complete":true,
         "Length":8,
         "Fields":[
           {
@@ -8557,9 +8536,7 @@
         "Id":"airmarNmea2000Options",
         "Description":"Airmar: NMEA 2000 options",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":[
-          "Interval"],
+        "Complete":true,
         "Length":6,
         "Fields":[
           {

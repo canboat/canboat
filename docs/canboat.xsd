@@ -147,6 +147,7 @@ limitations under the License.
       <xs:element type="xs:string" name="Id"/>
       <xs:element type="xs:string" name="Description"/>
       <xs:element type="xs:string" name="Explanation" minOccurs="0"/>
+      <xs:element type="xs:string" name="URL" minOccurs="0"/>
       <xs:element type="xs:string" name="Type"/>
       <xs:element type="xs:boolean" name="Complete"/>
       <xs:element type="xs:string" name="Fallback" minOccurs="0"/>

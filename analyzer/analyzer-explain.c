@@ -217,6 +217,14 @@ static void explainPGN(Pgn pgn)
 
   printf("PGN: %d / %08o / %05X - %s\n\n", pgn.pgn, pgn.pgn, pgn.pgn, pgn.description);
 
+  if (pgn.explanation != NULL)
+  {
+    printf("     %s\n", pgn.explanation);
+  }
+  if (pgn.url != NULL)
+  {
+    printf("     URL: %s\n", pgn.url);
+  }
   len = getMinimalPgnLength(&pgn, &isVariable);
   if (isVariable)
   {
@@ -453,6 +461,7 @@ static void explainPGNXML(Pgn pgn)
   if (!doV1)
   {
     printXML(6, "Explanation", pgn.explanation);
+    printXML(6, "URL", pgn.url);
   }
   printXML(6, "Type", (pgn.type == PACKET_ISO11783 ? "ISO" : (pgn.type == PACKET_FAST ? "Fast" : "Single")));
   printXML(6, "Complete", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));

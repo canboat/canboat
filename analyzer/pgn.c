@@ -202,8 +202,7 @@ void checkPgnList(void)
 
 Field *getField(uint32_t pgnId, uint32_t field)
 {
-  Pgn    *pgn = searchForPgn(pgnId);
-  uint8_t n;
+  Pgn *pgn = searchForPgn(pgnId);
 
   if (!pgn)
   {

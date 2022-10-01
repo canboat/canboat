@@ -756,6 +756,7 @@ typedef struct
   char       *camelDescription; /* Filled by C, no need to set in initializers. */
   bool        fallback;         /* true = this is a catch-all for unknown PGNs */
   const char *explanation;      /* Preferably the NMEA 2000 explanation from the NMEA PGN field list */
+  const char *url;              /* External URL */
   uint16_t    interval;         /* Milliseconds between transmissions, standard. 0 is: not known, UINT16_MAX = never */
   uint8_t     repeatingCount1;  /* How many fields repeat in set 1? */
   uint8_t     repeatingCount2;  /* How many fields repeat in set 2? */
@@ -1354,13 +1355,13 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS}}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Boot State Acknowledgment",
      65285,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {COMPANY(135), LOOKUP_FIELD("Boot State", 4, BOOT_STATE), END_OF_FIELDS}}
+     {COMPANY(135), LOOKUP_FIELD("Boot State", 4, BOOT_STATE), END_OF_FIELDS},
+     .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Lowrance: Temperature",
@@ -1386,11 +1387,14 @@ Pgn pgnList[] = {
       UINT8_FIELD("Control"),
       END_OF_FIELDS}}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
-    {"Airmar: Boot State Request", 65286, PACKET_COMPLETE, PACKET_SINGLE, {COMPANY(135), END_OF_FIELDS}}
+    {"Airmar: Boot State Request",
+     65286,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(135), END_OF_FIELDS},
+     .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Access Level",
      65287,
@@ -1403,7 +1407,8 @@ Pgn pgnList[] = {
       UINT32_DESC_FIELD(
           "Access Seed/Key",
           "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208."),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Simnet: Configure Temperature Sensor", 65287, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
@@ -1533,15 +1538,15 @@ Pgn pgnList[] = {
       BINARY_FIELD("Sub Mode", BYTES(1), NULL),
       BINARY_FIELD("Pilot Mode Data", BYTES(1), NULL),
       RESERVED_FIELD(BYTES(3)),
-      END_OF_FIELDS}} /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
-    ,
+      END_OF_FIELDS}},
+
     {"Airmar: Depth Quality Factor",
      65408,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(135), UINT8_FIELD("SID"), LOOKUP_FIELD("Depth Quality Factor", 4, AIRMAR_DEPTH_QUALITY_FACTOR), END_OF_FIELDS}}
+     {COMPANY(135), UINT8_FIELD("SID"), LOOKUP_FIELD("Depth Quality Factor", 4, AIRMAR_DEPTH_QUALITY_FACTOR), END_OF_FIELDS},
+     .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Speed Pulse Count",
      65409,
@@ -1552,9 +1557,9 @@ Pgn pgnList[] = {
       TIME_UFIX16_MS_FIELD("Duration of interval", NULL),
       UINT16_FIELD("Number of pulses received"),
       RESERVED_FIELD(BYTES(1)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Device Information",
      65410,
@@ -1565,7 +1570,9 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Internal Device Temperature"),
       VOLTAGE_FIELD("Supply Voltage", 0.01),
       RESERVED_FIELD(BYTES(1)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Simnet: Autopilot Mode", 65480, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
@@ -1583,8 +1590,6 @@ Pgn pgnList[] = {
                     "0x1EE00 (65536 - 126464). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
-    /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
-    /* http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf */
     ,
     {"NMEA - Request group function",
      126208,
@@ -1601,6 +1606,7 @@ Pgn pgnList[] = {
      .interval    = UINT16_MAX,
      .explanation = "This is the Request variation of this group function PGN. The receiver shall respond by sending the requested "
                     "PGN, at the desired transmission interval.",
+     .url         = "http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 5,
      .repeatingCount1 = 2,
      .repeatingStart1 = 6}
@@ -1907,7 +1913,6 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("device", BYTES(1), SEATALK_DEVICE_ID),
       END_OF_FIELDS}}
 
-    /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
     ,
     {"Airmar: Attitude Offset",
      126720,
@@ -1918,9 +1923,10 @@ Pgn pgnList[] = {
       ANGLE_I16_FIELD("Azimuth offset", "Positive: sensor rotated to port, negative: sensor rotated to starboard"),
       ANGLE_I16_FIELD("Pitch offset", "Positive: sensor tilted to bow, negative: sensor tilted to stern"),
       ANGLE_I16_FIELD("Roll offset", "Positive: sensor tilted to port, negative: sensor tilted to starboard"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
     ,
     {"Airmar: Calibrate Compass",
      126720,
@@ -1941,9 +1947,10 @@ Pgn pgnList[] = {
       TIME_FIX16_5CS_FIELD("Pitch and Roll damping", "default 30, range 0 to 200"),
       TIME_FIX16_5CS_FIELD("Compass/Rate gyro damping",
                            "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf */
     ,
     {"Airmar: True Wind Options",
      126720,
@@ -1964,9 +1971,10 @@ Pgn pgnList[] = {
       TIME_FIX16_5CS_FIELD("Pitch and Roll damping", "default 30, range 0 to 200"),
       TIME_FIX16_5CS_FIELD("Compass/Rate gyro damping",
                            "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Simulate Mode",
      126720,
@@ -1976,9 +1984,10 @@ Pgn pgnList[] = {
       MATCH_FIELD("Proprietary ID", BYTES(1), 35, "Simulate Mode"),
       LOOKUP_FIELD("Simulate Mode", 2, OFF_ON),
       RESERVED_FIELD(22),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Calibrate Depth",
      126720,
@@ -1988,9 +1997,10 @@ Pgn pgnList[] = {
       MATCH_FIELD("Proprietary ID", BYTES(1), 40, "Calibrate Depth"),
       SPEED_U16_DM_FIELD("Speed of Sound Mode", "actual allowed range is 1350.0 to 1650.0 m/s"),
       RESERVED_FIELD(8),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Calibrate Speed",
      126720,
@@ -2004,9 +2014,10 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .repeatingField1 = 5,
      .repeatingCount1 = 2,
-     .repeatingStart1 = 6}
+     .repeatingStart1 = 6,
+     .interval        = UINT16_MAX,
+     .url             = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Calibrate Temperature",
      126720,
@@ -2017,9 +2028,10 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Temperature instance", 2, AIRMAR_TEMPERATURE_INSTANCE),
       RESERVED_FIELD(6),
       TEMPERATURE_DELTA_FIX16_FIELD("Temperature offset", "actual range is -9.999 to +9.999 K"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Speed Filter None",
      126720,
@@ -2030,9 +2042,10 @@ Pgn pgnList[] = {
       MATCH_FIELD("Filter type", 4, 0, "No filter"),
       RESERVED_FIELD(4),
       TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the paddlewheel pulse accumulator"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Speed Filter IIR",
      126720,
@@ -2044,9 +2057,10 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the paddlewheel pulse accumulator"),
       TIME_UFIX16_CS_FIELD("Filter duration", "Duration of filter, must be bigger than the sample interval"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Temperature Filter None",
      126720,
@@ -2057,9 +2071,10 @@ Pgn pgnList[] = {
       MATCH_FIELD("Filter type", 4, 0, "No filter"),
       RESERVED_FIELD(4),
       TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the water temperature thermistor"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: Temperature Filter IIR",
      126720,
@@ -2071,9 +2086,10 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the water temperature thermistor"),
       TIME_UFIX16_CS_FIELD("Filter duration", "Duration of filter, must be bigger than the sample interval"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
-    /* http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf */
     ,
     {"Airmar: NMEA 2000 options",
      126720,
@@ -2083,7 +2099,9 @@ Pgn pgnList[] = {
       MATCH_FIELD("Proprietary ID", BYTES(1), 46, "NMEA 2000 options"),
       LOOKUP_FIELD("Transmission Interval", 2, AIRMAR_TRANSMISSION_INTERVAL),
       RESERVED_FIELD(22),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
+     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: Addressable Multi-Frame",
@@ -2235,7 +2253,8 @@ Pgn pgnList[] = {
        "timing variables.” is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 "
        "of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See "
        "ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for "
-       "additional context."}
+       "additional context.",
+     .url = "http://www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf"}
 
     ,
     {"Product Information",
@@ -2712,7 +2731,6 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval = 1500}
 
-    /* https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf */
     ,
     {"Inverter Status",
      127509,
@@ -2725,7 +2743,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Inverter Enable", 2, OFF_ON),
       RESERVED_FIELD(2),
       END_OF_FIELDS},
-     .interval = 1500}
+     .interval = 1500,
+     .url      = "https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf"}
 
     ,
     {"Charger Configuration Status",
@@ -2876,13 +2895,13 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS}}
 
-    /* https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf */
     ,
     {"Leeway Angle",
      128000,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {UINT8_FIELD("SID"), ANGLE_I16_FIELD("Leeway Angle", NULL), RESERVED_FIELD(BYTES(5)), END_OF_FIELDS}}
+     {UINT8_FIELD("SID"), ANGLE_I16_FIELD("Leeway Angle", NULL), RESERVED_FIELD(BYTES(5)), END_OF_FIELDS},
+     .url = "https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf"}
 
     ,
     {"Thruster Control Status",
@@ -2991,7 +3010,6 @@ Pgn pgnList[] = {
      .interval = 1000}
 
     ,
-    /* https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf */
     {"Windlass Control Status",
      128776,
      PACKET_COMPLETE,
@@ -3010,10 +3028,10 @@ Pgn pgnList[] = {
       TIME_UFIX8_5MS_FIELD("Command Timeout", "If timeout elapses the thruster stops operating and reverts to static mode"),
       LOOKUP_BITFIELD("Windlass Control Events", 4, WINDLASS_CONTROL),
       RESERVED_FIELD(4),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf"}
 
     ,
-    /* https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf */
     {"Anchor Windlass Operating Status",
      128777,
      PACKET_COMPLETE,
@@ -3028,10 +3046,10 @@ Pgn pgnList[] = {
       SPEED_U16_CM_FIELD("Windlass Line Speed"),
       LOOKUP_FIELD("Anchor Docking Status", 2, DOCKING_STATUS),
       LOOKUP_BITFIELD("Windlass Operating Events", 6, WINDLASS_OPERATION),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf"}
 
     ,
-    /* https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf */
     {"Anchor Windlass Monitoring Status",
      128778,
      PACKET_COMPLETE,
@@ -3043,7 +3061,8 @@ Pgn pgnList[] = {
       CURRENT_UFIX8_A_FIELD("Motor current"),
       TIME_UFIX16_MIN_FIELD("Total Motor Time", NULL),
       RESERVED_FIELD(BYTES(1)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf"}
 
     ,
     {"Position, Rapid Update",
@@ -3053,7 +3072,6 @@ Pgn pgnList[] = {
      {LATITUDE_I32_FIELD("Latitude"), LONGITUDE_I32_FIELD("Longitude"), END_OF_FIELDS},
      .interval = 100}
 
-    /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
     {"COG & SOG, Rapid Update",
      129026,
@@ -3066,7 +3084,8 @@ Pgn pgnList[] = {
       SPEED_U16_CM_FIELD("SOG"),
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
-     .interval = 250}
+     .interval = 250,
+     .url      = "http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf"}
 
     ,
     {"Position Delta, Rapid Update",
@@ -3843,7 +3862,6 @@ Pgn pgnList[] = {
      .interval = UINT16_MAX}
 
     ,
-    // Derived from https://navcen.uscg.gov/ais-addressed-safety-related-message12
     {"AIS Addressed Safety Related Message",
      129801,
      PACKET_INCOMPLETE,
@@ -3859,10 +3877,10 @@ Pgn pgnList[] = {
       RESERVED_FIELD(7),
       STRING_FIX_FIELD("Safety Related Text", BYTES(117)),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval = UINT16_MAX,
+     .url      = "https://navcen.uscg.gov/ais-addressed-safety-related-message12"}
 
     ,
-    // Derived from https://www.navcen.uscg.gov/ais-safety-related-broadcast-message14
     {"AIS Safety Related Broadcast Message",
      129802,
      PACKET_INCOMPLETE,
@@ -3874,7 +3892,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(3),
       STRING_FIX_FIELD("Safety Related Text", BYTES(162)),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval = UINT16_MAX,
+     .url      = "https://www.navcen.uscg.gov/ais-safety-related-broadcast-message14"}
 
     ,
     {"AIS Interrogation",
@@ -4032,7 +4051,8 @@ Pgn pgnList[] = {
      .interval        = UINT16_MAX,
      .repeatingField1 = 255,
      .repeatingCount1 = 2,
-     .repeatingStart1 = 21}
+     .repeatingStart1 = 21,
+     .url             = "http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf"}
 
     ,
     {"DSC Call Information",
@@ -4065,7 +4085,8 @@ Pgn pgnList[] = {
      .interval        = UINT16_MAX,
      .repeatingField1 = 255,
      .repeatingCount1 = 2,
-     .repeatingStart1 = 21}
+     .repeatingStart1 = 21,
+     .url             = "http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf"}
 
     ,
     {"AIS Class B static data (msg 24 Part A)",
@@ -4322,7 +4343,6 @@ Pgn pgnList[] = {
      .repeatingCount1 = 4,
      .repeatingStart1 = 6}
 
-    /* http://askjackrabbit.typepad.com/ask_jack_rabbit/page/7/ */
     ,
     {"Wind Data",
      130306,
@@ -4334,7 +4354,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Reference", 3, WIND_REFERENCE),
       RESERVED_FIELD(5 + BYTES(2)),
       END_OF_FIELDS},
-     .interval = 100}
+     .interval = 100,
+     .url      = "http://askjackrabbit.typepad.com/ask_jack_rabbit/page/7/"}
 
     /* Water temperature, Transducer Measurement */
     ,
@@ -4571,9 +4592,10 @@ Pgn pgnList[] = {
       VOLUMETRIC_FLOW_FIELD("Product Water Flow"),
       VOLUMETRIC_FLOW_FIELD("Brine Water Flow"),
       TIME_UFIX32_S_FIELD("Run Time", NULL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "http://www.nmea.org/Assets/"
+            "20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf"}
 
-    /* https://www.nmea.org/Assets/20160725%20corrigenda%20pgn%20130569%20published.pdf */
     ,
     {"Current Status and File",
      130569,
@@ -4596,9 +4618,8 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("HD Frequency Multicast", "Digital sub channel"),
       UINT8_DESC_FIELD("Delete Favorite Number", "Used to command AV to delete current station as favorite"),
       UINT16_FIELD("Total Number of Tracks"),
-      END_OF_FIELDS}}
-
-    /* https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf */
+      END_OF_FIELDS},
+     .url = "https://www.nmea.org/Assets/20160725%20corrigenda%20pgn%20130569%20published.pdf"}
 
     ,
     {"Library Data File",
@@ -4622,7 +4643,8 @@ Pgn pgnList[] = {
       STRINGLAU_FIELD("Artist"),
       STRINGLAU_FIELD("Album"),
       STRINGLAU_FIELD("Station"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Library Data Group",
@@ -4642,7 +4664,8 @@ Pgn pgnList[] = {
       STRINGLAU_FIELD("Artist")},
      .repeatingField1 = 6,
      .repeatingCount1 = 2,
-     .repeatingStart1 = 9}
+     .repeatingStart1 = 9,
+     .url             = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Library Data Search",
@@ -4658,7 +4681,8 @@ Pgn pgnList[] = {
       STRINGLAU_FIELD("Group name 2"),
       LOOKUP_FIELD("Group type 3", BYTES(1), ENTERTAINMENT_GROUP),
       STRINGLAU_FIELD("Group name 3"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Supported Source Data",
@@ -4681,7 +4705,8 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .repeatingField1 = 2,
      .repeatingCount1 = 10,
-     .repeatingStart1 = 4}
+     .repeatingStart1 = 4,
+     .url             = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Supported Zone Data",
@@ -4696,7 +4721,8 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .repeatingField1 = 2,
      .repeatingCount1 = 2,
-     .repeatingStart1 = 4}
+     .repeatingStart1 = 4,
+     .url             = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Small Craft Status",
@@ -5936,7 +5962,8 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Apparent Windchill Temperature"),
       TEMPERATURE_FIELD("True Windchill Temperature"),
       TEMPERATURE_FIELD("Dewpoint"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf"}
 
     ,
     {"Airmar: Heater Control",
@@ -5948,7 +5975,8 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Plate Temperature"),
       TEMPERATURE_FIELD("Air Temperature"),
       TEMPERATURE_FIELD("Dewpoint"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf"}
 
     ,
     {"Airmar: POST",
@@ -5964,7 +5992,8 @@ Pgn pgnList[] = {
                         AIRMAR_POST_ID,
                         "See Airmar docs for table of IDs and failure codes; these lookup values are for DST200"),
       UINT8_DESC_FIELD("Test result", "Values other than 0 are failure codes"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Actisense: Operating mode",
