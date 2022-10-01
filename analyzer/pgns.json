@@ -1138,9 +1138,8 @@
             "BitLength":32,
             "BitOffset":0,
             "BitStart":0,
-            "Units":"J",
+            "Units":"kWh",
             "Type":"Integer",
-            "Resolution":3.6e+06,
             "Signed":false,
             "FieldType":"ENERGY_UINT32"},
           {
@@ -1150,9 +1149,8 @@
             "BitLength":32,
             "BitOffset":32,
             "BitStart":0,
-            "Units":"J",
+            "Units":"kWh",
             "Type":"Integer",
-            "Resolution":3.6e+06,
             "Signed":false,
             "FieldType":"ENERGY_UINT32"}]},
       {
@@ -1699,9 +1697,8 @@
             "BitLength":32,
             "BitOffset":0,
             "BitStart":0,
-            "Units":"J",
+            "Units":"kWh",
             "Type":"Integer",
-            "Resolution":3.6e+06,
             "Signed":false,
             "FieldType":"ENERGY_UINT32"},
           {
@@ -1711,9 +1708,8 @@
             "BitLength":32,
             "BitOffset":32,
             "BitStart":0,
-            "Units":"J",
+            "Units":"kWh",
             "Type":"Integer",
-            "Resolution":3.6e+06,
             "Signed":false,
             "FieldType":"ENERGY_UINT32"}]},
       {

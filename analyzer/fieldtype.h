@@ -959,6 +959,6 @@ extern const size_t fieldTypeCount;
 #endif // FIELDTYPE_GLOBALS
 
 extern FieldType *getFieldType(const char *name);
-extern void       fillFieldType(void);
+extern void       fillFieldType(bool doUnitFixup);
 
 #endif // FIELD_H_INCLUDED

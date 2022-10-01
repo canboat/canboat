@@ -1,4 +1,4 @@
-VERSION "Canboat export 2022-10-01T13:07:00.311431"
+VERSION "Canboat export 2022-10-01T16:59:53.539216"
 
 
 NS_ : 
@@ -82,8 +82,8 @@ BO_ 2566778110 PGN_65004_bus1AverageBasicAcQuan: 8 Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
 BO_ 2566778366 PGN_65005_utilityTotalAcEnergy: 8 Vector__XXX
- SG_ totalEnergyImport : 32|32@1+ (3600000.0,0) [0|0] "J" Vector__XXX
- SG_ totalEnergyExport : 0|32@1+ (3600000.0,0) [0|0] "J" Vector__XXX
+ SG_ totalEnergyImport : 32|32@1+ (1,0) [0|0] "kWh" Vector__XXX
+ SG_ totalEnergyExport : 0|32@1+ (1,0) [0|0] "kWh" Vector__XXX
 
 BO_ 2566778878 PGN_65007_utilityPhaseCAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
@@ -126,8 +126,8 @@ BO_ 2566781438 PGN_65017_utilityAverageBasicAcQ: 8 Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
 BO_ 2566781694 PGN_65018_generatorTotalAcEnergy: 8 Vector__XXX
- SG_ totalEnergyImport : 32|32@1+ (3600000.0,0) [0|0] "J" Vector__XXX
- SG_ totalEnergyExport : 0|32@1+ (3600000.0,0) [0|0] "J" Vector__XXX
+ SG_ totalEnergyImport : 32|32@1+ (1,0) [0|0] "kWh" Vector__XXX
+ SG_ totalEnergyExport : 0|32@1+ (1,0) [0|0] "kWh" Vector__XXX
 
 BO_ 2566782206 PGN_65020_generatorPhaseCAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX

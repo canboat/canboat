@@ -268,7 +268,7 @@ int main(int argc, char **argv)
   }
 
   fillLookups();
-  fillFieldType();
+  fillFieldType(true);
   checkPgnList();
 
   while (fgets(msg, sizeof(msg) - 1, file))

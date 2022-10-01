@@ -154,7 +154,7 @@ int main(int argc, char **argv)
   }
 
   fillLookups();
-  fillFieldType();
+  fillFieldType(false);
 
   if (doExplain)
   {

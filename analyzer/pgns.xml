@@ -1275,9 +1275,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Units>J</Units>
+          <Units>kWh</Units>
           <Type>Integer</Type>
-          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY_UINT32</FieldType>
         </Field>
@@ -1288,9 +1287,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>J</Units>
+          <Units>kWh</Units>
           <Type>Integer</Type>
-          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY_UINT32</FieldType>
         </Field>
@@ -1917,9 +1915,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Units>J</Units>
+          <Units>kWh</Units>
           <Type>Integer</Type>
-          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY_UINT32</FieldType>
         </Field>
@@ -1930,9 +1927,8 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Units>J</Units>
+          <Units>kWh</Units>
           <Type>Integer</Type>
-          <Resolution>3.6e+06</Resolution>
           <Signed>false</Signed>
           <FieldType>ENERGY_UINT32</FieldType>
         </Field>

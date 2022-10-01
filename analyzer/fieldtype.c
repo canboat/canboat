@@ -92,7 +92,7 @@ static void fixupUnit(Field *f)
   }
 }
 
-extern void fillFieldType(void)
+extern void fillFieldType(bool doUnitFixup)
 {
   for (size_t i = 0; i < fieldTypeCount; i++)
   {
@@ -208,7 +208,7 @@ extern void fillFieldType(void)
                  ft->unit);
       }
 
-      if (f->unit != NULL && f->resolution != 0.0)
+      if (doUnitFixup && f->unit != NULL && f->resolution != 0.0)
       {
         fixupUnit(f);
       }
