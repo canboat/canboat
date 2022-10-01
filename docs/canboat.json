@@ -7968,7 +7968,8 @@
         "Complete":true,
         "FieldCount":7,
         "MinLength":11,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":6,
         "RepeatingFieldSet1CountField":5,
         "TransmissionIrregular":true,
         "Fields":[
@@ -8061,7 +8062,8 @@
         "Complete":true,
         "FieldCount":7,
         "MinLength":6,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":6,
         "RepeatingFieldSet1CountField":5,
         "TransmissionIrregular":true,
         "Fields":[
@@ -8151,7 +8153,8 @@
         "Complete":true,
         "FieldCount":6,
         "MinLength":6,
-        "RepeatingFieldSet1":1,
+        "RepeatingFieldSet1Size":1,
+        "RepeatingFieldSet1StartField":6,
         "RepeatingFieldSet1CountField":5,
         "TransmissionIrregular":true,
         "Fields":[
@@ -8234,9 +8237,11 @@
         ],
         "FieldCount":11,
         "MinLength":9,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":9,
         "RepeatingFieldSet1CountField":7,
-        "RepeatingFieldSet2":1,
+        "RepeatingFieldSet2Size":1,
+        "RepeatingFieldSet2StartField":11,
         "RepeatingFieldSet2CountField":8,
         "TransmissionIrregular":true,
         "Fields":[
@@ -8356,9 +8361,11 @@
         "Complete":true,
         "FieldCount":12,
         "MinLength":9,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":9,
         "RepeatingFieldSet1CountField":7,
-        "RepeatingFieldSet2":2,
+        "RepeatingFieldSet2Size":2,
+        "RepeatingFieldSet2StartField":11,
         "RepeatingFieldSet2CountField":8,
         "TransmissionIrregular":true,
         "Fields":[
@@ -8486,9 +8493,11 @@
         "Complete":true,
         "FieldCount":12,
         "MinLength":9,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":9,
         "RepeatingFieldSet1CountField":7,
-        "RepeatingFieldSet2":2,
+        "RepeatingFieldSet2Size":2,
+        "RepeatingFieldSet2StartField":11,
         "RepeatingFieldSet2CountField":8,
         "TransmissionIrregular":true,
         "Fields":[
@@ -8616,9 +8625,11 @@
         "Complete":true,
         "FieldCount":12,
         "MinLength":9,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":9,
         "RepeatingFieldSet1CountField":7,
-        "RepeatingFieldSet2":2,
+        "RepeatingFieldSet2Size":2,
+        "RepeatingFieldSet2StartField":11,
         "RepeatingFieldSet2CountField":8,
         "TransmissionIrregular":true,
         "Fields":[
@@ -8745,7 +8756,8 @@
         "Complete":true,
         "FieldCount":2,
         "MinLength":1,
-        "RepeatingFields":1,
+        "RepeatingFieldSet1Size":1,
+        "RepeatingFieldSet1StartField":2,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -10369,7 +10381,8 @@
         ],
         "FieldCount":7,
         "MinLength":4,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":6,
         "RepeatingFieldSet1CountField":5,
         "Fields":[
           {
@@ -14061,7 +14074,8 @@
         "Complete":true,
         "FieldCount":12,
         "MinLength":2,
-        "RepeatingFieldSet1":10,
+        "RepeatingFieldSet1Size":10,
+        "RepeatingFieldSet1StartField":3,
         "RepeatingFieldSet1CountField":2,
         "TransmissionInterval":1500,
         "Fields":[
@@ -14208,7 +14222,8 @@
         "Complete":true,
         "FieldCount":12,
         "MinLength":2,
-        "RepeatingFieldSet1":10,
+        "RepeatingFieldSet1Size":10,
+        "RepeatingFieldSet1StartField":3,
         "RepeatingFieldSet1CountField":2,
         "TransmissionInterval":1500,
         "Fields":[
@@ -16879,7 +16894,8 @@
         "Complete":true,
         "FieldCount":18,
         "MinLength":43,
-        "RepeatingFieldSet1":3,
+        "RepeatingFieldSet1Size":3,
+        "RepeatingFieldSet1StartField":16,
         "RepeatingFieldSet1CountField":15,
         "TransmissionInterval":1000,
         "Fields":[
@@ -18655,7 +18671,8 @@
         "Complete":true,
         "FieldCount":13,
         "MinLength":10,
-        "RepeatingFieldSet1":4,
+        "RepeatingFieldSet1Size":4,
+        "RepeatingFieldSet1StartField":11,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -19267,7 +19284,8 @@
         "Complete":true,
         "FieldCount":11,
         "MinLength":3,
-        "RepeatingFieldSet1":7,
+        "RepeatingFieldSet1Size":7,
+        "RepeatingFieldSet1StartField":5,
         "RepeatingFieldSet1CountField":4,
         "TransmissionInterval":1000,
         "Fields":[
@@ -21230,7 +21248,8 @@
         "Complete":true,
         "FieldCount":8,
         "MinLength":8,
-        "RepeatingFieldSet1":1,
+        "RepeatingFieldSet1Size":1,
+        "RepeatingFieldSet1StartField":8,
         "RepeatingFieldSet1CountField":7,
         "TransmissionIrregular":true,
         "Fields":[
@@ -21865,7 +21884,8 @@
         ],
         "FieldCount":10,
         "MinLength":6,
-        "RepeatingFields":4,
+        "RepeatingFieldSet1Size":4,
+        "RepeatingFieldSet1StartField":7,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -21980,9 +22000,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData"
         ],
-        "FieldCount":8,
-        "MinLength":6,
-        "RepeatingFields":3,
+        "FieldCount":11,
+        "Length":22,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -22039,8 +22058,8 @@
           },
           {
             "Order":6,
-            "Id":"destinationId",
-            "Name":"Destination ID",
+            "Id":"destinationIdA",
+            "Name":"Destination ID A",
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
@@ -22049,8 +22068,8 @@
           },
           {
             "Order":7,
-            "Id":"offset",
-            "Name":"Offset",
+            "Id":"offsetA",
+            "Name":"Offset A",
             "BitLength":16,
             "BitOffset":80,
             "BitStart":0,
@@ -22059,10 +22078,40 @@
           },
           {
             "Order":8,
-            "Id":"increment",
-            "Name":"Increment",
+            "Id":"incrementA",
+            "Name":"Increment A",
             "BitLength":16,
             "BitOffset":96,
+            "BitStart":0,
+            "Signed":false,
+            "FieldType":"UINT16"
+          },
+          {
+            "Order":9,
+            "Id":"destinationIdB",
+            "Name":"Destination ID B",
+            "BitLength":32,
+            "BitOffset":112,
+            "BitStart":0,
+            "Signed":false,
+            "FieldType":"MMSI"
+          },
+          {
+            "Order":10,
+            "Id":"offsetB",
+            "Name":"Offset B",
+            "BitLength":16,
+            "BitOffset":144,
+            "BitStart":0,
+            "Signed":false,
+            "FieldType":"UINT16"
+          },
+          {
+            "Order":11,
+            "Id":"incrementB",
+            "Name":"Increment B",
+            "BitLength":16,
+            "BitOffset":160,
             "BitStart":0,
             "Signed":false,
             "FieldType":"UINT16"
@@ -22079,7 +22128,8 @@
         ],
         "FieldCount":9,
         "MinLength":6,
-        "RepeatingFields":4,
+        "RepeatingFieldSet1Size":4,
+        "RepeatingFieldSet1StartField":6,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -22607,7 +22657,8 @@
         ],
         "FieldCount":22,
         "MinLength":60,
-        "RepeatingFields":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":21,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -22829,7 +22880,8 @@
         ],
         "FieldCount":22,
         "MinLength":60,
-        "RepeatingFields":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":21,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -23339,7 +23391,8 @@
         ],
         "FieldCount":12,
         "MinLength":3,
-        "RepeatingFieldSet1":9,
+        "RepeatingFieldSet1Size":9,
+        "RepeatingFieldSet1StartField":4,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -23461,8 +23514,9 @@
         "Missing":["Fields","FieldLengths","Resolution","SampleData"
         ],
         "FieldCount":9,
-        "MinLength":3,
-        "RepeatingFieldSet1":6,
+        "MinLength":4,
+        "RepeatingFieldSet1Size":5,
+        "RepeatingFieldSet1StartField":5,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -23677,7 +23731,8 @@
         ],
         "FieldCount":9,
         "MinLength":6,
-        "RepeatingFieldSet1":4,
+        "RepeatingFieldSet1Size":4,
+        "RepeatingFieldSet1StartField":6,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -23781,7 +23836,8 @@
         ],
         "FieldCount":7,
         "MinLength":6,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":6,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -23865,7 +23921,8 @@
         ],
         "FieldCount":9,
         "MinLength":4,
-        "RepeatingFieldSet1":6,
+        "RepeatingFieldSet1Size":6,
+        "RepeatingFieldSet1StartField":4,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -23971,7 +24028,8 @@
         ],
         "FieldCount":7,
         "MinLength":6,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":6,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -24055,7 +24113,8 @@
         ],
         "FieldCount":6,
         "MinLength":5,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":5,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -24129,7 +24188,8 @@
         ],
         "FieldCount":5,
         "MinLength":4,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":4,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -24193,7 +24253,8 @@
         ],
         "FieldCount":7,
         "MinLength":6,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":6,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -24279,7 +24340,8 @@
         ],
         "FieldCount":9,
         "MinLength":6,
-        "RepeatingFieldSet1":4,
+        "RepeatingFieldSet1Size":4,
+        "RepeatingFieldSet1StartField":6,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
@@ -26349,9 +26411,10 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
         ],
-        "FieldCount":10,
-        "MinLength":14,
-        "RepeatingFieldSet1":2,
+        "FieldCount":11,
+        "MinLength":18,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":9,
         "RepeatingFieldSet1CountField":6,
         "Fields":[
           {
@@ -26456,6 +26519,14 @@
             "Order":10,
             "Id":"name",
             "Name":"Name",
+            "BitLengthVariable":true,
+            "Signed":false,
+            "FieldType":"STRING_LAU"
+          },
+          {
+            "Order":11,
+            "Id":"artist",
+            "Name":"Artist",
             "BitLengthVariable":true,
             "Signed":false,
             "FieldType":"STRING_LAU"
@@ -26571,7 +26642,8 @@
         ],
         "FieldCount":13,
         "MinLength":6,
-        "RepeatingFieldSet1":10,
+        "RepeatingFieldSet1Size":10,
+        "RepeatingFieldSet1StartField":4,
         "RepeatingFieldSet1CountField":2,
         "Fields":[
           {
@@ -26714,7 +26786,8 @@
         ],
         "FieldCount":5,
         "MinLength":3,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":4,
         "RepeatingFieldSet1CountField":2,
         "Fields":[
           {
@@ -27160,7 +27233,8 @@
         ],
         "FieldCount":5,
         "MinLength":3,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":4,
         "RepeatingFieldSet1CountField":2,
         "Fields":[
           {
@@ -27306,7 +27380,8 @@
         ],
         "FieldCount":5,
         "MinLength":3,
-        "RepeatingFieldSet1":2,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":4,
         "RepeatingFieldSet1CountField":2,
         "Fields":[
           {
@@ -27370,8 +27445,9 @@
         "Missing":["SampleData","Interval"
         ],
         "FieldCount":7,
-        "MinLength":9,
-        "RepeatingFieldSet1":3,
+        "MinLength":3,
+        "RepeatingFieldSet1Size":4,
+        "RepeatingFieldSet1StartField":4,
         "RepeatingFieldSet1CountField":2,
         "Fields":[
           {

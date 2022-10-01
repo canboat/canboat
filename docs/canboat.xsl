@@ -44,57 +44,24 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template name="getFirstRepeatingField">
-    <xsl:choose>
-      <xsl:when test="RepeatingFields">
-        <xsl:value-of select="FieldCount - RepeatingFields + 1"/>
-      </xsl:when>
-      <xsl:when test="RepeatingFieldSet2">
-        <xsl:value-of select="FieldCount - RepeatingFieldSet2 - RepeatingFieldSet1 + 1"/>
-      </xsl:when>
-      <xsl:when test="RepeatingFieldSet1">
-        <xsl:value-of select="FieldCount - RepeatingFieldSet1 + 1"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="FieldCount + 1"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
   <xsl:template name="HandleRepeatingFields">
-    <!-- 
-      RepeatingFields is generated when there is one set of repeating fields without a repeat count.
-      RepeatingFieldSet1 and RepeatingFieldSet2 only when the PGN has one or two repeating sets with 
-      a field that says how often this is repeated. 
-    -->
+    <xsl:if test="RepeatingFieldSet1Size">
+      <xsl:if test="RepeatingFieldSet1CountField">
+          The <xsl:value-of select="RepeatingFieldSet1Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet1StartField"/> are repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="RepeatingFieldSet1CountField"/>.
+      </xsl:if>
+      <xsl:if test="not(RepeatingFieldSet1CountField)">
+          The <xsl:value-of select="RepeatingFieldSet1Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet1StartField"/> are repeated until there is no more data in the PGN.
+      </xsl:if>
+    </xsl:if>
+    <xsl:if test="RepeatingFieldSet2Size">
+      <xsl:if test="RepeatingFieldSet2CountField">
+          The <xsl:value-of select="RepeatingFieldSet2Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet2StartField"/> are repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="RepeatingFieldSet2CountField"/>.
+      </xsl:if>
+      <xsl:if test="not(RepeatingFieldSet2CountField)">
+          The <xsl:value-of select="RepeatingFieldSet2Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet2StartField"/> are repeated until there is no more data in the PGN.
+      </xsl:if>
+    </xsl:if>
 
-    <xsl:choose>
-      <xsl:when test="RepeatingFields">
-        <xsl:variable name="repeating" select="RepeatingFields"/>
-        <xsl:variable name="startRepeat" select="FieldCount - $repeating + 1"/>
-        The last <xsl:value-of select="$repeating"/> fields starting at field <xsl:value-of select="$startRepeat"/> repeat until the data is exhausted.
-      </xsl:when>
-
-      <xsl:when test="RepeatingFieldSet2">
-        <xsl:variable name="repeatingSet1" select="RepeatingFieldSet1"/>
-        <xsl:variable name="repeatingCount1" select="RepeatingFieldSet1CountField"/>
-        <xsl:variable name="repeatingSet2" select="RepeatingFieldSet2"/>
-        <xsl:variable name="repeatingCount2" select="RepeatingFieldSet2CountField"/>
-        <xsl:variable name="startRepeat" select="FieldCount - $repeatingSet1 - $repeatingSet2 + 1"/>
-
-        The <xsl:value-of select="$repeatingSet1"/> fields starting at field <xsl:value-of select="$startRepeat"/> are repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="$repeatingCount1"/>.
-        The <xsl:value-of select="$repeatingSet2"/> fields starting at field <xsl:value-of select="$startRepeat + $repeatingSet1"/> are repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="$repeatingCount2"/>.
-      </xsl:when>
-
-      <xsl:when test="RepeatingFieldSet1">
-        <xsl:variable name="repeatingSet1" select="RepeatingFieldSet1"/>
-        <xsl:variable name="repeatingCount1" select="RepeatingFieldSet1CountField"/>
-        <xsl:variable name="startRepeat" select="FieldCount - $repeatingSet1 + 1"/>
-
-        The <xsl:value-of select="$repeatingSet1"/> fields starting at field <xsl:value-of select="$startRepeat"/> are repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="$repeatingCount1"/>.
-      </xsl:when>
-
-    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="pgn-list">
@@ -155,9 +122,6 @@
             </xsl:choose>
           </p>
 
-          <xsl:variable name="startRepeat">
-            <xsl:call-template name="getFirstRepeatingField" />
-          </xsl:variable>
           <p>
             This
             <xsl:if test="Type = 'Single'"> single-frame </xsl:if>
@@ -169,13 +133,7 @@
             <xsl:if test="Length">
               <xsl:value-of select="Length"/>
             </xsl:if>
-            bytes long and contains 
-            <xsl:if test="$startRepeat = FieldCount + 1">
-              <xsl:value-of select="FieldCount"/> fields.
-            </xsl:if>
-            <xsl:if test="$startRepeat != FieldCount + 1">
-              at least <xsl:value-of select="$startRepeat + 1"/> fields.
-            </xsl:if>
+            bytes long and contains <xsl:value-of select="FieldCount"/> fields.
 
             <xsl:call-template name="HandleRepeatingFields"/>
 
@@ -186,6 +144,7 @@
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </xsl:if>
           </p>
+
           <table>
             <tr>
               <th> Field # </th>
@@ -207,14 +166,33 @@
                 </xsl:choose>
               </xsl:variable>
               <tr>
-                <xsl:if test="Order = $startRepeat">
-                  <xsl:attribute name="class">startrepeating</xsl:attribute>
+                <xsl:variable name="OrderPlus1" select="Order + 1"/>
+                <xsl:variable name="FirstFieldAfterSet1" select="../../RepeatingFieldSet1StartField + ../../RepeatingFieldSet1Size"/>
+                <xsl:variable name="FirstFieldAfterSet2" select="../../RepeatingFieldSet2StartField + ../../RepeatingFieldSet2Size"/>
+                <xsl:if test="Order = ../../RepeatingFieldSet1StartField">
+                  <xsl:attribute name="class">repeatmarker</xsl:attribute>
                 </xsl:if>
+                <xsl:if test="Order = $FirstFieldAfterSet1">
+                  <xsl:attribute name="class">repeatmarker</xsl:attribute>
+                </xsl:if>
+                <xsl:if test="Order = $FirstFieldAfterSet2">
+                  <xsl:attribute name="class">repeatmarker</xsl:attribute>
+                </xsl:if>
+
                 <td>
-                  <xsl:if test="Order >= $startRepeat">
+                  <xsl:if test="($OrderPlus1 &gt; ../../RepeatingFieldSet1StartField) and (Order &lt; $FirstFieldAfterSet1)">
+                    <xsl:attribute name="class">repeating</xsl:attribute>
+                  </xsl:if>
+                  <xsl:if test="($OrderPlus1 &gt; ../../RepeatingFieldSet2StartField) and (Order &lt; $FirstFieldAfterSet2)">
                     <xsl:attribute name="class">repeating</xsl:attribute>
                   </xsl:if>
                   <xsl:value-of select="Order"/>
+                  <xsl:if test="($OrderPlus1 &gt; ../../RepeatingFieldSet1StartField) and (Order &lt; $FirstFieldAfterSet1)">
+                    <br/>Set 1
+                  </xsl:if>
+                  <xsl:if test="($OrderPlus1 &gt; ../../RepeatingFieldSet2StartField) and (Order &lt; $FirstFieldAfterSet2)">
+                    <br/>Set 2
+                  </xsl:if>
                 </td>
                 <td> <xsl:value-of select="Name"/> </td>
                 <td>

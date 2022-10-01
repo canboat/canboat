@@ -37,7 +37,6 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>15</Length>
-      <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>

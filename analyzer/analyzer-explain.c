@@ -178,19 +178,13 @@ int main(int argc, char **argv)
 static unsigned int getMinimalPgnLength(Pgn *pgn, bool *isVariable)
 {
   // Count all fields until the first repeating field
-  uint32_t     fieldCount      = pgn->fieldCount;
-  uint32_t     repeatingFields = pgn->repeatingFields;
-  unsigned int length          = 0;
+  uint32_t     fieldCount = pgn->fieldCount;
+  unsigned int length     = 0;
 
   *isVariable = false;
-  if (repeatingFields >= 100)
+  if (pgn->repeatingCount1 > 0)
   {
-    fieldCount -= repeatingFields / 100 + repeatingFields % 100;
-    *isVariable = true;
-  }
-  else if (repeatingFields > 0)
-  {
-    fieldCount -= repeatingFields;
+    fieldCount -= pgn->repeatingCount1 + pgn->repeatingCount2;
     *isVariable = true;
   }
 
@@ -233,16 +227,40 @@ static void explainPGN(Pgn pgn)
     printf("     The length is %d bytes\n", len);
   }
 
-  if (pgn.repeatingFields >= 100)
+  if (pgn.repeatingCount1 > 0)
   {
-    printf("     The last %u and %u fields repeat until the data is exhausted.\n\n",
-           pgn.repeatingFields % 100,
-           pgn.repeatingFields / 100);
+    if (pgn.repeatingField1 < 255)
+    {
+      printf("     Fields %u thru %u repeat n times, where n is the value contained in field %u.\n\n",
+             pgn.repeatingStart1,
+             pgn.repeatingStart1 + pgn.repeatingCount1,
+             pgn.repeatingField1);
+    }
+    else
+    {
+      printf("     Fields %u thru %u repeat until the data in the PGN is exhausted.\n\n",
+             pgn.repeatingStart1,
+             pgn.repeatingStart1 + pgn.repeatingCount1);
+    }
   }
-  else if (pgn.repeatingFields)
+
+  if (pgn.repeatingCount2 > 0)
   {
-    printf("     The last %u fields repeat until the data is exhausted.\n\n", pgn.repeatingFields);
+    if (pgn.repeatingField2 < 255)
+    {
+      printf("     Fields %u thru %u repeat n times, where n is the value contained in field %u.\n\n",
+             pgn.repeatingStart2,
+             pgn.repeatingStart2 + pgn.repeatingCount2,
+             pgn.repeatingField2);
+    }
+    else
+    {
+      printf("     Fields %u thru %u repeat until the data in the PGN is exhausted.\n\n",
+             pgn.repeatingStart2,
+             pgn.repeatingStart2 + pgn.repeatingCount2);
+    }
   }
+
   if (pgn.interval != 0 && pgn.interval < UINT16_MAX)
   {
     printf("     The PGN is normally transmitted every %u ms\n", pgn.interval);
@@ -493,25 +511,26 @@ static void explainPGNXML(Pgn pgn)
     printXMLUnsigned(6, "Length", len);
   }
 
-  if (pgn.repeatingFields >= 100)
+  if (pgn.repeatingCount1 > 0)
   {
-    printXMLUnsigned(6, "RepeatingFieldSet1", pgn.repeatingFields % 100);
-    printXMLUnsigned(6, "RepeatingFieldSet1CountField", pgn.repeatingField1);
-    printXMLUnsigned(6, "RepeatingFieldSet2", pgn.repeatingFields / 100);
-    printXMLUnsigned(6, "RepeatingFieldSet2CountField", pgn.repeatingField2);
-  }
-  else if (doV1 || pgn.repeatingFields > 0)
-  {
-    if (pgn.repeatingField1 > 0 && pgn.repeatingField1 < 255)
+    printXMLUnsigned(6, "RepeatingFieldSet1Size", pgn.repeatingCount1);
+    printXMLUnsigned(6, "RepeatingFieldSet1StartField", pgn.repeatingStart1);
+    if (pgn.repeatingField1 < 255)
     {
-      printXMLUnsigned(6, "RepeatingFieldSet1", pgn.repeatingFields);
       printXMLUnsigned(6, "RepeatingFieldSet1CountField", pgn.repeatingField1);
     }
-    else
+  }
+
+  if (pgn.repeatingCount2 > 0)
+  {
+    printXMLUnsigned(6, "RepeatingFieldSet2Size", pgn.repeatingCount2);
+    printXMLUnsigned(6, "RepeatingFieldSet2StartField", pgn.repeatingStart2);
+    if (pgn.repeatingField2 < 255)
     {
-      printXMLUnsigned(6, "RepeatingFields", pgn.repeatingFields);
+      printXMLUnsigned(6, "RepeatingFieldSet2CountField", pgn.repeatingField2);
     }
   }
+
   if (!doV1)
   {
     if (pgn.interval != 0 && pgn.interval < UINT16_MAX)

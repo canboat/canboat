@@ -37,7 +37,6 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>13</Length>
-      <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -109,7 +108,6 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>14</Length>
-      <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -203,7 +201,6 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>33</Length>
-      <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -506,7 +503,6 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>7</Length>
-      <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>

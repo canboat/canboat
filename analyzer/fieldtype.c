@@ -221,9 +221,13 @@ extern void fillFieldType(void)
     {
       logError("PGN %u '%s' is outside single-frame range\n", pgn, pgnList[i].description);
     }
-    if (pgnList[i].repeatingFields != 0 && pgnList[i].repeatingField1 == 0)
+    if (pgnList[i].repeatingCount1 != 0 && pgnList[i].repeatingStart1 == 0)
     {
-      logAbort("PGN %u '%s' has no way to determine repeating fields\n", pgn, pgnList[i].description);
+      logAbort("PGN %u '%s' has no way to determine repeating field set 1\n", pgn, pgnList[i].description);
+    }
+    if (pgnList[i].repeatingCount2 != 0 && pgnList[i].repeatingStart2 == 0)
+    {
+      logAbort("PGN %u '%s' has no way to determine repeating field set 2\n", pgn, pgnList[i].description);
     }
 
     if (pgnList[i].interval == 0)

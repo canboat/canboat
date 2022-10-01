@@ -189,7 +189,7 @@ class CanboatReader:
 
         # pgn_complete = json_data["Complete"] if "Complete" in json_data else None
 
-        pgn_repeating_fields = json_data["RepeatingFields"]
+        pgn_repeating_fields = json_data["RepeatingFieldsSet1Size"] if "RepeatingFieldsSet1Size" in json_data else 0
 
         # check the offset and length of the last field to verify it fits in the message
         if not self._validate_data_length(json_data["Fields"], pgn_length):

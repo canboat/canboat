@@ -15,7 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     documentation page for humans on how the PGN list is built up.
   - `canboat.css` for helping in rendering `canboat.xml` in a webbrowser.
   - `canboat.dtd` for validating `canboat.xml`.
-- The older `pgns.xml` and `pgns.json` files are, as much as possible, unchanged but there are some changes seeping through:
+- The older `pgns.xml` and `pgns.json` files are, as much as possible, unchanged but there are still some (breaking) changes:
+  - The `RepeatingFields` element was imprecise and was not able to cover all types and manners of repetition, and has been replaced
+    by up to six elements.
+    `RepeatingFieldSet1Size`
+    `RepeatingFieldSet1StartField`
+    `RepeatingFieldSet1CountField` (only present if there is a field that contains the number of repetitions, otherwise boundless)
+    `RepeatingFieldSet2Size`
+    `RepeatingFieldSet2StartField`
+    `RepeatingFieldSet2CountField` (only present if there is a field that contains the number of repetitions, otherwise boundless)
   - All fields now have a `Type`.
   - PGN fields no longer have a description `PGN` (which added no value as the field name is also `PGN`.
   - PGN 60416 "ISO Transport Protocol, Connection Management - End Of Message" field id "totalNumberOfPacketsReceived" is now

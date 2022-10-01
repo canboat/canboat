@@ -202,7 +202,8 @@ void checkPgnList(void)
 
 Field *getField(uint32_t pgnId, uint32_t field)
 {
-  Pgn *pgn = searchForPgn(pgnId);
+  Pgn    *pgn = searchForPgn(pgnId);
+  uint8_t n;
 
   if (!pgn)
   {
@@ -212,13 +213,6 @@ Field *getField(uint32_t pgnId, uint32_t field)
   if (field < pgn->fieldCount)
   {
     return pgn->fieldList + field;
-  }
-  if (pgn->repeatingFields)
-  {
-    uint32_t startOfRepeatingFields = pgn->fieldCount - pgn->repeatingFields;
-    uint32_t index                  = startOfRepeatingFields + ((field - startOfRepeatingFields) % pgn->repeatingFields);
-
-    return pgn->fieldList + index;
   }
   logDebug("PGN %u does not have field %u\n", pgnId, field);
   return 0;

@@ -14,7 +14,6 @@
         "Missing":[
           "Interval"],
         "Length":13,
-        "RepeatingFields":0,
         "Fields":[
           {
             "Order":1,
@@ -78,7 +77,6 @@
           "Resolution",
           "Interval"],
         "Length":14,
-        "RepeatingFields":0,
         "Fields":[
           {
             "Order":1,
@@ -162,7 +160,6 @@
           "Resolution",
           "Interval"],
         "Length":33,
-        "RepeatingFields":0,
         "Fields":[
           {
             "Order":1,
@@ -436,7 +433,6 @@
           "Resolution",
           "Interval"],
         "Length":7,
-        "RepeatingFields":0,
         "Fields":[
           {
             "Order":1,

@@ -7593,7 +7593,8 @@ limitations under the License.
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
       <MinLength>11</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>5</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -7686,7 +7687,8 @@ limitations under the License.
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
       <MinLength>6</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>5</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -7776,7 +7778,8 @@ limitations under the License.
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
       <MinLength>6</MinLength>
-      <RepeatingFieldSet1>1</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>1</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>5</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -7862,9 +7865,11 @@ limitations under the License.
       </Missing>
       <FieldCount>11</FieldCount>
       <MinLength>9</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>9</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>7</RepeatingFieldSet1CountField>
-      <RepeatingFieldSet2>1</RepeatingFieldSet2>
+      <RepeatingFieldSet2Size>1</RepeatingFieldSet2Size>
+      <RepeatingFieldSet2StartField>11</RepeatingFieldSet2StartField>
       <RepeatingFieldSet2CountField>8</RepeatingFieldSet2CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -7984,9 +7989,11 @@ limitations under the License.
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
       <MinLength>9</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>9</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>7</RepeatingFieldSet1CountField>
-      <RepeatingFieldSet2>2</RepeatingFieldSet2>
+      <RepeatingFieldSet2Size>2</RepeatingFieldSet2Size>
+      <RepeatingFieldSet2StartField>11</RepeatingFieldSet2StartField>
       <RepeatingFieldSet2CountField>8</RepeatingFieldSet2CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -8114,9 +8121,11 @@ limitations under the License.
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
       <MinLength>9</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>9</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>7</RepeatingFieldSet1CountField>
-      <RepeatingFieldSet2>2</RepeatingFieldSet2>
+      <RepeatingFieldSet2Size>2</RepeatingFieldSet2Size>
+      <RepeatingFieldSet2StartField>11</RepeatingFieldSet2StartField>
       <RepeatingFieldSet2CountField>8</RepeatingFieldSet2CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -8244,9 +8253,11 @@ limitations under the License.
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
       <MinLength>9</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>9</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>7</RepeatingFieldSet1CountField>
-      <RepeatingFieldSet2>2</RepeatingFieldSet2>
+      <RepeatingFieldSet2Size>2</RepeatingFieldSet2Size>
+      <RepeatingFieldSet2StartField>11</RepeatingFieldSet2StartField>
       <RepeatingFieldSet2CountField>8</RepeatingFieldSet2CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -8373,7 +8384,8 @@ limitations under the License.
       <Complete>true</Complete>
       <FieldCount>2</FieldCount>
       <MinLength>1</MinLength>
-      <RepeatingFields>1</RepeatingFields>
+      <RepeatingFieldSet1Size>1</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>2</RepeatingFieldSet1StartField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -10108,7 +10120,8 @@ limitations under the License.
       </Missing>
       <FieldCount>7</FieldCount>
       <MinLength>4</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>5</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
@@ -13874,7 +13887,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
       <MinLength>2</MinLength>
-      <RepeatingFieldSet1>10</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>10</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>3</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
@@ -14021,7 +14035,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
       <MinLength>2</MinLength>
-      <RepeatingFieldSet1>10</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>10</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>3</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
@@ -16720,7 +16735,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <FieldCount>18</FieldCount>
       <MinLength>43</MinLength>
-      <RepeatingFieldSet1>3</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>3</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>16</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>15</RepeatingFieldSet1CountField>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
@@ -18496,7 +18512,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <FieldCount>13</FieldCount>
       <MinLength>10</MinLength>
-      <RepeatingFieldSet1>4</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>11</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -19121,7 +19138,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <FieldCount>11</FieldCount>
       <MinLength>3</MinLength>
-      <RepeatingFieldSet1>7</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>7</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>5</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>4</RepeatingFieldSet1CountField>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
@@ -21124,7 +21142,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>true</Complete>
       <FieldCount>8</FieldCount>
       <MinLength>8</MinLength>
-      <RepeatingFieldSet1>1</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>1</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>8</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>7</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -21778,7 +21797,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>10</FieldCount>
       <MinLength>6</MinLength>
-      <RepeatingFields>4</RepeatingFields>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>7</RepeatingFieldSet1StartField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -21897,9 +21917,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>8</FieldCount>
-      <MinLength>6</MinLength>
-      <RepeatingFields>3</RepeatingFields>
+      <FieldCount>11</FieldCount>
+      <Length>22</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -21956,8 +21975,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>destinationId</Id>
-          <Name>Destination ID</Name>
+          <Id>destinationIdA</Id>
+          <Name>Destination ID A</Name>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -21966,8 +21985,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>offset</Id>
-          <Name>Offset</Name>
+          <Id>offsetA</Id>
+          <Name>Offset A</Name>
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
@@ -21976,10 +21995,40 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>increment</Id>
-          <Name>Increment</Name>
+          <Id>incrementA</Id>
+          <Name>Increment A</Name>
           <BitLength>16</BitLength>
           <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>UINT16</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>destinationIdB</Id>
+          <Name>Destination ID B</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>MMSI</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>offsetB</Id>
+          <Name>Offset B</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Signed>false</Signed>
+          <FieldType>UINT16</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>incrementB</Id>
+          <Name>Increment B</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Signed>false</Signed>
           <FieldType>UINT16</FieldType>
@@ -21999,7 +22048,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>9</FieldCount>
       <MinLength>6</MinLength>
-      <RepeatingFields>4</RepeatingFields>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -22537,7 +22587,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>22</FieldCount>
       <MinLength>60</MinLength>
-      <RepeatingFields>2</RepeatingFields>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>21</RepeatingFieldSet1StartField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -22763,7 +22814,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>22</FieldCount>
       <MinLength>60</MinLength>
-      <RepeatingFields>2</RepeatingFields>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>21</RepeatingFieldSet1StartField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -23287,7 +23339,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>12</FieldCount>
       <MinLength>3</MinLength>
-      <RepeatingFieldSet1>9</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>9</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -23413,8 +23466,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>9</FieldCount>
-      <MinLength>3</MinLength>
-      <RepeatingFieldSet1>6</RepeatingFieldSet1>
+      <MinLength>4</MinLength>
+      <RepeatingFieldSet1Size>5</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>5</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -23637,7 +23691,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>9</FieldCount>
       <MinLength>6</MinLength>
-      <RepeatingFieldSet1>4</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -23745,7 +23800,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>7</FieldCount>
       <MinLength>6</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -23833,7 +23889,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>9</FieldCount>
       <MinLength>4</MinLength>
-      <RepeatingFieldSet1>6</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>6</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -23943,7 +24000,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>7</FieldCount>
       <MinLength>6</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -24031,7 +24089,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>6</FieldCount>
       <MinLength>5</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>5</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -24109,7 +24168,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>5</FieldCount>
       <MinLength>4</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -24177,7 +24237,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>7</FieldCount>
       <MinLength>6</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -24267,7 +24328,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>9</FieldCount>
       <MinLength>6</MinLength>
-      <RepeatingFieldSet1>4</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -26372,9 +26434,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>10</FieldCount>
-      <MinLength>14</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <FieldCount>11</FieldCount>
+      <MinLength>18</MinLength>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>9</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>6</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
@@ -26479,6 +26542,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>10</Order>
           <Id>name</Id>
           <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <Signed>false</Signed>
+          <FieldType>STRING_LAU</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>artist</Id>
+          <Name>Artist</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
           <FieldType>STRING_LAU</FieldType>
@@ -26604,7 +26675,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>13</FieldCount>
       <MinLength>6</MinLength>
-      <RepeatingFieldSet1>10</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>10</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
@@ -26752,7 +26824,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>5</FieldCount>
       <MinLength>3</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
@@ -27215,7 +27288,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>5</FieldCount>
       <MinLength>3</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
@@ -27367,7 +27441,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Missing>
       <FieldCount>5</FieldCount>
       <MinLength>3</MinLength>
-      <RepeatingFieldSet1>2</RepeatingFieldSet1>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
@@ -27433,8 +27508,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
-      <MinLength>9</MinLength>
-      <RepeatingFieldSet1>3</RepeatingFieldSet1>
+      <MinLength>3</MinLength>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <Fields>
         <Field>

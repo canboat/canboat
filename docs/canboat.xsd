@@ -154,10 +154,11 @@ limitations under the License.
       <xs:element type="xs:short" name="FieldCount"/>
       <xs:element type="xs:short" name="MinLength" minOccurs="0"/>
       <xs:element type="xs:short" name="Length" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFields" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFieldSet1" minOccurs="0"/>
+      <xs:element type="xs:byte" name="RepeatingFieldSet1Size" minOccurs="0"/>
+      <xs:element type="xs:byte" name="RepeatingFieldSet1StartField" minOccurs="0"/>
       <xs:element type="xs:byte" name="RepeatingFieldSet1CountField" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFieldSet2" minOccurs="0"/>
+      <xs:element type="xs:byte" name="RepeatingFieldSet2Size" minOccurs="0"/>
+      <xs:element type="xs:byte" name="RepeatingFieldSet2StartField" minOccurs="0"/>
       <xs:element type="xs:byte" name="RepeatingFieldSet2CountField" minOccurs="0"/>
       <xs:element type="xs:short" name="TransmissionInterval" minOccurs="0"/>
       <xs:element type="xs:boolean" name="TransmissionIrregular" minOccurs="0"/>

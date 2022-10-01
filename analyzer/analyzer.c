@@ -863,19 +863,10 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
   g_variableFieldRepeat[1] = 0;   // Can be overridden by '# of parameters'
   g_variableFieldIndex     = 0;
 
-  if (pgn->repeatingFields >= 100)
-  {
-    variableFieldCount[0] = pgn->repeatingFields % 100;
-    variableFieldCount[1] = pgn->repeatingFields / 100;
-  }
-  else
-  {
-    variableFieldCount[0] = pgn->repeatingFields % 100;
-    variableFieldCount[1] = 0;
-  }
-
-  variableFieldStart = pgn->fieldCount - variableFieldCount[0] - variableFieldCount[1];
-  logDebug("fieldCount=%d variableFieldStart=%d\n", pgn->fieldCount, variableFieldStart);
+  variableFieldCount[0] = pgn->repeatingCount1;
+  variableFieldCount[1] = pgn->repeatingCount2;
+  variableFieldStart    = pgn->repeatingStart1;
+  logDebug("fieldCount=%d repeatingStart1=%d\n", pgn->fieldCount, variableFieldStart);
 
   r = true;
   for (i = 0, startBit = 0, data = dataStart; data < dataEnd; i++)
