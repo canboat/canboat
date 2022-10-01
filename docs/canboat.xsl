@@ -47,18 +47,18 @@
   <xsl:template name="HandleRepeatingFields">
     <xsl:if test="RepeatingFieldSet1Size">
       <xsl:if test="RepeatingFieldSet1CountField">
-          The <xsl:value-of select="RepeatingFieldSet1Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet1StartField"/> are repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="RepeatingFieldSet1CountField"/>.
+          The <xsl:value-of select="RepeatingFieldSet1Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet1StartField"/> form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="RepeatingFieldSet1CountField"/>.
       </xsl:if>
       <xsl:if test="not(RepeatingFieldSet1CountField)">
-          The <xsl:value-of select="RepeatingFieldSet1Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet1StartField"/> are repeated until there is no more data in the PGN.
+          The <xsl:value-of select="RepeatingFieldSet1Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet1StartField"/> form repeating set 1. The set is repeated until there is no more data in the PGN.
       </xsl:if>
     </xsl:if>
     <xsl:if test="RepeatingFieldSet2Size">
       <xsl:if test="RepeatingFieldSet2CountField">
-          The <xsl:value-of select="RepeatingFieldSet2Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet2StartField"/> are repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="RepeatingFieldSet2CountField"/>.
+          The <xsl:value-of select="RepeatingFieldSet2Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet2StartField"/> form repeating set 2. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="RepeatingFieldSet2CountField"/>.
       </xsl:if>
       <xsl:if test="not(RepeatingFieldSet2CountField)">
-          The <xsl:value-of select="RepeatingFieldSet2Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet2StartField"/> are repeated until there is no more data in the PGN.
+          The <xsl:value-of select="RepeatingFieldSet2Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet2StartField"/> form repeating set 2. The set is repeated until there is no more data in the PGN.
       </xsl:if>
     </xsl:if>
 
