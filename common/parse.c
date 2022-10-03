@@ -95,6 +95,12 @@ int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
     return 2;
   }
 
+  if (len > 9)
+  {
+    // This is not PLAIN format but FAST format */
+    return -1;
+  }
+
   if (r <= 5 + 8)
   {
     for (i = 0; i < len; i++)

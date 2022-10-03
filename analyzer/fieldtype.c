@@ -212,6 +212,7 @@ extern void fillFieldType(bool doUnitFixup)
       {
         fixupUnit(f);
       }
+      f->pgn = &pgnList[i];
     }
     if (pgnList[i].type == PACKET_FAST && !ALLOW_PGN_FAST_PACKET(pgn))
     {

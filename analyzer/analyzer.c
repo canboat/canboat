@@ -89,6 +89,7 @@ static enum RawFormats detectFormat(const char *msg);
 static void            printCanFormat(RawMessage *msg);
 static bool            printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 static void            printCanRaw(RawMessage *msg);
+static void            showBuffers(void);
 
 static void usage(char **argv, char **av)
 {
@@ -277,6 +278,14 @@ int main(int argc, char **argv)
 
     if (*msg == 0 || *msg == '\r' || *msg == '\n' || *msg == '#')
     {
+      if (*msg == '#')
+      {
+        if (strncmp(msg + 1, "SHOWBUFFERS", STRSIZE("SHOWBUFFERS")) == 0)
+        {
+          showBuffers();
+        }
+      }
+
       continue;
     }
 
@@ -302,6 +311,12 @@ int main(int argc, char **argv)
 
       case RAWFORMAT_FAST:
         r = parseRawFormatFast(msg, &m, showJson);
+        if (r >= 0 && format == RAWFORMAT_PLAIN)
+        {
+          logInfo("Detected normal format with all frames on one line\n");
+          multiPackets = MULTIPACKETS_COALESCED;
+          format       = RAWFORMAT_FAST;
+        }
         break;
 
       case RAWFORMAT_AIRMAR:
@@ -525,6 +540,26 @@ void setSystemClock(void)
 #endif
 }
 
+static void showBuffers(void)
+{
+  size_t  buffer;
+  Packet *p;
+
+  for (buffer = 0; buffer < REASSEMBLY_BUFFER_SIZE; buffer++)
+  {
+    p = &reassemblyBuffer[buffer];
+
+    if (p->used)
+    {
+      logDebug("ReassemblyBuffer[%zu] PGN %u: size %zu frames=%x mask=%x\n", buffer, p->pgn, p->size, p->frames, p->allFrames);
+    }
+    else
+    {
+      logInfo("ReassemblyBuffer[%zu]: inUse=false\n", buffer);
+    }
+  }
+}
+
 static void printCanFormat(RawMessage *msg)
 {
   Pgn    *pgn;
@@ -720,7 +755,13 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     resolution = field->ft->resolution;
   }
 
-  logDebug("printField(<%s>, \"%s\", ..., %zu, %zu) res=%g\n", field->name, fieldName, dataLen, startBit, field->resolution);
+  logDebug("PGN %u: printField(<%s>, \"%s\", ..., dataLen=%zu, startBit=%zu) resolution=%g\n",
+           field->pgn->pgn,
+           field->name,
+           fieldName,
+           dataLen,
+           startBit,
+           field->resolution);
 
   if (field->size != 0 || field->ft != NULL)
   {
@@ -740,8 +781,13 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     refPgn = data[0] + (data[1] << 8) + (data[2] << 16);
   }
 
-  logDebug(
-      "printField <%s>, \"%s\": bits=%zu proprietary=%u refPgn=%u\n", field->name, fieldName, *bits, field->proprietary, refPgn);
+  logDebug("PGN %u: printField <%s>, \"%s\": bits=%zu proprietary=%u refPgn=%u\n",
+           field->pgn->pgn,
+           field->name,
+           fieldName,
+           *bits,
+           field->proprietary,
+           refPgn);
 
   if (field->proprietary)
   {
@@ -757,8 +803,6 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     }
   }
 
-  logDebug("printField <%s>, \"%s\": ft=%p ft->pf=%p\n", field->name, fieldName, field->ft, (field->ft) ? field->ft->pf : NULL);
-
   if (field->ft != NULL && field->ft->pf != NULL)
   {
     size_t location;
@@ -768,11 +812,12 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
       mprintf("%s%s", getSep(), showJson ? "{" : "");
       sep = "";
     }
-    logDebug("printField <%s>, \"%s\": calling function for %s\n", field->name, fieldName, field->fieldType);
+    logDebug(
+        "PGN %u: printField <%s>, \"%s\": calling function for %s\n", field->pgn->pgn, field->name, fieldName, field->fieldType);
     g_skip   = false;
     location = mlocation();
     r        = (field->ft->pf)(field, fieldName, data, dataLen, startBit, bits);
-    logDebug("printField <%s>, \"%s\": result %d bits=%zu\n", field->name, fieldName, r, *bits);
+    logDebug("PGN %u: printField <%s>, \"%s\": result %d bits=%zu\n", field->pgn->pgn, field->name, fieldName, r, *bits);
     if (r && !g_skip && location == mlocation())
     {
       logError("Field \"%s\" print routine did not print anything\n", field->name);
@@ -784,6 +829,8 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     }
     return r;
   }
+
+  logError("PGN %u: no function found to print field '%s'\n", field->pgn->pgn, fieldName);
   return false;
 }
 

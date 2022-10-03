@@ -36,6 +36,7 @@ limitations under the License.
 #define RES_HIRES_ROTATION (1e-6 / 32.0)
 
 typedef struct FieldType FieldType;
+typedef struct Pgn       Pgn;
 
 typedef struct
 {
@@ -62,6 +63,7 @@ typedef struct
   const char   *lookupName;
   const size_t *lookupLength;
   FieldType    *ft;
+  Pgn          *pgn;
 } Field;
 
 #include "fieldtype.h"
@@ -744,7 +746,7 @@ typedef enum PacketType
   PACKET_ISO11783
 } PacketType;
 
-typedef struct
+struct Pgn
 {
   char       *description;
   uint32_t    pgn;
@@ -764,7 +766,7 @@ typedef struct
   uint8_t     repeatingStart2;  /* At which field does the second set start? */
   uint8_t     repeatingField1;  /* Which field explains how often the repeating fields set #1 repeats? 255 = there is no field */
   uint8_t     repeatingField2;  /* Which field explains how often the repeating fields set #2 repeats? 255 = there is no field */
-} Pgn;
+};
 
 // Returns the first pgn that matches the given id, or NULL if not found.
 Pgn *searchForPgn(int pgn);
