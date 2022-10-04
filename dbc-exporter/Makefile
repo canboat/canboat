@@ -2,19 +2,23 @@
 # Makefile for dbc-exporter
 #
 
+PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
+VENV=../rel/$(PLATFORM)/venv
+
+
 all: pgns.dbc
 
 pgns.dbc: dbc-exporter
-	venv/bin/canboat-dbc-exporter ../analyzer/pgns.json pgns.dbc
+	"$(VENV)/bin/canboat-dbc-exporter" ../analyzer/pgns.json pgns.dbc
 
-dbc-exporter: venv
-	venv/bin/python3 setup.py install
+dbc-exporter: $(VENV)
+	"$(VENV)/bin/python3" setup.py install
 
-venv:
-	python3 -m venv venv
+$(VENV):
+	python3 -m venv "$(VENV)"
 
 .PHONY: all dbc-exporter
 
 clean:
-	-venv/bin/python3 setup.py clean
-	-rm -rf venv build dist pgns.dbc
+	-[ -x "$(VENV)/bin/python3" ] && "$(VENV)/bin/python3" setup.py clean || :
+	-rm -rf "$(VENV)" build dist pgns.dbc
