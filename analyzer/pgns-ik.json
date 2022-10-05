@@ -2,17 +2,18 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"2.0.0",
+    "Version":"4.0.0",
     "PGNs": [
     
       {
         "PGN":262400,
         "Id":"ikonvertNetworkStatus",
         "Description":"iKonvert: Network status",
-        "Type":"Fast",
-        "Complete":true,
+        "Type":"Single",
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":15,
-        "RepeatingFields":0,
         "Fields":[
           {
             "Order":1,
@@ -22,8 +23,8 @@
             "BitOffset":0,
             "BitStart":0,
             "Type":"Integer",
-            "Resolution":1,
-            "Signed":false},
+            "Signed":false,
+            "FieldType":"UINT8"},
           {
             "Order":2,
             "Id":"errors",
@@ -32,8 +33,8 @@
             "BitOffset":8,
             "BitStart":0,
             "Type":"Integer",
-            "Resolution":1,
-            "Signed":false},
+            "Signed":false,
+            "FieldType":"UINT32"},
           {
             "Order":3,
             "Id":"deviceCount",
@@ -42,19 +43,19 @@
             "BitOffset":40,
             "BitStart":0,
             "Type":"Integer",
-            "Resolution":1,
-            "Signed":false},
+            "Signed":false,
+            "FieldType":"UINT8"},
           {
             "Order":4,
             "Id":"uptime",
             "Name":"Uptime",
-            "Description":"s",
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
-            "Signed":false},
+            "Units":"s",
+            "Resolution":0.0001,
+            "Signed":false,
+            "FieldType":"TIME"},
           {
             "Order":5,
             "Id":"gatewayAddress",
@@ -63,8 +64,8 @@
             "BitOffset":80,
             "BitStart":0,
             "Type":"Integer",
-            "Resolution":1,
-            "Signed":false},
+            "Signed":false,
+            "FieldType":"UINT8"},
           {
             "Order":6,
             "Id":"rejectedTxRequests",
@@ -73,8 +74,8 @@
             "BitOffset":88,
             "BitStart":0,
             "Type":"Integer",
-            "Resolution":1,
-            "Signed":false}]}
+            "Signed":false,
+            "FieldType":"UINT32"}]}
     ]
-    }
+}
     

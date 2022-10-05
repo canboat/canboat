@@ -17,7 +17,8 @@
 # 
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-TARGETDIR=../rel/$(PLATFORM)
+BUILDDIR?=rel/$(PLATFORM)
+TARGETDIR=../$(BUILDDIR)
 COMMAND=$(TARGETDIR)/command-group-function
 REQUEST=$(TARGETDIR)/request-group-function
 TARGETS=$(COMMAND) $(REQUEST)

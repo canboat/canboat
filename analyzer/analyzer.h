@@ -50,8 +50,8 @@ typedef unsigned int       uint32_t;
 typedef signed int         int32_t;
 typedef __int64            int64_t;
 typedef unsigned __int64   uint64_t;
-#define UINT64_C(x) ((uint64_t)(x))
-#define INT64_C(x) ((int64_t)(x))
+#define UINT64_C(x) ((uint64_t) (x))
+#define INT64_C(x) ((int64_t) (x))
 #define PRId64 "I64d"
 #define PRIu64 "I64u"
 #define PRIx64 "I64x"
@@ -78,3 +78,41 @@ typedef unsigned __int64   uint64_t;
 #include "pgn.h"
 
 #define DST_GLOBAL (0xff) /* The address used when a message is addressed to -all- stations */
+
+/* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
+ * but I don't yet know which datafields reserve the reserved values.
+ */
+#define DATAFIELD_UNKNOWN (0)
+#define DATAFIELD_ERROR (-1)
+#define DATAFIELD_RESERVED1 (-2)
+#define DATAFIELD_RESERVED2 (-3)
+#define DATAFIELD_RESERVED3 (-4)
+
+typedef enum GeoFormats
+{
+  GEO_DD,
+  GEO_DM,
+  GEO_DMS
+} GeoFormats;
+
+extern bool       showRaw;
+extern bool       showData;
+extern bool       showJson;
+extern bool       showJsonEmpty;
+extern bool       showJsonValue;
+extern bool       showSI;
+extern GeoFormats showGeo;
+extern char      *sep;
+extern char       closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
+extern bool       g_skip;
+
+/* analyzer.c */
+
+/* print.c */
+
+extern char  *getSep(void);
+extern void   mprintf(const char *format, ...);
+extern void   mreset(void);
+extern void   mwrite(FILE *stream);
+extern size_t mlocation(void);
+extern void   printEmpty(const char *name, int64_t exceptionValue);

@@ -19,6 +19,8 @@ PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 OS=$(shell uname -o 2>&1)
 SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analyzer socketcan-writer ikonvert-serial
 
+BUILDDIR ?= ./rel/$(PLATFORM)
+
 MKDIR = mkdir -p
 export HELP2MAN=$(shell command -v help2man 2> /dev/null)
 
@@ -29,16 +31,23 @@ ROOT_GID=0
 ROOT_MOD=0644
 
 all:	bin man1 compile
+	@echo "The binaries are now built and are in $(BUILDDIR)"
+	@echo "Use 'make generated' to recreate generated XML, JSON and DBC files."
 
 compile:
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
-	$(MAKE) -C analyzer json
+
+tests:
+	$(MAKE) -C analyzer tests
+
+generated: tests
+	$(MAKE) -C analyzer generated
 	$(MAKE) -C dbc-exporter
 
-bin:	rel/$(PLATFORM)
+bin:	$(BUILDDIR)
 
-rel/$(PLATFORM):
-	$(MKDIR) rel/$(PLATFORM)
+$(BUILDDIR):
+	$(MKDIR) -p $(BUILDDIR)
 
 man1: man/man1
 
@@ -48,24 +57,19 @@ man/man1:
 clean:
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
 	$(MAKE) -C dbc-exporter clean
-	-rm -R -f man
+	-rm -R -f man $(BUILDDIR)
 
-install: rel/$(PLATFORM)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(CONFDIR) $(DESTDIR)$(MANDIR)/man1
-	for i in rel/$(PLATFORM)/* util/* */*_monitor; do f=`basename $$i`; echo $$f; rm -f $(DESTDIR)$(BINDIR)/$$f; cp $$i $(DESTDIR)$(BINDIR); done
+install: $(BUILDDIR)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(CONFDIR) $(DESTDIR)$(MANDIR)/man1
+	for i in $(BUILDDIR)/* util/* */*_monitor; do if [ -x $$i ]; then f=`basename $$i`; echo $$f; rm -f $(DESTDIR)$(BINDIR)/$$f; cp $$i $(DESTDIR)$(BINDIR); fi; done
 	for i in config/*; do install -m $(ROOT_MOD) $$i $(DESTDIR)$(CONFDIR); done
 ifeq ($(notdir $(HELP2MAN)),help2man)
 	for i in man/man1/*; do echo $$i; install -m $(ROOT_MOD) $$i $(DESTDIR)$(MANDIR)/man1; done
 endif
 
-zip:
-	(cd rel; zip -r ../packetlogger_`date +%Y%m%d`.zip *)
-	./rel/$(PLATFORM)/analyzer -explain > packetlogger_`date +%Y%m%d`_explain.txt
-	./rel/$(PLATFORM)/analyzer -explain-xml > packetlogger_`date +%Y%m%d`_explain.xml
-
 format:
 	for file in */*.c */*.h; do clang-format -i $$file; done
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated compile
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)
