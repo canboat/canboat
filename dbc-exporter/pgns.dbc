@@ -1,4 +1,4 @@
-VERSION "Canboat export 2022-10-04T13:28:36.895543"
+VERSION "Canboat export 2022-10-06T00:58:31.336611"
 
 
 NS_ : 
@@ -130,7 +130,7 @@ BO_ 2566781694 PGN_65018_generatorTotalAcEnergy: 8 Vector__XXX
  SG_ totalEnergyExport : 0|32@1+ (1,0) [0|0] "kWh" Vector__XXX
 
 BO_ 2566782206 PGN_65020_generatorPhaseCAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
+ SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VAR" Vector__XXX
  SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566782462 PGN_65021_generatorPhaseCBasicAc: 8 Vector__XXX
@@ -379,7 +379,7 @@ BO_ 2582646014 PGN_126988_alertValue: 8 Vector__XXX
 
 BO_ 2582647038 PGN_126992_systemTime: 8 Vector__XXX
  SG_ time : 32|32@1+ (0.0001,0) [0|0] "s" Vector__XXX
- SG_ date : 16|16@1+ (1,0) [0|0] "days" Vector__XXX
+ SG_ date : 16|16@1+ (1,0) [0|0] "d" Vector__XXX
  SG_ reserved : 12|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ source : 8|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -442,7 +442,7 @@ BO_ 2582714878 PGN_127257_attitude: 8 Vector__XXX
 
 BO_ 2582715134 PGN_127258_magneticVariation: 8 Vector__XXX
  SG_ variation : 32|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
- SG_ ageOfService : 16|16@1+ (1,0) [0|0] "days" Vector__XXX
+ SG_ ageOfService : 16|16@1+ (1,0) [0|0] "d" Vector__XXX
  SG_ reserved : 12|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ source : 8|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -759,7 +759,7 @@ BO_ 2583168510 PGN_129029_gnssPositionData: 8 Vector__XXX
 BO_ 2583169534 PGN_129033_timeDate: 8 Vector__XXX
  SG_ localOffset : 48|16@1- (60,0) [0|0] "s" Vector__XXX
  SG_ time : 16|32@1+ (0.0001,0) [0|0] "s" Vector__XXX
- SG_ date : 0|16@1+ (1,0) [0|0] "days" Vector__XXX
+ SG_ date : 0|16@1+ (1,0) [0|0] "d" Vector__XXX
 
 BO_ 2583170814 PGN_129038_aisClassAPositionRepo: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX

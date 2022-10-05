@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.0.0
+CANboat version v4.1.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.0.0</Version>
+  <Version>4.1.0</Version>
   <PGNs>
     <PGNInfo>
       <PGN>262161</PGN>
@@ -47,7 +47,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -58,7 +60,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT16</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -69,7 +73,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT32</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -80,7 +86,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT32</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -91,7 +99,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT16</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -107,7 +117,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>14</Length>
+      <Length>15</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -118,7 +128,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -129,7 +141,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT16</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -140,7 +154,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT32</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -151,40 +167,48 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT32</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>firmwareVersion</Id>
           <Name>Firmware version</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>0.001</Resolution>
           <Signed>false</Signed>
-          <FieldType>VERSION</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65.533</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>resetStatus</Id>
           <Name>Reset status</Name>
           <BitLength>8</BitLength>
-          <BitOffset>96</BitOffset>
+          <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>a</Id>
           <Name>A</Name>
           <BitLength>8</BitLength>
-          <BitOffset>104</BitOffset>
+          <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -211,7 +235,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -222,7 +248,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT16</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -233,7 +261,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT32</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -244,7 +274,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT32</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -255,7 +287,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -266,7 +300,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -277,7 +313,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -288,7 +326,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -299,7 +339,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
@@ -310,7 +352,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>11</Order>
@@ -321,7 +365,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>12</Order>
@@ -332,7 +378,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>13</Order>
@@ -343,7 +391,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>14</Order>
@@ -354,7 +404,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>15</Order>
@@ -365,7 +417,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>16</Order>
@@ -376,7 +430,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>17</Order>
@@ -387,7 +443,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>18</Order>
@@ -398,7 +456,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>19</Order>
@@ -409,7 +469,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>20</Order>
@@ -420,7 +482,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>21</Order>
@@ -431,7 +495,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>22</Order>
@@ -442,7 +508,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>23</Order>
@@ -453,7 +521,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>24</Order>
@@ -464,7 +534,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>25</Order>
@@ -475,7 +547,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>26</Order>
@@ -486,7 +560,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -513,7 +589,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -524,7 +602,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT16</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -535,7 +615,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT32</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

@@ -150,10 +150,8 @@
               <th> Field # </th>
               <th> Field Name </th>
               <th> Description </th>
-              <th> Size (bits) </th>
-              <th> Type </th>
               <th> Unit </th>
-              <th> Lookup </th>
+              <th> Type </th>
             </tr>
             <xsl:for-each select="Fields/*">
               <xsl:variable name="resolution" select="Resolution"/>
@@ -205,36 +203,66 @@
                     </xsl:with-param>
                   </xsl:call-template>
                 </td>
-                <td> <xsl:value-of select="BitLength"/> </td>
-                <td>
-                  <a>
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="concat('#ft-', FieldType)"/>
-                    </xsl:attribute>
-                    <xsl:value-of select="FieldType"/>
-                  </a>
-                </td>
                 <td>
                   <xsl:value-of select="$notone"/>
-                  <xsl:value-of select="Unit"/>
+                  <xsl:if test="PhysicalQuantity">
+                    <a>
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="concat('#pq-', PhysicalQuantity)"/>
+                      </xsl:attribute>
+                      <xsl:if test="not(Unit)">
+                        <xsl:value-of select="PhysicalQuantity"/>
+                      </xsl:if>
+                      <xsl:value-of select="Unit"/>
+                    </a>
+                  </xsl:if>
+                  <xsl:if test="not(PhysicalQuantity)">
+                    <xsl:value-of select="Unit"/>
+                  </xsl:if>
+                  <xsl:if test="RangeMin">
+                    <div class='xs'>
+                      <xsl:value-of select="RangeMin"/> .. <xsl:value-of select="RangeMax"/>
+                    </div>
+                  </xsl:if>
                 </td>
                 <td>
-                  <xsl:if test="LookupEnumeration">
-                    <a>
-                      <xsl:attribute name="href">
-                        <xsl:value-of select="concat('#lookup-', LookupEnumeration)"/>
-                      </xsl:attribute>
-                      <xsl:value-of select="LookupEnumeration"/>
-                    </a>
+                  <xsl:if test="BitLength">
+                    <xsl:value-of select="BitLength"/> bits
                   </xsl:if>
-                  <xsl:if test="LookupBitEnumeration">
-                    <a>
-                      <xsl:attribute name="href">
-                        <xsl:value-of select="concat('#lookupbit-', LookupBitEnumeration)"/>
-                      </xsl:attribute>
-                      <xsl:value-of select="LookupBitEnumeration"/>
-                    </a>
-                  </xsl:if>
+                  <xsl:choose>
+                    <xsl:when test="LookupEnumeration">
+                      lookup
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="concat('#lookup-', LookupEnumeration)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="LookupEnumeration"/>
+                      </a>
+                    </xsl:when>
+                    <xsl:when test="LookupBitEnumeration">
+                      bitfield
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="concat('#lookupbit-', LookupBitEnumeration)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="LookupBitEnumeration"/>
+                      </a>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:if test="Signed = 'true'">
+                        signed
+                      </xsl:if>
+                      <xsl:if test="Signed = 'false'">
+                        unsigned
+                      </xsl:if>
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="concat('#ft-', FieldType)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="FieldType"/>
+                      </a>
+                    </xsl:otherwise>
+                  </xsl:choose>
                 </td>
               </tr>
             </xsl:for-each>
@@ -310,6 +338,34 @@
           </tr>
         </xsl:for-each>
       </table>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template name="physicalquantity-list">
+    <h2 id='physical-quantities'>Physical quantities</h2>
+
+    A lot of fields represent a physical, observable, quantity. 
+
+    <xsl:for-each select="/PGNDefinitions/PhysicalQuantities/*">
+      <h3>
+        <xsl:attribute name="id">
+          <xsl:value-of select="concat('pq-', @Name)"/>
+        </xsl:attribute>
+        <xsl:value-of select="@Name"/> - <xsl:value-of select="Description"/>
+      </h3>
+      <p> <xsl:value-of select="Comment"/> </p>
+      <p>In the CAN data these are expressed in <xsl:value-of select="UnitDescription"/>, abbreviated as <xsl:value-of select="Unit"/>.</p>
+      <xsl:if test="URL">
+        <p>
+          For more information see:
+          <a>
+            <xsl:attribute name="href">
+              <xsl:value-of select="URL"/>
+            </xsl:attribute>
+            <xsl:value-of select="URL"/>
+          </a>
+        </p>
+      </xsl:if>
     </xsl:for-each>
   </xsl:template>
 
@@ -419,6 +475,7 @@
           <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&#215;</a>
           <a href="#main">Top</a>
           <a href="#pgn-list">PGN list</a>
+          <a href="#physical-quantities">Physical Quantities</a>
           <a href="#field-types">Field Types</a>
           <a href="#lookup-enumerations">Lookup enumerations</a>
           <a href="#bitfield-enumerations">Bitfield enumerations</a>
@@ -605,6 +662,7 @@
           </p>
 
           <xsl:call-template name="pgn-list"/>
+          <xsl:call-template name="physicalquantity-list"/>
           <xsl:call-template name="fieldtypes-list"/>
           <xsl:call-template name="lookup-list"/>
           <xsl:call-template name="lookupbit-list"/>

@@ -37,6 +37,62 @@ extern FieldType *getFieldType(const char *name)
   return NULL;
 }
 
+static bool isPhysicalQuantityListed(const PhysicalQuantity *pq)
+{
+  for (size_t i = 0; i < ARRAY_SIZE(PhysicalQuantityList); i++)
+  {
+    if (PhysicalQuantityList[i] == pq)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+static double getMinRange(const char *name, uint32_t size, double resolution, bool sign)
+{
+  uint64_t specialvalues = (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
+  uint64_t highbit       = size;
+
+  if (!sign)
+  {
+    uint64_t maxValue = (UINT64_C(1) << highbit) - 1 - specialvalues;
+    logDebug("%s bits=%llu sign=%u maxValue=%llu res=%g\n", name, highbit, sign, maxValue, resolution);
+    return 0.0;
+  }
+  else
+  {
+    int64_t maxValue;
+
+    highbit--;
+    maxValue = (UINT64_C(1) << highbit) - 1;
+    logDebug("%s bits=%llu sign=%u maxValue=%lld res=%g\n", name, highbit, sign, maxValue, resolution);
+    return maxValue * resolution * -1.0;
+  }
+}
+
+static double getMaxRange(const char *name, uint32_t size, double resolution, bool sign)
+{
+  uint64_t specialvalues = (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
+  uint64_t highbit       = size;
+
+  if (!sign)
+  {
+    uint64_t maxValue = (UINT64_C(1) << highbit) - 1 - specialvalues;
+    logDebug("%s bits=%llu sign=%u maxValue=%llu res=%g\n", name, highbit, sign, maxValue, resolution);
+    return maxValue * resolution;
+  }
+  else
+  {
+    int64_t maxValue;
+
+    highbit--;
+    maxValue = (UINT64_C(1) << highbit) - 1;
+    logDebug("%s bits=%llu sign=%u maxValue=%lld res=%g\n", name, highbit, sign, maxValue, resolution);
+    return (maxValue - specialvalues) * resolution;
+  }
+}
+
 static void fixupUnit(Field *f)
 {
   if (showSI)
@@ -94,6 +150,29 @@ static void fixupUnit(Field *f)
 
 extern void fillFieldType(bool doUnitFixup)
 {
+  // Percolate fields from physical quantity to fieldtype
+  for (size_t i = 0; i < fieldTypeCount; i++)
+  {
+    FieldType *ft = &fieldTypeList[i];
+
+    if (ft->physical != NULL)
+    {
+      if (!isPhysicalQuantityListed(ft->physical))
+      {
+        logAbort("FieldType '%s' contains an unlisted physical quantity '%s'\n", ft->name, ft->physical->name);
+      }
+      if (ft->unit == NULL)
+      {
+        ft->unit = ft->physical->abbreviation;
+      }
+      if (ft->url == NULL)
+      {
+        ft->url = ft->physical->url;
+      }
+    }
+  }
+
+  // Percolate fields from base to derived field
   for (size_t i = 0; i < fieldTypeCount; i++)
   {
     FieldType *ft = &fieldTypeList[i];
@@ -108,9 +187,17 @@ extern void fillFieldType(bool doUnitFixup)
       {
         logAbort("invalid baseFieldType '%s' found in FieldType '%s'\n", ft->baseFieldType, ft->name);
       }
+      if (base > ft)
+      {
+        logAbort("invalid baseFieldType '%s' must be ordered before FieldType '%s'\n", ft->baseFieldType, ft->name);
+      }
       ft->baseFieldTypePtr = base;
 
       // Inherit parent fields
+      if (ft->physical == NULL)
+      {
+        ft->physical = base->physical;
+      }
       if (ft->hasSign == Null && base->hasSign != Null)
       {
         ft->hasSign = base->hasSign;
@@ -122,6 +209,10 @@ extern void fillFieldType(bool doUnitFixup)
       if (ft->resolution == 0.0 && base->resolution != 0.0)
       {
         ft->resolution = base->resolution;
+      }
+      else if (ft->resolution != 0.0 && base->resolution != 0.0 && ft->resolution != base->resolution)
+      {
+        logAbort("Cannot overrule resolution %g in '%s' with %g in '%s'\n", base->resolution, base->name, ft->resolution, ft->name);
       }
       if (ft->pf == NULL)
       {
@@ -137,26 +228,8 @@ extern void fillFieldType(bool doUnitFixup)
     // Set the field range
     if (ft->size != 0 && ft->resolution != 0.0 && ft->hasSign != Null && ft->rangeMax == 0.0)
     {
-      uint64_t specialvalues = (ft->size >= 4) ? 2 : (ft->size >= 2) ? 1 : 0;
-      uint64_t highbit       = ft->size;
-
-      if (ft->hasSign == False)
-      {
-        uint64_t maxValue = (UINT64_C(1) << highbit) - 1 - specialvalues;
-        logDebug("%s bits=%llu sign=%u maxValue=%llu res=%g\n", ft->name, highbit, ft->hasSign, maxValue, ft->resolution);
-        ft->rangeMin = 0.0;
-        ft->rangeMax = maxValue * ft->resolution;
-      }
-      else
-      {
-        int64_t maxValue;
-
-        highbit--;
-        maxValue = (UINT64_C(1) << highbit) - 1;
-        logDebug("%s bits=%llu sign=%u maxValue=%lld res=%g\n", ft->name, highbit, ft->hasSign, maxValue, ft->resolution);
-        ft->rangeMin = maxValue * ft->resolution * -1.0;
-        ft->rangeMax = (maxValue - specialvalues) * ft->resolution;
-      }
+      ft->rangeMin = getMinRange(ft->name, ft->size, ft->resolution, ft->hasSign == True);
+      ft->rangeMax = getMaxRange(ft->name, ft->size, ft->resolution, ft->hasSign == True);
     }
     else
     {
@@ -193,11 +266,50 @@ extern void fillFieldType(bool doUnitFixup)
             "PGN %u '%s' field '%s' contains different sign attribute than fieldType '%s'\n", pgn, pname, f->name, f->fieldType);
       }
 
+      if (f->resolution == 0.0)
+      {
+        f->resolution = ft->resolution;
+      }
+      if (ft->resolution != 0.0 && ft->resolution != f->resolution)
+      {
+        logAbort("Cannot overrule resolution %g in '%s' with %g in PGN %u field '%s'\n",
+                 ft->resolution,
+                 ft->name,
+                 f->resolution,
+                 pgnList[i].pgn,
+                 f->name);
+      }
+
+      if (ft->size != 0 && f->size == 0)
+      {
+        f->size = ft->size;
+      }
+      if (ft->size != 0 && ft->size != f->size)
+      {
+        logAbort(
+            "Cannot overrule size %d in '%s' with %d in PGN %u field '%s'\n", ft->size, ft->name, f->size, pgnList[i].pgn, f->name);
+      }
+
+      if (ft->offset != 0 && f->offset == 0)
+      {
+        f->offset = ft->offset;
+      }
+      if (ft->offset != f->offset)
+      {
+        logAbort("Cannot overrule offset %d in '%s' with %d in PGN %u field '%s'\n",
+                 ft->offset,
+                 ft->name,
+                 f->offset,
+                 pgnList[i].pgn,
+                 f->name);
+      }
+
       if (ft->unit != NULL && f->unit == NULL)
       {
         f->unit = ft->unit;
       }
-      if (f->unit != NULL && ft->unit != NULL && strcmp(f->unit, ft->unit) != 0)
+      if (f->unit != NULL && ft->unit != NULL && strcmp(f->unit, ft->unit) != 0
+          && !(strcmp(f->unit, "deg") == 0 && strcmp(ft->unit, "rad") == 0))
       {
         logAbort("PGN %u '%s' field '%s' contains different unit attribute ('%s') than fieldType '%s' ('%s')\n",
                  pgn,
@@ -215,6 +327,15 @@ extern void fillFieldType(bool doUnitFixup)
       {
         pgnList[i].hasMatchFields = true;
       }
+
+      f->rangeMin = ft->rangeMin;
+      f->rangeMax = ft->rangeMax;
+      if (f->size != 0 && f->resolution != 0.0 && ft->hasSign != Null && isnan(f->rangeMax))
+      {
+        f->rangeMin = getMinRange(f->name, f->size, f->resolution, f->hasSign);
+        f->rangeMax = getMaxRange(f->name, f->size, f->resolution, f->hasSign);
+      }
+
       f->pgn   = &pgnList[i];
       f->order = j + 1;
     }

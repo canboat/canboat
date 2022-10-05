@@ -54,6 +54,229 @@ typedef enum Bool
   True
 } Bool;
 
+typedef struct PhysicalQuantity
+{
+  const char *name;        // Name, UPPERCASE_WITH_UNDERSCORE
+  const char *description; // English description, shortish
+  const char *comment;     // Other observations
+  const char *abbreviation;
+  const char *unit;
+  const char *url; // Website explaining this
+} PhysicalQuantity;
+
+static const PhysicalQuantity ELECTRICAL_CURRENT = {
+    .name         = "ELECTRICAL_CURRENT",
+    .description  = "Electrical current",
+    .abbreviation = "A",
+    .unit         = "Ampere",
+    .url          = "https://en.wikipedia.org/wiki/Electric_current",
+};
+
+static const PhysicalQuantity ELECTRICAL_CHARGE = {.name         = "ELECTRICAL_CHARGE",
+                                                   .description  = "Electrical charge",
+                                                   .abbreviation = "C",
+                                                   .unit         = "Coulomb",
+                                                   .url          = "https://en.wikipedia.org/wiki/Electric_charge"};
+
+static const PhysicalQuantity ELECTRICAL_ENERGY
+    = {.name        = "ELECTRICAL_ENERGY",
+       .description = "Electrical energy",
+       .comment = "The amount of electricity used or stored. The base unit used in NMEA 2000 is the Kilo Watt Hour (kWh) which is "
+                  "equivalent to 3.6e6 J (Joules).",
+       .unit    = "Kilo Watt Hour",
+       .abbreviation = "kWh",
+       .url          = "https://en.wikipedia.org/wiki/Electrical_energy"};
+
+static const PhysicalQuantity ELECTRICAL_POWER = {.name         = "ELECTRICAL_POWER",
+                                                  .description  = "Electrical power",
+                                                  .comment      = "The amount of energy transferred or converted per unit time.",
+                                                  .unit         = "Watt",
+                                                  .abbreviation = "W",
+                                                  .url          = "https://en.wikipedia.org/wiki/Electrical_power"};
+
+static const PhysicalQuantity ELECTRICAL_APPARENT_POWER
+    = {.name         = "ELECTRICAL_APPARENT_POWER",
+       .description  = "AC apparent power",
+       .comment      = "The amount of power transferred where the current and voltage are in phase.",
+       .unit         = "Volt Ampere",
+       .abbreviation = "VA",
+       .url          = "https://en.wikipedia.org/wiki/Volt-ampere"};
+
+static const PhysicalQuantity ELECTRICAL_REACTIVE_POWER
+    = {.name         = "ELECTRICAL_REACTIVE_POWER",
+       .description  = "AC reactive power",
+       .comment      = "The amount of power transferred where the current and voltage are not in phase.",
+       .unit         = "Volt Ampere Reactive",
+       .abbreviation = "VAR",
+       .url          = "https://en.wikipedia.org/wiki/Volt-ampere#Reactive"};
+
+static const PhysicalQuantity POTENTIAL_DIFFERENCE = {.name         = "POTENTIAL_DIFFERENCE",
+                                                      .description  = "Potential difference",
+                                                      .abbreviation = "V",
+                                                      .unit         = "Volt",
+                                                      .url          = "https://en.wikipedia.org/wiki/Voltage"};
+
+static const PhysicalQuantity POWER_FACTOR
+    = {.name        = "POWER_FACTOR",
+       .description = "Power Factor",
+       .comment = "Used in AC circuits only, the ratio of the real power absorbed by the load to the apparent power flowing in the "
+                  "circuit. If less than one, the voltage and current are not in phase.",
+       .unit    = "Cos(Phi)",
+       .abbreviation = "Cos Phi",
+       .url          = "https://en.wikipedia.org/wiki/Power_factor"};
+
+static const PhysicalQuantity LENGTH = {.name         = "LENGTH",
+                                        .description  = "Length",
+                                        .comment      = "The physical size in one dimension of an object.",
+                                        .unit         = "Meter",
+                                        .abbreviation = "m",
+                                        .url          = "https://en.wikipedia.org/wiki/Length"};
+
+static const PhysicalQuantity DISTANCE = {.name         = "DISTANCE",
+                                          .description  = "Distance",
+                                          .comment      = "The amount of separation between two objects.",
+                                          .unit         = "meter",
+                                          .abbreviation = "m",
+                                          .url          = "https://en.wikipedia.org/wiki/Distance"};
+
+static const PhysicalQuantity SPEED = {.name         = "SPEED",
+                                       .description  = "Speed",
+                                       .comment      = "The velocity, or length per unit of time.",
+                                       .abbreviation = "m/s",
+                                       .unit         = "meter per second",
+                                       .url          = "https://en.wikipedia.org/wiki/Speed"};
+
+static const PhysicalQuantity ANGLE
+    = {.name         = "ANGLE",
+       .description  = "Angle",
+       .comment      = "All standardized PGNs seen so far all use radians, but some manufacturer specific PGNs use degrees (deg).",
+       .url          = "https://en.wikipedia.org/wiki/Angle",
+       .abbreviation = "rad",
+       .unit         = "radian"};
+
+static const PhysicalQuantity ANGLE_DEG = {.name         = "ANGLE_DEG",
+                                           .description  = "Angle",
+                                           .url          = "https://en.wikipedia.org/wiki/Angle",
+                                           .abbreviation = "deg",
+                                           .unit         = "degree"};
+
+static const PhysicalQuantity ANGULAR_VELOCITY = {.name         = "ANGULAR_VELOCITY",
+                                                  .description  = "Angular velocity",
+                                                  .comment      = "The speed at which a measured angle changes",
+                                                  .url          = "https://en.wikipedia.org/wiki/Angular_velocity",
+                                                  .abbreviation = "rad/s",
+                                                  .unit         = "radians per second"};
+
+static const PhysicalQuantity VOLUME = {.name         = "VOLUME",
+                                        .description  = "Volume",
+                                        .comment      = "A measure of occupied three-dimensional space.",
+                                        .url          = "https://en.wikipedia.org/wiki/Volume",
+                                        .abbreviation = "L",
+                                        .unit         = "liter"};
+
+static const PhysicalQuantity VOLUMETRIC_FLOW = {.name         = "VOLUMETRIC_FLOW",
+                                                 .description  = "Volumetric flow",
+                                                 .comment      = "The volume of fluid which passes per unit time.",
+                                                 .abbreviation = "L/h",
+                                                 .unit         = "liter per hour",
+                                                 .url          = "https://en.wikipedia.org/wiki/Volumetric_flow_rate"};
+
+static const PhysicalQuantity FREQUENCY = {.name         = "FREQUENCY",
+                                           .description  = "Frequency",
+                                           .abbreviation = "Hz",
+                                           .unit         = "Hertz",
+                                           .url          = "https://en.wikipedia.org/wiki/Radio_frequency"};
+
+static const PhysicalQuantity DATE = {.name         = "DATE",
+                                      .description  = "Date",
+                                      .comment      = "A calendar date is a reference to a particular day in time, in NMEA 2000 "
+                                                      "expressed as the number of days since 1970-01-01 (UNIX epoch).",
+                                      .abbreviation = "d",
+                                      .unit         = "days",
+                                      .url          = "https://en.wikipedia.org/wiki/Calendar_date"};
+
+static const PhysicalQuantity TIME
+    = {.name        = "TIME",
+       .description = "Time",
+       .comment
+       = "Time is what clocks measure. We use time to place events in sequence one after the other, and we use time to compare how "
+         "long events last. Absolute times in NMEA2000 are expressed as seconds since midnight(in an undefined timezone)",
+       .url          = "https://en.wikipedia.org/wiki/Time",
+       .abbreviation = "s",
+       .unit         = "Second"};
+
+static const PhysicalQuantity MAGNETIC_FIELD = {.name         = "MAGNETIC_FIELD",
+                                                .description  = "Magnetic field",
+                                                .unit         = "Tesla",
+                                                .abbreviation = "T",
+                                                .url          = "https://en.wikipedia.org/wiki/Magnetic_field"};
+
+static const PhysicalQuantity GEO_COORDINATE
+    = {.name         = "GEOGRAPHICAL_COORDINATE",
+       .description  = "Geographical coordinate",
+       .comment      = "Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.",
+       .abbreviation = "deg",
+       .unit         = "degree",
+       .url          = "https://en.wikipedia.org/wiki/Geographic_coordinate_system"};
+
+static const PhysicalQuantity TEMPERATURE = {.name         = "TEMPERATURE",
+                                             .description  = "Temperature",
+                                             .unit         = "Kelvin",
+                                             .abbreviation = "K",
+                                             .url          = "https://en.wikipedia.org/wiki/Temperature"};
+
+static const PhysicalQuantity PRESSURE = {.name         = "PRESSURE",
+                                          .description  = "Pressure",
+                                          .abbreviation = "Pa",
+                                          .unit         = "Pascal",
+                                          .url          = "https://en.wikipedia.org/wiki/Pressure"};
+
+static const PhysicalQuantity PRESSURE_RATE = {.name         = "PRESSURE_RATE",
+                                               .description  = "Pressure rate",
+                                               .comment      = "How the pressure changes over time.",
+                                               .abbreviation = "Pa/hr",
+                                               .unit         = "Pascal per hour",
+                                               .url          = "https://en.wikipedia.org/wiki/Pressure"};
+
+static const PhysicalQuantity CONCENTRATION
+    = {.name         = "CONCENTRATION",
+       .description  = "Concentration of one substance in another, in this marine context usually the amount of salts in water",
+       .url          = "https://www.engineeringtoolbox.com/water-salinity-d_1251.html",
+       .unit         = "parts per million",
+       .abbreviation = "ppm"};
+
+static const PhysicalQuantity SIGNAL_TO_NOISE_RATIO = {.name         = "SIGNAL_TO_NOISE_RATIO",
+                                                       .description  = "Signal-to-noise ratio",
+                                                       .url          = "https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
+                                                       .abbreviation = "dB",
+                                                       .unit         = "decibel"};
+
+static const PhysicalQuantity *PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
+                                                         &ELECTRICAL_CHARGE,
+                                                         &ELECTRICAL_ENERGY,
+                                                         &ELECTRICAL_POWER,
+                                                         &ELECTRICAL_APPARENT_POWER,
+                                                         &ELECTRICAL_REACTIVE_POWER,
+                                                         &POTENTIAL_DIFFERENCE,
+                                                         &POWER_FACTOR,
+                                                         &LENGTH,
+                                                         &DISTANCE,
+                                                         &SPEED,
+                                                         &ANGLE,
+                                                         &ANGULAR_VELOCITY,
+                                                         &VOLUME,
+                                                         &VOLUMETRIC_FLOW,
+                                                         &MAGNETIC_FIELD,
+                                                         &FREQUENCY,
+                                                         &DATE,
+                                                         &TIME,
+                                                         &GEO_COORDINATE,
+                                                         &TEMPERATURE,
+                                                         &PRESSURE,
+                                                         &PRESSURE_RATE,
+                                                         &CONCENTRATION,
+                                                         &SIGNAL_TO_NOISE_RATIO};
+
 /**
  * The FieldType structure encapsulates the different datatypes in a PGN field.
  */
@@ -69,6 +292,7 @@ struct FieldType
   Bool        variableSize;        // True if size varies per instance of PGN
   char       *baseFieldType;       // Some field types are variations of others
   char       *v1Type;              // Type as printed in v1 xml/json
+  bool        external;            // True when printed in XML
 
   // The following are only set for numbers
   const char *unit;       // String containing the 'Dimension' (e.g. s, h, m/s, etc.)
@@ -80,12 +304,10 @@ struct FieldType
   // These are derived from size, variableSize, resolution and hasSign
   double rangeMin;
   double rangeMax;
-  // Sometimes we override the range so as to show a more useful value
-  char *rangeMinText;
-  char *rangeMaxText;
 
   // How to print this field
-  FieldPrintFunctionType pf;
+  FieldPrintFunctionType  pf;
+  const PhysicalQuantity *physical;
 
   // Filled by initializer
   FieldType *baseFieldTypePtr;
@@ -106,7 +328,7 @@ FieldType fieldTypeList[] = {
      .pf  = fieldPrintNumber},
 
     {.name          = "INTEGER",
-     .description   = "Integral number",
+     .description   = "Signed integral number",
      .resolution    = 1,
      .hasSign       = True,
      .baseFieldType = "NUMBER",
@@ -173,6 +395,8 @@ FieldType fieldTypeList[] = {
      .size          = 16,
      .baseFieldType = "UNSIGNED_FIXED_POINT_NUMBER"},
 
+    {.name = "FIX24", .description = "24 bit signed fixed point number", .size = 24, .baseFieldType = "SIGNED_FIXED_POINT_NUMBER"},
+
     {.name          = "UFIX24",
      .description   = "24 bit unsigned fixed point number",
      .size          = 24,
@@ -203,7 +427,6 @@ FieldType fieldTypeList[] = {
      .description         = "A unsigned numeric value represented with 2 decimal digits per byte",
      .encodingDescription = "Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number "
                             "with an odd number of digits will have 0 as the first digit in the first byte.",
-     .size                = 32,
      .hasSign             = False,
      .url                 = "https://en.wikipedia.org/wiki/Binary-coded_decimal",
      .pf                  = fieldPrintDecimal},
@@ -235,7 +458,7 @@ FieldType fieldTypeList[] = {
 
     {.name = "INDUSTRY", .description = "Industry", .size = 3, .pf = fieldPrintLookup, .baseFieldType = "LOOKUP"},
 
-    {.name = "VERSION", .description = "Version", .resolution = 0.001, .pf = fieldPrintNumber, .baseFieldType = "UFIX16"},
+    {.name = "VERSION", .description = "Version", .resolution = 0.001, .baseFieldType = "UFIX16"},
 
     // Specific typed numeric fields
 
@@ -255,29 +478,19 @@ FieldType fieldTypeList[] = {
      .description   = "Signal-to-noise ratio",
      .url           = "https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
      .resolution    = 0.01,
-     .unit          = "dB",
+     .physical      = &SIGNAL_TO_NOISE_RATIO,
      .baseFieldType = "UFIX16"},
 
-    {.name          = "ANGLE_FIX16",
-     .description   = "Angle",
-     .resolution    = 0.001,
-     .unit          = "rad",
-     .url           = "https://en.wikipedia.org/wiki/Ship_motions",
-     .baseFieldType = "FIX16"},
+    {.name = "ANGLE_FIX16", .description = "Angle", .resolution = 0.0001, .physical = &ANGLE, .baseFieldType = "FIX16"},
 
     {.name          = "ANGLE_FIX16_DDEG",
      .description   = "Angle",
      .resolution    = 0.1,
      .unit          = "deg",
-     .url           = "https://en.wikipedia.org/wiki/Ship_motions",
+     .physical      = &ANGLE,
      .baseFieldType = "FIX16"},
 
-    {.name          = "ANGLE_UFIX16",
-     .description   = "Angle",
-     .resolution    = 0.001,
-     .unit          = "rad",
-     .url           = "https://en.wikipedia.org/wiki/Ship_motions",
-     .baseFieldType = "UFIX16"},
+    {.name = "ANGLE_UFIX16", .description = "Angle", .resolution = 0.0001, .physical = &ANGLE, .baseFieldType = "UFIX16"},
 
     {.name        = "GEO_FIX32",
      .description = "Geographical latitude or longitude",
@@ -285,8 +498,7 @@ FieldType fieldTypeList[] = {
      = "The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 "
        "cm when we refer to an Earth position",
      .resolution    = 1.0e-7,
-     .unit          = "deg",
-     .url           = "https://en.wikipedia.org/wiki/Geographic_coordinate_system",
+     .physical      = &GEO_COORDINATE,
      .pf            = fieldPrintLatLon,
      .baseFieldType = "FIX32",
      .v1Type        = "Lat/Lon"},
@@ -296,8 +508,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we "
                             "refer to an Earth position",
      .resolution          = 1.0e-16,
-     .unit                = "deg",
-     .url                 = "https://en.wikipedia.org/wiki/Geographic_coordinate_system",
+     .physical            = &GEO_COORDINATE,
      .pf                  = fieldPrintLatLon,
      .baseFieldType       = "FIX64",
      .v1Type              = "Lat/Lon"},
@@ -305,92 +516,79 @@ FieldType fieldTypeList[] = {
     {.name          = "LENGTH_UFIX8_DAM",
      .description   = "Length, in decameter resolution",
      .resolution    = 10,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX8"},
 
     {.name          = "LENGTH_UFIX16_DM",
      .description   = "Length, in decimeter resolution",
      .resolution    = 0.1,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX16"},
 
     {.name          = "LENGTH_UFIX32_CM",
      .description   = "Length, in centimeter resolution",
      .resolution    = 0.01,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX32"},
 
     {.name          = "LENGTH_UFIX32_M",
      .description   = "Length, in meter resolution",
      .resolution    = 1,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX32"},
 
     {.name          = "LENGTH_UFIX32_CM",
      .description   = "Length, in centimeter resolution",
      .resolution    = 0.01,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX32"},
 
     {.name          = "LENGTH_UFIX32_MM",
      .description   = "Length, in millimeter resolution",
      .resolution    = 0.001,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX32"},
 
     {.name          = "LENGTH_UFIX8_DAM",
      .description   = "Length, byte, unsigned decameters",
      .resolution    = 10.,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX8"},
 
     {.name          = "LENGTH_UFIX16_CM",
      .description   = "Length, unsigned centimeters",
      .resolution    = 0.01,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX16"},
 
     {.name          = "LENGTH_UFIX16_DM",
      .description   = "Length, unsigned decimeters",
      .resolution    = 0.1,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX16"},
 
     {.name          = "LENGTH_UFIX32_MM",
      .description   = "Length, high range, unsigned millimeters",
      .resolution    = 0.001,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX32"},
 
     {.name          = "LENGTH_UFIX32_CM",
      .description   = "Length, high range, unsigned centimeters",
      .resolution    = 0.01,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX32"},
 
     {.name          = "LENGTH_UFIX32_M",
      .description   = "Length, high range, meters",
      .resolution    = 1.,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Length",
+     .physical      = &LENGTH,
      .baseFieldType = "UFIX32"},
 
     {.name          = "TEMPERATURE",
      .description   = "Temperature",
      .resolution    = 0.01,
-     .unit          = "K",
-     .url           = "https://en.wikipedia.org/wiki/Temperature",
+     .physical      = &TEMPERATURE,
      .baseFieldType = "UFIX16",
      .v1Type        = "Temperature"},
 
@@ -398,8 +596,7 @@ FieldType fieldTypeList[] = {
      .description         = "Temperature, high range",
      .encodingDescription = "This has a higher range but lower resolution than TEMPERATURE",
      .resolution          = 0.1,
-     .unit                = "K",
-     .url                 = "https://en.wikipedia.org/wiki/Temperature",
+     .physical            = &TEMPERATURE,
      .baseFieldType       = "UFIX16",
      .v1Type              = "Temperature"},
 
@@ -407,197 +604,205 @@ FieldType fieldTypeList[] = {
      .description         = "Temperature, high resolution",
      .encodingDescription = "This has a higher range and higher resolution than TEMPERATURE (but uses three bytes)",
      .resolution          = 0.001,
-     .unit                = "K",
-     .url                 = "https://en.wikipedia.org/wiki/Temperature",
+     .physical            = &TEMPERATURE,
      .baseFieldType       = "UFIX24",
      .v1Type              = "Temperature"},
 
     {.name          = "TEMPERATURE_DELTA_FIX16",
      .description   = "Temperature difference",
      .resolution    = 0.001,
-     .unit          = "K",
-     .url           = "https://en.wikipedia.org/wiki/Temperature",
+     .physical      = &TEMPERATURE,
      .baseFieldType = "FIX16"},
 
     {.name          = "VOLUMETRIC_FLOW",
      .description   = "Volumetric flow",
      .resolution    = 0.1,
-     .unit          = "L/h",
-     .url           = "https://en.wikipedia.org/wiki/Volumetric_flow_rate",
+     .physical      = &VOLUMETRIC_FLOW,
      .baseFieldType = "FIX16"},
 
     {.name                = "CONCENTRATION_UINT16_PPM",
      .description         = "Concentration of one substance in another, in this context usually the amount of salts in water",
      .encodingDescription = "Expressed in parts per million",
      .resolution          = 1,
-     .url                 = "https://www.engineeringtoolbox.com/water-salinity-d_1251.html",
-     .unit                = "ppm",
+     .physical            = &CONCENTRATION,
      .baseFieldType       = "UINT16"},
 
-    {.name = "VOLUME_UFIX16_L", .description = "Volume", .resolution = 1, .unit = "L", .baseFieldType = "UFIX16"},
+    {.name = "VOLUME_UFIX16_L", .description = "Volume", .resolution = 1, .physical = &VOLUME, .baseFieldType = "UFIX16"},
 
-    {.name = "VOLUME_UFIX32_DL", .description = "Volume", .resolution = 0.1, .unit = "L", .baseFieldType = "UFIX32"},
+    {.name = "VOLUME_UFIX32_DL", .description = "Volume", .resolution = 0.1, .physical = &VOLUME, .baseFieldType = "UFIX32"},
 
-    {.name                = "TIME",
+    {.name = "TIME", .description = "Time", .physical = &TIME, .pf = fieldPrintTime},
+
+    {.name                = "TIME_UFIX32",
      .description         = "Time",
      .encodingDescription = "When indicating a wall clock time, this is the amount of time passed since midnight",
+     .size                = 32,
+     .hasSign             = False,
      .resolution          = 0.0001,
-     .unit                = "s",
-     .pf                  = fieldPrintTime,
-     .baseFieldType       = "UFIX32"},
+     .baseFieldType       = "TIME"},
 
     {.name          = "TIME_UFIX16_S",
      .description   = "Time delta, 16 bits with 1 second resolution",
      .resolution    = 1,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "UFIX16"},
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_UFIX8_5MS",
      .description   = "Time delta, 8 bits with 5 millisecond resolution",
-     .resolution    = 0.05,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "UFIX8"},
+     .resolution    = 0.005,
+     .size          = 8,
+     .hasSign       = False,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_UFIX8_P12S",
      .description   = "Time delta, 8 bits with 2^12 second resolution",
      .resolution    = POW2(12),
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "UFIX8"},
+     .size          = 8,
+     .hasSign       = False,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_UFIX16_MS",
      .description   = "Time delta, 16 bits with millisecond resolution",
      .resolution    = 0.001,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "UFIX16"},
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_UFIX16_CS",
      .description   = "Time delta, 16 bits with centisecond resolution",
      .resolution    = 0.01,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "UFIX16"},
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_UFIX16_MIN",
      .description   = "Time delta, 16 bits with minute resolution",
      .resolution    = 60,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "UFIX16"},
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_UFIX24_MS",
      .description   = "Time delta, 24 bits with millisecond resolution",
      .resolution    = 0.001,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "UFIX24"},
+     .size          = 24,
+     .hasSign       = False,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_UFIX32_S",
      .description   = "Time delta, 32 bits with second resolution",
      .resolution    = 1,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "UFIX32"},
+     .size          = 32,
+     .hasSign       = False,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_UFIX32_MS",
      .description   = "Time delta, 32 bits with millisecond resolution",
      .resolution    = 0.001,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "UFIX32"},
+     .size          = 32,
+     .hasSign       = False,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_FIX32_MS",
      .description   = "Time delta",
      .resolution    = 0.001,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "FIX32"},
+     .size          = 32,
+     .hasSign       = True,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_FIX16_5CS",
      .description   = "Time delta, 5 centisecond resolution",
      .resolution    = 0.05,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "FIX16"},
+     .size          = 16,
+     .hasSign       = True,
+     .baseFieldType = "TIME"},
 
     {.name          = "TIME_FIX16_MIN",
      .description   = "Time delta, minute resolution",
      .resolution    = 60,
-     .unit          = "s",
-     .pf            = fieldPrintTime,
-     .baseFieldType = "FIX16"},
+     .size          = 16,
+     .hasSign       = True,
+     .baseFieldType = "TIME"},
 
     {.name                = "DATE",
      .description         = "Date",
      .encodingDescription = "The date, in days since 1 January 1970.",
-     .unit                = "days",
-     .pf                  = fieldPrintDate,
-     .baseFieldType       = "UINT16"},
+     .physical            = &DATE,
+     .size                = 16,
+     .hasSign             = False,
+     .pf                  = fieldPrintDate},
 
-    {.name                = "VOLTAGE_UFIX16",
-     .description         = "Voltage",
-     .encodingDescription = "Various resolutions are used, ranging from 0.01 V to 1 V.",
-     .unit                = "V",
-     .url                 = "https://en.wikipedia.org/wiki/Voltage",
-     .baseFieldType       = "UFIX16"},
+    {.name          = "VOLTAGE_UFIX16_10MV",
+     .description   = "Voltage",
+     .resolution    = 0.01,
+     .physical      = &POTENTIAL_DIFFERENCE,
+     .baseFieldType = "UFIX16"},
 
-    {.name                = "VOLTAGE_INT16",
-     .description         = "Voltage, signed",
-     .encodingDescription = "Various resolutions are used, ranging from 0.01 V to 1 V.",
-     .unit                = "V",
-     .url                 = "https://en.wikipedia.org/wiki/Voltage",
-     .baseFieldType       = "INT16"},
+    {.name          = "VOLTAGE_UFIX16_100MV",
+     .description   = "Voltage",
+     .resolution    = 0.1,
+     .physical      = &POTENTIAL_DIFFERENCE,
+     .baseFieldType = "UFIX16"},
+
+    {.name          = "VOLTAGE_UFIX16_200MV",
+     .description   = "Voltage",
+     .resolution    = 0.2,
+     .physical      = &POTENTIAL_DIFFERENCE,
+     .baseFieldType = "UFIX16"},
+
+    {.name          = "VOLTAGE_UFIX16_V",
+     .description   = "Voltage",
+     .resolution    = 1,
+     .physical      = &POTENTIAL_DIFFERENCE,
+     .baseFieldType = "UFIX16"},
+
+    {.name          = "VOLTAGE_FIX16_10MV",
+     .description   = "Voltage, signed",
+     .resolution    = 0.01,
+     .physical      = &POTENTIAL_DIFFERENCE,
+     .baseFieldType = "FIX16"},
 
     {.name          = "CURRENT",
      .description   = "Electrical current",
      .hasSign       = False,
-     .unit          = "A",
-     .url           = "https://en.wikipedia.org/wiki/Electric_current",
+     .physical      = &ELECTRICAL_CURRENT,
      .baseFieldType = "UNSIGNED_FIXED_POINT_NUMBER"},
 
     {.name          = "CURRENT_UFIX8_A",
      .description   = "Electrical current",
      .resolution    = 1,
-     .unit          = "A",
-     .url           = "https://en.wikipedia.org/wiki/Electric_current",
+     .physical      = &ELECTRICAL_CURRENT,
      .baseFieldType = "UFIX8"},
 
     {.name          = "CURRENT_UFIX16_A",
      .description   = "Electrical current",
      .resolution    = 1,
-     .unit          = "A",
-     .url           = "https://en.wikipedia.org/wiki/Electric_current",
+     .physical      = &ELECTRICAL_CURRENT,
      .baseFieldType = "UFIX16"},
 
     {.name          = "CURRENT_UFIX16_DA",
      .description   = "Electrical current",
      .resolution    = .1,
-     .unit          = "A",
-     .url           = "https://en.wikipedia.org/wiki/Electric_current",
+     .physical      = &ELECTRICAL_CURRENT,
      .baseFieldType = "UFIX16"},
 
     {.name          = "CURRENT_FIX16_DA",
      .description   = "Electrical current",
      .resolution    = .1,
-     .unit          = "A",
-     .url           = "https://en.wikipedia.org/wiki/Electric_current",
+     .physical      = &ELECTRICAL_CURRENT,
      .baseFieldType = "FIX16"},
 
     {.name          = "CURRENT_FIX24_CA",
      .description   = "Electrical current",
      .resolution    = .01,
-     .unit          = "A",
-     .url           = "https://en.wikipedia.org/wiki/Electric_current",
-     .baseFieldType = "FIX16"},
+     .physical      = &ELECTRICAL_CURRENT,
+     .baseFieldType = "FIX24"},
 
     {.name          = "ELECTRIC_CHARGE_UFIX16_AH",
      .description   = "Electrical charge",
      .resolution    = 3600,
-     .unit          = "C",
-     .url           = "https://en.wikipedia.org/wiki/Electric_charge",
+     .physical      = &ELECTRICAL_CHARGE,
      .baseFieldType = "UFIX16"},
 
     {.name          = "PEUKERT_EXPONENT",
@@ -609,74 +814,94 @@ FieldType fieldTypeList[] = {
 
     {.name          = "CURRENT_SIGNED",
      .description   = "Electrical current, signed",
-     .unit          = "A",
-     .url           = "https://en.wikipedia.org/wiki/Electric_current",
+     .physical      = &ELECTRICAL_CHARGE,
      .baseFieldType = "SIGNED_FIXED_POINT_NUMBER"},
 
-    {.name          = "ENERGY_UINT32",
-     .description   = "Electrical energy",
-     .unit          = "kWh",
-     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
-     .baseFieldType = "UINT32"},
+    {.name = "ENERGY_UINT32", .description = "Electrical energy", .physical = &ELECTRICAL_ENERGY, .baseFieldType = "UINT32"},
 
-    {.name        = "POWER_INT32_OFFSET",
+    {.name        = "POWER_FIX32_OFFSET",
      .description = "Electrical power",
+     .encodingDescription
+     = "This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.",
+     .offset        = -2000000000,
+     .physical      = &ELECTRICAL_POWER,
+     .baseFieldType = "FIX32"},
+
+    {.name        = "POWER_FIX32_OFFSET",
+     .description = "Electrical power",
+     .encodingDescription
+     = "This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.",
+     .offset        = -2000000000,
+     .physical      = &ELECTRICAL_POWER,
+     .baseFieldType = "FIX32"},
+
+    {.name        = "POWER_FIX32_VA_OFFSET",
+     .description = "Electrical power, AC apparent power",
      .encodingDescription
      = "This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000. Depending on "
        "the field it represents either real power in W, active power in VA or reactive power in VAR.",
      .offset        = -2000000000,
-     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
-     .baseFieldType = "INT32"},
+     .physical      = &ELECTRICAL_APPARENT_POWER,
+     .baseFieldType = "FIX32"},
+
+    {.name        = "POWER_FIX32_VAR_OFFSET",
+     .description = "Electrical power, AC reactive power",
+     .encodingDescription
+     = "This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000. Depending on "
+       "the field it represents either real power in W, active power in VA or reactive power in VAR.",
+     .offset        = -2000000000,
+     .physical      = &ELECTRICAL_REACTIVE_POWER,
+     .baseFieldType = "FIX32"},
 
     {.name          = "POWER_UINT16",
      .description   = "Electrical power, either DC or AC Real power, in Watts",
-     .unit          = "W",
-     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
+     .physical      = &ELECTRICAL_POWER,
      .baseFieldType = "UINT16"},
 
     {.name          = "POWER_UINT16_VAR",
      .description   = "Electrical power, AC reactive",
+     .physical      = &ELECTRICAL_REACTIVE_POWER,
      .unit          = "VAR",
-     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
      .baseFieldType = "UINT16"},
 
     {.name          = "POWER_INT32",
      .description   = "Electrical power, either DC or AC Real power, in Watts",
-     .unit          = "W",
-     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
+     .physical      = &ELECTRICAL_POWER,
      .baseFieldType = "INT32"},
 
     {.name          = "POWER_UINT32",
      .description   = "Electrical power, DC or AC Real power, in Watts",
-     .unit          = "W",
-     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
+     .physical      = &ELECTRICAL_POWER,
      .baseFieldType = "UINT32"},
 
     {.name          = "POWER_UINT32_VA",
-     .description   = "Electrical power, AC active power in VA.",
+     .description   = "Electrical power, AC apparent power in VA.",
      .unit          = "VA",
-     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
+     .physical      = &ELECTRICAL_APPARENT_POWER,
      .baseFieldType = "UINT32"},
 
     {.name          = "POWER_UINT32_VAR",
      .description   = "Electrical power, AC reactive power in VAR.",
      .unit          = "VAR",
-     .url           = "https://en.wikipedia.org/wiki/Electrical_energy",
+     .physical      = &ELECTRICAL_REACTIVE_POWER,
      .baseFieldType = "UINT32"},
 
     {.name = "PERCENTAGE_UINT8", .description = "Percentage, unsigned", .unit = "%", .baseFieldType = "UINT8"},
 
     {.name = "PERCENTAGE_INT8", .description = "Percentage", .unit = "%", .baseFieldType = "INT8"},
 
-    {.name = "PERCENTAGE_UINT16", .description = "Percentage, unsigned high range", .unit = "%", .baseFieldType = "UINT16"},
+    {.name          = "PERCENTAGE_UFIX16",
+     .description   = "Percentage, unsigned high range",
+     .resolution    = 0.004,
+     .unit          = "%",
+     .baseFieldType = "UFIX16"},
 
     {.name                = "ROTATION_FIX16",
      .description         = "Rotational speed",
      .encodingDescription = "Angular rotation in rad/s, in 1/32th of a thousandth radian",
      .comment             = "Whoever came up with 1/32th of 1/1000 of a radian?",
      .resolution          = (1e-3 / 32.0),
-     .unit                = "rad/s",
-     .url                 = "https://en.wikipedia.org/wiki/Angular_velocity",
+     .physical            = &ANGULAR_VELOCITY,
      .baseFieldType       = "FIX16"},
 
     {.name                = "ROTATION_FIX32",
@@ -684,8 +909,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "Angular rotation in rad/s, in 1/32th of a millionth radian",
      .comment             = "Whoever came up with 1/32th of 1e-6 of a radian?",
      .resolution          = (1e-6 / 32.0),
-     .unit                = "rad/s",
-     .url                 = "https://en.wikipedia.org/wiki/Angular_velocity",
+     .physical            = &ANGULAR_VELOCITY,
      .baseFieldType       = "FIX32"},
 
     {.name                = "ROTATION_UFIX16_RPM",
@@ -693,142 +917,115 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "Angular rotation in 0.25 rpm",
      .resolution          = 0.25,
      .unit                = "rpm",
-     .url                 = "https://en.wikipedia.org/wiki/Angular_velocity",
+     .physical            = &ANGULAR_VELOCITY,
      .baseFieldType       = "UFIX16"},
 
     {.name          = "PRESSURE_UFIX16_HPA",
      .description   = "Pressure, 16 bit unsigned in hectopascal resolution",
      .resolution    = 100,
-     .unit          = "Pa",
-     .url           = "https://en.wikipedia.org/wiki/Pressure",
+     .physical      = &PRESSURE,
      .baseFieldType = "UFIX16"},
 
     {.name          = "PRESSURE_UFIX16_KPA",
      .description   = "Pressure, 16 bit unsigned in kilopascal resolution.",
      .resolution    = 1000,
-     .unit          = "Pa",
-     .url           = "https://en.wikipedia.org/wiki/Pressure",
+     .physical      = &PRESSURE,
      .baseFieldType = "UFIX16"},
 
     {.name          = "PRESSURE_RATE_FIX16_PA",
      .description   = "Pressure change rate, 16 bit signed in pascal resolution.",
-     .resolution    = 1000,
-     .unit          = "Pa/hr",
-     .url           = "https://en.wikipedia.org/wiki/Pressure",
+     .resolution    = 1,
+     .physical      = &PRESSURE_RATE,
      .baseFieldType = "FIX16"},
 
     {.name          = "PRESSURE_FIX16_KPA",
      .description   = "Pressure, 16 bit signed in kilopascal resolution.",
      .resolution    = 1000,
-     .unit          = "Pa",
-     .url           = "https://en.wikipedia.org/wiki/Pressure",
+     .physical      = &PRESSURE,
      .baseFieldType = "FIX16"},
 
     {.name          = "PRESSURE_UFIX32_DPA",
      .description   = "Pressure, 32 bit unsigned in decipascal resolution.",
      .resolution    = 0.1,
-     .unit          = "Pa",
-     .url           = "https://en.wikipedia.org/wiki/Pressure",
+     .physical      = &PRESSURE,
      .baseFieldType = "UFIX32"},
 
     {.name          = "PRESSURE_FIX32_DPA",
      .description   = "Pressure, 32 bit signed in decipascal resolution.",
      .resolution    = 0.1,
-     .unit          = "Pa",
-     .url           = "https://en.wikipedia.org/wiki/Pressure",
+     .physical      = &PRESSURE,
      .baseFieldType = "FIX32"},
 
-    {.name          = "RADIO_FREQUENCY_UFIX32",
-     .description   = "Radio frequency",
-     .resolution    = 10,
-     .unit          = "Hz",
-     .url           = "https://en.wikipedia.org/wiki/Radio_frequency",
-     .baseFieldType = "UFIX32"},
+    {.name = "RADIO_FREQUENCY_UFIX32", .description = "Radio frequency", .physical = &FREQUENCY, .baseFieldType = "UFIX32"},
 
     {.name                = "FREQUENCY_UFIX16",
      .description         = "frequency",
      .encodingDescription = "Various resolutions are used, ranging from 0.01 Hz to 1 Hz",
-     .unit                = "Hz",
-     .url                 = "https://en.wikipedia.org/wiki/Radio_frequency",
+     .physical            = &FREQUENCY,
      .baseFieldType       = "UFIX16"},
 
     {.name          = "SPEED_FIX16_MM",
      .description   = "Speed, with millimeter resolution",
      .resolution    = 0.001,
-     .unit          = "m/s",
-     .url           = "https://en.wikipedia.org/wiki/Speed",
+     .physical      = &SPEED,
      .baseFieldType = "FIX16"},
 
     {.name          = "SPEED_FIX16_CM",
      .description   = "Speed, with centimeter resolution",
      .resolution    = 0.01,
-     .unit          = "m/s",
-     .url           = "https://en.wikipedia.org/wiki/Speed",
+     .physical      = &SPEED,
      .baseFieldType = "FIX16"},
 
     {.name          = "SPEED_UFIX16_CM",
      .description   = "Speed, unsigned, with centimeter resolution",
      .resolution    = 0.01,
-     .unit          = "m/s",
-     .url           = "https://en.wikipedia.org/wiki/Speed",
+     .physical      = &SPEED,
      .baseFieldType = "UFIX16"},
 
     {.name          = "SPEED_UFIX16_DM",
      .description   = "Speed, unsigned, with decimeter resolution",
      .resolution    = 0.1,
-     .unit          = "m/s",
-     .url           = "https://en.wikipedia.org/wiki/Speed",
+     .physical      = &SPEED,
      .baseFieldType = "UFIX16"},
 
     {.name          = "DISTANCE_FIX16_M",
      .description   = "Distance, with meter resolution",
      .resolution    = 1,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Distance",
+     .physical      = &DISTANCE,
      .baseFieldType = "FIX16"},
 
     {.name          = "DISTANCE_FIX16_CM",
      .description   = "Distance, with centimeter resolution",
      .resolution    = 0.01,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Distance",
+     .physical      = &DISTANCE,
      .baseFieldType = "FIX16"},
 
     {.name          = "DISTANCE_FIX16_MM",
      .description   = "Distance, with millimeter resolution",
      .resolution    = 0.001,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Distance",
+     .physical      = &DISTANCE,
      .baseFieldType = "FIX16"},
 
     {.name          = "DISTANCE_FIX32_MM",
      .description   = "Distance, high range, with millimeter resolution",
      .resolution    = 0.001,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Distance",
+     .physical      = &DISTANCE,
      .baseFieldType = "FIX32"},
 
     {.name          = "DISTANCE_FIX32_CM",
      .description   = "Distance, high range, with centimeter resolution",
      .resolution    = 0.01,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Distance",
+     .physical      = &DISTANCE,
      .baseFieldType = "FIX32"},
 
-    {.name          = "DISTANCE_FIX64",
-     .description   = "Distance",
-     .resolution    = 1e-6,
-     .unit          = "m",
-     .url           = "https://en.wikipedia.org/wiki/Distance",
-     .baseFieldType = "FIX64"},
+    {.name = "DISTANCE_FIX64", .description = "Distance", .resolution = 1e-6, .physical = &DISTANCE, .baseFieldType = "FIX64"},
 
     {.name = "GAIN_FIX16", .description = "Gain", .resolution = 0.01, .baseFieldType = "FIX16"},
 
     {.name          = "MAGNETIC_FIELD_FIX16",
      .description   = "Magnetic field",
      .resolution    = 0.01,
-     .unit          = "Tesla",
-     .url           = "https://en.wikipedia.org/wiki/Magnetic_field",
+     .physical      = &MAGNETIC_FIELD,
      .baseFieldType = "FIX16"},
 
     {.name          = "INSTANCE",
@@ -841,15 +1038,13 @@ FieldType fieldTypeList[] = {
     {.name          = "POWER_FACTOR_UFIX16",
      .description   = "Power Factor",
      .resolution    = 1 / 16384.,
-     .unit          = "Cos Phi",
-     .url           = "https://en.wikipedia.org/wiki/Power_factor",
+     .physical      = &POWER_FACTOR,
      .baseFieldType = "UFIX16"},
 
     {.name          = "POWER_FACTOR_UFIX8",
      .description   = "Power Factor",
      .resolution    = 0.01,
-     .unit          = "Cos Phi",
-     .url           = "https://en.wikipedia.org/wiki/Power_factor",
+     .physical      = &POWER_FACTOR,
      .baseFieldType = "UFIX8"},
 
     {.name                = "SIGNED_ALMANAC_PARAMETER",
@@ -915,7 +1110,7 @@ FieldType fieldTypeList[] = {
     // Others
     {.name                = "BINARY",
      .description         = "Binary field",
-     .encodingDescription = "Any content consisting of any number of bits.",
+     .encodingDescription = "Unspecified content consisting of any number of bits.",
      .pf                  = fieldPrintBinary,
      .v1Type              = "Binary data"},
 
@@ -923,27 +1118,23 @@ FieldType fieldTypeList[] = {
      .description         = "Reserved field",
      .encodingDescription = "All reserved bits shall be 1",
      .comment             = "NMEA reserved for future expansion and/or to align next data on byte boundary",
-     .pf                  = fieldPrintReserved,
-     .baseFieldType       = "BINARY"},
+     .pf                  = fieldPrintReserved},
 
     {.name                = "SPARE",
      .description         = "Spare field",
-     .encodingDescription = "All reserved bits shall be 0",
+     .encodingDescription = "All spare bits shall be 0",
      .comment = "This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS "
                 "ITU-1371 standard.",
-     .pf      = fieldPrintSpare,
-     .baseFieldType = "BINARY"},
+     .pf      = fieldPrintSpare},
 
     {.name        = "MMSI",
      .description = "MMSI",
      .encodingDescription
      = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. "
        "The first three or four digits are special, see the USCG link for a detailed explanation.",
-     .url           = "https://navcen.uscg.gov/maritime-mobile-service-identity",
-     .format        = "\"%09u\"",
-     .baseFieldType = "UINT32",
-     .rangeMinText  = "000000000",
-     .rangeMaxText  = "999999999"},
+     .url    = "https://navcen.uscg.gov/maritime-mobile-service-identity",
+     .format = "\"%09u\"",
+     .pf     = fieldPrintMMSI},
 
     {.name        = "VARIABLE",
      .description = "Variable",

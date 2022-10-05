@@ -66,6 +66,22 @@ limitations under the License.
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="PhysicalQuantity">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description"/>
+      <xs:element type="xs:string" name="Comment" minOccurs="0"/>
+      <xs:element type="xs:string" name="URL" minOccurs="0"/>
+      <xs:element type="xs:string" name="UnitDescription"/>
+      <xs:element type="xs:string" name="Unit"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name"/>
+  </xs:complexType>
+  <xs:complexType name="PhysicalQuantities">
+    <xs:sequence>
+      <xs:element type="PhysicalQuantity" name="PhysicalQuantity" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="FieldType">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
@@ -94,26 +110,29 @@ limitations under the License.
   </xs:complexType>
 
   <xs:complexType name="Field">
-    <xs:choice maxOccurs="unbounded" minOccurs="0">
+    <xs:sequence>
       <xs:element type="xs:byte" name="Order"/>
       <xs:element type="xs:string" name="Id"/>
       <xs:element type="xs:string" name="Name"/>
-      <xs:element type="xs:string" name="Description"/>
-      <xs:element type="xs:short" name="BitLength"/>
-      <xs:element type="xs:boolean" name="BitLengthVariable"/>
-      <xs:element type="xs:short" name="BitOffset"/>
-      <xs:element type="xs:byte" name="BitStart"/>
-      <xs:element type="xs:int" name="Match"/>
-      <xs:element type="xs:string" name="Type"/>
-      <xs:element type="xs:float" name="Resolution"/>
-      <xs:element type="xs:int" name="Offset"/>
-      <xs:element type="xs:boolean" name="Signed"/>
+      <xs:element type="xs:string" name="Description" minOccurs="0"/>
+      <xs:element type="xs:boolean" name="BitLengthVariable" minOccurs="0"/>
+      <xs:element type="xs:short" name="BitLength" minOccurs="0"/>
+      <xs:element type="xs:short" name="BitOffset" minOccurs="0"/>
+      <xs:element type="xs:byte" name="BitStart" minOccurs="0"/>
+      <xs:element type="xs:string" name="Condition" minOccurs="0"/>
+      <xs:element type="xs:int" name="Match" minOccurs="0"/>
+      <xs:element type="xs:string" name="Unit" minOccurs="0"/>
+      <xs:element type="xs:float" name="Resolution" minOccurs="0"/>
+      <xs:element type="xs:boolean" name="Signed" minOccurs="0"/>
+      <xs:element type="xs:int" name="Offset" minOccurs="0"/>
+      <xs:element type="xs:string" name="Format" minOccurs="0"/>
+      <xs:element type="xs:float" name="RangeMin" minOccurs="0"/>
+      <xs:element type="xs:float" name="RangeMax" minOccurs="0"/>
       <xs:element type="xs:string" name="FieldType"/>
-      <xs:element type="xs:string" name="LookupEnumeration"/>
-      <xs:element type="xs:string" name="LookupBitEnumeration"/>
-      <xs:element type="xs:string" name="Unit"/>
-      <xs:element type="xs:string" name="Condition"/>
-    </xs:choice>
+      <xs:element type="xs:string" name="PhysicalQuantity" minOccurs="0"/>
+      <xs:element type="xs:string" name="LookupEnumeration" minOccurs="0"/>
+      <xs:element type="xs:string" name="LookupBitEnumeration" minOccurs="0"/>
+    </xs:sequence>
   </xs:complexType>
   <xs:complexType name="Fields">
     <xs:sequence>
@@ -180,6 +199,7 @@ limitations under the License.
       <xs:element type="xs:string" name="License"/>
       <xs:element type="xs:string" name="Version"/>
       <xs:element type="xs:string" name="Copyright"/>
+      <xs:element type="PhysicalQuantities" name="PhysicalQuantities"/>
       <xs:element type="FieldTypes" name="FieldTypes"/>
       <xs:element type="MissingEnumerations" name="MissingEnumerations"/>
       <xs:element type="LookupEnumerations" name="LookupEnumerations"/>

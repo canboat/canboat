@@ -65,6 +65,8 @@ typedef struct
   const size_t *lookupLength;
   FieldType    *ft;
   Pgn          *pgn;
+  double        rangeMin;
+  double        rangeMax;
 } Field;
 
 #include "fieldtype.h"
@@ -190,17 +192,32 @@ typedef struct
 
 #define VERSION_FIELD(nam)                                                     \
   {                                                                            \
-    .name = nam, .size = BYTES(1), .resolution = 0.001, .fieldType = "VERSION" \
+    .name = nam, .size = BYTES(2), .resolution = 0.001, .fieldType = "VERSION" \
   }
 
-#define VOLTAGE_FIELD(nam, res)                                                                  \
-  {                                                                                              \
-    .name = nam, .size = BYTES(2), .resolution = res, .unit = "V", .fieldType = "VOLTAGE_UFIX16" \
+#define VOLTAGE_U16_V_FIELD(nam)                                                                   \
+  {                                                                                                \
+    .name = nam, .size = BYTES(2), .resolution = 1.0, .unit = "V", .fieldType = "VOLTAGE_UFIX16_V" \
   }
 
-#define VOLTAGE_I16_FIELD(nam, res)                                                                              \
-  {                                                                                                              \
-    .name = nam, .size = BYTES(2), .resolution = res, .unit = "V", .hasSign = true, .fieldType = "VOLTAGE_INT16" \
+#define VOLTAGE_U16_10MV_FIELD(nam)                                                                    \
+  {                                                                                                    \
+    .name = nam, .size = BYTES(2), .resolution = 0.01, .unit = "V", .fieldType = "VOLTAGE_UFIX16_10MV" \
+  }
+
+#define VOLTAGE_U16_100MV_FIELD(nam)                                                                   \
+  {                                                                                                    \
+    .name = nam, .size = BYTES(2), .resolution = 0.1, .unit = "V", .fieldType = "VOLTAGE_UFIX16_100MV" \
+  }
+
+#define VOLTAGE_U16_200MV_FIELD(nam)                                                                   \
+  {                                                                                                    \
+    .name = nam, .size = BYTES(2), .resolution = 0.2, .unit = "V", .fieldType = "VOLTAGE_UFIX16_200MV" \
+  }
+
+#define VOLTAGE_I16_10MV_FIELD(nam)                                                                                    \
+  {                                                                                                                    \
+    .name = nam, .size = BYTES(2), .resolution = 0.01, .unit = "V", .hasSign = true, .fieldType = "VOLTAGE_FIX16_10MV" \
   }
 
 #define RADIO_FREQUENCY_FIELD(nam, res)                                                                   \
@@ -331,7 +348,7 @@ typedef struct
 
 #define PEUKERT_FIELD(nam)                                                              \
   {                                                                                     \
-    .name = nam, .size = BYTES(2), .resolution = 0.002, .fieldType = "PEUKERT_EXPONENT" \
+    .name = nam, .size = BYTES(1), .resolution = 0.002, .fieldType = "PEUKERT_EXPONENT" \
   }
 
 // Fully defined NUMBER fields
@@ -346,14 +363,14 @@ typedef struct
     .name = "Instance", .size = BYTES(1), .resolution = 1, .description = NULL, .fieldType = "UINT8" \
   }
 
-#define POWER_FACTOR_U16_FIELD                                                                                  \
-  {                                                                                                             \
-    .name = "Power factor", .size = BYTES(2), .resolution = 1 / 16384., .unit = "Cos Phi", .fieldType = "UFIX8" \
+#define POWER_FACTOR_U16_FIELD                                                                                   \
+  {                                                                                                              \
+    .name = "Power factor", .size = BYTES(2), .resolution = 1 / 16384., .unit = "Cos Phi", .fieldType = "UFIX16" \
   }
 
 #define POWER_FACTOR_U8_FIELD                                                                             \
   {                                                                                                       \
-    .name = "Power factor", .size = BYTES(2), .resolution = 0.01, .unit = "Cos Phi", .fieldType = "UFIX8" \
+    .name = "Power factor", .size = BYTES(1), .resolution = 0.01, .unit = "Cos Phi", .fieldType = "UFIX8" \
   }
 
 // End of NUMBER fields
@@ -586,9 +603,9 @@ typedef struct
     .name = nam, .size = BYTES(4), .resolution = 0.0001, .unit = "s", .fieldType = "TIME" \
   }
 
-#define DATE_FIELD(nam)                                                                 \
-  {                                                                                     \
-    .name = nam, .size = BYTES(2), .resolution = 1, .unit = "days", .fieldType = "DATE" \
+#define DATE_FIELD(nam)                                                              \
+  {                                                                                  \
+    .name = nam, .size = BYTES(2), .resolution = 1, .unit = "d", .fieldType = "DATE" \
   }
 
 #define VARIABLE_FIELD(nam, desc)                                                   \
@@ -601,10 +618,19 @@ typedef struct
     .name = nam, .size = BYTES(4), .resolution = 1, .unit = "kWh", .fieldType = "ENERGY_UINT32" \
   }
 
-#define POWER_I32_OFFSET_FIELD(nam, unt)                                                                 \
-  {                                                                                                      \
-    .name = nam, .size = BYTES(4), .resolution = 1, .hasSign = true, .unit = unt, .offset = -2000000000, \
-    .fieldType = "POWER_INT32_OFFSET"                                                                    \
+#define POWER_I32_OFFSET_FIELD(nam)                                 \
+  {                                                                 \
+    .name = nam, .hasSign = true, .fieldType = "POWER_FIX32_OFFSET" \
+  }
+
+#define POWER_I32_VA_OFFSET_FIELD(nam)                                 \
+  {                                                                    \
+    .name = nam, .hasSign = true, .fieldType = "POWER_FIX32_VA_OFFSET" \
+  }
+
+#define POWER_I32_VAR_OFFSET_FIELD(nam)                                 \
+  {                                                                     \
+    .name = nam, .hasSign = true, .fieldType = "POWER_FIX32_VAR_OFFSET" \
   }
 
 #define POWER_U16_FIELD(nam)                                                                 \
@@ -649,7 +675,7 @@ typedef struct
 
 #define PERCENTAGE_U16_FIELD(nam)                                                                              \
   {                                                                                                            \
-    .name = nam, .size = BYTES(2), .resolution = RES_PERCENTAGE, .unit = "%", .fieldType = "PERCENTAGE_UINT16" \
+    .name = nam, .size = BYTES(2), .resolution = RES_PERCENTAGE, .unit = "%", .fieldType = "PERCENTAGE_UFIX16" \
   }
 
 #define ROTATION_FIX16_FIELD(nam)                                                                                               \
@@ -702,9 +728,9 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 0.01, .hasSign = true, .fieldType = "GAIN_FIX16", .description = desc \
   }
 
-#define MAGNETIC_FIELD_FIELD(nam, desc)                                                                       \
-  {                                                                                                           \
-    .name = nam, .size = BYTES(2), .resolution = 0.01, .hasSign = true, .unit = "Tesla", .fieldType = "FIX16" \
+#define MAGNETIC_FIX16_FIELD(nam, desc)                                                                                  \
+  {                                                                                                                      \
+    .name = nam, .size = BYTES(2), .resolution = 0.01, .hasSign = true, .unit = "T", .fieldType = "MAGNETIC_FIELD_FIX16" \
   }
 
 #define ANGLE_FIX16_DDEG_FIELD(nam, desc)                                                                             \
@@ -1034,8 +1060,8 @@ Pgn pgnList[] = {
      65001,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       END_OF_FIELDS}}
 
@@ -1044,8 +1070,8 @@ Pgn pgnList[] = {
      65002,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       END_OF_FIELDS}}
 
@@ -1054,8 +1080,8 @@ Pgn pgnList[] = {
      65003,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       END_OF_FIELDS}}
 
@@ -1064,8 +1090,8 @@ Pgn pgnList[] = {
      65004,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       END_OF_FIELDS}}
 
@@ -1091,15 +1117,15 @@ Pgn pgnList[] = {
      65007,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
+     {POWER_I32_OFFSET_FIELD("Real Power"), POWER_I32_VA_OFFSET_FIELD("Apparent Power"), END_OF_FIELDS}}
 
     ,
     {"Utility Phase C Basic AC Quantities",
      65008,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       CURRENT_UFIX16_A_FIELD("AC RMS Current"),
       END_OF_FIELDS}}
@@ -1119,15 +1145,15 @@ Pgn pgnList[] = {
      65010,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
+     {POWER_I32_OFFSET_FIELD("Real Power"), POWER_I32_VA_OFFSET_FIELD("Apparent Power"), END_OF_FIELDS}}
 
     ,
     {"Utility Phase B Basic AC Quantities",
      65011,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       CURRENT_UFIX16_A_FIELD("AC RMS Current"),
       END_OF_FIELDS}}
@@ -1137,7 +1163,7 @@ Pgn pgnList[] = {
      65012,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
+     {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1147,15 +1173,15 @@ Pgn pgnList[] = {
      65013,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
+     {POWER_I32_OFFSET_FIELD("Real Power"), POWER_I32_VA_OFFSET_FIELD("Apparent Power"), END_OF_FIELDS}}
 
     ,
     {"Utility Phase A Basic AC Quantities",
      65014,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       CURRENT_UFIX16_A_FIELD("AC RMS Current"),
       END_OF_FIELDS}}
@@ -1165,7 +1191,7 @@ Pgn pgnList[] = {
      65015,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
+     {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1175,15 +1201,15 @@ Pgn pgnList[] = {
      65016,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
+     {POWER_I32_OFFSET_FIELD("Real Power"), POWER_I32_VA_OFFSET_FIELD("Apparent Power"), END_OF_FIELDS}}
 
     ,
     {"Utility Average Basic AC Quantities",
      65017,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       CURRENT_UFIX16_A_FIELD("AC RMS Current"),
       END_OF_FIELDS}}
@@ -1200,7 +1226,7 @@ Pgn pgnList[] = {
      65019,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
+     {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1210,15 +1236,15 @@ Pgn pgnList[] = {
      65020,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
+     {POWER_I32_OFFSET_FIELD("Real Power"), POWER_I32_VAR_OFFSET_FIELD("Apparent Power"), END_OF_FIELDS}}
 
     ,
     {"Generator Phase C Basic AC Quantities",
      65021,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       CURRENT_UFIX16_A_FIELD("AC RMS Current"),
       END_OF_FIELDS}}
@@ -1228,7 +1254,7 @@ Pgn pgnList[] = {
      65022,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
+     {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1238,15 +1264,15 @@ Pgn pgnList[] = {
      65023,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
+     {POWER_I32_OFFSET_FIELD("Real Power"), POWER_I32_VA_OFFSET_FIELD("Apparent Power"), END_OF_FIELDS}}
 
     ,
     {"Generator Phase B Basic AC Quantities",
      65024,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       CURRENT_UFIX16_A_FIELD("AC RMS Current"),
       END_OF_FIELDS}}
@@ -1256,7 +1282,7 @@ Pgn pgnList[] = {
      65025,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
+     {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1266,15 +1292,15 @@ Pgn pgnList[] = {
      65026,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
+     {POWER_I32_OFFSET_FIELD("Real Power"), POWER_I32_VA_OFFSET_FIELD("Apparent Power"), END_OF_FIELDS}}
 
     ,
     {"Generator Phase A Basic AC Quantities",
      65027,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       CURRENT_UFIX16_A_FIELD("AC RMS Current"),
       END_OF_FIELDS}}
@@ -1284,7 +1310,7 @@ Pgn pgnList[] = {
      65028,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Reactive Power", "VAR"),
+     {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
       END_OF_FIELDS}}
@@ -1294,15 +1320,15 @@ Pgn pgnList[] = {
      65029,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {POWER_I32_OFFSET_FIELD("Real Power", "W"), POWER_I32_OFFSET_FIELD("Apparent Power", "VA"), END_OF_FIELDS}}
+     {POWER_I32_OFFSET_FIELD("Real Power"), POWER_I32_VA_OFFSET_FIELD("Apparent Power"), END_OF_FIELDS}}
 
     ,
     {"Generator Average Basic AC Quantities",
      65030,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {VOLTAGE_FIELD("Line-Line AC RMS Voltage", 1),
-      VOLTAGE_FIELD("Line-Neutral AC RMS Voltage", 1),
+     {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
+      VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
       CURRENT_UFIX16_A_FIELD("AC RMS Current"),
       END_OF_FIELDS}}
@@ -1572,7 +1598,7 @@ Pgn pgnList[] = {
      {COMPANY(135),
       UINT8_FIELD("SID"),
       TEMPERATURE_FIELD("Internal Device Temperature"),
-      VOLTAGE_FIELD("Supply Voltage", 0.01),
+      VOLTAGE_U16_10MV_FIELD("Supply Voltage"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
@@ -1944,9 +1970,9 @@ Pgn pgnList[] = {
       GAIN_FIELD("X-axis gain value", "default 100, range 50 to 500"),
       GAIN_FIELD("Y-axis gain value", "default 100, range 50 to 500"),
       GAIN_FIELD("Z-axis gain value", "default 100, range 50 to 500"),
-      MAGNETIC_FIELD_FIELD("X-axis linear offset", "default 0, range -320.00 to 320.00"),
-      MAGNETIC_FIELD_FIELD("Y-axis linear offset", "default 0, range -320.00 to 320.00"),
-      MAGNETIC_FIELD_FIELD("Z-axis linear offset", "default 0, range -320.00 to 320.00"),
+      MAGNETIC_FIX16_FIELD("X-axis linear offset", "default 0, range -320.00 to 320.00"),
+      MAGNETIC_FIX16_FIELD("Y-axis linear offset", "default 0, range -320.00 to 320.00"),
+      MAGNETIC_FIX16_FIELD("Z-axis linear offset", "default 0, range -320.00 to 320.00"),
       ANGLE_FIX16_DDEG_FIELD("X-axis angular offset", "default 0, range 0 to 3600"),
       TIME_FIX16_5CS_FIELD("Pitch and Roll damping", "default 30, range 0 to 200"),
       TIME_FIX16_5CS_FIELD("Compass/Rate gyro damping",
@@ -1968,16 +1994,16 @@ Pgn pgnList[] = {
       GAIN_FIELD("X-axis gain value", "default 100, range 50 to 500"),
       GAIN_FIELD("Y-axis gain value", "default 100, range 50 to 500"),
       GAIN_FIELD("Z-axis gain value", "default 100, range 50 to 500"),
-      MAGNETIC_FIELD_FIELD("X-axis linear offset", "default 0, range -320.00 to 320.00"),
-      MAGNETIC_FIELD_FIELD("Y-axis linear offset", "default 0, range -320.00 to 320.00"),
-      MAGNETIC_FIELD_FIELD("Z-axis linear offset", "default 0, range -320.00 to 320.00"),
+      MAGNETIC_FIX16_FIELD("X-axis linear offset", "default 0, range -320.00 to 320.00"),
+      MAGNETIC_FIX16_FIELD("Y-axis linear offset", "default 0, range -320.00 to 320.00"),
+      MAGNETIC_FIX16_FIELD("Z-axis linear offset", "default 0, range -320.00 to 320.00"),
       ANGLE_FIX16_DDEG_FIELD("X-axis angular offset", "default 0, range 0 to 3600"),
       TIME_FIX16_5CS_FIELD("Pitch and Roll damping", "default 30, range 0 to 200"),
       TIME_FIX16_5CS_FIELD("Compass/Rate gyro damping",
                            "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf"}
+     .url      = "http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf"}
 
     ,
     {"Airmar: Simulate Mode",
@@ -2475,7 +2501,7 @@ Pgn pgnList[] = {
       PRESSURE_UFIX16_HPA_FIELD("Oil pressure"),
       TEMPERATURE_HIGH_FIELD("Oil temperature"),
       TEMPERATURE_FIELD("Temperature"),
-      VOLTAGE_I16_FIELD("Alternator Potential", 0.01),
+      VOLTAGE_I16_10MV_FIELD("Alternator Potential"),
       VOLUMETRIC_FLOW_FIELD("Fuel Rate"),
       TIME_UFIX32_S_FIELD("Total Engine hours", NULL),
       PRESSURE_UFIX16_HPA_FIELD("Coolant Pressure"),
@@ -2637,7 +2663,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Line", 2),
       LOOKUP_FIELD("Acceptability", 2, ACCEPTABILITY),
       RESERVED_FIELD(4),
-      VOLTAGE_FIELD("Voltage", 0.01),
+      VOLTAGE_U16_10MV_FIELD("Voltage"),
       CURRENT_UFIX16_DA_FIELD("Current"),
       FREQUENCY_FIELD("Frequency", 0.01),
       CURRENT_UFIX16_DA_FIELD("Breaker Size"),
@@ -2661,7 +2687,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Line", 2, LINE),
       LOOKUP_FIELD("Waveform", 3, WAVEFORM),
       RESERVED_FIELD(3),
-      VOLTAGE_FIELD("Voltage", 0.01),
+      VOLTAGE_U16_10MV_FIELD("Voltage"),
       CURRENT_UFIX16_DA_FIELD("Current"),
       FREQUENCY_FIELD("Frequency", 0.01),
       CURRENT_UFIX16_DA_FIELD("Breaker Size"),
@@ -2700,7 +2726,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("State of Charge"),
       UINT8_FIELD("State of Health"),
       TIME_UFIX16_MIN_FIELD("Time Remaining", "Time remaining at current rate of discharge"),
-      VOLTAGE_FIELD("Ripple Voltage", 0.01),
+      VOLTAGE_U16_10MV_FIELD("Ripple Voltage"),
       ELECTRIC_CHARGE_UFIX16_AH("Remaining capacity"),
       END_OF_FIELDS},
      .interval = 1500}
@@ -2728,7 +2754,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {INSTANCE_FIELD,
-      VOLTAGE_FIELD("Voltage", 0.01),
+      VOLTAGE_U16_10MV_FIELD("Voltage"),
       CURRENT_FIX16_DA_FIELD("Current"),
       TEMPERATURE_FIELD("Temperature"),
       UINT8_FIELD("SID"),
@@ -2894,7 +2920,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {BINARY_FIELD("SID", BYTES(1), NULL),
       UINT8_FIELD("Connection Number"),
-      VOLTAGE_FIELD("DC Voltage", 0.1),
+      VOLTAGE_U16_100MV_FIELD("DC Voltage"),
       CURRENT_FIX24_CA_FIELD("DC Current"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS}}
@@ -3061,7 +3087,7 @@ Pgn pgnList[] = {
      {UINT8_FIELD("SID"),
       UINT8_FIELD("Windlass ID"),
       LOOKUP_BITFIELD("Windlass Monitoring Events", 8, WINDLASS_MONITORING),
-      VOLTAGE_FIELD("Controller voltage", 0.2),
+      VOLTAGE_U16_200MV_FIELD("Controller voltage"),
       CURRENT_UFIX8_A_FIELD("Motor current"),
       TIME_UFIX16_MIN_FIELD("Total Motor Time", NULL),
       RESERVED_FIELD(BYTES(1)),
@@ -5880,7 +5906,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Year"),
       UINT8_FIELD("Month"),
       UINT16_FIELD("Device Number"),
-      VOLTAGE_FIELD("Node Voltage", 0.01),
+      VOLTAGE_U16_10MV_FIELD("Node Voltage"),
       END_OF_FIELDS}}
 
     ,

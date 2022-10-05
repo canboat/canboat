@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.0.0
+CANboat version v4.1.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.0.0</Version>
+  <Version>4.1.0</Version>
   <PGNs>
     <PGNInfo>
       <PGN>262400</PGN>
@@ -47,7 +47,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -58,7 +60,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT32</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -69,7 +73,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
@@ -82,6 +88,7 @@ limitations under the License.
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <FieldType>TIME</FieldType>
+          <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -92,7 +99,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT8</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -103,7 +112,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Signed>false</Signed>
-          <FieldType>UINT32</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

@@ -341,7 +341,7 @@ static void explainPGN(Pgn pgn)
       }
     }
 
-    if (f.lookupValue && strcmp(f.fieldType, "BITLOOKUP") == 0)
+    if (f.lookupValue != NULL && strcmp(f.fieldType, "BITLOOKUP") == 0)
     {
       uint32_t maxValue = f.size;
 
@@ -435,6 +435,18 @@ static const char *getV1Type(Field *f)
         return "Latitude";
       }
       return ft->v1Type;
+    }
+  }
+  return NULL;
+}
+
+static const char *getV2Type(Field *f)
+{
+  for (FieldType *ft = f->ft; ft != NULL; ft = ft->baseFieldTypePtr)
+  {
+    if (ft->baseFieldTypePtr == NULL)
+    {
+      return ft->name;
     }
   }
   return NULL;
@@ -558,7 +570,8 @@ static void explainPGNXML(Pgn pgn)
 
     for (i = 0; i < ARRAY_SIZE(pgn.fieldList) && pgn.fieldList[i].name; i++)
     {
-      Field f = pgn.fieldList[i];
+      Field      f  = pgn.fieldList[i];
+      FieldType *ft = f.ft;
 
       printf("        <Field>\n"
              "          <Order>%d</Order>\n",
@@ -624,19 +637,53 @@ static void explainPGNXML(Pgn pgn)
       {
         printf("          <Resolution>%g</Resolution>\n", f.resolution);
       }
-      printXML(10, "Signed", f.hasSign ? "true" : "false");
+
+      if (doV1)
+      {
+        printXML(10, "Signed", f.hasSign ? "true" : "false");
+      }
+      else if (ft->hasSign != Null)
+      {
+        printf("          <Signed>%s</Signed>\n", ft->hasSign == True ? "true" : "false");
+      }
+
       if (f.offset != 0)
       {
         printf("          <Offset>%d</Offset>\n", f.offset);
       }
 
-      if (f.fieldType != NULL)
+      if (!isnan(f.rangeMin))
       {
-        printXML(10, "FieldType", f.fieldType);
+        printf("          <RangeMin>%.16g</RangeMin>\n", f.rangeMin);
       }
-      else
+      else if (!doV1 && f.lookupValue != 0)
       {
-        logError("PGN %u field '%s' has no fieldtype\n", pgn.pgn, f.name);
+        if (!(f.unit && f.unit[0] == '='))
+        {
+          printf("          <RangeMin>%.16g</RangeMin>\n", 0.0);
+        }
+      }
+
+      if (!isnan(f.rangeMax))
+      {
+        printf("          <RangeMax>%.16g</RangeMax>\n", f.rangeMax);
+      }
+      else if (!doV1 && f.lookupValue != 0 && !(f.unit && f.unit[0] == '='))
+      {
+        if (strcmp(f.fieldType, "BITLOOKUP") == 0)
+        {
+          printf("          <RangeMax>%.16g</RangeMax>\n", (double) f.size);
+        }
+        else
+        {
+          printf("          <RangeMax>%.16g</RangeMax>\n", (double) ((1 << f.size) - 1));
+        }
+      }
+
+      printXML(10, "FieldType", getV2Type(&f));
+      if (ft->physical != NULL)
+      {
+        printXML(10, "PhysicalQuantity", ft->physical->name);
       }
 
       if (f.lookupValue != 0)
@@ -696,7 +743,7 @@ static void explainPGNXML(Pgn pgn)
         }
       }
 
-      if ((f.ft != NULL && f.ft->variableSize) || f.proprietary)
+      if ((ft != NULL && ft->variableSize) || f.proprietary)
       {
         showBitOffset = false; // From here on there is no good bitoffset to be printed
       }
@@ -755,12 +802,50 @@ static void explainMissingXML(void)
   printf("  </MissingEnumerations>\n");
 }
 
+static void explainPhysicalQuantityXML(void)
+{
+  printf("  <PhysicalQuantities>\n");
+  for (size_t i = 0; i < ARRAY_SIZE(PhysicalQuantityList); i++)
+  {
+    const PhysicalQuantity *pq = PhysicalQuantityList[i];
+
+    printf("    <PhysicalQuantity Name=\"%s\">\n", pq->name);
+    if (pq->description != NULL)
+    {
+      printf("      <Description>%s</Description>\n", pq->description);
+    }
+    if (pq->comment != NULL)
+    {
+      printf("      <Comment>%s</Comment>\n", pq->comment);
+    }
+    if (pq->url != NULL)
+    {
+      printf("      <URL>%s</URL>\n", pq->url);
+    }
+    if (pq->unit != NULL)
+    {
+      printf("      <UnitDescription>%s</UnitDescription>\n", pq->unit);
+    }
+    if (pq->abbreviation != NULL)
+    {
+      printf("      <Unit>%s</Unit>\n", pq->abbreviation);
+    }
+    printf("    </PhysicalQuantity>\n");
+  }
+  printf("  </PhysicalQuantities>\n");
+}
+
 static void explainFieldTypesXML(void)
 {
   printf("  <FieldTypes>\n");
   for (size_t i = 0; i < fieldTypeCount; i++)
   {
     FieldType *ft = &fieldTypeList[i];
+
+    if (ft->baseFieldType != NULL)
+    {
+      continue;
+    }
 
     printf("    <FieldType Name=\"%s\">\n", ft->name);
     if (ft->description != NULL)
@@ -807,26 +892,16 @@ static void explainFieldTypesXML(void)
     {
       printf("      <Resolution>%.16g</Resolution>\n", ft->resolution);
     }
-    if (ft->format != NULL)
-    {
-      printf("      <Format>%s</Format>\n", ft->format);
-    }
-    if (ft->rangeMinText != NULL)
-    {
-      printf("      <RangeMin>%s</RangeMin>\n", ft->rangeMinText);
-    }
-    else if (!isnan(ft->rangeMin))
+
+    if (!isnan(ft->rangeMin))
     {
       printf("      <RangeMin>%.16g</RangeMin>\n", ft->rangeMin);
     }
-    if (ft->rangeMaxText != NULL)
-    {
-      printf("      <RangeMax>%s</RangeMax>\n", ft->rangeMaxText);
-    }
-    else if (!isnan(ft->rangeMax))
+    if (!isnan(ft->rangeMax))
     {
       printf("      <RangeMax>%.16g</RangeMax>\n", ft->rangeMax);
     }
+
     printf("    </FieldType>\n");
   }
   printf("  </FieldTypes>\n");
@@ -855,6 +930,7 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
 
   if (normal && !doV1)
   {
+    explainPhysicalQuantityXML();
     explainFieldTypesXML();
     explainMissingXML();
 

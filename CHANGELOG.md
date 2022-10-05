@@ -4,7 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## WIP
+## [4.1.0]
+
+### Changed
+
+- Reduce the types of fields reported in the XML and JSON to the base types. A parser needs
+  a 'parser' for each FieldType, and each will be different. Copy some attributes to field
+  level in the XML. Internally the derived fieldtypes are still used.
+- Add an orthogonal `PhysicalQuantity` type in the canboat.xml,json that explains what is stored in the field.
+- Cleaner field lists in `canboat.xsl`.
+
+### Issues resolved:
+
+- #311: Fix regression in 4.0.0: PGN 126996 Version field length
+- #310: Resolution of field should match field type
+- #283: Further improvements to v2 JSON/XML
+
+
+## [4.0.0]
 
 ### Changed
 
