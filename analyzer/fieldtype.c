@@ -207,12 +207,16 @@ extern void fillFieldType(bool doUnitFixup)
                  f->fieldType,
                  ft->unit);
       }
-
       if (doUnitFixup && f->unit != NULL && f->resolution != 0.0)
       {
         fixupUnit(f);
       }
-      f->pgn = &pgnList[i];
+      if (f->unit != NULL && f->unit[0] == '=') // Is a match field
+      {
+        pgnList[i].hasMatchFields = true;
+      }
+      f->pgn   = &pgnList[i];
+      f->order = j + 1;
     }
     if (pgnList[i].type == PACKET_FAST && !ALLOW_PGN_FAST_PACKET(pgn))
     {

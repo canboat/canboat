@@ -27,7 +27,6 @@ limitations under the License.
 #include "utf.h"
 
 extern int g_variableFieldRepeat[2]; // Actual number of repetitions
-extern int g_variableFieldIndex;
 bool       g_skip;
 
 static bool unhandledStartOffset(const char *fieldName, size_t startBit)
@@ -168,10 +167,16 @@ static bool extractNumberNotEmpty(const Field *field,
     reserved = 0;
   }
 
-  if (fieldName[0] == '#')
+  if (field->pgn->repeatingField1 == field->order)
   {
-    logDebug("g_variableFieldRepeat[%d]=%d\n", g_variableFieldIndex, *value);
-    g_variableFieldRepeat[g_variableFieldIndex++] = *value;
+    logDebug("The first repeating fieldset repeats %" PRId64 " times\n", *value);
+    g_variableFieldRepeat[0] = *value;
+  }
+
+  if (field->pgn->repeatingField2 == field->order)
+  {
+    logDebug("The second repeating fieldset repeats %" PRId64 " times\n", *value);
+    g_variableFieldRepeat[1] = *value;
   }
 
   if (*value > *maxValue - reserved)
@@ -376,6 +381,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
     if (strcmp(lookfor, field->unit) != 0)
     {
       logDebug("Field %s value %" PRId64 " does not match %s\n", fieldName, value, field->unit + 1);
+      g_skip = true;
       return false;
     }
     s = field->description;

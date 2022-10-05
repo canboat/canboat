@@ -844,12 +844,12 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
   size_t   i;
   size_t   bits;
   size_t   startBit;
-  int      repetition = 0;
+  int      repetition;
   char     fieldName[60];
   bool     r;
-  uint32_t variableFieldCount[2]; // How many variable fields over all repetitions, indexed by group
-  uint32_t variableFields[2];     // How many variable fields per repetition, indexed by group
-  size_t   variableFieldStart;
+  size_t   variableFields; // How many variable fields remain (product of repetition count * # of fields)
+  uint8_t  variableFieldStart;
+  uint8_t  variableFieldCount;
 
   if (msg == NULL)
   {
@@ -906,79 +906,74 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
     sep = " ";
   }
 
+  logDebug("fieldCount=%d repeatingStart1=%" PRIu8 "\n", pgn->fieldCount, pgn->repeatingStart1);
+
   g_variableFieldRepeat[0] = 255; // Can be overridden by '# of parameters'
   g_variableFieldRepeat[1] = 0;   // Can be overridden by '# of parameters'
-  g_variableFieldIndex     = 0;
-
-  variableFieldCount[0] = pgn->repeatingCount1;
-  variableFieldCount[1] = pgn->repeatingCount2;
-  variableFieldStart    = pgn->repeatingStart1;
-  logDebug("fieldCount=%d repeatingStart1=%d\n", pgn->fieldCount, variableFieldStart);
-
-  r = true;
+  repetition               = 0;
+  variableFields           = 0;
+  r                        = true;
   for (i = 0, startBit = 0, data = dataStart; data < dataEnd; i++)
   {
     Field *field;
 
-    if (variableFieldCount[0] > 0 && i == variableFieldStart && repetition == 0)
+    field = &pgn->fieldList[i];
+
+    if (pgn->repeatingCount1 > 0 && field->order == pgn->repeatingStart1 && repetition == 0)
     {
-      repetition = 1;
       if (showJson)
       {
         mprintf("%s\"list\":[{", getSep());
         strcat(closingBraces, "]}");
         sep = "";
       }
-      // Only now is g_variableFieldRepeat set via values for parameters starting with '# of ...'
-      variableFields[0] = variableFieldCount[0] * g_variableFieldRepeat[0];
-      variableFields[1] = variableFieldCount[1] * g_variableFieldRepeat[1];
+      // Only now is g_variableFieldRepeat set
+      variableFields     = pgn->repeatingCount1 * g_variableFieldRepeat[0];
+      variableFieldCount = pgn->repeatingCount1;
+      variableFieldStart = pgn->repeatingStart1;
+      repetition         = 1;
     }
-    if (repetition > 0)
+    if (pgn->repeatingCount2 > 0 && field->order == pgn->repeatingStart2 && repetition == 0)
     {
-      if (variableFields[0])
+      if (showJson)
       {
-        logDebug("variableFields: field=%d variableFieldStart=%d variableFields[0]=%d\n", i, variableFieldStart, variableFields[0]);
-        if (i == variableFieldStart + variableFieldCount[0])
-        {
-          i = variableFieldStart;
-          repetition++;
-          if (showJson)
-          {
-            mprintf("},{");
-            sep = "";
-          }
-        }
-        variableFields[0]--;
-        if (variableFields[0] == 0)
-        {
-          variableFieldStart += variableFieldCount[0];
-        }
+        mprintf("%s\"list\":[{", getSep());
+        strcat(closingBraces, "]}");
+        sep = "";
       }
-      else if (variableFields[1])
-      {
-        if (variableFields[1] == variableFieldCount[1] * g_variableFieldRepeat[1])
-        {
-          repetition = 0;
-        }
-        if (i == variableFieldStart + variableFieldCount[1])
-        {
-          i = variableFieldStart;
-          repetition++;
-          if (showJson)
-          {
-            mprintf("},{");
-            sep = "";
-          }
-        }
-        variableFields[1]--;
-      }
-      else
-      {
-        break;
-      }
+      // Only now is g_variableFieldRepeat set
+      variableFields     = pgn->repeatingCount2 * g_variableFieldRepeat[0];
+      variableFieldCount = pgn->repeatingCount1;
+      variableFieldStart = pgn->repeatingStart2;
+      repetition         = 1;
     }
 
-    field = &pgn->fieldList[i];
+    if (variableFields > 0)
+    {
+      variableFields--;
+      if (variableFields == 0)
+      {
+        repetition = 0;
+      }
+      else if (i + 1 == variableFieldStart + variableFieldCount)
+      {
+        i     = variableFieldStart - 1;
+        field = &pgn->fieldList[i];
+        repetition++;
+        if (showJson)
+        {
+          mprintf("},{");
+          sep = "";
+        }
+      }
+      logDebug("variableFields: repetition=%d field=%" PRIu8 " variableFieldStart=%" PRIu8 " variableFieldsCount=%" PRIu8
+               " remaining=%zu\n",
+               repetition,
+               i + 1,
+               variableFieldStart,
+               variableFieldCount,
+               variableFields);
+    }
 
     if (!field->camelName && !field->name)
     {

@@ -54,10 +54,11 @@ typedef struct
   double resolution;  /* Either a positive real value or zero */
   int    precision;   /* How many decimal digits after the decimal point to print; usually 0 = automatic */
   double unitOffset;  /* Only used for K->C conversion in non-SI print */
-  bool   proprietary; /* Field is only present if earlier PGN field is in propietary range */
+  bool   proprietary; /* Field is only present if earlier PGN field is in proprietary range */
   bool   hasSign;     /* Is the value signed, e.g. has both positive and negative values? */
 
   /* The following fields are filled by C, no need to set in initializers */
+  uint8_t       order;
   char         *camelName;
   const char  **lookupValue;
   const char   *lookupName;
@@ -757,6 +758,7 @@ struct Pgn
   uint32_t    size;          /* Filled by C, no need to set in initializers. */
   char       *camelDescription; /* Filled by C, no need to set in initializers. */
   bool        fallback;         /* true = this is a catch-all for unknown PGNs */
+  bool        hasMatchFields;   /* true = there are multiple PGNs with same PRN */
   const char *explanation;      /* Preferably the NMEA 2000 explanation from the NMEA PGN field list */
   const char *url;              /* External URL */
   uint16_t    interval;         /* Milliseconds between transmissions, standard. 0 is: not known, UINT16_MAX = never */

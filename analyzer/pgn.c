@@ -112,9 +112,9 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
     return pgn;
   }
 
-  if (!IS_PGN_PROPRIETARY(pgnId))
+  if (!pgn->hasMatchFields)
   {
-    logDebug("PGN %u is not manufacturer specific, returning '%s'\n", pgnId, pgn->description);
+    logDebug("getMatchingPgn: PGN %u has no match fields, returning '%s'\n", pgnId, pgn->description);
     return pgn;
   }
 
@@ -129,7 +129,7 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
     bool matchedFixedField = true;
     bool hasFixedField     = false;
 
-    logDebug("PGN %u matching with manufacturer specific '%s'\n", prn, pgn->description);
+    logDebug("getMatchingPgn: PGN %u matching with manufacturer specific '%s'\n", prn, pgn->description);
 
     // Iterate over fields
     for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
@@ -146,11 +146,16 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
         desiredValue  = strtol(field->unit + 1, 0, 10);
         if (!extractNumber(field, data, length, startBit, field->size, &value, &maxValue) || value != desiredValue)
         {
-          logDebug("PGN %u field '%s' value %" PRId64 " does not match %" PRId64 "\n", prn, field->name, value, desiredValue);
+          logDebug("getMatchingPgn: PGN %u field '%s' value %" PRId64 " does not match %" PRId64 "\n",
+                   prn,
+                   field->name,
+                   value,
+                   desiredValue);
           matchedFixedField = false;
           break;
         }
-        logDebug("PGN %u field '%s' value %" PRId64 " matches %" PRId64 "\n", prn, field->name, value, desiredValue);
+        logDebug(
+            "getMatchingPgn: PGN %u field '%s' value %" PRId64 " matches %" PRId64 "\n", prn, field->name, value, desiredValue);
       }
       startBit += bits;
       data += startBit / 8;
@@ -159,12 +164,12 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
     }
     if (!hasFixedField)
     {
-      logDebug("Cant determine prn choice, return prn=%d variation '%s'\n", prn, pgn->description);
+      logDebug("getMatchingPgn: Cant determine prn choice, return prn=%d variation '%s'\n", prn, pgn->description);
       return pgn;
     }
     if (matchedFixedField)
     {
-      logDebug("PGN %u selected manufacturer specific '%s'\n", prn, pgn->description);
+      logDebug("getMatchingPgn: PGN %u selected manufacturer specific '%s'\n", prn, pgn->description);
       return pgn;
     }
   }

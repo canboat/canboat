@@ -562,7 +562,7 @@ static void explainPGNXML(Pgn pgn)
 
       printf("        <Field>\n"
              "          <Order>%d</Order>\n",
-             i + 1);
+             f.order);
       printXML(10, "Id", f.camelName);
       printXML(10, "Name", f.name);
 
