@@ -17,7 +17,8 @@
 # 
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-TARGETDIR=../rel/$(PLATFORM)
+BUILDDIR?=rel/$(PLATFORM)
+TARGETDIR=../$(BUILDDIR)
 ANALYZER=$(TARGETDIR)/analyzer
 ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
 TARGETS=$(ANALYZER) $(ANALYZER_EXPLAIN)

@@ -3,7 +3,9 @@
 #
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-VENV=../rel/$(PLATFORM)/venv
+BUILDDIR?=rel/$(PLATFORM)
+TARGETDIR=../$(BUILDDIR)
+VENV=$(TARGETDIR)/venv
 
 
 all: pgns.dbc
