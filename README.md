@@ -15,7 +15,9 @@ To use the programs included in this project you may need a supported CAN interf
 
 For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 
-where you can find instructions on how to build the programs on your own computer and how to start extending the PGN database.
+where you can find instructions on how to build the programs on your own computer and how to start 
+extending the PGN database.
+Short build instructions are also found in [BUILDING.md].
 
 ## Version history
 

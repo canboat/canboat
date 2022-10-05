@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- The default `make` target on top level is now to only build the binaries, not the 
+  generated files. This is seems more appropriate for most users.
+  Use `make generated` to update all generated files.
 - The generated `pgns-v2` files (`.xml` and `.json`) added in 3.0.0 are moved to the
   `docs` subdirectory and renamed to `canboat`.
   They are now accompanied by:

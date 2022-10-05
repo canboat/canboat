@@ -87,17 +87,15 @@ $(IKJSONFILE): $(IKXMLFILE) pgns2json.xslt
 $(NPMFILE): ../common/version.h $(ANALYZER)
 	python3 fixup-version.py $(ANALYZER) $(NPMFILE)
 
-json: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE) $(NPMFILE) $(HTML2FILE)
+generated: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE) $(NPMFILE) $(HTML2FILE)
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
-	-rm -f $(XMLFILE)
-	-rm -f $(JSONFILE)
 
-tests:	json
+tests:	$(ANALYZER)
 	(cd tests; make tests)
 
 webserver:
 	cd ../docs; python3 -m http.server --cgi 8080
 
-.PHONY:	tests
+.PHONY:	generated clean tests webserver

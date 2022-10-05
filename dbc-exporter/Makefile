@@ -21,4 +21,4 @@ $(VENV):
 
 clean:
 	-[ -x "$(VENV)/bin/python3" ] && "$(VENV)/bin/python3" setup.py clean || :
-	-rm -rf "$(VENV)" build dist pgns.dbc
+	-rm -rf "$(VENV)" build dist
