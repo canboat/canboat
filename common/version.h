@@ -18,4 +18,4 @@ limitations under the License.
 
 */
 
-#define VERSION "4.0.0-alpha"
+#define VERSION "4.0.0"
