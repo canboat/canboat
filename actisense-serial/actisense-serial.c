@@ -267,7 +267,7 @@ int main(int argc, char **argv)
   // Do not read anything until we have seen 10 messages on bus
   for (i = 0; i < 10;)
   {
-    int r = isReady(handle, INVALID_SOCKET, INVALID_SOCKET, 1);
+    int r = isReady(handle, INVALID_SOCKET, INVALID_SOCKET, timeout);
 
     if ((r & FD1_ReadReady) > 0)
     {

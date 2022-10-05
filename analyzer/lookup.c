@@ -24,12 +24,12 @@ limitations under the License.
 
 #include "analyzer.h"
 
-#define LOOKUP_TYPE(type, length)               \
-  const char *lookupValue##type[1 << (length)]; \
-  uint32_t    lookupLength##type = 1 << (length);
+#define LOOKUP_TYPE(type, length)                \
+  const char  *lookupValue##type[1 << (length)]; \
+  const size_t lookupLength##type = 1 << (length);
 #define LOOKUP_TYPE_BITFIELD(type, length) \
-  const char *lookupValue##type[length];   \
-  uint32_t    lookupLength##type = length;
+  const char  *lookupValue##type[length];  \
+  const size_t lookupLength##type = length;
 
 #include "lookup.h"
 
@@ -71,11 +71,11 @@ void fillLookups(void)
     {
       Field *f = &pgnList[i].fieldList[0];
 
-      if (f->name && f->units && strcmp(f->name, "Manufacturer Code") == 0)
+      if (f->name != NULL && f->unit != NULL && strcmp(f->name, "Manufacturer Code") == 0)
       {
         int id = 0;
 
-        if (sscanf(f->units, "=%d", &id) > 0)
+        if (sscanf(f->unit, "=%d", &id) > 0)
         {
           f->description = lookupValueMANUFACTURER_CODE[id];
         }

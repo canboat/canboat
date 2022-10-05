@@ -17,7 +17,8 @@
 # 
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-TARGETDIR=../rel/$(PLATFORM)
+BUILDDIR?=rel/$(PLATFORM)
+TARGETDIR=../$(BUILDDIR)
 IKONVERT=$(TARGETDIR)/ikonvert-serial
 TARGETS=$(IKONVERT)
 

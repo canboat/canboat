@@ -24,13 +24,6 @@ limitations under the License.
 #include "analyzer.h"
 #include "common.h"
 
-enum GeoFormats
-{
-  GEO_DD,
-  GEO_DM,
-  GEO_DMS
-};
-
 /* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
  * but I don't yet know which datafields reserve the reserved values.
  */
@@ -40,21 +33,22 @@ enum GeoFormats
 #define DATAFIELD_RESERVED2 (-3)
 #define DATAFIELD_RESERVED3 (-4)
 
-bool            showRaw         = false;
-bool            showData        = false;
-bool            showBytes       = false;
-bool            showJson        = false;
-bool            showJsonEmpty   = false;
-bool            showJsonValue   = false;
-bool            showSI          = false; // Output everything in strict SI units
-bool            doExpandLookups = false;
-char           *sep             = " ";
-char            closingBraces[8]; // } and ] chars to close sentence in JSON mode, otherwise empty string
-enum GeoFormats showGeo  = GEO_DD;
-int             onlyPgn  = 0;
-int             onlySrc  = -1;
-int             clockSrc = -1;
-size_t          heapSize = 0;
+bool       showRaw       = false;
+bool       showData      = false;
+bool       showJson      = false;
+bool       showJsonEmpty = false;
+bool       showJsonValue = false;
+bool       showSI        = true; // Output everything in strict SI units
+GeoFormats showGeo       = GEO_DD;
+
+bool  doV1 = false;
+char *sep  = " ";
+char  closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
+
+int    onlyPgn  = 0;
+int    onlySrc  = -1;
+int    clockSrc = -1;
+size_t heapSize = 0;
 
 int g_variableFieldRepeat[2]; // Actual number of repetitions
 int g_variableFieldIndex;
@@ -93,10 +87,11 @@ static void usage(char **argv, char **av)
   printf("     -explain-xml      Export the PGN database in XML format\n");
   printf("     -explain-ngt-xml  Export the Actisense PGN database in XML format\n");
   printf("     -explain-ik-xml   Export the iKonvert PGN database in XML format\n");
-  printf("     -expand-lookups   Explain lookups everywhere they are used (historic format)\n");
+  printf("     -v1               v1 format: Explain lookups everywhere they are used\n");
   printf("     -camel            Show fieldnames in normalCamelCase\n");
   printf("     -upper-camel      Show fieldnames in UpperCamelCase\n");
   printf("     -version          Print the version of the program and quit\n");
+  printf("     -d                Print logging from level ERROR, INFO and DEBUG\n");
   printf("\n");
   exit(1);
 }
@@ -111,9 +106,6 @@ int main(int argc, char **argv)
   bool   doExplainIK  = false;
 
   setProgName(argv[0]);
-
-  camelCase(false);
-  fillLookups();
 
   for (; ac > 1; ac--, av++)
   {
@@ -146,15 +138,23 @@ int main(int argc, char **argv)
     {
       doExplain = true;
     }
-    else if (strcasecmp(av[1], "-expand-lookups") == 0)
+    else if (strcasecmp(av[1], "-v1") == 0)
     {
-      doExpandLookups = true;
+      doV1 = true;
+    }
+    else if (strcasecmp(av[1], "-d") == 0)
+    {
+      setLogLevel(LOGLEVEL_DEBUG);
+      logDebug("Logging at debug level\n");
     }
     else
     {
-      usage(argv, av);
+      usage(argv, av + 1);
     }
   }
+
+  fillLookups();
+  fillFieldType(false);
 
   if (doExplain)
   {
@@ -170,22 +170,114 @@ int main(int argc, char **argv)
   exit(1);
 }
 
+/**
+ * Count the number of bits in all fields up to the first
+ * repeating field.
+ * Variable length fields are counted as 0.
+ */
+static unsigned int getMinimalPgnLength(Pgn *pgn, bool *isVariable)
+{
+  // Count all fields until the first repeating field
+  uint32_t     fieldCount = pgn->fieldCount;
+  unsigned int length     = 0;
+
+  *isVariable = false;
+  if (pgn->repeatingCount1 > 0)
+  {
+    fieldCount -= pgn->repeatingCount1 + pgn->repeatingCount2;
+    *isVariable = true;
+  }
+
+  logDebug("PGN %u fieldCount=%u (was %u)\n", pgn->pgn, fieldCount, pgn->fieldCount);
+
+  for (uint32_t i = 0; i < fieldCount; i++)
+  {
+    Field *f = &pgn->fieldList[i];
+
+    if (f->size == LEN_VARIABLE)
+    {
+      *isVariable = true;
+    }
+    else
+    {
+      length += f->size;
+    }
+  }
+
+  length /= 8; // Bits to bytes
+  logDebug("PGN %u len=%u\n", pgn->pgn, length);
+  return length;
+}
+
 static void explainPGN(Pgn pgn)
 {
-  int i;
+  int  i;
+  int  len;
+  bool isVariable;
 
-  printf("PGN: %d / %08o / %05X - %u - %s\n\n", pgn.pgn, pgn.pgn, pgn.pgn, pgn.size, pgn.description);
+  printf("PGN: %d / %08o / %05X - %s\n\n", pgn.pgn, pgn.pgn, pgn.pgn, pgn.description);
 
-  if (pgn.repeatingFields >= 100)
+  if (pgn.explanation != NULL)
   {
-    printf("     The last %u and %u fields repeat until the data is exhausted.\n\n",
-           pgn.repeatingFields % 100,
-           pgn.repeatingFields / 100);
+    printf("     %s\n", pgn.explanation);
   }
-  else if (pgn.repeatingFields)
+  if (pgn.url != NULL)
   {
-    printf("     The last %u fields repeat until the data is exhausted.\n\n", pgn.repeatingFields);
+    printf("     URL: %s\n", pgn.url);
   }
+  len = getMinimalPgnLength(&pgn, &isVariable);
+  if (isVariable)
+  {
+    printf("     The length is variable but at least %d bytes\n", len);
+  }
+  else
+  {
+    printf("     The length is %d bytes\n", len);
+  }
+
+  if (pgn.repeatingCount1 > 0)
+  {
+    if (pgn.repeatingField1 < 255)
+    {
+      printf("     Fields %u thru %u repeat n times, where n is the value contained in field %u.\n\n",
+             pgn.repeatingStart1,
+             pgn.repeatingStart1 + pgn.repeatingCount1,
+             pgn.repeatingField1);
+    }
+    else
+    {
+      printf("     Fields %u thru %u repeat until the data in the PGN is exhausted.\n\n",
+             pgn.repeatingStart1,
+             pgn.repeatingStart1 + pgn.repeatingCount1);
+    }
+  }
+
+  if (pgn.repeatingCount2 > 0)
+  {
+    if (pgn.repeatingField2 < 255)
+    {
+      printf("     Fields %u thru %u repeat n times, where n is the value contained in field %u.\n\n",
+             pgn.repeatingStart2,
+             pgn.repeatingStart2 + pgn.repeatingCount2,
+             pgn.repeatingField2);
+    }
+    else
+    {
+      printf("     Fields %u thru %u repeat until the data in the PGN is exhausted.\n\n",
+             pgn.repeatingStart2,
+             pgn.repeatingStart2 + pgn.repeatingCount2);
+    }
+  }
+
+  if (pgn.interval != 0 && pgn.interval < UINT16_MAX)
+  {
+    printf("     The PGN is normally transmitted every %u ms\n", pgn.interval);
+  }
+  if (pgn.interval == UINT16_MAX)
+  {
+    printf("     The PGN is transmitted on-demand or when data is available\n");
+  }
+
   for (i = 0; i < ARRAY_SIZE(pgn.fieldList) && pgn.fieldList[i].name; i++)
   {
     Field f = pgn.fieldList[i];
@@ -203,39 +295,16 @@ static void explainPGN(Pgn pgn)
       printf("                  Bits: %u\n", f.size);
     }
 
-    if (f.units && f.units[0] == '=')
+    if (f.unit && f.unit[0] == '=')
     {
-      printf("                  Match: %s\n", &f.units[1]);
+      printf("                  Match: %s\n", &f.unit[1]);
     }
-    else if (f.units && f.units[0] != ',')
+    else if (f.unit && f.unit[0] != ',')
     {
-      printf("                  Units: %s\n", f.units);
+      printf("                  Unit: %s\n", f.unit);
     }
 
-    if (f.resolution < 0.0)
-    {
-      Resolution t = types[-1 * (int) f.resolution - 1];
-      if (t.name)
-      {
-        printf("                  Type: %s\n", t.name);
-      }
-      if (t.resolution)
-      {
-        printf("                  Resolution: %s\n", t.resolution);
-      }
-      else if (f.resolution == RES_LATITUDE || f.resolution == RES_LONGITUDE)
-      {
-        if (f.size == BYTES(8))
-        {
-          printf("                  Resolution: %.16f\n", 1e-16);
-        }
-        else
-        {
-          printf("                  Resolution: %.7f\n", 1e-7);
-        }
-      }
-    }
-    else if (f.resolution != 1.0)
+    if (f.resolution != 0.0)
     {
       printf("                  Resolution: %g\n", f.resolution);
     }
@@ -247,17 +316,17 @@ static void explainPGN(Pgn pgn)
 
     if (f.lookupName)
     {
-      if (f.resolution == RES_LOOKUP)
+      if (strstr(f.fieldType, "BIT") == NULL)
       {
         printf("                  Enumeration: %s\n", f.lookupName);
       }
-      if (f.resolution == RES_BITFIELD)
+      else
       {
         printf("                  BitEnumeration: %s\n", f.lookupName);
       }
     }
 
-    if (!(f.units && f.units[0] == '=') && f.resolution == RES_LOOKUP && f.lookupValue)
+    if (!(f.unit && f.unit[0] == '=') && f.lookupValue != NULL && strcmp(f.fieldType, "LOOKUP") == 0)
     {
       uint32_t maxValue = (1 << f.size) - 1;
       printf("                  Range: 0..%u\n", maxValue);
@@ -272,7 +341,7 @@ static void explainPGN(Pgn pgn)
       }
     }
 
-    if (f.resolution == RES_BITFIELD && f.lookupValue)
+    if (f.lookupValue && strcmp(f.fieldType, "BITLOOKUP") == 0)
     {
       uint32_t maxValue = f.size;
 
@@ -340,19 +409,66 @@ static void printXML(int indent, const char *element, const char *p)
   }
 }
 
+static void printXMLUnsigned(int indent, const char *element, const unsigned int p)
+{
+  int i;
+
+  for (i = 0; i < indent; i++)
+  {
+    fputs(" ", stdout);
+  }
+  printf("<%s>%u</%s>\n", element, p, element);
+}
+
+static const char *getV1Type(Field *f)
+{
+  for (FieldType *ft = f->ft; ft != NULL; ft = ft->baseFieldTypePtr)
+  {
+    if (ft->v1Type != NULL)
+    {
+      if (strcmp(ft->v1Type, "Lat/Lon") == 0)
+      {
+        if (strstr(f->name, "ongitude") != NULL)
+        {
+          return "Longitude";
+        }
+        return "Latitude";
+      }
+      return ft->v1Type;
+    }
+  }
+  return NULL;
+}
+
 static void explainPGNXML(Pgn pgn)
 {
   int      i;
   unsigned bitOffset     = 0;
   bool     showBitOffset = true;
+  int      len;
+  bool     isVariable;
+
+  if (pgn.fallback && doV1)
+  {
+    return;
+  }
 
   printf("    <PGNInfo>\n"
          "      <PGN>%u</PGN>\n",
          pgn.pgn);
   printXML(6, "Id", pgn.camelDescription);
   printXML(6, "Description", pgn.description);
+  if (!doV1)
+  {
+    printXML(6, "Explanation", pgn.explanation);
+    printXML(6, "URL", pgn.url);
+  }
   printXML(6, "Type", (pgn.type == PACKET_ISO11783 ? "ISO" : (pgn.type == PACKET_FAST ? "Fast" : "Single")));
-  printf("      <Complete>%s</Complete>\n", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));
+  printXML(6, "Complete", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));
+  if (pgn.fallback)
+  {
+    printXML(6, "Fallback", "true");
+  }
 
   if (pgn.complete != PACKET_COMPLETE)
   {
@@ -366,9 +482,9 @@ static void explainPGNXML(Pgn pgn)
     {
       printXML(8, "MissingAttribute", "FieldLengths");
     }
-    if ((pgn.complete & PACKET_PRECISION_UNKNOWN) != 0)
+    if ((pgn.complete & PACKET_RESOLUTION_UNKNOWN) != 0)
     {
-      printXML(8, "MissingAttribute", "Precision");
+      printXML(8, "MissingAttribute", "Resolution");
     }
     if ((pgn.complete & PACKET_LOOKUPS_UNKNOWN) != 0)
     {
@@ -378,20 +494,62 @@ static void explainPGNXML(Pgn pgn)
     {
       printXML(8, "MissingAttribute", "SampleData");
     }
+    if ((pgn.complete & PACKET_INTERVAL_UNKNOWN) != 0)
+    {
+      printXML(8, "MissingAttribute", "Interval");
+    }
 
     printf("      </Missing>\n");
   }
 
-  printf("      <Length>%u</Length>\n", pgn.size);
-
-  if (pgn.repeatingFields >= 100)
+  len = getMinimalPgnLength(&pgn, &isVariable);
+  if (!doV1)
   {
-    printf("      <RepeatingFieldSet1>%u</RepeatingFieldSet1>\n", pgn.repeatingFields % 100);
-    printf("      <RepeatingFieldSet2>%u</RepeatingFieldSet2>\n", pgn.repeatingFields / 100);
+    printXMLUnsigned(6, "FieldCount", pgn.fieldCount);
+    if (isVariable)
+    {
+      printXMLUnsigned(6, "MinLength", len);
+    }
+    else
+    {
+      printXMLUnsigned(6, "Length", len);
+    }
   }
   else
   {
-    printf("      <RepeatingFields>%u</RepeatingFields>\n", pgn.repeatingFields);
+    printXMLUnsigned(6, "Length", len);
+  }
+
+  if (pgn.repeatingCount1 > 0)
+  {
+    printXMLUnsigned(6, "RepeatingFieldSet1Size", pgn.repeatingCount1);
+    printXMLUnsigned(6, "RepeatingFieldSet1StartField", pgn.repeatingStart1);
+    if (pgn.repeatingField1 < 255)
+    {
+      printXMLUnsigned(6, "RepeatingFieldSet1CountField", pgn.repeatingField1);
+    }
+  }
+
+  if (pgn.repeatingCount2 > 0)
+  {
+    printXMLUnsigned(6, "RepeatingFieldSet2Size", pgn.repeatingCount2);
+    printXMLUnsigned(6, "RepeatingFieldSet2StartField", pgn.repeatingStart2);
+    if (pgn.repeatingField2 < 255)
+    {
+      printXMLUnsigned(6, "RepeatingFieldSet2CountField", pgn.repeatingField2);
+    }
+  }
+
+  if (!doV1)
+  {
+    if (pgn.interval != 0 && pgn.interval < UINT16_MAX)
+    {
+      printXMLUnsigned(6, "TransmissionInterval", pgn.interval);
+    }
+    if (pgn.interval == UINT16_MAX)
+    {
+      printXML(6, "TransmissionIrregular", "true");
+    }
   }
 
   if (pgn.fieldList[0].name)
@@ -404,7 +562,7 @@ static void explainPGNXML(Pgn pgn)
 
       printf("        <Field>\n"
              "          <Order>%d</Order>\n",
-             i + 1);
+             f.order);
       printXML(10, "Id", f.camelName);
       printXML(10, "Name", f.name);
 
@@ -423,124 +581,122 @@ static void explainPGNXML(Pgn pgn)
       }
       else
       {
-        printf("          <BitLength>%u</BitLength>\n", f.size);
+        printXMLUnsigned(10, "BitLength", f.size);
       }
       if (showBitOffset)
       {
-        printf("          <BitOffset>%u</BitOffset>\n", bitOffset);
-        printf("          <BitStart>%u</BitStart>\n", bitOffset % 8);
+        printXMLUnsigned(10, "BitOffset", bitOffset);
+        printXMLUnsigned(10, "BitStart", bitOffset % 8);
       }
       bitOffset = bitOffset + f.size;
 
       if (f.proprietary)
       {
-        if (doExpandLookups)
+        printXML(10, "Condition", "PGNIsProprietary");
+      }
+      if (f.unit && f.unit[0] == '=')
+      {
+        printXML(10, "Match", &f.unit[1]);
+      }
+      else if (f.unit && f.unit[0] != ',')
+      {
+        if (doV1)
         {
-          printf("          <Match>proprietary pgn only</Match>\n");
+          printXML(10, "Units", f.unit);
         }
         else
         {
-          printf("          <Condition>PGNIsProprietary</Condition>\n");
+          printXML(10, "Unit", f.unit);
         }
-      }
-      if (f.units && f.units[0] == '=')
-      {
-        printf("          <Match>%s</Match>\n", &f.units[1]);
-      }
-      else if (f.units && f.units[0] != ',')
-      {
-        printf("          <Units>%s</Units>\n", f.units);
       }
 
-      if (f.resolution < 0.0)
+      if (doV1)
       {
-        Resolution t = types[-1 * (int) f.resolution - 1];
-        if (t.name)
+        const char *s = getV1Type(&f);
+
+        if (s != NULL)
         {
-          printf("          <Type>%s</Type>\n", t.name);
-        }
-        if (t.resolution)
-        {
-          printf("          <Resolution>%s</Resolution>\n", t.resolution);
-        }
-        else if (f.resolution == RES_LATITUDE || f.resolution == RES_LONGITUDE)
-        {
-          if (f.size == BYTES(8))
-          {
-            printf("          <Resolution>%.16f</Resolution>\n", 1e-16);
-          }
-          else
-          {
-            printf("          <Resolution>%.7f</Resolution>\n", 1e-7);
-          }
+          printXML(10, "Type", s);
         }
       }
-      else if (f.resolution != 1.0)
+
+      if (f.resolution != 1.0 && f.resolution != 0.0)
       {
         printf("          <Resolution>%g</Resolution>\n", f.resolution);
       }
-      printf("          <Signed>%s</Signed>\n", f.hasSign ? "true" : "false");
+      printXML(10, "Signed", f.hasSign ? "true" : "false");
       if (f.offset != 0)
       {
         printf("          <Offset>%d</Offset>\n", f.offset);
       }
 
-      if (!(f.units && f.units[0] == '=') && f.resolution == RES_LOOKUP && f.lookupValue)
+      if (f.fieldType != NULL)
       {
-        if (doExpandLookups)
+        printXML(10, "FieldType", f.fieldType);
+      }
+      else
+      {
+        logError("PGN %u field '%s' has no fieldtype\n", pgn.pgn, f.name);
+      }
+
+      if (f.lookupValue != 0)
+      {
+        if (strcmp(f.fieldType, "BITLOOKUP") == 0)
         {
-          uint32_t maxValue = (1 << f.size) - 1;
-
-          printf("          <EnumValues>\n");
-
-          for (uint32_t i = 0; i <= maxValue; i++)
+          if (doV1)
           {
-            const char *s = f.lookupValue[i];
+            uint32_t maxValue = f.size;
 
-            if (s)
+            printf("          <EnumBitValues>\n");
+
+            for (uint32_t i = 0; i < maxValue; i++)
             {
-              printf("            <EnumPair Value='%u' Name='", i);
-              printXML(0, 0, s);
-              printf("' />\n");
+              const char *s = f.lookupValue[i];
+
+              if (s)
+              {
+                printf("            <EnumPair Bit='%u' Name='", i);
+                printXML(0, 0, s);
+                printf("' />\n");
+              }
             }
+
+            printf("          </EnumBitValues>\n");
           }
-          printf("          </EnumValues>\n");
+          else
+          {
+            printXML(10, "LookupBitEnumeration", f.lookupName);
+          }
         }
-        else
+        else if (!(f.unit && f.unit[0] == '='))
         {
-          printf("          <LookupEnumeration>%s</LookupEnumeration>\n", f.lookupName);
+          if (doV1)
+          {
+            uint32_t maxValue = (1 << f.size) - 1;
+
+            printf("          <EnumValues>\n");
+
+            for (uint32_t i = 0; i <= maxValue; i++)
+            {
+              const char *s = f.lookupValue[i];
+
+              if (s)
+              {
+                printf("            <EnumPair Value='%u' Name='", i);
+                printXML(0, 0, s);
+                printf("' />\n");
+              }
+            }
+            printf("          </EnumValues>\n");
+          }
+          else
+          {
+            printXML(10, "LookupEnumeration", f.lookupName);
+          }
         }
       }
 
-      if (f.resolution == RES_BITFIELD && f.lookupValue)
-      {
-        if (doExpandLookups)
-        {
-          uint32_t maxValue = f.size;
-
-          printf("          <EnumBitValues>\n");
-
-          for (uint32_t i = 0; i < maxValue; i++)
-          {
-            const char *s = f.lookupValue[i];
-
-            if (s)
-            {
-              printf("            <EnumPair Bit='%u' Name='", i);
-              printXML(0, 0, s);
-              printf("' />\n");
-            }
-          }
-
-          printf("          </EnumBitValues>\n");
-        }
-        else
-        {
-          printf("          <LookupBitEnumeration>%s</LookupBitEnumeration>\n", f.lookupName);
-        }
-      }
-
-      if (f.resolution == RES_STRINGLZ || f.resolution == RES_STRINGLAU || f.resolution == RES_VARIABLE || f.proprietary)
+      if ((f.ft != NULL && f.ft->variableSize) || f.proprietary)
       {
         showBitOffset = false; // From here on there is no good bitoffset to be printed
       }
@@ -577,23 +733,132 @@ static void explain(void)
   }
 }
 
+static void explainMissingXML(void)
+{
+  printf("  <MissingEnumerations>\n");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
+         "Fields",
+         "The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
+         "FieldLengths",
+         "The length of one or more fields is likely incorrect");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
+         "Resolution",
+         "The resolution of one or more fields is likely incorrect");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
+         "Lookups",
+         "One or more of the lookup fields contain missing or incorrect values");
+  printf(
+      "    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "SampleData", "The PGN has not been seen in any logfiles yet");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "Interval", "The transmission interval is not known");
+
+  printf("  </MissingEnumerations>\n");
+}
+
+static void explainFieldTypesXML(void)
+{
+  printf("  <FieldTypes>\n");
+  for (size_t i = 0; i < fieldTypeCount; i++)
+  {
+    FieldType *ft = &fieldTypeList[i];
+
+    printf("    <FieldType Name=\"%s\">\n", ft->name);
+    if (ft->description != NULL)
+    {
+      printf("      <Description>%s</Description>\n", ft->description);
+    }
+    if (ft->encodingDescription != NULL)
+    {
+      printf("      <EncodingDescription>%s</EncodingDescription>\n", ft->encodingDescription);
+    }
+    if (ft->comment != NULL)
+    {
+      printf("      <Comment>%s</Comment>\n", ft->comment);
+    }
+    if (ft->url != NULL)
+    {
+      printf("      <URL>%s</URL>\n", ft->url);
+    }
+    if (ft->baseFieldType != NULL)
+    {
+      printf("      <BaseFieldType>%s</BaseFieldType>\n", ft->baseFieldType);
+    }
+    if (ft->size != 0)
+    {
+      printf("      <Bits>%u</Bits>\n", ft->size);
+    }
+    if (ft->offset != 0)
+    {
+      printf("      <Offset>%d</Offset>\n", ft->offset);
+    }
+    if (ft->variableSize != Null)
+    {
+      printf("      <VariableSize>true</VariableSize>\n");
+    }
+    if (ft->unit != NULL)
+    {
+      printf("      <Unit>%s</Unit>\n", ft->unit);
+    }
+    if (ft->hasSign != Null)
+    {
+      printf("      <Signed>%s</Signed>\n", ft->hasSign == True ? "true" : "false");
+    }
+    if (ft->resolution != 1.0 && ft->resolution != 0.0)
+    {
+      printf("      <Resolution>%.16g</Resolution>\n", ft->resolution);
+    }
+    if (ft->format != NULL)
+    {
+      printf("      <Format>%s</Format>\n", ft->format);
+    }
+    if (ft->rangeMinText != NULL)
+    {
+      printf("      <RangeMin>%s</RangeMin>\n", ft->rangeMinText);
+    }
+    else if (!isnan(ft->rangeMin))
+    {
+      printf("      <RangeMin>%.16g</RangeMin>\n", ft->rangeMin);
+    }
+    if (ft->rangeMaxText != NULL)
+    {
+      printf("      <RangeMax>%s</RangeMax>\n", ft->rangeMaxText);
+    }
+    else if (!isnan(ft->rangeMax))
+    {
+      printf("      <RangeMax>%.16g</RangeMax>\n", ft->rangeMax);
+    }
+    printf("    </FieldType>\n");
+  }
+  printf("  </FieldTypes>\n");
+}
+
 static void explainXML(bool normal, bool actisense, bool ikonvert)
 {
   int i;
 
   printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-         "<!--\n" COPYRIGHT "\n-->\n"
-         "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+         "<!--\n" COPYRIGHT "\n-->\n");
+  if (!doV1)
+  {
+    printf("<?xml-stylesheet type=\"text/xsl\" href=\"canboat.xsl\"?>\n");
+  }
+  printf("<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
          "Version=\"0.1\">\n"
          "  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
          "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
          "  <License>Apache License Version 2.0</License>\n"
          "  <Version>" VERSION "</Version>\n");
-
-  if (normal && !doExpandLookups)
+  if (!doV1)
   {
-    printf("  <LookupEnumerations>\n");
+    printf("  <Copyright>" COPYRIGHT "\n</Copyright>\n");
+  }
 
+  if (normal && !doV1)
+  {
+    explainFieldTypesXML();
+    explainMissingXML();
+
+    printf("  <LookupEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(lookupEnums); i++)
     {
       uint32_t maxValue = (1 << lookupEnums[i].size) - 1;
@@ -610,8 +875,8 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
       printf("    </LookupEnumeration>\n");
     }
     printf("  </LookupEnumerations>\n");
-    printf("  <LookupBitEnumerations>\n");
 
+    printf("  <LookupBitEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(bitfieldEnums); i++)
     {
       uint32_t maxValue = bitfieldEnums[i].size - 1;
@@ -627,12 +892,11 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
       }
       printf("    </LookupBitEnumeration>\n");
     }
-
     printf("  </LookupBitEnumerations>\n");
   }
 
   printf("  <PGNs>\n");
-  for (i = 1; i < ARRAY_SIZE(pgnList); i++)
+  for (i = 0; i < ARRAY_SIZE(pgnList); i++)
   {
     int pgn = pgnList[i].pgn;
     if ((normal && pgn < ACTISENSE_BEM) || (actisense && pgn >= ACTISENSE_BEM && pgn < IKONVERT_BEM)
@@ -644,4 +908,9 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
 
   printf("  </PGNs>\n"
          "</PGNDefinitions>\n");
+}
+
+extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+{
+  return false;
 }

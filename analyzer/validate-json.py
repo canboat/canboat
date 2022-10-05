@@ -16,20 +16,10 @@
 # limitations under the License.
 # 
 
-PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-BUILDDIR?=rel/$(PLATFORM)
-TARGETDIR=../$(BUILDDIR)
-CANDUMP2ANALYZER=$(TARGETDIR)/candump2analyzer
-TARGETS=$(CANDUMP2ANALYZER)
-LDLIBS+=-lm
+import sys;
+import json;
 
-CFLAGS= -Wall -O2
-
-all: $(TARGETS)
-
-$(CANDUMP2ANALYZER): candump2analyzer.c ../common/common.c ../common/common.h Makefile
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(CANDUMP2ANALYZER) -I../common candump2analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
-
-clean:
-	-rm -f $(TARGETS) *.elf *.gdb
-
+file = open(sys.argv[1])
+json.loads(file.read())
+file.close()
+print("JSON in", sys.argv[1], "seems valid.")

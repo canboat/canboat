@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v3.1.0
+CANboat version v4.0.0-alpha
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,16 +25,18 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>3.1.0</Version>
+  <Version>4.0.0-alpha</Version>
   <PGNs>
     <PGNInfo>
       <PGN>262400</PGN>
       <Id>ikonvertNetworkStatus</Id>
       <Description>iKonvert: Network status</Description>
-      <Type>Fast</Type>
-      <Complete>true</Complete>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
       <Length>15</Length>
-      <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -44,8 +46,8 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
@@ -55,8 +57,8 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <FieldType>UINT32</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -66,20 +68,20 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>uptime</Id>
           <Name>Uptime</Name>
-          <Description>s</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Units>s</Units>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
+          <FieldType>TIME</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -89,8 +91,8 @@ limitations under the License.
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <FieldType>UINT8</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -100,8 +102,8 @@ limitations under the License.
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
-          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <FieldType>UINT32</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

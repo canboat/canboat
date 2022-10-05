@@ -1,3 +1,5 @@
+
+
 #
 # (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 #  
@@ -16,20 +18,24 @@
 # limitations under the License.
 # 
 
-PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-BUILDDIR?=rel/$(PLATFORM)
-TARGETDIR=../$(BUILDDIR)
-CANDUMP2ANALYZER=$(TARGETDIR)/candump2analyzer
-TARGETS=$(CANDUMP2ANALYZER)
-LDLIBS+=-lm
+import sys
+import re
+import subprocess
 
-CFLAGS= -Wall -O2
+analyzer = sys.argv[1]
+filename = sys.argv[2]
 
-all: $(TARGETS)
+version = subprocess.check_output([analyzer, "-version"], encoding='utf8')
 
-$(CANDUMP2ANALYZER): candump2analyzer.c ../common/common.c ../common/common.h Makefile
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(CANDUMP2ANALYZER) -I../common candump2analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+version = str(version).split('\n')[0]
 
-clean:
-	-rm -f $(TARGETS) *.elf *.gdb
+print("Replacing version in",filename,"with",version)
+
+with open(filename,'r') as file:
+    filedata = file.read()
+
+filedata = re.sub('"version": "[^"]*"', '"version": "' + version + '"', filedata)
+
+with open(filename,'w') as file:
+    file.write(filedata)
 

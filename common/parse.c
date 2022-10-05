@@ -39,7 +39,6 @@ static char *findOccurrence(char *msg, char c, int count)
       return 0;
     }
   }
-  logDebug("Found occurrence #%d of '%c' in msg '%s' at '%s'\n", count, c, msg, p);
   return p;
 }
 
@@ -94,6 +93,12 @@ int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
     if (!showJson)
       fprintf(stdout, "%s", msg);
     return 2;
+  }
+
+  if (len > 9)
+  {
+    // This is not PLAIN format but FAST format */
+    return -1;
   }
 
   if (r <= 5 + 8)

@@ -18,7 +18,8 @@
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 OS=$(shell uname)
-TARGETDIR=../rel/$(PLATFORM)
+BUILDDIR?=rel/$(PLATFORM)
+TARGETDIR=../$(BUILDDIR)
 SOCKETCAN_WRITER=$(TARGETDIR)/socketcan-writer
 
 ifeq ($(OS),Linux)

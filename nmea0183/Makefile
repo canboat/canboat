@@ -17,8 +17,9 @@
 # 
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-TARGETDIR=../rel/$(PLATFORM)
-TARGET1=../rel/$(PLATFORM)/nmea0183-serial
+BUILDDIR?=rel/$(PLATFORM)
+TARGETDIR=../$(BUILDDIR)
+TARGET1=$(TARGETDIR)/nmea0183-serial
 TARGETLIST=$(TARGET1)
 
 CFLAGS= -Wall -O2
