@@ -64,6 +64,7 @@ Issues resolved:
 - #305: Print reserved fields only when they are not all ones.
 - #304: Print spare fields only when they are not all zeroes.
 - #303: Allow lookups to use the values for "Error" and "Unknown".
+- #302: Field type has changed for PGNs[].Fields[].Match in pgn JSON/XML.
 - #298: Lookup values should say "Temperature", not just "Temp".
 - #293: Unify field names for "RAIM", "AIS RAIM Flag" and "AIS RAIM flag" as "RAIM".
 - #292: Reactive power unit is "VAR", not "var".

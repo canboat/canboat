@@ -592,14 +592,7 @@ static void explainPGNXML(Pgn pgn)
 
       if (f.proprietary)
       {
-        if (doV1)
-        {
-          printXML(10, "Match", "proprietary pgn only");
-        }
-        else
-        {
-          printXML(10, "Condition", "PGNIsProprietary");
-        }
+        printXML(10, "Condition", "PGNIsProprietary");
       }
       if (f.unit && f.unit[0] == '=')
       {

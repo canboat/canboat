@@ -5759,7 +5759,7 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
           <FieldType>MANUFACTURER</FieldType>
@@ -5949,7 +5949,7 @@ limitations under the License.
           <Name>Reserved</Name>
           <Description>Only in PGN when Commanded PGN is proprietary</Description>
           <BitLength>2</BitLength>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Binary data</Type>
           <Signed>false</Signed>
           <FieldType>RESERVED</FieldType>
@@ -5960,7 +5960,7 @@ limitations under the License.
           <Name>Industry Code</Name>
           <Description>Only in PGN when Commanded PGN is proprietary</Description>
           <BitLength>3</BitLength>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <FieldType>INDUSTRY</FieldType>
@@ -6075,7 +6075,7 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
           <FieldType>MANUFACTURER</FieldType>
@@ -6265,7 +6265,7 @@ limitations under the License.
           <Name>Reserved</Name>
           <Description>Only in PGN when Commanded PGN is proprietary</Description>
           <BitLength>2</BitLength>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Binary data</Type>
           <Signed>false</Signed>
           <FieldType>RESERVED</FieldType>
@@ -6276,7 +6276,7 @@ limitations under the License.
           <Name>Industry Code</Name>
           <Description>Only in PGN when Commanded PGN is proprietary</Description>
           <BitLength>3</BitLength>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <FieldType>INDUSTRY</FieldType>
@@ -6399,7 +6399,7 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
           <FieldType>MANUFACTURER</FieldType>
@@ -6589,7 +6589,7 @@ limitations under the License.
           <Name>Reserved</Name>
           <Description>Only in PGN when Commanded PGN is proprietary</Description>
           <BitLength>2</BitLength>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Binary data</Type>
           <Signed>false</Signed>
           <FieldType>RESERVED</FieldType>
@@ -6600,7 +6600,7 @@ limitations under the License.
           <Name>Industry Code</Name>
           <Description>Only in PGN when Commanded PGN is proprietary</Description>
           <BitLength>3</BitLength>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <FieldType>INDUSTRY</FieldType>
@@ -6723,7 +6723,7 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Manufacturer code</Type>
           <Signed>false</Signed>
           <FieldType>MANUFACTURER</FieldType>
@@ -6913,7 +6913,7 @@ limitations under the License.
           <Name>Reserved</Name>
           <Description>Only in PGN when Commanded PGN is proprietary</Description>
           <BitLength>2</BitLength>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Binary data</Type>
           <Signed>false</Signed>
           <FieldType>RESERVED</FieldType>
@@ -6924,7 +6924,7 @@ limitations under the License.
           <Name>Industry Code</Name>
           <Description>Only in PGN when Commanded PGN is proprietary</Description>
           <BitLength>3</BitLength>
-          <Match>proprietary pgn only</Match>
+          <Condition>PGNIsProprietary</Condition>
           <Type>Lookup table</Type>
           <Signed>false</Signed>
           <FieldType>INDUSTRY</FieldType>
