@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0]
+
+### Changed
+
+- XML v2 (`canboat.xml` + `canboat.json`) changes:
+  - Added LOOKUP and BITLOOKUP as base field types in the FieldList. This means they
+    are easily recognised (they are no longer a NUMBER).
+  - Emit `Resolution` even when it is 1. Only stringy types now do not have a resolution.
+  - Emit `LookupEnumeration` even for fields that have a `Match`.
+- XML v2 `canboat.xsl` changes:
+  - Show offset for number fields and add textual explanation.
+
+### Issues resolved:
+
+- #283: Further improvements to v2 JSON/XML
+
+
 ## [4.1.0]
 
 ### Changed

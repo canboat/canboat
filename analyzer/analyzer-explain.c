@@ -611,7 +611,7 @@ static void explainPGNXML(Pgn pgn)
       {
         printXML(10, "Match", &f.unit[1]);
       }
-      else if (f.unit && f.unit[0] != ',')
+      else
       {
         if (doV1)
         {
@@ -633,7 +633,7 @@ static void explainPGNXML(Pgn pgn)
         }
       }
 
-      if (f.resolution != 1.0 && f.resolution != 0.0)
+      if (f.resolution != 0.0)
       {
         printf("          <Resolution>%g</Resolution>\n", f.resolution);
       }
@@ -670,20 +670,16 @@ static void explainPGNXML(Pgn pgn)
       }
       else if (!doV1 && f.lookupValue != 0 && !(f.unit && f.unit[0] == '='))
       {
-        if (strcmp(f.fieldType, "BITLOOKUP") == 0)
-        {
-          printf("          <RangeMax>%.16g</RangeMax>\n", (double) f.size);
-        }
-        else
-        {
-          printf("          <RangeMax>%.16g</RangeMax>\n", (double) ((1 << f.size) - 1));
-        }
+        printf("          <RangeMax>%.16g</RangeMax>\n", (double) ((1 << f.size) - 1));
       }
 
-      printXML(10, "FieldType", getV2Type(&f));
-      if (ft->physical != NULL)
+      if (!doV1)
       {
-        printXML(10, "PhysicalQuantity", ft->physical->name);
+        printXML(10, "FieldType", getV2Type(&f));
+        if (ft->physical != NULL)
+        {
+          printXML(10, "PhysicalQuantity", ft->physical->name);
+        }
       }
 
       if (f.lookupValue != 0)
@@ -715,9 +711,9 @@ static void explainPGNXML(Pgn pgn)
             printXML(10, "LookupBitEnumeration", f.lookupName);
           }
         }
-        else if (!(f.unit && f.unit[0] == '='))
+        else
         {
-          if (doV1)
+          if (doV1 && !(f.unit && f.unit[0] == '='))
           {
             uint32_t maxValue = (1 << f.size) - 1;
 
@@ -736,7 +732,7 @@ static void explainPGNXML(Pgn pgn)
             }
             printf("          </EnumValues>\n");
           }
-          else
+          else if (!doV1)
           {
             printXML(10, "LookupEnumeration", f.lookupName);
           }

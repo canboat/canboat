@@ -1,4 +1,4 @@
-VERSION "Canboat export 2022-10-06T00:58:31.336611"
+VERSION "Canboat export 2022-10-06T10:50:17.829195"
 
 
 NS_ : 
@@ -449,7 +449,7 @@ BO_ 2582715134 PGN_127258_magneticVariation: 8 Vector__XXX
 
 BO_ 2582774014 PGN_127488_engineParametersRapid: 8 Vector__XXX
  SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ tiltTrim : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ tiltTrim : 40|8@1- (1,0) [0|0] "" Vector__XXX
  SG_ boostPressure : 24|16@1+ (100,0) [0|0] "Pa" Vector__XXX
  SG_ speed : 8|16@1+ (0.25,0) [0|0] "rpm" Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -605,19 +605,19 @@ BO_ 2582780670 PGN_127514_agsStatus: 8 Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582839550 PGN_127744_acPowerCurrentPhaseA: 8 Vector__XXX
- SG_ power : 32|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ power : 32|32@1- (1,0) [0|0] "W" Vector__XXX
  SG_ acRmsCurrent : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582839806 PGN_127745_acPowerCurrentPhaseB: 8 Vector__XXX
- SG_ power : 32|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ power : 32|32@1- (1,0) [0|0] "W" Vector__XXX
  SG_ acRmsCurrent : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582840062 PGN_127746_acPowerCurrentPhaseC: 8 Vector__XXX
- SG_ power : 32|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ power : 32|32@1- (1,0) [0|0] "W" Vector__XXX
  SG_ acRmsCurrent : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -738,18 +738,18 @@ BO_ 2583167742 PGN_129026_cogSogRapidUpdate: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583167998 PGN_129027_positionDeltaRapidUpd: 8 Vector__XXX
- SG_ longitudeDelta : 40|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ latitudeDelta : 24|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ longitudeDelta : 40|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ latitudeDelta : 24|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ timeDelta : 8|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583168254 PGN_129028_altitudeDeltaRapidUpd: 8 Vector__XXX
- SG_ altitudeDelta : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ altitudeDelta : 48|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ cog : 32|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ reserved : 28|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ direction : 26|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ gnssQuality : 24|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ timeDelta : 8|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ timeDelta : 8|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583168510 PGN_129029_gnssPositionData: 8 Vector__XXX
@@ -1099,8 +1099,8 @@ BO_ 2583564030 PGN_130574_supportedZoneData: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583564542 PGN_130576_smallCraftStatus: 8 Vector__XXX
- SG_ starboardTrimTab : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ portTrimTab : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ starboardTrimTab : 8|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ portTrimTab : 0|8@1- (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583564798 PGN_130577_directionData: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX

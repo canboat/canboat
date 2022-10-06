@@ -436,9 +436,9 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "Each lookup has a LookupEnumeration defining what the possible values mean",
      .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
                 "occurs that has no corresponding textual explanation.",
+     .hasSign = False,
      .pf      = fieldPrintLookup,
-     .baseFieldType = "UNSIGNED_INTEGER",
-     .v1Type        = "Lookup table"},
+     .v1Type  = "Lookup table"},
 
     {.name                = "BITLOOKUP",
      .description         = "Number value where each bit value encodes for a distinct meaning",
@@ -446,8 +446,7 @@ FieldType fieldTypeList[] = {
                             "any combination of bits set.",
      .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
                 "occurs that has no corresponding textual explanation.",
-     .pf      = fieldPrintBitLookup,
-     .baseFieldType = "UNSIGNED_INTEGER"},
+     .pf      = fieldPrintBitLookup},
 
     {.name          = "MANUFACTURER",
      .description   = "Manufacturer",

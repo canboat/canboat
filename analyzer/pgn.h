@@ -76,26 +76,27 @@ typedef struct
     0                 \
   }
 
-#define LOOKUP_FIELD(nam, len, typ)                                                                                 \
-  {                                                                                                                 \
-    .name = nam, .size = len, .resolution = 1, .lookupValue = lookupValue##typ, .lookupLength = &lookupLength##typ, \
-    .lookupName = xstr(typ), .fieldType = "LOOKUP"                                                                  \
+#define LOOKUP_FIELD(nam, len, typ)                                                               \
+  {                                                                                               \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookupValue = lookupValue##typ, \
+    .lookupLength = &lookupLength##typ, .lookupName = xstr(typ), .fieldType = "LOOKUP"            \
   }
 
-#define LOOKUP_FIELD_DESC(nam, len, typ, desc)                                                                      \
-  {                                                                                                                 \
-    .name = nam, .size = len, .resolution = 1, .lookupValue = lookupValue##typ, .lookupLength = &lookupLength##typ, \
-    .lookupName = xstr(typ), .description = desc, .fieldType = "LOOKUP"                                             \
+#define LOOKUP_FIELD_DESC(nam, len, typ, desc)                                                              \
+  {                                                                                                         \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookupValue = lookupValue##typ,           \
+    .lookupLength = &lookupLength##typ, .lookupName = xstr(typ), .description = desc, .fieldType = "LOOKUP" \
   }
 
-#define LOOKUP_BITFIELD(nam, len, typ)                                                                                            \
-  {                                                                                                                               \
-    .name = nam, .size = len, .resolution = 1, .lookupValue = lookupValue##typ, .lookupName = xstr(typ), .fieldType = "BITLOOKUP" \
+#define LOOKUP_BITFIELD(nam, len, typ)                                                                                     \
+  {                                                                                                                        \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookupValue = lookupValue##typ, .lookupName = xstr(typ), \
+    .fieldType = "BITLOOKUP"                                                                                               \
   }
 
-#define UNKNOWN_LOOKUP_FIELD(nam, len)                               \
-  {                                                                  \
-    .name = nam, .size = len, .resolution = 1, .fieldType = "LOOKUP" \
+#define UNKNOWN_LOOKUP_FIELD(nam, len)                                                 \
+  {                                                                                    \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .fieldType = "LOOKUP" \
   }
 
 #define SPARE_FIELD(len)                                                  \

@@ -186,10 +186,10 @@
                   </xsl:if>
                   <xsl:value-of select="Order"/>
                   <xsl:if test="($OrderPlus1 &gt; ../../RepeatingFieldSet1StartField) and (Order &lt; $FirstFieldAfterSet1)">
-                    <br/>Set 1
+                    <div>Set 1</div>
                   </xsl:if>
                   <xsl:if test="($OrderPlus1 &gt; ../../RepeatingFieldSet2StartField) and (Order &lt; $FirstFieldAfterSet2)">
-                    <br/>Set 2
+                    <div>Set 2</div>
                   </xsl:if>
                 </td>
                 <td> <xsl:value-of select="Name"/> </td>
@@ -261,6 +261,12 @@
                         </xsl:attribute>
                         <xsl:value-of select="FieldType"/>
                       </a>
+                      <xsl:if test="Offset">
+                        <div>
+                          stored with <a href="#offset">offset</a>
+                          <xsl:text> </xsl:text> <xsl:value-of select="Offset"/>
+                        </div>
+                      </xsl:if>
                     </xsl:otherwise>
                   </xsl:choose>
                 </td>
@@ -479,6 +485,7 @@
           <a href="#field-types">Field Types</a>
           <a href="#lookup-enumerations">Lookup enumerations</a>
           <a href="#bitfield-enumerations">Bitfield enumerations</a>
+          <a href="#notes">Notes</a>
         </div>
 
         <div id="sidenav-closed" class="sidenav">
@@ -666,6 +673,21 @@
           <xsl:call-template name="fieldtypes-list"/>
           <xsl:call-template name="lookup-list"/>
           <xsl:call-template name="lookupbit-list"/>
+
+          <h2 id='notes'>Notes</h2>
+          <h3 id='offset'>Excess-K offset</h3>
+          <p>
+            Some fields are not stored as a straight signed two's complement binary number,
+            but as an binary number with an offset.
+          </p>
+          <p>
+            So in effect the value <i>is</i> signed, but it is stored as an unsigned number where
+            the unsigned number n should be interpreted as (n + K). As the offset
+            in these definitions is negative, it results in a value that can be negative.
+          </p>
+          <p>
+            For more information see: <a href="https://en.wikipedia.org/wiki/Offset_binary">https://en.wikipedia.org/wiki/Offset_binary</a>
+          </p>
 
         </div>
 
