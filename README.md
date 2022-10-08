@@ -23,6 +23,10 @@ Short build instructions are also found in [BUILDING.md].
 
 See [Changelog](CHANGELOG.md).
 
+## Related Projects
+
+- [canboatjs](https://github.com/canboat/canboatjs) Pure JavaScript NMEA 2000 decoder and encoder
+
 ---
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
