@@ -37,6 +37,7 @@ limitations under the License.
 #define TX_SHOWLISTS_MSG IKONVERT_ASCII_PREFIX "SHOW_LISTS"           // Show RX and TX lists
 #define TX_SETUP_MSG IKONVERT_ASCII_PREFIX "N2NET_SETUP,%u,%u,%u,%u,," // Instance, Address, Baud, Checksum (A/V/nil)
 #define TX_LIMIT_OFF IKONVERT_ASCII_PREFIX "TX_LIMIT,OFF"              // No TX limit, use at own risk
+#define TX_GETNAMES_MSG IKONVERT_ASCII_PREFIX "GET_N2NET_NAME"         // Show all N2K devices
 #define RX_NAK_MSG "NAK,"                                              // Error # followed by string
 #define RX_ACK_MSG "ACK,"                                              // Acknowledgement of command
 #define RX_TEXT_MSG "TEXT,"                                            // Status text

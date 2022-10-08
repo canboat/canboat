@@ -364,8 +364,6 @@ int main(int argc, char **argv)
     {
       uint64_t now = getNow();
 
-      logInfo("lastNow=%llu now=%llu to=%llu\n", lastNow, now, now - 1000 * timeout);
-
       if (lastNow == 0)
       {
         lastNow = now;
@@ -404,6 +402,12 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
       {
         sbAppendEncodeBase64(out, msg.data, msg.len, 0);
       }
+      sbAppendFormat(out, "\r\n");
+      logDebug("SendBuffer [%s]\n", sbGet(out));
+    }
+    else if (!readonly && msg.data > sizeof("$PDGY") && memcmp(msg.data, "$PDGY", sizeof("$PDGY")) == 0)
+    {
+      sbAppendData(out, msg.data, msg.len);
       sbAppendFormat(out, "\r\n");
       logDebug("SendBuffer [%s]\n", sbGet(out));
     }
