@@ -64,6 +64,8 @@ typedef struct PhysicalQuantity
   const char *url; // Website explaining this
 } PhysicalQuantity;
 
+#ifdef FIELDTYPE_GLOBALS
+
 static const PhysicalQuantity ELECTRICAL_CURRENT = {
     .name         = "ELECTRICAL_CURRENT",
     .description  = "Electrical current",
@@ -251,7 +253,7 @@ static const PhysicalQuantity SIGNAL_TO_NOISE_RATIO = {.name         = "SIGNAL_T
                                                        .abbreviation = "dB",
                                                        .unit         = "decibel"};
 
-static const PhysicalQuantity *PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
+const PhysicalQuantity * const PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
                                                          &ELECTRICAL_CHARGE,
                                                          &ELECTRICAL_ENERGY,
                                                          &ELECTRICAL_POWER,
@@ -275,7 +277,14 @@ static const PhysicalQuantity *PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
                                                          &PRESSURE,
                                                          &PRESSURE_RATE,
                                                          &CONCENTRATION,
-                                                         &SIGNAL_TO_NOISE_RATIO};
+                                                         &SIGNAL_TO_NOISE_RATIO,
+                                                         NULL};
+
+#else /* FIELDTYPE_GLOBALS */
+
+extern const PhysicalQuantity * const PhysicalQuantityList[];
+
+#endif
 
 /**
  * The FieldType structure encapsulates the different datatypes in a PGN field.

@@ -801,7 +801,7 @@ static void explainMissingXML(void)
 static void explainPhysicalQuantityXML(void)
 {
   printf("  <PhysicalQuantities>\n");
-  for (size_t i = 0; i < ARRAY_SIZE(PhysicalQuantityList); i++)
+  for (size_t i = 0; PhysicalQuantityList[i] != NULL; i++)
   {
     const PhysicalQuantity *pq = PhysicalQuantityList[i];
 
