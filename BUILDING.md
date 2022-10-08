@@ -53,7 +53,7 @@ It should still work with cygwin, but this is getting old and I suggest using WS
 
 The first line is for use with Debian/Ubuntu/PopOS! etc.
 
-    sudo apt install build-essential git xsltproc libxml2-utils python3 python3-setuptools
+    sudo apt install build-essential git xsltproc libxml2-utils python3 python3-setuptools python3-venv
     cd canboat
     make generated
 
