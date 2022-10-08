@@ -17,7 +17,8 @@
 # 
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-TARGETDIR=../rel/$(PLATFORM)
+BUILDDIR?=rel/$(PLATFORM)
+TARGETDIR=../$(BUILDDIR)
 IKONVERT=$(TARGETDIR)/ikonvert-serial
 TARGETS=$(IKONVERT)
 
@@ -25,8 +26,8 @@ CFLAGS= -Wall -O2
 
 all: $(TARGETS)
 
-$(IKONVERT): ikonvert-serial.c ikonvert.h ../common/common.c ../common/b64.c ../common/common.h
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(IKONVERT) -I../common ikonvert-serial.c ../common/common.c ../common/b64.c $(LDLIBS$(LDLIBS-$(@)))
+$(IKONVERT): ikonvert-serial.c ikonvert.h ../common/common.c ../common/parse.c ../common/b64.c ../common/common.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(IKONVERT) -I../common ikonvert-serial.c ../common/common.c ../common/parse.c ../common/b64.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

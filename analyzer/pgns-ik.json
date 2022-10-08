@@ -2,17 +2,18 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"2.0.0",
+    "Version":"4.2.0",
     "PGNs": [
     
       {
         "PGN":262400,
         "Id":"ikonvertNetworkStatus",
         "Description":"iKonvert: Network status",
-        "Type":"Fast",
-        "Complete":true,
+        "Type":"Single",
+        "Complete":false,
+        "Missing":[
+          "Interval"],
         "Length":15,
-        "RepeatingFields":0,
         "Fields":[
           {
             "Order":1,
@@ -23,7 +24,9 @@
             "BitStart":0,
             "Type":"Integer",
             "Resolution":1,
-            "Signed":false},
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253},
           {
             "Order":2,
             "Id":"errors",
@@ -33,7 +36,9 @@
             "BitStart":0,
             "Type":"Integer",
             "Resolution":1,
-            "Signed":false},
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4294967293},
           {
             "Order":3,
             "Id":"deviceCount",
@@ -43,17 +48,18 @@
             "BitStart":0,
             "Type":"Integer",
             "Resolution":1,
-            "Signed":false},
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253},
           {
             "Order":4,
             "Id":"uptime",
             "Name":"Uptime",
-            "Description":"s",
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
-            "Type":"Integer",
-            "Resolution":1,
+            "Units":"s",
+            "Resolution":0.0001,
             "Signed":false},
           {
             "Order":5,
@@ -64,7 +70,9 @@
             "BitStart":0,
             "Type":"Integer",
             "Resolution":1,
-            "Signed":false},
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253},
           {
             "Order":6,
             "Id":"rejectedTxRequests",
@@ -74,7 +82,9 @@
             "BitStart":0,
             "Type":"Integer",
             "Resolution":1,
-            "Signed":false}]}
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4294967293}]}
     ]
-    }
+}
     

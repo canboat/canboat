@@ -17,7 +17,8 @@
 #
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-TARGETDIR=../rel/$(PLATFORM)
+BUILDDIR?=rel/$(PLATFORM)
+TARGETDIR=../$(BUILDDIR)
 N2KD=$(TARGETDIR)/n2kd
 N2KD_MONITOR=$(TARGETDIR)/n2kd_monitor
 TARGETS=$(N2KD) $(N2KD_MONITOR)

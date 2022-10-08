@@ -341,9 +341,52 @@
     <xsl:apply-templates select="node()"/>
   </xsl:template>
 
+  <xsl:template match="LookupEnumerations">
+    <xsl:call-template name="indent"/>"LookupEnumerations":[<xsl:apply-templates/>],
+  </xsl:template>
+
+  <xsl:template match="LookupBitEnumerations">
+    <xsl:call-template name="indent"/>"LookupBitEnumerations":[<xsl:apply-templates/>],
+  </xsl:template>
+
+  <xsl:template match="LookupEnumeration">
+    <xsl:call-template name="indent"/>{
+        "name": "<xsl:value-of select="@Name"/>",
+        "maxValue": <xsl:value-of select="@MaxValue"/>,
+        "EnumValues": [<xsl:apply-templates/>
+        ]
+      }<xsl:if test="not(position() = last())">,</xsl:if>
+  </xsl:template>
+
+  <xsl:template match="LookupBitEnumeration">
+    <xsl:call-template name="indent"/>{
+        "name": "<xsl:value-of select="@Name"/>",
+        "maxValue": <xsl:value-of select="@MaxValue"/>,
+        "EnumBitValues":[<xsl:apply-templates/>
+        ]
+      }<xsl:if test="not(position() = last())">,</xsl:if>
+  </xsl:template>
+
+  <xsl:template match="LookupEnumeration/EnumPair">
+    <xsl:call-template name="indent"/>{"Name": "<xsl:value-of select="@Name"/>", "Value": <xsl:value-of select="@Value"/>}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="LookupBitEnumeration/BitPair">
+    <xsl:call-template name="indent"/>{"Name": "<xsl:value-of select="@Name"/>", "Bit": <xsl:value-of select="@Bit"/>}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="Field/LookupEnumeration">
+    <xsl:call-template name="indent"/>"LookupEnumeration": "<xsl:value-of select="."/>"<xsl:text/>
+    <xsl:if test="not(following-sibling::*)">}</xsl:if>
+  </xsl:template>
+
+  <xsl:template match="Field/LookupBitEnumeration">
+    <xsl:call-template name="indent"/>"LookupBitEnumeration": "<xsl:value-of select="."/>"<xsl:text/>
+    <xsl:if test="not(following-sibling::*)">}</xsl:if>
+  </xsl:template>
+
   <xsl:template match="EnumValues">
-    <xsl:call-template name="indent"/>"EnumValues":[<xsl:apply-templates/>]<xsl:if
-    test="not(following-sibling::*)">}</xsl:if>
+    <xsl:call-template name="indent"/>"EnumValues":[<xsl:apply-templates/>]<xsl:if test="not(following-sibling::*)">}</xsl:if>
   </xsl:template>
 
   <xsl:template match="EnumBitValues">
@@ -351,7 +394,7 @@
   </xsl:template>
 
   <xsl:template match="EnumValues/EnumPair">
-    <xsl:call-template name="indent"/>{"name":"<xsl:value-of select="@Name"/>","value":"<xsl:value-of select="@Value"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+    <xsl:call-template name="indent"/>{"name": "<xsl:value-of select="@Name"/>", "value": <xsl:value-of select="@Value"/>}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="EnumBitValues/EnumPair">
@@ -369,7 +412,7 @@
     "PGNs": [
     <xsl:apply-templates/>
     ]
-    }
+}
     </xsl:template>
 
 </xsl:stylesheet>

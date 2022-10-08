@@ -31,7 +31,7 @@ limitations under the License.
 
 #define GLOBALS
 #include "common.h"
-#include "pgn.h"
+#include "parse.h"
 
 static int    openCanDevice(char *device, int *socket);
 static void   writeRawPGNToCanSocket(RawMessage *msg, int socket);
@@ -41,9 +41,9 @@ unsigned long time_diff(struct timeval x, struct timeval y, char *timestamp);
 
 int main(int argc, char **argv)
 {
-  FILE *         file = stdin;
+  FILE          *file = stdin;
   char           msg[2000];
-  char *         milliSecond;
+  char          *milliSecond;
   int            socket;
   struct timeval frameTime;
   struct timeval prevFrameTime;

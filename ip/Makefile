@@ -17,8 +17,9 @@
 # 
 
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-TARGETDIR=../rel/$(PLATFORM)
-TARGET1=../rel/$(PLATFORM)/iptee
+BUILDDIR?=rel/$(PLATFORM)
+TARGETDIR=../$(BUILDDIR)
+TARGET1=$(TARGETDIR)/iptee
 TARGETLIST=$(TARGET1)
 
 CFLAGS= -Wall -O2

@@ -18,7 +18,8 @@ limitations under the License.
 
 */
 
-#ifndef CANBOAT_COMMON
+#ifndef COMMON_H_INCLUDED
+#define COMMON_H_INCLUDED
 
 #include "license.h"
 
@@ -68,6 +69,7 @@ typedef int SOCKET;
 #endif
 
 #define STRSIZE(x) (sizeof(x) - 1)
+#define STRNULL(x) ((x != NULL) ? (x) : "NULL")
 
 #ifndef INVALID_SOCKET
 #define INVALID_SOCKET (-1)
@@ -93,10 +95,11 @@ void die(const char *t);
 void setLogLevel(LogLevel level);
 bool isLogLevelEnabled(LogLevel level);
 void setProgName(char *name);
+void setFixedTimestamp(char *fixedStr);
 
 typedef struct StringBuffer
 {
-  char * data;
+  char  *data;
   size_t len;
   size_t alloc;
 } StringBuffer;
@@ -159,7 +162,7 @@ SOCKET open_socket_stream(const char *url);
 #define DATE_LENGTH 60
 const char *now(char str[DATE_LENGTH]);
 uint64_t    getNow(void);
-void        storeTimestamp(char *buf, uint64_t when);
+void        storeTimestamp(char str[DATE_LENGTH], uint64_t when);
 
 uint8_t scanNibble(char c);
 int     scanHex(char **p, uint8_t *m);
@@ -185,6 +188,10 @@ int writeSerial(int handle, const uint8_t *data, size_t len);
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 #endif
 
+// C stringify operations with macro names
+#define xstr(s) str(s)
+#define str(s) #s
+
 /*
  * Notes on the NMEA 2000 packet structure
  * ---------------------------------------
@@ -208,7 +215,7 @@ int writeSerial(int handle, const uint8_t *data, size_t len);
  */
 
 /*
- * NMEA 2000 uses the 8 'data' bytes as follows:
+ * NMEA 2000 uses the 8 'data' bytes for fast framed PGNs as follows:
  * data[0] is an 'order' that increments, or not (depending a bit on implementation).
  * If the size of the packet <= 7 then the data follows in data[1..7]
  * If the size of the packet > 7 then the next byte data[1] is the size of the payload
@@ -226,26 +233,24 @@ int writeSerial(int handle, const uint8_t *data, size_t len);
 #define FASTPACKET_BUCKET_0_OFFSET (2)
 #define FASTPACKET_BUCKET_N_OFFSET (1)
 #define FASTPACKET_MAX_INDEX (0x1f)
-#define FASTPACKET_MAX_SIZE (FASTPACKET_BUCKET_0_SIZE + FASTPACKET_BUCKET_N_SIZE * (FASTPACKET_MAX_INDEX - 1))
+#define FASTPACKET_MAX_SIZE (FASTPACKET_BUCKET_0_SIZE + FASTPACKET_BUCKET_N_SIZE * FASTPACKET_MAX_INDEX)
 
-typedef struct
-{
-  char     timestamp[DATE_LENGTH];
-  uint8_t  prio;
-  uint32_t pgn;
-  uint8_t  dst;
-  uint8_t  src;
-  uint8_t  len;
-  uint8_t  data[FASTPACKET_MAX_SIZE];
-} RawMessage;
+#define IS_PGN_PROPRIETARY(n)                                                   \
+  (((n) >= 0xEF00 && (n) <= 0xEFFF)      /* PDU1 (addressed) single-frame */    \
+   || ((n) >= 0xFF00 && (n) <= 0xFFFF)   /* PDU2 (nonaddressed) single-frame */ \
+   || ((n) >= 0x1EF00 && (n) <= 0x1EFFF) /* PDU1 (addressed) fast-packet */     \
+   || ((n) >= 0x1FF00 && (n) <= 0x1FFFF) /* PDU2 (nonaddressed) fast-packet */  \
+  )
 
-bool parseFastFormat(StringBuffer *src, RawMessage *msg);
+#define ALLOW_PGN_FAST_PACKET(n) ((n) >= 0x10000 && (n) < CANBOAT_PGN_START)
+#define ALLOW_PGN_SINGLE_FRAME(n) ((n) < 0x10000 || (n) >= 0x1F000)
 
-bool parseInt(const char **msg, int *value, int defValue);
-bool parseConst(const char **msg, const char *str);
+#define MAP_PGN_TO_CONTINUOUS_RANGE(n) ((n) - (0xE800))
+#define PGN_MAX_CONTINUOUS_RANGE (MAP_PGN_TO_CONTINUOUS_RANGE(0x20000))
 
 #define Pi (3.141592654)
 #define RadianToDegree (360.0 / 2 / Pi)
+#define BITS(x) (x)
 #define BYTES(x) ((x) * (8))
 #define BITS_TO_BYTES(x) ((x) >> 3)
 
@@ -262,7 +267,6 @@ void logAbort(const char *format, ...);
 #define CANBOAT_PGN_START 0x40000
 #define CANBOAT_PGN_END 0x401FF
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
-#define IKONVERT_BEM 0x40100 /* iKonvert specific fake PGNs */
+#define IKONVERT_BEM 0x40100  /* iKonvert specific fake PGNs */
 
-#define CANBOAT_COMMON
 #endif

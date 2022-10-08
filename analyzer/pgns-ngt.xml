@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v2.0.0
+CANboat version v4.2.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,16 +25,18 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>2.0.0</Version>
+  <Version>4.2.0</Version>
   <PGNs>
     <PGNInfo>
       <PGN>262161</PGN>
       <Id>actisenseOperatingMode</Id>
       <Description>Actisense: Operating mode</Description>
       <Type>Single</Type>
-      <Complete>true</Complete>
-      <Length>14</Length>
-      <RepeatingFields>0</RepeatingFields>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>13</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -43,7 +45,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -52,9 +58,11 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -63,9 +71,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>4</Order>
@@ -74,9 +84,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
@@ -85,7 +97,11 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -93,15 +109,15 @@ limitations under the License.
       <PGN>262384</PGN>
       <Id>actisenseStartupStatus</Id>
       <Description>Actisense: Startup status</Description>
-      <Type>Fast</Type>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>15</Length>
-      <RepeatingFields>0</RepeatingFields>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -110,7 +126,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -119,9 +139,11 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -130,9 +152,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>4</Order>
@@ -141,9 +165,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
@@ -154,6 +180,8 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>0.001</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65.533</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
@@ -162,7 +190,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
@@ -171,7 +203,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -179,15 +215,15 @@ limitations under the License.
       <PGN>262386</PGN>
       <Id>actisenseSystemStatus</Id>
       <Description>Actisense: System status</Description>
-      <Type>Fast</Type>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>34</Length>
-      <RepeatingFields>0</RepeatingFields>
+      <Length>33</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -196,7 +232,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -205,9 +245,11 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -216,9 +258,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>4</Order>
@@ -227,9 +271,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
@@ -238,7 +284,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
@@ -247,7 +297,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
@@ -256,7 +310,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
@@ -265,7 +323,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>9</Order>
@@ -274,7 +336,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>10</Order>
@@ -283,7 +349,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>11</Order>
@@ -292,7 +362,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>12</Order>
@@ -301,7 +375,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>13</Order>
@@ -310,7 +388,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>14</Order>
@@ -319,7 +401,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>15</Order>
@@ -328,7 +414,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>16</Order>
@@ -337,7 +427,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>17</Order>
@@ -346,7 +440,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>18</Order>
@@ -355,7 +453,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>19</Order>
@@ -364,7 +466,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>20</Order>
@@ -373,7 +479,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>21</Order>
@@ -382,7 +492,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>216</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>22</Order>
@@ -391,7 +505,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>23</Order>
@@ -400,7 +518,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>232</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>24</Order>
@@ -409,7 +531,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>240</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>25</Order>
@@ -418,7 +544,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>248</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>26</Order>
@@ -427,7 +557,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>256</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -435,15 +569,15 @@ limitations under the License.
       <PGN>262388</PGN>
       <Id>actisense</Id>
       <Description>Actisense: ?</Description>
-      <Type>Fast</Type>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Precision</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>17</Length>
-      <RepeatingFields>0</RepeatingFields>
+      <Length>7</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -452,7 +586,11 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -461,9 +599,11 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -472,9 +612,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-                 <Type>Integer</Type>
-                 <Resolution>1</Resolution>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
