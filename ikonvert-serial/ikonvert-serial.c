@@ -406,7 +406,7 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
       sbAppendFormat(out, "\r\n");
       logDebug("SendBuffer [%s]\n", sbGet(out));
     }
-    else if (!readonly && msg.data > sizeof("$PDGY") && memcmp(msg.data, "$PDGY", sizeof("$PDGY")) == 0)
+    else if (!readonly && msg.len > sizeof("$PDGY") && memcmp(msg.data, "$PDGY", sizeof("$PDGY")) == 0)
     {
       sbAppendData(out, msg.data, msg.len);
       sbAppendFormat(out, "\r\n");
