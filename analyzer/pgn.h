@@ -342,9 +342,9 @@ typedef struct
     .name = nam, .size = BYTES(3), .resolution = 0.01, .hasSign = true, .unit = "A", .fieldType = "CURRENT_FIX24_CA" \
   }
 
-#define ELECTRIC_CHARGE_UFIX16_AH(nam)                                                                       \
-  {                                                                                                          \
-    .name = nam, .size = BYTES(2), .resolution = 3600, .unit = "C", .fieldType = "ELECTRIC_CHARGE_UFIX16_AH" \
+#define ELECTRIC_CHARGE_UFIX16_AH(nam)                    \
+  {                                                       \
+    .name = nam, .fieldType = "ELECTRIC_CHARGE_UFIX16_AH" \
   }
 
 #define PEUKERT_FIELD(nam)                       \

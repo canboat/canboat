@@ -66,7 +66,7 @@ static double getMinRange(const char *name, uint32_t size, double resolution, bo
     r        = minValue * resolution * -1.0;
   }
   logDebug(
-      "%s bits=%llu sign=%u minValue=%lld res=%g offset=%d -> minRange %g\n", name, highbit, sign, minValue, resolution, offset, r);
+      "%s bits=%llu sign=%u minValue=%lld res=%g offset=%d -> rangeMin %g\n", name, highbit, sign, minValue, resolution, offset, r);
   return r;
 }
 
@@ -85,7 +85,7 @@ static double getMaxRange(const char *name, uint32_t size, double resolution, bo
 
   r = maxValue * resolution;
   logDebug(
-      "%s bits=%llu sign=%u maxValue=%lld res=%g offset=%d -> maxRange %g\n", name, highbit, sign, maxValue, resolution, offset, r);
+      "%s bits=%llu sign=%u maxValue=%lld res=%g offset=%d -> rangeMax %g\n", name, highbit, sign, maxValue, resolution, offset, r);
   return r;
 }
 
@@ -96,11 +96,15 @@ static void fixupUnit(Field *f)
     if (strcmp(f->unit, "kWh") == 0)
     {
       f->resolution *= 3.6e6; // 1 kWh = 3.6 MJ.
+      f->rangeMin *= 3.6e6;
+      f->rangeMax *= 3.6e6;
       f->unit = "J";
     }
     else if (strcmp(f->unit, "Ah") == 0)
     {
       f->resolution *= 3600.0; // 1 Ah = 3600 C.
+      f->rangeMin *= 3600.0;
+      f->rangeMax *= 3600.0;
       f->unit = "C";
     }
 
@@ -111,12 +115,16 @@ static void fixupUnit(Field *f)
     if (strcmp(f->unit, "C") == 0)
     {
       f->resolution /= 3600.0; // 3600 C = 1 Ah
+      f->rangeMin /= 3600.0;
+      f->rangeMax /= 3600.0;
       f->unit = "Ah";
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
     }
     else if (strcmp(f->unit, "Pa") == 0)
     {
       f->resolution /= 100000.0;
+      f->rangeMin /= 100000.0;
+      f->rangeMax /= 100000.0;
       f->precision = 3;
       f->unit      = "bar";
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
@@ -124,13 +132,17 @@ static void fixupUnit(Field *f)
     else if (strcmp(f->unit, "K") == 0)
     {
       f->unitOffset = -273.15;
-      f->precision  = 2;
-      f->unit       = "C";
+      f->rangeMin += -273.15;
+      f->rangeMax += -275.15;
+      f->precision = 2;
+      f->unit      = "C";
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
     }
     else if (strcmp(f->unit, "rad") == 0)
     {
       f->resolution *= RadianToDegree;
+      f->rangeMin *= RadianToDegree;
+      f->rangeMax *= RadianToDegree;
       f->unit      = "deg";
       f->precision = 1;
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
@@ -138,6 +150,8 @@ static void fixupUnit(Field *f)
     else if (strcmp(f->unit, "rad/s") == 0)
     {
       f->resolution *= RadianToDegree;
+      f->rangeMin *= RadianToDegree;
+      f->rangeMax *= RadianToDegree;
       f->unit = "deg/s";
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
     }

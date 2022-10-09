@@ -809,7 +809,8 @@ FieldType fieldTypeList[] = {
 
     {.name          = "ELECTRIC_CHARGE_UFIX16_AH",
      .description   = "Electrical charge",
-     .resolution    = 3600,
+     .resolution    = 1,
+     .unit          = "Ah",
      .physical      = &ELECTRICAL_CHARGE,
      .baseFieldType = "UFIX16"},
 
