@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.2]
+
+### Changed
+
+- Add/fix `RangeMin` and `RangeMax` for fields with `Offset`.
+- Fix makefiles & version permeation.
+- Add external documentation section.
+
+## [4.2.1]
+
+### Changed
+
+- Add documentation on the fields in `canboat.xml` in `canboat.xsd`. 
+  These are useful for downstream interpreters of the file.
+- Make `n2kd` emit a request for PGN 126996 (Product Info) if a source 
+  is found that it doesn't have product info for. This allows it to use the
+  secondary keys properly, and downstream users can create device -> src mappings.
+- `ikonvert-serial` will now send $PDGY strings on stdin to the iKonvert.
+  This is useful in debugging scenarios.
+
 ## [4.2.0]
 
 ### Changed
