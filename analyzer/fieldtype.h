@@ -338,7 +338,6 @@ FieldType fieldTypeList[] = {
 
     {.name          = "INTEGER",
      .description   = "Signed integral number",
-     .resolution    = 1,
      .hasSign       = True,
      .baseFieldType = "NUMBER",
      .url           = "https://en.wikipedia.org/wiki/Integer_%28computer_science%29",
@@ -346,7 +345,6 @@ FieldType fieldTypeList[] = {
 
     {.name          = "UNSIGNED_INTEGER",
      .description   = "Unsigned integral number",
-     .resolution    = 1,
      .hasSign       = False,
      .baseFieldType = "NUMBER",
      .url           = "https://en.wikipedia.org/wiki/Integer_%28computer_science%29",
@@ -832,6 +830,7 @@ FieldType fieldTypeList[] = {
      .description = "Electrical power",
      .encodingDescription
      = "This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.",
+     .resolution    = 1,
      .offset        = -2000000000,
      .physical      = &ELECTRICAL_POWER,
      .baseFieldType = "FIX32"},
@@ -840,6 +839,7 @@ FieldType fieldTypeList[] = {
      .description = "Electrical power",
      .encodingDescription
      = "This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.",
+     .resolution    = 1,
      .offset        = -2000000000,
      .physical      = &ELECTRICAL_POWER,
      .baseFieldType = "FIX32"},

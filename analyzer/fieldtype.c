@@ -51,7 +51,7 @@ static bool isPhysicalQuantityListed(const PhysicalQuantity *pq)
 
 static double getMinRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset)
 {
-  uint32_t highbit = sign ? (size - 1) : size;
+  uint32_t highbit = (sign && offset == 0) ? (size - 1) : size;
   int64_t  minValue;
   double   r;
 
@@ -73,7 +73,7 @@ static double getMinRange(const char *name, uint32_t size, double resolution, bo
 static double getMaxRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset)
 {
   uint64_t specialvalues = (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
-  uint32_t highbit       = sign ? (size - 1) : size;
+  uint32_t highbit       = (sign && offset == 0) ? (size - 1) : size;
   uint64_t maxValue;
   double   r;
 
@@ -329,6 +329,9 @@ extern void fillFieldType(bool doUnitFixup)
                  f->fieldType,
                  ft->unit);
       }
+
+      f->rangeMin = ft->rangeMin;
+      f->rangeMax = ft->rangeMax;
       if (doUnitFixup && f->unit != NULL && f->resolution != 0.0)
       {
         fixupUnit(f);
@@ -338,8 +341,6 @@ extern void fillFieldType(bool doUnitFixup)
         pgnList[i].hasMatchFields = true;
       }
 
-      f->rangeMin = ft->rangeMin;
-      f->rangeMax = ft->rangeMax;
       if (f->size != 0 && f->resolution != 0.0 && ft->hasSign != Null && isnan(f->rangeMax))
       {
         f->rangeMin = getMinRange(f->name, f->size, f->resolution, f->hasSign, f->offset);
