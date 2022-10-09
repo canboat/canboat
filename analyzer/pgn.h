@@ -347,9 +347,9 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 3600, .unit = "C", .fieldType = "ELECTRIC_CHARGE_UFIX16_AH" \
   }
 
-#define PEUKERT_FIELD(nam)                                                              \
-  {                                                                                     \
-    .name = nam, .size = BYTES(1), .resolution = 0.002, .fieldType = "PEUKERT_EXPONENT" \
+#define PEUKERT_FIELD(nam)                       \
+  {                                              \
+    .name = nam, .fieldType = "PEUKERT_EXPONENT" \
   }
 
 // Fully defined NUMBER fields

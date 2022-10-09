@@ -24,11 +24,6 @@ import subprocess
 
 analyzer = sys.argv[1]
 filename = sys.argv[2]
-newline  = '\n'
-if (sys.argv[1] == '-w'):
-    analyzer = sys.argv[2]
-    filename = sys.argv[3]
-    newline  = '\r\n'
 
 version = subprocess.check_output([analyzer, "-version"], encoding='utf8')
 
@@ -40,9 +35,7 @@ with open(filename,'r') as file:
     filedata = file.read()
 
 filedata = re.sub('"version": "[^"]*"', '"version": "' + version + '"', filedata)
-filedata = re.sub('CANboat version v[.0-9]*"', 'CANboat version v' + version, filedata)
-filedata = re.sub('^VERSION "[^"]*"$', 'VERSION "' + version + '"', filedata)
 
-with open(filename,'w', newline=newline) as file:
+with open(filename,'w') as file:
     file.write(filedata)
 

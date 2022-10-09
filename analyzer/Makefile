@@ -57,7 +57,6 @@ $(XMLFILE): $(ANALYZER_EXPLAIN_DEP)
 	$(ANALYZER_EXPLAIN) -explain-xml -camel -v1 >$(XMLFILE)
 
 $(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE)
-	python3 fixup-version.py $(ANALYZER) $(XSD2FILE)
 	$(ANALYZER_EXPLAIN) -explain-xml -camel >$(XML2FILE) 
 	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
 

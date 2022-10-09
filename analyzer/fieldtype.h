@@ -253,36 +253,36 @@ static const PhysicalQuantity SIGNAL_TO_NOISE_RATIO = {.name         = "SIGNAL_T
                                                        .abbreviation = "dB",
                                                        .unit         = "decibel"};
 
-const PhysicalQuantity * const PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
-                                                         &ELECTRICAL_CHARGE,
-                                                         &ELECTRICAL_ENERGY,
-                                                         &ELECTRICAL_POWER,
-                                                         &ELECTRICAL_APPARENT_POWER,
-                                                         &ELECTRICAL_REACTIVE_POWER,
-                                                         &POTENTIAL_DIFFERENCE,
-                                                         &POWER_FACTOR,
-                                                         &LENGTH,
-                                                         &DISTANCE,
-                                                         &SPEED,
-                                                         &ANGLE,
-                                                         &ANGULAR_VELOCITY,
-                                                         &VOLUME,
-                                                         &VOLUMETRIC_FLOW,
-                                                         &MAGNETIC_FIELD,
-                                                         &FREQUENCY,
-                                                         &DATE,
-                                                         &TIME,
-                                                         &GEO_COORDINATE,
-                                                         &TEMPERATURE,
-                                                         &PRESSURE,
-                                                         &PRESSURE_RATE,
-                                                         &CONCENTRATION,
-                                                         &SIGNAL_TO_NOISE_RATIO,
-                                                         NULL};
+const PhysicalQuantity *const PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
+                                                        &ELECTRICAL_CHARGE,
+                                                        &ELECTRICAL_ENERGY,
+                                                        &ELECTRICAL_POWER,
+                                                        &ELECTRICAL_APPARENT_POWER,
+                                                        &ELECTRICAL_REACTIVE_POWER,
+                                                        &POTENTIAL_DIFFERENCE,
+                                                        &POWER_FACTOR,
+                                                        &LENGTH,
+                                                        &DISTANCE,
+                                                        &SPEED,
+                                                        &ANGLE,
+                                                        &ANGULAR_VELOCITY,
+                                                        &VOLUME,
+                                                        &VOLUMETRIC_FLOW,
+                                                        &MAGNETIC_FIELD,
+                                                        &FREQUENCY,
+                                                        &DATE,
+                                                        &TIME,
+                                                        &GEO_COORDINATE,
+                                                        &TEMPERATURE,
+                                                        &PRESSURE,
+                                                        &PRESSURE_RATE,
+                                                        &CONCENTRATION,
+                                                        &SIGNAL_TO_NOISE_RATIO,
+                                                        NULL};
 
 #else /* FIELDTYPE_GLOBALS */
 
-extern const PhysicalQuantity * const PhysicalQuantityList[];
+extern const PhysicalQuantity *const PhysicalQuantityList[];
 
 #endif
 
@@ -816,7 +816,7 @@ FieldType fieldTypeList[] = {
     {.name          = "PEUKERT_EXPONENT",
      .description   = "Effect of discharge rate on usable battery capacity",
      .resolution    = 0.002,
-     .offset        = 1,
+     .offset        = 500, // = 1 / resolution
      .url           = "https://en.wikipedia.org/wiki/Peukert's_law",
      .baseFieldType = "UFIX8"},
 
@@ -1153,8 +1153,8 @@ FieldType fieldTypeList[] = {
 const size_t fieldTypeCount = ARRAY_SIZE(fieldTypeList);
 
 #else
-extern FieldType    fieldTypeList[];
-extern const size_t fieldTypeCount;
+extern FieldType                     fieldTypeList[];
+extern const size_t                  fieldTypeCount;
 #endif // FIELDTYPE_GLOBALS
 
 extern FieldType *getFieldType(const char *name);

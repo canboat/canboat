@@ -49,48 +49,44 @@ static bool isPhysicalQuantityListed(const PhysicalQuantity *pq)
   return false;
 }
 
-static double getMinRange(const char *name, uint32_t size, double resolution, bool sign)
+static double getMinRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset)
 {
-  uint64_t specialvalues = (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
-  uint64_t highbit       = size;
+  uint32_t highbit = sign ? (size - 1) : size;
+  int64_t  minValue;
+  double   r;
 
-  if (!sign)
+  if (!sign || offset != 0)
   {
-    uint64_t maxValue = (UINT64_C(1) << highbit) - 1 - specialvalues;
-    logDebug("%s bits=%llu sign=%u maxValue=%llu res=%g\n", name, highbit, sign, maxValue, resolution);
-    return 0.0;
+    minValue = INT64_C(0) + offset;
+    r        = minValue * resolution;
   }
   else
   {
-    int64_t maxValue;
-
-    highbit--;
-    maxValue = (UINT64_C(1) << highbit) - 1;
-    logDebug("%s bits=%llu sign=%u maxValue=%lld res=%g\n", name, highbit, sign, maxValue, resolution);
-    return maxValue * resolution * -1.0;
+    minValue = (UINT64_C(1) << highbit) - 1;
+    r        = minValue * resolution * -1.0;
   }
+  logDebug(
+      "%s bits=%llu sign=%u minValue=%lld res=%g offset=%d -> minRange %g\n", name, highbit, sign, minValue, resolution, offset, r);
+  return r;
 }
 
-static double getMaxRange(const char *name, uint32_t size, double resolution, bool sign)
+static double getMaxRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset)
 {
   uint64_t specialvalues = (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
-  uint64_t highbit       = size;
+  uint32_t highbit       = sign ? (size - 1) : size;
+  uint64_t maxValue;
+  double   r;
 
-  if (!sign)
+  maxValue = (UINT64_C(1) << highbit) - 1 - specialvalues;
+  if (offset != 0)
   {
-    uint64_t maxValue = (UINT64_C(1) << highbit) - 1 - specialvalues;
-    logDebug("%s bits=%llu sign=%u maxValue=%llu res=%g\n", name, highbit, sign, maxValue, resolution);
-    return maxValue * resolution;
+    maxValue += offset;
   }
-  else
-  {
-    int64_t maxValue;
 
-    highbit--;
-    maxValue = (UINT64_C(1) << highbit) - 1;
-    logDebug("%s bits=%llu sign=%u maxValue=%lld res=%g\n", name, highbit, sign, maxValue, resolution);
-    return (maxValue - specialvalues) * resolution;
-  }
+  r = maxValue * resolution;
+  logDebug(
+      "%s bits=%llu sign=%u maxValue=%lld res=%g offset=%d -> maxRange %g\n", name, highbit, sign, maxValue, resolution, offset, r);
+  return r;
 }
 
 static void fixupUnit(Field *f)
@@ -228,8 +224,8 @@ extern void fillFieldType(bool doUnitFixup)
     // Set the field range
     if (ft->size != 0 && ft->resolution != 0.0 && ft->hasSign != Null && ft->rangeMax == 0.0)
     {
-      ft->rangeMin = getMinRange(ft->name, ft->size, ft->resolution, ft->hasSign == True);
-      ft->rangeMax = getMaxRange(ft->name, ft->size, ft->resolution, ft->hasSign == True);
+      ft->rangeMin = getMinRange(ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset);
+      ft->rangeMax = getMaxRange(ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset);
     }
     else
     {
@@ -332,8 +328,8 @@ extern void fillFieldType(bool doUnitFixup)
       f->rangeMax = ft->rangeMax;
       if (f->size != 0 && f->resolution != 0.0 && ft->hasSign != Null && isnan(f->rangeMax))
       {
-        f->rangeMin = getMinRange(f->name, f->size, f->resolution, f->hasSign);
-        f->rangeMax = getMaxRange(f->name, f->size, f->resolution, f->hasSign);
+        f->rangeMin = getMinRange(f->name, f->size, f->resolution, f->hasSign, f->offset);
+        f->rangeMax = getMaxRange(f->name, f->size, f->resolution, f->hasSign, f->offset);
       }
 
       f->pgn   = &pgnList[i];
