@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.2.0
+CANboat version v4.2.2
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -26,8 +26,8 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.2.0</Version>
-  <Copyright>CANboat version v4.2.0
+  <Version>4.2.2</Version>
+  <Copyright>CANboat version v4.2.2
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -3337,8 +3337,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>W</Unit>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_POWER</PhysicalQuantity>
         </Field>
@@ -3508,8 +3511,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>W</Unit>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_POWER</PhysicalQuantity>
         </Field>
@@ -3677,8 +3683,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>W</Unit>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_POWER</PhysicalQuantity>
         </Field>
@@ -3846,8 +3855,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>W</Unit>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_POWER</PhysicalQuantity>
         </Field>
@@ -4060,8 +4072,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>W</Unit>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_POWER</PhysicalQuantity>
         </Field>
@@ -4229,8 +4244,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>W</Unit>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_POWER</PhysicalQuantity>
         </Field>
@@ -4398,8 +4416,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>W</Unit>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_POWER</PhysicalQuantity>
         </Field>
@@ -4567,8 +4588,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>W</Unit>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_POWER</PhysicalQuantity>
         </Field>
@@ -15507,11 +15531,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
-          <Resolution>3600</Resolution>
+          <Unit>Ah</Unit>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>235918800</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_CHARGE</PhysicalQuantity>
         </Field>
@@ -16252,11 +16276,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
-          <Resolution>3600</Resolution>
+          <Unit>Ah</Unit>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>235918800</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_CHARGE</PhysicalQuantity>
         </Field>
@@ -16269,9 +16293,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Resolution>0.002</Resolution>
           <Signed>false</Signed>
-          <Offset>1</Offset>
-          <RangeMin>0</RangeMin>
-          <RangeMax>0.506</RangeMax>
+          <Offset>500</Offset>
+          <RangeMin>1</RangeMin>
+          <RangeMax>1.506</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>

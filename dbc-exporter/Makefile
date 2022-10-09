@@ -12,6 +12,7 @@ all: pgns.dbc
 
 pgns.dbc: dbc-exporter
 	"$(VENV)/bin/canboat-dbc-exporter" ../analyzer/pgns.json pgns.dbc
+	"$(VENV)/bin/python3" ../analyzer/fixup-version.py -w $(TARGETDIR)/analyzer pgns.dbc
 
 dbc-exporter: $(VENV)
 	"$(VENV)/bin/python3" setup.py install
