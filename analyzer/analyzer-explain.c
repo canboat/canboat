@@ -666,7 +666,15 @@ static void explainPGNXML(Pgn pgn)
 
       if (!isnan(f.rangeMax))
       {
-        printf("          <RangeMax>%.16g</RangeMax>\n", f.rangeMax);
+        if (f.resolution == 1.0 && f.size == 64 && ft->hasSign == False && f.offset == 0)
+        {
+          // This is the only RangeMax that doesn't print well as a double.
+          printf("          <RangeMax>%" PRIu64 "</RangeMax>\n", UINT64_MAX);
+        }
+        else
+        {
+          printf("          <RangeMax>%.16g</RangeMax>\n", f.rangeMax);
+        }
       }
       else if (!doV1 && f.lookupValue != 0 && !(f.unit && f.unit[0] == '='))
       {

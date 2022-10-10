@@ -11556,7 +11556,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -11702,7 +11702,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -11851,7 +11851,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -11903,7 +11903,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -12021,7 +12021,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>

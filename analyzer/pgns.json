@@ -9508,7 +9508,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19},
+            "RangeMax":18446744073709551615},
           {
             "Order":7,
             "Id":"dataSourceInstance",
@@ -9655,7 +9655,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19},
+            "RangeMax":18446744073709551615},
           {
             "Order":18,
             "Id":"triggerCondition",
@@ -9812,7 +9812,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19},
+            "RangeMax":18446744073709551615},
           {
             "Order":7,
             "Id":"dataSourceInstance",
@@ -9860,7 +9860,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19},
+            "RangeMax":18446744073709551615},
           {
             "Order":11,
             "Id":"responseCommand",
@@ -9976,7 +9976,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19},
+            "RangeMax":18446744073709551615},
           {
             "Order":7,
             "Id":"dataSourceInstance",

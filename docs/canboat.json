@@ -11673,7 +11673,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19,
+            "RangeMax":18446744073709551615,
             "FieldType":"NUMBER"
           },
           {
@@ -11819,7 +11819,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19,
+            "RangeMax":18446744073709551615,
             "FieldType":"NUMBER"
           },
           {
@@ -11967,7 +11967,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19,
+            "RangeMax":18446744073709551615,
             "FieldType":"NUMBER"
           },
           {
@@ -12019,7 +12019,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19,
+            "RangeMax":18446744073709551615,
             "FieldType":"NUMBER"
           },
           {
@@ -12136,7 +12136,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19,
+            "RangeMax":18446744073709551615,
             "FieldType":"NUMBER"
           },
           {
