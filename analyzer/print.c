@@ -188,10 +188,27 @@ static bool extractNumberNotEmpty(const Field *field,
   return true;
 }
 
+// This is only a different printer than fieldPrintNumber so the JSON can contain a string value
 extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  // This is only a different printer so the JSON can contain a string value
-  return fieldPrintNumber(field, fieldName, data, dataLen, startBit, bits);
+  int64_t value;
+  int64_t maxValue;
+
+  if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+
+  if (showJson)
+  {
+    mprintf("%s\"%s\":\"%09u\"", getSep(), fieldName, value);
+  }
+  else
+  {
+    mprintf("%s %s = \"%09u\"", getSep(), fieldName, value);
+  }
+
+  return true;
 }
 
 extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
@@ -209,19 +226,13 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
   logDebug("fieldPrintNumber <%s> resolution=%g unit='%s'\n", fieldName, field->resolution, (field->unit ? field->unit : "-"));
   if (field->resolution == 1.0 && field->unitOffset == 0.0)
   {
-    const char *fmt = "%" PRId64;
-
-    fmt = (field->ft->format != NULL) ? field->ft->format : "%" PRId64;
-
     if (showJson)
     {
-      mprintf("%s\"%s\":", getSep(), fieldName);
-      mprintf(fmt, value);
+      mprintf("%s\"%s\":%" PRId64, getSep(), fieldName, value);
     }
     else
     {
-      mprintf("%s %s = ", getSep(), fieldName);
-      mprintf(fmt, value);
+      mprintf("%s %s = %" PRId64, getSep(), fieldName, value);
       if (unit != NULL)
       {
         mprintf(" %s", unit);

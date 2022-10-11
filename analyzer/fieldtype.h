@@ -308,7 +308,6 @@ struct FieldType
   int32_t     offset;     // For numbers with excess-K offset
   double      resolution; // A positive real value, or 1 for integral values
   Bool        hasSign;    // Is the value signed, e.g. has both positive and negative values?
-  const char *format;     // Format string for printf
 
   // These are derived from size, variableSize, resolution and hasSign
   double rangeMin;
@@ -1142,7 +1141,6 @@ FieldType fieldTypeList[] = {
      = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. "
        "The first three or four digits are special, see the USCG link for a detailed explanation.",
      .url    = "https://navcen.uscg.gov/maritime-mobile-service-identity",
-     .format = "\"%09u\"",
      .pf     = fieldPrintMMSI},
 
     {.name        = "VARIABLE",
