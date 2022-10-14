@@ -1,4 +1,4 @@
-VERSION "Canboat export 2022-10-04T13:28:36.895543"
+VERSION "4.2.2"
 
 
 NS_ : 
@@ -87,7 +87,7 @@ BO_ 2566778366 PGN_65005_utilityTotalAcEnergy: 8 Vector__XXX
 
 BO_ 2566778878 PGN_65007_utilityPhaseCAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566779134 PGN_65008_utilityPhaseCBasicAcQu: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -97,7 +97,7 @@ BO_ 2566779134 PGN_65008_utilityPhaseCBasicAcQu: 8 Vector__XXX
 
 BO_ 2566779646 PGN_65010_utilityPhaseBAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566779902 PGN_65011_utilityPhaseBBasicAcQu: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -107,7 +107,7 @@ BO_ 2566779902 PGN_65011_utilityPhaseBBasicAcQu: 8 Vector__XXX
 
 BO_ 2566780414 PGN_65013_utilityPhaseAAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566780670 PGN_65014_utilityPhaseABasicAcQu: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -117,7 +117,7 @@ BO_ 2566780670 PGN_65014_utilityPhaseABasicAcQu: 8 Vector__XXX
 
 BO_ 2566781182 PGN_65016_utilityTotalAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566781438 PGN_65017_utilityAverageBasicAcQ: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -130,8 +130,8 @@ BO_ 2566781694 PGN_65018_generatorTotalAcEnergy: 8 Vector__XXX
  SG_ totalEnergyExport : 0|32@1+ (1,0) [0|0] "kWh" Vector__XXX
 
 BO_ 2566782206 PGN_65020_generatorPhaseCAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VAR" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566782462 PGN_65021_generatorPhaseCBasicAc: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -141,7 +141,7 @@ BO_ 2566782462 PGN_65021_generatorPhaseCBasicAc: 8 Vector__XXX
 
 BO_ 2566782974 PGN_65023_generatorPhaseBAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566783230 PGN_65024_generatorPhaseBBasicAc: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -151,7 +151,7 @@ BO_ 2566783230 PGN_65024_generatorPhaseBBasicAc: 8 Vector__XXX
 
 BO_ 2566783742 PGN_65026_generatorPhaseAAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566783998 PGN_65027_generatorPhaseABasicAc: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -161,7 +161,7 @@ BO_ 2566783998 PGN_65027_generatorPhaseABasicAc: 8 Vector__XXX
 
 BO_ 2566784510 PGN_65029_generatorTotalAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1+ (1,0) [0|0] "VA" Vector__XXX
- SG_ realPower : 0|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566784766 PGN_65030_generatorAverageBasicA: 8 Vector__XXX
  SG_ acRmsCurrent : 48|16@1+ (1,0) [0|0] "A" Vector__XXX
@@ -379,7 +379,7 @@ BO_ 2582646014 PGN_126988_alertValue: 8 Vector__XXX
 
 BO_ 2582647038 PGN_126992_systemTime: 8 Vector__XXX
  SG_ time : 32|32@1+ (0.0001,0) [0|0] "s" Vector__XXX
- SG_ date : 16|16@1+ (1,0) [0|0] "days" Vector__XXX
+ SG_ date : 16|16@1+ (1,0) [0|0] "d" Vector__XXX
  SG_ reserved : 12|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ source : 8|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -442,14 +442,14 @@ BO_ 2582714878 PGN_127257_attitude: 8 Vector__XXX
 
 BO_ 2582715134 PGN_127258_magneticVariation: 8 Vector__XXX
  SG_ variation : 32|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
- SG_ ageOfService : 16|16@1+ (1,0) [0|0] "days" Vector__XXX
+ SG_ ageOfService : 16|16@1+ (1,0) [0|0] "d" Vector__XXX
  SG_ reserved : 12|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ source : 8|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582774014 PGN_127488_engineParametersRapid: 8 Vector__XXX
  SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ tiltTrim : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ tiltTrim : 40|8@1- (1,0) [0|0] "" Vector__XXX
  SG_ boostPressure : 24|16@1+ (100,0) [0|0] "Pa" Vector__XXX
  SG_ speed : 8|16@1+ (0.25,0) [0|0] "rpm" Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -605,19 +605,19 @@ BO_ 2582780670 PGN_127514_agsStatus: 8 Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582839550 PGN_127744_acPowerCurrentPhaseA: 8 Vector__XXX
- SG_ power : 32|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ power : 32|32@1- (1,0) [0|0] "W" Vector__XXX
  SG_ acRmsCurrent : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582839806 PGN_127745_acPowerCurrentPhaseB: 8 Vector__XXX
- SG_ power : 32|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ power : 32|32@1- (1,0) [0|0] "W" Vector__XXX
  SG_ acRmsCurrent : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582840062 PGN_127746_acPowerCurrentPhaseC: 8 Vector__XXX
- SG_ power : 32|32@1+ (1,0) [0|0] "W" Vector__XXX
+ SG_ power : 32|32@1- (1,0) [0|0] "W" Vector__XXX
  SG_ acRmsCurrent : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -738,18 +738,18 @@ BO_ 2583167742 PGN_129026_cogSogRapidUpdate: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583167998 PGN_129027_positionDeltaRapidUpd: 8 Vector__XXX
- SG_ longitudeDelta : 40|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ latitudeDelta : 24|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ longitudeDelta : 40|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ latitudeDelta : 24|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ timeDelta : 8|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583168254 PGN_129028_altitudeDeltaRapidUpd: 8 Vector__XXX
- SG_ altitudeDelta : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ altitudeDelta : 48|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ cog : 32|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ reserved : 28|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ direction : 26|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ gnssQuality : 24|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ timeDelta : 8|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ timeDelta : 8|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583168510 PGN_129029_gnssPositionData: 8 Vector__XXX
@@ -759,7 +759,7 @@ BO_ 2583168510 PGN_129029_gnssPositionData: 8 Vector__XXX
 BO_ 2583169534 PGN_129033_timeDate: 8 Vector__XXX
  SG_ localOffset : 48|16@1- (60,0) [0|0] "s" Vector__XXX
  SG_ time : 16|32@1+ (0.0001,0) [0|0] "s" Vector__XXX
- SG_ date : 0|16@1+ (1,0) [0|0] "days" Vector__XXX
+ SG_ date : 0|16@1+ (1,0) [0|0] "d" Vector__XXX
 
 BO_ 2583170814 PGN_129038_aisClassAPositionRepo: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
@@ -1099,8 +1099,8 @@ BO_ 2583564030 PGN_130574_supportedZoneData: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583564542 PGN_130576_smallCraftStatus: 8 Vector__XXX
- SG_ starboardTrimTab : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ portTrimTab : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ starboardTrimTab : 8|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ portTrimTab : 0|8@1- (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583564798 PGN_130577_directionData: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX

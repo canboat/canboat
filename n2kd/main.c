@@ -57,10 +57,10 @@ bool     unitSI   = false;
 
 struct sockaddr_in udpWildcardAddress;
 
-#define SENSOR_TIMEOUT (120) /* Timeout when PGN messages expire (no longer retransmitted) */
-#define AIS_TIMEOUT (3600) /* AIS messages expiration is much longer */
+#define SENSOR_TIMEOUT (120)       /* Timeout when PGN messages expire (no longer retransmitted) */
+#define AIS_TIMEOUT (3600)         /* AIS messages expiration is much longer */
 #define SONICHUB_TIMEOUT (8640000) /* SonicHub messages expiration is basically indefinite */
-#define CLAIM_TIMEOUT (8640000) /* .. as are address claims and device names */
+#define CLAIM_TIMEOUT (8640000)    /* .. as are address claims and device names */
 
 static void closeStream(int i);
 
@@ -159,6 +159,8 @@ StreamInfo stream[FD_SETSIZE];
 const int stdinfd  = 0; /* The fd for the stdin port, this receives the analyzed stream of N2K data. */
 const int stdoutfd = 1; /* Possible fd for the stdout port */
 
+bool haveNMEA0183Client = false;
+
 int outputIdx = -1;
 
 FILE *debugf;
@@ -192,7 +194,7 @@ typedef struct
 {
   uint8_t m_src;
   char *  m_key2;
-  time_t  m_time;
+  time_t  m_time; // Message valid until this time
   char *  m_text;
 } Message;
 
@@ -209,22 +211,22 @@ typedef struct
 } Pgn;
 
 /*
- * An index from PRN to index in the data[] array. By keeping
- * the PGNs that we have seen coalesced in data[] we can loop over all
- * of them very efficiently.
+ * An array of pointers to arrays of Pgn, indexed by PrnToIdx(prn);
+ * Each pointer points to an array of Pgn structures, dynamically allocated.
  */
 Pgn *pgnIdx[PGN_SPACE];
 
 /*
- * Support for 512 different PGNs. Since this is more than there are defined
- * by the NMEA this does not need to be variable.
+ * Keep track of which pgnIdx[] entries are non zero.
  * Each entry points to the location of pgnIdx[...].
+ * This is just a speed up to avoid looping over lots of empty
+ * entries in pgnIdx.
  */
 Pgn ** pgnList[512];
 size_t maxPgnList;
 
 /*
- * If one of the fiels is named like one of these then we index
+ * If one of the fields is named like one of these then we index
  * the array by its value as well.
  *
  * The easiest insight is that an AIS transmission from a particular User ID
@@ -258,6 +260,21 @@ int64_t epoch(void)
     logAbort("Error on obtaining wall clock\n");
   }
   return (int64_t) t.tv_sec * 1000 + t.tv_usec / 1000;
+}
+
+static void setHaveNMEA0183Client(void)
+{
+  int i;
+
+  haveNMEA0183Client = false;
+  for (i = 0; i <= socketIdxMax; i++)
+  {
+    if (stream[i].fd != INVALID_SOCKET && (stream[i].type == CLIENT_NMEA0183_STREAM || stream[i].type == SERVER_NMEA0183_DATAGRAM))
+    {
+      haveNMEA0183Client = true;
+      return;
+    }
+  }
 }
 
 static int setFdUsed(SOCKET fd, StreamType ct)
@@ -339,6 +356,7 @@ static int setFdUsed(SOCKET fd, StreamType ct)
   socketFdMax  = CB_MAX(socketFdMax, fd);
   logDebug("New %s %u (%u..%u fd=%d fdMax=%d)\n", streamTypeName[stream[i].type], i, socketIdxMin, socketIdxMax, fd, socketFdMax);
 
+  setHaveNMEA0183Client();
   return i;
 }
 
@@ -367,6 +385,7 @@ static void closeStream(int i)
       }
     }
   }
+  setHaveNMEA0183Client();
   logDebug("closeStream(%d) (%u..%u fdMax=%d)\n", i, socketIdxMin, socketIdxMax, socketFdMax);
 }
 
@@ -543,7 +562,7 @@ static void safeWriteBuffer(int idx, StringBuffer *sb)
 {
   int r;
 
-  if (stream[idx].writeBuffer.len > 0)
+  if (stream[idx].writeBuffer.len > 0 && sb != &stream[idx].writeBuffer)
   {
     // Awww shit, last time we did not write everything, append the
     // new bits to the old unwritten data and try to write the buffered
@@ -649,6 +668,12 @@ static void writeAllClients(void)
                  stream[i].timeout);
         r--;
 
+        if (stream[i].writeBuffer.len > 0)
+        {
+          safeWriteBuffer(i, &stream[i].writeBuffer);
+          continue;
+        }
+
         switch (stream[i].type)
         {
           case CLIENT_AIS:
@@ -729,6 +754,43 @@ static void writeAllClients(void)
     }
   }
 #endif
+}
+
+static void checkSrcIsKnown(int src, time_t n)
+{
+  static const int PRODUCT_INFO_IDX = PrnToIdx(126996);
+  int              i;
+  Pgn *            pgn = pgnIdx[PRODUCT_INFO_IDX];
+
+  if (src == 0)
+  {
+    return;
+  }
+
+  if (pgn != NULL)
+  {
+    for (i = 0; i < pgn->p_maxSrc; i++)
+    {
+      if (pgn->p_message[i].m_src == src && pgn->p_message[i].m_time >= n)
+      {
+        // Yes, we have product information for this source
+        return;
+      }
+    }
+  }
+
+  // Oops, no product info for this source
+  logInfo("New device src=%d seen\n", src);
+
+  if (stream[stdoutfd].type != DATA_OUTPUT_SINK)
+  {
+    char         strTmp[DATE_LENGTH];
+    StringBuffer msg = sbNew;
+
+    sbAppendFormat(&msg, "%s,6,59904,0,%d,3,14,f0,01\n", now(strTmp), src);
+    safeWriteBuffer(stdoutfd, &msg);
+    sbClean(&msg);
+  }
 }
 
 static bool storeMessage(char *line, size_t len)
@@ -976,6 +1038,11 @@ static bool storeMessage(char *line, size_t len)
     free(key2);
   }
   m->m_time = now + valid;
+
+  if (prn != 126996)
+  {
+    checkSrcIsKnown(src, now);
+  }
   return true;
 }
 
@@ -1033,7 +1100,7 @@ static void handleClientRequest(int i)
       }
     }
     *p = 0;
-    if (storeMessage(stream[i].buffer, len))
+    if (storeMessage(stream[i].buffer, len) && haveNMEA0183Client)
     {
       convertJSONToNMEA0183(&nmeaMessage, stream[i].buffer);
     }

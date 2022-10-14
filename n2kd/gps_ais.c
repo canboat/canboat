@@ -94,7 +94,7 @@ Field Number:
 Update","fields":{"SID":9,"COG Reference":"True","COG":0.0,"SOG":0.00}} $GPVTG,,T,,M,0.150,N,0.278,K,D*2F<0x0D><0x0A>
 */
 
-void nmea0183VTG(StringBuffer *msg183, int src, const char *msg)
+extern void nmea0183VTG(StringBuffer *msg183, int src, const char *msg)
 {
   double sog;
   double cog;
@@ -136,7 +136,7 @@ Field Number:
 DOPs","fields":{"SID":177,"Desired Mode":"3D","Actual Mode":"3D","HDOP":0.97,"VDOP":1.57,"TDOP":327.67}}
 */
 
-void nmea0183GSA(StringBuffer *msg183, int src, const char *msg)
+extern void nmea0183GSA(StringBuffer *msg183, int src, const char *msg)
 {
   char modeString[OTHER_LENGTH] = "";
   char pdopString[OTHER_LENGTH] = "";
@@ -181,7 +181,7 @@ type":"GPS+SBAS/WAAS","Method":"GNSS fix","Integrity":"Safe","Number of SVs":12,
 Separation":-0.01,"Reference Station ID":4087}} $GPGLL,3609.42711,N,00521.36949,W,200015.00,A,D*72
 */
 
-void nmea0183GLL(StringBuffer *msg183, int src, const char *msg)
+extern void nmea0183GLL(StringBuffer *msg183, int src, const char *msg)
 {
   char latString[LAT_LENGTH];
   char lonString[LON_LENGTH];
@@ -302,7 +302,7 @@ strings exceeding the buffer capacity into several substrings. In currently enco
 AIS sentences the maximum size of strings are 20 characters. The negative effect of
 increased memory fotprint is seen as insignificant.
 */
-char *aisString(const char *msg, const char *fieldName)
+static char *aisString(const char *msg, const char *fieldName)
 {
   static char jsonString[21];
 
@@ -348,7 +348,7 @@ static int addAisLongString(const char *msg, const char *fieldName, int maxSize,
 /*
 Extracts and encodes next 6 bit value from the packed ais vector.
 */
-char nextPayloadChar(aisVector *bitVec, int *opos, unsigned char *padding)
+static char nextPayloadChar(aisVector *bitVec, int *opos, unsigned char *padding)
 {
   unsigned char i;
   int           start = *opos / 8;
@@ -423,12 +423,12 @@ static void aisToNmea0183(StringBuffer *msg183, int src, char *aisTalkerId, char
   }
 }
 
-int aisEnum(const char *, const char *);
+static int aisEnum(const char *, const char *);
 
 /*
 Ais nummerical values
 */
-long int aisInteger(const char *msg, const char *fieldName)
+static long int aisInteger(const char *msg, const char *fieldName)
 {
   typedef struct
   {
@@ -488,7 +488,7 @@ long int aisInteger(const char *msg, const char *fieldName)
   return aisEnum(msg, "Time Stamp"); /* Time Stamp enum values */
 }
 
-long int aisFloat(const char *msg, const char *fieldName)
+static long int aisFloat(const char *msg, const char *fieldName)
 {
 #define DEGREES_PER_RADIAN (57.295779513)
 #define SECONDS_PER_MINUTE (60.0)
@@ -586,7 +586,7 @@ long int aisFloat(const char *msg, const char *fieldName)
 /*
 Routine to enumerate ais enum fields based on the json string value.
 */
-int aisEnum(const char *msg, const char *fieldName)
+static int aisEnum(const char *msg, const char *fieldName)
 {
   typedef struct
   {
@@ -1124,7 +1124,7 @@ int aisEnum(const char *msg, const char *fieldName)
 }
 
 // Ship dimensions must be translated from pgn
-long int aisShipDimensions(const char *msg, bool ship)
+static long int aisShipDimensions(const char *msg, bool ship)
 {
   long int length, beam, refBow, refStarboard, toStern, toPort;
 
@@ -1184,7 +1184,7 @@ long int aisETA(const char *msg)
 }
 
 // PGN "Position Date" must be translated to sentence UTC date
-long int aisDate(const char *msg)
+static long int aisDate(const char *msg)
 {
   char         jstr[11];
   unsigned int year = 0, month = 0, day = 0;
@@ -1206,7 +1206,7 @@ long int aisDate(const char *msg)
 }
 
 // PGN "Position Time" must be translated to sentence UTC time
-long int aisTime(const char *msg)
+static long int aisTime(const char *msg)
 {
   char         jstr[9];
   unsigned int hour = 24, minute = 60, second = 60;
@@ -1270,7 +1270,7 @@ char *aisAtoNName(const char *msg, bool extended, int *len)
   return jsonString;
 }
 
-void nmea0183AIVDM(StringBuffer *msg183, int source, const char *msg)
+extern void nmea0183AIVDM(StringBuffer *msg183, int source, const char *msg)
 {
   long int msgid, pgn;
   char     jstr[10];

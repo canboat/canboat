@@ -30,14 +30,14 @@ ROOT_UID=0
 ROOT_GID=0
 ROOT_MOD=0644
 
-all:	bin man1 compile
+all:	bin compile
 	@echo "The binaries are now built and are in $(BUILDDIR)"
 	@echo "Use 'make generated' to recreate generated XML, JSON and DBC files."
 
-compile:
+compile: bin
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
 
-tests:
+tests:  compile
 	$(MAKE) -C analyzer tests
 
 generated: tests

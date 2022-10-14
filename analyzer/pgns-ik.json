@@ -2,7 +2,7 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"4.0.0",
+    "Version":"4.2.2",
     "PGNs": [
     
       {
@@ -23,8 +23,10 @@
             "BitOffset":0,
             "BitStart":0,
             "Type":"Integer",
+            "Resolution":1,
             "Signed":false,
-            "FieldType":"UINT8"},
+            "RangeMin":0,
+            "RangeMax":253},
           {
             "Order":2,
             "Id":"errors",
@@ -33,8 +35,10 @@
             "BitOffset":8,
             "BitStart":0,
             "Type":"Integer",
+            "Resolution":1,
             "Signed":false,
-            "FieldType":"UINT32"},
+            "RangeMin":0,
+            "RangeMax":4294967293},
           {
             "Order":3,
             "Id":"deviceCount",
@@ -43,8 +47,10 @@
             "BitOffset":40,
             "BitStart":0,
             "Type":"Integer",
+            "Resolution":1,
             "Signed":false,
-            "FieldType":"UINT8"},
+            "RangeMin":0,
+            "RangeMax":253},
           {
             "Order":4,
             "Id":"uptime",
@@ -54,8 +60,7 @@
             "BitStart":0,
             "Units":"s",
             "Resolution":0.0001,
-            "Signed":false,
-            "FieldType":"TIME"},
+            "Signed":false},
           {
             "Order":5,
             "Id":"gatewayAddress",
@@ -64,8 +69,10 @@
             "BitOffset":80,
             "BitStart":0,
             "Type":"Integer",
+            "Resolution":1,
             "Signed":false,
-            "FieldType":"UINT8"},
+            "RangeMin":0,
+            "RangeMax":253},
           {
             "Order":6,
             "Id":"rejectedTxRequests",
@@ -74,8 +81,10 @@
             "BitOffset":88,
             "BitStart":0,
             "Type":"Integer",
+            "Resolution":1,
             "Signed":false,
-            "FieldType":"UINT32"}]}
+            "RangeMin":0,
+            "RangeMax":4294967293}]}
     ]
 }
     

@@ -150,10 +150,8 @@
               <th> Field # </th>
               <th> Field Name </th>
               <th> Description </th>
-              <th> Size (bits) </th>
-              <th> Type </th>
               <th> Unit </th>
-              <th> Lookup </th>
+              <th> Type </th>
             </tr>
             <xsl:for-each select="Fields/*">
               <xsl:variable name="resolution" select="Resolution"/>
@@ -188,10 +186,10 @@
                   </xsl:if>
                   <xsl:value-of select="Order"/>
                   <xsl:if test="($OrderPlus1 &gt; ../../RepeatingFieldSet1StartField) and (Order &lt; $FirstFieldAfterSet1)">
-                    <br/>Set 1
+                    <div>Set 1</div>
                   </xsl:if>
                   <xsl:if test="($OrderPlus1 &gt; ../../RepeatingFieldSet2StartField) and (Order &lt; $FirstFieldAfterSet2)">
-                    <br/>Set 2
+                    <div>Set 2</div>
                   </xsl:if>
                 </td>
                 <td> <xsl:value-of select="Name"/> </td>
@@ -205,36 +203,72 @@
                     </xsl:with-param>
                   </xsl:call-template>
                 </td>
-                <td> <xsl:value-of select="BitLength"/> </td>
-                <td>
-                  <a>
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="concat('#ft-', FieldType)"/>
-                    </xsl:attribute>
-                    <xsl:value-of select="FieldType"/>
-                  </a>
-                </td>
                 <td>
                   <xsl:value-of select="$notone"/>
-                  <xsl:value-of select="Unit"/>
+                  <xsl:if test="PhysicalQuantity">
+                    <a>
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="concat('#pq-', PhysicalQuantity)"/>
+                      </xsl:attribute>
+                      <xsl:if test="not(Unit)">
+                        <xsl:value-of select="PhysicalQuantity"/>
+                      </xsl:if>
+                      <xsl:value-of select="Unit"/>
+                    </a>
+                  </xsl:if>
+                  <xsl:if test="not(PhysicalQuantity)">
+                    <xsl:value-of select="Unit"/>
+                  </xsl:if>
+                  <xsl:if test="RangeMin">
+                    <div class='xs'>
+                      <xsl:value-of select="RangeMin"/> .. <xsl:value-of select="RangeMax"/>
+                    </div>
+                  </xsl:if>
                 </td>
                 <td>
-                  <xsl:if test="LookupEnumeration">
-                    <a>
-                      <xsl:attribute name="href">
-                        <xsl:value-of select="concat('#lookup-', LookupEnumeration)"/>
-                      </xsl:attribute>
-                      <xsl:value-of select="LookupEnumeration"/>
-                    </a>
+                  <xsl:if test="BitLength">
+                    <xsl:value-of select="BitLength"/> bits
                   </xsl:if>
-                  <xsl:if test="LookupBitEnumeration">
-                    <a>
-                      <xsl:attribute name="href">
-                        <xsl:value-of select="concat('#lookupbit-', LookupBitEnumeration)"/>
-                      </xsl:attribute>
-                      <xsl:value-of select="LookupBitEnumeration"/>
-                    </a>
-                  </xsl:if>
+                  <xsl:choose>
+                    <xsl:when test="LookupEnumeration">
+                      lookup
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="concat('#lookup-', LookupEnumeration)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="LookupEnumeration"/>
+                      </a>
+                    </xsl:when>
+                    <xsl:when test="LookupBitEnumeration">
+                      bitfield
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="concat('#lookupbit-', LookupBitEnumeration)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="LookupBitEnumeration"/>
+                      </a>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:if test="Signed = 'true'">
+                        signed
+                      </xsl:if>
+                      <xsl:if test="Signed = 'false'">
+                        unsigned
+                      </xsl:if>
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="concat('#ft-', FieldType)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="FieldType"/>
+                      </a>
+                      <xsl:if test="Offset">
+                        <div>
+                          stored with <a href="#offset">offset</a>
+                          <xsl:text> </xsl:text> <xsl:value-of select="Offset"/>
+                        </div>
+                      </xsl:if>
+                    </xsl:otherwise>
+                  </xsl:choose>
                 </td>
               </tr>
             </xsl:for-each>
@@ -310,6 +344,34 @@
           </tr>
         </xsl:for-each>
       </table>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template name="physicalquantity-list">
+    <h2 id='physical-quantities'>Physical quantities</h2>
+
+    A lot of fields represent a physical, observable, quantity. 
+
+    <xsl:for-each select="/PGNDefinitions/PhysicalQuantities/*">
+      <h3>
+        <xsl:attribute name="id">
+          <xsl:value-of select="concat('pq-', @Name)"/>
+        </xsl:attribute>
+        <xsl:value-of select="@Name"/> - <xsl:value-of select="Description"/>
+      </h3>
+      <p> <xsl:value-of select="Comment"/> </p>
+      <p>In the CAN data these are expressed in <xsl:value-of select="UnitDescription"/>, abbreviated as <xsl:value-of select="Unit"/>.</p>
+      <xsl:if test="URL">
+        <p>
+          For more information see:
+          <a>
+            <xsl:attribute name="href">
+              <xsl:value-of select="URL"/>
+            </xsl:attribute>
+            <xsl:value-of select="URL"/>
+          </a>
+        </p>
+      </xsl:if>
     </xsl:for-each>
   </xsl:template>
 
@@ -419,9 +481,11 @@
           <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&#215;</a>
           <a href="#main">Top</a>
           <a href="#pgn-list">PGN list</a>
+          <a href="#physical-quantities">Physical Quantities</a>
           <a href="#field-types">Field Types</a>
           <a href="#lookup-enumerations">Lookup enumerations</a>
           <a href="#bitfield-enumerations">Bitfield enumerations</a>
+          <a href="#notes">Notes</a>
         </div>
 
         <div id="sidenav-closed" class="sidenav">
@@ -605,9 +669,25 @@
           </p>
 
           <xsl:call-template name="pgn-list"/>
+          <xsl:call-template name="physicalquantity-list"/>
           <xsl:call-template name="fieldtypes-list"/>
           <xsl:call-template name="lookup-list"/>
           <xsl:call-template name="lookupbit-list"/>
+
+          <h2 id='notes'>Notes</h2>
+          <h3 id='offset'>Excess-K offset</h3>
+          <p>
+            Some fields are not stored as a straight signed two's complement binary number,
+            but as an binary number with an offset.
+          </p>
+          <p>
+            So in effect the value <i>is</i> signed, but it is stored as an unsigned number where
+            the unsigned number n should be interpreted as (n + K). As the offset
+            in these definitions is negative, it results in a value that can be negative.
+          </p>
+          <p>
+            For more information see: <a href="https://en.wikipedia.org/wiki/Offset_binary">https://en.wikipedia.org/wiki/Offset_binary</a>
+          </p>
 
         </div>
 

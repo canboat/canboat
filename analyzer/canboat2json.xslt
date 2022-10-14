@@ -322,6 +322,12 @@
     <xsl:call-template name="indent"/><xsl:text>],</xsl:text>
   </xsl:template>
 
+  <xsl:template match="PhysicalQuantities">
+    <xsl:call-template name="indent"/><xsl:text>"PhysicalQuantities":[</xsl:text>
+    <xsl:apply-templates/>
+    <xsl:call-template name="indent"/><xsl:text>],</xsl:text>
+  </xsl:template>
+
   <xsl:template match="FieldTypes">
     <xsl:call-template name="indent"/><xsl:text>"FieldTypes":[</xsl:text>
     <xsl:apply-templates/>
@@ -348,6 +354,10 @@
     <xsl:value-of select="."/><xsl:text>"</xsl:text>
     <xsl:call-template name="indent"/><xsl:text>}</xsl:text>
     <xsl:if test="not(position() = last())">,</xsl:if>
+  </xsl:template>
+
+  <xsl:template match="PhysicalQuantities/PhysicalQuantity">
+    <xsl:call-template name="base2"/>
   </xsl:template>
 
   <xsl:template match="FieldTypes/FieldType">

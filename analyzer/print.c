@@ -188,6 +188,12 @@ static bool extractNumberNotEmpty(const Field *field,
   return true;
 }
 
+extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+{
+  // This is only a different printer so the JSON can contain a string value
+  return fieldPrintNumber(field, fieldName, data, dataLen, startBit, bits);
+}
+
 extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
   int64_t     value;

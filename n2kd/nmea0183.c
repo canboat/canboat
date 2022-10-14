@@ -125,7 +125,7 @@ enum
 
 static int64_t rateLimitPassed[256][RATE_COUNT];
 
-void nmea0183CreateMessage(StringBuffer *msg183, int src, const char *format, ...)
+extern void nmea0183CreateMessage(StringBuffer *msg183, int src, const char *format, ...)
 {
   unsigned int chk;
   size_t       i;
@@ -562,7 +562,7 @@ static bool matchFilter(int n, char *filter)
   return negativeMatch;
 }
 
-void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
+extern void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
 {
   int prn;
   int src;

@@ -52,17 +52,6 @@ void fillLookups(void)
 
 #include "lookup.h"
 
-  /*
-#define LOOKUP_TYPE(type, length)                                       \
-  if (length > 1)                                                       \
-  {                                                                     \
-    FILL_IF_NOT_SET(lookupValue##type, (1 << (length)) - 1, "Unknown"); \
-    FILL_IF_NOT_SET(lookupValue##type, (1 << (length)) - 2, "Error");   \
-  }
-
-#include "lookup.h"
-*/
-
   // Iterate over the PGNs and fill the description of company-code fixed values
   {
     int i;

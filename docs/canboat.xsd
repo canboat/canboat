@@ -20,11 +20,47 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-
 </xs:documentation>
+
     </xs:annotation>
   </xs:element>
+
+  <xs:complexType name="PGNDefinitions">
+    <xs:annotation>
+      <xs:documentation>
+        The outer container has the historic name PGNDefinitions.
+        Historic, because it now also contains other complex types that
+        are referred to from the PGNs.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:annotation>
+        <xs:documentation>
+          Whereever possible we use a straight sequence, which garantuees
+          that the children elements are always in the same order.
+
+          This has as children some basic string elements followed by
+          the different complex types that we use to define the PGNs:
+          Physical Quantities, Field Types, and three types of enumerations:
+          Missing, Lookup and LookupBit.
+          The last element is the list of PGNs themselves.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:element type="xs:string" name="Comment"/>
+      <xs:element type="xs:string" name="CreatorCode"/>
+      <xs:element type="xs:string" name="License"/>
+      <xs:element type="xs:string" name="Version"/>
+      <xs:element type="xs:string" name="Copyright"/>
+      <xs:element type="PhysicalQuantities" name="PhysicalQuantities"/>
+      <xs:element type="FieldTypes" name="FieldTypes"/>
+      <xs:element type="MissingEnumerations" name="MissingEnumerations"/>
+      <xs:element type="LookupEnumerations" name="LookupEnumerations"/>
+      <xs:element type="LookupBitEnumerations" name="LookupBitEnumerations"/>
+      <xs:element type="PGNs" name="PGNs"/>
+    </xs:sequence>
+    <xs:attribute type="xs:float" name="Version"/>
+  </xs:complexType>
+
   <xs:complexType name="EnumPair">
     <xs:simpleContent>
       <xs:extension base="xs:string">
@@ -34,6 +70,14 @@ limitations under the License.
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="LookupEnumeration">
+    <xs:annotation>
+      <xs:documentation>
+        The LookupEnumeration is a list of EnumPair elements with a name.
+        This allows the PGN field to refer to this when it contains a lookup
+        field, for instance 0 = No, 1 = Yes. The special null-like values
+        for Unknown and Error are not placed in this list.
+      </xs:documentation>
+    </xs:annotation>
     <xs:sequence>
       <xs:element type="EnumPair" name="EnumPair" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
@@ -54,6 +98,14 @@ limitations under the License.
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="LookupBitEnumeration">
+    <xs:annotation>
+      <xs:documentation>
+        The LookupBitEnumeration is a list of BitPair elements with a name.
+        This allows the PGN field to refer to this when it contains a lookup
+        field, for instance bit 0 = Too Hot, bit 1 = Too Cold.
+        LookupBitEnumeration fields do not have special null-like values.
+      </xs:documentation>
+    </xs:annotation>
     <xs:sequence>
       <xs:element type="BitPair" name="BitPair" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
@@ -66,24 +118,93 @@ limitations under the License.
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="FieldType">
+  <xs:complexType name="PhysicalQuantity">
+    <xs:annotation>
+      <xs:documentation>
+        To explain numeric types more easily the concept of a PhysicalQuantity
+        is introduced. Given the few public snippets of the NMEA PGN definitions
+        it looks as if they do not explicity have such a concept, but it seems
+        a nice way of grouping similar fields.
+        If a field represents a value with a particular unit, like 'A' for Ampere,
+        this refers to the concept of ELECTRICAL_CURRENT -- at least that is how
+        we see it.
+        The PhysicalQuantity is mostly used for 'explanation', it is not fundamental
+        to interpreting the PGN field values.
+      </xs:documentation>
+    </xs:annotation>
     <xs:sequence>
-      <xs:choice maxOccurs="unbounded" minOccurs="0">
-        <xs:element type="xs:string" name="Description"/>
-        <xs:element type="xs:string" name="EncodingDescription"/>
-        <xs:element type="xs:string" name="Comment"/>
-        <xs:element type="xs:string" name="URL" minOccurs="0"/>
-        <xs:element type="xs:float" name="Resolution"/>
-        <xs:element type="xs:float" name="Offset"/>
-        <xs:element type="xs:string" name="Unit"/>
-        <xs:element type="xs:boolean" name="Signed"/>
-        <xs:element type="xs:boolean" name="VariableSize"/>
-        <xs:element type="xs:short" name="Bits"/>
-        <xs:element type="xs:float" name="RangeMin"/>
-        <xs:element type="xs:float" name="RangeMax"/>
-        <xs:element type="xs:string" name="Format"/>
-        <xs:element type="xs:string" name="BaseFieldType"/>
-      </xs:choice>
+      <xs:element type="xs:string" name="Description"/>
+      <xs:element type="xs:string" name="Comment" minOccurs="0"/>
+      <xs:element type="xs:string" name="URL" minOccurs="0"/>
+      <xs:element type="xs:string" name="UnitDescription"/>
+      <xs:element type="xs:string" name="Unit"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name"/>
+  </xs:complexType>
+  <xs:complexType name="PhysicalQuantities">
+    <xs:sequence>
+      <xs:element type="PhysicalQuantity" name="PhysicalQuantity" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FieldType">
+    <xs:annotation>
+      <xs:documentation>
+        There are only a few, really basic, field types.
+        In the C code of the CANBoat analyzer, these map perfectly onto C functions
+        that extract the bits from the PGN and emit them in "human" or "JSON" form.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description">
+      </xs:element>
+      <xs:element type="xs:string" name="EncodingDescription" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Explanation of how the field type is encoded.
+            field type.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="Comment" minOccurs="0">
+      </xs:element>
+      <xs:element type="xs:string" name="URL" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Optional external reference explaining the encoding of this
+            field type.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:short" name="Bits" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            The number of bits that this field takes up in the PGN, if this
+            is fixed for all fields.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="Unit" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Present in the FieldType when it has a typical unit.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:boolean" name="Signed" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Present in the FieldType when all fields have a garuanteed sign.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:boolean" name="VariableSize" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            True if the fields of this FieldType all have a variable length in bits.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
     <xs:attribute type="xs:string" name="Name"/>
   </xs:complexType>
@@ -94,26 +215,196 @@ limitations under the License.
   </xs:complexType>
 
   <xs:complexType name="Field">
-    <xs:choice maxOccurs="unbounded" minOccurs="0">
-      <xs:element type="xs:byte" name="Order"/>
-      <xs:element type="xs:string" name="Id"/>
-      <xs:element type="xs:string" name="Name"/>
-      <xs:element type="xs:string" name="Description"/>
-      <xs:element type="xs:short" name="BitLength"/>
-      <xs:element type="xs:boolean" name="BitLengthVariable"/>
-      <xs:element type="xs:short" name="BitOffset"/>
-      <xs:element type="xs:byte" name="BitStart"/>
-      <xs:element type="xs:int" name="Match"/>
-      <xs:element type="xs:string" name="Type"/>
-      <xs:element type="xs:float" name="Resolution"/>
-      <xs:element type="xs:int" name="Offset"/>
-      <xs:element type="xs:boolean" name="Signed"/>
-      <xs:element type="xs:string" name="FieldType"/>
-      <xs:element type="xs:string" name="LookupEnumeration"/>
-      <xs:element type="xs:string" name="LookupBitEnumeration"/>
-      <xs:element type="xs:string" name="Unit"/>
-      <xs:element type="xs:string" name="Condition"/>
-    </xs:choice>
+    <xs:annotation>
+      <xs:documentation>
+        The Field is the core definition, as a PGN is usually just a bunch of fields
+        in sequence.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element type="xs:byte" name="Order">
+        <xs:annotation>
+          <xs:documentation>
+            The sequence in which the field is ordered within the PGN. 
+            Starts at 1. In theory there could be 233 * 8 fields, but in practice
+            there are no more than 29.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="Id">
+        <xs:annotation>
+          <xs:documentation>
+            A generated string representing the field name; e.g. with spaces removed
+            and in camelCase.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="Name">
+        <xs:annotation>
+          <xs:documentation>
+            The field name.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="Description" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            An extra explanation.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:boolean" name="BitLengthVariable" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            This is present, and true, if the field has a variable length.
+            For instance, most types of strings. These will then have a minimum
+            length defined by how the string length is determined, but that
+            is type dependent.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:short" name="BitLength" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            If present, the field has a fixed length and this element gives
+            the number of bits that the field is long.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:short" name="BitOffset" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            If present, the field is preceded by no other fields or only fixed
+            length fields and the offset from the start of the PGN data can be
+            pre-determined, and this element says how many bits from the start
+            that this field is located.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:byte" name="BitStart" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Some fields are not byte-aligned, and will contain a non-zero value
+            for BitStart, indicating at which bit in the byte the field starts.
+            Note that fields can span multiple bytes. In practice we have not
+            seen fields that start at a non-zero BitStart and span more than 2
+            bytes.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="Condition" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When a field contains this element, this field may or may not
+            appear in the PGN depending on the condition.
+            At this moment the only possible condition is if the early
+            field in the same PGN named 'PGN' is manufacturer proprietary.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:int" name="Match" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Manufacturer proprietary PGNs do not have to have a unique PGN
+            number, as each manufacturer is free to use all PGNs in the
+            manufacturer proprietary ranges. To distinguish which PGN definition
+            is the appropriate one, some PGNs contain Match values that must
+            all match before this PGN definition is considered the right one.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="Unit" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            The unit that the PGN is defined in; these are generally, but not always,
+            SI or SI like. Some manufacturer PGNs define angles in degrees instead
+            of in radians, and some standardized fields use kWh instead of J.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:float" name="Resolution" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            All number-y fields have a resolution, which tells you how the binary
+            value must be interpreted vis-a-vis the physical quantity. For instance,
+            angles are generally stored as 0.0001 radian, so a binary value of 0
+            means 0 radians, 1 means 0.0001 radian, 2 means 0.0002 radian, etc.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:boolean" name="Signed" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            All number-y fields have this element, and it reports whether the
+            fields contains a signed or an unsigned value. Unsigned values are
+            always in standard binary format, with the LSB representing the
+            value 1, the 2nd bit the value 2, the 3rd bit the value 4, etc.
+            Signed values are either in 2s complement, or in Excess K offset
+            notation. If the latter, the Offset element is present.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:int" name="Offset" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the value is signed, but not in 2s complement, the value is in
+            Excess K format and this element contains the (negative) offset that
+            must be added to the unsigned binary number to end up with the 
+            appropriate signed value.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:float" name="RangeMin" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            The minimal value that the field can represent, after conversion to
+            a floating point value -- e.g. after the sign and offset and resolution
+            have been applied.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:float" name="RangeMax" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            The minimal value that the field can represent, after conversion to
+            a floating point value -- e.g. after the sign and offset and resolution
+            have been applied. Note that this reserves space for the special values
+            that can be present.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="FieldType">
+        <xs:annotation>
+          <xs:documentation>
+            Fields always contain a field type.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="PhysicalQuantity" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Fields that represent a physical quantity refer to one of the
+            PhysicalQuantities. If Unit is present, so is PhysicalQuantity.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is LOOKUP, the field value has meaning derived from 
+            the lookup table mentioned here.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupBitEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is BITLOOKUP, the field value has to be interpreted as
+            a number of bits, with each bit forming a flag whose meaning is given in the lookup table.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
   </xs:complexType>
   <xs:complexType name="Fields">
     <xs:sequence>
@@ -122,6 +413,11 @@ limitations under the License.
   </xs:complexType>
 
   <xs:complexType name="Missing">
+    <xs:annotation>
+      <xs:documentation>
+        Documents the things that we do not know about this PGN yet.
+      </xs:documentation>
+    </xs:annotation>
     <xs:sequence>
       <xs:element type="xs:string" name="MissingAttribute" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
@@ -148,21 +444,118 @@ limitations under the License.
       <xs:element type="xs:string" name="Description"/>
       <xs:element type="xs:string" name="Explanation" minOccurs="0"/>
       <xs:element type="xs:string" name="URL" minOccurs="0"/>
-      <xs:element type="xs:string" name="Type"/>
-      <xs:element type="xs:boolean" name="Complete"/>
+      <xs:element type="xs:string" name="Type">
+        <xs:annotation>
+          <xs:documentation>
+            Whether the PGN is a <i>Single</i> frame or a <i>Fast</i> packet set of frames.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:boolean" name="Complete">
+        <xs:annotation>
+          <xs:documentation>
+            When present and true, the PGN has been reverse engineered to such a level that
+            we believe it is nearly complete; e.g. in all practical ways the PGN is usable
+            in producing proper results. If this is not present, there will be a Missing
+            element that explains what we think we don't know.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:string" name="Fallback" minOccurs="0"/>
-      <xs:element type="Missing" name="Missing" minOccurs="0"/>
+      <xs:element type="Missing" name="Missing" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Gives a list of MissingAttribute that we think we don't know.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:short" name="FieldCount"/>
       <xs:element type="xs:short" name="MinLength" minOccurs="0"/>
       <xs:element type="xs:short" name="Length" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFieldSet1Size" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFieldSet1StartField" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFieldSet1CountField" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFieldSet2Size" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFieldSet2StartField" minOccurs="0"/>
-      <xs:element type="xs:byte" name="RepeatingFieldSet2CountField" minOccurs="0"/>
-      <xs:element type="xs:short" name="TransmissionInterval" minOccurs="0"/>
-      <xs:element type="xs:boolean" name="TransmissionIrregular" minOccurs="0"/>
+      <xs:element type="xs:byte" name="RepeatingFieldSet1Size" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Some fields may repeat, either until the data is exhausted or a particular
+            field says how often the fields repeat. There can be two sets of repeating
+            fields.
+            If present, this element documents how many fields are in the first set of 
+            repeating fields.
+            If not present, there are no repeating fields.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:byte" name="RepeatingFieldSet1StartField" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Some fields may repeat, either until the data is exhausted or a particular
+            field says how often the fields repeat. There can be two sets of repeating
+            fields.
+            This element documents at which field (e.g. its 'Order') the first set starts.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:byte" name="RepeatingFieldSet1CountField" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Some fields may repeat, either until the data is exhausted or a particular
+            field says how often the fields repeat. There can be two sets of repeating
+            fields.
+            This element documents which earlier field indicates how often the first set repeats.
+            If RepeatingFieldSet1StartField is present but RepeatingFieldSet1CountField is not,
+            the set repeats until the data is exhausted.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:byte" name="RepeatingFieldSet2Size" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Some fields may repeat, either until the data is exhausted or a particular
+            field says how often the fields repeat. There can be two sets of repeating
+            fields.
+            If present, this element documents how many fields are in the second set of
+            repeating fields.
+            If not present, there is no repeating second set.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:byte" name="RepeatingFieldSet2StartField" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Some fields may repeat, either until the data is exhausted or a particular
+            field says how often the fields repeat. There can be two sets of repeating
+            fields.
+            This element documents at which field (e.g. its 'Order') the second set starts.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:byte" name="RepeatingFieldSet2CountField" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Some fields may repeat, either until the data is exhausted or a particular
+            field says how often the fields repeat. There can be two sets of repeating
+            fields.
+            This element documents which earlier field indicates how often the second set repeats.
+            If RepeatingFieldSet2StartField is present but RepeatingFieldSet2CountField is not,
+            the set repeats until the data is exhausted.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:short" name="TransmissionInterval" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When present, it reports the typical interval, in milliseconds, that the PGN repeats.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:boolean" name="TransmissionIrregular" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When present, and true, the PGN is only transmitted when something happens (like
+            an error condition), when a button is pressed, or when some other devices sends a
+            request for the device to send this PGN.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="Fields" name="Fields" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
@@ -173,19 +566,4 @@ limitations under the License.
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="PGNDefinitions">
-    <xs:sequence>
-      <xs:element type="xs:string" name="Comment"/>
-      <xs:element type="xs:string" name="CreatorCode"/>
-      <xs:element type="xs:string" name="License"/>
-      <xs:element type="xs:string" name="Version"/>
-      <xs:element type="xs:string" name="Copyright"/>
-      <xs:element type="FieldTypes" name="FieldTypes"/>
-      <xs:element type="MissingEnumerations" name="MissingEnumerations"/>
-      <xs:element type="LookupEnumerations" name="LookupEnumerations"/>
-      <xs:element type="LookupBitEnumerations" name="LookupBitEnumerations"/>
-      <xs:element type="PGNs" name="PGNs"/>
-    </xs:sequence>
-    <xs:attribute type="xs:float" name="Version"/>
-  </xs:complexType>
 </xs:schema>
