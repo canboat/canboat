@@ -5202,14 +5202,6 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Manufacturer Proprietary fast-packet non-addressed",
-     130816,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), NULL), END_OF_FIELDS},
-     .fallback = true}
-
-    ,
     {"Navico: Product Information",
      130817,
      PACKET_INCOMPLETE,

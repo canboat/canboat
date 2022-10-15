@@ -12,6 +12,7 @@ Sections can be: Changed Deprecated Removed Fixed Security.
 
 - Fix `RangeMax` for UINT64_MAX values.
 - #316: Regression since v2.0.0: Temperature Coefficient was dropped from PGN 127513.
+- #315: Remove superfluous duplicate fallback PGN.
 
 ## [4.2.2]
 
