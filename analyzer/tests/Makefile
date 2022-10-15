@@ -21,16 +21,26 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 tests
+.PHONY: test1 test2 test3 tests
 
-test1:	$(ANALYZER) recombine-frames.in recombine-frames.out
+all:	tests
+
+test1:
 	$(ANALYZER) < recombine-frames.in > $(TEMPDIR)/recombine-frames.out -debug -q -fixtime recombine 2> $(TEMPDIR)/recombine-frames.err
 	diff $(TEMPDIR)/recombine-frames.out recombine-frames.out
 	diff $(TEMPDIR)/recombine-frames.err recombine-frames.err
 
-test2:	$(ANALYZER) switch-multi-to-one-line.in switch-multi-to-one-line.out
+test2:	
 	$(ANALYZER) < switch-multi-to-one-line.in > $(TEMPDIR)/switch-multi-to-one-line.out -debug -q -fixtime switch-multi-to-one-line 2> $(TEMPDIR)/switch-multi-to-one-line.err
 	diff $(TEMPDIR)/switch-multi-to-one-line.out switch-multi-to-one-line.out
 	diff $(TEMPDIR)/switch-multi-to-one-line.err switch-multi-to-one-line.err
 
-tests:	test1 test2
+#
+# This tests JSON stability
+#
+test3:	
+	$(ANALYZER) < pgn-test.in > $(TEMPDIR)/pgn-test.out -debug -q -json -fixtime pgn-test 2> $(TEMPDIR)/pgn-test.err
+	diff $(TEMPDIR)/pgn-test.out pgn-test.out
+	diff $(TEMPDIR)/pgn-test.err pgn-test.err
+
+tests:	test1 test2 test3

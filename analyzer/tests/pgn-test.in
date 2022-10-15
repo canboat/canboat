@@ -1,0 +1,9 @@
+#
+# A list of PGNs to be processed, in order of PGN.
+#
+# Some are artificially changed to have non-null fields. These
+# are recognisable by timestamp date 1970-01-01.
+#
+2011-04-25-06:25:03.603,3,129029,36,255,43,e6,f1,3a,80,9c,c6,0d,00,12,38,aa,49,eb,51,07,00,0c,44,95,fb,15,b8,00,40,e1,33,00,00,00,00,00,13,fc,09,5a,00,8c,00,ff,ff,ff,7f,00
+1970-01-01T00:00:00.000Z,3,127513,61,255,8,00,c1,11,14,00,02,01,62
+#SHOWBUFFERS

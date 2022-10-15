@@ -16261,8 +16261,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
         ],
-        "FieldCount":9,
-        "Length":7,
+        "FieldCount":10,
+        "Length":8,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -16361,10 +16361,24 @@
           },
           {
             "Order":8,
+            "Id":"temperatureCoefficient",
+            "Name":"Temperature Coefficient",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Unit":"%",
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-127,
+            "RangeMax":125,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
             "Id":"peukertExponent",
             "Name":"Peukert Exponent",
             "BitLength":8,
-            "BitOffset":40,
+            "BitOffset":48,
             "BitStart":0,
             "Resolution":0.002,
             "Signed":false,
@@ -16374,17 +16388,17 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":9,
+            "Order":10,
             "Id":"chargeEfficiencyFactor",
             "Name":"Charge Efficiency Factor",
             "BitLength":8,
-            "BitOffset":48,
+            "BitOffset":56,
             "BitStart":0,
             "Unit":"%",
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
+            "Signed":true,
+            "RangeMin":-127,
+            "RangeMax":125,
             "FieldType":"NUMBER"
           }
         ]

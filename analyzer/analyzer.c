@@ -551,11 +551,11 @@ static void showBuffers(void)
 
     if (p->used)
     {
-      logDebug("ReassemblyBuffer[%zu] PGN %u: size %zu frames=%x mask=%x\n", buffer, p->pgn, p->size, p->frames, p->allFrames);
+      logError("ReassemblyBuffer[%zu] PGN %u: size %zu frames=%x mask=%x\n", buffer, p->pgn, p->size, p->frames, p->allFrames);
     }
     else
     {
-      logInfo("ReassemblyBuffer[%zu]: inUse=false\n", buffer);
+      logDebug("ReassemblyBuffer[%zu]: inUse=false\n", buffer);
     }
   }
 }

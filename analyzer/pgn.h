@@ -2847,8 +2847,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Nominal Voltage", 4, BATTERY_VOLTAGE),
       LOOKUP_FIELD("Chemistry", 4, BATTERY_CHEMISTRY),
       ELECTRIC_CHARGE_UFIX16_AH("Capacity"),
+      PERCENTAGE_I8_FIELD("Temperature Coefficient"),
       PEUKERT_FIELD("Peukert Exponent"),
-      PERCENTAGE_U8_FIELD("Charge Efficiency Factor"),
+      PERCENTAGE_I8_FIELD("Charge Efficiency Factor"),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
