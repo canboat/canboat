@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 tests
+.PHONY: test1 test2 test3 test4 tests
 
 all:	tests
 
@@ -36,11 +36,19 @@ test2:
 	diff $(TEMPDIR)/switch-multi-to-one-line.err switch-multi-to-one-line.err
 
 #
-# This tests JSON stability
+# This tests TEXT stability
 #
 test3:	
-	$(ANALYZER) < pgn-test.in > $(TEMPDIR)/pgn-test.out -debug -q -json -fixtime pgn-test 2> $(TEMPDIR)/pgn-test.err
+	$(ANALYZER) < pgn-test.in > $(TEMPDIR)/pgn-test.out -debug -q -fixtime pgn-test 2> $(TEMPDIR)/pgn-test.err
 	diff $(TEMPDIR)/pgn-test.out pgn-test.out
 	diff $(TEMPDIR)/pgn-test.err pgn-test.err
 
-tests:	test1 test2 test3
+#
+# This tests JSON stability
+#
+test4:	
+	$(ANALYZER) < pgn-test.in > $(TEMPDIR)/pgn-test-json.out -debug -q -json -fixtime pgn-test 2> $(TEMPDIR)/pgn-test-json.err
+	diff $(TEMPDIR)/pgn-test-json.out pgn-test-json.out
+	diff $(TEMPDIR)/pgn-test-json.err pgn-test-json.err
+
+tests:	test1 test2 test3 test4

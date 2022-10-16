@@ -16,9 +16,11 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #317: PGN 127489 Dynamic Engine Parameters field Percent Engine Torque is signed, not unsigned.
 - #316: Regression since v2.0.0: Temperature Coefficient was dropped from PGN 127513.
 - #315: Remove superfluous duplicate fallback PGN.
 - Fix `RangeMax` for UINT64_MAX values.
+- Fix print of bitlookup in textual analyzer.
 
 ## [4.2.2]
 

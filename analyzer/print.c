@@ -492,7 +492,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
     {
       s = (*field->lookup.function.pair)((size_t) value);
     }
-    else /* TRIPLET */
+    else if (field->lookup.type == LOOKUP_TYPE_TRIPLET)
     {
       int64_t val1;
 
@@ -503,6 +503,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
         s = (*field->lookup.function.triplet)((size_t) val1, (size_t) value);
       }
     }
+    // BIT is handled in fieldPrintBitLookup
   }
 
   if (s != NULL)
@@ -597,7 +598,14 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
   }
   if (value == 0)
   {
-    printEmpty(fieldName, value - maxValue);
+    if (showJson)
+    {
+      printEmpty(fieldName, value - maxValue);
+    }
+    else
+    {
+      mprintf("%s %s = None", getSep(), fieldName);
+    }
     return true;
   }
 
