@@ -12646,9 +12646,9 @@ limitations under the License.
           <Units>%</Units>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>125</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>

@@ -13897,9 +13897,9 @@
             "BitStart":0,
             "Unit":"%",
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
+            "Signed":true,
+            "RangeMin":-127,
+            "RangeMax":125,
             "FieldType":"NUMBER"
           }
         ]

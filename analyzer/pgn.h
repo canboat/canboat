@@ -2541,6 +2541,8 @@ Pgn pgnList[] = {
      .interval = 100}
 
     // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
+    // samples/susteranna-actisense-serial.raw:
+    //   2016-04-09T16:41:39.628Z,2,127489,16,255,26,00,2f,06,ff,ff,e3,73,65,05,ff,7f,72,10,00,00,ff,ff,ff,ff,ff,06,00,00,00,7f,7f
     ,
     {"Engine Parameters, Dynamic",
      127489,
@@ -2559,7 +2561,7 @@ Pgn pgnList[] = {
       BITLOOKUP_FIELD("Discrete Status 1", BYTES(2), ENGINE_STATUS_1),
       BITLOOKUP_FIELD("Discrete Status 2", BYTES(2), ENGINE_STATUS_2),
       PERCENTAGE_I8_FIELD("Engine Load"),
-      PERCENTAGE_U8_FIELD("Engine Torque"),
+      PERCENTAGE_I8_FIELD("Engine Torque"),
       END_OF_FIELDS},
      .interval = 500}
 
