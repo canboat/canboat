@@ -2,7 +2,7 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"4.2.2",
+    "Version":"4.3.0",
     "PGNs": [
     
       {
@@ -31898,7 +31898,16 @@
               {"name": "Skip back", "value": 12},
               {"name": "Jog ahead", "value": 13},
               {"name": "Jog back", "value": 14},
-              {"name": "Seek up", "value": 15}]},
+              {"name": "Seek up", "value": 15},
+              {"name": "Seek down", "value": 16},
+              {"name": "Scan up", "value": 17},
+              {"name": "Scan down", "value": 18},
+              {"name": "Tune up", "value": 19},
+              {"name": "Tune down", "value": 20},
+              {"name": "Slow motion .75x", "value": 21},
+              {"name": "Slow motion .5x", "value": 22},
+              {"name": "Slow motion .25x", "value": 23},
+              {"name": "Slow motion .125x", "value": 24}]},
           {
             "Order":7,
             "Id":"x",

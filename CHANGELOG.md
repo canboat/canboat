@@ -4,15 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Sections can be: Changed Deprecated Removed Fixed Security.
+Sections can be: Added Changed Deprecated Removed Fixed Security.
 
-## [Unreleased]
+## [4.3.0]
+
+### Added
+
+- #317: Add `INDIRECT_LOOKUP` fieldtype, and XML/JSON that enumerates `EnumTriplet`s.
+        This is used for enumerating DEVICE_FUNCTION, which depends on the DEVICE_CLASS,
+        as used in PGNs 60928 "ISO Address Claim" and 65240 "ISO Commanded Address".
 
 ### Fixed
 
-- Fix `RangeMax` for UINT64_MAX values.
 - #316: Regression since v2.0.0: Temperature Coefficient was dropped from PGN 127513.
 - #315: Remove superfluous duplicate fallback PGN.
+- Fix `RangeMax` for UINT64_MAX values.
 
 ## [4.2.2]
 

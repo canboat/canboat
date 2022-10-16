@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.2.2
+CANboat version v4.3.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.2.2</Version>
+  <Version>4.3.0</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -35261,6 +35261,15 @@ limitations under the License.
             <EnumPair Value='13' Name='Jog ahead' />
             <EnumPair Value='14' Name='Jog back' />
             <EnumPair Value='15' Name='Seek up' />
+            <EnumPair Value='16' Name='Seek down' />
+            <EnumPair Value='17' Name='Scan up' />
+            <EnumPair Value='18' Name='Scan down' />
+            <EnumPair Value='19' Name='Tune up' />
+            <EnumPair Value='20' Name='Tune down' />
+            <EnumPair Value='21' Name='Slow motion .75x' />
+            <EnumPair Value='22' Name='Slow motion .5x' />
+            <EnumPair Value='23' Name='Slow motion .25x' />
+            <EnumPair Value='24' Name='Slow motion .125x' />
           </EnumValues>
         </Field>
         <Field>

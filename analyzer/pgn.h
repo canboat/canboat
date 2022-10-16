@@ -38,6 +38,44 @@ limitations under the License.
 typedef struct FieldType FieldType;
 typedef struct Pgn       Pgn;
 
+typedef void (*EnumPairCallback)(size_t value, const char *name);
+typedef void (*BitPairCallback)(size_t value, const char *name);
+typedef void (*EnumTripletCallback)(size_t value1, size_t value2, const char *name);
+
+typedef enum LookupType
+{
+  LOOKUP_TYPE_NONE,
+  LOOKUP_TYPE_PAIR,
+  LOOKUP_TYPE_TRIPLET,
+  LOOKUP_TYPE_BIT
+} LookupType;
+
+typedef struct
+{
+  const char *name;
+  LookupType  type;
+  union
+  {
+    const char *(*pair)(size_t val);
+    const char *(*triplet)(size_t val1, size_t val2);
+    void (*pairEnumerator)(EnumPairCallback);
+    void (*bitEnumerator)(BitPairCallback);
+    void (*tripletEnumerator)(EnumTripletCallback);
+  } function;
+  uint8_t val1Order;
+  size_t  size;
+} LookupInfo;
+
+#ifdef EXPLAIN
+#define LOOKUP_PAIR_MEMBER .lookup.function.pairEnumerator
+#define LOOKUP_BIT_MEMBER .lookup.function.bitEnumerator
+#define LOOKUP_TRIPLET_MEMBER .lookup.function.tripletEnumerator
+#else
+#define LOOKUP_PAIR_MEMBER .lookup.function.pair
+#define LOOKUP_BIT_MEMBER .lookup.function.pair
+#define LOOKUP_TRIPLET_MEMBER .lookup.function.triplet
+#endif
+
 typedef struct
 {
   const char *name;
@@ -58,15 +96,14 @@ typedef struct
   bool   hasSign;     /* Is the value signed, e.g. has both positive and negative values? */
 
   /* The following fields are filled by C, no need to set in initializers */
-  uint8_t       order;
-  char         *camelName;
-  const char  **lookupValue;
-  const char   *lookupName;
-  const size_t *lookupLength;
-  FieldType    *ft;
-  Pgn          *pgn;
-  double        rangeMin;
-  double        rangeMax;
+  uint8_t    order;
+  size_t     bitOffset; // Bit offset from start of data, e.g. lower 3 bits = bit#, bit 4.. is byte offset
+  char      *camelName;
+  LookupInfo lookup;
+  FieldType *ft;
+  Pgn       *pgn;
+  double     rangeMin;
+  double     rangeMax;
 } Field;
 
 #include "fieldtype.h"
@@ -78,25 +115,32 @@ typedef struct
 
 #define LOOKUP_FIELD(nam, len, typ)                                                               \
   {                                                                                               \
-    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookupValue = lookupValue##typ, \
-    .lookupLength = &lookupLength##typ, .lookupName = xstr(typ), .fieldType = "LOOKUP"            \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_PAIR, \
+    LOOKUP_PAIR_MEMBER = lookup##typ, .lookup.name = xstr(typ), .fieldType = "LOOKUP"             \
   }
 
-#define LOOKUP_FIELD_DESC(nam, len, typ, desc)                                                              \
-  {                                                                                                         \
-    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookupValue = lookupValue##typ,           \
-    .lookupLength = &lookupLength##typ, .lookupName = xstr(typ), .description = desc, .fieldType = "LOOKUP" \
+#define LOOKUP_TRIPLET_FIELD(nam, len, typ, desc, order)                                                                      \
+  {                                                                                                                           \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_TRIPLET,                          \
+    LOOKUP_TRIPLET_MEMBER = lookup##typ, .lookup.name = xstr(typ), .lookup.val1Order = order, .fieldType = "INDIRECT_LOOKUP", \
+    .description = desc                                                                                                       \
   }
 
-#define LOOKUP_BITFIELD(nam, len, typ)                                                                                     \
-  {                                                                                                                        \
-    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookupValue = lookupValue##typ, .lookupName = xstr(typ), \
-    .fieldType = "BITLOOKUP"                                                                                               \
+#define LOOKUP_FIELD_DESC(nam, len, typ, desc)                                                             \
+  {                                                                                                        \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_PAIR,          \
+    LOOKUP_PAIR_MEMBER = lookup##typ, .lookup.name = xstr(typ), .fieldType = "LOOKUP", .description = desc \
   }
 
-#define UNKNOWN_LOOKUP_FIELD(nam, len)                                                 \
-  {                                                                                    \
-    .name = nam, .size = len, .resolution = 1, .hasSign = false, .fieldType = "LOOKUP" \
+#define BITLOOKUP_FIELD(nam, len, typ)                                                                                            \
+  {                                                                                                                               \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookup##typ, \
+    .lookup.name = xstr(typ), .fieldType = "BITLOOKUP"                                                                            \
+  }
+
+#define UNKNOWN_LOOKUP_FIELD(nam, len)                                                                                  \
+  {                                                                                                                     \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_PAIR, .fieldType = "LOOKUP" \
   }
 
 #define SPARE_FIELD(len)                                                  \
@@ -376,17 +420,17 @@ typedef struct
 
 // End of NUMBER fields
 
-#define MANUFACTURER_FIELD(unt, desc, prop)                                                              \
-  {                                                                                                      \
-    .name = "Manufacturer Code", .size = 11, .resolution = 1, .description = desc, .unit = unt,          \
-    .lookupValue = lookupValueMANUFACTURER_CODE, .lookupName = "MANUFACTURER_CODE", .proprietary = prop, \
-    .fieldType = "MANUFACTURER"                                                                          \
+#define MANUFACTURER_FIELD(unt, desc, prop)                                                                                      \
+  {                                                                                                                              \
+    .name = "Manufacturer Code", .size = 11, .resolution = 1, .description = desc, .unit = unt, .lookup.type = LOOKUP_TYPE_PAIR, \
+    LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE", .proprietary = prop,                       \
+    .fieldType = "MANUFACTURER"                                                                                                  \
   }
 
-#define INDUSTRY_FIELD(unt, desc, prop)                                                                                  \
-  {                                                                                                                      \
-    .name = "Industry Code", .size = 3, .resolution = 1, .unit = unt, .description = desc,                               \
-    .lookupValue = lookupValueINDUSTRY_CODE, .lookupName = "INDUSTRY_CODE", .proprietary = prop, .fieldType = "INDUSTRY" \
+#define INDUSTRY_FIELD(unt, desc, prop)                                                                                     \
+  {                                                                                                                         \
+    .name = "Industry Code", .size = 3, .resolution = 1, .unit = unt, .description = desc, .lookup.type = LOOKUP_TYPE_PAIR, \
+    LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE", .proprietary = prop, .fieldType = "INDUSTRY"  \
   }
 
 #define MARINE_INDUSTRY_FIELD INDUSTRY_FIELD("=4", "Marine Industry", false)
@@ -438,9 +482,10 @@ typedef struct
 
 #define UINT32_FIELD(nam) UINT32_DESC_FIELD(nam, NULL)
 
-#define MATCH_FIELD(nam, len, id, desc)                                                                         \
-  {                                                                                                             \
-    .name = nam, .size = len, .resolution = 1, .unit = "=" xstr(id), .description = desc, .fieldType = "LOOKUP" \
+#define MATCH_FIELD(nam, len, id, desc)                                                                                    \
+  {                                                                                                                        \
+    .name = nam, .size = len, .resolution = 1, .unit = "=" xstr(id), .description = desc, .lookup.type = LOOKUP_TYPE_PAIR, \
+    .fieldType = "LOOKUP"                                                                                                  \
   }
 
 #define SIMPLE_DESC_FIELD(nam, len, desc)                                                           \
@@ -744,12 +789,15 @@ typedef struct
     .name = nam, .size = BYTES(4), .hasSign = true, .unit = unt, .fieldType = "FLOAT", .description = desc \
   }
 
-#define LOOKUP_TYPE(type, length)                       \
-  extern const char  *lookupValue##type[1 << (length)]; \
-  extern const size_t lookupLength##type;
-#define LOOKUP_TYPE_BITFIELD(type, length)       \
-  extern const char  *lookupValue##type[length]; \
-  extern const size_t lookupLength##type;
+#ifdef EXPLAIN
+#define LOOKUP_TYPE(type, length) extern void lookup##type(EnumPairCallback cb);
+#define LOOKUP_TYPE_TRIPLET(type, length) extern void lookup##type(EnumTripletCallback cb);
+#define LOOKUP_TYPE_BITFIELD(type, length) extern void lookup##type(BitPairCallback cb);
+#else
+#define LOOKUP_TYPE(type, length) extern const char *lookup##type(size_t val);
+#define LOOKUP_TYPE_TRIPLET(type, length) extern const char *lookup##type(size_t val1, size_t val2);
+#define LOOKUP_TYPE_BITFIELD(type, length) extern const char *lookup##type(size_t val);
+#endif
 
 #include "lookup.h"
 
@@ -990,7 +1038,7 @@ Pgn pgnList[] = {
       MANUFACTURER_FIELD(NULL, NULL, false),
       SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
       SIMPLE_DESC_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
-      SIMPLE_DESC_FIELD("Device Function", 8, "ISO Function"),
+      LOOKUP_TRIPLET_FIELD("Device Function", BYTES(1), DEVICE_FUNCTION, "ISO Function", 7 /*Device Class*/),
       SPARE_FIELD(1),
       LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
       SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
@@ -1345,7 +1393,7 @@ Pgn pgnList[] = {
       MANUFACTURER_FIELD("Manufacturer Code", NULL, false),
       SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
       SIMPLE_DESC_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
-      SIMPLE_DESC_FIELD("Device Function", BYTES(1), "ISO Function"),
+      LOOKUP_TRIPLET_FIELD("Device Function", BYTES(1), DEVICE_FUNCTION, "ISO Function", 7 /*Device Class*/),
       RESERVED_FIELD(1),
       LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
       SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
@@ -2508,8 +2556,8 @@ Pgn pgnList[] = {
       PRESSURE_UFIX16_HPA_FIELD("Coolant Pressure"),
       PRESSURE_UFIX16_KPA_FIELD("Fuel Pressure"),
       RESERVED_FIELD(BYTES(1)),
-      LOOKUP_BITFIELD("Discrete Status 1", BYTES(2), ENGINE_STATUS_1),
-      LOOKUP_BITFIELD("Discrete Status 2", BYTES(2), ENGINE_STATUS_2),
+      BITLOOKUP_FIELD("Discrete Status 1", BYTES(2), ENGINE_STATUS_1),
+      BITLOOKUP_FIELD("Discrete Status 2", BYTES(2), ENGINE_STATUS_2),
       PERCENTAGE_I8_FIELD("Engine Load"),
       PERCENTAGE_U8_FIELD("Engine Torque"),
       END_OF_FIELDS},
@@ -2946,7 +2994,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Power Enabled", 2, OFF_ON),
       LOOKUP_FIELD("Retract Control", 2, THRUSTER_RETRACT_CONTROL),
       PERCENTAGE_U8_FIELD("Speed Control"),
-      LOOKUP_BITFIELD("Control Events", BYTES(1), THRUSTER_CONTROL_EVENTS),
+      BITLOOKUP_FIELD("Control Events", BYTES(1), THRUSTER_CONTROL_EVENTS),
       TIME_UFIX8_5MS_FIELD("Command Timeout", NULL),
       ANGLE_U16_FIELD("Azimuth Control", NULL),
       END_OF_FIELDS}}
@@ -2971,7 +3019,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {UINT8_FIELD("SID"),
       UINT8_FIELD("Identifier"),
-      LOOKUP_BITFIELD("Motor Events", BYTES(1), THRUSTER_MOTOR_EVENTS),
+      BITLOOKUP_FIELD("Motor Events", BYTES(1), THRUSTER_MOTOR_EVENTS),
       CURRENT_UFIX8_A_FIELD("Current"),
       TEMPERATURE_FIELD("Temperature"),
       TIME_UFIX16_MIN_FIELD("Operating Time", NULL),
@@ -3058,7 +3106,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Deck and Anchor Wash", 2, OFF_ON),
       LOOKUP_FIELD("Anchor Light", 2, OFF_ON),
       TIME_UFIX8_5MS_FIELD("Command Timeout", "If timeout elapses the thruster stops operating and reverts to static mode"),
-      LOOKUP_BITFIELD("Windlass Control Events", 4, WINDLASS_CONTROL),
+      BITLOOKUP_FIELD("Windlass Control Events", 4, WINDLASS_CONTROL),
       RESERVED_FIELD(4),
       END_OF_FIELDS},
      .url = "https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf"}
@@ -3077,7 +3125,7 @@ Pgn pgnList[] = {
       LENGTH_UFIX16_DM_FIELD("Rode Counter Value"),
       SPEED_U16_CM_FIELD("Windlass Line Speed"),
       LOOKUP_FIELD("Anchor Docking Status", 2, DOCKING_STATUS),
-      LOOKUP_BITFIELD("Windlass Operating Events", 6, WINDLASS_OPERATION),
+      BITLOOKUP_FIELD("Windlass Operating Events", 6, WINDLASS_OPERATION),
       END_OF_FIELDS},
      .url = "https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf"}
 
@@ -3088,7 +3136,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {UINT8_FIELD("SID"),
       UINT8_FIELD("Windlass ID"),
-      LOOKUP_BITFIELD("Windlass Monitoring Events", 8, WINDLASS_MONITORING),
+      BITLOOKUP_FIELD("Windlass Monitoring Events", 8, WINDLASS_MONITORING),
       VOLTAGE_U16_200MV_FIELD("Controller voltage"),
       CURRENT_UFIX8_A_FIELD("Motor current"),
       TIME_UFIX16_MIN_FIELD("Total Motor Time", NULL),
@@ -4728,12 +4776,12 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
       UINT8_DESC_FIELD("Number", "Source number per type"),
       STRINGLAU_FIELD("Name"),
-      LOOKUP_BITFIELD("Play support", BYTES(4), ENTERTAINMENT_PLAY_STATUS_BITFIELD),
-      LOOKUP_BITFIELD("Browse support", BYTES(2), ENTERTAINMENT_GROUP_BITFIELD),
+      BITLOOKUP_FIELD("Play support", BYTES(4), ENTERTAINMENT_PLAY_STATUS_BITFIELD),
+      BITLOOKUP_FIELD("Browse support", BYTES(2), ENTERTAINMENT_GROUP_BITFIELD),
       LOOKUP_FIELD("Thumbs support", 2, YES_NO),
       LOOKUP_FIELD("Connected", 2, YES_NO),
-      LOOKUP_BITFIELD("Repeat support", 2, ENTERTAINMENT_REPEAT_BITFIELD),
-      LOOKUP_BITFIELD("Shuffle support", 2, ENTERTAINMENT_SHUFFLE_BITFIELD),
+      BITLOOKUP_FIELD("Repeat support", 2, ENTERTAINMENT_REPEAT_BITFIELD),
+      BITLOOKUP_FIELD("Shuffle support", 2, ENTERTAINMENT_SHUFFLE_BITFIELD),
       END_OF_FIELDS},
      .repeatingField1 = 2,
      .repeatingCount1 = 10,
@@ -4805,7 +4853,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Default Settings", 2, ENTERTAINMENT_DEFAULT_SETTINGS),
       LOOKUP_FIELD("Tuner regions", 4, ENTERTAINMENT_REGIONS),
       UINT8_FIELD("Max favorites"),
-      LOOKUP_BITFIELD("Video protocols", 4, VIDEO_PROTOCOLS),
+      BITLOOKUP_FIELD("Video protocols", 4, VIDEO_PROTOCOLS),
       RESERVED_FIELD(44),
       END_OF_FIELDS}}
 

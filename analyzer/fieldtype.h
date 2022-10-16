@@ -446,6 +446,16 @@ FieldType fieldTypeList[] = {
      .pf      = fieldPrintLookup,
      .v1Type  = "Lookup table"},
 
+    {.name = "INDIRECT_LOOKUP",
+     .description
+     = "Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field",
+     .encodingDescription = "Each lookup has a LookupIndirectEnumeration defining what the possible values mean",
+     .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
+                "occurs that has no corresponding textual explanation.",
+     .hasSign = False,
+     .pf      = fieldPrintLookup,
+     .v1Type  = "Integer"},
+
     {.name                = "BITLOOKUP",
      .description         = "Number value where each bit value encodes for a distinct meaning",
      .encodingDescription = "Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have "
@@ -1140,8 +1150,8 @@ FieldType fieldTypeList[] = {
      .encodingDescription
      = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. "
        "The first three or four digits are special, see the USCG link for a detailed explanation.",
-     .url    = "https://navcen.uscg.gov/maritime-mobile-service-identity",
-     .pf     = fieldPrintMMSI},
+     .url = "https://navcen.uscg.gov/maritime-mobile-service-identity",
+     .pf  = fieldPrintMMSI},
 
     {.name        = "VARIABLE",
      .description = "Variable",

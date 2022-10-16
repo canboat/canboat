@@ -340,6 +340,12 @@
     <xsl:call-template name="indent"/><xsl:text>],</xsl:text>
   </xsl:template>
 
+  <xsl:template match="LookupIndirectEnumerations">
+    <xsl:call-template name="indent"/><xsl:text>"LookupIndirectEnumerations":[</xsl:text>
+    <xsl:apply-templates/>
+    <xsl:call-template name="indent"/><xsl:text>],</xsl:text>
+  </xsl:template>
+
   <xsl:template match="LookupBitEnumerations">
     <xsl:call-template name="indent"/><xsl:text>"LookupBitEnumerations":[</xsl:text>
     <xsl:apply-templates/>
@@ -373,6 +379,15 @@
       }<xsl:if test="not(position() = last())">,</xsl:if>
   </xsl:template>
 
+  <xsl:template match="LookupIndirectEnumerations/LookupIndirectEnumeration">
+    <xsl:call-template name="indent"/>{
+        "Name":"<xsl:value-of select="@Name"/>",
+        "MaxValue":<xsl:value-of select="@MaxValue"/>,
+        "EnumValues":[<xsl:apply-templates/>
+        ]
+      }<xsl:if test="not(position() = last())">,</xsl:if>
+  </xsl:template>
+
   <xsl:template match="LookupBitEnumerations/LookupBitEnumeration">
     <xsl:call-template name="indent"/>{
         "Name":"<xsl:value-of select="@Name"/>",
@@ -384,6 +399,10 @@
 
   <xsl:template match="LookupEnumeration/EnumPair">
     <xsl:call-template name="indent"/>  {"Name":"<xsl:value-of select="@Name"/>", "Value":<xsl:value-of select="@Value"/>}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="LookupIndirectEnumeration/EnumTriplet">
+    <xsl:call-template name="indent"/>  {"Name":"<xsl:value-of select="@Name"/>", "Value1":<xsl:value-of select="@Value1"/>, "Value2":<xsl:value-of select="@Value2"/>}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="LookupBitEnumeration/BitPair">
