@@ -527,13 +527,22 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
     {
       printEmpty(fieldName, value - maxValue);
     }
+    else if (showJsonValue)
+    {
+      mprintf("%s\"%s\":{\"value\":%" PRId64, getSep(), fieldName, value);
+      if (showJsonEmpty)
+      {
+        mprintf(",\"name\":null");
+      }
+      mprintf("}");
+    }
     else if (showJson)
     {
-      mprintf("%s\"%s\":\"%" PRId64 "\"", getSep(), fieldName, value);
+      mprintf("%s\"%s\":%" PRId64, getSep(), fieldName, value);
     }
     else
     {
-      mprintf("%s %s = %" PRId64 "", getSep(), fieldName, value);
+      mprintf("%s %s = %" PRId64, getSep(), fieldName, value);
     }
   }
 

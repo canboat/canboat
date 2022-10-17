@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [Unreleased]
+
+### Fixed
+
+- #319: analyzer: fixup printing of lookup values for `-json -nv` that have no entry in the lookup table.
+
 ## [4.3.0]
 
 ### Added
