@@ -4701,7 +4701,18 @@ Pgn pgnList[] = {
      .interval = 1000}
 
     ,
-    {"Payload Mass", 130560, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {END_OF_FIELDS}}
+    {"Payload Mass",
+     130560,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_SINGLE,
+     {UINT8_FIELD("SID"),
+      SIMPLE_FIELD("Measurement Status", 3),
+      RESERVED_FIELD(5),
+      UINT8_FIELD("Measurement ID"),
+      UINT32_FIELD("Payload Mass"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .interval = 0}
 
     /* http://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
 
