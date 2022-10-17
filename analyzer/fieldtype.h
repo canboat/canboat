@@ -489,6 +489,13 @@ FieldType fieldTypeList[] = {
      .resolution    = 0.01,
      .baseFieldType = "UFIX16"},
 
+    {.name          = "SIGNALTONOISERATIO_FIX16",
+     .description   = "Signal-to-noise ratio",
+     .url           = "https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
+     .resolution    = 0.01,
+     .physical      = &SIGNAL_TO_NOISE_RATIO,
+     .baseFieldType = "FIX16"},
+
     {.name          = "SIGNALTONOISERATIO_UFIX16",
      .description   = "Signal-to-noise ratio",
      .url           = "https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
