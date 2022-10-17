@@ -4278,7 +4278,23 @@ Pgn pgnList[] = {
     {"Label", 130060, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {END_OF_FIELDS}}
 
     ,
-    {"Channel Source Configuration", 130061, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {END_OF_FIELDS}}
+    {"Channel Source Configuration",
+     130061,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {UINT8_FIELD("Data Source Channel ID"),
+      SIMPLE_FIELD("Source Selection Status", 2),
+      RESERVED_FIELD(2),
+      BINARY_FIELD("NAME Selection Criteria Mask", 12, NULL),
+      SIMPLE_FIELD("Source NAME", BYTES(8)),
+      PGN_FIELD("PGN", NULL),
+      UINT8_FIELD("Data Source Instance Field Number"),
+      UINT8_FIELD("Data Source Instance Value"),
+      UINT8_FIELD("Secondary Enumeration Field Number"),
+      UINT8_FIELD("Secondary Enumeration Field Value"),
+      UINT8_FIELD("Parameter Field Number"),
+      END_OF_FIELDS},
+     .interval = 0}
 
     ,
     {"Route and WP Service - Database List",
