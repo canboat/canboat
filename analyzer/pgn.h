@@ -4887,7 +4887,10 @@ Pgn pgnList[] = {
      130576,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_SINGLE,
-     {SIMPLE_SIGNED_FIELD("Port trim tab", BYTES(1)), SIMPLE_SIGNED_FIELD("Starboard trim tab", BYTES(1)), END_OF_FIELDS},
+     {PERCENTAGE_I8_FIELD("Port trim tab"),
+      PERCENTAGE_I8_FIELD("Starboard trim tab"),
+      RESERVED_FIELD(BYTES(6)),
+      END_OF_FIELDS},
      .interval = 200}
 
     ,
