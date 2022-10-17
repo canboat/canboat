@@ -47,12 +47,12 @@ limitations under the License.
 #define UPDATE_INTERVAL (500) /* Every x milliseconds send the normal 'once' clients all state */
 
 uint16_t port      = PORT;
-char *   srcFilter = 0;
+char    *srcFilter = 0;
 bool     rateLimit;
 bool     udp183;
+bool     stop;
 
 uint32_t protocol = 1;
-int      debug    = 0;
 bool     unitSI   = false;
 
 struct sockaddr_in udpWildcardAddress;
@@ -97,6 +97,7 @@ typedef enum StreamType
   DATA_OUTPUT_SINK,
   DATA_OUTPUT_COPY,
   DATA_OUTPUT_STREAM,
+  DATA_OUTPUT_NMEA0183_STREAM,
   SOCKET_TYPE_MAX
 } StreamType;
 
@@ -116,6 +117,7 @@ const char *streamTypeName[] = {"Any",
                                 "Data output sink",
                                 "Data output copy",
                                 "Data output stream",
+                                "Data output NMEA0183 stream",
                                 "<Max>"};
 
 ReadHandler readHandlers[SOCKET_TYPE_MAX] = {0,
@@ -133,7 +135,8 @@ ReadHandler readHandlers[SOCKET_TYPE_MAX] = {0,
                                              handleClientRequest,
                                              closeClientRequest,
                                              closeClientRequest,
-                                             closeClientRequest};
+                                             closeClientRequest,
+                                             0};
 
 int    socketIdxMin = 0;
 int    socketIdxMax = 0;
@@ -141,7 +144,6 @@ SOCKET socketFdMax  = 0;
 fd_set activeSet;
 fd_set readSet;
 fd_set writeSet;
-fd_set errorSet;
 
 typedef struct StreamInfo
 {
@@ -193,9 +195,9 @@ StringBuffer nmeaMessage; /* Buffer for sending to NMEA0183 TCP clients */
 typedef struct
 {
   uint8_t m_src;
-  char *  m_key2;
+  char   *m_key2;
   time_t  m_time; // Message valid until this time
-  char *  m_text;
+  char   *m_text;
 } Message;
 
 /*
@@ -206,7 +208,7 @@ typedef struct
 {
   unsigned int p_prn;
   unsigned int p_maxSrc;
-  char *       p_description;
+  char        *p_description;
   Message      p_message[];
 } Pgn;
 
@@ -222,7 +224,7 @@ Pgn *pgnIdx[PGN_SPACE];
  * This is just a speed up to avoid looping over lots of empty
  * entries in pgnIdx.
  */
-Pgn ** pgnList[512];
+Pgn  **pgnList[512];
 size_t maxPgnList;
 
 /*
@@ -266,13 +268,18 @@ static void setHaveNMEA0183Client(void)
 {
   int i;
 
-  haveNMEA0183Client = false;
-  for (i = 0; i <= socketIdxMax; i++)
+  haveNMEA0183Client = udp183;
+  if (!haveNMEA0183Client)
   {
-    if (stream[i].fd != INVALID_SOCKET && (stream[i].type == CLIENT_NMEA0183_STREAM || stream[i].type == SERVER_NMEA0183_DATAGRAM))
+    for (i = 0; i <= socketIdxMax; i++)
     {
-      haveNMEA0183Client = true;
-      return;
+      if (stream[i].fd != INVALID_SOCKET
+          && (stream[i].type == CLIENT_NMEA0183_STREAM || stream[i].type == SERVER_NMEA0183_DATAGRAM
+              || stream[i].type == DATA_OUTPUT_NMEA0183_STREAM))
+      {
+        haveNMEA0183Client = true;
+        return;
+      }
     }
   }
 }
@@ -322,21 +329,13 @@ static int setFdUsed(SOCKET fd, StreamType ct)
     case CLIENT_NMEA0183_STREAM:
     case DATA_OUTPUT_STREAM:
     case DATA_OUTPUT_COPY:
+    case DATA_OUTPUT_NMEA0183_STREAM:
     case SERVER_NMEA0183_DATAGRAM:
       FD_SET(fd, &writeSet);
       break;
     default:
       FD_CLR(fd, &writeSet);
       /* ignore */ shutdown(fd, SHUT_WR);
-  }
-
-  if (FD_ISSET(fd, &writeSet) || FD_ISSET(fd, &readSet))
-  {
-    FD_SET(fd, &errorSet);
-  }
-  else
-  {
-    FD_CLR(fd, &errorSet);
   }
 
 #ifdef O_NONBLOCK
@@ -368,7 +367,6 @@ static void closeStream(int i)
   FD_CLR(stream[i].fd, &activeSet);
   FD_CLR(stream[i].fd, &readSet);
   FD_CLR(stream[i].fd, &writeSet);
-  FD_CLR(stream[i].fd, &errorSet);
   sbClean(&stream[i].writeBuffer);
 
   stream[i].fd = INVALID_SOCKET; /* Free for re-use */
@@ -583,8 +581,7 @@ static void safeWriteBuffer(int idx, StringBuffer *sb)
       {
         if (stream[idx].type == DATA_OUTPUT_COPY || stream[idx].type == DATA_OUTPUT_STREAM)
         {
-          logError("Cannot write to stdout: %s\n", strerror(errno));
-          exit(3);
+          logAbort("Cannot write to stdout: %s\n", strerror(errno));
         }
         logError("Closing %s stream %d: %s\n", streamTypeName[stream[idx].type], stream[idx].fd, strerror(errno));
         closeStream(idx);
@@ -623,8 +620,8 @@ static void writeAllClients(void)
   int            i;
   SOCKET         fd;
   int64_t        now      = 0;
-  char *         aisState = 0;
-  char *         state    = 0;
+  char          *aisState = 0;
+  char          *state    = 0;
 
   logDebug("writeAllClients tcp=%d out=%d nmea=%d\n", tcpMessage.len, outMessage.len, nmeaMessage.len);
   FD_ZERO(&ws);
@@ -633,7 +630,7 @@ static void writeAllClients(void)
   if (socketIdxMax >= 0)
   {
     ws  = writeSet;
-    es  = errorSet;
+    es  = writeSet;
     r   = select(socketFdMax + 1, 0, &ws, &es, &timeout);
     now = epoch();
     logDebug("write to %d streams (%u..%u fdMax=%d)\n", r, socketIdxMin, socketIdxMax, socketFdMax);
@@ -653,14 +650,14 @@ static void writeAllClients(void)
       {
         logAbort("Inconsistent: fd[%u]=%d, fdMax=%d\n", i, fd, socketFdMax);
       }
-      if (FD_ISSET(fd, &es))
+      if (FD_ISSET(fd, &es) && fd != stdoutfd)
       {
-        logDebug("%s i=%u fd=%d error, closing\n", streamTypeName[stream[i].type], i, fd);
+        logDebug("%s i=%u fd=%d write error, closing\n", streamTypeName[stream[i].type], i, fd);
         closeStream(i);
       }
       else if (FD_ISSET(fd, &ws))
       {
-        logDebug("%s i=%u fd=%d writable=%d timeout=%lld\n",
+        logDebug("%s i=%u fd=%d writable=%d timeout=%" PRId64 "\n",
                  streamTypeName[stream[i].type],
                  i,
                  fd,
@@ -698,6 +695,7 @@ static void writeAllClients(void)
             }
             break;
           case CLIENT_NMEA0183_STREAM:
+          case DATA_OUTPUT_NMEA0183_STREAM:
             logDebug("NMEA-> %d\n", nmeaMessage.len);
             if (nmeaMessage.len)
             {
@@ -760,7 +758,7 @@ static void checkSrcIsKnown(int src, time_t n)
 {
   static const int PRODUCT_INFO_IDX = PrnToIdx(126996);
   int              i;
-  Pgn *            pgn = pgnIdx[PRODUCT_INFO_IDX];
+  Pgn             *pgn = pgnIdx[PRODUCT_INFO_IDX];
 
   if (src == 0)
   {
@@ -782,7 +780,7 @@ static void checkSrcIsKnown(int src, time_t n)
   // Oops, no product info for this source
   logInfo("New device src=%d seen\n", src);
 
-  if (stream[stdoutfd].type != DATA_OUTPUT_SINK)
+  if (stream[stdoutfd].type == DATA_OUTPUT_COPY || stream[stdoutfd].type == DATA_OUTPUT_COPY)
   {
     char         strTmp[DATE_LENGTH];
     StringBuffer msg = sbNew;
@@ -795,19 +793,29 @@ static void checkSrcIsKnown(int src, time_t n)
 
 static bool storeMessage(char *line, size_t len)
 {
-  char *   s, *e = 0, *e2;
+  char    *s, *e = 0, *e2;
   Message *m;
   int      i, idx, k;
   int      src = 0, dst = 255, prn = 0;
-  Pgn *    pgn;
+  Pgn     *pgn;
   time_t   now;
-  char *   key2 = 0;
+  char    *key2 = 0;
   int      valid;
   char     value[16];
 
   now = time(0);
 
-  logDebug("storeMessage(\"%s\",%u)\n", line, len);
+  if (isLogLevelEnabled(LOG_DEBUG))
+  {
+    if (len > 80)
+    {
+      logDebug("storeMessage(\"%1.20s...%1.20s\",%u)\n", line, line + len - 20, len);
+    }
+    else
+    {
+      logDebug("storeMessage(\"%s\",%u)\n", line, len);
+    }
+  }
 
   if (!strstr(line, "\"fields\":") || memcmp(line, "{\"timestamp", 11) != 0)
   {
@@ -1049,7 +1057,7 @@ static bool storeMessage(char *line, size_t len)
 static void handleClientRequest(int i)
 {
   ssize_t r;
-  char *  p;
+  char   *p;
   size_t  remain;
 
   if (stream[i].len >= sizeof(stream[i].buffer) - 2)
@@ -1067,18 +1075,24 @@ static void handleClientRequest(int i)
     logDebug("read %s i=%d fd=%d r=%d\n", streamTypeName[stream[i].type], i, stream[i].fd, r);
     if (stream[i].type == DATA_INPUT_STREAM)
     {
-      logAbort("EOF on reading stdin\n");
+      stop = true;
     }
-    closeStream(i);
-    return;
+    else
+    {
+      closeStream(i);
+      return;
+    }
   }
+  logDebug("processing stream %d\n", i);
 
   stream[i].len += r;
   stream[i].buffer[stream[i].len] = 0;
+
   while (stream[i].len > 0)
   {
     size_t len;
 
+    logDebug("processing stream %d buffer '%-1.20s...' len=%zu\n", i, stream[i].buffer, stream[i].len);
     p = strchr(stream[i].buffer, '\n');
     if (!p)
     {
@@ -1136,7 +1150,7 @@ static void checkReadEvents(void)
   logDebug("checkReadEvents fdMax=%d\n", socketFdMax);
 
   rs = readSet;
-  es = errorSet;
+  es = readSet;
 
   r = select(socketFdMax + 1, &rs, 0, &es, &timeout);
 
@@ -1146,7 +1160,7 @@ static void checkReadEvents(void)
 
     if (fd >= 0 && FD_ISSET(fd, &es))
     {
-      logDebug("%s i=%u fd=%d error, closing\n", streamTypeName[stream[i].type], i, fd);
+      logDebug("%s i=%u fd=%d read error, closing\n", streamTypeName[stream[i].type], i, fd);
       closeStream(i);
     }
     if (fd >= 0 && FD_ISSET(fd, &rs))
@@ -1159,12 +1173,12 @@ static void checkReadEvents(void)
 
 static void doServerWork(void)
 {
-  for (;;)
+  do
   {
     /* Do a range of non-blocking operations */
     checkReadEvents(); /* Process incoming requests on all clients */
     writeAllClients(); /* Check any timeouts on clients */
-  }
+  } while (!stop);
 }
 
 bool parseUDPAddress(char *target, char *port)
@@ -1195,8 +1209,44 @@ bool parseUDPAddress(char *target, char *port)
   return false;
 }
 
+static void verifyStdin(void)
+{
+  int     i      = 0;
+  size_t  remain = sizeof(stream[0].buffer) - 1;
+  ssize_t r;
+  char   *line_end;
+
+  for (;;)
+  {
+    r = read(stream[i].fd, stream[i].buffer + stream[i].len, remain);
+    if (r > 0)
+    {
+      stream[i].len += r;
+      stream[i].buffer[stream[i].len] = '\0';
+      line_end                        = strchr(stream[i].buffer, '\n');
+      if (line_end != NULL)
+      {
+        if (strstr(stream[i].buffer, "\"version\":") == NULL || strstr(stream[i].buffer, "\"showLookupValues\":true") == NULL)
+        {
+          logAbort("Standard input must be piped from `analyzer` in `-json -nv` mode");
+        }
+        remain = stream[i].buffer + stream[i].len - (line_end + 1);
+        memcpy(stream[i].buffer, line_end + 1, remain);
+        stream[i].len = remain;
+        break;
+      }
+    }
+    else
+    {
+      logAbort("Cannot read from piped input from `analyzer`");
+    }
+  }
+}
+
 int main(int argc, char **argv)
 {
+  bool noServers = false;
+
   struct sigaction sa;
 
   setProgName(argv[0]);
@@ -1205,7 +1255,6 @@ int main(int argc, char **argv)
   FD_ZERO(&readSet);
   FD_ZERO(&writeSet);
 
-  setFdUsed(stdinfd, DATA_INPUT_STREAM);
   outputIdx = setFdUsed(stdoutfd, DATA_OUTPUT_STREAM);
 
   while (argc > 1)
@@ -1218,7 +1267,6 @@ int main(int argc, char **argv)
     else if (strcasecmp(argv[1], "-d") == 0)
     {
       setLogLevel(LOGLEVEL_DEBUG);
-      debug = 1;
     }
     else if (strcasecmp(argv[1], "-q") == 0)
     {
@@ -1262,6 +1310,16 @@ int main(int argc, char **argv)
       }
       argc--, argv++;
     }
+    else if (strcasecmp(argv[1], "--nmea0183") == 0)
+    {
+      outputIdx = setFdUsed(stdoutfd, DATA_OUTPUT_NMEA0183_STREAM);
+      noServers = true;
+    }
+    else if (strcasecmp(argv[1], "-fixtime") == 0 && argc > 2)
+    {
+      setFixedTimestamp(argv[2]);
+      argc--, argv++;
+    }
     else
     {
       fprintf(stderr,
@@ -1274,13 +1332,22 @@ int main(int argc, char **argv)
               "  --rate-limit            restrict NMEA0183 stream to one message per source per second\n"
               "  -p <port>               Start servers at <port> instead of 2597\n"
               "  -u <target-addr> <port> Send UDP datagrams to UDP address indicated, can be wildcard address\n"
+              "  --nmea0183              Start no servers and send NMEA0183 data on stdout (this is mainly for debugging)\n"
+              "  -fixtime str            Print str as timestamp in logging\n"
               "  -version                Show version number on stdout\n\n" COPYRIGHT);
       exit(1);
     }
     argc--, argv++;
   }
 
-  startTcpServers();
+  // Read the first line from stdin, this must contain JSON from analyzer
+  verifyStdin();
+  setFdUsed(stdinfd, DATA_INPUT_STREAM);
+
+  if (!noServers)
+  {
+    startTcpServers();
+  }
 
   /*  Ignore SIGPIPE, this will let a write to a socket that's closed   */
   /*  at the other end just fail instead of raising SIGPIPE             */
@@ -1290,5 +1357,8 @@ int main(int argc, char **argv)
 
   doServerWork();
 
+  logInfo("N2KD stopping\n");
+  fflush(stdout);
+  fflush(stderr);
   exit(0);
 }

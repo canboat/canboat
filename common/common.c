@@ -154,6 +154,8 @@ void logAbort(const char *format, ...)
 
   logBase(LOGLEVEL_FATAL, format, ap);
   va_end(ap);
+  fflush(stderr);
+  fflush(stdout);
   exit(2);
 }
 
@@ -406,6 +408,11 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
     loc++;
   }
 
+  if (strncmp(loc, "null", 4) == 0)
+  {
+    return false;
+  }
+
   if (*loc != '"')
   {
     while ((isdigit(*loc) || *loc == '.' || *loc == '-' || *loc == 'E' || *loc == 'e' || *loc == '+') && len > 1)
@@ -472,6 +479,92 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
   }
   *value = 0;
   return true;
+}
+
+/*
+ * Retrieve a lookup list in a JSON styled message.
+ * Example: {"value":0,"name":"Under way using engine"}
+ */
+static bool getJSONLookupList(const char *message, const char *fieldName, char *value, size_t len)
+{
+  const char *loc      = message + 1;
+  size_t      fieldLen = strlen(fieldName);
+  const char *end;
+
+  for (;;)
+  {
+    loc = strstr(loc, fieldName);
+    if (!loc)
+    {
+      return false;
+    }
+    if (loc[-1] == '"' && loc[fieldLen] == '"' && loc[fieldLen + 1] == ':')
+    {
+      break;
+    }
+    loc += fieldLen;
+  }
+
+  /* field has been found */
+  loc += fieldLen + 2;
+
+  while (isspace(*loc))
+  {
+    loc++;
+  }
+
+  if (strncmp(loc, "null", 4) == 0)
+  {
+    return false;
+  }
+
+  end = strchr(loc, '}');
+
+  if (*loc != '{' || end == NULL)
+  {
+    logError("Cannot extract lookup for field '%s': it is not a -nv style lookup\n%s\n", fieldName, loc);
+    return false;
+  }
+  end++;
+  len--;
+  if (end - loc < len)
+  {
+    len = end - loc;
+  }
+  memcpy(value, loc, len);
+  value[len] = '\0';
+
+  return true;
+}
+
+/*
+ * Retrieve a name out of a lookup list in a JSON styled message.
+ * Example: {"value":0,"name":"Under way using engine"} -> Under way using engine
+ */
+bool getJSONLookupName(const char *message, const char *fieldName, char *value, size_t len)
+{
+  char buffer[128];
+
+  if (getJSONLookupList(message, fieldName, buffer, sizeof(buffer)))
+  {
+    return getJSONValue(buffer, "name", value, len);
+  }
+  return false;
+}
+
+/*
+ * Retrieve a value out of a JSON styled message.
+ */
+bool getJSONLookupValue(const char *message, const char *fieldName, int64_t *value)
+{
+  char buffer[128];
+
+  if (getJSONLookupList(message, fieldName, buffer, sizeof(buffer)) && getJSONValue(buffer, "value", buffer, sizeof(buffer))
+      && sscanf(buffer, "%" PRId64, value) == 1)
+  {
+    return true;
+  }
+  return false;
 }
 
 char *sbSearchChar(const StringBuffer *const in, char c)

@@ -8,9 +8,19 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Changed
+
+- `n2kd` must now be fed by `analyzer -json -nv` so that it does not need to reverse the lookup numbers
+  for NMEA0183 streams. It does mean that anything with a lookup value is now presented differently to
+  any JSON clients. This means the protocol has changed, requiring another version bump.
+- String fields that contain different 'filler' characters at the end, for instance both 'space', '@' and
+  0xff will be shrunk until all such characters are removed, not just the sequence of same type fillers.
+
 ### Fixed
 
 - #319: analyzer: fixup printing of lookup values for `-json -nv` that have no entry in the lookup table.
+- #318: n2kd: NMEA0183 streams for AIS will now log errors when AIS data field names are changed,
+        lookup values are extracted by number -- see above for new restriction
 
 ## [4.3.0]
 

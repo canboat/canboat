@@ -30,6 +30,7 @@ limitations under the License.
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <inttypes.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,6 +59,24 @@ typedef int SOCKET;
 #include <winsock2.h>
 
 #include "winport.h"
+#endif
+
+#ifdef WIN32
+typedef unsigned char      uint8_t;
+typedef unsigned short int uint16_t;
+typedef unsigned int       uint32_t;
+typedef signed int         int32_t;
+typedef __int64            int64_t;
+typedef unsigned __int64   uint64_t;
+#define UINT64_C(x) ((uint64_t) (x))
+#define INT64_C(x) ((int64_t) (x))
+#define PRId64 "I64d"
+#define PRIu64 "I64u"
+#define PRIx64 "I64x"
+#define PRIX64 "I64X"
+#define strcasecmp _stricmp
+#define UINT16_MAX (0xffff)
+#define UINT32_MAX (0xffffffff)
 #endif
 
 #ifndef CB_MAX
@@ -154,6 +173,8 @@ char *sbSearchChar(const StringBuffer *const sb, char c);
   }
 
 bool         getJSONValue(const char *message, const char *fieldName, char *value, size_t len);
+bool         getJSONLookupValue(const char *message, const char *fieldName, int64_t *value);
+bool         getJSONLookupName(const char *message, const char *fieldName, char *value, size_t len);
 void         getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int *pgn, unsigned int *src, unsigned int *dst);
 unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst);
 

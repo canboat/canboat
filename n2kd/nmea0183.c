@@ -127,10 +127,10 @@ static int64_t rateLimitPassed[256][RATE_COUNT];
 
 extern void nmea0183CreateMessage(StringBuffer *msg183, int src, const char *format, ...)
 {
-  unsigned int chk;
-  size_t       i;
-  char         first, second;
-  va_list      ap;
+  uint8_t chk;
+  size_t  i;
+  char    first, second;
+  va_list ap;
 
   va_start(ap, format);
 
@@ -164,7 +164,7 @@ extern void nmea0183CreateMessage(StringBuffer *msg183, int src, const char *for
   chk = 0;
   for (i++; i < msg183->len; i++)
   {
-    chk ^= (unsigned int) msg183->data[i];
+    chk ^= (uint8_t) msg183->data[i];
   }
   sbAppendFormat(msg183, "*%02X\r\n", chk);
   logDebug("nmea0183 = %s", sbGet(msg183));
@@ -634,7 +634,7 @@ extern void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
     return;
   }
 
-  logDebug("NMEA passed filter for prn %d src %d\n", src, prn);
+  logDebug("NMEA passed filter for prn %d src %d\n", prn, src);
 
   if (rateLimit && rateType != RATE_NO_LIMIT)
   {
@@ -642,11 +642,11 @@ extern void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
 
     if (rateLimitPassed[src][rateType] > (now - 1000L))
     {
-      logDebug("Ratelimit for prn %d src %d not reached\n", src, prn);
+      logDebug("Ratelimit for prn %d src %d not reached\n", prn, src);
       return;
     }
     rateLimitPassed[src][rateType] = now;
-    logDebug("Ratelimit passed for prn %d src %d\n", src, prn);
+    logDebug("Ratelimit passed for prn %d src %d\n", prn, src);
   }
 
   switch (prn)

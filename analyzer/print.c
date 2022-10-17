@@ -925,19 +925,17 @@ static void print_ascii_json_escaped(uint8_t *data, int len)
 
 static bool printString(char *fieldName, uint8_t *data, size_t len)
 {
-  int     k;
-  uint8_t lastbyte;
+  int      k;
+  uint8_t *lastbyte;
 
   if (len > 0)
   {
     // rtrim funny stuff from end, we see all sorts
-    lastbyte = data[len - 1];
-    if (lastbyte == 0xff || isspace(lastbyte) || lastbyte == 0 || lastbyte == '@')
+    lastbyte = &data[len - 1];
+    while (len > 0 && (*lastbyte == 0xff || isspace(*lastbyte) || *lastbyte == 0 || *lastbyte == '@'))
     {
-      while (len > 0 && (data[len - 1] == lastbyte))
-      {
-        len--;
-      }
+      len--;
+      lastbyte--;
     }
   }
 
