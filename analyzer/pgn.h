@@ -3262,6 +3262,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(5),
       UINT8_FIELD("Sequence ID"),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -3294,6 +3295,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
       LOOKUP_FIELD("AIS communication state", 1, AIS_COMMUNICATION_STATE),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -3328,6 +3330,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -3359,6 +3362,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(3),
       STRINGLAU_FIELD("AtoN Name"),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -3776,6 +3780,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -3801,6 +3806,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
       BINARY_FIELD("Spare", BYTES(1), NULL),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     /* http://www.navcen.uscg.gov/enav/ais/AIS_messages.htm */
@@ -3830,6 +3836,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(1),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -3850,6 +3857,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", BYTES(8), NULL),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -3868,6 +3876,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(6),
       BINARY_FIELD("Sequence Number for ID n", 2, "reserved"),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -3884,6 +3893,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", 1, NULL),
       END_OF_FIELDS},
+     .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval        = UINT16_MAX,
      .repeatingField1 = 7,
      .repeatingCount1 = 1,
@@ -3913,6 +3923,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
       RESERVED_FIELD(7),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -3941,6 +3952,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(3),
       MMSI_FIELD("Destination ID"),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -3993,6 +4005,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Message ID A", 6),
       SIMPLE_FIELD("Slot Offset A", 16),
       END_OF_FIELDS},
+     .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval        = UINT16_MAX,
      .repeatingField1 = 255,
      .repeatingCount1 = 4,
@@ -4015,6 +4028,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Offset B"),
       UINT16_FIELD("Increment B"),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -4032,6 +4046,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Timeout"),
       UINT16_FIELD("Increment"),
       END_OF_FIELDS},
+     .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval        = UINT16_MAX,
      .repeatingField1 = 255,
      .repeatingCount1 = 4,
@@ -4063,6 +4078,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(2),
       UINT8_FIELD("Transitional Zone Size"),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -4088,6 +4104,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Reporting Interval", 4, REPORTING_INTERVAL),
       SIMPLE_FIELD("Quiet Time", 4),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     /* http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf */
@@ -4183,6 +4200,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(3),
       UINT8_FIELD("Sequence ID"),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -4207,6 +4225,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(3),
       UINT8_FIELD("Sequence ID"),
       END_OF_FIELDS},
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,

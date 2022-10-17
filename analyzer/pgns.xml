@@ -18157,6 +18157,8 @@ limitations under the License.
             <EnumPair Value='8' Name='Under way sailing' />
             <EnumPair Value='9' Name='Hazardous material - High Speed' />
             <EnumPair Value='10' Name='Hazardous material - Wing in Ground' />
+            <EnumPair Value='11' Name='Power-driven vessl towing astern' />
+            <EnumPair Value='12' Name='Power-driven vessl pushing ahead or towing alongside' />
             <EnumPair Value='14' Name='AIS-SART' />
           </EnumValues>
         </Field>
@@ -18784,7 +18786,11 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
-            <EnumPair Value='29' Name='Wing In Ground (no other information)' />
+            <EnumPair Value='21' Name='Wing In Ground (hazard cat X)' />
+            <EnumPair Value='22' Name='Wing In Ground (hazard cat Y)' />
+            <EnumPair Value='23' Name='Wing In Ground (hazard cat Z)' />
+            <EnumPair Value='24' Name='Wing In Ground (hazard cat OS)' />
+            <EnumPair Value='29' Name='Wing In Ground (no additional information)' />
             <EnumPair Value='30' Name='Fishing' />
             <EnumPair Value='31' Name='Towing' />
             <EnumPair Value='32' Name='Towing exceeds 200m or wider than 25m' />
@@ -18794,10 +18800,10 @@ limitations under the License.
             <EnumPair Value='36' Name='Sailing' />
             <EnumPair Value='37' Name='Pleasure' />
             <EnumPair Value='40' Name='High speed craft' />
-            <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
-            <EnumPair Value='42' Name='High speed craft hazard cat B' />
-            <EnumPair Value='43' Name='High speed craft hazard cat C' />
-            <EnumPair Value='44' Name='High speed craft hazard cat D' />
+            <EnumPair Value='41' Name='High speed craft (hazard cat X)' />
+            <EnumPair Value='42' Name='High speed craft (hazard cat Y)' />
+            <EnumPair Value='43' Name='High speed craft (hazard cat Z)' />
+            <EnumPair Value='44' Name='High speed craft (hazard cat OS)' />
             <EnumPair Value='49' Name='High speed craft (no additional information)' />
             <EnumPair Value='50' Name='Pilot vessel' />
             <EnumPair Value='51' Name='SAR' />
@@ -18808,26 +18814,30 @@ limitations under the License.
             <EnumPair Value='56' Name='Spare' />
             <EnumPair Value='57' Name='Spare #2' />
             <EnumPair Value='58' Name='Medical' />
-            <EnumPair Value='59' Name='RR Resolution No.18' />
+            <EnumPair Value='59' Name='Ships and aircraft of States not parties to an armed conflict' />
             <EnumPair Value='60' Name='Passenger ship' />
+            <EnumPair Value='61' Name='Passenger ship (hazard cat X)' />
+            <EnumPair Value='62' Name='Passenger ship (hazard cat Y)' />
+            <EnumPair Value='63' Name='Passenger ship (hazard cat Z)' />
+            <EnumPair Value='64' Name='Passenger ship (hazard cat OS)' />
             <EnumPair Value='69' Name='Passenger ship (no additional information)' />
             <EnumPair Value='70' Name='Cargo ship' />
-            <EnumPair Value='71' Name='Cargo ship carrying dangerous goods' />
-            <EnumPair Value='72' Name='Cargo ship hazard cat B' />
-            <EnumPair Value='73' Name='Cargo ship hazard cat C' />
-            <EnumPair Value='74' Name='Cargo ship hazard cat D' />
+            <EnumPair Value='71' Name='Cargo ship (hazard cat X)' />
+            <EnumPair Value='72' Name='Cargo ship (hazard cat Y)' />
+            <EnumPair Value='73' Name='Cargo ship (hazard cat Z)' />
+            <EnumPair Value='74' Name='Cargo ship (hazard cat OS)' />
             <EnumPair Value='79' Name='Cargo ship (no additional information)' />
             <EnumPair Value='80' Name='Tanker' />
-            <EnumPair Value='81' Name='Tanker carrying dangerous goods' />
-            <EnumPair Value='82' Name='Tanker hazard cat B' />
-            <EnumPair Value='83' Name='Tanker hazard cat C' />
-            <EnumPair Value='84' Name='Tanker hazard cat D' />
+            <EnumPair Value='81' Name='Tanker (hazard cat X)' />
+            <EnumPair Value='82' Name='Tanker (hazard cat Y)' />
+            <EnumPair Value='83' Name='Tanker (hazard cat Z)' />
+            <EnumPair Value='84' Name='Tanker (hazard cat OS)' />
             <EnumPair Value='89' Name='Tanker (no additional information)' />
             <EnumPair Value='90' Name='Other' />
-            <EnumPair Value='91' Name='Other carrying dangerous goods' />
-            <EnumPair Value='92' Name='Other hazard cat B' />
-            <EnumPair Value='93' Name='Other hazard cat C' />
-            <EnumPair Value='94' Name='Other hazard cat D' />
+            <EnumPair Value='91' Name='Other (hazard cat X)' />
+            <EnumPair Value='92' Name='Other (hazard cat Y)' />
+            <EnumPair Value='93' Name='Other (hazard cat Z)' />
+            <EnumPair Value='94' Name='Other (hazard cat OS)' />
             <EnumPair Value='99' Name='Other (no additional information)' />
           </EnumValues>
         </Field>
@@ -22602,7 +22612,11 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
-            <EnumPair Value='29' Name='Wing In Ground (no other information)' />
+            <EnumPair Value='21' Name='Wing In Ground (hazard cat X)' />
+            <EnumPair Value='22' Name='Wing In Ground (hazard cat Y)' />
+            <EnumPair Value='23' Name='Wing In Ground (hazard cat Z)' />
+            <EnumPair Value='24' Name='Wing In Ground (hazard cat OS)' />
+            <EnumPair Value='29' Name='Wing In Ground (no additional information)' />
             <EnumPair Value='30' Name='Fishing' />
             <EnumPair Value='31' Name='Towing' />
             <EnumPair Value='32' Name='Towing exceeds 200m or wider than 25m' />
@@ -22612,10 +22626,10 @@ limitations under the License.
             <EnumPair Value='36' Name='Sailing' />
             <EnumPair Value='37' Name='Pleasure' />
             <EnumPair Value='40' Name='High speed craft' />
-            <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
-            <EnumPair Value='42' Name='High speed craft hazard cat B' />
-            <EnumPair Value='43' Name='High speed craft hazard cat C' />
-            <EnumPair Value='44' Name='High speed craft hazard cat D' />
+            <EnumPair Value='41' Name='High speed craft (hazard cat X)' />
+            <EnumPair Value='42' Name='High speed craft (hazard cat Y)' />
+            <EnumPair Value='43' Name='High speed craft (hazard cat Z)' />
+            <EnumPair Value='44' Name='High speed craft (hazard cat OS)' />
             <EnumPair Value='49' Name='High speed craft (no additional information)' />
             <EnumPair Value='50' Name='Pilot vessel' />
             <EnumPair Value='51' Name='SAR' />
@@ -22626,26 +22640,30 @@ limitations under the License.
             <EnumPair Value='56' Name='Spare' />
             <EnumPair Value='57' Name='Spare #2' />
             <EnumPair Value='58' Name='Medical' />
-            <EnumPair Value='59' Name='RR Resolution No.18' />
+            <EnumPair Value='59' Name='Ships and aircraft of States not parties to an armed conflict' />
             <EnumPair Value='60' Name='Passenger ship' />
+            <EnumPair Value='61' Name='Passenger ship (hazard cat X)' />
+            <EnumPair Value='62' Name='Passenger ship (hazard cat Y)' />
+            <EnumPair Value='63' Name='Passenger ship (hazard cat Z)' />
+            <EnumPair Value='64' Name='Passenger ship (hazard cat OS)' />
             <EnumPair Value='69' Name='Passenger ship (no additional information)' />
             <EnumPair Value='70' Name='Cargo ship' />
-            <EnumPair Value='71' Name='Cargo ship carrying dangerous goods' />
-            <EnumPair Value='72' Name='Cargo ship hazard cat B' />
-            <EnumPair Value='73' Name='Cargo ship hazard cat C' />
-            <EnumPair Value='74' Name='Cargo ship hazard cat D' />
+            <EnumPair Value='71' Name='Cargo ship (hazard cat X)' />
+            <EnumPair Value='72' Name='Cargo ship (hazard cat Y)' />
+            <EnumPair Value='73' Name='Cargo ship (hazard cat Z)' />
+            <EnumPair Value='74' Name='Cargo ship (hazard cat OS)' />
             <EnumPair Value='79' Name='Cargo ship (no additional information)' />
             <EnumPair Value='80' Name='Tanker' />
-            <EnumPair Value='81' Name='Tanker carrying dangerous goods' />
-            <EnumPair Value='82' Name='Tanker hazard cat B' />
-            <EnumPair Value='83' Name='Tanker hazard cat C' />
-            <EnumPair Value='84' Name='Tanker hazard cat D' />
+            <EnumPair Value='81' Name='Tanker (hazard cat X)' />
+            <EnumPair Value='82' Name='Tanker (hazard cat Y)' />
+            <EnumPair Value='83' Name='Tanker (hazard cat Z)' />
+            <EnumPair Value='84' Name='Tanker (hazard cat OS)' />
             <EnumPair Value='89' Name='Tanker (no additional information)' />
             <EnumPair Value='90' Name='Other' />
-            <EnumPair Value='91' Name='Other carrying dangerous goods' />
-            <EnumPair Value='92' Name='Other hazard cat B' />
-            <EnumPair Value='93' Name='Other hazard cat C' />
-            <EnumPair Value='94' Name='Other hazard cat D' />
+            <EnumPair Value='91' Name='Other (hazard cat X)' />
+            <EnumPair Value='92' Name='Other (hazard cat Y)' />
+            <EnumPair Value='93' Name='Other (hazard cat Z)' />
+            <EnumPair Value='94' Name='Other (hazard cat OS)' />
             <EnumPair Value='99' Name='Other (no additional information)' />
           </EnumValues>
         </Field>
@@ -22763,6 +22781,8 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='ITU-R M.1371-1' />
             <EnumPair Value='1' Name='ITU-R M.1371-3' />
+            <EnumPair Value='2' Name='ITU-R M.1371-5' />
+            <EnumPair Value='3' Name='ITU-R M.1371 future edition' />
           </EnumValues>
         </Field>
         <Field>
@@ -25721,7 +25741,11 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
-            <EnumPair Value='29' Name='Wing In Ground (no other information)' />
+            <EnumPair Value='21' Name='Wing In Ground (hazard cat X)' />
+            <EnumPair Value='22' Name='Wing In Ground (hazard cat Y)' />
+            <EnumPair Value='23' Name='Wing In Ground (hazard cat Z)' />
+            <EnumPair Value='24' Name='Wing In Ground (hazard cat OS)' />
+            <EnumPair Value='29' Name='Wing In Ground (no additional information)' />
             <EnumPair Value='30' Name='Fishing' />
             <EnumPair Value='31' Name='Towing' />
             <EnumPair Value='32' Name='Towing exceeds 200m or wider than 25m' />
@@ -25731,10 +25755,10 @@ limitations under the License.
             <EnumPair Value='36' Name='Sailing' />
             <EnumPair Value='37' Name='Pleasure' />
             <EnumPair Value='40' Name='High speed craft' />
-            <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
-            <EnumPair Value='42' Name='High speed craft hazard cat B' />
-            <EnumPair Value='43' Name='High speed craft hazard cat C' />
-            <EnumPair Value='44' Name='High speed craft hazard cat D' />
+            <EnumPair Value='41' Name='High speed craft (hazard cat X)' />
+            <EnumPair Value='42' Name='High speed craft (hazard cat Y)' />
+            <EnumPair Value='43' Name='High speed craft (hazard cat Z)' />
+            <EnumPair Value='44' Name='High speed craft (hazard cat OS)' />
             <EnumPair Value='49' Name='High speed craft (no additional information)' />
             <EnumPair Value='50' Name='Pilot vessel' />
             <EnumPair Value='51' Name='SAR' />
@@ -25745,26 +25769,30 @@ limitations under the License.
             <EnumPair Value='56' Name='Spare' />
             <EnumPair Value='57' Name='Spare #2' />
             <EnumPair Value='58' Name='Medical' />
-            <EnumPair Value='59' Name='RR Resolution No.18' />
+            <EnumPair Value='59' Name='Ships and aircraft of States not parties to an armed conflict' />
             <EnumPair Value='60' Name='Passenger ship' />
+            <EnumPair Value='61' Name='Passenger ship (hazard cat X)' />
+            <EnumPair Value='62' Name='Passenger ship (hazard cat Y)' />
+            <EnumPair Value='63' Name='Passenger ship (hazard cat Z)' />
+            <EnumPair Value='64' Name='Passenger ship (hazard cat OS)' />
             <EnumPair Value='69' Name='Passenger ship (no additional information)' />
             <EnumPair Value='70' Name='Cargo ship' />
-            <EnumPair Value='71' Name='Cargo ship carrying dangerous goods' />
-            <EnumPair Value='72' Name='Cargo ship hazard cat B' />
-            <EnumPair Value='73' Name='Cargo ship hazard cat C' />
-            <EnumPair Value='74' Name='Cargo ship hazard cat D' />
+            <EnumPair Value='71' Name='Cargo ship (hazard cat X)' />
+            <EnumPair Value='72' Name='Cargo ship (hazard cat Y)' />
+            <EnumPair Value='73' Name='Cargo ship (hazard cat Z)' />
+            <EnumPair Value='74' Name='Cargo ship (hazard cat OS)' />
             <EnumPair Value='79' Name='Cargo ship (no additional information)' />
             <EnumPair Value='80' Name='Tanker' />
-            <EnumPair Value='81' Name='Tanker carrying dangerous goods' />
-            <EnumPair Value='82' Name='Tanker hazard cat B' />
-            <EnumPair Value='83' Name='Tanker hazard cat C' />
-            <EnumPair Value='84' Name='Tanker hazard cat D' />
+            <EnumPair Value='81' Name='Tanker (hazard cat X)' />
+            <EnumPair Value='82' Name='Tanker (hazard cat Y)' />
+            <EnumPair Value='83' Name='Tanker (hazard cat Z)' />
+            <EnumPair Value='84' Name='Tanker (hazard cat OS)' />
             <EnumPair Value='89' Name='Tanker (no additional information)' />
             <EnumPair Value='90' Name='Other' />
-            <EnumPair Value='91' Name='Other carrying dangerous goods' />
-            <EnumPair Value='92' Name='Other hazard cat B' />
-            <EnumPair Value='93' Name='Other hazard cat C' />
-            <EnumPair Value='94' Name='Other hazard cat D' />
+            <EnumPair Value='91' Name='Other (hazard cat X)' />
+            <EnumPair Value='92' Name='Other (hazard cat Y)' />
+            <EnumPair Value='93' Name='Other (hazard cat Z)' />
+            <EnumPair Value='94' Name='Other (hazard cat OS)' />
             <EnumPair Value='99' Name='Other (no additional information)' />
           </EnumValues>
         </Field>
@@ -40067,7 +40095,11 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
-            <EnumPair Value='29' Name='Wing In Ground (no other information)' />
+            <EnumPair Value='21' Name='Wing In Ground (hazard cat X)' />
+            <EnumPair Value='22' Name='Wing In Ground (hazard cat Y)' />
+            <EnumPair Value='23' Name='Wing In Ground (hazard cat Z)' />
+            <EnumPair Value='24' Name='Wing In Ground (hazard cat OS)' />
+            <EnumPair Value='29' Name='Wing In Ground (no additional information)' />
             <EnumPair Value='30' Name='Fishing' />
             <EnumPair Value='31' Name='Towing' />
             <EnumPair Value='32' Name='Towing exceeds 200m or wider than 25m' />
@@ -40077,10 +40109,10 @@ limitations under the License.
             <EnumPair Value='36' Name='Sailing' />
             <EnumPair Value='37' Name='Pleasure' />
             <EnumPair Value='40' Name='High speed craft' />
-            <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
-            <EnumPair Value='42' Name='High speed craft hazard cat B' />
-            <EnumPair Value='43' Name='High speed craft hazard cat C' />
-            <EnumPair Value='44' Name='High speed craft hazard cat D' />
+            <EnumPair Value='41' Name='High speed craft (hazard cat X)' />
+            <EnumPair Value='42' Name='High speed craft (hazard cat Y)' />
+            <EnumPair Value='43' Name='High speed craft (hazard cat Z)' />
+            <EnumPair Value='44' Name='High speed craft (hazard cat OS)' />
             <EnumPair Value='49' Name='High speed craft (no additional information)' />
             <EnumPair Value='50' Name='Pilot vessel' />
             <EnumPair Value='51' Name='SAR' />
@@ -40091,26 +40123,30 @@ limitations under the License.
             <EnumPair Value='56' Name='Spare' />
             <EnumPair Value='57' Name='Spare #2' />
             <EnumPair Value='58' Name='Medical' />
-            <EnumPair Value='59' Name='RR Resolution No.18' />
+            <EnumPair Value='59' Name='Ships and aircraft of States not parties to an armed conflict' />
             <EnumPair Value='60' Name='Passenger ship' />
+            <EnumPair Value='61' Name='Passenger ship (hazard cat X)' />
+            <EnumPair Value='62' Name='Passenger ship (hazard cat Y)' />
+            <EnumPair Value='63' Name='Passenger ship (hazard cat Z)' />
+            <EnumPair Value='64' Name='Passenger ship (hazard cat OS)' />
             <EnumPair Value='69' Name='Passenger ship (no additional information)' />
             <EnumPair Value='70' Name='Cargo ship' />
-            <EnumPair Value='71' Name='Cargo ship carrying dangerous goods' />
-            <EnumPair Value='72' Name='Cargo ship hazard cat B' />
-            <EnumPair Value='73' Name='Cargo ship hazard cat C' />
-            <EnumPair Value='74' Name='Cargo ship hazard cat D' />
+            <EnumPair Value='71' Name='Cargo ship (hazard cat X)' />
+            <EnumPair Value='72' Name='Cargo ship (hazard cat Y)' />
+            <EnumPair Value='73' Name='Cargo ship (hazard cat Z)' />
+            <EnumPair Value='74' Name='Cargo ship (hazard cat OS)' />
             <EnumPair Value='79' Name='Cargo ship (no additional information)' />
             <EnumPair Value='80' Name='Tanker' />
-            <EnumPair Value='81' Name='Tanker carrying dangerous goods' />
-            <EnumPair Value='82' Name='Tanker hazard cat B' />
-            <EnumPair Value='83' Name='Tanker hazard cat C' />
-            <EnumPair Value='84' Name='Tanker hazard cat D' />
+            <EnumPair Value='81' Name='Tanker (hazard cat X)' />
+            <EnumPair Value='82' Name='Tanker (hazard cat Y)' />
+            <EnumPair Value='83' Name='Tanker (hazard cat Z)' />
+            <EnumPair Value='84' Name='Tanker (hazard cat OS)' />
             <EnumPair Value='89' Name='Tanker (no additional information)' />
             <EnumPair Value='90' Name='Other' />
-            <EnumPair Value='91' Name='Other carrying dangerous goods' />
-            <EnumPair Value='92' Name='Other hazard cat B' />
-            <EnumPair Value='93' Name='Other hazard cat C' />
-            <EnumPair Value='94' Name='Other hazard cat D' />
+            <EnumPair Value='91' Name='Other (hazard cat X)' />
+            <EnumPair Value='92' Name='Other (hazard cat Y)' />
+            <EnumPair Value='93' Name='Other (hazard cat Z)' />
+            <EnumPair Value='94' Name='Other (hazard cat OS)' />
             <EnumPair Value='99' Name='Other (no additional information)' />
           </EnumValues>
         </Field>

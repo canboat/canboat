@@ -18,6 +18,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #320: Update AIS lookups according to ITU M.1371-5
 - #319: analyzer: fixup printing of lookup values for `-json -nv` that have no entry in the lookup table.
 - #318: n2kd: NMEA0183 streams for AIS will now log errors when AIS data field names are changed,
         lookup values are extracted by number -- see above for new restriction

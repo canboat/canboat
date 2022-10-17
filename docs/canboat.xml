@@ -510,7 +510,11 @@ limitations under the License.
     <LookupEnumeration Name='SHIP_TYPE' MaxValue='255'>
       <EnumPair Value='0' Name='Unavailable' />
       <EnumPair Value='20' Name='Wing In Ground' />
-      <EnumPair Value='29' Name='Wing In Ground (no other information)' />
+      <EnumPair Value='21' Name='Wing In Ground (hazard cat X)' />
+      <EnumPair Value='22' Name='Wing In Ground (hazard cat Y)' />
+      <EnumPair Value='23' Name='Wing In Ground (hazard cat Z)' />
+      <EnumPair Value='24' Name='Wing In Ground (hazard cat OS)' />
+      <EnumPair Value='29' Name='Wing In Ground (no additional information)' />
       <EnumPair Value='30' Name='Fishing' />
       <EnumPair Value='31' Name='Towing' />
       <EnumPair Value='32' Name='Towing exceeds 200m or wider than 25m' />
@@ -520,10 +524,10 @@ limitations under the License.
       <EnumPair Value='36' Name='Sailing' />
       <EnumPair Value='37' Name='Pleasure' />
       <EnumPair Value='40' Name='High speed craft' />
-      <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
-      <EnumPair Value='42' Name='High speed craft hazard cat B' />
-      <EnumPair Value='43' Name='High speed craft hazard cat C' />
-      <EnumPair Value='44' Name='High speed craft hazard cat D' />
+      <EnumPair Value='41' Name='High speed craft (hazard cat X)' />
+      <EnumPair Value='42' Name='High speed craft (hazard cat Y)' />
+      <EnumPair Value='43' Name='High speed craft (hazard cat Z)' />
+      <EnumPair Value='44' Name='High speed craft (hazard cat OS)' />
       <EnumPair Value='49' Name='High speed craft (no additional information)' />
       <EnumPair Value='50' Name='Pilot vessel' />
       <EnumPair Value='51' Name='SAR' />
@@ -534,26 +538,30 @@ limitations under the License.
       <EnumPair Value='56' Name='Spare' />
       <EnumPair Value='57' Name='Spare #2' />
       <EnumPair Value='58' Name='Medical' />
-      <EnumPair Value='59' Name='RR Resolution No.18' />
+      <EnumPair Value='59' Name='Ships and aircraft of States not parties to an armed conflict' />
       <EnumPair Value='60' Name='Passenger ship' />
+      <EnumPair Value='61' Name='Passenger ship (hazard cat X)' />
+      <EnumPair Value='62' Name='Passenger ship (hazard cat Y)' />
+      <EnumPair Value='63' Name='Passenger ship (hazard cat Z)' />
+      <EnumPair Value='64' Name='Passenger ship (hazard cat OS)' />
       <EnumPair Value='69' Name='Passenger ship (no additional information)' />
       <EnumPair Value='70' Name='Cargo ship' />
-      <EnumPair Value='71' Name='Cargo ship carrying dangerous goods' />
-      <EnumPair Value='72' Name='Cargo ship hazard cat B' />
-      <EnumPair Value='73' Name='Cargo ship hazard cat C' />
-      <EnumPair Value='74' Name='Cargo ship hazard cat D' />
+      <EnumPair Value='71' Name='Cargo ship (hazard cat X)' />
+      <EnumPair Value='72' Name='Cargo ship (hazard cat Y)' />
+      <EnumPair Value='73' Name='Cargo ship (hazard cat Z)' />
+      <EnumPair Value='74' Name='Cargo ship (hazard cat OS)' />
       <EnumPair Value='79' Name='Cargo ship (no additional information)' />
       <EnumPair Value='80' Name='Tanker' />
-      <EnumPair Value='81' Name='Tanker carrying dangerous goods' />
-      <EnumPair Value='82' Name='Tanker hazard cat B' />
-      <EnumPair Value='83' Name='Tanker hazard cat C' />
-      <EnumPair Value='84' Name='Tanker hazard cat D' />
+      <EnumPair Value='81' Name='Tanker (hazard cat X)' />
+      <EnumPair Value='82' Name='Tanker (hazard cat Y)' />
+      <EnumPair Value='83' Name='Tanker (hazard cat Z)' />
+      <EnumPair Value='84' Name='Tanker (hazard cat OS)' />
       <EnumPair Value='89' Name='Tanker (no additional information)' />
       <EnumPair Value='90' Name='Other' />
-      <EnumPair Value='91' Name='Other carrying dangerous goods' />
-      <EnumPair Value='92' Name='Other hazard cat B' />
-      <EnumPair Value='93' Name='Other hazard cat C' />
-      <EnumPair Value='94' Name='Other hazard cat D' />
+      <EnumPair Value='91' Name='Other (hazard cat X)' />
+      <EnumPair Value='92' Name='Other (hazard cat Y)' />
+      <EnumPair Value='93' Name='Other (hazard cat Z)' />
+      <EnumPair Value='94' Name='Other (hazard cat OS)' />
       <EnumPair Value='99' Name='Other (no additional information)' />
     </LookupEnumeration>
     <LookupEnumeration Name='DEVICE_CLASS' MaxValue='127'>
@@ -803,6 +811,8 @@ limitations under the License.
       <EnumPair Value='8' Name='Under way sailing' />
       <EnumPair Value='9' Name='Hazardous material - High Speed' />
       <EnumPair Value='10' Name='Hazardous material - Wing in Ground' />
+      <EnumPair Value='11' Name='Power-driven vessl towing astern' />
+      <EnumPair Value='12' Name='Power-driven vessl pushing ahead or towing alongside' />
       <EnumPair Value='14' Name='AIS-SART' />
     </LookupEnumeration>
     <LookupEnumeration Name='POWER_FACTOR' MaxValue='3'>
@@ -1556,6 +1566,8 @@ limitations under the License.
     <LookupEnumeration Name='AIS_VERSION' MaxValue='3'>
       <EnumPair Value='0' Name='ITU-R M.1371-1' />
       <EnumPair Value='1' Name='ITU-R M.1371-3' />
+      <EnumPair Value='2' Name='ITU-R M.1371-5' />
+      <EnumPair Value='3' Name='ITU-R M.1371 future edition' />
     </LookupEnumeration>
     <LookupEnumeration Name='TIDE' MaxValue='3'>
       <EnumPair Value='0' Name='Falling' />
@@ -18869,6 +18881,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129038</PGN>
       <Id>aisClassAPositionReport</Id>
       <Description>AIS Class A Position Report</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>20</FieldCount>
@@ -19148,6 +19161,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129039</PGN>
       <Id>aisClassBPositionReport</Id>
       <Description>AIS Class B Position Report</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>22</FieldCount>
@@ -19465,6 +19479,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129040</PGN>
       <Id>aisClassBExtendedPositionReport</Id>
       <Description>AIS Class B Extended Position Report</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>26</FieldCount>
@@ -19826,6 +19841,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129041</PGN>
       <Id>aisAidsToNavigationAtonReport</Id>
       <Description>AIS Aids to Navigation (AtoN) Report</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>23</FieldCount>
@@ -22882,6 +22898,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129792</PGN>
       <Id>aisDgnssBroadcastBinaryMessage</Id>
       <Description>AIS DGNSS Broadcast Binary Message</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -23041,6 +23058,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129793</PGN>
       <Id>aisUtcAndDateReport</Id>
       <Description>AIS UTC and Date Report</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -23249,6 +23267,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129794</PGN>
       <Id>aisClassAStaticAndVoyageRelatedData</Id>
       <Description>AIS Class A Static and Voyage Related Data</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>20</FieldCount>
@@ -23520,6 +23539,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129795</PGN>
       <Id>aisAddressedBinaryMessage</Id>
       <Description>AIS Addressed Binary Message</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
@@ -23672,6 +23692,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129796</PGN>
       <Id>aisAcknowledge</Id>
       <Description>AIS Acknowledge</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>10</FieldCount>
@@ -23800,6 +23821,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129797</PGN>
       <Id>aisBinaryBroadcastMessage</Id>
       <Description>AIS Binary Broadcast Message</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>8</FieldCount>
@@ -23912,6 +23934,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129798</PGN>
       <Id>aisSarAircraftPositionReport</Id>
       <Description>AIS SAR Aircraft Position Report</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -24242,6 +24265,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129800</PGN>
       <Id>aisUtcDateInquiry</Id>
       <Description>AIS UTC/Date Inquiry</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -24552,6 +24576,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129803</PGN>
       <Id>aisInterrogation</Id>
       <Description>AIS Interrogation</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -24688,6 +24713,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129804</PGN>
       <Id>aisAssignmentModeCommand</Id>
       <Description>AIS Assignment Mode Command</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -24839,6 +24865,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129805</PGN>
       <Id>aisDataLinkManagementMessage</Id>
       <Description>AIS Data Link Management Message</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -24971,6 +24998,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129806</PGN>
       <Id>aisChannelManagement</Id>
       <Description>AIS Channel Management</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -25244,6 +25272,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129807</PGN>
       <Id>aisClassBGroupAssignment</Id>
       <Description>AIS Class B Group Assignment</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -25999,6 +26028,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129809</PGN>
       <Id>aisClassBStaticDataMsg24PartA</Id>
       <Description>AIS Class B static data (msg 24 Part A)</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
@@ -26094,6 +26124,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129810</PGN>
       <Id>aisClassBStaticDataMsg24PartB</Id>
       <Description>AIS Class B static data (msg 24 Part B)</Description>
+      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>16</FieldCount>
