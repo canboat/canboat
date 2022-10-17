@@ -4555,8 +4555,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Source", BYTES(1), HUMIDITY_SOURCE),
       PERCENTAGE_U16_FIELD("Actual Humidity"),
       PERCENTAGE_U16_FIELD("Set Humidity"),
+      RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval = 2000}
 
     ,
     {"Actual Pressure",
