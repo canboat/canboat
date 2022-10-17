@@ -68,6 +68,7 @@ bool       showBytes     = false;
 bool       showJson      = false;
 bool       showJsonEmpty = false;
 bool       showJsonValue = false;
+bool       showVersion   = true;
 bool       showSI        = false; // Output everything in strict SI units
 GeoFormats showGeo       = GEO_DD;
 
@@ -217,6 +218,7 @@ int main(int argc, char **argv)
     else if (ac > 2 && strcasecmp(av[1], "-fixtime") == 0)
     {
       setFixedTimestamp(av[2]);
+      showVersion = false;
       ac--;
       av++;
     }
@@ -263,7 +265,7 @@ int main(int argc, char **argv)
   {
     logInfo("N2K packet analyzer\n" COPYRIGHT);
   }
-  else
+  else if (showVersion)
   {
     printf("{\"version\":\"%s\",\"units\":\"%s\"}\n", VERSION, showSI ? "si" : "std");
   }
@@ -551,11 +553,11 @@ static void showBuffers(void)
 
     if (p->used)
     {
-      logDebug("ReassemblyBuffer[%zu] PGN %u: size %zu frames=%x mask=%x\n", buffer, p->pgn, p->size, p->frames, p->allFrames);
+      logError("ReassemblyBuffer[%zu] PGN %u: size %zu frames=%x mask=%x\n", buffer, p->pgn, p->size, p->frames, p->allFrames);
     }
     else
     {
-      logInfo("ReassemblyBuffer[%zu]: inUse=false\n", buffer);
+      logDebug("ReassemblyBuffer[%zu]: inUse=false\n", buffer);
     }
   }
 }
@@ -825,7 +827,7 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     }
     else if (showBytes && !g_skip)
     {
-      showBytesOrBits(data, startBit, *bits);
+      showBytesOrBits(data + (startBit >> 3), startBit & 7, *bits);
     }
     return r;
   }
@@ -834,28 +836,25 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
   return false;
 }
 
-bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bool showJson)
+bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool showJson)
 {
   Pgn *pgn;
 
-  uint8_t *data;
-
-  uint8_t *dataEnd = dataStart + length;
-  size_t   i;
-  size_t   bits;
-  size_t   startBit;
-  int      repetition;
-  char     fieldName[60];
-  bool     r;
-  size_t   variableFields; // How many variable fields remain (product of repetition count * # of fields)
-  uint8_t  variableFieldStart;
-  uint8_t  variableFieldCount;
+  size_t  i;
+  size_t  bits;
+  size_t  startBit;
+  int     repetition;
+  char    fieldName[60];
+  bool    r;
+  size_t  variableFields; // How many variable fields remain (product of repetition count * # of fields)
+  uint8_t variableFieldStart;
+  uint8_t variableFieldCount;
 
   if (msg == NULL)
   {
     return false;
   }
-  pgn = getMatchingPgn(msg->pgn, dataStart, length);
+  pgn = getMatchingPgn(msg->pgn, data, length);
   if (!pgn)
   {
     logAbort("No PGN definition found for PGN %u\n", msg->pgn);
@@ -873,14 +872,14 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
     fprintf(f, "%s %u %3u %3u %6u %s: ", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     for (i = 0; i < length; i++)
     {
-      fprintf(f, " %2.02X", dataStart[i]);
+      fprintf(f, " %2.02X", data[i]);
     }
     putc('\n', f);
 
     fprintf(f, "%s %u %3u %3u %6u %s: ", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     for (i = 0; i < length; i++)
     {
-      fprintf(f, "  %c", isalnum(dataStart[i]) ? dataStart[i] : '.');
+      fprintf(f, "  %c", isalnum(data[i]) ? data[i] : '.');
     }
     putc('\n', f);
   }
@@ -913,7 +912,7 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
   repetition               = 0;
   variableFields           = 0;
   r                        = true;
-  for (i = 0, startBit = 0, data = dataStart; data < dataEnd; i++)
+  for (i = 0, startBit = 0; (startBit >> 3) < length; i++)
   {
     Field *field;
 
@@ -977,7 +976,7 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
 
     if (!field->camelName && !field->name)
     {
-      logDebug("PGN %u has unknown bytes at end: %u\n", msg->pgn, dataEnd - data);
+      logDebug("PGN %u has unknown bytes at end: %u\n", msg->pgn, length - (startBit >> 3));
       break;
     }
 
@@ -988,7 +987,7 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
       sprintf(fieldName + strlen(fieldName), "%u", repetition);
     }
 
-    if (!printField(field, fieldName, data, dataEnd - data, startBit, &bits))
+    if (!printField(field, fieldName, data, length, startBit, &bits))
     {
       logError("PGN %u field %s error\n", msg->pgn, fieldName);
       r = false;
@@ -996,8 +995,6 @@ bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bo
     }
 
     startBit += bits;
-    data += startBit / 8;
-    startBit %= 8;
   }
 
   if (showJson)

@@ -4,9 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+Sections can be: Added Changed Deprecated Removed Fixed Security.
+
+## [4.3.0]
+
+### Added
+
+- #317: Add `INDIRECT_LOOKUP` fieldtype, and XML/JSON that enumerates `EnumTriplet`s.
+        This is used for enumerating DEVICE_FUNCTION, which depends on the DEVICE_CLASS,
+        as used in PGNs 60928 "ISO Address Claim" and 65240 "ISO Commanded Address".
+
+### Fixed
+
+- #317: PGN 127489 Dynamic Engine Parameters field Percent Engine Torque is signed, not unsigned.
+- #316: Regression since v2.0.0: Temperature Coefficient was dropped from PGN 127513.
+- #315: Remove superfluous duplicate fallback PGN.
+- Fix `RangeMax` for UINT64_MAX values.
+- Fix print of bitlookup in textual analyzer.
+
 ## [4.2.2]
 
-### Changed
+### Fixed
 
 - Add/fix `RangeMin` and `RangeMax` for fields with `Offset`.
 - Fix makefiles & version permeation.
@@ -98,7 +116,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - shorter binary fields were incorrectly printed as a string contain decimal number. They are now printed as a
     space separated sequence of two uppercase hex digits.
   - longer binary fields are now printed the same as above, with uppercase instead of lowercase and no trailing space.
-  - Some fields have changed from being a 'number' to a 'time', causing them to be formatted as "hh:mi:ss[.milli]".
+  - Some fields have changed from being a 'number' to a 'time', causing them to be formatted as `hh:mi:ss[.milli]`.
     These are:
     - PGN 126993 "Heartbeat" field "Data transmit offset"
     - PGN 127489 "Engine Parameters, Dynamic" field "Total engine hours"
@@ -118,7 +136,7 @@ Issues resolved:
 - #305: Print reserved fields only when they are not all ones.
 - #304: Print spare fields only when they are not all zeroes.
 - #303: Allow lookups to use the values for "Error" and "Unknown".
-- #302: Field type has changed for PGNs[].Fields[].Match in pgn JSON/XML.
+- #302: Field type has changed for `PGNs[].Fields[].Match` in pgn JSON/XML.
 - #298: Lookup values should say "Temperature", not just "Temp".
 - #293: Unify field names for "RAIM", "AIS RAIM Flag" and "AIS RAIM flag" as "RAIM".
 - #292: Reactive power unit is "VAR", not "var".
@@ -358,5 +376,20 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.2.2...HEAD
+[4.2.2]: https://github.com/canboat/canboat/compare/v4.2.1...v4.2.2
+[4.2.1]: https://github.com/canboat/canboat/compare/v4.2.0...v4.2.1
+[4.2.0]: https://github.com/canboat/canboat/compare/v4.1.0...v4.2.0
+[4.1.0]: https://github.com/canboat/canboat/compare/v4.0.0...v4.1.0
+[4.0.0]: https://github.com/canboat/canboat/compare/v3.1.0...v4.0.0
+[3.1.0]: https://github.com/canboat/canboat/compare/v3.0.0...v3.1.0
+[3.0.0]: https://github.com/canboat/canboat/compare/v2.0.0...v3.0.0
+[2.0.0]: https://github.com/canboat/canboat/compare/v1.4.2...v2.0.0
+[1.4.2]: https://github.com/canboat/canboat/compare/v1.4.1...v1.4.2
+[1.4.1]: https://github.com/canboat/canboat/compare/v1.4.0...v1.4.1
+[1.4.0]: https://github.com/canboat/canboat/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/canboat/canboat/compare/v1.2.1...v1.3.0
+[1.2.1]: https://github.com/canboat/canboat/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/canboat/canboat/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/canboat/canboat/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/canboat/canboat/compare/v0.1.0...v1.0.0

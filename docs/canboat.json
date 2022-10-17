@@ -3,8 +3,8 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"4.2.2",
-    "Copyright":"CANboat version v4.2.2\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"4.3.0",
+    "Copyright":"CANboat version v4.3.0\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
     {
         "Name":"ELECTRICAL_CURRENT",
@@ -223,6 +223,13 @@
         "Name":"LOOKUP",
       "Description":"Number value where each value encodes for a distinct meaning",
       "EncodingDescription":"Each lookup has a LookupEnumeration defining what the possible values mean",
+      "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.",
+      "Signed":false
+      },
+    {
+        "Name":"INDIRECT_LOOKUP",
+      "Description":"Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field",
+      "EncodingDescription":"Each lookup has a LookupIndirectEnumeration defining what the possible values mean",
       "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.",
       "Signed":false
       },
@@ -2389,6 +2396,113 @@
         ]
       }
     ],
+    "LookupIndirectEnumerations":[
+      {
+        "Name":"DEVICE_FUNCTION",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Diagnostic", "Value1":10, "Value2":130},
+          {"Name":"Bus Traffic Logger", "Value1":10, "Value2":140},
+          {"Name":"Alarm Enunciator", "Value1":20, "Value2":110},
+          {"Name":"Emergency Position Indicating Radio Beacon (EPIRB)", "Value1":20, "Value2":130},
+          {"Name":"Man Overboard", "Value1":20, "Value2":135},
+          {"Name":"Voyage Data Recorder", "Value1":20, "Value2":140},
+          {"Name":"Camera", "Value1":20, "Value2":150},
+          {"Name":"PC Gateway", "Value1":25, "Value2":130},
+          {"Name":"NMEA 2000 to Analog Gateway", "Value1":25, "Value2":131},
+          {"Name":"Analog to NMEA 2000 Gateway", "Value1":25, "Value2":132},
+          {"Name":"NMEA 0183 Gateway", "Value1":25, "Value2":135},
+          {"Name":"Router", "Value1":25, "Value2":140},
+          {"Name":"Bridge", "Value1":25, "Value2":150},
+          {"Name":"Repeater", "Value1":25, "Value2":160},
+          {"Name":"Binary Event Monitor", "Value1":30, "Value2":130},
+          {"Name":"Load Controller", "Value1":30, "Value2":140},
+          {"Name":"AC/DC Input", "Value1":30, "Value2":141},
+          {"Name":"Function Controller", "Value1":30, "Value2":150},
+          {"Name":"Engine", "Value1":35, "Value2":140},
+          {"Name":"DC Generator/Alternator", "Value1":35, "Value2":141},
+          {"Name":"Solar Panel (Solar Array)", "Value1":35, "Value2":142},
+          {"Name":"Wind Generator (DC)", "Value1":35, "Value2":143},
+          {"Name":"Fuel Cell", "Value1":35, "Value2":144},
+          {"Name":"Network Power Supply", "Value1":35, "Value2":145},
+          {"Name":"AC Generator", "Value1":35, "Value2":151},
+          {"Name":"AC Bus", "Value1":35, "Value2":152},
+          {"Name":"AC Mains (Utility/Shore)", "Value1":35, "Value2":153},
+          {"Name":"AC Output", "Value1":35, "Value2":154},
+          {"Name":"Power Converter - Battery Charger", "Value1":35, "Value2":160},
+          {"Name":"Power Converter - Battery Charger+Inverter", "Value1":35, "Value2":161},
+          {"Name":"Power Converter - Inverter", "Value1":35, "Value2":162},
+          {"Name":"Power Converter - DC", "Value1":35, "Value2":163},
+          {"Name":"Battery", "Value1":35, "Value2":170},
+          {"Name":"Engine Gateway", "Value1":35, "Value2":180},
+          {"Name":"Follow-up Controller", "Value1":40, "Value2":130},
+          {"Name":"Mode Controller", "Value1":40, "Value2":140},
+          {"Name":"Autopilot", "Value1":40, "Value2":150},
+          {"Name":"Rudder", "Value1":40, "Value2":155},
+          {"Name":"Heading Sensors", "Value1":40, "Value2":160},
+          {"Name":"Trim (Tabs)/Interceptors", "Value1":40, "Value2":170},
+          {"Name":"Attitude (Pitch, Roll, Yaw) Control", "Value1":40, "Value2":180},
+          {"Name":"Engineroom Monitoring", "Value1":50, "Value2":130},
+          {"Name":"Engine", "Value1":50, "Value2":140},
+          {"Name":"DC Generator/Alternator", "Value1":50, "Value2":141},
+          {"Name":"Engine Controller", "Value1":50, "Value2":150},
+          {"Name":"AC Generator", "Value1":50, "Value2":151},
+          {"Name":"Motor", "Value1":50, "Value2":155},
+          {"Name":"Engine Gateway", "Value1":50, "Value2":160},
+          {"Name":"Transmission", "Value1":50, "Value2":165},
+          {"Name":"Throttle/Shift Control", "Value1":50, "Value2":170},
+          {"Name":"Actuator", "Value1":50, "Value2":180},
+          {"Name":"Gauge Interface", "Value1":50, "Value2":190},
+          {"Name":"Gauge Large", "Value1":50, "Value2":200},
+          {"Name":"Gauge Small", "Value1":50, "Value2":210},
+          {"Name":"Bottom Depth", "Value1":60, "Value2":130},
+          {"Name":"Bottom Depth/Speed", "Value1":60, "Value2":135},
+          {"Name":"Ownship Attitude", "Value1":60, "Value2":140},
+          {"Name":"Ownship Position (GNSS)", "Value1":60, "Value2":145},
+          {"Name":"Ownship Position (Loran C)", "Value1":60, "Value2":150},
+          {"Name":"Speed", "Value1":60, "Value2":155},
+          {"Name":"Turn Rate Indicator", "Value1":60, "Value2":160},
+          {"Name":"Integrated Navigation", "Value1":60, "Value2":170},
+          {"Name":"Integrated Navigation System", "Value1":60, "Value2":175},
+          {"Name":"Navigation Management", "Value1":60, "Value2":190},
+          {"Name":"Automatic Identification System (AIS)", "Value1":60, "Value2":195},
+          {"Name":"Radar", "Value1":60, "Value2":200},
+          {"Name":"Infrared Imaging", "Value1":60, "Value2":201},
+          {"Name":"ECDIS", "Value1":60, "Value2":205},
+          {"Name":"ECS", "Value1":60, "Value2":210},
+          {"Name":"Direction Finder", "Value1":60, "Value2":220},
+          {"Name":"Voyage Status", "Value1":60, "Value2":230},
+          {"Name":"EPIRB", "Value1":70, "Value2":130},
+          {"Name":"AIS", "Value1":70, "Value2":140},
+          {"Name":"DSC", "Value1":70, "Value2":150},
+          {"Name":"Data Receiver/Transceiver", "Value1":70, "Value2":160},
+          {"Name":"Satellite", "Value1":70, "Value2":170},
+          {"Name":"Radio-telephone (MF/HF)", "Value1":70, "Value2":180},
+          {"Name":"Radiotelephone", "Value1":70, "Value2":190},
+          {"Name":"Temperature", "Value1":75, "Value2":130},
+          {"Name":"Pressure", "Value1":75, "Value2":140},
+          {"Name":"Fluid Level", "Value1":75, "Value2":150},
+          {"Name":"Flow", "Value1":75, "Value2":160},
+          {"Name":"Humidity", "Value1":75, "Value2":170},
+          {"Name":"Time/Date Systems", "Value1":80, "Value2":130},
+          {"Name":"VDR", "Value1":80, "Value2":140},
+          {"Name":"Integrated Instrumentation", "Value1":80, "Value2":150},
+          {"Name":"General Purpose Displays", "Value1":80, "Value2":160},
+          {"Name":"General Sensor Box", "Value1":80, "Value2":170},
+          {"Name":"Weather Instruments", "Value1":80, "Value2":180},
+          {"Name":"Transducer/General", "Value1":80, "Value2":190},
+          {"Name":"NMEA 0183 Converter", "Value1":80, "Value2":200},
+          {"Name":"Atmospheric", "Value1":85, "Value2":130},
+          {"Name":"Aquatic", "Value1":85, "Value2":160},
+          {"Name":"HVAC", "Value1":90, "Value2":130},
+          {"Name":"Scale (Catch)", "Value1":100, "Value2":130},
+          {"Name":"Display", "Value1":120, "Value2":130},
+          {"Name":"Alarm Enunciator", "Value1":120, "Value2":140},
+          {"Name":"Multimedia Player", "Value1":125, "Value2":130},
+          {"Name":"Multimedia Controller", "Value1":125, "Value2":140}
+        ]
+      }
+    ],
     "LookupBitEnumerations":[
       {
         "Name":"ENGINE_STATUS_1",
@@ -3112,7 +3226,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"INDIRECT_LOOKUP",
+            "LookupIndirectEnumeration":"DEVICE_FUNCTION",
+            "LookupIndirectEnumerationField":"Device Class"
           },
           {
             "Order":6,
@@ -5213,7 +5329,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"INDIRECT_LOOKUP",
+            "LookupIndirectEnumeration":"DEVICE_FUNCTION",
+            "LookupIndirectEnumerationField":"Device Class"
           },
           {
             "Order":6,
@@ -11673,7 +11791,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19,
+            "RangeMax":18446744073709551615,
             "FieldType":"NUMBER"
           },
           {
@@ -11819,7 +11937,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19,
+            "RangeMax":18446744073709551615,
             "FieldType":"NUMBER"
           },
           {
@@ -11967,7 +12085,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19,
+            "RangeMax":18446744073709551615,
             "FieldType":"NUMBER"
           },
           {
@@ -12019,7 +12137,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19,
+            "RangeMax":18446744073709551615,
             "FieldType":"NUMBER"
           },
           {
@@ -12136,7 +12254,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1.844674407370955e+19,
+            "RangeMax":18446744073709551615,
             "FieldType":"NUMBER"
           },
           {
@@ -13779,9 +13897,9 @@
             "BitStart":0,
             "Unit":"%",
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
+            "Signed":true,
+            "RangeMin":-127,
+            "RangeMax":125,
             "FieldType":"NUMBER"
           }
         ]
@@ -16261,8 +16379,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
         ],
-        "FieldCount":9,
-        "Length":7,
+        "FieldCount":10,
+        "Length":8,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -16361,10 +16479,24 @@
           },
           {
             "Order":8,
+            "Id":"temperatureCoefficient",
+            "Name":"Temperature Coefficient",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Unit":"%",
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-127,
+            "RangeMax":125,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
             "Id":"peukertExponent",
             "Name":"Peukert Exponent",
             "BitLength":8,
-            "BitOffset":40,
+            "BitOffset":48,
             "BitStart":0,
             "Resolution":0.002,
             "Signed":false,
@@ -16374,17 +16506,17 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":9,
+            "Order":10,
             "Id":"chargeEfficiencyFactor",
             "Name":"Charge Efficiency Factor",
             "BitLength":8,
-            "BitOffset":48,
+            "BitOffset":56,
             "BitStart":0,
             "Unit":"%",
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
+            "Signed":true,
+            "RangeMin":-127,
+            "RangeMax":125,
             "FieldType":"NUMBER"
           }
         ]

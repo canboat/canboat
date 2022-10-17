@@ -308,7 +308,6 @@ struct FieldType
   int32_t     offset;     // For numbers with excess-K offset
   double      resolution; // A positive real value, or 1 for integral values
   Bool        hasSign;    // Is the value signed, e.g. has both positive and negative values?
-  const char *format;     // Format string for printf
 
   // These are derived from size, variableSize, resolution and hasSign
   double rangeMin;
@@ -446,6 +445,16 @@ FieldType fieldTypeList[] = {
      .hasSign = False,
      .pf      = fieldPrintLookup,
      .v1Type  = "Lookup table"},
+
+    {.name = "INDIRECT_LOOKUP",
+     .description
+     = "Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field",
+     .encodingDescription = "Each lookup has a LookupIndirectEnumeration defining what the possible values mean",
+     .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
+                "occurs that has no corresponding textual explanation.",
+     .hasSign = False,
+     .pf      = fieldPrintLookup,
+     .v1Type  = "Integer"},
 
     {.name                = "BITLOOKUP",
      .description         = "Number value where each bit value encodes for a distinct meaning",
@@ -1141,9 +1150,8 @@ FieldType fieldTypeList[] = {
      .encodingDescription
      = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. "
        "The first three or four digits are special, see the USCG link for a detailed explanation.",
-     .url    = "https://navcen.uscg.gov/maritime-mobile-service-identity",
-     .format = "\"%09u\"",
-     .pf     = fieldPrintMMSI},
+     .url = "https://navcen.uscg.gov/maritime-mobile-service-identity",
+     .pf  = fieldPrintMMSI},
 
     {.name        = "VARIABLE",
      .description = "Variable",

@@ -24,50 +24,147 @@ limitations under the License.
 
 #include "analyzer.h"
 
-#define LOOKUP_TYPE(type, length)                \
-  const char  *lookupValue##type[1 << (length)]; \
-  const size_t lookupLength##type = 1 << (length);
+/*
+ The source below expands to many C functions, depending on whether EXPLAIN is set or
+ not. When compiled for `analyzer-explain`, the macro is set, and the code will generate
+ a function for every lookup that looks like this:
+
+    void lookupYES_NO(EnumPairCallback cb)
+    {
+      (cb)(0, "No");
+      (cb)(1, "Yes");
+    }
+
+ When the EXPLAIN macro is not set, and this is compiled for `analyzer`, the code generated
+ will look like this:
+
+    const char *lookupYES_NO(size_t val)
+    {
+      switch (val)
+      {
+        case 0: return "No";
+        case 1: return "Yes";
+      }
+      return NULL;
+    }
+
+ This does away with all long sparse arrays that we had before this, and the C optimizers
+ generally do an excellent job of creating jump tables to create this code, as this is a
+ very typical pattern of code used by code generators (like this one :-) )
+*/
+
+#ifdef EXPLAIN
+
+// Generate functions that are usable as callbacks that will loop over all
+// possible values.
+
+#define LOOKUP_TYPE(type, length)        \
+  void lookup##type(EnumPairCallback cb) \
+  {
+#define LOOKUP(type, n, str) (cb)(n, str);
+
 #define LOOKUP_TYPE_BITFIELD(type, length) \
-  const char  *lookupValue##type[length];  \
-  const size_t lookupLength##type = length;
+  void lookup##type(BitPairCallback cb)    \
+  {
+#define LOOKUP_BITFIELD(type, n, str) (cb)(n, str);
+
+#define LOOKUP_TYPE_TRIPLET(type, length)   \
+  void lookup##type(EnumTripletCallback cb) \
+  {
+#define LOOKUP_TRIPLET(type, n1, n2, str) (cb)(n1, n2, str);
+
+#define LOOKUP_END }
+
+#else
+
+// Generate functions that lookup the value using switch statements. Compilers
+// are really good at optimizing long switch statements, as lex/yacc style generated
+// code uses that a lot.
+
+#define LOOKUP_TYPE(type, length)      \
+  const char *lookup##type(size_t val) \
+  {                                    \
+    switch (val)                       \
+    {
+#define LOOKUP(type, n, str) \
+  case n:                    \
+    return str;
+
+#define LOOKUP_TYPE_BITFIELD(type, length) \
+  const char *lookup##type(size_t val)     \
+  {                                        \
+    switch (val)                           \
+    {
+#define LOOKUP_BITFIELD(type, n, str) \
+  case n:                             \
+    return str;
+
+#define LOOKUP_TYPE_TRIPLET(type, length)            \
+  const char *lookup##type(size_t val1, size_t val2) \
+  {                                                  \
+    switch (val1 * 256 + val2)                       \
+    {
+#define LOOKUP_TRIPLET(type, n1, n2, str) \
+  case n1 * 256 + n2:                     \
+    return str;
+
+#define LOOKUP_TYPE_TRIPLET(type, length)            \
+  const char *lookup##type(size_t val1, size_t val2) \
+  {                                                  \
+    switch (val1 * 256 + val2)                       \
+    {
+#define LOOKUP_TRIPLET(type, n1, n2, str) \
+  case n1 * 256 + n2:                     \
+    return str;
+
+#define LOOKUP_END \
+  }                \
+  return NULL;     \
+  }
+
+#endif
 
 #include "lookup.h"
-
-#define FILL(a, x, y)                                                 \
-  if (a[(x)] != NULL)                                                 \
-    logAbort("Non-unique value %u for lookup type %s\n", x, xstr(a)); \
-  a[(x)] = y;
-
-#define FILL_IF_NOT_SET(a, x, y) \
-  if (a[(x)] == NULL)            \
-  a[(x)] = y
 
 // Fill the lookup arrays
 
+#ifdef EXPLAIN
+static size_t l_id;
+static Field *l_field;
+
+static void fillFieldDescription(size_t n, const char *s)
+{
+  if (n == l_id)
+  {
+    l_field->description = s;
+  }
+}
+#endif
+
 void fillLookups(void)
 {
-  // We don't need to check array index, the C compiler will do that
-  // for us with -Warray-bounds.
-#define LOOKUP(type, id, value) FILL(lookupValue##type, id, value)
-
-#include "lookup.h"
-
   // Iterate over the PGNs and fill the description of company-code fixed values
+  int i;
+
+  for (i = 0; i < pgnListSize; i++)
   {
-    int i;
+    Field *f = &pgnList[i].fieldList[0];
 
-    for (i = 0; i < pgnListSize; i++)
+    if (f->name != NULL && f->unit != NULL && strcmp(f->name, "Manufacturer Code") == 0)
     {
-      Field *f = &pgnList[i].fieldList[0];
+      int id = 0;
 
-      if (f->name != NULL && f->unit != NULL && strcmp(f->name, "Manufacturer Code") == 0)
+      if (sscanf(f->unit, "=%d", &id) > 0)
       {
-        int id = 0;
-
-        if (sscanf(f->unit, "=%d", &id) > 0)
-        {
-          f->description = lookupValueMANUFACTURER_CODE[id];
-        }
+#ifdef EXPLAIN
+        // The callback will enumerate all fields, set globals to indicate which
+        // id to filter and where to fill the description.
+        l_id    = id;
+        l_field = f;
+        (lookupMANUFACTURER_CODE)(fillFieldDescription);
+#else
+        f->description = (lookupMANUFACTURER_CODE) (id);
+#endif
       }
     }
   }

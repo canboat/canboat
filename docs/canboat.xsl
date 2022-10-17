@@ -239,6 +239,17 @@
                         <xsl:value-of select="LookupEnumeration"/>
                       </a>
                     </xsl:when>
+                    <xsl:when test="LookupIndirectEnumeration">
+                      lookup
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="concat('#indirect-lookup-', LookupIndirectEnumeration)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="LookupIndirectEnumeration"/>
+                      </a>
+                      where the first column is the value from field 
+                        <xsl:value-of select="LookupIndirectEnumerationField"/>
+                    </xsl:when>
                     <xsl:when test="LookupBitEnumeration">
                       bitfield
                       <a>
@@ -308,6 +319,39 @@
           <tr>
             <td>
               <xsl:value-of select="@Value"/>
+            </td>
+            <td>
+              <xsl:value-of select="@Name"/>
+            </td>
+          </tr>
+        </xsl:for-each>
+      </table>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template name="indirect-lookup-list">
+    <h2 id='lookup-indirect-enumerations'>Indirect Lookup enumerations</h2>
+    <xsl:for-each select="/PGNDefinitions/LookupIndirectEnumerations/*">
+      <h3>
+        <xsl:attribute name="id">
+          <xsl:value-of select="concat('indirect-lookup-', @Name)"/>
+        </xsl:attribute>
+        <xsl:value-of select="@Name"/>
+        (0 - <xsl:value-of select="@MaxValue"/>)
+      </h3>
+      <table>
+        <tr>
+          <th>Value in other field</th>
+          <th>Value</th>
+          <th>Description</th>
+        </tr>
+        <xsl:for-each select="EnumTriplet">
+          <tr>
+            <td>
+              <xsl:value-of select="@Value1"/>
+            </td>
+            <td>
+              <xsl:value-of select="@Value2"/>
             </td>
             <td>
               <xsl:value-of select="@Name"/>
@@ -484,6 +528,7 @@
           <a href="#physical-quantities">Physical Quantities</a>
           <a href="#field-types">Field Types</a>
           <a href="#lookup-enumerations">Lookup enumerations</a>
+          <a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a>
           <a href="#bitfield-enumerations">Bitfield enumerations</a>
           <a href="#notes">Notes</a>
         </div>
@@ -672,6 +717,7 @@
           <xsl:call-template name="physicalquantity-list"/>
           <xsl:call-template name="fieldtypes-list"/>
           <xsl:call-template name="lookup-list"/>
+          <xsl:call-template name="indirect-lookup-list"/>
           <xsl:call-template name="lookupbit-list"/>
 
           <h2 id='notes'>Notes</h2>

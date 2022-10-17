@@ -53,25 +53,24 @@ size_t heapSize = 0;
 int g_variableFieldRepeat[2]; // Actual number of repetitions
 int g_variableFieldIndex;
 
-typedef struct
-{
-  const char  *name;
-  uint32_t     size;
-  const char **values;
-} Enumeration;
-
-Enumeration lookupEnums[] = {
-#define LOOKUP_TYPE(type, length) {.name = xstr(type), .size = length, .values = lookupValue##type},
+LookupInfo lookupEnums[] = {
+#define LOOKUP_TYPE(type, length) {.name = xstr(type), .size = length, .function.pairEnumerator = lookup##type},
 #include "lookup.h"
 };
 
-Enumeration bitfieldEnums[] = {
-#define LOOKUP_TYPE_BITFIELD(type, length) {.name = xstr(type), .size = length, .values = lookupValue##type},
+LookupInfo bitfieldEnums[] = {
+#define LOOKUP_TYPE_BITFIELD(type, length) {.name = xstr(type), .size = length, .function.bitEnumerator = lookup##type},
+#include "lookup.h"
+};
+
+LookupInfo tripletEnums[] = {
+#define LOOKUP_TYPE_TRIPLET(type, length) {.name = xstr(type), .size = length, .function.tripletEnumerator = lookup##type},
 #include "lookup.h"
 };
 
 static void explain(void);
 static void explainXML(bool, bool, bool);
+static void printXML(int indent, const char *element, const char *p);
 
 static void usage(char **argv, char **av)
 {
@@ -209,6 +208,56 @@ static unsigned int getMinimalPgnLength(Pgn *pgn, bool *isVariable)
   return length;
 }
 
+static void explainPairText(size_t n, const char *s)
+{
+  printf("                  Lookup: %zu=%s\n", n, s);
+}
+
+static void explainTripletText(size_t n1, size_t n2, const char *s)
+{
+  printf("                  Lookup: %zu,%zu=%s\n", n1, n2, s);
+}
+
+static void explainBitText(size_t n, const char *s)
+{
+  printf("                  Bit: %zu=%s\n", n, s);
+}
+
+static void explainPairXMLv1(size_t n, const char *s)
+{
+  printf("            <EnumPair Value='%zu' Name='", n);
+  printXML(0, 0, s);
+  printf("' />\n");
+}
+
+static void explainBitXMLv1(size_t n, const char *s)
+{
+  printf("            <EnumPair Bit='%zu' Name='", n);
+  printXML(0, 0, s);
+  printf("' />\n");
+}
+
+static void explainPairXMLv2(size_t n, const char *s)
+{
+  printf("      <EnumPair Value='%zu' Name='", n);
+  printXML(0, 0, s);
+  printf("' />\n");
+}
+
+static void explainBitXMLv2(size_t n, const char *s)
+{
+  printf("      <BitPair Bit='%zu' Name='", n);
+  printXML(0, 0, s);
+  printf("' />\n");
+}
+
+static void explainTripletXML2(size_t n1, size_t n2, const char *s)
+{
+  printf("      <EnumTriplet Value1='%zu' Value2='%zu' Name='", n1, n2);
+  printXML(0, 0, s);
+  printf("' />\n");
+}
+
 static void explainPGN(Pgn pgn)
 {
   int  i;
@@ -314,46 +363,40 @@ static void explainPGN(Pgn pgn)
       printf("                  Offset: %d\n", f.offset);
     }
 
-    if (f.lookupName)
+    if (f.lookup.function.pairEnumerator != NULL)
     {
-      if (strstr(f.fieldType, "BIT") == NULL)
+      switch (f.lookup.type)
       {
-        printf("                  Enumeration: %s\n", f.lookupName);
-      }
-      else
-      {
-        printf("                  BitEnumeration: %s\n", f.lookupName);
-      }
-    }
-
-    if (!(f.unit && f.unit[0] == '=') && f.lookupValue != NULL && strcmp(f.fieldType, "LOOKUP") == 0)
-    {
-      uint32_t maxValue = (1 << f.size) - 1;
-      printf("                  Range: 0..%u\n", maxValue);
-      for (uint32_t i = 0; i <= maxValue; i++)
-      {
-        const char *s = f.lookupValue[i];
-
-        if (s)
-        {
-          printf("                  Lookup: %u=%s\n", i, s);
+        case LOOKUP_TYPE_PAIR: {
+          printf("                  Enumeration: %s\n", f.lookup.name);
+          if (!(f.unit && f.unit[0] == '='))
+          {
+            uint32_t maxValue = (1 << f.size) - 1;
+            printf("                  Range: 0..%u\n", maxValue);
+            (f.lookup.function.pairEnumerator)(explainPairText);
+          }
+          break;
         }
-      }
-    }
 
-    if (f.lookupValue != NULL && strcmp(f.fieldType, "BITLOOKUP") == 0)
-    {
-      uint32_t maxValue = f.size;
-
-      printf("           BitRange: 0..%u\n", maxValue);
-      for (uint32_t i = 0; i < maxValue; i++)
-      {
-        const char *s = f.lookupValue[i];
-
-        if (s)
-        {
-          printf("                  Bit: %u=%s\n", i, s);
+        case LOOKUP_TYPE_TRIPLET: {
+          uint32_t maxValue = (1 << f.size) - 1;
+          printf("                  IndirectEnumeration: %s\n", f.lookup.name);
+          printf("                  Range: 0..%u\n", maxValue);
+          (f.lookup.function.tripletEnumerator)(explainTripletText);
+          break;
         }
+
+        case LOOKUP_TYPE_BIT: {
+          uint32_t maxValue = f.size;
+
+          printf("                  BitEnumeration: %s\n", f.lookup.name);
+          printf("                  BitRange: 0..%u\n", maxValue);
+          (f.lookup.function.bitEnumerator)(explainBitText);
+          break;
+        }
+
+        default:
+          break;
       }
     }
   }
@@ -656,7 +699,7 @@ static void explainPGNXML(Pgn pgn)
       {
         printf("          <RangeMin>%.16g</RangeMin>\n", f.rangeMin);
       }
-      else if (!doV1 && f.lookupValue != 0)
+      else if (!doV1 && f.lookup.function.pairEnumerator != 0)
       {
         if (!(f.unit && f.unit[0] == '='))
         {
@@ -666,9 +709,17 @@ static void explainPGNXML(Pgn pgn)
 
       if (!isnan(f.rangeMax))
       {
-        printf("          <RangeMax>%.16g</RangeMax>\n", f.rangeMax);
+        if (f.resolution == 1.0 && f.size == 64 && ft->hasSign == False && f.offset == 0)
+        {
+          // This is the only RangeMax that doesn't print well as a double.
+          printf("          <RangeMax>%" PRIu64 "</RangeMax>\n", UINT64_MAX);
+        }
+        else
+        {
+          printf("          <RangeMax>%.16g</RangeMax>\n", f.rangeMax);
+        }
       }
-      else if (!doV1 && f.lookupValue != 0 && !(f.unit && f.unit[0] == '='))
+      else if (!doV1 && f.lookup.function.pairEnumerator != NULL && !(f.unit && f.unit[0] == '='))
       {
         printf("          <RangeMax>%.16g</RangeMax>\n", (double) ((1 << f.size) - 1));
       }
@@ -682,60 +733,50 @@ static void explainPGNXML(Pgn pgn)
         }
       }
 
-      if (f.lookupValue != 0)
+      if (f.lookup.function.pairEnumerator != NULL)
       {
-        if (strcmp(f.fieldType, "BITLOOKUP") == 0)
+        switch (f.lookup.type)
         {
-          if (doV1)
-          {
-            uint32_t maxValue = f.size;
-
-            printf("          <EnumBitValues>\n");
-
-            for (uint32_t i = 0; i < maxValue; i++)
+          case LOOKUP_TYPE_BIT: {
+            if (doV1)
             {
-              const char *s = f.lookupValue[i];
-
-              if (s)
-              {
-                printf("            <EnumPair Bit='%u' Name='", i);
-                printXML(0, 0, s);
-                printf("' />\n");
-              }
+              printf("          <EnumBitValues>\n");
+              (f.lookup.function.bitEnumerator)(explainBitXMLv1);
+              printf("          </EnumBitValues>\n");
             }
-
-            printf("          </EnumBitValues>\n");
-          }
-          else
-          {
-            printXML(10, "LookupBitEnumeration", f.lookupName);
-          }
-        }
-        else
-        {
-          if (doV1 && !(f.unit && f.unit[0] == '='))
-          {
-            uint32_t maxValue = (1 << f.size) - 1;
-
-            printf("          <EnumValues>\n");
-
-            for (uint32_t i = 0; i <= maxValue; i++)
+            else
             {
-              const char *s = f.lookupValue[i];
-
-              if (s)
-              {
-                printf("            <EnumPair Value='%u' Name='", i);
-                printXML(0, 0, s);
-                printf("' />\n");
-              }
+              printXML(10, "LookupBitEnumeration", f.lookup.name);
             }
-            printf("          </EnumValues>\n");
+            break;
           }
-          else if (!doV1)
-          {
-            printXML(10, "LookupEnumeration", f.lookupName);
+
+          case LOOKUP_TYPE_PAIR: {
+            if (doV1 && !(f.unit && f.unit[0] == '='))
+            {
+              printf("          <EnumValues>\n");
+              (f.lookup.function.pairEnumerator)(explainPairXMLv1);
+              printf("          </EnumValues>\n");
+            }
+            else if (!doV1)
+            {
+              printXML(10, "LookupEnumeration", f.lookup.name);
+            }
+            break;
           }
+
+          case LOOKUP_TYPE_TRIPLET: {
+            if (!doV1)
+            {
+              Field *refField = &pgn.fieldList[f.lookup.val1Order - 1];
+              printXML(10, "LookupIndirectEnumeration", f.lookup.name);
+              printXML(10, "LookupIndirectEnumerationField", refField->name);
+            }
+            break;
+          }
+
+          default:
+            break;
         }
       }
 
@@ -934,34 +975,30 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
     for (i = 0; i < ARRAY_SIZE(lookupEnums); i++)
     {
       uint32_t maxValue = (1 << lookupEnums[i].size) - 1;
+
       printf("    <LookupEnumeration Name='%s' MaxValue='%u'>\n", lookupEnums[i].name, maxValue);
-      for (int j = 0; j <= maxValue; j++)
-      {
-        if (lookupEnums[i].values[j])
-        {
-          printf("      <EnumPair Value='%u' Name='", j);
-          printXML(0, 0, lookupEnums[i].values[j]);
-          printf("' />\n");
-        }
-      }
+      (lookupEnums[i].function.pairEnumerator)(explainPairXMLv2);
       printf("    </LookupEnumeration>\n");
     }
     printf("  </LookupEnumerations>\n");
+
+    printf("  <LookupIndirectEnumerations>\n");
+    for (i = 0; i < ARRAY_SIZE(tripletEnums); i++)
+    {
+      uint32_t maxValue = (1 << tripletEnums[i].size) - 1;
+
+      printf("    <LookupIndirectEnumeration Name='%s' MaxValue='%u'>\n", tripletEnums[i].name, maxValue);
+      (tripletEnums[i].function.tripletEnumerator)(explainTripletXML2);
+      printf("    </LookupIndirectEnumeration>\n");
+    }
+    printf("  </LookupIndirectEnumerations>\n");
 
     printf("  <LookupBitEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(bitfieldEnums); i++)
     {
       uint32_t maxValue = bitfieldEnums[i].size - 1;
       printf("    <LookupBitEnumeration Name='%s' MaxValue='%u'>\n", bitfieldEnums[i].name, maxValue);
-      for (int j = 0; j <= maxValue; j++)
-      {
-        if (bitfieldEnums[i].values[j])
-        {
-          printf("      <BitPair Bit='%u' Name='", j);
-          printXML(0, 0, bitfieldEnums[i].values[j]);
-          printf("' />\n");
-        }
-      }
+      (bitfieldEnums[i].function.bitEnumerator)(explainBitXMLv2);
       printf("    </LookupBitEnumeration>\n");
     }
     printf("  </LookupBitEnumerations>\n");

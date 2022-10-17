@@ -100,6 +100,61 @@ extern char *getSep(void)
   return s;
 }
 
+/*
+ * Find a field by Order. This will only work for a field that
+ * is at a predefined bit offset, so no variable fields before
+ * it.
+ *
+ * It is currently only used for LOOKUP_TYPE_TRIPLET.
+ */
+static size_t getFieldOffsetByOrder(Pgn *pgn, size_t order)
+{
+  uint8_t i;
+  size_t  bitOffset = 0;
+
+  for (i = 0; i < order; i++)
+  {
+    Field *field = &pgn->fieldList[i];
+
+    if (i + 1 == order)
+    {
+      return bitOffset;
+    }
+    bitOffset += field->size;
+  }
+  return 0;
+}
+
+bool adjustDataLenStart(uint8_t **data, size_t *dataLen, size_t *startBit)
+{
+  size_t bytes = *startBit >> 3;
+
+  if (bytes < *dataLen)
+  {
+    *data += bytes;
+    *dataLen += bytes;
+    *startBit = *startBit & 7;
+    return true;
+  }
+
+  return false;
+}
+
+static bool extractNumberByOrder(Pgn *pgn, size_t order, uint8_t *data, size_t dataLen, int64_t *value)
+{
+  Field *field     = &pgn->fieldList[order - 1];
+  size_t bitOffset = getFieldOffsetByOrder(pgn, order);
+
+  size_t  startBit;
+  int64_t maxValue;
+
+  startBit = bitOffset & 7;
+  data += bitOffset >> 3;
+  dataLen -= bitOffset >> 3;
+
+  return extractNumber(field, data, dataLen, startBit, field->size, value, &maxValue);
+}
+
 extern void printEmpty(const char *fieldName, int64_t exceptionValue)
 {
   if (showJson)
@@ -188,10 +243,27 @@ static bool extractNumberNotEmpty(const Field *field,
   return true;
 }
 
+// This is only a different printer than fieldPrintNumber so the JSON can contain a string value
 extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  // This is only a different printer so the JSON can contain a string value
-  return fieldPrintNumber(field, fieldName, data, dataLen, startBit, bits);
+  int64_t value;
+  int64_t maxValue;
+
+  if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+
+  if (showJson)
+  {
+    mprintf("%s\"%s\":\"%09u\"", getSep(), fieldName, value);
+  }
+  else
+  {
+    mprintf("%s %s = \"%09u\"", getSep(), fieldName, value);
+  }
+
+  return true;
 }
 
 extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
@@ -209,19 +281,13 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
   logDebug("fieldPrintNumber <%s> resolution=%g unit='%s'\n", fieldName, field->resolution, (field->unit ? field->unit : "-"));
   if (field->resolution == 1.0 && field->unitOffset == 0.0)
   {
-    const char *fmt = "%" PRId64;
-
-    fmt = (field->ft->format != NULL) ? field->ft->format : "%" PRId64;
-
     if (showJson)
     {
-      mprintf("%s\"%s\":", getSep(), fieldName);
-      mprintf(fmt, value);
+      mprintf("%s\"%s\":%" PRId64, getSep(), fieldName, value);
     }
     else
     {
-      mprintf("%s %s = ", getSep(), fieldName);
-      mprintf(fmt, value);
+      mprintf("%s %s = %" PRId64, getSep(), fieldName, value);
       if (unit != NULL)
       {
         mprintf(" %s", unit);
@@ -274,6 +340,11 @@ extern bool fieldPrintFloat(Field *field, char *fieldName, uint8_t *data, size_t
     uint8_t  b[4];
   } f;
 
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
   if (*bits != sizeof(f) || startBit != 0)
   {
     logError("field '%s' FLOAT value unhandled bits=%zu startBit=%zu\n", fieldName, *bits, startBit);
@@ -309,11 +380,18 @@ extern bool fieldPrintFloat(Field *field, char *fieldName, uint8_t *data, size_t
 }
 extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  uint8_t  value        = 0;
-  uint8_t  bitMask      = 1 << startBit;
+  uint8_t  value = 0;
+  uint8_t  bitMask;
   uint64_t bitMagnitude = 1;
   size_t   bit;
   char     buf[128];
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
+  bitMask = 1 << startBit;
 
   if (startBit + *bits > dataLen * 8)
   {
@@ -408,9 +486,24 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
 
   const char *s = NULL;
 
-  if (field->lookupValue != NULL && value >= 0)
+  if (field->lookup.type != LOOKUP_TYPE_NONE && value >= 0)
   {
-    s = field->lookupValue[value];
+    if (field->lookup.type == LOOKUP_TYPE_PAIR)
+    {
+      s = (*field->lookup.function.pair)((size_t) value);
+    }
+    else if (field->lookup.type == LOOKUP_TYPE_TRIPLET)
+    {
+      int64_t val1;
+
+      logDebug("Triplet extraction for field '%s'\n", field->name);
+
+      if (extractNumberByOrder(field->pgn, field->lookup.val1Order, data, dataLen, &val1))
+      {
+        s = (*field->lookup.function.triplet)((size_t) val1, (size_t) value);
+      }
+    }
+    // BIT is handled in fieldPrintBitLookup
   }
 
   if (s != NULL)
@@ -505,7 +598,14 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
   }
   if (value == 0)
   {
-    printEmpty(fieldName, value - maxValue);
+    if (showJson)
+    {
+      printEmpty(fieldName, value - maxValue);
+    }
+    else
+    {
+      mprintf("%s %s = None", getSep(), fieldName);
+    }
     return true;
   }
 
@@ -528,7 +628,7 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
     logDebug("RES_BITFIELD is bit %u value %" PRIx64 " set? = %d\n", bit, bitValue, isSet);
     if (isSet)
     {
-      const char *s = field->lookupValue[bit];
+      const char *s = (*field->lookup.function.pair)(bit);
 
       if (s != NULL)
       {
@@ -716,6 +816,11 @@ extern bool fieldPrintDate(Field *field, char *fieldName, uint8_t *data, size_t 
   struct tm *tm;
   uint16_t   d;
 
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
   if (startBit != 0)
   {
     return unhandledStartOffset(fieldName, startBit);
@@ -865,6 +970,11 @@ extern bool fieldPrintStringFix(Field *field, char *fieldName, uint8_t *data, si
 {
   size_t len = field->size / 8;
 
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
   logDebug("fieldPrintStringFix('%s',%zu) size=%zu\n", fieldName, dataLen, len);
 
   len   = CB_MIN(len, dataLen); // Cap length to remaining bytes in message
@@ -875,6 +985,11 @@ extern bool fieldPrintStringFix(Field *field, char *fieldName, uint8_t *data, si
 extern bool fieldPrintStringVar(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
   size_t len;
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
 
   // No space in message for string, don't print anything
   if (dataLen == 0)
@@ -924,9 +1039,15 @@ extern bool fieldPrintStringVar(Field *field, char *fieldName, uint8_t *data, si
 extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
   // STRINGLZ format is <len> [ <data> ... ]
-  size_t len = *data++;
+  size_t len;
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
 
   // Cap to dataLen
+  len   = *data++;
   len   = CB_MIN(len, dataLen - 1);
   *bits = BYTES(len + 1);
 
@@ -943,6 +1064,11 @@ extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, si
   size_t  utf8_len;
   utf8_t *utf8 = NULL;
   bool    r;
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
 
   len     = *data++;
   control = *data++;
@@ -986,6 +1112,11 @@ extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_
   size_t      i;
   size_t      remaining_bits;
   const char *s;
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
 
   if (startBit + *bits > dataLen * 8)
   {

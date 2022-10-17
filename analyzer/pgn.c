@@ -99,7 +99,7 @@ Pgn *searchForUnknownPgn(int pgnId)
  * If all else fails, return an 'fallback' match-all PGN that
  * matches the fast/single frame, PDU1/PDU2 and proprietary/generic range.
  */
-Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
+Pgn *getMatchingPgn(int pgnId, uint8_t *data, int length)
 {
   Pgn *pgn = searchForPgn(pgnId);
   int  prn;
@@ -123,16 +123,14 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
 
   for (prn = pgn->pgn; pgn->pgn == prn; pgn++)
   {
-    int      startBit = 0;
-    uint8_t *data     = dataStart;
-
+    int  startBit          = 0;
     bool matchedFixedField = true;
     bool hasFixedField     = false;
 
     logDebug("getMatchingPgn: PGN %u matching with manufacturer specific '%s'\n", prn, pgn->description);
 
     // Iterate over fields
-    for (i = 0, startBit = 0, data = dataStart; i < pgn->fieldCount; i++)
+    for (i = 0, startBit = 0; i < pgn->fieldCount; i++)
     {
       const Field *field = &pgn->fieldList[i];
       int          bits  = field->size;
@@ -158,9 +156,6 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length)
             "getMatchingPgn: PGN %u field '%s' value %" PRId64 " matches %" PRId64 "\n", prn, field->name, value, desiredValue);
       }
       startBit += bits;
-      data += startBit / 8;
-      length -= startBit / 8;
-      startBit %= 8;
     }
     if (!hasFixedField)
     {
@@ -278,7 +273,7 @@ bool extractNumber(const Field *field,
   const bool  hasSign = field ? field->hasSign : false;
   const char *name    = field ? field->name : "<bits>";
 
-  size_t   firstBit      = startBit;
+  size_t   firstBit;
   size_t   bitsRemaining = bits;
   size_t   magnitude     = 0;
   size_t   bitsInThisByte;
@@ -287,8 +282,16 @@ bool extractNumber(const Field *field,
   uint64_t valueInThisByte;
   uint64_t maxv;
 
-  *value = 0;
-  maxv   = 0;
+  logDebug("extractNumber <%s> startBit=%zu bits=%zu\n", name, startBit, bits);
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
+  firstBit = startBit;
+  *value   = 0;
+  maxv     = 0;
 
   while (bitsRemaining > 0 && dataLen > 0)
   {

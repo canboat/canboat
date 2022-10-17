@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.2.2
+CANboat version v4.3.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.2.2</Version>
+  <Version>4.3.0</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -10435,7 +10435,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
@@ -10599,7 +10599,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
         </Field>
         <Field>
           <Order>18</Order>
@@ -10774,7 +10774,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
@@ -10826,7 +10826,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
         </Field>
         <Field>
           <Order>11</Order>
@@ -10956,7 +10956,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
@@ -12646,9 +12646,9 @@ limitations under the License.
           <Units>%</Units>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>125</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -15309,7 +15309,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <Length>7</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -15426,10 +15426,24 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
+          <Id>temperatureCoefficient</Id>
+          <Name>Temperature Coefficient</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>%</Units>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>125</RangeMax>
+        </Field>
+        <Field>
+          <Order>9</Order>
           <Id>peukertExponent</Id>
           <Name>Peukert Exponent</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>0.002</Resolution>
           <Signed>false</Signed>
@@ -15438,18 +15452,18 @@ limitations under the License.
           <RangeMax>1.506</RangeMax>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>10</Order>
           <Id>chargeEfficiencyFactor</Id>
           <Name>Charge Efficiency Factor</Name>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>125</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -35247,6 +35261,15 @@ limitations under the License.
             <EnumPair Value='13' Name='Jog ahead' />
             <EnumPair Value='14' Name='Jog back' />
             <EnumPair Value='15' Name='Seek up' />
+            <EnumPair Value='16' Name='Seek down' />
+            <EnumPair Value='17' Name='Scan up' />
+            <EnumPair Value='18' Name='Scan down' />
+            <EnumPair Value='19' Name='Tune up' />
+            <EnumPair Value='20' Name='Tune down' />
+            <EnumPair Value='21' Name='Slow motion .75x' />
+            <EnumPair Value='22' Name='Slow motion .5x' />
+            <EnumPair Value='23' Name='Slow motion .25x' />
+            <EnumPair Value='24' Name='Slow motion .125x' />
           </EnumValues>
         </Field>
         <Field>

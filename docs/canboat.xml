@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.2.2
+CANboat version v4.3.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -26,8 +26,8 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.2.2</Version>
-  <Copyright>CANboat version v4.2.2
+  <Version>4.3.0</Version>
+  <Copyright>CANboat version v4.3.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -237,6 +237,12 @@ limitations under the License.
     <FieldType Name="LOOKUP">
       <Description>Number value where each value encodes for a distinct meaning</Description>
       <EncodingDescription>Each lookup has a LookupEnumeration defining what the possible values mean</EncodingDescription>
+      <Comment>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</Comment>
+      <Signed>false</Signed>
+    </FieldType>
+    <FieldType Name="INDIRECT_LOOKUP">
+      <Description>Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field</Description>
+      <EncodingDescription>Each lookup has a LookupIndirectEnumeration defining what the possible values mean</EncodingDescription>
       <Comment>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</Comment>
       <Signed>false</Signed>
     </FieldType>
@@ -1765,6 +1771,109 @@ limitations under the License.
       <EnumPair Value='2' Name='Hot' />
     </LookupEnumeration>
   </LookupEnumerations>
+  <LookupIndirectEnumerations>
+    <LookupIndirectEnumeration Name='DEVICE_FUNCTION' MaxValue='255'>
+      <EnumTriplet Value1='10' Value2='130' Name='Diagnostic' />
+      <EnumTriplet Value1='10' Value2='140' Name='Bus Traffic Logger' />
+      <EnumTriplet Value1='20' Value2='110' Name='Alarm Enunciator' />
+      <EnumTriplet Value1='20' Value2='130' Name='Emergency Position Indicating Radio Beacon (EPIRB)' />
+      <EnumTriplet Value1='20' Value2='135' Name='Man Overboard' />
+      <EnumTriplet Value1='20' Value2='140' Name='Voyage Data Recorder' />
+      <EnumTriplet Value1='20' Value2='150' Name='Camera' />
+      <EnumTriplet Value1='25' Value2='130' Name='PC Gateway' />
+      <EnumTriplet Value1='25' Value2='131' Name='NMEA 2000 to Analog Gateway' />
+      <EnumTriplet Value1='25' Value2='132' Name='Analog to NMEA 2000 Gateway' />
+      <EnumTriplet Value1='25' Value2='135' Name='NMEA 0183 Gateway' />
+      <EnumTriplet Value1='25' Value2='140' Name='Router' />
+      <EnumTriplet Value1='25' Value2='150' Name='Bridge' />
+      <EnumTriplet Value1='25' Value2='160' Name='Repeater' />
+      <EnumTriplet Value1='30' Value2='130' Name='Binary Event Monitor' />
+      <EnumTriplet Value1='30' Value2='140' Name='Load Controller' />
+      <EnumTriplet Value1='30' Value2='141' Name='AC/DC Input' />
+      <EnumTriplet Value1='30' Value2='150' Name='Function Controller' />
+      <EnumTriplet Value1='35' Value2='140' Name='Engine' />
+      <EnumTriplet Value1='35' Value2='141' Name='DC Generator/Alternator' />
+      <EnumTriplet Value1='35' Value2='142' Name='Solar Panel (Solar Array)' />
+      <EnumTriplet Value1='35' Value2='143' Name='Wind Generator (DC)' />
+      <EnumTriplet Value1='35' Value2='144' Name='Fuel Cell' />
+      <EnumTriplet Value1='35' Value2='145' Name='Network Power Supply' />
+      <EnumTriplet Value1='35' Value2='151' Name='AC Generator' />
+      <EnumTriplet Value1='35' Value2='152' Name='AC Bus' />
+      <EnumTriplet Value1='35' Value2='153' Name='AC Mains (Utility/Shore)' />
+      <EnumTriplet Value1='35' Value2='154' Name='AC Output' />
+      <EnumTriplet Value1='35' Value2='160' Name='Power Converter - Battery Charger' />
+      <EnumTriplet Value1='35' Value2='161' Name='Power Converter - Battery Charger+Inverter' />
+      <EnumTriplet Value1='35' Value2='162' Name='Power Converter - Inverter' />
+      <EnumTriplet Value1='35' Value2='163' Name='Power Converter - DC' />
+      <EnumTriplet Value1='35' Value2='170' Name='Battery' />
+      <EnumTriplet Value1='35' Value2='180' Name='Engine Gateway' />
+      <EnumTriplet Value1='40' Value2='130' Name='Follow-up Controller' />
+      <EnumTriplet Value1='40' Value2='140' Name='Mode Controller' />
+      <EnumTriplet Value1='40' Value2='150' Name='Autopilot' />
+      <EnumTriplet Value1='40' Value2='155' Name='Rudder' />
+      <EnumTriplet Value1='40' Value2='160' Name='Heading Sensors' />
+      <EnumTriplet Value1='40' Value2='170' Name='Trim (Tabs)/Interceptors' />
+      <EnumTriplet Value1='40' Value2='180' Name='Attitude (Pitch, Roll, Yaw) Control' />
+      <EnumTriplet Value1='50' Value2='130' Name='Engineroom Monitoring' />
+      <EnumTriplet Value1='50' Value2='140' Name='Engine' />
+      <EnumTriplet Value1='50' Value2='141' Name='DC Generator/Alternator' />
+      <EnumTriplet Value1='50' Value2='150' Name='Engine Controller' />
+      <EnumTriplet Value1='50' Value2='151' Name='AC Generator' />
+      <EnumTriplet Value1='50' Value2='155' Name='Motor' />
+      <EnumTriplet Value1='50' Value2='160' Name='Engine Gateway' />
+      <EnumTriplet Value1='50' Value2='165' Name='Transmission' />
+      <EnumTriplet Value1='50' Value2='170' Name='Throttle/Shift Control' />
+      <EnumTriplet Value1='50' Value2='180' Name='Actuator' />
+      <EnumTriplet Value1='50' Value2='190' Name='Gauge Interface' />
+      <EnumTriplet Value1='50' Value2='200' Name='Gauge Large' />
+      <EnumTriplet Value1='50' Value2='210' Name='Gauge Small' />
+      <EnumTriplet Value1='60' Value2='130' Name='Bottom Depth' />
+      <EnumTriplet Value1='60' Value2='135' Name='Bottom Depth/Speed' />
+      <EnumTriplet Value1='60' Value2='140' Name='Ownship Attitude' />
+      <EnumTriplet Value1='60' Value2='145' Name='Ownship Position (GNSS)' />
+      <EnumTriplet Value1='60' Value2='150' Name='Ownship Position (Loran C)' />
+      <EnumTriplet Value1='60' Value2='155' Name='Speed' />
+      <EnumTriplet Value1='60' Value2='160' Name='Turn Rate Indicator' />
+      <EnumTriplet Value1='60' Value2='170' Name='Integrated Navigation' />
+      <EnumTriplet Value1='60' Value2='175' Name='Integrated Navigation System' />
+      <EnumTriplet Value1='60' Value2='190' Name='Navigation Management' />
+      <EnumTriplet Value1='60' Value2='195' Name='Automatic Identification System (AIS)' />
+      <EnumTriplet Value1='60' Value2='200' Name='Radar' />
+      <EnumTriplet Value1='60' Value2='201' Name='Infrared Imaging' />
+      <EnumTriplet Value1='60' Value2='205' Name='ECDIS' />
+      <EnumTriplet Value1='60' Value2='210' Name='ECS' />
+      <EnumTriplet Value1='60' Value2='220' Name='Direction Finder' />
+      <EnumTriplet Value1='60' Value2='230' Name='Voyage Status' />
+      <EnumTriplet Value1='70' Value2='130' Name='EPIRB' />
+      <EnumTriplet Value1='70' Value2='140' Name='AIS' />
+      <EnumTriplet Value1='70' Value2='150' Name='DSC' />
+      <EnumTriplet Value1='70' Value2='160' Name='Data Receiver/Transceiver' />
+      <EnumTriplet Value1='70' Value2='170' Name='Satellite' />
+      <EnumTriplet Value1='70' Value2='180' Name='Radio-telephone (MF/HF)' />
+      <EnumTriplet Value1='70' Value2='190' Name='Radiotelephone' />
+      <EnumTriplet Value1='75' Value2='130' Name='Temperature' />
+      <EnumTriplet Value1='75' Value2='140' Name='Pressure' />
+      <EnumTriplet Value1='75' Value2='150' Name='Fluid Level' />
+      <EnumTriplet Value1='75' Value2='160' Name='Flow' />
+      <EnumTriplet Value1='75' Value2='170' Name='Humidity' />
+      <EnumTriplet Value1='80' Value2='130' Name='Time/Date Systems' />
+      <EnumTriplet Value1='80' Value2='140' Name='VDR' />
+      <EnumTriplet Value1='80' Value2='150' Name='Integrated Instrumentation' />
+      <EnumTriplet Value1='80' Value2='160' Name='General Purpose Displays' />
+      <EnumTriplet Value1='80' Value2='170' Name='General Sensor Box' />
+      <EnumTriplet Value1='80' Value2='180' Name='Weather Instruments' />
+      <EnumTriplet Value1='80' Value2='190' Name='Transducer/General' />
+      <EnumTriplet Value1='80' Value2='200' Name='NMEA 0183 Converter' />
+      <EnumTriplet Value1='85' Value2='130' Name='Atmospheric' />
+      <EnumTriplet Value1='85' Value2='160' Name='Aquatic' />
+      <EnumTriplet Value1='90' Value2='130' Name='HVAC' />
+      <EnumTriplet Value1='100' Value2='130' Name='Scale (Catch)' />
+      <EnumTriplet Value1='120' Value2='130' Name='Display' />
+      <EnumTriplet Value1='120' Value2='140' Name='Alarm Enunciator' />
+      <EnumTriplet Value1='125' Value2='130' Name='Multimedia Player' />
+      <EnumTriplet Value1='125' Value2='140' Name='Multimedia Controller' />
+    </LookupIndirectEnumeration>
+  </LookupIndirectEnumerations>
   <LookupBitEnumerations>
     <LookupBitEnumeration Name='ENGINE_STATUS_1' MaxValue='15'>
       <BitPair Bit='0' Name='Check Engine' />
@@ -2480,7 +2589,9 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>INDIRECT_LOOKUP</FieldType>
+          <LookupIndirectEnumeration>DEVICE_FUNCTION</LookupIndirectEnumeration>
+          <LookupIndirectEnumerationField>Device Class</LookupIndirectEnumerationField>
         </Field>
         <Field>
           <Order>6</Order>
@@ -4763,7 +4874,9 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>INDIRECT_LOOKUP</FieldType>
+          <LookupIndirectEnumeration>DEVICE_FUNCTION</LookupIndirectEnumeration>
+          <LookupIndirectEnumerationField>Device Class</LookupIndirectEnumerationField>
         </Field>
         <Field>
           <Order>6</Order>
@@ -11556,7 +11669,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -11702,7 +11815,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -11851,7 +11964,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -11903,7 +12016,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -12021,7 +12134,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.844674407370955e+19</RangeMax>
+          <RangeMax>18446744073709551615</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -13691,9 +13804,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>%</Unit>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>125</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -16186,8 +16299,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <FieldCount>9</FieldCount>
-      <Length>7</Length>
+      <FieldCount>10</FieldCount>
+      <Length>8</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -16286,10 +16399,24 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
+          <Id>temperatureCoefficient</Id>
+          <Name>Temperature Coefficient</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>125</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
           <Id>peukertExponent</Id>
           <Name>Peukert Exponent</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>0.002</Resolution>
           <Signed>false</Signed>
@@ -16299,17 +16426,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>10</Order>
           <Id>chargeEfficiencyFactor</Id>
           <Name>Charge Efficiency Factor</Name>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Unit>%</Unit>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>125</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -34213,72 +34340,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_FIX</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130816</PGN>
-      <Id>manufacturerProprietaryFastPacketNonAddressed</Id>
-      <Description>Manufacturer Proprietary fast-packet non-addressed</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Fallback>true</Fallback>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <FieldCount>4</FieldCount>
-      <Length>223</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>1768</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

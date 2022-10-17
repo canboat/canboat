@@ -55,6 +55,7 @@ limitations under the License.
       <xs:element type="FieldTypes" name="FieldTypes"/>
       <xs:element type="MissingEnumerations" name="MissingEnumerations"/>
       <xs:element type="LookupEnumerations" name="LookupEnumerations"/>
+      <xs:element type="LookupIndirectEnumerations" name="LookupIndirectEnumerations"/>
       <xs:element type="LookupBitEnumerations" name="LookupBitEnumerations"/>
       <xs:element type="PGNs" name="PGNs"/>
     </xs:sequence>
@@ -64,11 +65,12 @@ limitations under the License.
   <xs:complexType name="EnumPair">
     <xs:simpleContent>
       <xs:extension base="xs:string">
-        <xs:attribute type="xs:short" name="Value" use="optional"/>
-        <xs:attribute type="xs:string" name="Name" use="optional"/>
+        <xs:attribute type="xs:short" name="Value" />
+        <xs:attribute type="xs:string" name="Name" />
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
+
   <xs:complexType name="LookupEnumeration">
     <xs:annotation>
       <xs:documentation>
@@ -84,19 +86,56 @@ limitations under the License.
     <xs:attribute type="xs:string" name="Name"/>
     <xs:attribute type="xs:int" name="MaxValue"/>
   </xs:complexType>
+
   <xs:complexType name="LookupEnumerations">
     <xs:sequence>
       <xs:element type="LookupEnumeration" name="LookupEnumeration" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="BitPair">
+
+  <xs:complexType name="EnumTriplet">
     <xs:simpleContent>
       <xs:extension base="xs:string">
-        <xs:attribute type="xs:byte" name="Bit" use="optional"/>
-        <xs:attribute type="xs:string" name="Name" use="optional"/>
+        <xs:attribute type="xs:short" name="Value1" />
+        <xs:attribute type="xs:short" name="Value2" />
+        <xs:attribute type="xs:string" name="Name" />
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
+
+  <xs:complexType name="LookupIndirectEnumeration">
+    <xs:annotation>
+      <xs:documentation>
+        The LookupEnumeration is a list of EnumTriplet elements with a name.
+        This allows the PGN field to refer to this when it contains a lookup
+        field. Indirect enumerations use two values to define a specific name.
+        The first value is taken from another field. The second value is the value
+        for this field.
+        The special null-like values for Unknown and Error are not placed in this list.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element type="EnumTriplet" name="EnumTriplet" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name"/>
+    <xs:attribute type="xs:int" name="MaxValue"/>
+  </xs:complexType>
+
+  <xs:complexType name="LookupIndirectEnumerations">
+    <xs:sequence>
+      <xs:element type="LookupIndirectEnumeration" name="LookupIndirectEnumeration" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BitPair">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:byte" name="Bit" />
+        <xs:attribute type="xs:string" name="Name" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
   <xs:complexType name="LookupBitEnumeration">
     <xs:annotation>
       <xs:documentation>
@@ -393,6 +432,23 @@ limitations under the License.
           <xs:documentation>
             When the FieldType is LOOKUP, the field value has meaning derived from 
             the lookup table mentioned here.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupIndirectEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is INDIRECT_LOOKUP, the field value has meaning derived from 
+            the lookup table mentioned here. It requires an additional first
+            value derived from the field indicated by LookupIndirectEnumerationField..
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupIndirectEnumerationField" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is INDIRECT_LOOKUP, the field value has meaning that
+            also depends on the value of the field mentioned in this element.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
