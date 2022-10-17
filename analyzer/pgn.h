@@ -230,9 +230,15 @@ typedef struct
     .description = desc                                                                                             \
   }
 
-#define SIGNALTONOISERATIO_FIELD(nam, desc)                                                                          \
+#define SIGNALTONOISERATIO_UFIX16_FIELD(nam, desc)                                                                   \
   {                                                                                                                  \
     .name = nam, .size = BYTES(2), .resolution = 0.01, .fieldType = "SIGNALTONOISERATIO_UFIX16", .description = desc \
+  }
+
+#define SIGNALTONOISERATIO_FIX16_FIELD(nam, desc)                                                                \
+  {                                                                                                              \
+    .name = nam, .size = BYTES(2), .resolution = 0.01, .hasSign = true, .fieldType = "SIGNALTONOISERATIO_FIX16", \
+    .description = desc                                                                                          \
   }
 
 #define VERSION_FIELD(nam)                                                     \
@@ -3530,7 +3536,7 @@ Pgn pgnList[] = {
      {SIMPLE_DESC_FIELD("SV Elevation Mask", BYTES(2), "Will not use SV below this elevation"),
       DILUTION_OF_PRECISION_UFIX16_FIELD("PDOP Mask", "Will not report position above this PDOP"),
       DILUTION_OF_PRECISION_UFIX16_FIELD("PDOP Switch", "Will report 2D position above this PDOP"),
-      SIGNALTONOISERATIO_FIELD("SNR Mask", "Will not use SV below this SNR"),
+      SIGNALTONOISERATIO_UFIX16_FIELD("SNR Mask", "Will not use SV below this SNR"),
       LOOKUP_FIELD("GNSS Mode (desired)", 3, GNSS_MODE),
       LOOKUP_FIELD("DGNSS Mode (desired)", 3, DGNSS_MODE),
       SIMPLE_FIELD("Position/Velocity Filter", 2),
@@ -3568,7 +3574,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("PRN"),
       ANGLE_I16_FIELD("Elevation", NULL),
       ANGLE_U16_FIELD("Azimuth", NULL),
-      SIGNALTONOISERATIO_FIELD("SNR", NULL),
+      SIGNALTONOISERATIO_UFIX16_FIELD("SNR", NULL),
       INT32_FIELD("Range residuals", NULL),
       LOOKUP_FIELD("Status", 4, SATELLITE_STATUS),
       RESERVED_FIELD(4),
@@ -4208,6 +4214,65 @@ Pgn pgnList[] = {
       UINT8_FIELD("Sequence ID"),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
+
+    ,
+    {"Loran-C TD Data",
+     130052,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {SIMPLE_SIGNED_FIELD("Group Repetition Interval (GRI)", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Master Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("V Secondary TD", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("W Secondary TD", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("X Secondary TD", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Y Secondary TD", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Z Secondary TD", BYTES(4)),
+      BITLOOKUP_FIELD("Station status: Master", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: V", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: W", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: X", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: Y", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: Z", 4, STATION_STATUS),
+      LOOKUP_FIELD("Mode", 4, RESIDUAL_MODE),
+      RESERVED_FIELD(4),
+      END_OF_FIELDS},
+     .interval = 0}
+
+    ,
+    {"Loran-C Range Data",
+     130053,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {SIMPLE_SIGNED_FIELD("Group Repetition Interval (GRI)", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Master Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("V Secondary Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("W Secondary Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("X Secondary Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Y Secondary Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Z Secondary Range", BYTES(4)),
+      BITLOOKUP_FIELD("Station status: Master", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: V", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: W", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: X", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: Y", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: Z", 4, STATION_STATUS),
+      LOOKUP_FIELD("Mode", 4, RESIDUAL_MODE),
+      RESERVED_FIELD(4),
+      END_OF_FIELDS},
+     .interval = 0}
+
+    ,
+    {"Loran-C Signal Data",
+     130054,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {SIMPLE_SIGNED_FIELD("Group Repetition Interval (GRI)", BYTES(4)),
+      STRING_FIX_FIELD("Station identifier", BYTES(1)),
+      SIGNALTONOISERATIO_FIX16_FIELD("Station SNR", NULL),
+      SIMPLE_SIGNED_FIELD("Station ECD", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Station ASF", BYTES(4)),
+      END_OF_FIELDS},
+     .interval = 0}
 
     ,
     {"Label", 130060, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {END_OF_FIELDS}}
