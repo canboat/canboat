@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.4.0
+CANboat version v4.5.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -26,8 +26,8 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.4.0</Version>
-  <Copyright>CANboat version v4.4.0
+  <Version>4.5.0</Version>
+  <Copyright>CANboat version v4.5.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -2603,7 +2603,7 @@ limitations under the License.
           <RangeMax>253</RangeMax>
           <FieldType>INDIRECT_LOOKUP</FieldType>
           <LookupIndirectEnumeration>DEVICE_FUNCTION</LookupIndirectEnumeration>
-          <LookupIndirectEnumerationField>Device Class</LookupIndirectEnumerationField>
+          <LookupIndirectEnumerationFieldOrder>7</LookupIndirectEnumerationFieldOrder>
         </Field>
         <Field>
           <Order>6</Order>
@@ -4888,7 +4888,7 @@ limitations under the License.
           <RangeMax>253</RangeMax>
           <FieldType>INDIRECT_LOOKUP</FieldType>
           <LookupIndirectEnumeration>DEVICE_FUNCTION</LookupIndirectEnumeration>
-          <LookupIndirectEnumerationField>Device Class</LookupIndirectEnumerationField>
+          <LookupIndirectEnumerationFieldOrder>7</LookupIndirectEnumerationFieldOrder>
         </Field>
         <Field>
           <Order>6</Order>

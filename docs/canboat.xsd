@@ -444,11 +444,11 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:string" name="LookupIndirectEnumerationField" minOccurs="0">
+      <xs:element type="xs:string" name="LookupIndirectEnumerationFieldOrder" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             When the FieldType is INDIRECT_LOOKUP, the field value has meaning that
-            also depends on the value of the field mentioned in this element.
+            also depends on the value of the field mentioned by order in this element.
           </xs:documentation>
         </xs:annotation>
       </xs:element>

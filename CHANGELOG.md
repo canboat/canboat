@@ -6,7 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
-## [Unreleased]
+## [4.5.0]
+
+### Added
+
+- `docs/canboat.xml` now contains `PGN/Fields/Field/LookupIndirectEnumerationFieldOrder`.
+
+### Removed
+
+- `docs/canboat.xml` no longer contains `PGN/Fields/Field/LookupIndirectEnumerationField`.
+
+### Fixed
+
+- #322: Generate Order for IndirectEnumeration lookups.
+
+## [4.4.0]
 
 ### Changed
 
