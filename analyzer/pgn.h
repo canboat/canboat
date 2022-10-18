@@ -143,10 +143,12 @@ typedef struct
     .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_PAIR, .fieldType = "LOOKUP" \
   }
 
-#define SPARE_FIELD(len)                                                  \
-  {                                                                       \
-    .name = "Spare", .size = (len), .resolution = 1, .fieldType = "SPARE" \
+#define SPARE_NAMED_FIELD(nam, len)                                   \
+  {                                                                   \
+    .name = nam, .size = (len), .resolution = 1, .fieldType = "SPARE" \
   }
+
+#define SPARE_FIELD(len) SPARE_NAMED_FIELD("Spare", len)
 
 #define RESERVED_FIELD(len)                                                     \
   {                                                                             \
@@ -1076,7 +1078,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Seatalk: Wireless Keypad Light Control",
+    {"Seatalk: Wireless Keypad Control",
      61184,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -1536,12 +1538,6 @@ Pgn pgnList[] = {
      {COMPANY(275), UINT8_FIELD("Unknown"), PERCENTAGE_U8_FIELD("Signal Strength"), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS}}
 
     ,
-    {"Simnet: Reprogram Status", 65325, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Autopilot Mode", 65341, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
-
-    ,
     {"Seatalk: Pilot Wind Datum",
      65345,
      PACKET_INCOMPLETE,
@@ -1928,7 +1924,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Fusion: Mute",
+    {"Fusion: Set Mute",
      126720,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -3285,8 +3281,8 @@ Pgn pgnList[] = {
                    "Information used by the TDMA slot allocation algorithm and synchronization information"),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       ANGLE_U16_FIELD("Heading", "True heading"),
-      UINT8_FIELD("Regional Application"),
-      SIMPLE_FIELD("Regional Application", 2),
+      SPARE_NAMED_FIELD("Regional Application", 8),
+      SPARE_NAMED_FIELD("Regional Application B", 2),
       LOOKUP_FIELD("Unit type", 1, AIS_TYPE),
       LOOKUP_FIELD_DESC("Integrated Display", 1, YES_NO, "Whether the unit can show messages 12 and 14"),
       LOOKUP_FIELD("DSC", 1, YES_NO),
@@ -3313,8 +3309,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Time Stamp", 6, TIME_STAMP),
       ANGLE_U16_FIELD("COG", NULL),
       SPEED_U16_CM_FIELD("SOG"),
-      UINT8_FIELD("Regional Application"),
-      SIMPLE_FIELD("Regional Application", 4),
+      SPARE_NAMED_FIELD("Regional Application", 8),
+      SPARE_NAMED_FIELD("Regional Application B", 4),
       RESERVED_FIELD(4),
       LOOKUP_FIELD("Type of ship", BYTES(1), SHIP_TYPE),
       ANGLE_U16_FIELD("True Heading", NULL),
@@ -3327,7 +3323,7 @@ Pgn pgnList[] = {
       STRING_FIX_FIELD("Name", BYTES(20)),
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
       LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
-      RESERVED_FIELD(4),
+      SPARE_FIELD(4),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       END_OF_FIELDS},
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
@@ -3746,21 +3742,25 @@ Pgn pgnList[] = {
      129556,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     {UINT8_FIELD("PRN"),
-      UINT8_FIELD("NA"),
-      UINT8_FIELD("CnA"),
-      UINT8_FIELD("HnA"),
-      UINT8_FIELD("(epsilon)nA"),
-      UINT8_FIELD("(deltaTnA)DOT"),
-      UINT8_FIELD("(omega)nA"),
-      UINT8_FIELD("(delta)TnA"),
-      UINT8_FIELD("tnA"),
-      UINT8_FIELD("(lambda)nA"),
-      UINT8_FIELD("(delta)inA"),
-      UINT8_FIELD("tcA"),
-      UINT8_FIELD("tnA"),
+     {UINT8_DESC_FIELD("PRN", "Satellite ID number"),
+      UINT16_DESC_FIELD("NA", "Calendar day count within the four year period beginning with the previous leap year"),
+      RESERVED_FIELD(2),
+      SIMPLE_DESC_FIELD("CnA", 1, "Generalized health of the satellite"),
+      SIMPLE_DESC_FIELD("HnA", 5, "Carrier frequency number"),
+      SIMPLE_DESC_FIELD("(epsilon)nA", 16, "Eccentricity"),
+      SIMPLE_DESC_FIELD("(deltaTnA)DOT", 8, "Rate of change of the draconitic circling time"),
+      SIMPLE_DESC_FIELD("(omega)nA", 16, "Rate of change of the draconitic circling time"),
+      SIMPLE_DESC_FIELD("(delta)TnA", 24, "Correction to the average value of the draconitic circling time"),
+      SIMPLE_DESC_FIELD("tnA", 24, "Time of the ascension node"),
+      SIMPLE_DESC_FIELD("(lambda)nA", 24, "Greenwich longitude of the ascension node"),
+      SIMPLE_DESC_FIELD("(delta)inA", 24, "Correction to the average value of the inclination angle"),
+      SIMPLE_DESC_FIELD("(tau)cA", 28, "System time scale correction"),
+      SIMPLE_DESC_FIELD("(tau)nA", 12, "Course value of the time scale shift"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .explanation = "Almanac data for GLONASS products. The alamant contains satellite vehicle course orbital parameters. These "
+                    "parameters are described in the GLONASS ICS Section 4.5 Table 4.3. See URL.",
+     .url         = "https://www.unavco.org/help/glossary/docs/ICD_GLONASS_5.1_%282008%29_en.pdf",
+     .interval    = UINT16_MAX}
 
     ,
     {"AIS DGNSS Broadcast Binary Message",
@@ -3804,7 +3804,7 @@ Pgn pgnList[] = {
       DATE_FIELD("Position Date"),
       RESERVED_FIELD(4),
       LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
-      BINARY_FIELD("Spare", BYTES(1), NULL),
+      SPARE_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
@@ -4460,7 +4460,7 @@ Pgn pgnList[] = {
 
     /* Water temperature, Transducer Measurement */
     ,
-    {"Environmental Parameters",
+    {"Environmental Parameters (obsolete)",
      130310,
      PACKET_COMPLETE,
      PACKET_SINGLE,
@@ -4470,7 +4470,9 @@ Pgn pgnList[] = {
       PRESSURE_UFIX16_HPA_FIELD("Atmospheric Pressure"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
-     .interval = 500}
+     .explanation = "This PGN was succeeded by PGN 130310, but it should no longer be generated and separate PGNs in "
+                    "range 130312..130315 should be used",
+     .interval    = 500}
 
     ,
     {"Environmental Parameters",
@@ -4484,7 +4486,9 @@ Pgn pgnList[] = {
       PERCENTAGE_U16_FIELD("Humidity"),
       PRESSURE_UFIX16_HPA_FIELD("Atmospheric Pressure"),
       END_OF_FIELDS},
-     .interval = 500}
+     .explanation = "This PGN was introduced as a better version of PGN 130310, but it should no longer be generated and separate "
+                    "PGNs in range 130312..130315 should be used",
+     .interval    = 500}
 
     ,
     {"Temperature",
@@ -4741,9 +4745,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("In play queue", 2, YES_NO),
       LOOKUP_FIELD("Locked", 2, YES_NO),
       RESERVED_FIELD(4),
-      STRINGLAU_FIELD("Artist"),
-      STRINGLAU_FIELD("Album"),
-      STRINGLAU_FIELD("Station"),
+      STRINGLAU_FIELD("Artist Name"),
+      STRINGLAU_FIELD("Album Name"),
+      STRINGLAU_FIELD("Station Name"),
       END_OF_FIELDS},
      .url = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
@@ -5325,7 +5329,7 @@ Pgn pgnList[] = {
 
     /* M/V Dirona */
     ,
-    {"Furuno: Unknown",
+    {"Furuno: Unknown 130820",
      130820,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -5638,7 +5642,7 @@ Pgn pgnList[] = {
 
     /* M/V Dirona */
     ,
-    {"Furuno: Unknown",
+    {"Furuno: Unknown 130821",
      130821,
      PACKET_INCOMPLETE,
      PACKET_FAST,

@@ -354,32 +354,33 @@ bool extractNumber(const Field *field,
   return true;
 }
 
-static char *camelize(const char *str, bool upperCamelCase)
+static char *camelize(const char *str, bool upperCamelCase, int order)
 {
-  size_t len         = strlen(str);
-  char  *ptr         = malloc(len + 1);
-  char  *s           = ptr;
-  bool   lastIsAlpha = !upperCamelCase;
+  size_t      len         = strlen(str);
+  char       *ptr         = malloc(len + 4);
+  char       *p           = ptr;
+  const char *s           = str;
+  bool        lastIsAlpha = !upperCamelCase;
 
-  if (!s)
+  if (p == NULL)
   {
-    return 0;
+    return NULL;
   }
 
-  for (s = ptr; *str; str++)
+  for (; *s; s++)
   {
-    if (isalpha(*str) || isdigit(*str))
+    if (isalpha(*s) || isdigit(*s))
     {
       if (lastIsAlpha)
       {
-        *s = tolower(*str);
+        *p = tolower(*s);
       }
       else
       {
-        *s          = toupper(*str);
+        *p          = toupper(*s);
         lastIsAlpha = true;
       }
-      s++;
+      p++;
     }
     else
     {
@@ -387,20 +388,35 @@ static char *camelize(const char *str, bool upperCamelCase)
     }
   }
 
-  *s = 0;
+  if (order > 0 && (strcmp(str, "Reserved") == 0 || strcmp(str, "Spare") == 0))
+  {
+    sprintf(p, "%u", order);
+  }
+  else
+  {
+    *p = 0;
+  }
   return ptr;
 }
 
 void camelCase(bool upperCamelCase)
 {
-  int i, j;
+  int  i, j;
+  bool haveEarlierSpareOrReserved;
 
   for (i = 0; i < pgnListSize; i++)
   {
-    pgnList[i].camelDescription = camelize(pgnList[i].description, upperCamelCase);
+    pgnList[i].camelDescription = camelize(pgnList[i].description, upperCamelCase, 0);
+    haveEarlierSpareOrReserved  = false;
     for (j = 0; j < ARRAY_SIZE(pgnList[i].fieldList) && pgnList[i].fieldList[j].name; j++)
     {
-      pgnList[i].fieldList[j].camelName = camelize(pgnList[i].fieldList[j].name, upperCamelCase);
+      const char *name = pgnList[i].fieldList[j].name;
+
+      pgnList[i].fieldList[j].camelName = camelize(name, upperCamelCase, haveEarlierSpareOrReserved ? j + 1 : 0);
+      if (strcmp(name, "Reserved") == 0 || strcmp(name, "Spare") == 0)
+      {
+        haveEarlierSpareOrReserved = true;
+      }
     }
   }
 }

@@ -8,9 +8,26 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [4.5.0]
 
+### Changed
+
+- When a PGN contains multiple 'Reserved' or 'Spare' fields the Id has been made unique by
+  appending the field order to the Id.
+- Several PGN Descriptions and Id have been changed to make them unique.
+  Of these, only PGN 130310 is in general use.
+  The affected PGNs (with their old names) are:
+  - PGN 61184 "Seatalk: Wireless Keypad Control" has been split, with one version dropping the "Control" word.
+  - PGN 65325 "Simnet: Reprogram Status" has been removed.
+  - PGN 126720 "Fusion: Mute" has been renamed to "Fusion: Set Mute".
+  - PGN 130310 "Environmental Parameters" has been renamed to "Environmental Parameters (obsolete)".
+  - PGN 130820 "Furuno: Unknown" has been renamed to "Furuno: Unknown 130820"
+  - PGN 130821 "Furuno: Unknown" has been renamed to "Furuno: Unknown 130821"
+- PGN 129556 "GLONASS Almanac Data" has been improved with URL reference and explanations, as well as slight changes
+  to field names causing Id changes.
+
 ### Added
 
 - `docs/canboat.xml` now contains `PGN/Fields/Field/LookupIndirectEnumerationFieldOrder`.
+- A test has been added to verify that PGN Id and Field Id are unique.
 
 ### Removed
 
@@ -18,7 +35,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #323: Generate unique 'Id' elements for PGNs.
 - #322: Generate Order for IndirectEnumeration lookups.
+- #321: Generate unique 'Id' elements for fields.
 
 ## [4.4.0]
 

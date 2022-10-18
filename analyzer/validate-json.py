@@ -19,7 +19,39 @@
 import sys;
 import json;
 
+res = 0
+allowedDuplicates = { } # 'Reserved', 'Spare' }
+
 file = open(sys.argv[1])
-json.loads(file.read())
+
+data = json.loads(file.read())
+pgns = data["PGNs"]
+pMap = {}
+for pgn in pgns:
+    prn = pgn['PGN']
+    desc = pgn['Description']
+    pid = pgn['Id']
+
+    if (pid in pMap):
+        print("ERROR: PGN", prn, "'" +  desc + "' has duplicate Id '" + pid + "'; first used in PGN ", pMap[pid])
+        res = 1
+    pMap[pid] = prn
+
+    if ('Fields' in pgn):
+        fields = pgn['Fields']
+        nMap = {}
+        for field in fields:
+            order = field['Order']
+            fid  = field['Id']
+            if (not fid in allowedDuplicates):
+                if (fid in nMap):
+                    print("ERROR: PGN", prn, "'" +  desc + "' has duplicate field id '" + fid + "'; first used as field", nMap[fid], "and repeated as field", order)
+                    res = 1
+                else:
+                    nMap[fid] = order
+
 file.close()
-print("JSON in", sys.argv[1], "seems valid.")
+
+if (res == 0):
+    print("JSON in", sys.argv[1], "seems valid.")
+exit(res)

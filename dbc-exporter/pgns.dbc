@@ -50,7 +50,7 @@ BO_ 2565538046 PGN_60160_isoTransportProtocolDa: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2565734654 PGN_60928_isoAddressClaim: 8 Vector__XXX
- SG_ reserved : 63|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved10 : 63|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryGroup : 60|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ systemInstance : 56|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ deviceClass : 49|7@1+ (1,0) [0|0] "" Vector__XXX
@@ -170,14 +170,14 @@ BO_ 2566784766 PGN_65030_generatorAverageBasicA: 8 Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
 BO_ 2566848766 PGN_65280_furunoHeave: 8 Vector__XXX
- SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved5 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ heave : 16|32@1- (0.001,0) [0|0] "m" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566849790 PGN_65284_maretronProprietaryDcB: 8 Vector__XXX
- SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ breakerCurrent : 32|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ indicatorNumber : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ bankInstance : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -197,12 +197,12 @@ BO_ 2566850046 PGN_65285_multiplexed: 8 Vector__XXX
 
 BO_ 2566850558 PGN_65287_multiplexed: 8 Vector__XXX
  SG_ m135_accessSeedKey m135 : 24|32@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m135_reserved_1 m135 : 22|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m135_reserved6 m135 : 22|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m135_accessLevel m135 : 19|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m135_formatCode m135 : 16|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m1857_industryCode_1 m1857 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m135_industryCode m135 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m1857_reserved_2 m1857 : 11|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m1857_reserved_1 m1857 : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m135_reserved m135 : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode M : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -237,7 +237,7 @@ BO_ 2566852094 PGN_65293_simnetLgc2000Configura: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566856190 PGN_65309_navicoWirelessBatteryS: 8 Vector__XXX
- SG_ reserved_1 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
  SG_ batteryChargeStatus : 32|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ batteryStatus : 24|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ status : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -246,25 +246,15 @@ BO_ 2566856190 PGN_65309_navicoWirelessBatteryS: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566856958 PGN_65312_navicoWirelessSignalSt: 8 Vector__XXX
- SG_ reserved_1 : 32|24@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved6 : 32|24@1+ (1,0) [0|0] "" Vector__XXX
  SG_ signalStrength : 24|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ unknown : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2566860286 PGN_65325_simnetReprogramStatus: 8 Vector__XXX
- SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2566864382 PGN_65341_simnetAutopilotMode: 8 Vector__XXX
- SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2566865406 PGN_65345_seatalkPilotWindDatum: 8 Vector__XXX
- SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved6 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ rollingAverageWindAngle : 32|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ windDatum : 16|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
@@ -272,7 +262,7 @@ BO_ 2566865406 PGN_65345_seatalkPilotWindDatum: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566868990 PGN_65359_seatalkPilotHeading: 8 Vector__XXX
- SG_ reserved_1 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ headingMagnetic : 40|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ headingTrue : 24|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ sid : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -281,7 +271,7 @@ BO_ 2566868990 PGN_65359_seatalkPilotHeading: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566869246 PGN_65360_seatalkPilotLockedHead: 8 Vector__XXX
- SG_ reserved_1 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ targetHeadingMagnetic : 40|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ targetHeadingTrue : 24|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ sid : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -290,7 +280,7 @@ BO_ 2566869246 PGN_65360_seatalkPilotLockedHead: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566869502 PGN_65361_seatalkSilenceAlarm: 8 Vector__XXX
- SG_ reserved_1 : 32|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved6 : 32|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ alarmGroup : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ alarmId : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
@@ -299,7 +289,7 @@ BO_ 2566869502 PGN_65361_seatalkSilenceAlarm: 8 Vector__XXX
 
 BO_ 2566872062 PGN_65371_seatalkKeypadMessage: 8 Vector__XXX
  SG_ encoderPosition : 48|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ reserved_1 : 44|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved9 : 44|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ secondKeyState : 42|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ firstKeyState : 40|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ secondKey : 32|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -318,7 +308,7 @@ BO_ 2566872830 PGN_65374_seatalkKeypadHeartbeat: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566874110 PGN_65379_seatalkPilotMode: 8 Vector__XXX
- SG_ reserved_1 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
  SG_ pilotModeData : 32|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ subMode : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ pilotMode : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -327,7 +317,7 @@ BO_ 2566874110 PGN_65379_seatalkPilotMode: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566881790 PGN_65409_airmarSpeedPulseCount: 8 Vector__XXX
- SG_ reserved_1 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ numberOfPulsesReceived : 40|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ durationOfInterval : 24|16@1+ (0.001,0) [0|0] "s" Vector__XXX
  SG_ sid : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -336,7 +326,7 @@ BO_ 2566881790 PGN_65409_airmarSpeedPulseCount: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566882046 PGN_65410_airmarDeviceInformatio: 8 Vector__XXX
- SG_ reserved_1 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ supplyVoltage : 40|16@1+ (0.01,0) [0|0] "V" Vector__XXX
  SG_ internalDeviceTemperature : 24|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ sid : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -409,7 +399,7 @@ BO_ 2582709758 PGN_127237_headingTrackControl: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582711806 PGN_127245_rudder: 8 Vector__XXX
- SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved6 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ position : 32|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ angleOrder : 16|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ reserved : 11|5@1+ (1,0) [0|0] "" Vector__XXX
@@ -459,7 +449,7 @@ BO_ 2582774270 PGN_127489_engineParametersDynam: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582775294 PGN_127493_transmissionParameter: 8 Vector__XXX
- SG_ reserved_1 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ discreteStatus1 : 48|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ oilTemperature : 32|16@1+ (0.1,0) [0|0] "K" Vector__XXX
  SG_ oilPressure : 16|16@1+ (100,0) [0|0] "Pa" Vector__XXX
@@ -694,7 +684,7 @@ BO_ 2583038206 PGN_128520_trackedTargetData: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583103742 PGN_128776_windlassControlStatus: 8 Vector__XXX
- SG_ reserved_1 : 52|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved14 : 52|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ windlassControlEvents : 48|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ commandTimeout : 40|8@1+ (0.005,0) [0|0] "s" Vector__XXX
  SG_ anchorLight : 38|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -730,7 +720,7 @@ BO_ 2583167486 PGN_129025_positionRapidUpdate: 8 Vector__XXX
  SG_ latitude : 0|32@1- (1e-07,0) [0|0] "deg" Vector__XXX
 
 BO_ 2583167742 PGN_129026_cogSogRapidUpdate: 8 Vector__XXX
- SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved6 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sog : 32|16@1+ (0.01,0) [0|0] "m/s" Vector__XXX
  SG_ cog : 16|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ reserved : 10|6@1+ (1,0) [0|0] "" Vector__XXX
@@ -786,7 +776,7 @@ BO_ 2583172606 PGN_129045_userDatum: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583233534 PGN_129283_crossTrackError: 8 Vector__XXX
- SG_ reserved_1 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved6 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ xte : 16|32@1- (0.01,0) [0|0] "m" Vector__XXX
  SG_ navigationTerminated : 14|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 12|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -1161,7 +1151,7 @@ BO_ 2583626750 PGN_130819_simnetRequestReprogra: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2583627262 PGN_130821_furunoUnknown: 8 Vector__XXX
+BO_ 2583627262 PGN_130821_furunoUnknown130821: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -1304,12 +1294,6 @@ CM_ SG_ 2566856190 manufacturerCode "Navico";
 CM_ BO_ 2566856958 "Navico: Wireless Signal Status";
 CM_ SG_ 2566856958 industryCode "Marine Industry";
 CM_ SG_ 2566856958 manufacturerCode "Navico";
-CM_ BO_ 2566860286 "Simnet: Reprogram Status";
-CM_ SG_ 2566860286 industryCode "Marine Industry";
-CM_ SG_ 2566860286 manufacturerCode "Simrad";
-CM_ BO_ 2566864382 "Simnet: Autopilot Mode";
-CM_ SG_ 2566864382 industryCode "Marine Industry";
-CM_ SG_ 2566864382 manufacturerCode "Simrad";
 CM_ BO_ 2566865406 "Seatalk: Pilot Wind Datum";
 CM_ SG_ 2566865406 industryCode "Marine Industry";
 CM_ SG_ 2566865406 manufacturerCode "Raymarine";
@@ -1465,7 +1449,7 @@ CM_ BO_ 2583435518 "Route and WP Service - Database Comment";
 CM_ BO_ 2583435774 "Route and WP Service - Radius of Turn";
 CM_ BO_ 2583436030 "Route and WP Service - WP List - WP Name & Position";
 CM_ BO_ 2583495422 "Wind Data";
-CM_ BO_ 2583496446 "Environmental Parameters";
+CM_ BO_ 2583496446 "Environmental Parameters (obsolete)";
 CM_ BO_ 2583496702 "Environmental Parameters";
 CM_ BO_ 2583496958 "Temperature";
 CM_ BO_ 2583497214 "Humidity";
@@ -1499,7 +1483,7 @@ CM_ BO_ 2583566846 "Bluetooth source status";
 CM_ BO_ 2583567102 "Zone Configuration";
 CM_ BO_ 2583626494 "Simnet: Reprogram Data";
 CM_ BO_ 2583626750 "Simnet: Request Reprogram";
-CM_ BO_ 2583627262 "Furuno: Unknown";
+CM_ BO_ 2583627262 "Furuno: Unknown 130821";
 CM_ BO_ 2583627774 "Maretron: Proprietary Temperature High Range";
 CM_ BO_ 2583628798 "Lowrance: unknown";
 CM_ BO_ 2583629054 "Simnet: Set Serial Number";
@@ -1599,7 +1583,7 @@ BA_ "SystemMessageLongSymbol" BO_ 2583435262 "PGN_130071_routeAndWpServiceRouteC
 BA_ "SystemMessageLongSymbol" BO_ 2583435518 "PGN_130072_routeAndWpServiceDatabaseComment";
 BA_ "SystemMessageLongSymbol" BO_ 2583435774 "PGN_130073_routeAndWpServiceRadiusOfTurn";
 BA_ "SystemMessageLongSymbol" BO_ 2583436030 "PGN_130074_routeAndWpServiceWpListWpNamePosition";
-BA_ "SystemMessageLongSymbol" BO_ 2583496446 "PGN_130310_environmentalParameters";
+BA_ "SystemMessageLongSymbol" BO_ 2583496446 "PGN_130310_environmentalParametersObsolete";
 BA_ "SystemMessageLongSymbol" BO_ 2583496702 "PGN_130311_environmentalParameters";
 BA_ "SystemMessageLongSymbol" BO_ 2583497982 "PGN_130316_temperatureExtendedRange";
 BA_ "SystemMessageLongSymbol" BO_ 2583499774 "PGN_130323_meteorologicalStationData";

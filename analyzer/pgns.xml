@@ -852,7 +852,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved</Id>
+          <Id>reserved10</Id>
           <Name>Reserved</Name>
           <BitLength>1</BitLength>
           <BitOffset>63</BitOffset>
@@ -974,8 +974,8 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>61184</PGN>
-      <Id>seatalkWirelessKeypadLightControl</Id>
-      <Description>Seatalk: Wireless Keypad Light Control</Description>
+      <Id>seatalkWirelessKeypadControl</Id>
+      <Description>Seatalk: Wireless Keypad Control</Description>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -3051,7 +3051,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved</Id>
+          <Id>reserved10</Id>
           <Name>Reserved</Name>
           <BitLength>1</BitLength>
           <BitOffset>63</BitOffset>
@@ -3143,7 +3143,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>reserved</Id>
+          <Id>reserved5</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -3245,7 +3245,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -3695,7 +3695,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
@@ -4336,7 +4336,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>24</BitLength>
           <BitOffset>40</BitOffset>
@@ -4427,125 +4427,13 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>24</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>65325</PGN>
-      <Id>simnetReprogramStatus</Id>
-      <Description>Simnet: Reprogram Status</Description>
-      <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>2</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Simrad</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>1857</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>65341</PGN>
-      <Id>simnetAutopilotMode</Id>
-      <Description>Simnet: Autopilot Mode</Description>
-      <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>2</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Simrad</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>1857</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -4631,7 +4519,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -4734,7 +4622,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -4834,7 +4722,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -5041,7 +4929,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
@@ -5172,7 +5060,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved</Id>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>44</BitOffset>
@@ -5379,7 +5267,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>24</BitLength>
           <BitOffset>40</BitOffset>
@@ -5576,7 +5464,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -5681,7 +5569,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -8043,8 +7931,8 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>126720</PGN>
-      <Id>fusionMute</Id>
-      <Description>Fusion: Mute</Description>
+      <Id>fusionSetMute</Id>
+      <Description>Fusion: Set Mute</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -8610,7 +8498,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -9311,7 +9199,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>22</BitLength>
           <BitOffset>26</BitOffset>
@@ -9400,7 +9288,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -9601,7 +9489,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>26</BitOffset>
@@ -9705,7 +9593,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
@@ -9809,7 +9697,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
@@ -9927,7 +9815,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
@@ -10031,7 +9919,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
@@ -10151,7 +10039,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>22</BitLength>
           <BitOffset>26</BitOffset>
@@ -11504,7 +11392,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>5</BitLength>
           <BitOffset>83</BitOffset>
@@ -11584,7 +11472,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>13</Order>
-          <Id>reserved</Id>
+          <Id>reserved13</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>202</BitOffset>
@@ -11647,7 +11535,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>18</Order>
-          <Id>reserved</Id>
+          <Id>reserved18</Id>
           <Name>Reserved</Name>
           <BitLength>5</BitLength>
           <BitOffset>275</BitOffset>
@@ -12014,7 +11902,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -12747,7 +12635,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -17015,7 +16903,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>14</Order>
-          <Id>reserved</Id>
+          <Id>reserved14</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>52</BitOffset>
@@ -17406,7 +17294,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -18193,7 +18081,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>18</Order>
-          <Id>spare</Id>
+          <Id>spare18</Id>
           <Name>Spare</Name>
           <BitLength>3</BitLength>
           <BitOffset>208</BitOffset>
@@ -18203,7 +18091,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>19</Order>
-          <Id>reserved</Id>
+          <Id>reserved19</Id>
           <Name>Reserved</Name>
           <BitLength>5</BitLength>
           <BitOffset>211</BitOffset>
@@ -18437,24 +18325,18 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>regionalApplication</Id>
-          <Name>Regional Application</Name>
+          <Id>regionalApplicationB</Id>
+          <Name>Regional Application B</Name>
           <BitLength>2</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
         </Field>
         <Field>
           <Order>16</Order>
@@ -18742,24 +18624,18 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>regionalApplication</Id>
-          <Name>Regional Application</Name>
+          <Id>regionalApplicationB</Id>
+          <Name>Regional Application B</Name>
           <BitLength>4</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
         </Field>
         <Field>
           <Order>13</Order>
@@ -18856,7 +18732,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>16</Order>
-          <Id>reserved</Id>
+          <Id>reserved16</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>184</BitOffset>
@@ -18987,8 +18863,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>25</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
+          <Id>spare25</Id>
+          <Name>Spare</Name>
           <BitLength>4</BitLength>
           <BitOffset>418</BitOffset>
           <BitStart>2</BitStart>
@@ -19336,7 +19212,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>19</Order>
-          <Id>reserved</Id>
+          <Id>reserved19</Id>
           <Name>Reserved</Name>
           <BitLength>3</BitLength>
           <BitOffset>189</BitOffset>
@@ -19379,7 +19255,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>22</Order>
-          <Id>reserved</Id>
+          <Id>reserved22</Id>
           <Name>Reserved</Name>
           <BitLength>3</BitLength>
           <BitOffset>205</BitOffset>
@@ -19680,7 +19556,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -20029,7 +19905,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved</Id>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
@@ -20828,7 +20704,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>11</Order>
-          <Id>reserved</Id>
+          <Id>reserved11</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>116</BitOffset>
@@ -21946,12 +21822,13 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>13</Length>
+      <Length>26</Length>
       <Fields>
         <Field>
           <Order>1</Order>
           <Id>prn</Id>
           <Name>PRN</Name>
+          <Description>Satellite ID number</Description>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -21965,71 +21842,73 @@ limitations under the License.
           <Order>2</Order>
           <Id>na</Id>
           <Name>NA</Name>
-          <BitLength>8</BitLength>
+          <Description>Calendar day count within the four year period beginning with the previous leap year</Description>
+          <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
-          <Id>cna</Id>
-          <Name>CnA</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>hna</Id>
-          <Name>HnA</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
+          <Id>cna</Id>
+          <Name>CnA</Name>
+          <Description>Generalized health of the satellite</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>26</BitOffset>
+          <BitStart>2</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>1</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
+          <Id>hna</Id>
+          <Name>HnA</Name>
+          <Description>Carrier frequency number</Description>
+          <BitLength>5</BitLength>
+          <BitOffset>27</BitOffset>
+          <BitStart>3</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>29</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
           <Id>EpsilonNa</Id>
           <Name>(epsilon)nA</Name>
-          <BitLength>8</BitLength>
+          <Description>Eccentricity</Description>
+          <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>DeltatnaDot</Id>
-          <Name>(deltaTnA)DOT</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>OmegaNa</Id>
-          <Name>(omega)nA</Name>
+          <Id>DeltatnaDot</Id>
+          <Name>(deltaTnA)DOT</Name>
+          <Description>Rate of change of the draconitic circling time</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -22041,81 +21920,101 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>DeltaTna</Id>
-          <Name>(delta)TnA</Name>
-          <BitLength>8</BitLength>
+          <Id>OmegaNa</Id>
+          <Name>(omega)nA</Name>
+          <Description>Rate of change of the draconitic circling time</Description>
+          <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>tna</Id>
-          <Name>tnA</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>10</Order>
-          <Id>LambdaNa</Id>
-          <Name>(lambda)nA</Name>
-          <BitLength>8</BitLength>
+          <Id>DeltaTna</Id>
+          <Name>(delta)TnA</Name>
+          <Description>Correction to the average value of the draconitic circling time</Description>
+          <BitLength>24</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>16777213</RangeMax>
         </Field>
         <Field>
-          <Order>11</Order>
-          <Id>DeltaIna</Id>
-          <Name>(delta)inA</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>tca</Id>
-          <Name>tcA</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>13</Order>
+          <Order>10</Order>
           <Id>tna</Id>
           <Name>tnA</Name>
-          <BitLength>8</BitLength>
+          <Description>Time of the ascension node</Description>
+          <BitLength>24</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>16777213</RangeMax>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>LambdaNa</Id>
+          <Name>(lambda)nA</Name>
+          <Description>Greenwich longitude of the ascension node</Description>
+          <BitLength>24</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>16777213</RangeMax>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>DeltaIna</Id>
+          <Name>(delta)inA</Name>
+          <Description>Correction to the average value of the inclination angle</Description>
+          <BitLength>24</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>16777213</RangeMax>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>TauCa</Id>
+          <Name>(tau)cA</Name>
+          <Description>System time scale correction</Description>
+          <BitLength>28</BitLength>
+          <BitOffset>168</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>268435453</RangeMax>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>TauNa</Id>
+          <Name>(tau)nA</Name>
+          <Description>Course value of the time scale shift</Description>
+          <BitLength>12</BitLength>
+          <BitOffset>196</BitOffset>
+          <BitStart>4</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4093</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -22202,7 +22101,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>spare</Id>
+          <Id>spare6</Id>
           <Name>Spare</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
@@ -22240,7 +22139,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved</Id>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>3</BitLength>
           <BitOffset>112</BitOffset>
@@ -22250,7 +22149,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>spare</Id>
+          <Id>spare10</Id>
           <Name>Spare</Name>
           <BitLength>5</BitLength>
           <BitOffset>115</BitOffset>
@@ -22468,7 +22367,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>13</Order>
-          <Id>reserved</Id>
+          <Id>reserved13</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>184</BitOffset>
@@ -22503,12 +22402,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>spare</Id>
+          <Id>spare15</Id>
           <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Binary data</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -22966,7 +22864,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>reserved</Id>
+          <Id>reserved8</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>80</BitOffset>
@@ -22989,7 +22887,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved</Id>
+          <Id>reserved10</Id>
           <Name>Reserved</Name>
           <BitLength>1</BitLength>
           <BitOffset>87</BitOffset>
@@ -23106,7 +23004,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
@@ -23141,7 +23039,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved</Id>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>82</BitOffset>
@@ -23252,7 +23150,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
@@ -23850,7 +23748,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved</Id>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>7</BitLength>
           <BitOffset>81</BitOffset>
@@ -24058,7 +23956,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>spare</Id>
+          <Id>spare6</Id>
           <Name>Spare</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
@@ -24078,7 +23976,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>reserved</Id>
+          <Id>reserved8</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>80</BitOffset>
@@ -24531,7 +24429,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>reserved</Id>
+          <Id>reserved8</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>62</BitOffset>
@@ -24624,7 +24522,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>reserved</Id>
+          <Id>reserved15</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>208</BitOffset>
@@ -24673,7 +24571,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>19</Order>
-          <Id>reserved</Id>
+          <Id>reserved19</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>230</BitOffset>
@@ -24781,7 +24679,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
@@ -24871,7 +24769,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>reserved</Id>
+          <Id>reserved12</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>180</BitOffset>
@@ -24894,7 +24792,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>14</Order>
-          <Id>spare</Id>
+          <Id>spare14</Id>
           <Name>Spare</Name>
           <BitLength>22</BitLength>
           <BitOffset>190</BitOffset>
@@ -24904,7 +24802,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>reserved</Id>
+          <Id>reserved15</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>212</BitOffset>
@@ -25890,7 +25788,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>13</Order>
-          <Id>spare</Id>
+          <Id>spare13</Id>
           <Name>Spare</Name>
           <BitLength>6</BitLength>
           <BitOffset>258</BitOffset>
@@ -25921,7 +25819,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>reserved</Id>
+          <Id>reserved15</Id>
           <Name>Reserved</Name>
           <BitLength>3</BitLength>
           <BitOffset>269</BitOffset>
@@ -27354,8 +27252,8 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130310</PGN>
-      <Id>environmentalParameters</Id>
-      <Description>Environmental Parameters</Description>
+      <Id>environmentalParametersObsolete</Id>
+      <Description>Environmental Parameters (obsolete)</Description>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -28540,7 +28438,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved</Id>
+          <Id>reserved10</Id>
           <Name>Reserved</Name>
           <BitLength>5</BitLength>
           <BitOffset>155</BitOffset>
@@ -28743,7 +28641,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved</Id>
+          <Id>reserved10</Id>
           <Name>Reserved</Name>
           <BitLength>5</BitLength>
           <BitOffset>155</BitOffset>
@@ -29791,24 +29689,24 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>artist</Id>
-          <Name>Artist</Name>
+          <Id>artistName</Id>
+          <Name>Artist Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>16</Order>
-          <Id>album</Id>
-          <Name>Album</Name>
+          <Id>albumName</Id>
+          <Name>Album Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>17</Order>
-          <Id>station</Id>
-          <Name>Station</Name>
+          <Id>stationName</Id>
+          <Name>Station Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
@@ -31806,7 +31704,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -31931,7 +31829,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32030,7 +31928,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>11</Order>
-          <Id>reserved</Id>
+          <Id>reserved11</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>86</BitOffset>
@@ -32106,7 +32004,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32217,7 +32115,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32337,7 +32235,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32471,7 +32369,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32586,7 +32484,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32710,7 +32608,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32809,7 +32707,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>11</Order>
-          <Id>reserved</Id>
+          <Id>reserved11</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>86</BitOffset>
@@ -32885,7 +32783,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33066,7 +32964,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33187,7 +33085,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33308,7 +33206,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33429,7 +33327,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33589,7 +33487,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33700,7 +33598,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33821,7 +33719,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33945,7 +33843,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -34043,7 +33941,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -34155,7 +34053,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -34279,7 +34177,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -34878,7 +34776,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -34901,7 +34799,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>24</BitLength>
           <BitOffset>32</BitOffset>
@@ -34913,8 +34811,8 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>furunoUnknown</Id>
-      <Description>Furuno: Unknown</Description>
+      <Id>furunoUnknown130820</Id>
+      <Description>Furuno: Unknown 130820</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -37940,8 +37838,8 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130821</PGN>
-      <Id>furunoUnknown</Id>
-      <Description>Furuno: Unknown</Description>
+      <Id>furunoUnknown130821</Id>
+      <Description>Furuno: Unknown 130821</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -39239,7 +39137,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>reserved</Id>
+          <Id>reserved12</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>106</BitOffset>
@@ -39465,7 +39363,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>reserved</Id>
+          <Id>reserved12</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>178</BitOffset>
@@ -40234,7 +40132,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>17</Order>
-          <Id>spare</Id>
+          <Id>spare17</Id>
           <Name>Spare</Name>
           <BitLength>6</BitLength>
           <BitOffset>288</BitOffset>
@@ -40244,7 +40142,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>18</Order>
-          <Id>reserved</Id>
+          <Id>reserved18</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>294</BitOffset>
@@ -42407,7 +42305,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>reserved</Id>
+          <Id>reserved5</Id>
           <Name>Reserved</Name>
           <BitLength>7</BitLength>
           <BitOffset>17</BitOffset>
