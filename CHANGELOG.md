@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [4.5.1]
+
+### Changed
+
+- Added resolution for FLOAT and POWER fields.
+
+### Fixed
+
+- #324: pgns: some fields are missing resolution value
+
 ## [4.5.0]
 
 ### Changed

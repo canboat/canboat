@@ -858,6 +858,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription
      = "This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000. Depending on "
        "the field it represents either real power in W, active power in VA or reactive power in VAR.",
+     .resolution    = 1,
      .offset        = -2000000000,
      .physical      = &ELECTRICAL_APPARENT_POWER,
      .baseFieldType = "FIX32"},
@@ -867,6 +868,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription
      = "This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000. Depending on "
        "the field it represents either real power in W, active power in VA or reactive power in VAR.",
+     .resolution    = 1,
      .offset        = -2000000000,
      .physical      = &ELECTRICAL_REACTIVE_POWER,
      .baseFieldType = "FIX32"},
@@ -874,33 +876,39 @@ FieldType fieldTypeList[] = {
     {.name          = "POWER_UINT16",
      .description   = "Electrical power, either DC or AC Real power, in Watts",
      .physical      = &ELECTRICAL_POWER,
+     .resolution    = 1,
      .baseFieldType = "UINT16"},
 
     {.name          = "POWER_UINT16_VAR",
      .description   = "Electrical power, AC reactive",
      .physical      = &ELECTRICAL_REACTIVE_POWER,
      .unit          = "VAR",
+     .resolution    = 1,
      .baseFieldType = "UINT16"},
 
     {.name          = "POWER_INT32",
      .description   = "Electrical power, either DC or AC Real power, in Watts",
      .physical      = &ELECTRICAL_POWER,
+     .resolution    = 1,
      .baseFieldType = "INT32"},
 
     {.name          = "POWER_UINT32",
      .description   = "Electrical power, DC or AC Real power, in Watts",
      .physical      = &ELECTRICAL_POWER,
+     .resolution    = 1,
      .baseFieldType = "UINT32"},
 
     {.name          = "POWER_UINT32_VA",
      .description   = "Electrical power, AC apparent power in VA.",
      .unit          = "VA",
+     .resolution    = 1,
      .physical      = &ELECTRICAL_APPARENT_POWER,
      .baseFieldType = "UINT32"},
 
     {.name          = "POWER_UINT32_VAR",
      .description   = "Electrical power, AC reactive power in VAR.",
      .unit          = "VAR",
+     .resolution    = 1,
      .physical      = &ELECTRICAL_REACTIVE_POWER,
      .baseFieldType = "UINT32"},
 

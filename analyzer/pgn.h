@@ -20,6 +20,8 @@ limitations under the License.
 
 */
 
+#include <float.h>
+
 #include "common.h"
 #include "parse.h"
 #include "pow.h"
@@ -786,9 +788,10 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 0.1, .hasSign = true, .unit = "deg", .fieldType = "ANGLE_FIX16_DDEG" \
   }
 
-#define FLOAT_FIELD(nam, unt, desc)                                                                        \
-  {                                                                                                        \
-    .name = nam, .size = BYTES(4), .hasSign = true, .unit = unt, .fieldType = "FLOAT", .description = desc \
+#define FLOAT_FIELD(nam, unt, desc)                                                                                          \
+  {                                                                                                                          \
+    .name = nam, .size = BYTES(4), .hasSign = true, .unit = unt, .fieldType = "FLOAT", .description = desc, .resolution = 1, \
+    .rangeMin = -1 * FLT_MAX, .rangeMax = FLT_MAX                                                                            \
   }
 
 #ifdef EXPLAIN

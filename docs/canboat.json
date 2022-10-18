@@ -3,8 +3,8 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"4.5.0",
-    "Copyright":"CANboat version v4.5.0\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"4.5.1",
+    "Copyright":"CANboat version v4.5.1\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
     {
         "Name":"ELECTRICAL_CURRENT",
@@ -3956,8 +3956,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -4127,8 +4130,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -4226,8 +4232,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -4296,8 +4305,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -4395,8 +4407,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -4465,8 +4480,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -4607,8 +4625,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -4677,8 +4698,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           }
@@ -4776,8 +4800,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -4846,8 +4873,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -4945,8 +4975,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -5015,8 +5048,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -5114,8 +5150,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -5184,8 +5223,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -20234,7 +20276,10 @@
             "BitLength":32,
             "BitOffset":96,
             "BitStart":0,
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -20245,7 +20290,10 @@
             "BitLength":32,
             "BitOffset":128,
             "BitStart":0,
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -20256,7 +20304,10 @@
             "BitLength":32,
             "BitOffset":160,
             "BitStart":0,
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -20267,7 +20318,10 @@
             "BitOffset":192,
             "BitStart":0,
             "Unit":"ppm",
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -20294,7 +20348,10 @@
             "BitLength":32,
             "BitOffset":256,
             "BitStart":0,
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -28392,7 +28449,10 @@
             "BitOffset":120,
             "BitStart":0,
             "Unit":"ppt",
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {

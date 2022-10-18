@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.5.0
+CANboat version v4.5.1
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.5.0</Version>
+  <Version>4.5.1</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -1493,8 +1493,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -1654,8 +1657,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -1743,8 +1749,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -1812,8 +1821,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -1901,8 +1913,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -1970,8 +1985,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -2101,8 +2119,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -2170,8 +2191,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -2259,8 +2283,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -2328,8 +2355,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -2417,8 +2447,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -2486,8 +2519,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -2575,8 +2611,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -2644,8 +2683,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -19404,7 +19446,10 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
@@ -19414,7 +19459,10 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
@@ -19424,7 +19472,10 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
@@ -19434,7 +19485,10 @@ limitations under the License.
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
           <Units>ppm</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
@@ -19458,7 +19512,10 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>256</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>10</Order>
@@ -28106,7 +28163,10 @@ limitations under the License.
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Units>ppt</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>

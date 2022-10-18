@@ -330,8 +330,11 @@ extern void fillFieldType(bool doUnitFixup)
                  ft->unit);
       }
 
-      f->rangeMin = ft->rangeMin;
-      f->rangeMax = ft->rangeMax;
+      if (isnan(f->rangeMax) || f->rangeMax == 0.0)
+      {
+        f->rangeMin = ft->rangeMin;
+        f->rangeMax = ft->rangeMax;
+      }
       if (doUnitFixup && f->unit != NULL && f->resolution != 0.0)
       {
         fixupUnit(f);
