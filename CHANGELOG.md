@@ -6,6 +6,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [4.5.1]
+
+### Changed
+
+- Added resolution for FLOAT and POWER fields.
+
+### Fixed
+
+- #324: pgns: some fields are missing resolution value
+
+## [4.5.0]
+
+### Changed
+
+- When a PGN contains multiple 'Reserved' or 'Spare' fields the Id has been made unique by
+  appending the field order to the Id.
+- Several PGN Descriptions and Id have been changed to make them unique.
+  Of these, only PGN 130310 is in general use.
+  The affected PGNs (with their old names) are:
+  - PGN 61184 "Seatalk: Wireless Keypad Control" has been split, with one version dropping the "Control" word.
+  - PGN 65325 "Simnet: Reprogram Status" has been removed.
+  - PGN 126720 "Fusion: Mute" has been renamed to "Fusion: Set Mute".
+  - PGN 130310 "Environmental Parameters" has been renamed to "Environmental Parameters (obsolete)".
+  - PGN 130820 "Furuno: Unknown" has been renamed to "Furuno: Unknown 130820"
+  - PGN 130821 "Furuno: Unknown" has been renamed to "Furuno: Unknown 130821"
+- PGN 129556 "GLONASS Almanac Data" has been improved with URL reference and explanations, as well as slight changes
+  to field names causing Id changes.
+
+### Added
+
+- `docs/canboat.xml` now contains `PGN/Fields/Field/LookupIndirectEnumerationFieldOrder`.
+- A test has been added to verify that PGN Id and Field Id are unique.
+
+### Removed
+
+- `docs/canboat.xml` no longer contains `PGN/Fields/Field/LookupIndirectEnumerationField`.
+
+### Fixed
+
+- #323: Generate unique 'Id' elements for PGNs.
+- #322: Generate Order for IndirectEnumeration lookups.
+- #321: Generate unique 'Id' elements for fields.
+
+## [4.4.0]
+
+### Changed
+
+- `n2kd` must now be fed by `analyzer -json -nv` so that it does not need to reverse the lookup numbers
+  for NMEA0183 streams. It does mean that anything with a lookup value is now presented differently to
+  any JSON clients. This means the protocol has changed, requiring another version bump.
+- String fields that contain different 'filler' characters at the end, for instance both 'space', '@' and
+  0xff will be shrunk until all such characters are removed, not just the sequence of same type fillers.
+
+### Fixed
+
+- #320: Update AIS lookups according to ITU M.1371-5
+- #319: analyzer: fixup printing of lookup values for `-json -nv` that have no entry in the lookup table.
+- #318: n2kd: NMEA0183 streams for AIS will now log errors when AIS data field names are changed,
+        lookup values are extracted by number -- see above for new restriction
+
 ## [4.3.0]
 
 ### Added

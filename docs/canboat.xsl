@@ -46,19 +46,39 @@
 
   <xsl:template name="HandleRepeatingFields">
     <xsl:if test="RepeatingFieldSet1Size">
+      <xsl:variable name="Set1StartField" select="RepeatingFieldSet1StartField"/>
       <xsl:if test="RepeatingFieldSet1CountField">
-          The <xsl:value-of select="RepeatingFieldSet1Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet1StartField"/> form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="RepeatingFieldSet1CountField"/>.
+        The <xsl:value-of select="RepeatingFieldSet1Size"/> fields starting at field 
+        <xsl:value-of select="$Set1StartField"/> 
+        (with name "<xsl:value-of select="Fields/Field[Order = $Set1StartField]/Name"/>")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        <xsl:variable name="Set1CountField" select="RepeatingFieldSet1CountField"/>
+        <xsl:value-of select="$Set1CountField"/> 
+        (with name "<xsl:value-of select="Fields/Field[Order = $Set1CountField]/Name"/>".)
       </xsl:if>
       <xsl:if test="not(RepeatingFieldSet1CountField)">
-          The <xsl:value-of select="RepeatingFieldSet1Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet1StartField"/> form repeating set 1. The set is repeated until there is no more data in the PGN.
+        The <xsl:value-of select="RepeatingFieldSet1Size"/> fields starting at field 
+        <xsl:value-of select="$Set1StartField"/> 
+        (with name "<xsl:value-of select="Fields/Field[Order = $Set1StartField]/Name"/>")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
       </xsl:if>
     </xsl:if>
     <xsl:if test="RepeatingFieldSet2Size">
+      <xsl:variable name="Set2StartField" select="RepeatingFieldSet2StartField"/>
       <xsl:if test="RepeatingFieldSet2CountField">
-          The <xsl:value-of select="RepeatingFieldSet2Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet2StartField"/> form repeating set 2. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field <xsl:value-of select="RepeatingFieldSet2CountField"/>.
+        The <xsl:value-of select="RepeatingFieldSet2Size"/> fields starting at field 
+        <xsl:value-of select="$Set2StartField"/> 
+        (with name "<xsl:value-of select="Fields/Field[Order = $Set2StartField]/Name"/>")
+        form repeating set 2. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        <xsl:variable name="Set2CountField" select="RepeatingFieldSet2CountField"/>
+        <xsl:value-of select="$Set2CountField"/> 
+        (with name "<xsl:value-of select="Fields/Field[Order = $Set2CountField]/Name"/>".)
       </xsl:if>
       <xsl:if test="not(RepeatingFieldSet2CountField)">
-          The <xsl:value-of select="RepeatingFieldSet2Size"/> fields starting at field <xsl:value-of select="RepeatingFieldSet2StartField"/> form repeating set 2. The set is repeated until there is no more data in the PGN.
+        The <xsl:value-of select="RepeatingFieldSet2Size"/> fields starting at field 
+        <xsl:value-of select="$Set2StartField"/> 
+        (with name "<xsl:value-of select="Fields/Field[Order = $Set2StartField]/Name"/>")
+        form repeating set 2. The set is repeated until there is no more data in the PGN.
       </xsl:if>
     </xsl:if>
 
@@ -69,6 +89,7 @@
     <xsl:for-each select="/PGNDefinitions/PGNs/*">
       <xsl:choose>
         <xsl:when test="./Fallback = 'true'">
+
           <h2>
             <xsl:attribute name="id">
               <xsl:value-of select="concat('pgn-', PGN)"/>
@@ -240,7 +261,7 @@
                       </a>
                     </xsl:when>
                     <xsl:when test="LookupIndirectEnumeration">
-                      lookup
+                      indirect lookup
                       <a>
                         <xsl:attribute name="href">
                           <xsl:value-of select="concat('#indirect-lookup-', LookupIndirectEnumeration)"/>
@@ -248,7 +269,9 @@
                         <xsl:value-of select="LookupIndirectEnumeration"/>
                       </a>
                       where the first column is the value from field 
-                        <xsl:value-of select="LookupIndirectEnumerationField"/>
+                        <xsl:variable name="val1Order" select="LookupIndirectEnumerationFieldOrder"/>
+                        <xsl:value-of select="$val1Order"/>
+                        ("<xsl:value-of select="../Field[Order = $val1Order]/Name"/>")
                     </xsl:when>
                     <xsl:when test="LookupBitEnumeration">
                       bitfield

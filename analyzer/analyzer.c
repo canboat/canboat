@@ -218,7 +218,10 @@ int main(int argc, char **argv)
     else if (ac > 2 && strcasecmp(av[1], "-fixtime") == 0)
     {
       setFixedTimestamp(av[2]);
-      showVersion = false;
+      if (strstr(av[2], "n2kd") == NULL)
+      {
+        showVersion = false;
+      }
       ac--;
       av++;
     }
@@ -267,7 +270,10 @@ int main(int argc, char **argv)
   }
   else if (showVersion)
   {
-    printf("{\"version\":\"%s\",\"units\":\"%s\"}\n", VERSION, showSI ? "si" : "std");
+    printf("{\"version\":\"%s\",\"units\":\"%s\",\"showLookupValues\":%s}\n",
+           VERSION,
+           showSI ? "si" : "std",
+           showJsonValue ? "true" : "false");
   }
 
   fillLookups();

@@ -768,9 +768,8 @@ static void explainPGNXML(Pgn pgn)
           case LOOKUP_TYPE_TRIPLET: {
             if (!doV1)
             {
-              Field *refField = &pgn.fieldList[f.lookup.val1Order - 1];
               printXML(10, "LookupIndirectEnumeration", f.lookup.name);
-              printXML(10, "LookupIndirectEnumerationField", refField->name);
+              printXMLUnsigned(10, "LookupIndirectEnumerationFieldOrder", f.lookup.val1Order);
             }
             break;
           }

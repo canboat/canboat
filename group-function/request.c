@@ -33,9 +33,6 @@ limitations under the License.
 
 #define PACKED __attribute__((__packed__))
 
-typedef unsigned char uint8_t;
-typedef unsigned int  uint32_t;
-
 typedef struct
 {
   uint8_t functionCode;
@@ -64,15 +61,15 @@ void usage(char **argv, char **av)
 int main(int argc, char **argv)
 {
   int                      ac = argc;
-  char **                  av = argv;
+  char                   **av = argv;
   long                     dest;
   long                     pgn;
   long                     interval;
   size_t                   cnt = 0;
   command_group_function_t command;
   size_t                   i, bytes;
-  char *                   p, *e;
-  uint8_t *                b;
+  char                    *p, *e;
+  uint8_t                 *b;
   uint32_t                 v;
   char                     dateStr[DATE_LENGTH];
 

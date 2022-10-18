@@ -3,8 +3,8 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"4.3.0",
-    "Copyright":"CANboat version v4.3.0\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"4.5.1",
+    "Copyright":"CANboat version v4.5.1\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
     {
         "Name":"ELECTRICAL_CURRENT",
@@ -538,7 +538,11 @@
         "EnumValues":[
           {"Name":"Unavailable", "Value":0},
           {"Name":"Wing In Ground", "Value":20},
-          {"Name":"Wing In Ground (no other information)", "Value":29},
+          {"Name":"Wing In Ground (hazard cat X)", "Value":21},
+          {"Name":"Wing In Ground (hazard cat Y)", "Value":22},
+          {"Name":"Wing In Ground (hazard cat Z)", "Value":23},
+          {"Name":"Wing In Ground (hazard cat OS)", "Value":24},
+          {"Name":"Wing In Ground (no additional information)", "Value":29},
           {"Name":"Fishing", "Value":30},
           {"Name":"Towing", "Value":31},
           {"Name":"Towing exceeds 200m or wider than 25m", "Value":32},
@@ -548,10 +552,10 @@
           {"Name":"Sailing", "Value":36},
           {"Name":"Pleasure", "Value":37},
           {"Name":"High speed craft", "Value":40},
-          {"Name":"High speed craft carrying dangerous goods", "Value":41},
-          {"Name":"High speed craft hazard cat B", "Value":42},
-          {"Name":"High speed craft hazard cat C", "Value":43},
-          {"Name":"High speed craft hazard cat D", "Value":44},
+          {"Name":"High speed craft (hazard cat X)", "Value":41},
+          {"Name":"High speed craft (hazard cat Y)", "Value":42},
+          {"Name":"High speed craft (hazard cat Z)", "Value":43},
+          {"Name":"High speed craft (hazard cat OS)", "Value":44},
           {"Name":"High speed craft (no additional information)", "Value":49},
           {"Name":"Pilot vessel", "Value":50},
           {"Name":"SAR", "Value":51},
@@ -562,26 +566,30 @@
           {"Name":"Spare", "Value":56},
           {"Name":"Spare #2", "Value":57},
           {"Name":"Medical", "Value":58},
-          {"Name":"RR Resolution No.18", "Value":59},
+          {"Name":"Ships and aircraft of States not parties to an armed conflict", "Value":59},
           {"Name":"Passenger ship", "Value":60},
+          {"Name":"Passenger ship (hazard cat X)", "Value":61},
+          {"Name":"Passenger ship (hazard cat Y)", "Value":62},
+          {"Name":"Passenger ship (hazard cat Z)", "Value":63},
+          {"Name":"Passenger ship (hazard cat OS)", "Value":64},
           {"Name":"Passenger ship (no additional information)", "Value":69},
           {"Name":"Cargo ship", "Value":70},
-          {"Name":"Cargo ship carrying dangerous goods", "Value":71},
-          {"Name":"Cargo ship hazard cat B", "Value":72},
-          {"Name":"Cargo ship hazard cat C", "Value":73},
-          {"Name":"Cargo ship hazard cat D", "Value":74},
+          {"Name":"Cargo ship (hazard cat X)", "Value":71},
+          {"Name":"Cargo ship (hazard cat Y)", "Value":72},
+          {"Name":"Cargo ship (hazard cat Z)", "Value":73},
+          {"Name":"Cargo ship (hazard cat OS)", "Value":74},
           {"Name":"Cargo ship (no additional information)", "Value":79},
           {"Name":"Tanker", "Value":80},
-          {"Name":"Tanker carrying dangerous goods", "Value":81},
-          {"Name":"Tanker hazard cat B", "Value":82},
-          {"Name":"Tanker hazard cat C", "Value":83},
-          {"Name":"Tanker hazard cat D", "Value":84},
+          {"Name":"Tanker (hazard cat X)", "Value":81},
+          {"Name":"Tanker (hazard cat Y)", "Value":82},
+          {"Name":"Tanker (hazard cat Z)", "Value":83},
+          {"Name":"Tanker (hazard cat OS)", "Value":84},
           {"Name":"Tanker (no additional information)", "Value":89},
           {"Name":"Other", "Value":90},
-          {"Name":"Other carrying dangerous goods", "Value":91},
-          {"Name":"Other hazard cat B", "Value":92},
-          {"Name":"Other hazard cat C", "Value":93},
-          {"Name":"Other hazard cat D", "Value":94},
+          {"Name":"Other (hazard cat X)", "Value":91},
+          {"Name":"Other (hazard cat Y)", "Value":92},
+          {"Name":"Other (hazard cat Z)", "Value":93},
+          {"Name":"Other (hazard cat OS)", "Value":94},
           {"Name":"Other (no additional information)", "Value":99}
         ]
       },
@@ -951,6 +959,8 @@
           {"Name":"Under way sailing", "Value":8},
           {"Name":"Hazardous material - High Speed", "Value":9},
           {"Name":"Hazardous material - Wing in Ground", "Value":10},
+          {"Name":"Power-driven vessl towing astern", "Value":11},
+          {"Name":"Power-driven vessl pushing ahead or towing alongside", "Value":12},
           {"Name":"AIS-SART", "Value":14}
         ]
       },
@@ -2051,7 +2061,9 @@
         "MaxValue":3,
         "EnumValues":[
           {"Name":"ITU-R M.1371-1", "Value":0},
-          {"Name":"ITU-R M.1371-3", "Value":1}
+          {"Name":"ITU-R M.1371-3", "Value":1},
+          {"Name":"ITU-R M.1371-5", "Value":2},
+          {"Name":"ITU-R M.1371 future edition", "Value":3}
         ]
       },
       {
@@ -3228,7 +3240,7 @@
             "RangeMax":253,
             "FieldType":"INDIRECT_LOOKUP",
             "LookupIndirectEnumeration":"DEVICE_FUNCTION",
-            "LookupIndirectEnumerationField":"Device Class"
+            "LookupIndirectEnumerationFieldOrder":7
           },
           {
             "Order":6,
@@ -3284,7 +3296,7 @@
           },
           {
             "Order":10,
-            "Id":"reserved",
+            "Id":"reserved10",
             "Name":"Reserved",
             "BitLength":1,
             "BitOffset":63,
@@ -3405,8 +3417,8 @@
       },
       {
         "PGN":61184,
-        "Id":"seatalkWirelessKeypadLightControl",
-        "Description":"Seatalk: Wireless Keypad Light Control",
+        "Id":"seatalkWirelessKeypadControl",
+        "Description":"Seatalk: Wireless Keypad Control",
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -3944,8 +3956,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -4115,8 +4130,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -4214,8 +4232,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -4284,8 +4305,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -4383,8 +4407,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -4453,8 +4480,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -4595,8 +4625,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -4665,8 +4698,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           }
@@ -4764,8 +4800,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -4834,8 +4873,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -4933,8 +4975,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -5003,8 +5048,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -5102,8 +5150,11 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"VAR",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
           },
@@ -5172,8 +5223,11 @@
             "BitOffset":32,
             "BitStart":0,
             "Unit":"VA",
+            "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
+            "RangeMin":-2000000000,
+            "RangeMax":2294967293,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
@@ -5331,7 +5385,7 @@
             "RangeMax":253,
             "FieldType":"INDIRECT_LOOKUP",
             "LookupIndirectEnumeration":"DEVICE_FUNCTION",
-            "LookupIndirectEnumerationField":"Device Class"
+            "LookupIndirectEnumerationFieldOrder":7
           },
           {
             "Order":6,
@@ -5387,7 +5441,7 @@
           },
           {
             "Order":10,
-            "Id":"reserved",
+            "Id":"reserved10",
             "Name":"Reserved",
             "BitLength":1,
             "BitOffset":63,
@@ -5480,7 +5534,7 @@
           },
           {
             "Order":5,
-            "Id":"reserved",
+            "Id":"reserved5",
             "Name":"Reserved",
             "BitLength":16,
             "BitOffset":48,
@@ -5586,7 +5640,7 @@
           },
           {
             "Order":7,
-            "Id":"reserved",
+            "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":16,
             "BitOffset":48,
@@ -6021,7 +6075,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":22,
@@ -6533,7 +6587,7 @@
           },
           {
             "Order":7,
-            "Id":"reserved",
+            "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":24,
             "BitOffset":40,
@@ -6625,123 +6679,13 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":24,
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
-          }
-        ]
-      },
-      {
-        "PGN":65325,
-        "Id":"simnetReprogramStatus",
-        "Description":"Simnet: Reprogram Status",
-        "Type":"Single",
-        "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
-        ],
-        "FieldCount":3,
-        "Length":2,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "Description":"Simrad",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Match":1857,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2045,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
-          },
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "Description":"Marine Industry",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Match":4,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
-          }
-        ]
-      },
-      {
-        "PGN":65341,
-        "Id":"simnetAutopilotMode",
-        "Description":"Simnet: Autopilot Mode",
-        "Type":"Single",
-        "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
-        ],
-        "FieldCount":3,
-        "Length":2,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "Description":"Simrad",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Match":1857,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2045,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
-          },
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "Description":"Marine Industry",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Match":4,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -6830,7 +6774,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":16,
             "BitOffset":48,
@@ -6935,7 +6879,7 @@
           },
           {
             "Order":7,
-            "Id":"reserved",
+            "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":56,
@@ -7040,7 +6984,7 @@
           },
           {
             "Order":7,
-            "Id":"reserved",
+            "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":56,
@@ -7133,7 +7077,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":32,
             "BitOffset":32,
@@ -7263,7 +7207,7 @@
           },
           {
             "Order":9,
-            "Id":"reserved",
+            "Id":"reserved9",
             "Name":"Reserved",
             "BitLength":4,
             "BitOffset":44,
@@ -7465,7 +7409,7 @@
           },
           {
             "Order":7,
-            "Id":"reserved",
+            "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":24,
             "BitOffset":40,
@@ -7655,7 +7599,7 @@
           },
           {
             "Order":7,
-            "Id":"reserved",
+            "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":56,
@@ -7765,7 +7709,7 @@
           },
           {
             "Order":7,
-            "Id":"reserved",
+            "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":56,
@@ -9354,8 +9298,8 @@
       },
       {
         "PGN":126720,
-        "Id":"fusionMute",
-        "Description":"Fusion: Mute",
+        "Id":"fusionSetMute",
+        "Description":"Fusion: Set Mute",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -9901,7 +9845,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":40,
@@ -10624,7 +10568,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":22,
             "BitOffset":26,
@@ -10720,7 +10664,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":40,
@@ -10931,7 +10875,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":6,
             "BitOffset":26,
@@ -11041,7 +10985,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":4,
             "BitOffset":28,
@@ -11152,7 +11096,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":4,
             "BitOffset":28,
@@ -11279,7 +11223,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":4,
             "BitOffset":28,
@@ -11390,7 +11334,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":4,
             "BitOffset":28,
@@ -11516,7 +11460,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":22,
             "BitOffset":26,
@@ -12758,7 +12702,7 @@
           },
           {
             "Order":7,
-            "Id":"reserved",
+            "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":5,
             "BitOffset":83,
@@ -12839,7 +12783,7 @@
           },
           {
             "Order":13,
-            "Id":"reserved",
+            "Id":"reserved13",
             "Name":"Reserved",
             "BitLength":6,
             "BitOffset":202,
@@ -12903,7 +12847,7 @@
           },
           {
             "Order":18,
-            "Id":"reserved",
+            "Id":"reserved18",
             "Name":"Reserved",
             "BitLength":5,
             "BitOffset":275,
@@ -13261,7 +13205,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":16,
             "BitOffset":48,
@@ -13997,7 +13941,7 @@
           },
           {
             "Order":7,
-            "Id":"reserved",
+            "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":56,
@@ -18037,7 +17981,7 @@
           },
           {
             "Order":14,
-            "Id":"reserved",
+            "Id":"reserved14",
             "Name":"Reserved",
             "BitLength":4,
             "BitOffset":52,
@@ -18426,7 +18370,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":16,
             "BitOffset":48,
@@ -18931,6 +18875,7 @@
         "PGN":129038,
         "Id":"aisClassAPositionReport",
         "Description":"AIS Class A Position Report",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":20,
@@ -19173,7 +19118,7 @@
           },
           {
             "Order":18,
-            "Id":"spare",
+            "Id":"spare18",
             "Name":"Spare",
             "BitLength":3,
             "BitOffset":208,
@@ -19183,7 +19128,7 @@
           },
           {
             "Order":19,
-            "Id":"reserved",
+            "Id":"reserved19",
             "Name":"Reserved",
             "BitLength":5,
             "BitOffset":211,
@@ -19210,6 +19155,7 @@
         "PGN":129039,
         "Id":"aisClassBPositionReport",
         "Description":"AIS Class B Position Report",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":22,
@@ -19404,23 +19350,17 @@
             "BitOffset":184,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":15,
-            "Id":"regionalApplication",
-            "Name":"Regional Application",
+            "Id":"regionalApplicationB",
+            "Name":"Regional Application B",
             "BitLength":2,
             "BitOffset":192,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":16,
@@ -19527,6 +19467,7 @@
         "PGN":129040,
         "Id":"aisClassBExtendedPositionReport",
         "Description":"AIS Class B Extended Position Report",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":26,
@@ -19680,23 +19621,17 @@
             "BitOffset":144,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":12,
-            "Id":"regionalApplication",
-            "Name":"Regional Application",
+            "Id":"regionalApplicationB",
+            "Name":"Regional Application B",
             "BitLength":4,
             "BitOffset":152,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":13,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":13,
@@ -19739,7 +19674,7 @@
           },
           {
             "Order":16,
-            "Id":"reserved",
+            "Id":"reserved16",
             "Name":"Reserved",
             "BitLength":4,
             "BitOffset":184,
@@ -19860,13 +19795,13 @@
           },
           {
             "Order":25,
-            "Id":"reserved",
-            "Name":"Reserved",
+            "Id":"spare25",
+            "Name":"Spare",
             "BitLength":4,
             "BitOffset":418,
             "BitStart":2,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "FieldType":"SPARE"
           },
           {
             "Order":26,
@@ -19888,6 +19823,7 @@
         "PGN":129041,
         "Id":"aisAidsToNavigationAtonReport",
         "Description":"AIS Aids to Navigation (AtoN) Report",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":23,
@@ -20145,7 +20081,7 @@
           },
           {
             "Order":19,
-            "Id":"reserved",
+            "Id":"reserved19",
             "Name":"Reserved",
             "BitLength":3,
             "BitOffset":189,
@@ -20180,7 +20116,7 @@
           },
           {
             "Order":22,
-            "Id":"reserved",
+            "Id":"reserved22",
             "Name":"Reserved",
             "BitLength":3,
             "BitOffset":205,
@@ -20340,7 +20276,10 @@
             "BitLength":32,
             "BitOffset":96,
             "BitStart":0,
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -20351,7 +20290,10 @@
             "BitLength":32,
             "BitOffset":128,
             "BitStart":0,
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -20362,7 +20304,10 @@
             "BitLength":32,
             "BitOffset":160,
             "BitStart":0,
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -20373,7 +20318,10 @@
             "BitOffset":192,
             "BitStart":0,
             "Unit":"ppm",
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -20400,7 +20348,10 @@
             "BitLength":32,
             "BitOffset":256,
             "BitStart":0,
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -20493,7 +20444,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":16,
             "BitOffset":48,
@@ -20839,7 +20790,7 @@
           },
           {
             "Order":9,
-            "Id":"reserved",
+            "Id":"reserved9",
             "Name":"Reserved",
             "BitLength":8,
             "Resolution":1,
@@ -21609,7 +21560,7 @@
           },
           {
             "Order":11,
-            "Id":"reserved",
+            "Id":"reserved11",
             "Name":"Reserved",
             "BitLength":4,
             "BitOffset":116,
@@ -22715,18 +22666,21 @@
         "PGN":129556,
         "Id":"glonassAlmanacData",
         "Description":"GLONASS Almanac Data",
+        "Explanation":"Almanac data for GLONASS products. The alamant contains satellite vehicle course orbital parameters. These parameters are described in the GLONASS ICS Section 4.5 Table 4.3. See URL.",
+        "URL":"https://www.unavco.org/help/glossary/docs/ICD_GLONASS_5.1_%282008%29_en.pdf",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData"
         ],
-        "FieldCount":13,
-        "Length":13,
+        "FieldCount":14,
+        "Length":26,
         "TransmissionIrregular":true,
         "Fields":[
           {
             "Order":1,
             "Id":"prn",
             "Name":"PRN",
+            "Description":"Satellite ID number",
             "BitLength":8,
             "BitOffset":0,
             "BitStart":0,
@@ -22740,71 +22694,73 @@
             "Order":2,
             "Id":"na",
             "Name":"NA",
-            "BitLength":8,
+            "Description":"Calendar day count within the four year period beginning with the previous leap year",
+            "BitLength":16,
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":65533,
             "FieldType":"NUMBER"
           },
           {
             "Order":3,
-            "Id":"cna",
-            "Name":"CnA",
-            "BitLength":8,
-            "BitOffset":16,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":4,
-            "Id":"hna",
-            "Name":"HnA",
-            "BitLength":8,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
             "BitOffset":24,
             "BitStart":0,
             "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":4,
+            "Id":"cna",
+            "Name":"CnA",
+            "Description":"Generalized health of the satellite",
+            "BitLength":1,
+            "BitOffset":26,
+            "BitStart":2,
+            "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":1,
             "FieldType":"NUMBER"
           },
           {
             "Order":5,
+            "Id":"hna",
+            "Name":"HnA",
+            "Description":"Carrier frequency number",
+            "BitLength":5,
+            "BitOffset":27,
+            "BitStart":3,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":29,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
             "Id":"EpsilonNa",
             "Name":"(epsilon)nA",
-            "BitLength":8,
+            "Description":"Eccentricity",
+            "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":6,
-            "Id":"DeltatnaDot",
-            "Name":"(deltaTnA)DOT",
-            "BitLength":8,
-            "BitOffset":40,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":65533,
             "FieldType":"NUMBER"
           },
           {
             "Order":7,
-            "Id":"OmegaNa",
-            "Name":"(omega)nA",
+            "Id":"DeltatnaDot",
+            "Name":"(deltaTnA)DOT",
+            "Description":"Rate of change of the draconitic circling time",
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
@@ -22816,80 +22772,100 @@
           },
           {
             "Order":8,
-            "Id":"DeltaTna",
-            "Name":"(delta)TnA",
-            "BitLength":8,
+            "Id":"OmegaNa",
+            "Name":"(omega)nA",
+            "Description":"Rate of change of the draconitic circling time",
+            "BitLength":16,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":65533,
             "FieldType":"NUMBER"
           },
           {
             "Order":9,
-            "Id":"tna",
-            "Name":"tnA",
-            "BitLength":8,
-            "BitOffset":64,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":10,
-            "Id":"LambdaNa",
-            "Name":"(lambda)nA",
-            "BitLength":8,
+            "Id":"DeltaTna",
+            "Name":"(delta)TnA",
+            "Description":"Correction to the average value of the draconitic circling time",
+            "BitLength":24,
             "BitOffset":72,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":16777213,
             "FieldType":"NUMBER"
           },
           {
-            "Order":11,
-            "Id":"DeltaIna",
-            "Name":"(delta)inA",
-            "BitLength":8,
-            "BitOffset":80,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":12,
-            "Id":"tca",
-            "Name":"tcA",
-            "BitLength":8,
-            "BitOffset":88,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":13,
+            "Order":10,
             "Id":"tna",
             "Name":"tnA",
-            "BitLength":8,
+            "Description":"Time of the ascension node",
+            "BitLength":24,
             "BitOffset":96,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":16777213,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":11,
+            "Id":"LambdaNa",
+            "Name":"(lambda)nA",
+            "Description":"Greenwich longitude of the ascension node",
+            "BitLength":24,
+            "BitOffset":120,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":16777213,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":12,
+            "Id":"DeltaIna",
+            "Name":"(delta)inA",
+            "Description":"Correction to the average value of the inclination angle",
+            "BitLength":24,
+            "BitOffset":144,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":16777213,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":13,
+            "Id":"TauCa",
+            "Name":"(tau)cA",
+            "Description":"System time scale correction",
+            "BitLength":28,
+            "BitOffset":168,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":268435453,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":14,
+            "Id":"TauNa",
+            "Name":"(tau)nA",
+            "Description":"Course value of the time scale shift",
+            "BitLength":12,
+            "BitOffset":196,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4093,
             "FieldType":"NUMBER"
           }
         ]
@@ -22898,6 +22874,7 @@
         "PGN":129792,
         "Id":"aisDgnssBroadcastBinaryMessage",
         "Description":"AIS DGNSS Broadcast Binary Message",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData"
@@ -22968,7 +22945,7 @@
           },
           {
             "Order":6,
-            "Id":"spare",
+            "Id":"spare6",
             "Name":"Spare",
             "BitLength":2,
             "BitOffset":46,
@@ -23008,7 +22985,7 @@
           },
           {
             "Order":9,
-            "Id":"reserved",
+            "Id":"reserved9",
             "Name":"Reserved",
             "BitLength":3,
             "BitOffset":112,
@@ -23018,7 +22995,7 @@
           },
           {
             "Order":10,
-            "Id":"spare",
+            "Id":"spare10",
             "Name":"Spare",
             "BitLength":5,
             "BitOffset":115,
@@ -23053,6 +23030,7 @@
         "PGN":129793,
         "Id":"aisUtcAndDateReport",
         "Description":"AIS UTC and Date Report",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
@@ -23220,7 +23198,7 @@
           },
           {
             "Order":13,
-            "Id":"reserved",
+            "Id":"reserved13",
             "Name":"Reserved",
             "BitLength":4,
             "BitOffset":184,
@@ -23244,13 +23222,13 @@
           },
           {
             "Order":15,
-            "Id":"spare",
+            "Id":"spare15",
             "Name":"Spare",
             "BitLength":8,
             "BitOffset":192,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "FieldType":"SPARE"
           }
         ]
       },
@@ -23258,6 +23236,7 @@
         "PGN":129794,
         "Id":"aisClassAStaticAndVoyageRelatedData",
         "Description":"AIS Class A Static and Voyage Related Data",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":20,
@@ -23529,6 +23508,7 @@
         "PGN":129795,
         "Id":"aisAddressedBinaryMessage",
         "Description":"AIS Addressed Binary Message",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":12,
@@ -23621,7 +23601,7 @@
           },
           {
             "Order":8,
-            "Id":"reserved",
+            "Id":"reserved8",
             "Name":"Reserved",
             "BitLength":6,
             "BitOffset":80,
@@ -23644,7 +23624,7 @@
           },
           {
             "Order":10,
-            "Id":"reserved",
+            "Id":"reserved10",
             "Name":"Reserved",
             "BitLength":1,
             "BitOffset":87,
@@ -23681,6 +23661,7 @@
         "PGN":129796,
         "Id":"aisAcknowledge",
         "Description":"AIS Acknowledge",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":10,
@@ -23750,7 +23731,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":46,
@@ -23784,7 +23765,7 @@
           },
           {
             "Order":9,
-            "Id":"reserved",
+            "Id":"reserved9",
             "Name":"Reserved",
             "BitLength":6,
             "BitOffset":82,
@@ -23809,6 +23790,7 @@
         "PGN":129797,
         "Id":"aisBinaryBroadcastMessage",
         "Description":"AIS Binary Broadcast Message",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":8,
@@ -23884,7 +23866,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":46,
@@ -23921,6 +23903,7 @@
         "PGN":129798,
         "Id":"aisSarAircraftPositionReport",
         "Description":"AIS SAR Aircraft Position Report",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData"
@@ -24244,6 +24227,7 @@
         "PGN":129800,
         "Id":"aisUtcDateInquiry",
         "Description":"AIS UTC/Date Inquiry",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
@@ -24437,7 +24421,7 @@
           },
           {
             "Order":9,
-            "Id":"reserved",
+            "Id":"reserved9",
             "Name":"Reserved",
             "BitLength":7,
             "BitOffset":81,
@@ -24545,6 +24529,7 @@
         "PGN":129803,
         "Id":"aisInterrogation",
         "Description":"AIS Interrogation",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
@@ -24618,7 +24603,7 @@
           },
           {
             "Order":6,
-            "Id":"spare",
+            "Id":"spare6",
             "Name":"Spare",
             "BitLength":2,
             "BitOffset":46,
@@ -24638,7 +24623,7 @@
           },
           {
             "Order":8,
-            "Id":"reserved",
+            "Id":"reserved8",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":80,
@@ -24678,6 +24663,7 @@
         "PGN":129804,
         "Id":"aisAssignmentModeCommand",
         "Description":"AIS Assignment Mode Command",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData"
@@ -24825,6 +24811,7 @@
         "PGN":129805,
         "Id":"aisDataLinkManagementMessage",
         "Description":"AIS Data Link Management Message",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
@@ -24954,6 +24941,7 @@
         "PGN":129806,
         "Id":"aisChannelManagement",
         "Description":"AIS Channel Management",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
@@ -25051,7 +25039,7 @@
           },
           {
             "Order":8,
-            "Id":"reserved",
+            "Id":"reserved8",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":62,
@@ -25148,7 +25136,7 @@
           },
           {
             "Order":15,
-            "Id":"reserved",
+            "Id":"reserved15",
             "Name":"Reserved",
             "BitLength":6,
             "BitOffset":208,
@@ -25197,7 +25185,7 @@
           },
           {
             "Order":19,
-            "Id":"reserved",
+            "Id":"reserved19",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":230,
@@ -25224,6 +25212,7 @@
         "PGN":129807,
         "Id":"aisClassBGroupAssignment",
         "Description":"AIS Class B Group Assignment",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
@@ -25295,7 +25284,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":46,
@@ -25379,7 +25368,7 @@
           },
           {
             "Order":12,
-            "Id":"reserved",
+            "Id":"reserved12",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":180,
@@ -25402,7 +25391,7 @@
           },
           {
             "Order":14,
-            "Id":"spare",
+            "Id":"spare14",
             "Name":"Spare",
             "BitLength":22,
             "BitOffset":190,
@@ -25412,7 +25401,7 @@
           },
           {
             "Order":15,
-            "Id":"reserved",
+            "Id":"reserved15",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":212,
@@ -25968,6 +25957,7 @@
         "PGN":129809,
         "Id":"aisClassBStaticDataMsg24PartA",
         "Description":"AIS Class B static data (msg 24 Part A)",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":7,
@@ -26063,6 +26053,7 @@
         "PGN":129810,
         "Id":"aisClassBStaticDataMsg24PartB",
         "Description":"AIS Class B static data (msg 24 Part B)",
+        "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":16,
@@ -26220,7 +26211,7 @@
           },
           {
             "Order":13,
-            "Id":"spare",
+            "Id":"spare13",
             "Name":"Spare",
             "BitLength":6,
             "BitOffset":258,
@@ -26244,7 +26235,7 @@
           },
           {
             "Order":15,
-            "Id":"reserved",
+            "Id":"reserved15",
             "Name":"Reserved",
             "BitLength":3,
             "BitOffset":269,
@@ -27649,8 +27640,9 @@
       },
       {
         "PGN":130310,
-        "Id":"environmentalParameters",
-        "Description":"Environmental Parameters",
+        "Id":"environmentalParametersObsolete",
+        "Description":"Environmental Parameters (obsolete)",
+        "Explanation":"This PGN was succeeded by PGN 130310, but it should no longer be generated and separate PGNs in range 130312..130315 should be used",
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -27731,6 +27723,7 @@
         "PGN":130311,
         "Id":"environmentalParameters",
         "Description":"Environmental Parameters",
+        "Explanation":"This PGN was introduced as a better version of PGN 130310, but it should no longer be generated and separate PGNs in range 130312..130315 should be used",
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
@@ -28456,7 +28449,10 @@
             "BitOffset":120,
             "BitStart":0,
             "Unit":"ppt",
+            "Resolution":1,
             "Signed":true,
+            "RangeMin":-3.402823466385289e+38,
+            "RangeMax":3.402823466385289e+38,
             "FieldType":"FLOAT"
           },
           {
@@ -28797,7 +28793,7 @@
           },
           {
             "Order":10,
-            "Id":"reserved",
+            "Id":"reserved10",
             "Name":"Reserved",
             "BitLength":5,
             "BitOffset":155,
@@ -29004,7 +29000,7 @@
           },
           {
             "Order":10,
-            "Id":"reserved",
+            "Id":"reserved10",
             "Name":"Reserved",
             "BitLength":5,
             "BitOffset":155,
@@ -29908,22 +29904,22 @@
           },
           {
             "Order":15,
-            "Id":"artist",
-            "Name":"Artist",
+            "Id":"artistName",
+            "Name":"Artist Name",
             "BitLengthVariable":true,
             "FieldType":"STRING_LAU"
           },
           {
             "Order":16,
-            "Id":"album",
-            "Name":"Album",
+            "Id":"albumName",
+            "Name":"Album Name",
             "BitLengthVariable":true,
             "FieldType":"STRING_LAU"
           },
           {
             "Order":17,
-            "Id":"station",
-            "Name":"Station",
+            "Id":"stationName",
+            "Name":"Station Name",
             "BitLengthVariable":true,
             "FieldType":"STRING_LAU"
           }
@@ -31591,7 +31587,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -31711,7 +31707,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -31805,7 +31801,7 @@
           },
           {
             "Order":11,
-            "Id":"reserved",
+            "Id":"reserved11",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":86,
@@ -31879,7 +31875,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -31986,7 +31982,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -32094,7 +32090,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -32223,7 +32219,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -32331,7 +32327,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -32451,7 +32447,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -32545,7 +32541,7 @@
           },
           {
             "Order":11,
-            "Id":"reserved",
+            "Id":"reserved11",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":86,
@@ -32619,7 +32615,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -32796,7 +32792,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -32912,7 +32908,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -33028,7 +33024,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -33144,7 +33140,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -33299,7 +33295,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -33406,7 +33402,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -33526,7 +33522,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -33646,7 +33642,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -33740,7 +33736,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -33849,7 +33845,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -33969,7 +33965,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -34555,7 +34551,7 @@
           },
           {
             "Order":4,
-            "Id":"reserved",
+            "Id":"reserved4",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":16,
@@ -34578,7 +34574,7 @@
           },
           {
             "Order":6,
-            "Id":"reserved",
+            "Id":"reserved6",
             "Name":"Reserved",
             "BitLength":24,
             "BitOffset":32,
@@ -34590,8 +34586,8 @@
       },
       {
         "PGN":130820,
-        "Id":"furunoUnknown",
-        "Description":"Furuno: Unknown",
+        "Id":"furunoUnknown130820",
+        "Description":"Furuno: Unknown 130820",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -37535,8 +37531,8 @@
       },
       {
         "PGN":130821,
-        "Id":"furunoUnknown",
-        "Description":"Furuno: Unknown",
+        "Id":"furunoUnknown130821",
+        "Description":"Furuno: Unknown 130821",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -38802,7 +38798,7 @@
           },
           {
             "Order":12,
-            "Id":"reserved",
+            "Id":"reserved12",
             "Name":"Reserved",
             "BitLength":16,
             "BitOffset":106,
@@ -39034,7 +39030,7 @@
           },
           {
             "Order":12,
-            "Id":"reserved",
+            "Id":"reserved12",
             "Name":"Reserved",
             "BitLength":6,
             "BitOffset":178,
@@ -39732,7 +39728,7 @@
           },
           {
             "Order":17,
-            "Id":"spare",
+            "Id":"spare17",
             "Name":"Spare",
             "BitLength":6,
             "BitOffset":288,
@@ -39742,7 +39738,7 @@
           },
           {
             "Order":18,
-            "Id":"reserved",
+            "Id":"reserved18",
             "Name":"Reserved",
             "BitLength":2,
             "BitOffset":294,
@@ -41831,7 +41827,7 @@
           },
           {
             "Order":5,
-            "Id":"reserved",
+            "Id":"reserved5",
             "Name":"Reserved",
             "BitLength":7,
             "BitOffset":17,

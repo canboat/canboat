@@ -39,6 +39,7 @@ compile: bin
 
 tests:  compile
 	$(MAKE) -C analyzer tests
+	$(MAKE) -C n2kd tests
 
 generated: tests
 	$(MAKE) -C analyzer generated

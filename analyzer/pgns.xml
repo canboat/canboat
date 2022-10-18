@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.3.0
+CANboat version v4.5.1
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.3.0</Version>
+  <Version>4.5.1</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -852,7 +852,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved</Id>
+          <Id>reserved10</Id>
           <Name>Reserved</Name>
           <BitLength>1</BitLength>
           <BitOffset>63</BitOffset>
@@ -974,8 +974,8 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>61184</PGN>
-      <Id>seatalkWirelessKeypadLightControl</Id>
-      <Description>Seatalk: Wireless Keypad Light Control</Description>
+      <Id>seatalkWirelessKeypadControl</Id>
+      <Description>Seatalk: Wireless Keypad Control</Description>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -1493,8 +1493,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -1654,8 +1657,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -1743,8 +1749,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -1812,8 +1821,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -1901,8 +1913,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -1970,8 +1985,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -2101,8 +2119,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -2170,8 +2191,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -2259,8 +2283,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -2328,8 +2355,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -2417,8 +2447,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -2486,8 +2519,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -2575,8 +2611,11 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -2644,8 +2683,11 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3051,7 +3093,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved</Id>
+          <Id>reserved10</Id>
           <Name>Reserved</Name>
           <BitLength>1</BitLength>
           <BitOffset>63</BitOffset>
@@ -3143,7 +3185,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>reserved</Id>
+          <Id>reserved5</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -3245,7 +3287,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -3695,7 +3737,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>22</BitOffset>
@@ -4336,7 +4378,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>24</BitLength>
           <BitOffset>40</BitOffset>
@@ -4427,125 +4469,13 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>24</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>65325</PGN>
-      <Id>simnetReprogramStatus</Id>
-      <Description>Simnet: Reprogram Status</Description>
-      <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>2</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Simrad</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>1857</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>65341</PGN>
-      <Id>simnetAutopilotMode</Id>
-      <Description>Simnet: Autopilot Mode</Description>
-      <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>2</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Simrad</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>1857</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -4631,7 +4561,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -4734,7 +4664,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -4834,7 +4764,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -5041,7 +4971,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
@@ -5172,7 +5102,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved</Id>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>44</BitOffset>
@@ -5379,7 +5309,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>24</BitLength>
           <BitOffset>40</BitOffset>
@@ -5576,7 +5506,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -5681,7 +5611,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -8043,8 +7973,8 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>126720</PGN>
-      <Id>fusionMute</Id>
-      <Description>Fusion: Mute</Description>
+      <Id>fusionSetMute</Id>
+      <Description>Fusion: Set Mute</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -8610,7 +8540,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -9311,7 +9241,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>22</BitLength>
           <BitOffset>26</BitOffset>
@@ -9400,7 +9330,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -9601,7 +9531,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>26</BitOffset>
@@ -9705,7 +9635,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
@@ -9809,7 +9739,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
@@ -9927,7 +9857,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
@@ -10031,7 +9961,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
@@ -10151,7 +10081,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>22</BitLength>
           <BitOffset>26</BitOffset>
@@ -11504,7 +11434,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>5</BitLength>
           <BitOffset>83</BitOffset>
@@ -11584,7 +11514,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>13</Order>
-          <Id>reserved</Id>
+          <Id>reserved13</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>202</BitOffset>
@@ -11647,7 +11577,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>18</Order>
-          <Id>reserved</Id>
+          <Id>reserved18</Id>
           <Name>Reserved</Name>
           <BitLength>5</BitLength>
           <BitOffset>275</BitOffset>
@@ -12014,7 +11944,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -12747,7 +12677,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved</Id>
+          <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -17015,7 +16945,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>14</Order>
-          <Id>reserved</Id>
+          <Id>reserved14</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>52</BitOffset>
@@ -17406,7 +17336,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -18157,6 +18087,8 @@ limitations under the License.
             <EnumPair Value='8' Name='Under way sailing' />
             <EnumPair Value='9' Name='Hazardous material - High Speed' />
             <EnumPair Value='10' Name='Hazardous material - Wing in Ground' />
+            <EnumPair Value='11' Name='Power-driven vessl towing astern' />
+            <EnumPair Value='12' Name='Power-driven vessl pushing ahead or towing alongside' />
             <EnumPair Value='14' Name='AIS-SART' />
           </EnumValues>
         </Field>
@@ -18191,7 +18123,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>18</Order>
-          <Id>spare</Id>
+          <Id>spare18</Id>
           <Name>Spare</Name>
           <BitLength>3</BitLength>
           <BitOffset>208</BitOffset>
@@ -18201,7 +18133,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>19</Order>
-          <Id>reserved</Id>
+          <Id>reserved19</Id>
           <Name>Reserved</Name>
           <BitLength>5</BitLength>
           <BitOffset>211</BitOffset>
@@ -18435,24 +18367,18 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>regionalApplication</Id>
-          <Name>Regional Application</Name>
+          <Id>regionalApplicationB</Id>
+          <Name>Regional Application B</Name>
           <BitLength>2</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
         </Field>
         <Field>
           <Order>16</Order>
@@ -18740,24 +18666,18 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>regionalApplication</Id>
-          <Name>Regional Application</Name>
+          <Id>regionalApplicationB</Id>
+          <Name>Regional Application B</Name>
           <BitLength>4</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
         </Field>
         <Field>
           <Order>13</Order>
@@ -18784,7 +18704,11 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
-            <EnumPair Value='29' Name='Wing In Ground (no other information)' />
+            <EnumPair Value='21' Name='Wing In Ground (hazard cat X)' />
+            <EnumPair Value='22' Name='Wing In Ground (hazard cat Y)' />
+            <EnumPair Value='23' Name='Wing In Ground (hazard cat Z)' />
+            <EnumPair Value='24' Name='Wing In Ground (hazard cat OS)' />
+            <EnumPair Value='29' Name='Wing In Ground (no additional information)' />
             <EnumPair Value='30' Name='Fishing' />
             <EnumPair Value='31' Name='Towing' />
             <EnumPair Value='32' Name='Towing exceeds 200m or wider than 25m' />
@@ -18794,10 +18718,10 @@ limitations under the License.
             <EnumPair Value='36' Name='Sailing' />
             <EnumPair Value='37' Name='Pleasure' />
             <EnumPair Value='40' Name='High speed craft' />
-            <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
-            <EnumPair Value='42' Name='High speed craft hazard cat B' />
-            <EnumPair Value='43' Name='High speed craft hazard cat C' />
-            <EnumPair Value='44' Name='High speed craft hazard cat D' />
+            <EnumPair Value='41' Name='High speed craft (hazard cat X)' />
+            <EnumPair Value='42' Name='High speed craft (hazard cat Y)' />
+            <EnumPair Value='43' Name='High speed craft (hazard cat Z)' />
+            <EnumPair Value='44' Name='High speed craft (hazard cat OS)' />
             <EnumPair Value='49' Name='High speed craft (no additional information)' />
             <EnumPair Value='50' Name='Pilot vessel' />
             <EnumPair Value='51' Name='SAR' />
@@ -18808,26 +18732,30 @@ limitations under the License.
             <EnumPair Value='56' Name='Spare' />
             <EnumPair Value='57' Name='Spare #2' />
             <EnumPair Value='58' Name='Medical' />
-            <EnumPair Value='59' Name='RR Resolution No.18' />
+            <EnumPair Value='59' Name='Ships and aircraft of States not parties to an armed conflict' />
             <EnumPair Value='60' Name='Passenger ship' />
+            <EnumPair Value='61' Name='Passenger ship (hazard cat X)' />
+            <EnumPair Value='62' Name='Passenger ship (hazard cat Y)' />
+            <EnumPair Value='63' Name='Passenger ship (hazard cat Z)' />
+            <EnumPair Value='64' Name='Passenger ship (hazard cat OS)' />
             <EnumPair Value='69' Name='Passenger ship (no additional information)' />
             <EnumPair Value='70' Name='Cargo ship' />
-            <EnumPair Value='71' Name='Cargo ship carrying dangerous goods' />
-            <EnumPair Value='72' Name='Cargo ship hazard cat B' />
-            <EnumPair Value='73' Name='Cargo ship hazard cat C' />
-            <EnumPair Value='74' Name='Cargo ship hazard cat D' />
+            <EnumPair Value='71' Name='Cargo ship (hazard cat X)' />
+            <EnumPair Value='72' Name='Cargo ship (hazard cat Y)' />
+            <EnumPair Value='73' Name='Cargo ship (hazard cat Z)' />
+            <EnumPair Value='74' Name='Cargo ship (hazard cat OS)' />
             <EnumPair Value='79' Name='Cargo ship (no additional information)' />
             <EnumPair Value='80' Name='Tanker' />
-            <EnumPair Value='81' Name='Tanker carrying dangerous goods' />
-            <EnumPair Value='82' Name='Tanker hazard cat B' />
-            <EnumPair Value='83' Name='Tanker hazard cat C' />
-            <EnumPair Value='84' Name='Tanker hazard cat D' />
+            <EnumPair Value='81' Name='Tanker (hazard cat X)' />
+            <EnumPair Value='82' Name='Tanker (hazard cat Y)' />
+            <EnumPair Value='83' Name='Tanker (hazard cat Z)' />
+            <EnumPair Value='84' Name='Tanker (hazard cat OS)' />
             <EnumPair Value='89' Name='Tanker (no additional information)' />
             <EnumPair Value='90' Name='Other' />
-            <EnumPair Value='91' Name='Other carrying dangerous goods' />
-            <EnumPair Value='92' Name='Other hazard cat B' />
-            <EnumPair Value='93' Name='Other hazard cat C' />
-            <EnumPair Value='94' Name='Other hazard cat D' />
+            <EnumPair Value='91' Name='Other (hazard cat X)' />
+            <EnumPair Value='92' Name='Other (hazard cat Y)' />
+            <EnumPair Value='93' Name='Other (hazard cat Z)' />
+            <EnumPair Value='94' Name='Other (hazard cat OS)' />
             <EnumPair Value='99' Name='Other (no additional information)' />
           </EnumValues>
         </Field>
@@ -18846,7 +18774,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>16</Order>
-          <Id>reserved</Id>
+          <Id>reserved16</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>184</BitOffset>
@@ -18977,8 +18905,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>25</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
+          <Id>spare25</Id>
+          <Name>Spare</Name>
           <BitLength>4</BitLength>
           <BitOffset>418</BitOffset>
           <BitStart>2</BitStart>
@@ -19326,7 +19254,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>19</Order>
-          <Id>reserved</Id>
+          <Id>reserved19</Id>
           <Name>Reserved</Name>
           <BitLength>3</BitLength>
           <BitOffset>189</BitOffset>
@@ -19369,7 +19297,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>22</Order>
-          <Id>reserved</Id>
+          <Id>reserved22</Id>
           <Name>Reserved</Name>
           <BitLength>3</BitLength>
           <BitOffset>205</BitOffset>
@@ -19518,7 +19446,10 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
@@ -19528,7 +19459,10 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
@@ -19538,7 +19472,10 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
@@ -19548,7 +19485,10 @@ limitations under the License.
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
           <Units>ppm</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
@@ -19572,7 +19512,10 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>256</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>10</Order>
@@ -19670,7 +19613,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
@@ -20019,7 +19962,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved</Id>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
@@ -20818,7 +20761,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>11</Order>
-          <Id>reserved</Id>
+          <Id>reserved11</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>116</BitOffset>
@@ -21936,12 +21879,13 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>13</Length>
+      <Length>26</Length>
       <Fields>
         <Field>
           <Order>1</Order>
           <Id>prn</Id>
           <Name>PRN</Name>
+          <Description>Satellite ID number</Description>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -21955,71 +21899,73 @@ limitations under the License.
           <Order>2</Order>
           <Id>na</Id>
           <Name>NA</Name>
-          <BitLength>8</BitLength>
+          <Description>Calendar day count within the four year period beginning with the previous leap year</Description>
+          <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
-          <Id>cna</Id>
-          <Name>CnA</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>hna</Id>
-          <Name>HnA</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
+          <Id>cna</Id>
+          <Name>CnA</Name>
+          <Description>Generalized health of the satellite</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>26</BitOffset>
+          <BitStart>2</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>1</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
+          <Id>hna</Id>
+          <Name>HnA</Name>
+          <Description>Carrier frequency number</Description>
+          <BitLength>5</BitLength>
+          <BitOffset>27</BitOffset>
+          <BitStart>3</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>29</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
           <Id>EpsilonNa</Id>
           <Name>(epsilon)nA</Name>
-          <BitLength>8</BitLength>
+          <Description>Eccentricity</Description>
+          <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>DeltatnaDot</Id>
-          <Name>(deltaTnA)DOT</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>OmegaNa</Id>
-          <Name>(omega)nA</Name>
+          <Id>DeltatnaDot</Id>
+          <Name>(deltaTnA)DOT</Name>
+          <Description>Rate of change of the draconitic circling time</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -22031,81 +21977,101 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>DeltaTna</Id>
-          <Name>(delta)TnA</Name>
-          <BitLength>8</BitLength>
+          <Id>OmegaNa</Id>
+          <Name>(omega)nA</Name>
+          <Description>Rate of change of the draconitic circling time</Description>
+          <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>tna</Id>
-          <Name>tnA</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>10</Order>
-          <Id>LambdaNa</Id>
-          <Name>(lambda)nA</Name>
-          <BitLength>8</BitLength>
+          <Id>DeltaTna</Id>
+          <Name>(delta)TnA</Name>
+          <Description>Correction to the average value of the draconitic circling time</Description>
+          <BitLength>24</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>16777213</RangeMax>
         </Field>
         <Field>
-          <Order>11</Order>
-          <Id>DeltaIna</Id>
-          <Name>(delta)inA</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>tca</Id>
-          <Name>tcA</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>13</Order>
+          <Order>10</Order>
           <Id>tna</Id>
           <Name>tnA</Name>
-          <BitLength>8</BitLength>
+          <Description>Time of the ascension node</Description>
+          <BitLength>24</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>16777213</RangeMax>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>LambdaNa</Id>
+          <Name>(lambda)nA</Name>
+          <Description>Greenwich longitude of the ascension node</Description>
+          <BitLength>24</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>16777213</RangeMax>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>DeltaIna</Id>
+          <Name>(delta)inA</Name>
+          <Description>Correction to the average value of the inclination angle</Description>
+          <BitLength>24</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>16777213</RangeMax>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>TauCa</Id>
+          <Name>(tau)cA</Name>
+          <Description>System time scale correction</Description>
+          <BitLength>28</BitLength>
+          <BitOffset>168</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>268435453</RangeMax>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>TauNa</Id>
+          <Name>(tau)nA</Name>
+          <Description>Course value of the time scale shift</Description>
+          <BitLength>12</BitLength>
+          <BitOffset>196</BitOffset>
+          <BitStart>4</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4093</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -22192,7 +22158,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>spare</Id>
+          <Id>spare6</Id>
           <Name>Spare</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
@@ -22230,7 +22196,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved</Id>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>3</BitLength>
           <BitOffset>112</BitOffset>
@@ -22240,7 +22206,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>spare</Id>
+          <Id>spare10</Id>
           <Name>Spare</Name>
           <BitLength>5</BitLength>
           <BitOffset>115</BitOffset>
@@ -22458,7 +22424,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>13</Order>
-          <Id>reserved</Id>
+          <Id>reserved13</Id>
           <Name>Reserved</Name>
           <BitLength>4</BitLength>
           <BitOffset>184</BitOffset>
@@ -22493,12 +22459,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>spare</Id>
+          <Id>spare15</Id>
           <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Binary data</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -22602,7 +22567,11 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
-            <EnumPair Value='29' Name='Wing In Ground (no other information)' />
+            <EnumPair Value='21' Name='Wing In Ground (hazard cat X)' />
+            <EnumPair Value='22' Name='Wing In Ground (hazard cat Y)' />
+            <EnumPair Value='23' Name='Wing In Ground (hazard cat Z)' />
+            <EnumPair Value='24' Name='Wing In Ground (hazard cat OS)' />
+            <EnumPair Value='29' Name='Wing In Ground (no additional information)' />
             <EnumPair Value='30' Name='Fishing' />
             <EnumPair Value='31' Name='Towing' />
             <EnumPair Value='32' Name='Towing exceeds 200m or wider than 25m' />
@@ -22612,10 +22581,10 @@ limitations under the License.
             <EnumPair Value='36' Name='Sailing' />
             <EnumPair Value='37' Name='Pleasure' />
             <EnumPair Value='40' Name='High speed craft' />
-            <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
-            <EnumPair Value='42' Name='High speed craft hazard cat B' />
-            <EnumPair Value='43' Name='High speed craft hazard cat C' />
-            <EnumPair Value='44' Name='High speed craft hazard cat D' />
+            <EnumPair Value='41' Name='High speed craft (hazard cat X)' />
+            <EnumPair Value='42' Name='High speed craft (hazard cat Y)' />
+            <EnumPair Value='43' Name='High speed craft (hazard cat Z)' />
+            <EnumPair Value='44' Name='High speed craft (hazard cat OS)' />
             <EnumPair Value='49' Name='High speed craft (no additional information)' />
             <EnumPair Value='50' Name='Pilot vessel' />
             <EnumPair Value='51' Name='SAR' />
@@ -22626,26 +22595,30 @@ limitations under the License.
             <EnumPair Value='56' Name='Spare' />
             <EnumPair Value='57' Name='Spare #2' />
             <EnumPair Value='58' Name='Medical' />
-            <EnumPair Value='59' Name='RR Resolution No.18' />
+            <EnumPair Value='59' Name='Ships and aircraft of States not parties to an armed conflict' />
             <EnumPair Value='60' Name='Passenger ship' />
+            <EnumPair Value='61' Name='Passenger ship (hazard cat X)' />
+            <EnumPair Value='62' Name='Passenger ship (hazard cat Y)' />
+            <EnumPair Value='63' Name='Passenger ship (hazard cat Z)' />
+            <EnumPair Value='64' Name='Passenger ship (hazard cat OS)' />
             <EnumPair Value='69' Name='Passenger ship (no additional information)' />
             <EnumPair Value='70' Name='Cargo ship' />
-            <EnumPair Value='71' Name='Cargo ship carrying dangerous goods' />
-            <EnumPair Value='72' Name='Cargo ship hazard cat B' />
-            <EnumPair Value='73' Name='Cargo ship hazard cat C' />
-            <EnumPair Value='74' Name='Cargo ship hazard cat D' />
+            <EnumPair Value='71' Name='Cargo ship (hazard cat X)' />
+            <EnumPair Value='72' Name='Cargo ship (hazard cat Y)' />
+            <EnumPair Value='73' Name='Cargo ship (hazard cat Z)' />
+            <EnumPair Value='74' Name='Cargo ship (hazard cat OS)' />
             <EnumPair Value='79' Name='Cargo ship (no additional information)' />
             <EnumPair Value='80' Name='Tanker' />
-            <EnumPair Value='81' Name='Tanker carrying dangerous goods' />
-            <EnumPair Value='82' Name='Tanker hazard cat B' />
-            <EnumPair Value='83' Name='Tanker hazard cat C' />
-            <EnumPair Value='84' Name='Tanker hazard cat D' />
+            <EnumPair Value='81' Name='Tanker (hazard cat X)' />
+            <EnumPair Value='82' Name='Tanker (hazard cat Y)' />
+            <EnumPair Value='83' Name='Tanker (hazard cat Z)' />
+            <EnumPair Value='84' Name='Tanker (hazard cat OS)' />
             <EnumPair Value='89' Name='Tanker (no additional information)' />
             <EnumPair Value='90' Name='Other' />
-            <EnumPair Value='91' Name='Other carrying dangerous goods' />
-            <EnumPair Value='92' Name='Other hazard cat B' />
-            <EnumPair Value='93' Name='Other hazard cat C' />
-            <EnumPair Value='94' Name='Other hazard cat D' />
+            <EnumPair Value='91' Name='Other (hazard cat X)' />
+            <EnumPair Value='92' Name='Other (hazard cat Y)' />
+            <EnumPair Value='93' Name='Other (hazard cat Z)' />
+            <EnumPair Value='94' Name='Other (hazard cat OS)' />
             <EnumPair Value='99' Name='Other (no additional information)' />
           </EnumValues>
         </Field>
@@ -22763,6 +22736,8 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='ITU-R M.1371-1' />
             <EnumPair Value='1' Name='ITU-R M.1371-3' />
+            <EnumPair Value='2' Name='ITU-R M.1371-5' />
+            <EnumPair Value='3' Name='ITU-R M.1371 future edition' />
           </EnumValues>
         </Field>
         <Field>
@@ -22946,7 +22921,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>reserved</Id>
+          <Id>reserved8</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>80</BitOffset>
@@ -22969,7 +22944,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved</Id>
+          <Id>reserved10</Id>
           <Name>Reserved</Name>
           <BitLength>1</BitLength>
           <BitOffset>87</BitOffset>
@@ -23086,7 +23061,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
@@ -23121,7 +23096,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved</Id>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>82</BitOffset>
@@ -23232,7 +23207,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
@@ -23830,7 +23805,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved</Id>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>7</BitLength>
           <BitOffset>81</BitOffset>
@@ -24038,7 +24013,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>spare</Id>
+          <Id>spare6</Id>
           <Name>Spare</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
@@ -24058,7 +24033,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>reserved</Id>
+          <Id>reserved8</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>80</BitOffset>
@@ -24511,7 +24486,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>reserved</Id>
+          <Id>reserved8</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>62</BitOffset>
@@ -24604,7 +24579,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>reserved</Id>
+          <Id>reserved15</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>208</BitOffset>
@@ -24653,7 +24628,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>19</Order>
-          <Id>reserved</Id>
+          <Id>reserved19</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>230</BitOffset>
@@ -24761,7 +24736,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
@@ -24851,7 +24826,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>reserved</Id>
+          <Id>reserved12</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>180</BitOffset>
@@ -24874,7 +24849,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>14</Order>
-          <Id>spare</Id>
+          <Id>spare14</Id>
           <Name>Spare</Name>
           <BitLength>22</BitLength>
           <BitOffset>190</BitOffset>
@@ -24884,7 +24859,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>reserved</Id>
+          <Id>reserved15</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>212</BitOffset>
@@ -25721,7 +25696,11 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
-            <EnumPair Value='29' Name='Wing In Ground (no other information)' />
+            <EnumPair Value='21' Name='Wing In Ground (hazard cat X)' />
+            <EnumPair Value='22' Name='Wing In Ground (hazard cat Y)' />
+            <EnumPair Value='23' Name='Wing In Ground (hazard cat Z)' />
+            <EnumPair Value='24' Name='Wing In Ground (hazard cat OS)' />
+            <EnumPair Value='29' Name='Wing In Ground (no additional information)' />
             <EnumPair Value='30' Name='Fishing' />
             <EnumPair Value='31' Name='Towing' />
             <EnumPair Value='32' Name='Towing exceeds 200m or wider than 25m' />
@@ -25731,10 +25710,10 @@ limitations under the License.
             <EnumPair Value='36' Name='Sailing' />
             <EnumPair Value='37' Name='Pleasure' />
             <EnumPair Value='40' Name='High speed craft' />
-            <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
-            <EnumPair Value='42' Name='High speed craft hazard cat B' />
-            <EnumPair Value='43' Name='High speed craft hazard cat C' />
-            <EnumPair Value='44' Name='High speed craft hazard cat D' />
+            <EnumPair Value='41' Name='High speed craft (hazard cat X)' />
+            <EnumPair Value='42' Name='High speed craft (hazard cat Y)' />
+            <EnumPair Value='43' Name='High speed craft (hazard cat Z)' />
+            <EnumPair Value='44' Name='High speed craft (hazard cat OS)' />
             <EnumPair Value='49' Name='High speed craft (no additional information)' />
             <EnumPair Value='50' Name='Pilot vessel' />
             <EnumPair Value='51' Name='SAR' />
@@ -25745,26 +25724,30 @@ limitations under the License.
             <EnumPair Value='56' Name='Spare' />
             <EnumPair Value='57' Name='Spare #2' />
             <EnumPair Value='58' Name='Medical' />
-            <EnumPair Value='59' Name='RR Resolution No.18' />
+            <EnumPair Value='59' Name='Ships and aircraft of States not parties to an armed conflict' />
             <EnumPair Value='60' Name='Passenger ship' />
+            <EnumPair Value='61' Name='Passenger ship (hazard cat X)' />
+            <EnumPair Value='62' Name='Passenger ship (hazard cat Y)' />
+            <EnumPair Value='63' Name='Passenger ship (hazard cat Z)' />
+            <EnumPair Value='64' Name='Passenger ship (hazard cat OS)' />
             <EnumPair Value='69' Name='Passenger ship (no additional information)' />
             <EnumPair Value='70' Name='Cargo ship' />
-            <EnumPair Value='71' Name='Cargo ship carrying dangerous goods' />
-            <EnumPair Value='72' Name='Cargo ship hazard cat B' />
-            <EnumPair Value='73' Name='Cargo ship hazard cat C' />
-            <EnumPair Value='74' Name='Cargo ship hazard cat D' />
+            <EnumPair Value='71' Name='Cargo ship (hazard cat X)' />
+            <EnumPair Value='72' Name='Cargo ship (hazard cat Y)' />
+            <EnumPair Value='73' Name='Cargo ship (hazard cat Z)' />
+            <EnumPair Value='74' Name='Cargo ship (hazard cat OS)' />
             <EnumPair Value='79' Name='Cargo ship (no additional information)' />
             <EnumPair Value='80' Name='Tanker' />
-            <EnumPair Value='81' Name='Tanker carrying dangerous goods' />
-            <EnumPair Value='82' Name='Tanker hazard cat B' />
-            <EnumPair Value='83' Name='Tanker hazard cat C' />
-            <EnumPair Value='84' Name='Tanker hazard cat D' />
+            <EnumPair Value='81' Name='Tanker (hazard cat X)' />
+            <EnumPair Value='82' Name='Tanker (hazard cat Y)' />
+            <EnumPair Value='83' Name='Tanker (hazard cat Z)' />
+            <EnumPair Value='84' Name='Tanker (hazard cat OS)' />
             <EnumPair Value='89' Name='Tanker (no additional information)' />
             <EnumPair Value='90' Name='Other' />
-            <EnumPair Value='91' Name='Other carrying dangerous goods' />
-            <EnumPair Value='92' Name='Other hazard cat B' />
-            <EnumPair Value='93' Name='Other hazard cat C' />
-            <EnumPair Value='94' Name='Other hazard cat D' />
+            <EnumPair Value='91' Name='Other (hazard cat X)' />
+            <EnumPair Value='92' Name='Other (hazard cat Y)' />
+            <EnumPair Value='93' Name='Other (hazard cat Z)' />
+            <EnumPair Value='94' Name='Other (hazard cat OS)' />
             <EnumPair Value='99' Name='Other (no additional information)' />
           </EnumValues>
         </Field>
@@ -25862,7 +25845,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>13</Order>
-          <Id>spare</Id>
+          <Id>spare13</Id>
           <Name>Spare</Name>
           <BitLength>6</BitLength>
           <BitOffset>258</BitOffset>
@@ -25893,7 +25876,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>reserved</Id>
+          <Id>reserved15</Id>
           <Name>Reserved</Name>
           <BitLength>3</BitLength>
           <BitOffset>269</BitOffset>
@@ -27326,8 +27309,8 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130310</PGN>
-      <Id>environmentalParameters</Id>
-      <Description>Environmental Parameters</Description>
+      <Id>environmentalParametersObsolete</Id>
+      <Description>Environmental Parameters (obsolete)</Description>
       <Type>Single</Type>
       <Complete>true</Complete>
       <Length>8</Length>
@@ -28180,7 +28163,10 @@ limitations under the License.
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Units>ppt</Units>
+          <Resolution>1</Resolution>
           <Signed>true</Signed>
+          <RangeMin>-3.402823466385289e+38</RangeMin>
+          <RangeMax>3.402823466385289e+38</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
@@ -28512,7 +28498,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved</Id>
+          <Id>reserved10</Id>
           <Name>Reserved</Name>
           <BitLength>5</BitLength>
           <BitOffset>155</BitOffset>
@@ -28715,7 +28701,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved</Id>
+          <Id>reserved10</Id>
           <Name>Reserved</Name>
           <BitLength>5</BitLength>
           <BitOffset>155</BitOffset>
@@ -29763,24 +29749,24 @@ limitations under the License.
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>artist</Id>
-          <Name>Artist</Name>
+          <Id>artistName</Id>
+          <Name>Artist Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>16</Order>
-          <Id>album</Id>
-          <Name>Album</Name>
+          <Id>albumName</Id>
+          <Name>Album Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
         </Field>
         <Field>
           <Order>17</Order>
-          <Id>station</Id>
-          <Name>Station</Name>
+          <Id>stationName</Id>
+          <Name>Station Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
@@ -31778,7 +31764,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -31903,7 +31889,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32002,7 +31988,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>11</Order>
-          <Id>reserved</Id>
+          <Id>reserved11</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>86</BitOffset>
@@ -32078,7 +32064,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32189,7 +32175,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32309,7 +32295,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32443,7 +32429,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32558,7 +32544,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32682,7 +32668,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -32781,7 +32767,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>11</Order>
-          <Id>reserved</Id>
+          <Id>reserved11</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>86</BitOffset>
@@ -32857,7 +32843,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33038,7 +33024,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33159,7 +33145,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33280,7 +33266,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33401,7 +33387,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33561,7 +33547,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33672,7 +33658,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33793,7 +33779,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -33917,7 +33903,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -34015,7 +34001,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -34127,7 +34113,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -34251,7 +34237,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -34850,7 +34836,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>reserved</Id>
+          <Id>reserved4</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
@@ -34873,7 +34859,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>24</BitLength>
           <BitOffset>32</BitOffset>
@@ -34885,8 +34871,8 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>furunoUnknown</Id>
-      <Description>Furuno: Unknown</Description>
+      <Id>furunoUnknown130820</Id>
+      <Description>Furuno: Unknown 130820</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -37912,8 +37898,8 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130821</PGN>
-      <Id>furunoUnknown</Id>
-      <Description>Furuno: Unknown</Description>
+      <Id>furunoUnknown130821</Id>
+      <Description>Furuno: Unknown 130821</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -39211,7 +39197,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>reserved</Id>
+          <Id>reserved12</Id>
           <Name>Reserved</Name>
           <BitLength>16</BitLength>
           <BitOffset>106</BitOffset>
@@ -39437,7 +39423,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>reserved</Id>
+          <Id>reserved12</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
           <BitOffset>178</BitOffset>
@@ -40067,7 +40053,11 @@ limitations under the License.
           <EnumValues>
             <EnumPair Value='0' Name='Unavailable' />
             <EnumPair Value='20' Name='Wing In Ground' />
-            <EnumPair Value='29' Name='Wing In Ground (no other information)' />
+            <EnumPair Value='21' Name='Wing In Ground (hazard cat X)' />
+            <EnumPair Value='22' Name='Wing In Ground (hazard cat Y)' />
+            <EnumPair Value='23' Name='Wing In Ground (hazard cat Z)' />
+            <EnumPair Value='24' Name='Wing In Ground (hazard cat OS)' />
+            <EnumPair Value='29' Name='Wing In Ground (no additional information)' />
             <EnumPair Value='30' Name='Fishing' />
             <EnumPair Value='31' Name='Towing' />
             <EnumPair Value='32' Name='Towing exceeds 200m or wider than 25m' />
@@ -40077,10 +40067,10 @@ limitations under the License.
             <EnumPair Value='36' Name='Sailing' />
             <EnumPair Value='37' Name='Pleasure' />
             <EnumPair Value='40' Name='High speed craft' />
-            <EnumPair Value='41' Name='High speed craft carrying dangerous goods' />
-            <EnumPair Value='42' Name='High speed craft hazard cat B' />
-            <EnumPair Value='43' Name='High speed craft hazard cat C' />
-            <EnumPair Value='44' Name='High speed craft hazard cat D' />
+            <EnumPair Value='41' Name='High speed craft (hazard cat X)' />
+            <EnumPair Value='42' Name='High speed craft (hazard cat Y)' />
+            <EnumPair Value='43' Name='High speed craft (hazard cat Z)' />
+            <EnumPair Value='44' Name='High speed craft (hazard cat OS)' />
             <EnumPair Value='49' Name='High speed craft (no additional information)' />
             <EnumPair Value='50' Name='Pilot vessel' />
             <EnumPair Value='51' Name='SAR' />
@@ -40091,26 +40081,30 @@ limitations under the License.
             <EnumPair Value='56' Name='Spare' />
             <EnumPair Value='57' Name='Spare #2' />
             <EnumPair Value='58' Name='Medical' />
-            <EnumPair Value='59' Name='RR Resolution No.18' />
+            <EnumPair Value='59' Name='Ships and aircraft of States not parties to an armed conflict' />
             <EnumPair Value='60' Name='Passenger ship' />
+            <EnumPair Value='61' Name='Passenger ship (hazard cat X)' />
+            <EnumPair Value='62' Name='Passenger ship (hazard cat Y)' />
+            <EnumPair Value='63' Name='Passenger ship (hazard cat Z)' />
+            <EnumPair Value='64' Name='Passenger ship (hazard cat OS)' />
             <EnumPair Value='69' Name='Passenger ship (no additional information)' />
             <EnumPair Value='70' Name='Cargo ship' />
-            <EnumPair Value='71' Name='Cargo ship carrying dangerous goods' />
-            <EnumPair Value='72' Name='Cargo ship hazard cat B' />
-            <EnumPair Value='73' Name='Cargo ship hazard cat C' />
-            <EnumPair Value='74' Name='Cargo ship hazard cat D' />
+            <EnumPair Value='71' Name='Cargo ship (hazard cat X)' />
+            <EnumPair Value='72' Name='Cargo ship (hazard cat Y)' />
+            <EnumPair Value='73' Name='Cargo ship (hazard cat Z)' />
+            <EnumPair Value='74' Name='Cargo ship (hazard cat OS)' />
             <EnumPair Value='79' Name='Cargo ship (no additional information)' />
             <EnumPair Value='80' Name='Tanker' />
-            <EnumPair Value='81' Name='Tanker carrying dangerous goods' />
-            <EnumPair Value='82' Name='Tanker hazard cat B' />
-            <EnumPair Value='83' Name='Tanker hazard cat C' />
-            <EnumPair Value='84' Name='Tanker hazard cat D' />
+            <EnumPair Value='81' Name='Tanker (hazard cat X)' />
+            <EnumPair Value='82' Name='Tanker (hazard cat Y)' />
+            <EnumPair Value='83' Name='Tanker (hazard cat Z)' />
+            <EnumPair Value='84' Name='Tanker (hazard cat OS)' />
             <EnumPair Value='89' Name='Tanker (no additional information)' />
             <EnumPair Value='90' Name='Other' />
-            <EnumPair Value='91' Name='Other carrying dangerous goods' />
-            <EnumPair Value='92' Name='Other hazard cat B' />
-            <EnumPair Value='93' Name='Other hazard cat C' />
-            <EnumPair Value='94' Name='Other hazard cat D' />
+            <EnumPair Value='91' Name='Other (hazard cat X)' />
+            <EnumPair Value='92' Name='Other (hazard cat Y)' />
+            <EnumPair Value='93' Name='Other (hazard cat Z)' />
+            <EnumPair Value='94' Name='Other (hazard cat OS)' />
             <EnumPair Value='99' Name='Other (no additional information)' />
           </EnumValues>
         </Field>
@@ -40198,7 +40192,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>17</Order>
-          <Id>spare</Id>
+          <Id>spare17</Id>
           <Name>Spare</Name>
           <BitLength>6</BitLength>
           <BitOffset>288</BitOffset>
@@ -40208,7 +40202,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>18</Order>
-          <Id>reserved</Id>
+          <Id>reserved18</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
           <BitOffset>294</BitOffset>
@@ -42371,7 +42365,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>reserved</Id>
+          <Id>reserved5</Id>
           <Name>Reserved</Name>
           <BitLength>7</BitLength>
           <BitOffset>17</BitOffset>
