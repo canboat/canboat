@@ -19,6 +19,8 @@
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
+COMMONDIR=../common
+COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 CANDUMP2ANALYZER=$(TARGETDIR)/candump2analyzer
 TARGETS=$(CANDUMP2ANALYZER)
 LDLIBS+=-lm
@@ -27,7 +29,7 @@ CFLAGS= -Wall -O2
 
 all: $(TARGETS)
 
-$(CANDUMP2ANALYZER): candump2analyzer.c ../common/common.c ../common/common.h Makefile
+$(CANDUMP2ANALYZER): candump2analyzer.c $(COMMON) Makefile
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(CANDUMP2ANALYZER) -I../common candump2analyzer.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:

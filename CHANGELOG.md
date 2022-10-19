@@ -11,6 +11,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Fixed
 
 - Repaired `n2kd_monitor` to pass `-nv` option.
+- Improve dependencies on common files in Makefiles.
 
 ## [4.5.1]
 

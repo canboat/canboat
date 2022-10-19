@@ -20,6 +20,8 @@ PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 OS=$(shell uname)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
+COMMONDIR=../common
+COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 SOCKETCAN_WRITER=$(TARGETDIR)/socketcan-writer
 
 ifeq ($(OS),Linux)
@@ -32,7 +34,7 @@ CFLAGS= -Wall -O2
 
 all: $(TARGETS)
 
-$(SOCKETCAN_WRITER): socketcan-writer.c ../common/*.h ../common/*.c
+$(SOCKETCAN_WRITER): socketcan-writer.c $(COMMON)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(SOCKETCAN_WRITER) -I../analyzer -I../common socketcan-writer.c ../common/common.c ../common/parse.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:

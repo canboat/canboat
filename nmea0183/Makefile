@@ -19,6 +19,8 @@
 PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
+COMMONDIR=../common
+COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 TARGET1=$(TARGETDIR)/nmea0183-serial
 TARGETLIST=$(TARGET1)
 
@@ -32,5 +34,5 @@ $(TARGETDIR):
 clean:
 	-rm -f $(TARGETLIST) *.elf *.gdb
 
-$(TARGET1):	nmeareader.c ../common/common.c ../common/common.h
+$(TARGET1):	nmeareader.c $(COMMON)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(TARGET1) $(CFLAGS) -I../common nmeareader.c ../common/common.c
