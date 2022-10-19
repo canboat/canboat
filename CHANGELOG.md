@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [4.5.2]
+
+### Fixed
+
+- Repaired `n2kd_monitor` to pass `-nv` option.
+
 ## [4.5.1]
 
 ### Changed
