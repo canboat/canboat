@@ -8,21 +8,21 @@
 #
 #
 # (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
-#  
+#
 # This file is part of CANboat.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# 
+#
 
   $format_n2k_messages = null;
 
@@ -53,14 +53,14 @@
     {
       if ($format == "YDWG")
       {
-	$this->format = "YDWG";
+        $this->format = "YDWG";
       } elseif ($format == "CANBOAT")
       {
-	$this->format = "CANBOAT";
+        $this->format = "CANBOAT";
       }
       else
       {
-	die("Invalid format $format for setFormat()");
+        die("Invalid format $format for setFormat()");
       }
     }
 
@@ -136,17 +136,17 @@
 
       if ($this->format == "CANBOAT")
       {
-	$timestamp = strftime('%F-%T.000');
-	$data = preg_replace('/(..)/', ',$1', $data);
-	return $timestamp.",$prio,$pgn,$src,$dst,$len".$data."\n";
+        $timestamp = strftime('%F-%T.000');
+        $data = preg_replace('/(..)/', ',$1', $data);
+        return $timestamp.",$prio,$pgn,$src,$dst,$len".$data."\n";
       }
       // else YDWG
       if (($pgn & 0xff) == 0)
-      { 
-	$pgn = $pgn + $dst;
+      {
+        $pgn = $pgn + $dst;
       }
       $msgid = ($prio << 26) | ($pgn << 8) | ($src & 0xff);
-      
+
       $data = preg_replace('/(..)/', ' $1', $data);
       printf("%08X%s\r\n", $msgid, $data);
     }

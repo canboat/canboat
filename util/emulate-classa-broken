@@ -1,0 +1,31 @@
+#!/bin/ksh93
+
+while true
+do
+  for ((cog = 0; cog < 359; cog += 10))
+  do
+    for ((i = 1; i <= $1; i++))
+    do
+      second=$(date '+%S')
+      speed=$(($i + 100))
+      LONG=$(($i/100.0 + 5.3284383))
+      j=0
+      MMSI=$((211000000+$i * 1000 + $j))
+      IMO=$((9000000 + $i * 1000 + $j))
+      CALLSIGN="PD$(($i * 100 + $j))"
+      static_message="aisClassAStaticAndVoyageRelatedData,$MMSI,$IMO,$CALLSIGN,EMULATED $i-$j,20,40.1,10.1,5,DEN HELDER $i-$j"
+      echo "${static_message}" | php ./format-message --stdin
+      for ((j = 1; j <= $2; j++))
+      do
+        LAT=$(($j/100.0 + 53.17012))
+        heading=$cog
+        pos_rep="aisClassAPositionReport,$MMSI,$LONG,$LAT,$second,$cog,$speed,$heading"
+        echo "${pos_rep}" | php ./format-message --stdin
+#        static_message="aisClassAStaticAndVoyageRelatedData,$MMSI,$IMO,$CALLSIGN,EMULATED $i-$j,20,40.1,10.1,5,DEN HELDER $i-$j"
+        echo "${static_message}" | php ./format-message --stdin
+      done
+    done
+    date >&2
+  done
+done
+

@@ -24,13 +24,13 @@
     {
       while (!feof($fd))
       {
-	$s = fgets($fd, 8192);
+        $s = fgets($fd, 8192);
         $matches = array();
         if (preg_match('/^ *([A-Za-z0-9_]+) *= *(.+)/', $s, $matches))
         {
           if (strtolower($matches[1]) == strtolower($variable))
           {
-	    return eval('return '.$matches[2].';');
+            return eval('return '.$matches[2].';');
           }
         }
       }
@@ -41,4 +41,3 @@
 
 
 ?>
-

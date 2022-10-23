@@ -38,10 +38,30 @@
   { "args": "instance,rpm"
   , "pgn": 127488
   , "data": "pack('C', $instance) . pack('S', $rpm * 4.0) . str_repeat(pack('C', 255), 5)"
+  , "description": "Engine status"
   }
 , "engine_dynamic":
   { "args": "instance,temperature,voltage_alt,fuel_rate,hours"
   , "pgn": 127489
   , "data": "pack('C', $instance) . pack('V', -1) . pack('S', (273.15 + $temperature) * 100.0) . pack('S', $voltage_alt) .  pack('s', $fuel_rate) . pack('V', $hours) . str_repeat(pack('C', 255), 11)"
+  , "description": "Engine dynamic status"
+  }
+, "aisClassAStaticAndVoyageRelatedData":
+  { "args": "userId,imo,callsign,name,type,length,beam,draft,destination"
+  , "pgn": 129794
+  , "data": "pack('C', 5).pack('V',$userId).pack('V',$imo).pack('A7',$callsign).pack('A20',$name).pack('C',$type).pack('S',(int)($length * 10)).pack('S',(int)($beam * 10)).pack('S', 0).pack('S',0).pack('V',-1).pack('S',-1).pack('S',$draft*10).pack('A20',$destination).pack('C',0).pack('C',0)"
+  , "description": "AIS Class A Static and Voyage Related Data"
+  }
+, "aisClassAPositionReport":
+  { "args": "userId,longitude,latitude,timestamp,cog,sog,heading"
+  , "pgn":129038
+  , "data": "pack('C', 1).pack('V', $userId).pack('V', (int)($longitude * 1e7)).pack('V', (int)($latitude * 1e7)).pack('C', ($timestamp & 0x3f) << 2).pack('S', (int)($cog * 10000 * 3.14159264 / 180)).pack('S', (int)($sog * 10)).pack('S', 0).pack('C', 0).pack('S', (int)($heading * 10000 * 3.14159264 / 180)).pack('S', 0).pack('C', -1).pack('C',0).pack('C',-1)"
+  , "description": "AIS Class A position report"
+  }
+, "aisSarAircraftPositionReport":
+  { "args": "userId,longitude,latitude,timestamp,cog,sog,height"
+  , "pgn":129798
+  , "data": "pack('C', 9).pack('V', $userId).pack('V', (int)($longitude * 1e7)).pack('V', (int)($latitude * 1e7)).pack('C', ($timestamp & 0x3f) << 2).pack('S', (int)($cog * 10000 * 3.14159264 / 180)).pack('S', (int)($sog * 10)).pack('S', 0).pack('C', 0).pack('V', ((int)($height * 1e6)) & 0xffffffff).pack('V', ((int)($height * 1e6)) >> 32).pack('C', -1)"
+  , "description": "AIS SAR aircraft position report"
   }
 }
