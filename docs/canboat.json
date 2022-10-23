@@ -425,6 +425,7 @@
           {"Name":"Beyond Measure", "Value":396},
           {"Name":"Livorsi Marine", "Value":400},
           {"Name":"ComNav", "Value":404},
+          {"Name":"Chetco", "Value":409},
           {"Name":"Fusion Electronics", "Value":419},
           {"Name":"Standard Horizon", "Value":421},
           {"Name":"True Heading AB", "Value":422},
@@ -530,6 +531,39 @@
           {"Name":"Vector Cantech", "Value":1861},
           {"Name":"Yamaha Marine", "Value":1862},
           {"Name":"Faria Instruments", "Value":1863}
+        ]
+      },
+      {
+        "Name":"AIS_MESSAGE_ID",
+        "MaxValue":63,
+        "EnumValues":[
+          {"Name":"Scheduled Class A position report", "Value":1},
+          {"Name":"Assigned scheduled Class A position report", "Value":2},
+          {"Name":"Interrogated Class A position report", "Value":3},
+          {"Name":"Base station report", "Value":4},
+          {"Name":"Static and voyage related data", "Value":5},
+          {"Name":"Binary addressed message", "Value":6},
+          {"Name":"Binary acknowledgement", "Value":7},
+          {"Name":"Binary broadcast message", "Value":8},
+          {"Name":"Standard SAR aircraft position report", "Value":9},
+          {"Name":"UTC/date inquiry", "Value":10},
+          {"Name":"UTC/date response", "Value":11},
+          {"Name":"Safety related addressed message", "Value":12},
+          {"Name":"Safety related acknowledgement", "Value":13},
+          {"Name":"Satety related broadcast message", "Value":14},
+          {"Name":"Interrogation", "Value":15},
+          {"Name":"Assignment mode command", "Value":16},
+          {"Name":"DGNSS broadcast binary message", "Value":17},
+          {"Name":"Standard Class B position report", "Value":18},
+          {"Name":"Extended Class B position report", "Value":19},
+          {"Name":"Data link management message", "Value":20},
+          {"Name":"ATON report", "Value":21},
+          {"Name":"Channel management", "Value":22},
+          {"Name":"Group assignment command", "Value":23},
+          {"Name":"Static data report", "Value":24},
+          {"Name":"Single slot binary message", "Value":25},
+          {"Name":"Multiple slot binary message", "Value":26},
+          {"Name":"Position report for long range applications", "Value":27}
         ]
       },
       {
@@ -2157,6 +2191,84 @@
         ]
       },
       {
+        "Name":"SONICHUB_COMMAND",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Init #2", "Value":1},
+          {"Name":"AM Radio", "Value":4},
+          {"Name":"Zone Info", "Value":5},
+          {"Name":"Source", "Value":6},
+          {"Name":"Source List", "Value":8},
+          {"Name":"Control", "Value":9},
+          {"Name":"FM Radio", "Value":12},
+          {"Name":"Playlist", "Value":13},
+          {"Name":"Track", "Value":14},
+          {"Name":"Artist", "Value":15},
+          {"Name":"Album", "Value":16},
+          {"Name":"Menu Item", "Value":19},
+          {"Name":"Zones", "Value":20},
+          {"Name":"Max Volume", "Value":23},
+          {"Name":"Volume", "Value":24},
+          {"Name":"Init #1", "Value":25},
+          {"Name":"Position", "Value":48},
+          {"Name":"Init #3", "Value":50}
+        ]
+      },
+      {
+        "Name":"SIMRAD_COMMAND",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Text", "Value":50}
+        ]
+      },
+      {
+        "Name":"SIMRAD_TYPE",
+        "MaxValue":65535,
+        "EnumValues":[
+          {"Name":"Heading Offset", "Value":0},
+          {"Name":"Local field", "Value":768},
+          {"Name":"Field angle", "Value":1024}
+        ]
+      },
+      {
+        "Name":"SIMRAD_EVENT_COMMAND",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Alarm", "Value":1},
+          {"Name":"AP command", "Value":2}
+        ]
+      },
+      {
+        "Name":"FUSION_MESSAGE_ID",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Request Status", "Value":1},
+          {"Name":"Source", "Value":2},
+          {"Name":"Track Info", "Value":4},
+          {"Name":"Track Title", "Value":5},
+          {"Name":"Track Artist", "Value":6},
+          {"Name":"Track Progress", "Value":9},
+          {"Name":"AM/FM Station", "Value":11},
+          {"Name":"VHF", "Value":12},
+          {"Name":"Squelch", "Value":13},
+          {"Name":"Scan", "Value":14},
+          {"Name":"Menu Item", "Value":17},
+          {"Name":"Replay", "Value":20},
+          {"Name":"Mute", "Value":23},
+          {"Name":"Set Zone Volume", "Value":24},
+          {"Name":"Set All Volumes", "Value":25},
+          {"Name":"Sub Volume", "Value":26},
+          {"Name":"Tone", "Value":27},
+          {"Name":"Volume", "Value":29},
+          {"Name":"Power", "Value":32},
+          {"Name":"Unit Name", "Value":33},
+          {"Name":"SiriusXM Channel", "Value":36},
+          {"Name":"SiriusXM Title", "Value":37},
+          {"Name":"SiriusXM Artist", "Value":38},
+          {"Name":"SiriusXM Genre", "Value":40}
+        ]
+      },
+      {
         "Name":"SONICHUB_CONTROL",
         "MaxValue":255,
         "EnumValues":[
@@ -2185,6 +2297,47 @@
           {"Name":"NAK", "Value":1},
           {"Name":"Access Denied", "Value":2},
           {"Name":"Address Busy", "Value":3}
+        ]
+      },
+      {
+        "Name":"ISO_COMMAND",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"ACK", "Value":0},
+          {"Name":"RTS", "Value":16},
+          {"Name":"CTS", "Value":17},
+          {"Name":"EOM", "Value":19},
+          {"Name":"BAM", "Value":32},
+          {"Name":"Abort", "Value":255}
+        ]
+      },
+      {
+        "Name":"GROUP_FUNCTION",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Request", "Value":0},
+          {"Name":"Command", "Value":1},
+          {"Name":"Acknowledge", "Value":2},
+          {"Name":"Read Fields", "Value":3},
+          {"Name":"Read Fields Reply", "Value":4},
+          {"Name":"Write Fields", "Value":5},
+          {"Name":"Write Fields Reply", "Value":6}
+        ]
+      },
+      {
+        "Name":"AIRMAR_COMMAND",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Attitude Offsets", "Value":32},
+          {"Name":"Calibrate Compass", "Value":33},
+          {"Name":"True Wind Options", "Value":34},
+          {"Name":"Simulate Mode", "Value":35},
+          {"Name":"Calibrate Depth", "Value":40},
+          {"Name":"Calibrate Speed", "Value":41},
+          {"Name":"Calibrate Temperature", "Value":42},
+          {"Name":"Speed Filter", "Value":43},
+          {"Name":"Temperature Filter", "Value":44},
+          {"Name":"NMEA 2000 options", "Value":46}
         ]
       },
       {
@@ -2802,7 +2955,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"ISO_COMMAND"
           },
           {
             "Order":2,
@@ -2885,7 +3039,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"ISO_COMMAND"
           },
           {
             "Order":2,
@@ -2964,7 +3119,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"ISO_COMMAND"
           },
           {
             "Order":2,
@@ -3043,7 +3199,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"ISO_COMMAND"
           },
           {
             "Order":2,
@@ -3122,7 +3279,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"ISO_COMMAND"
           },
           {
             "Order":2,
@@ -3372,7 +3530,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -5819,6 +5977,7 @@
             "Order":1,
             "Id":"manufacturerCode",
             "Name":"Manufacturer Code",
+            "Description":"Chetco",
             "BitLength":11,
             "BitOffset":0,
             "BitStart":0,
@@ -7802,7 +7961,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GROUP_FUNCTION"
           },
           {
             "Order":2,
@@ -7913,7 +8073,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GROUP_FUNCTION"
           },
           {
             "Order":2,
@@ -8018,7 +8179,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GROUP_FUNCTION"
           },
           {
             "Order":2,
@@ -8123,7 +8285,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GROUP_FUNCTION"
           },
           {
             "Order":2,
@@ -8273,7 +8436,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GROUP_FUNCTION"
           },
           {
             "Order":2,
@@ -8430,7 +8594,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GROUP_FUNCTION"
           },
           {
             "Order":2,
@@ -8587,7 +8752,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GROUP_FUNCTION"
           },
           {
             "Order":2,
@@ -8821,7 +8987,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -8836,7 +9002,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":6,
@@ -8963,7 +9129,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -9073,7 +9239,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -9183,7 +9349,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -9257,7 +9424,7 @@
             "Order":4,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Set Source",
+            "Description":"Source",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -9266,7 +9433,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -9357,12 +9525,13 @@
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
-            "Match":17,
+            "Match":23,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -9446,7 +9615,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -9555,7 +9725,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -9690,7 +9861,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -9705,7 +9876,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":6,
@@ -9826,7 +9997,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -9841,7 +10012,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":6,
@@ -9935,7 +10106,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -10055,7 +10227,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -10303,7 +10476,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -10550,7 +10724,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -10644,7 +10819,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -10743,7 +10919,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -10857,7 +11034,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -10966,7 +11144,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -10981,7 +11160,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":6,
@@ -11077,7 +11256,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -11092,7 +11272,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":6,
@@ -11204,7 +11384,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -11219,7 +11400,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":6,
@@ -11315,7 +11496,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -11330,7 +11512,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":6,
@@ -11442,7 +11624,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND"
           },
           {
             "Order":5,
@@ -18893,7 +19076,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -19173,7 +19357,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -19485,7 +19670,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -19841,7 +20027,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -22894,7 +23081,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -23050,7 +23238,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -23254,7 +23443,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -23526,7 +23716,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -23679,7 +23870,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -23811,7 +24003,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -23923,7 +24116,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -24247,7 +24441,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -24333,7 +24528,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -24464,7 +24660,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -24551,7 +24748,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -24642,7 +24840,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":10,
@@ -24683,7 +24882,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -24833,7 +25033,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -24961,7 +25162,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -25232,7 +25434,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -25480,7 +25683,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":3,
@@ -25975,7 +26178,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -26071,7 +26275,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
             "Order":2,
@@ -31608,7 +31813,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -31728,7 +31934,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -31887,7 +32094,7 @@
             "Order":5,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Zone info",
+            "Description":"Zone Info",
             "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
@@ -31896,7 +32103,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -32003,7 +32211,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -32102,7 +32311,7 @@
             "Order":5,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Source list",
+            "Description":"Source List",
             "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
@@ -32111,7 +32320,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -32240,7 +32450,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -32269,126 +32480,6 @@
             "RangeMax":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_MUTE_COMMAND"
-          }
-        ]
-      },
-      {
-        "PGN":130816,
-        "Id":"sonichubUnknown",
-        "Description":"SonicHub: Unknown",
-        "Type":"Fast",
-        "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
-        ],
-        "FieldCount":8,
-        "Length":7,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "Description":"Navico",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Match":275,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2045,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
-          },
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "Description":"Marine Industry",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Match":4,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
-          },
-          {
-            "Order":4,
-            "Id":"reserved4",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":16,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":5,
-            "Id":"proprietaryId",
-            "Name":"Proprietary ID",
-            "Description":"Unknown",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
-            "Match":9,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"LOOKUP"
-          },
-          {
-            "Order":6,
-            "Id":"control",
-            "Name":"Control",
-            "BitLength":8,
-            "BitOffset":32,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"SONICHUB_CONTROL"
-          },
-          {
-            "Order":7,
-            "Id":"a",
-            "Name":"A",
-            "BitLength":8,
-            "BitOffset":40,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":8,
-            "Id":"b",
-            "Name":"B",
-            "BitLength":8,
-            "BitOffset":48,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
           }
         ]
       },
@@ -32468,7 +32559,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -32636,7 +32728,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -32813,7 +32906,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -32929,7 +33023,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -33045,7 +33140,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -33161,7 +33257,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -33316,7 +33413,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -33423,7 +33521,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -33543,7 +33642,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -33663,7 +33763,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -33757,7 +33858,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -33866,7 +33968,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SONICHUB_COMMAND"
           },
           {
             "Order":6,
@@ -33977,7 +34080,7 @@
             "Order":5,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Init #3",
+            "Description":"Text",
             "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
@@ -33986,7 +34089,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMRAD_COMMAND"
           },
           {
             "Order":6,
@@ -34770,7 +34874,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -34914,7 +35019,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -35132,7 +35238,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -35237,7 +35344,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -35333,7 +35441,7 @@
             "Order":4,
             "Id":"messageId",
             "Name":"Message ID",
-            "Description":"Track Album",
+            "Description":null,
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -35342,7 +35450,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -35447,7 +35556,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -35530,7 +35640,7 @@
             "Order":4,
             "Id":"messageId",
             "Name":"Message ID",
-            "Description":"Zone Name",
+            "Description":null,
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -35539,7 +35649,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -35644,7 +35755,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -35755,7 +35867,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -35902,7 +36015,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -36024,7 +36138,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -36133,7 +36248,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -36256,7 +36372,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -36439,7 +36556,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -36628,7 +36746,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -36725,7 +36844,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -36860,7 +36980,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -36995,7 +37116,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -37130,7 +37252,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -37227,7 +37350,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -37319,7 +37443,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -37411,7 +37536,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -37503,7 +37629,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID"
           },
           {
             "Order":5,
@@ -39271,7 +39398,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -39572,7 +39699,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"LOOKUP"
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -40035,7 +40162,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMRAD_TYPE"
           },
           {
             "Order":8,
@@ -40241,7 +40369,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMRAD_TYPE"
           },
           {
             "Order":8,
@@ -40382,7 +40511,7 @@
             "Order":7,
             "Id":"type",
             "Name":"Type",
-            "Description":"Local field",
+            "Description":"Field angle",
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
@@ -40391,7 +40520,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMRAD_TYPE"
           },
           {
             "Order":8,
@@ -40879,7 +41009,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMRAD_EVENT_COMMAND"
           },
           {
             "Order":5,
@@ -41048,7 +41179,7 @@
             "Order":5,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Alarm command",
+            "Description":"Alarm",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -41057,7 +41188,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMRAD_EVENT_COMMAND"
           },
           {
             "Order":6,
@@ -41122,141 +41254,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
-          }
-        ]
-      },
-      {
-        "PGN":130850,
-        "Id":"simnetEventCommandUnknown",
-        "Description":"Simnet: Event Command: Unknown",
-        "Type":"Fast",
-        "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
-        ],
-        "FieldCount":9,
-        "Length":12,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "Description":"Simrad",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Match":1857,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2045,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
-          },
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "Description":"Marine Industry",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Match":4,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
-          },
-          {
-            "Order":4,
-            "Id":"a",
-            "Name":"A",
-            "BitLength":16,
-            "BitOffset":16,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":65533,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":5,
-            "Id":"proprietaryId",
-            "Name":"Proprietary ID",
-            "Description":"Alarm command",
-            "BitLength":8,
-            "BitOffset":32,
-            "BitStart":0,
-            "Match":1,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"LOOKUP"
-          },
-          {
-            "Order":6,
-            "Id":"b",
-            "Name":"B",
-            "BitLength":8,
-            "BitOffset":40,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":7,
-            "Id":"c",
-            "Name":"C",
-            "BitLength":16,
-            "BitOffset":48,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":65533,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":8,
-            "Id":"d",
-            "Name":"D",
-            "BitLength":16,
-            "BitOffset":64,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":65533,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":9,
-            "Id":"e",
-            "Name":"E",
-            "BitLength":16,
-            "BitOffset":80,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":65533,
             "FieldType":"NUMBER"
           }
         ]
@@ -41327,7 +41324,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"LOOKUP"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMRAD_EVENT_COMMAND"
           },
           {
             "Order":5,

@@ -6,11 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
-## [Unreleased]
+## [4.5.3]
 
 ### Fixed
 
 - #327: Fix print of MMSI on gcc-8.30/linux-arm7l; cast required to pass correct size on stack.
+- #326: Match fields should have lookup enum or be number type.
 
 ## [4.5.2]
 

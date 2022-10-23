@@ -208,6 +208,16 @@ static unsigned int getMinimalPgnLength(Pgn *pgn, bool *isVariable)
   return length;
 }
 
+static size_t g_lookupValue;
+
+static void filterPair(size_t n, const char *s)
+{
+  if (n == g_lookupValue)
+  {
+    printf("%s", s);
+  }
+}
+
 static void explainPairText(size_t n, const char *s)
 {
   printf("                  Lookup: %zu=%s\n", n, s);
@@ -630,6 +640,13 @@ static void explainPGNXML(Pgn pgn)
       if (f.description && f.description[0] && f.description[0] != ',')
       {
         printXML(10, "Description", f.description);
+      }
+      else if (f.unit && f.unit[0] == '=')
+      {
+        g_lookupValue = (size_t) strtol(f.unit + 1, 0, 10);
+        printf("          <Description>");
+        (f.lookup.function.pairEnumerator)(filterPair);
+        printf("</Description>\n");
       }
       if (f.size == LEN_VARIABLE)
       {
