@@ -256,11 +256,11 @@ extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t 
 
   if (showJson)
   {
-    mprintf("%s\"%s\":\"%09u\"", getSep(), fieldName, value);
+    mprintf("%s\"%s\":\"%09u\"", getSep(), fieldName, (uint32_t) value);
   }
   else
   {
-    mprintf("%s %s = \"%09u\"", getSep(), fieldName, value);
+    mprintf("%s %s = \"%09u\"", getSep(), fieldName, (uint32_t) value);
   }
 
   return true;
