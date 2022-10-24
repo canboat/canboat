@@ -11,6 +11,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Fixed
 
 - #328: PGN 129302: Fix field lengths and lookup lists for `Bearing Reference` and `Calculation Type`.
+- #326: AIS PGNs now have Enum Message Id, also use this in the ais parser.
 
 ## [4.6.0]
 

@@ -479,7 +479,6 @@ static long int aisInteger(const char *msg, const char *fieldName)
   } intParam;
 
   // Initialisation of type keys, done at most once
-  static const int p0 = 'M' + 'e' + 's' + 's' + 'a' + 'g' + 'e' + ' ' + 'I' + 'D';
   static const int p1 = 'U' + 's' + 'e' + 'r' + ' ' + 'I' + 'D';
   static const int p2
       = 'C' + 'o' + 'm' + 'm' + 'u' + 'n' + 'i' + 'c' + 'a' + 't' + 'i' + 'o' + 'n' + ' ' + 'S' + 't' + 'a' + 't' + 'e';
@@ -494,8 +493,7 @@ static long int aisInteger(const char *msg, const char *fieldName)
   int      i, h = 0;
   long int value;
 
-  intParam paramRange[] = {{p0, "Message ID", 0, 63, -1},
-                           {p1, "User ID", 0, 999999999, 0},
+  intParam paramRange[] = {{p1, "User ID", 0, 999999999, 0},
                            {p2, "Communication State", 0, 524287, 393222},
                            {p3, "IMO number", 1000000, 9999999, 0},
                            {p4, "Mothership User ID", 0, 999999999, 0},
@@ -839,7 +837,7 @@ extern void nmea0183AIVDM(StringBuffer *msg183, int source, const char *msg)
   }
 
   // AIS payload bit vector
-  msgid = aisInteger(msg, "Message ID");
+  msgid = aisEnum(msg, "Message ID");
   switch (msgid)
   {
     case 1:
