@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.5.2
+CANboat version v4.6.1
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.5.2</Version>
+  <Version>4.6.1</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -20333,35 +20333,44 @@ limitations under the License.
           <Order>2</Order>
           <Id>bearingReference</Id>
           <Name>Bearing Reference</Name>
-          <BitLength>4</BitLength>
+          <BitLength>2</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='True' />
+            <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>calculationType</Id>
           <Name>Calculation Type</Name>
           <BitLength>2</BitLength>
-          <BitOffset>12</BitOffset>
-          <BitStart>4</BitStart>
+          <BitOffset>10</BitOffset>
+          <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Great Circle' />
+            <EnumPair Value='1' Name='Rhumbline' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>14</BitOffset>
-          <BitStart>6</BitStart>
+          <BitLength>4</BitLength>
+          <BitOffset>12</BitOffset>
+          <BitStart>4</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
