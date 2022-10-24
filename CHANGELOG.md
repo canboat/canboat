@@ -6,7 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
-## [4.5.3]
+## [4.6.1]
+
+### Fixed
+
+- #328: PGN 129302: Fix field lengths and lookup lists for `Bearing Reference` and `Calculation Type`.
+
+## [4.6.0]
 
 ### Fixed
 
