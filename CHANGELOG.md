@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [4.7.0]
+
+### Changed
+
+- Format change: `analyzer` now passes the unformatted data for fields such as Date and Time in 
+  `{"value":x,"name":"fmt"}` style so downstream code does not need to un-parse these. 
+  This is triggered by `-nv` just as it is for lookup fields.
+- Format change: `analyzer` output for fields is always `{"fieldname": <object>, ...}` where object
+  is either a simple value or a `{ "key": "value", ...}` object that contains at least the key named
+  `"value"`.
+
+### Fixed
+
+- #331: Fix invalid JSON generation by `analyzer` especially when options `-nv` and/or `-debug` were passed.
+- Fix regression where end-of-data was not properly handled; caused incomplete data fields to be processed
+  incorrectly.
+
 ## [4.6.1]
 
 ### Fixed

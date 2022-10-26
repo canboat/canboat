@@ -684,7 +684,7 @@ static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
 
   if (showJson)
   {
-    mprintf(",\"bytes\"=\"");
+    mprintf(",\"bytes\":\"");
   }
   else
   {
@@ -725,7 +725,7 @@ static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
     extractNumber(NULL, data, (bits + 7) >> 3, startBit, bits, &value, &maxValue);
     if (showJson)
     {
-      mprintf(",\"bits\"=\"");
+      mprintf(",\"bits\":\"");
     }
     else
     {
@@ -741,7 +741,10 @@ static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
     mprintf("\"");
   }
 
-  mprintf("%s", showJson ? "}" : ")");
+  if (!showJson)
+  {
+    mprintf(")");
+  }
 }
 
 static uint32_t refPgn = 0; // Remember this over the entire set of fields
@@ -775,7 +778,7 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
   {
     *bits = (field->size != 0) ? field->size : field->ft->size;
     bytes = (*bits + 7) / 8;
-    bytes = min(bytes, dataLen);
+    bytes = min(bytes, dataLen - startBit / 8);
     *bits = min(bytes * 8, *bits);
   }
   else
@@ -813,31 +816,59 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
 
   if (field->ft != NULL && field->ft->pf != NULL)
   {
-    size_t location;
+    size_t location = mlocation();
+    char  *oldSep   = sep;
+    size_t location2;
 
-    if (showBytes)
+    if (showJson)
     {
-      mprintf("%s%s", getSep(), showJson ? "{" : "");
-      sep = "";
+      mprintf("%s\"%s\":", getSep(), fieldName);
+      sep = ",";
+      if (showBytes)
+      {
+        mprintf("{");
+      }
     }
+    else
+    {
+      mprintf("%s %s = ", getSep(), fieldName);
+      sep = ";";
+    }
+    location2 = mlocation();
     logDebug(
         "PGN %u: printField <%s>, \"%s\": calling function for %s\n", field->pgn->pgn, field->name, fieldName, field->fieldType);
-    g_skip   = false;
-    location = mlocation();
-    r        = (field->ft->pf)(field, fieldName, data, dataLen, startBit, bits);
+    g_skip = false;
+    r      = (field->ft->pf)(field, fieldName, data, dataLen, startBit, bits);
+    // if match fails, r == false. If field is not printed, g_skip == true
     logDebug("PGN %u: printField <%s>, \"%s\": result %d bits=%zu\n", field->pgn->pgn, field->name, fieldName, r, *bits);
-    if (r && !g_skip && location == mlocation())
+    if (r && !g_skip)
     {
-      logError("Field \"%s\" print routine did not print anything\n", field->name);
-      r = false;
+      if (location2 == mlocation())
+      {
+        logError("PGN %u: field \"%s\" print routine did not print anything\n", field->pgn->pgn, field->name);
+        r = false;
+      }
+      else if (showBytes)
+      {
+        location2 = mlocation();
+        if (mchr(location2 - 1) == '}')
+        {
+          mset(location2 - 1);
+        }
+        showBytesOrBits(data + (startBit >> 3), startBit & 7, *bits);
+        if (showJson)
+        {
+          mprintf("}");
+        }
+      }
     }
-    else if (showBytes && !g_skip)
+    if (!r || g_skip)
     {
-      showBytesOrBits(data + (startBit >> 3), startBit & 7, *bits);
+      mset(location);
+      sep = oldSep;
     }
     return r;
   }
-
   logError("PGN %u: no function found to print field '%s'\n", field->pgn->pgn, fieldName);
   return false;
 }
@@ -995,7 +1026,6 @@ bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool sh
 
     if (!printField(field, fieldName, data, length, startBit, &bits))
     {
-      logError("PGN %u field %s error\n", msg->pgn, fieldName);
       r = false;
       break;
     }

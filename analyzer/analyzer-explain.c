@@ -38,6 +38,7 @@ bool       showData      = false;
 bool       showJson      = false;
 bool       showJsonEmpty = false;
 bool       showJsonValue = false;
+bool       showBytes     = false;
 bool       showSI        = true; // Output everything in strict SI units
 GeoFormats showGeo       = GEO_DD;
 
