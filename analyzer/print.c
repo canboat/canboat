@@ -960,8 +960,10 @@ static void print_ascii_json_escaped(uint8_t *data, int len)
         return;
 
       default:
-        if (c >= ' ' && c <= '~')
+        if (c > 0x00)
+        {
           mprintf("%c", c);
+        }
     }
   }
 }
@@ -989,6 +991,10 @@ static bool printString(char *fieldName, uint8_t *data, size_t len)
 
   if (showJson)
   {
+    if (showBytes)
+    {
+      mprintf("\"value\":");
+    }
     mprintf("\"");
     print_ascii_json_escaped(data, len);
     mprintf("\"");
@@ -1107,6 +1113,7 @@ extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, si
   {
     return false;
   }
+  logDebug("fieldPrintStringLAU: <%s> data=%p len=%zu startBit=%zu bits=%zu\n", fieldName, data, dataLen, startBit, *bits);
 
   len     = *data++;
   control = *data++;
@@ -1128,7 +1135,9 @@ extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, si
     {
       die("Out of memory");
     }
-    len = utf16_to_utf8((const utf16_t *) data, len / 2, utf8, utf8_len + 1);
+    logDebug("fieldprintStringLAU: UTF16 len %zu requires %zu utf8 bytes\n", len / 2, utf8_len);
+    len  = utf16_to_utf8((const utf16_t *) data, len / 2, utf8, utf8_len + 1);
+    data = utf8;
   }
   else if (control > 1)
   {

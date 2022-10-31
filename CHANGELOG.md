@@ -20,6 +20,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #335: UTF16 strings are printed incorrectly.
 - #333: Repair decimal fraction printing of Time fields.
 - #332: PGNInfo.Fallback should be type 'Boolean'.
 - #331: Fix invalid JSON generation by `analyzer` especially when options `-nv` and/or `-debug` were passed.
