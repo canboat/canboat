@@ -479,7 +479,15 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.2.2...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.7.0...HEAD
+[4.7.0]: https://github.com/canboat/canboat/compare/v4.6.1...v4.7.0
+[4.6.1]: https://github.com/canboat/canboat/compare/v4.6.0...v4.6.1
+[4.6.0]: https://github.com/canboat/canboat/compare/v4.5.2...v4.6.0
+[4.5.2]: https://github.com/canboat/canboat/compare/v4.5.1...v4.5.2
+[4.5.1]: https://github.com/canboat/canboat/compare/v4.5.0...v4.5.1
+[4.5.0]: https://github.com/canboat/canboat/compare/v4.4.0...v4.5.0
+[4.4.0]: https://github.com/canboat/canboat/compare/v4.3.0...v4.4.0
+[4.3.0]: https://github.com/canboat/canboat/compare/v4.2.2...v4.3.0
 [4.2.2]: https://github.com/canboat/canboat/compare/v4.2.1...v4.2.2
 [4.2.1]: https://github.com/canboat/canboat/compare/v4.2.0...v4.2.1
 [4.2.0]: https://github.com/canboat/canboat/compare/v4.1.0...v4.2.0
