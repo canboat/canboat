@@ -16,9 +16,11 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - Format change: `analyzer` output for fields is always `{"fieldname": <object>, ...}` where object
   is either a simple value or a `{ "key": "value", ...}` object that contains at least the key named
   `"value"`.
+- `docs/canboat.xml`: PGNInfo element `Fallback` is now a boolean.
 
 ### Fixed
 
+- #332: PGNInfo.Fallback should be type 'Boolean'.
 - #331: Fix invalid JSON generation by `analyzer` especially when options `-nv` and/or `-debug` were passed.
 - Fix regression where end-of-data was not properly handled; caused incomplete data fields to be processed
   incorrectly.

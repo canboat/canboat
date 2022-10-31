@@ -517,7 +517,15 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:string" name="Fallback" minOccurs="0"/>
+      <xs:element type="xs:boolean" name="Fallback" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When present and true, the PGN is a 'virtual' PGN used as a fallback mechanism
+            to print unknown PGNs.
+            The element will either be missing or contain true.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="Missing" name="Missing" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
