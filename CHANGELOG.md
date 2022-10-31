@@ -20,6 +20,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #336: PGN 129285 Repeating Field info incorrect.
 - #335: UTF16 strings are printed incorrectly.
 - #333: Repair decimal fraction printing of Time fields.
 - #332: PGNInfo.Fallback should be type 'Boolean'.

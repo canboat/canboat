@@ -19976,7 +19976,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>10</Length>
       <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
-      <RepeatingFieldSet1StartField>11</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1StartField>10</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <Fields>
         <Field>

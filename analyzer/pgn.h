@@ -3482,7 +3482,7 @@ Pgn pgnList[] = {
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 4,
-     .repeatingStart1 = 11}
+     .repeatingStart1 = 10}
 
     ,
     {"Set & Drift, Rapid Update",

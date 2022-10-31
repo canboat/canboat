@@ -20768,7 +20768,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <FieldCount>13</FieldCount>
       <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
-      <RepeatingFieldSet1StartField>11</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1StartField>10</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>

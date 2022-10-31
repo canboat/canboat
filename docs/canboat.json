@@ -20874,7 +20874,7 @@
         "FieldCount":13,
         "MinLength":10,
         "RepeatingFieldSet1Size":4,
-        "RepeatingFieldSet1StartField":11,
+        "RepeatingFieldSet1StartField":10,
         "RepeatingFieldSet1CountField":2,
         "TransmissionIrregular":true,
         "Fields":[
