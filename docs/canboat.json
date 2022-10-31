@@ -8040,7 +8040,7 @@
             "Order":7,
             "Id":"value",
             "Name":"Value",
-            "Description":"Parameter value, variable length",
+            "Description":"Parameter value",
             "BitLengthVariable":true,
             "FieldType":"VARIABLE"
           }
@@ -8146,7 +8146,7 @@
             "Order":7,
             "Id":"value",
             "Name":"Value",
-            "Description":"Parameter value, variable length",
+            "Description":"Parameter value",
             "BitLengthVariable":true,
             "FieldType":"VARIABLE"
           }
@@ -23211,6 +23211,7 @@
             "Id":"binaryData",
             "Name":"Binary Data",
             "BitLengthVariable":true,
+            "BitLengthField":11,
             "Resolution":1,
             "FieldType":"BINARY"
           }
@@ -23704,7 +23705,7 @@
         "Type":"Fast",
         "Complete":true,
         "FieldCount":12,
-        "Length":21,
+        "MinLength":13,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -23842,9 +23843,8 @@
             "Order":12,
             "Id":"binaryData",
             "Name":"Binary Data",
-            "BitLength":64,
-            "BitOffset":104,
-            "BitStart":0,
+            "BitLengthVariable":true,
+            "BitLengthField":11,
             "Resolution":1,
             "FieldType":"BINARY"
           }
@@ -24086,9 +24086,8 @@
             "Order":8,
             "Id":"binaryData",
             "Name":"Binary Data",
-            "BitLength":1,
-            "BitOffset":64,
-            "BitStart":0,
+            "BitLengthVariable":true,
+            "BitLengthField":7,
             "Resolution":1,
             "FieldType":"BINARY"
           }

@@ -18,6 +18,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
   `"value"`.
 - `docs/canboat.xml`: PGNInfo element `Fallback` is now a boolean.
 
+### Added
+
+- #337: Add `BitLengthField` element for variable length binary fields.
+
 ### Fixed
 
 - #336: PGN 129285 Repeating Field info incorrect.

@@ -5778,7 +5778,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <Description>Parameter value, variable length</Description>
+          <Description>Parameter value</Description>
           <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
@@ -5891,7 +5891,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <Description>Parameter value, variable length</Description>
+          <Description>Parameter value</Description>
           <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
@@ -22393,6 +22393,7 @@ limitations under the License.
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
           <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>11</BitLengthField>
           <Type>Binary data</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -23040,7 +23041,7 @@ limitations under the License.
       <Description>AIS Addressed Binary Message</Description>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>21</Length>
+      <Length>13</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23217,9 +23218,8 @@ limitations under the License.
           <Order>12</Order>
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
-          <BitLength>64</BitLength>
-          <BitOffset>104</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>11</BitLengthField>
           <Type>Binary data</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -23538,9 +23538,8 @@ limitations under the License.
           <Order>8</Order>
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
-          <BitLength>1</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>7</BitLengthField>
           <Type>Binary data</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>

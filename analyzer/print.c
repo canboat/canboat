@@ -28,6 +28,7 @@ limitations under the License.
 
 extern int g_variableFieldRepeat[2]; // Actual number of repetitions
 bool       g_skip;
+int64_t    g_previousFieldValue;
 
 static bool unhandledStartOffset(const char *fieldName, size_t startBit)
 {
@@ -247,6 +248,8 @@ static bool extractNumberNotEmpty(const Field *field,
     logDebug("The second repeating fieldset repeats %" PRId64 " times\n", *value);
     g_variableFieldRepeat[1] = *value;
   }
+
+  g_previousFieldValue = *value;
 
   if (*value > *maxValue - reserved)
   {
@@ -1162,6 +1165,13 @@ extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_
   if (!adjustDataLenStart(&data, &dataLen, &startBit))
   {
     return false;
+  }
+
+  if (*bits == 0 && strcmp(field->fieldType, "BINARY") == 0)
+  {
+    // The length is in the previous field. This is heuristically defined right now, it might change.
+    // The only PGNs where this happens are AIS PGNs 129792, 129795 and 129797.
+    *bits = g_previousFieldValue;
   }
 
   if (startBit + *bits > dataLen * 8)

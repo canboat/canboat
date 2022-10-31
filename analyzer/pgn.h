@@ -1684,7 +1684,7 @@ Pgn pgnList[] = {
       TIME_UFIX16_CS_FIELD("Transmission interval offset", NULL),
       UINT8_DESC_FIELD("Number of Parameters", "How many parameter pairs will follow"),
       UINT8_DESC_FIELD("Parameter", "Parameter index"),
-      VARIABLE_FIELD("Value", "Parameter value, variable length"),
+      VARIABLE_FIELD("Value", "Parameter value"),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This is the Request variation of this group function PGN. The receiver shall respond by sending the requested "
@@ -1705,7 +1705,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       UINT8_DESC_FIELD("Number of Parameters", "How many parameter pairs will follow"),
       UINT8_DESC_FIELD("Parameter", "Parameter index"),
-      VARIABLE_FIELD("Value", "Parameter value, variable length"),
+      VARIABLE_FIELD("Value", "Parameter value"),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This is the Command variation of this group function PGN. This instructs the receiver to modify its internal "
@@ -3863,7 +3863,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Retransmit flag", 1),
       RESERVED_FIELD(1),
       UINT16_FIELD("Number of Bits in Binary Data Field"),
-      BINARY_FIELD("Binary Data", BYTES(8), NULL),
+      BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
@@ -3899,7 +3899,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       RESERVED_FIELD(2),
       UINT16_FIELD("Number of Bits in Binary Data Field"),
-      BINARY_FIELD("Binary Data", 1, NULL),
+      BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
      .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval        = UINT16_MAX,

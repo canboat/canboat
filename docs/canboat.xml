@@ -7724,7 +7724,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <Description>Parameter value, variable length</Description>
+          <Description>Parameter value</Description>
           <BitLengthVariable>true</BitLengthVariable>
           <FieldType>VARIABLE</FieldType>
         </Field>
@@ -7830,7 +7830,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <Description>Parameter value, variable length</Description>
+          <Description>Parameter value</Description>
           <BitLengthVariable>true</BitLengthVariable>
           <FieldType>VARIABLE</FieldType>
         </Field>
@@ -23155,6 +23155,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
           <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>11</BitLengthField>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
         </Field>
@@ -23651,7 +23652,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
-      <Length>21</Length>
+      <MinLength>13</MinLength>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -23789,9 +23790,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>12</Order>
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
-          <BitLength>64</BitLength>
-          <BitOffset>104</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>11</BitLengthField>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
         </Field>
@@ -24033,9 +24033,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>8</Order>
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
-          <BitLength>1</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>7</BitLengthField>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
         </Field>

@@ -652,6 +652,10 @@ static void explainPGNXML(Pgn pgn)
       if (f.size == LEN_VARIABLE)
       {
         printf("          <BitLengthVariable>true</BitLengthVariable>\n");
+        if (strcmp(f.fieldType, "BINARY") == 0)
+        {
+          printXMLUnsigned(10, "BitLengthField", f.order - 1);
+        }
       }
       else
       {
