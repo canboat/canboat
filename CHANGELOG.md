@@ -20,6 +20,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #333: Repair decimal fraction printing of Time fields.
 - #332: PGNInfo.Fallback should be type 'Boolean'.
 - #331: Fix invalid JSON generation by `analyzer` especially when options `-nv` and/or `-debug` were passed.
 - Fix regression where end-of-data was not properly handled; caused incomplete data fields to be processed

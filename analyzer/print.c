@@ -770,6 +770,7 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   int64_t  value;
   int64_t  maxValue;
   uint64_t t;
+  int      digits;
 
   if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
   {
@@ -802,6 +803,8 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   hours   = minutes / 60;
   minutes = minutes % 60;
 
+  digits = log10(unitspersecond);
+
   if (showJson)
   {
     if (showJsonValue)
@@ -818,7 +821,7 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
     }
     if (units != 0)
     {
-      mprintf("\"%02u:%02u:%02u.%05u\"", hours, minutes, seconds, units);
+      mprintf("\"%02u:%02u:%02u.%0*u\"", hours, minutes, seconds, digits, units);
     }
     else
     {
@@ -833,7 +836,7 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   {
     if (units)
     {
-      mprintf("%02u:%02u:%02u.%05u", hours, minutes, seconds, units);
+      mprintf("%02u:%02u:%02u.%0*u", hours, minutes, seconds, digits, units);
     }
     else
     {
