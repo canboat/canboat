@@ -1,0 +1,43 @@
+#!/bin/ksh93
+
+while true
+do
+  for ((cog = 0; cog < 359; cog += 10))
+  do
+    for ((i = 1; i <= $1; i++))
+    do
+      second=$(date '+%S')
+      speed=$(($i + 100))
+      LONG=$(($i/100.0 + 5.3284383))
+      (
+      for ((j = 1; j <= $2; j++))
+      do
+        LAT=$(($j/100.0 + 53.17012))
+        heading=$cog
+        MMSI=$((211000000+$i * 1000 + $j))
+        IMO=$((9000000 + $i * 1000 + $j))
+        CALLSIGN="PD$(($i * 100 + $j))"
+        TYPE="51" # SAR
+        height=$cog
+        if [ $i -eq 1 ]
+        then
+          pos_rep="aisSarAircraftPositionReport,$MMSI,$LONG,$LAT,$second,$cog,$speed,$height"
+          NAME="SAR AIRCRAFT $i-$j"
+        else
+          pos_rep="aisClassAPositionReport,$MMSI,$LONG,$LAT,$second,$cog,$speed,$heading"
+          NAME="EMULATED $i-$j"
+        fi
+        echo "${pos_rep}"
+        if [ "$cog" == '0' -o "$cog" == '180' ]
+        then
+          static_message="aisClassAStaticAndVoyageRelatedData,$MMSI,$IMO,$CALLSIGN,$NAME,$TYPE,40.1,10.1,5,DEN HELDER $i-$j"
+          echo "${static_message}"
+        fi
+      done
+      ) | php ./format-message --stdin
+    done
+    date >&2
+    sleep 5
+  done
+done
+

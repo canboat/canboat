@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.5.1
+CANboat version v4.7.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.5.1</Version>
+  <Version>4.7.0</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -624,6 +624,7 @@ limitations under the License.
             <EnumPair Value='396' Name='Beyond Measure' />
             <EnumPair Value='400' Name='Livorsi Marine' />
             <EnumPair Value='404' Name='ComNav' />
+            <EnumPair Value='409' Name='Chetco' />
             <EnumPair Value='419' Name='Fusion Electronics' />
             <EnumPair Value='421' Name='Standard Horizon' />
             <EnumPair Value='422' Name='True Heading AB' />
@@ -925,7 +926,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2865,6 +2866,7 @@ limitations under the License.
             <EnumPair Value='396' Name='Beyond Measure' />
             <EnumPair Value='400' Name='Livorsi Marine' />
             <EnumPair Value='404' Name='ComNav' />
+            <EnumPair Value='409' Name='Chetco' />
             <EnumPair Value='419' Name='Fusion Electronics' />
             <EnumPair Value='421' Name='Standard Horizon' />
             <EnumPair Value='422' Name='True Heading AB' />
@@ -3485,6 +3487,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
+          <Description>Chetco</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -5775,7 +5778,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <Description>Parameter value, variable length</Description>
+          <Description>Parameter value</Description>
           <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
@@ -5888,7 +5891,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <Description>Parameter value, variable length</Description>
+          <Description>Parameter value</Description>
           <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
         </Field>
@@ -6148,6 +6151,7 @@ limitations under the License.
             <EnumPair Value='396' Name='Beyond Measure' />
             <EnumPair Value='400' Name='Livorsi Marine' />
             <EnumPair Value='404' Name='ComNav' />
+            <EnumPair Value='409' Name='Chetco' />
             <EnumPair Value='419' Name='Fusion Electronics' />
             <EnumPair Value='421' Name='Standard Horizon' />
             <EnumPair Value='422' Name='True Heading AB' />
@@ -6480,6 +6484,7 @@ limitations under the License.
             <EnumPair Value='396' Name='Beyond Measure' />
             <EnumPair Value='400' Name='Livorsi Marine' />
             <EnumPair Value='404' Name='ComNav' />
+            <EnumPair Value='409' Name='Chetco' />
             <EnumPair Value='419' Name='Fusion Electronics' />
             <EnumPair Value='421' Name='Standard Horizon' />
             <EnumPair Value='422' Name='True Heading AB' />
@@ -6819,6 +6824,7 @@ limitations under the License.
             <EnumPair Value='396' Name='Beyond Measure' />
             <EnumPair Value='400' Name='Livorsi Marine' />
             <EnumPair Value='404' Name='ComNav' />
+            <EnumPair Value='409' Name='Chetco' />
             <EnumPair Value='419' Name='Fusion Electronics' />
             <EnumPair Value='421' Name='Standard Horizon' />
             <EnumPair Value='422' Name='True Heading AB' />
@@ -7158,6 +7164,7 @@ limitations under the License.
             <EnumPair Value='396' Name='Beyond Measure' />
             <EnumPair Value='400' Name='Livorsi Marine' />
             <EnumPair Value='404' Name='ComNav' />
+            <EnumPair Value='409' Name='Chetco' />
             <EnumPair Value='419' Name='Fusion Electronics' />
             <EnumPair Value='421' Name='Standard Horizon' />
             <EnumPair Value='422' Name='True Heading AB' />
@@ -7472,7 +7479,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>33264</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -7487,7 +7494,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>132</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -7623,7 +7630,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>3</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -7739,7 +7746,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>30</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -7932,7 +7939,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>Set Source</Description>
+          <Description>Source</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -8033,7 +8040,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>17</Match>
+          <Match>23</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -8368,7 +8375,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>33264</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -8383,7 +8390,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>134</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -8517,7 +8524,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>33264</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -8532,7 +8539,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Match>144</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -9627,7 +9634,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>0</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -9731,7 +9738,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -9849,7 +9856,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>0</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -9953,7 +9960,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -17860,11 +17867,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -18171,11 +18207,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -18517,11 +18582,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -18951,11 +19045,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -19853,7 +19976,7 @@ limitations under the License.
       <Complete>true</Complete>
       <Length>10</Length>
       <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
-      <RepeatingFieldSet1StartField>11</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1StartField>10</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
@@ -20210,35 +20333,44 @@ limitations under the License.
           <Order>2</Order>
           <Id>bearingReference</Id>
           <Name>Bearing Reference</Name>
-          <BitLength>4</BitLength>
+          <BitLength>2</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='True' />
+            <EnumPair Value='1' Name='Magnetic' />
+            <EnumPair Value='2' Name='Error' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>calculationType</Id>
           <Name>Calculation Type</Name>
           <BitLength>2</BitLength>
-          <BitOffset>12</BitOffset>
-          <BitStart>4</BitStart>
+          <BitOffset>10</BitOffset>
+          <BitStart>2</BitStart>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Great Circle' />
+            <EnumPair Value='1' Name='Rhumbline' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>14</BitOffset>
-          <BitStart>6</BitStart>
+          <BitLength>4</BitLength>
+          <BitOffset>12</BitOffset>
+          <BitStart>4</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -22096,11 +22228,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -22232,6 +22393,7 @@ limitations under the License.
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
           <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>11</BitLengthField>
           <Type>Binary data</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -22258,11 +22420,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -22484,11 +22675,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -22821,7 +23041,7 @@ limitations under the License.
       <Description>AIS Addressed Binary Message</Description>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>21</Length>
+      <Length>13</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -22830,11 +23050,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -22969,9 +23218,8 @@ limitations under the License.
           <Order>12</Order>
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
-          <BitLength>64</BitLength>
-          <BitOffset>104</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>11</BitLengthField>
           <Type>Binary data</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -22993,11 +23241,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -23136,11 +23413,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -23232,9 +23538,8 @@ limitations under the License.
           <Order>8</Order>
           <Id>binaryData</Id>
           <Name>Binary Data</Name>
-          <BitLength>1</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>7</BitLengthField>
           <Type>Binary data</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -23262,11 +23567,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -23603,11 +23937,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -23701,11 +24064,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -23845,11 +24237,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -23945,11 +24366,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -24048,11 +24498,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>82</BitOffset>
           <BitStart>2</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>10</Order>
@@ -24090,11 +24569,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -24252,11 +24760,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -24392,11 +24929,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -24671,11 +25237,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -24956,7 +25551,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Match>112</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -25540,11 +26135,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -25646,11 +26270,40 @@ limitations under the License.
           <BitLength>6</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Scheduled Class A position report' />
+            <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
+            <EnumPair Value='3' Name='Interrogated Class A position report' />
+            <EnumPair Value='4' Name='Base station report' />
+            <EnumPair Value='5' Name='Static and voyage related data' />
+            <EnumPair Value='6' Name='Binary addressed message' />
+            <EnumPair Value='7' Name='Binary acknowledgement' />
+            <EnumPair Value='8' Name='Binary broadcast message' />
+            <EnumPair Value='9' Name='Standard SAR aircraft position report' />
+            <EnumPair Value='10' Name='UTC/date inquiry' />
+            <EnumPair Value='11' Name='UTC/date response' />
+            <EnumPair Value='12' Name='Safety related addressed message' />
+            <EnumPair Value='13' Name='Safety related acknowledgement' />
+            <EnumPair Value='14' Name='Satety related broadcast message' />
+            <EnumPair Value='15' Name='Interrogation' />
+            <EnumPair Value='16' Name='Assignment mode command' />
+            <EnumPair Value='17' Name='DGNSS broadcast binary message' />
+            <EnumPair Value='18' Name='Standard Class B position report' />
+            <EnumPair Value='19' Name='Extended Class B position report' />
+            <EnumPair Value='20' Name='Data link management message' />
+            <EnumPair Value='21' Name='ATON report' />
+            <EnumPair Value='22' Name='Channel management' />
+            <EnumPair Value='23' Name='Group assignment command' />
+            <EnumPair Value='24' Name='Static data report' />
+            <EnumPair Value='25' Name='Single slot binary message' />
+            <EnumPair Value='26' Name='Multiple slot binary message' />
+            <EnumPair Value='27' Name='Position report for long range applications' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>2</Order>
@@ -32076,7 +32729,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>Zone info</Description>
+          <Description>Zone Info</Description>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -32307,7 +32960,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>Source list</Description>
+          <Description>Source List</Description>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -32485,130 +33138,6 @@ limitations under the License.
             <EnumPair Value='1' Name='Mute On' />
             <EnumPair Value='2' Name='Mute Off' />
           </EnumValues>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130816</PGN>
-      <Id>sonichubUnknown</Id>
-      <Description>SonicHub: Unknown</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>7</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Navico</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>275</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>reserved4</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Unknown</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>9</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>control</Id>
-          <Name>Control</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <EnumValues>
-            <EnumPair Value='0' Name='Set' />
-            <EnumPair Value='128' Name='Ack' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -34249,7 +34778,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>Init #3</Description>
+          <Description>Text</Description>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -35649,7 +36178,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Track Album</Description>
+          <Description></Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -35850,7 +36379,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Zone Name</Description>
+          <Description></Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -39668,7 +40197,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>0</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -39977,7 +40506,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
-          <Type>Lookup table</Type>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -40861,7 +41390,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>type</Id>
           <Name>Type</Name>
-          <Description>Local field</Description>
+          <Description>Field angle</Description>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -41564,7 +42093,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>Alarm command</Description>
+          <Description>Alarm</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -41639,142 +42168,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130850</PGN>
-      <Id>simnetEventCommandUnknown</Id>
-      <Description>Simnet: Event Command: Unknown</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>12</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Simrad</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>1857</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Alarm command</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>1</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>c</Id>
-          <Name>C</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>d</Id>
-          <Name>D</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>e</Id>
-          <Name>E</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>

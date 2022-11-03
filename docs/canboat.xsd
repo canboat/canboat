@@ -298,7 +298,19 @@ limitations under the License.
             This is present, and true, if the field has a variable length.
             For instance, most types of strings. These will then have a minimum
             length defined by how the string length is determined, but that
-            is type dependent.
+            is type dependent. The field may also have a different field that
+            specifies how long this field is, in that case BitLengthField will
+            be present.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:byte" name="BitLengthField" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            If present, the field is variable length and the number of bits is
+            contained in the field whose order is indicated here.
+            Until now the only known occurrences have the property that the
+            length field immediately precedes the variable length field.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
@@ -517,7 +529,15 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:string" name="Fallback" minOccurs="0"/>
+      <xs:element type="xs:boolean" name="Fallback" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When present and true, the PGN is a 'virtual' PGN used as a fallback mechanism
+            to print unknown PGNs.
+            The element will either be missing or contain true.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="Missing" name="Missing" minOccurs="0">
         <xs:annotation>
           <xs:documentation>

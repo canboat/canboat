@@ -83,7 +83,7 @@ elsif ($INTERFACE_DEVICE =~ /^can/)
 }
 die "Configuration file $configFile incomplete: No INTERFACE_PROGRAM" unless ($INTERFACE_PROGRAM);
 
-my $BASH_COMMAND = "$INTERFACE_PROGRAM $INTERFACE_DEVICE $INTERFACE_OPTIONS | analyzer $ANALYZER_OPTIONS -json | n2kd $N2KD_OPTIONS";
+my $BASH_COMMAND = "$INTERFACE_PROGRAM $INTERFACE_DEVICE $INTERFACE_OPTIONS | analyzer $ANALYZER_OPTIONS -json -nv | n2kd $N2KD_OPTIONS";
 
 my $LOGFILE = '/var/log/n2kd_monitor.log';
 my $N2KD_LOGFILE = '/var/log/n2kd.log';

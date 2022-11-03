@@ -28,6 +28,7 @@ limitations under the License.
 
 extern int g_variableFieldRepeat[2]; // Actual number of repetitions
 bool       g_skip;
+int64_t    g_previousFieldValue;
 
 static bool unhandledStartOffset(const char *fieldName, size_t startBit)
 {
@@ -61,6 +62,16 @@ extern void mprintf(const char *format, ...)
 extern void mreset(void)
 {
   mp = mbuf;
+}
+
+extern void mset(size_t location)
+{
+  mp = mbuf + location;
+}
+
+extern char mchr(size_t location)
+{
+  return mbuf[location];
 }
 
 extern void mwrite(FILE *stream)
@@ -132,7 +143,7 @@ bool adjustDataLenStart(uint8_t **data, size_t *dataLen, size_t *startBit)
   if (bytes < *dataLen)
   {
     *data += bytes;
-    *dataLen += bytes;
+    *dataLen -= bytes;
     *startBit = *startBit & 7;
     return true;
   }
@@ -161,7 +172,11 @@ extern void printEmpty(const char *fieldName, int64_t exceptionValue)
   {
     if (showJsonEmpty)
     {
-      mprintf("%s\"%s\":null", getSep(), fieldName);
+      if (showBytes)
+      {
+        mprintf("\"value\":");
+      }
+      mprintf("null");
     }
     else
     {
@@ -173,22 +188,22 @@ extern void printEmpty(const char *fieldName, int64_t exceptionValue)
     switch (exceptionValue)
     {
       case DATAFIELD_UNKNOWN:
-        mprintf("%s %s = Unknown", getSep(), fieldName);
+        mprintf("Unknown");
         break;
       case DATAFIELD_ERROR:
-        mprintf("%s %s = ERROR", getSep(), fieldName);
+        mprintf("ERROR");
         break;
       case DATAFIELD_RESERVED1:
-        mprintf("%s %s = RESERVED1", getSep(), fieldName);
+        mprintf("RESERVED1");
         break;
       case DATAFIELD_RESERVED2:
-        mprintf("%s %s = RESERVED2", getSep(), fieldName);
+        mprintf("RESERVED2");
         break;
       case DATAFIELD_RESERVED3:
-        mprintf("%s %s = RESERVED3", getSep(), fieldName);
+        mprintf("RESERVED3");
         break;
       default:
-        mprintf("%s %s = Unhandled value %ld", getSep(), fieldName, exceptionValue);
+        mprintf("Unhandled value %ld", exceptionValue);
     }
   }
 }
@@ -234,6 +249,8 @@ static bool extractNumberNotEmpty(const Field *field,
     g_variableFieldRepeat[1] = *value;
   }
 
+  g_previousFieldValue = *value;
+
   if (*value > *maxValue - reserved)
   {
     printEmpty(fieldName, *value - *maxValue);
@@ -256,11 +273,11 @@ extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t 
 
   if (showJson)
   {
-    mprintf("%s\"%s\":\"%09u\"", getSep(), fieldName, value);
+    mprintf("\"%09u\"", (uint32_t) value);
   }
   else
   {
-    mprintf("%s %s = \"%09u\"", getSep(), fieldName, value);
+    mprintf("\"%09u\"", (uint32_t) value);
   }
 
   return true;
@@ -281,17 +298,14 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
   logDebug("fieldPrintNumber <%s> resolution=%g unit='%s'\n", fieldName, field->resolution, (field->unit ? field->unit : "-"));
   if (field->resolution == 1.0 && field->unitOffset == 0.0)
   {
-    if (showJson)
+    if (showJson && showBytes)
     {
-      mprintf("%s\"%s\":%" PRId64, getSep(), fieldName, value);
+      mprintf("\"value\":");
     }
-    else
+    mprintf("%" PRId64, value);
+    if (!showJson && unit != NULL)
     {
-      mprintf("%s %s = %" PRId64, getSep(), fieldName, value);
-      if (unit != NULL)
-      {
-        mprintf(" %s", unit);
-      }
+      mprintf(" %s", unit);
     }
   }
   else
@@ -312,15 +326,19 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
 
     if (showJson)
     {
-      mprintf("%s\"%s\":%.*f", getSep(), fieldName, precision, a);
+      if (showBytes)
+      {
+        mprintf("\"value\":");
+      }
+      mprintf("%.*f", precision, a);
     }
     else if (unit != NULL && strcmp(unit, "m") == 0 && a >= 1000.0)
     {
-      mprintf("%s %s = %.*f km", getSep(), fieldName, precision + 3, a / 1000);
+      mprintf("%.*f km", precision + 3, a / 1000);
     }
     else
     {
-      mprintf("%s %s = %.*f", getSep(), fieldName, precision, a);
+      mprintf("%.*f", precision, a);
       if (unit != NULL)
       {
         mprintf(" %s", unit);
@@ -363,17 +381,10 @@ extern bool fieldPrintFloat(Field *field, char *fieldName, uint8_t *data, size_t
   memcpy(&f.w, data, sizeof(f));
 #endif
 
-  if (showJson)
+  mprintf("%g", f.a);
+  if (!showJson && field->unit != NULL)
   {
-    mprintf("%s\"%s\":%g", getSep(), fieldName, f.a);
-  }
-  else
-  {
-    mprintf("%s %s = %g", getSep(), fieldName, f.a);
-    if (field->unit)
-    {
-      mprintf(" %s", field->unit);
-    }
+    mprintf(" %s", field->unit);
   }
 
   return true;
@@ -391,20 +402,16 @@ extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size
     return false;
   }
 
+  if (showJson && showBytes)
+  {
+    mprintf("\"value\":");
+  }
+
   bitMask = 1 << startBit;
 
   if (startBit + *bits > dataLen * 8)
   {
     *bits = dataLen * 8 - startBit;
-  }
-
-  if (showJson)
-  {
-    mprintf("%s\"%s\":\"", getSep(), fieldName);
-  }
-  else
-  {
-    mprintf("%s %s = ", getSep(), fieldName);
   }
 
   for (bit = 0; bit < *bits && bit < sizeof(buf) * 8; bit++)
@@ -437,10 +444,6 @@ extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size
       value        = 0;
       bitMagnitude = 1;
     }
-  }
-  if (showJson)
-  {
-    mprintf("\"");
   }
   return true;
 }
@@ -475,11 +478,11 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
     }
     if (showJson)
     {
-      mprintf("%s\"%s\":\"%s\"", getSep(), fieldName, s);
+      mprintf("\"%s\"", s);
     }
     else
     {
-      mprintf("%s %s = %s", getSep(), fieldName, s);
+      mprintf("%s", s);
     }
     return true;
   }
@@ -510,15 +513,23 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
   {
     if (showJsonValue)
     {
-      mprintf("%s\"%s\":{\"value\":%" PRId64 ",\"name\":\"%s\"}", getSep(), fieldName, value, s);
+      if (!showBytes)
+      {
+        mprintf("{");
+      }
+      mprintf("\"value\":%" PRId64 ",\"name\":\"%s\"}", value, s);
     }
     else if (showJson)
     {
-      mprintf("%s\"%s\":\"%s\"", getSep(), fieldName, s);
+      if (showBytes)
+      {
+        mprintf("\"value\":");
+      }
+      mprintf("\"%s\"", s);
     }
     else
     {
-      mprintf("%s %s = %s", getSep(), fieldName, s);
+      mprintf("%s", s);
     }
   }
   else
@@ -529,7 +540,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
     }
     else if (showJsonValue)
     {
-      mprintf("%s\"%s\":{\"value\":%" PRId64, getSep(), fieldName, value);
+      mprintf("{\"value\":%" PRId64, value);
       if (showJsonEmpty)
       {
         mprintf(",\"name\":null");
@@ -538,11 +549,11 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
     }
     else if (showJson)
     {
-      mprintf("%s\"%s\":%" PRId64, getSep(), fieldName, value);
+      mprintf("%" PRId64, value);
     }
     else
     {
-      mprintf("%s %s = %" PRId64, getSep(), fieldName, value);
+      mprintf("%" PRId64, value);
     }
   }
 
@@ -599,7 +610,7 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
   int64_t maxValue;
   int64_t bitValue;
   size_t  bit;
-  char    sep;
+  char   *sep;
 
   if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
   {
@@ -613,7 +624,7 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
     }
     else
     {
-      mprintf("%s %s = None", getSep(), fieldName);
+      mprintf("None");
     }
     return true;
   }
@@ -622,13 +633,15 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
 
   if (showJson)
   {
-    mprintf("%s\"%s\": ", getSep(), fieldName);
-    sep = '[';
+    if (showBytes)
+    {
+      mprintf("\"value\":");
+    }
+    sep = "[";
   }
   else
   {
-    mprintf("%s %s =", getSep(), fieldName);
-    sep = ' ';
+    sep = "";
   }
 
   for (bitValue = 1, bit = 0; bitValue <= maxValue; (bitValue *= 2), bit++)
@@ -643,27 +656,27 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
       {
         if (showJsonValue)
         {
-          mprintf("%c{\"value\":%" PRId64 ",\"name\":\"%s\"}", sep, bitValue, s);
+          mprintf("%s{\"value\":%" PRId64 ",\"name\":\"%s\"}", sep, bitValue, s);
         }
         else if (showJson)
         {
-          mprintf("%c\"%s\"", sep, s);
+          mprintf("%s\"%s\"", sep, s);
         }
         else
         {
-          mprintf("%c%s", sep, s);
+          mprintf("%s%s", sep, s);
         }
       }
       else
       {
-        mprintf("%c\"%" PRIu64 "\"", sep, bitValue);
+        mprintf("%s\"%" PRIu64 "\"", sep, bitValue);
       }
-      sep = ',';
+      sep = ",";
     }
   }
   if (showJson)
   {
-    if (sep != '[')
+    if (*sep != '[')
     {
       mprintf("]");
     }
@@ -686,7 +699,6 @@ extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_
   double   remainder;
   double   minutes;
   double   seconds;
-  double   scale;
 
   logDebug("fieldPrintLatLon for '%s' startbit=%zu bits=%zu\n", fieldName, startBit, *bits);
 
@@ -696,56 +708,56 @@ extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_
   }
 
   absVal = (value < 0) ? -value : value;
+  dd     = (double) value * field->resolution;
+
+  if (showJson && showBytes)
+  {
+    mprintf("\"value\":");
+  }
 
   if (showGeo == GEO_DD)
   {
-    dd = (double) value * field->resolution;
-
-    if (showJson)
-    {
-      mprintf("%s\"%s\":%10.7f", getSep(), fieldName, dd);
-    }
-    else
-    {
-      mprintf("%s %s = %10.7f", getSep(), fieldName, dd);
-    }
-  }
-  else if (showGeo == GEO_DM)
-  {
-    dd        = (double) absVal * field->resolution;
-    degrees   = floor(dd);
-    remainder = dd - degrees;
-    minutes   = remainder * 60.;
-
-    mprintf((showJson ? "%s\"%s\":\"%02u&deg; %6.3f %c\"" : "%s %s = %02ud %6.3f %c"),
-            getSep(),
-            fieldName,
-            (uint32_t) degrees,
-            minutes,
-            (isLongitude ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
+    mprintf("%10.7f", dd);
   }
   else
   {
-    dd        = (double) absVal * field->resolution;
-    degrees   = floor(dd);
-    remainder = dd - degrees;
-    minutes   = floor(remainder * 60.);
-    seconds   = floor(remainder * 3600.) - 60. * minutes;
-
-    mprintf((showJson ? "%s\"%s\":\"%02u&deg;%02u&rsquo;%06.3f&rdquo;%c\"" : "%s %s = %02ud %02u' %06.3f\"%c"),
-            getSep(),
-            fieldName,
-            (int) degrees,
-            (int) minutes,
-            seconds,
-            (isLongitude ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
-    if (showJson)
+    if (showJsonValue)
     {
-      scale = log10(1.0 / field->resolution);
-      dd    = (double) value * field->resolution;
-      logDebug("float %g resolution %g scale %g\n", dd, field->resolution, scale);
+      if (!showBytes)
+      {
+        mprintf("{");
+      }
+      mprintf("\"value\":%" PRId64 ",\"name\":", value);
+    }
+    if (showGeo == GEO_DM)
+    {
+      dd        = (double) absVal * field->resolution;
+      degrees   = floor(dd);
+      remainder = dd - degrees;
+      minutes   = remainder * 60.;
 
-      mprintf("%s\"%s_dd\":%.*g", getSep(), fieldName, (int) scale, dd);
+      mprintf((showJson ? "\"%02u&deg; %6.3f %c\"" : "%02ud %6.3f %c"),
+              (uint32_t) degrees,
+              minutes,
+              (isLongitude ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
+    }
+    else
+    {
+      dd        = (double) absVal * field->resolution;
+      degrees   = floor(dd);
+      remainder = dd - degrees;
+      minutes   = floor(remainder * 60.);
+      seconds   = floor(remainder * 3600.) - 60. * minutes;
+
+      mprintf((showJson ? "\"%02u&deg;%02u&rsquo;%06.3f&rdquo;%c\"" : "%02ud %02u' %06.3f\"%c"),
+              (int) degrees,
+              (int) minutes,
+              seconds,
+              (isLongitude ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
+    }
+    if (showJsonValue)
+    {
+      mprintf("}");
     }
   }
   return true;
@@ -761,6 +773,7 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   int64_t  value;
   int64_t  maxValue;
   uint64_t t;
+  int      digits;
 
   if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
   {
@@ -793,26 +806,44 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   hours   = minutes / 60;
   minutes = minutes % 60;
 
+  digits = log10(unitspersecond);
+
   if (showJson)
   {
+    if (showJsonValue)
+    {
+      if (!showBytes)
+      {
+        mprintf("{");
+      }
+      mprintf("\"value\":%" PRIu64 ",\"name\":", t);
+    }
+    else if (showBytes)
+    {
+      mprintf("\"value\":");
+    }
     if (units != 0)
     {
-      mprintf("%s \"%s\": \"%02u:%02u:%02u.%05u\"", getSep(), fieldName, hours, minutes, seconds, units);
+      mprintf("\"%02u:%02u:%02u.%0*u\"", hours, minutes, seconds, digits, units);
     }
     else
     {
-      mprintf("%s \"%s\": \"%02u:%02u:%02u\"", getSep(), fieldName, hours, minutes, seconds);
+      mprintf("\"%02u:%02u:%02u\"", hours, minutes, seconds);
+    }
+    if (showJsonValue)
+    {
+      mprintf("}");
     }
   }
   else
   {
     if (units)
     {
-      mprintf("%s %s = %02u:%02u:%02u.%05u", getSep(), fieldName, hours, minutes, seconds, units);
+      mprintf("%02u:%02u:%02u.%0*u", hours, minutes, seconds, digits, units);
     }
     else
     {
-      mprintf("%s %s = %02u:%02u:%02u", getSep(), fieldName, hours, minutes, seconds);
+      mprintf("%02u:%02u:%02u", hours, minutes, seconds);
     }
   }
   return true;
@@ -860,11 +891,26 @@ extern bool fieldPrintDate(Field *field, char *fieldName, uint8_t *data, size_t 
   strftime(buf, sizeof(buf), "%Y.%m.%d", tm);
   if (showJson)
   {
-    mprintf("%s\"%s\":\"%s\"", getSep(), fieldName, buf);
+    if (showJsonValue)
+    {
+      if (!showBytes)
+      {
+        mprintf("{");
+      }
+      mprintf("\"value\":%" PRIu16 ",\"name\":\"%s\"}", d, buf);
+    }
+    else
+    {
+      if (showBytes)
+      {
+        mprintf("\"value\":");
+      }
+      mprintf("\"%s\"", buf);
+    }
   }
   else
   {
-    mprintf("%s %s = %s", getSep(), fieldName, buf);
+    mprintf("%s", buf);
   }
   return true;
 }
@@ -917,15 +963,16 @@ static void print_ascii_json_escaped(uint8_t *data, int len)
         return;
 
       default:
-        if (c >= ' ' && c <= '~')
+        if (c > 0x00)
+        {
           mprintf("%c", c);
+        }
     }
   }
 }
 
 static bool printString(char *fieldName, uint8_t *data, size_t len)
 {
-  int      k;
   uint8_t *lastbyte;
 
   if (len > 0)
@@ -947,24 +994,17 @@ static bool printString(char *fieldName, uint8_t *data, size_t len)
 
   if (showJson)
   {
-    mprintf("%s\"%s\":\"", getSep(), fieldName);
+    if (showBytes)
+    {
+      mprintf("\"value\":");
+    }
+    mprintf("\"");
     print_ascii_json_escaped(data, len);
     mprintf("\"");
   }
   else
   {
-    mprintf("%s %s = ", getSep(), fieldName);
-    for (k = 0; k < len; k++)
-    {
-      if (data[k] == 0xff)
-      {
-        break;
-      }
-      if (data[k] >= ' ' && data[k] <= '~')
-      {
-        mprintf("%c", data[k]);
-      }
-    }
+    print_ascii_json_escaped(data, len);
   }
 
   return true;
@@ -1076,6 +1116,7 @@ extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, si
   {
     return false;
   }
+  logDebug("fieldPrintStringLAU: <%s> data=%p len=%zu startBit=%zu bits=%zu\n", fieldName, data, dataLen, startBit, *bits);
 
   len     = *data++;
   control = *data++;
@@ -1084,9 +1125,8 @@ extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, si
     logError("field '%s': Invalid string length %u in STRING_LAU field\n", fieldName, len);
     return false;
   }
-  len = len - 2;
-  // Cap to dataLen
-  len   = CB_MIN(len, dataLen - 2);
+  len = CB_MIN(len, dataLen) - 2;
+
   *bits = BYTES(len + 2);
 
   if (control == 0)
@@ -1098,7 +1138,9 @@ extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, si
     {
       die("Out of memory");
     }
-    len = utf16_to_utf8((const utf16_t *) data, len / 2, utf8, utf8_len + 1);
+    logDebug("fieldprintStringLAU: UTF16 len %zu requires %zu utf8 bytes\n", len / 2, utf8_len);
+    len  = utf16_to_utf8((const utf16_t *) data, len / 2, utf8, utf8_len + 1);
+    data = utf8;
   }
   else if (control > 1)
   {
@@ -1125,6 +1167,13 @@ extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_
     return false;
   }
 
+  if (*bits == 0 && strcmp(field->fieldType, "BINARY") == 0)
+  {
+    // The length is in the previous field. This is heuristically defined right now, it might change.
+    // The only PGNs where this happens are AIS PGNs 129792, 129795 and 129797.
+    *bits = g_previousFieldValue;
+  }
+
   if (startBit + *bits > dataLen * 8)
   {
     *bits = dataLen * 8 - startBit;
@@ -1132,11 +1181,7 @@ extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_
 
   if (showJson)
   {
-    mprintf("%s\"%s\":\"", getSep(), fieldName);
-  }
-  else
-  {
-    mprintf("%s %s = ", getSep(), fieldName);
+    mprintf("\"");
   }
   remaining_bits = *bits;
   s              = "";

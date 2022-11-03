@@ -247,6 +247,12 @@
                   </xsl:if>
                 </td>
                 <td>
+                  <xsl:if test="BitLengthField">
+                    Field <xsl:value-of select="BitLengthField"/> defines the 
+                  </xsl:if>
+                  <xsl:if test="BitLengthVariable">
+                    Variable length
+                  </xsl:if>
                   <xsl:if test="BitLength">
                     <xsl:value-of select="BitLength"/> bits
                   </xsl:if>

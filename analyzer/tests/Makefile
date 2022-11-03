@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 tests
 
 all:	tests
 
@@ -47,8 +47,36 @@ test3:
 # This tests JSON stability
 #
 test4:	
-	$(ANALYZER) < pgn-test.in > $(TEMPDIR)/pgn-test-json.out -debug -q -json -fixtime pgn-test 2> $(TEMPDIR)/pgn-test-json.err
+	$(ANALYZER) < pgn-test.in > $(TEMPDIR)/pgn-test-json.out -json -fixtime pgn-test 2> $(TEMPDIR)/pgn-test-json.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-test-json.out
 	diff $(TEMPDIR)/pgn-test-json.out pgn-test-json.out
 	diff $(TEMPDIR)/pgn-test-json.err pgn-test-json.err
 
-tests:	test1 test2 test3 test4
+#
+# This tests JSON stability
+#
+test5:	
+	$(ANALYZER) < pgn-test.in > $(TEMPDIR)/pgn-test-json-nv.out -nv -q -json -fixtime pgn-test 2> $(TEMPDIR)/pgn-test-json-nv.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-test-json-nv.out
+	diff $(TEMPDIR)/pgn-test-json-nv.out pgn-test-json-nv.out
+	diff $(TEMPDIR)/pgn-test-json-nv.err pgn-test-json-nv.err
+
+#
+# This tests JSON stability
+#
+test6:	
+	$(ANALYZER) < pgn-test.in > $(TEMPDIR)/pgn-test-json-debug.out -debug -q -json -fixtime pgn-test 2> $(TEMPDIR)/pgn-test-json-debug.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-test-json-debug.out
+	diff $(TEMPDIR)/pgn-test-json-debug.out pgn-test-json-debug.out
+	diff $(TEMPDIR)/pgn-test-json-debug.err pgn-test-json-debug.err
+
+#
+# This tests JSON stability
+#
+test7:	
+	$(ANALYZER) < pgn-test.in > $(TEMPDIR)/pgn-test-json-nv-debug.out -nv -debug -q -json -fixtime pgn-test 2> $(TEMPDIR)/pgn-test-json-nv-debug.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-test-json-nv-debug.out
+	diff $(TEMPDIR)/pgn-test-json-nv-debug.out pgn-test-json-nv-debug.out
+	diff $(TEMPDIR)/pgn-test-json-nv-debug.err pgn-test-json-nv-debug.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7

@@ -38,6 +38,7 @@ bool       showData      = false;
 bool       showJson      = false;
 bool       showJsonEmpty = false;
 bool       showJsonValue = false;
+bool       showBytes     = false;
 bool       showSI        = true; // Output everything in strict SI units
 GeoFormats showGeo       = GEO_DD;
 
@@ -206,6 +207,16 @@ static unsigned int getMinimalPgnLength(Pgn *pgn, bool *isVariable)
   length /= 8; // Bits to bytes
   logDebug("PGN %u len=%u\n", pgn->pgn, length);
   return length;
+}
+
+static size_t g_lookupValue;
+
+static void filterPair(size_t n, const char *s)
+{
+  if (n == g_lookupValue)
+  {
+    printf("%s", s);
+  }
 }
 
 static void explainPairText(size_t n, const char *s)
@@ -631,9 +642,20 @@ static void explainPGNXML(Pgn pgn)
       {
         printXML(10, "Description", f.description);
       }
+      else if (f.unit && f.unit[0] == '=')
+      {
+        g_lookupValue = (size_t) strtol(f.unit + 1, 0, 10);
+        printf("          <Description>");
+        (f.lookup.function.pairEnumerator)(filterPair);
+        printf("</Description>\n");
+      }
       if (f.size == LEN_VARIABLE)
       {
         printf("          <BitLengthVariable>true</BitLengthVariable>\n");
+        if (strcmp(f.fieldType, "BINARY") == 0)
+        {
+          printXMLUnsigned(10, "BitLengthField", f.order - 1);
+        }
       }
       else
       {

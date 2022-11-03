@@ -6,6 +6,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [4.7.0]
+
+### Changed
+
+- Format change: `analyzer` now passes the unformatted data for fields such as Date and Time in 
+  `{"value":x,"name":"fmt"}` style so downstream code does not need to un-parse these. 
+  This is triggered by `-nv` just as it is for lookup fields.
+- Format change: `analyzer` output for fields is always `{"fieldname": <object>, ...}` where object
+  is either a simple value or a `{ "key": "value", ...}` object that contains at least the key named
+  `"value"`.
+- `docs/canboat.xml`: PGNInfo element `Fallback` is now a boolean.
+
+### Added
+
+- #337: Add `BitLengthField` element for variable length binary fields.
+
+### Fixed
+
+- #336: PGN 129285 Repeating Field info incorrect.
+- #335: UTF16 strings are printed incorrectly.
+- #333: Repair decimal fraction printing of Time fields.
+- #332: PGNInfo.Fallback should be type 'Boolean'.
+- #331: Fix invalid JSON generation by `analyzer` especially when options `-nv` and/or `-debug` were passed.
+- Fix regression where end-of-data was not properly handled; caused incomplete data fields to be processed
+  incorrectly.
+
+## [4.6.1]
+
+### Fixed
+
+- #328: PGN 129302: Fix field lengths and lookup lists for `Bearing Reference` and `Calculation Type`.
+- #326: AIS PGNs now have Enum Message Id, also use this in the ais parser.
+
+## [4.6.0]
+
+### Fixed
+
+- #327: Fix print of MMSI on gcc-8.30/linux-arm7l; cast required to pass correct size on stack.
+- #326: Match fields should have lookup enum or be number type.
+
+## [4.5.2]
+
+### Fixed
+
+- Repaired `n2kd_monitor` to pass `-nv` option.
+- Improve dependencies on common files in Makefiles.
+
 ## [4.5.1]
 
 ### Changed
@@ -436,7 +483,15 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.2.2...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.7.0...HEAD
+[4.7.0]: https://github.com/canboat/canboat/compare/v4.6.1...v4.7.0
+[4.6.1]: https://github.com/canboat/canboat/compare/v4.6.0...v4.6.1
+[4.6.0]: https://github.com/canboat/canboat/compare/v4.5.2...v4.6.0
+[4.5.2]: https://github.com/canboat/canboat/compare/v4.5.1...v4.5.2
+[4.5.1]: https://github.com/canboat/canboat/compare/v4.5.0...v4.5.1
+[4.5.0]: https://github.com/canboat/canboat/compare/v4.4.0...v4.5.0
+[4.4.0]: https://github.com/canboat/canboat/compare/v4.3.0...v4.4.0
+[4.3.0]: https://github.com/canboat/canboat/compare/v4.2.2...v4.3.0
 [4.2.2]: https://github.com/canboat/canboat/compare/v4.2.1...v4.2.2
 [4.2.1]: https://github.com/canboat/canboat/compare/v4.2.0...v4.2.1
 [4.2.0]: https://github.com/canboat/canboat/compare/v4.1.0...v4.2.0

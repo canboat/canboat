@@ -18,12 +18,24 @@
 
 import sys;
 import json;
+import traceback;
+
+if (sys.argv[1] == '--line-by-line'):
+    file = open(sys.argv[2])
+    for line in file.readlines():
+        try:
+            data = json.loads(line)
+        except:
+            print(line)
+            traceback.print_exc(limit=1)
+            exit(1)
+    print("JSON in", sys.argv[2], "seems valid when parsed line-by-line.")
+    exit(0)
 
 res = 0
 allowedDuplicates = { } # 'Reserved', 'Spare' }
 
 file = open(sys.argv[1])
-
 data = json.loads(file.read())
 pgns = data["PGNs"]
 pMap = {}
