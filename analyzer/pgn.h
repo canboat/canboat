@@ -2292,7 +2292,7 @@ Pgn pgnList[] = {
     ,
     {"Alert Configuration",
      126986,
-     PACKET_INCOMPLETE,
+     PACKET_INCOMPLETE | PACKET_INTERVAL_UNKNOWN,
      PACKET_FAST,
      {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
       LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
@@ -2315,7 +2315,7 @@ Pgn pgnList[] = {
     ,
     {"Alert Threshold",
      126987,
-     PACKET_INCOMPLETE,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_INTERVAL_UNKNOWN,
      PACKET_FAST,
      {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
       LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
@@ -2339,7 +2339,7 @@ Pgn pgnList[] = {
     ,
     {"Alert Value",
      126988,
-     PACKET_INCOMPLETE,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_INTERVAL_UNKNOWN,
      PACKET_FAST,
      {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
       LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
@@ -4306,7 +4306,7 @@ Pgn pgnList[] = {
     ,
     {"Loran-C TD Data",
      130052,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
      PACKET_FAST,
      {SIMPLE_SIGNED_FIELD("Group Repetition Interval (GRI)", BYTES(4)),
       SIMPLE_SIGNED_FIELD("Master Range", BYTES(4)),
@@ -4329,7 +4329,7 @@ Pgn pgnList[] = {
     ,
     {"Loran-C Range Data",
      130053,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
      PACKET_FAST,
      {SIMPLE_SIGNED_FIELD("Group Repetition Interval (GRI)", BYTES(4)),
       SIMPLE_SIGNED_FIELD("Master Range", BYTES(4)),
@@ -4352,7 +4352,7 @@ Pgn pgnList[] = {
     ,
     {"Loran-C Signal Data",
      130054,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
      PACKET_FAST,
      {SIMPLE_SIGNED_FIELD("Group Repetition Interval (GRI)", BYTES(4)),
       STRING_FIX_FIELD("Station identifier", BYTES(1)),
@@ -4368,7 +4368,7 @@ Pgn pgnList[] = {
     ,
     {"Channel Source Configuration",
      130061,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
      PACKET_FAST,
      {UINT8_FIELD("Data Source Channel ID"),
       SIMPLE_FIELD("Source Selection Status", 2),
@@ -4812,7 +4812,7 @@ Pgn pgnList[] = {
     ,
     {"Payload Mass",
      130560,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
      PACKET_SINGLE,
      {UINT8_FIELD("SID"),
       SIMPLE_FIELD("Measurement Status", 3),
@@ -4826,7 +4826,7 @@ Pgn pgnList[] = {
     /* http://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
 
     This PGN may be requested or used to command and configure a number of Watermaker controls. The Command Group Function PGN
-    126208 is used perform the following: start/stop a production, start/stop rinse or flush operation , start/stop low and high
+    126208 is used perform the following: start/stop a production, start/stop rinse or flush operation, start/stop low and high
     pressure pump and perform an emergency stop. The Request Group Function PGN 126208 or ISO Request PGN 059904 may be used to
     request this PGN. This PGN also provides Watermaker status and measurement information. The PGN is broadcast periodically.
 
@@ -4994,7 +4994,7 @@ Pgn pgnList[] = {
     ,
     {"Small Craft Status",
      130576,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_NOT_SEEN,
      PACKET_SINGLE,
      {PERCENTAGE_I8_FIELD("Port trim tab"),
       PERCENTAGE_I8_FIELD("Starboard trim tab"),
