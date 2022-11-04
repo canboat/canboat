@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [4.8.0]
+
+### Added
+
+- #125: Added PGNs 130052 (Loran-C TD Data), 130054 (Loran-C Range Data), and 130054 (Loran-C Signal Data)
+- Added fields for PGN 126986 (Alert Configuration) with some field lengths unknown
+- Added fields for PGN 126987 (Alert Threshold) and PGN 126988 (Alert Value)
+- Added fields for PGN 130061 (Channel Source Configuration) and PGN 130560 (Payload Mass)
+- Added STATION_STATUS bitfield lookup for Loran-C PGNs
+- Added signed version of SNR field
+
+### Changed
+
+- Changed PGN 130560 (Payload Mass) from fast packet to single frame
+- Changed simple signed fields to signed percentages for PGN 130576 (Small Craft Status)
+- Set interval of PGN 130313 (Humidity) to 2000 ms
+- More forgiving timeout to suit NGT-1 USB
+
 ## [4.7.0]
 
 ### Changed
@@ -161,7 +179,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - XML v2 `canboat.xsl` changes:
   - Show offset for number fields and add textual explanation.
 
-### Issues resolved:
+### Fixed
 
 - #283: Further improvements to v2 JSON/XML
 
@@ -176,7 +194,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - Add an orthogonal `PhysicalQuantity` type in the canboat.xml,json that explains what is stored in the field.
 - Cleaner field lists in `canboat.xsl`.
 
-### Issues resolved:
+### Fixed
 
 - #311: Fix regression in 4.0.0: PGN 126996 Version field length
 - #310: Resolution of field should match field type
@@ -238,7 +256,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - The algorithm for recombining frames into a full fast-packet PGN has been refactored. It now handles out-of-order
   data as produced by the YDGW-02. Some tests have been added to verify that this works.
 
-Issues resolved:
+### Fixed
 
 - #305: Print reserved fields only when they are not all ones.
 - #304: Print spare fields only when they are not all zeroes.

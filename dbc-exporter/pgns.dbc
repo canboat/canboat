@@ -1,4 +1,4 @@
-VERSION "4.7.0"
+VERSION "4.8.0"
 
 
 NS_ : 
@@ -929,6 +929,18 @@ BO_ 2583368446 PGN_129810_aisClassBStaticDataMs: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2583430398 PGN_130052_loranCTdData: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583430654 PGN_130053_loranCRangeData: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583430910 PGN_130054_loranCSignalData: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2583432446 PGN_130060_label: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1011,6 +1023,7 @@ BO_ 2583496958 PGN_130312_temperature: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583497214 PGN_130313_humidity: 8 Vector__XXX
+ SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ setHumidity : 40|16@1+ (0.004,0) [0|0] "%" Vector__XXX
  SG_ actualHumidity : 24|16@1+ (0.004,0) [0|0] "%" Vector__XXX
  SG_ source : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1057,8 +1070,12 @@ BO_ 2583500030 PGN_130324_mooredBuoyStationData: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583560446 PGN_130560_payloadMass: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved6 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ payloadMass : 24|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ measurementId : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 11|5@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ measurementStatus : 8|3@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583562238 PGN_130567_watermakerInputSettin: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
@@ -1089,8 +1106,9 @@ BO_ 2583564030 PGN_130574_supportedZoneData: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583564542 PGN_130576_smallCraftStatus: 8 Vector__XXX
- SG_ starboardTrimTab : 8|8@1- (1,0) [0|0] "" Vector__XXX
- SG_ portTrimTab : 0|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 16|48@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ starboardTrimTab : 8|8@1- (1,0) [0|0] "%" Vector__XXX
+ SG_ portTrimTab : 0|8@1- (1,0) [0|0] "%" Vector__XXX
 
 BO_ 2583564798 PGN_130577_directionData: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
@@ -1435,6 +1453,9 @@ CM_ BO_ 2583367422 "AIS Channel Management";
 CM_ BO_ 2583367678 "AIS Class B Group Assignment";
 CM_ BO_ 2583368190 "AIS Class B static data (msg 24 Part A)";
 CM_ BO_ 2583368446 "AIS Class B static data (msg 24 Part B)";
+CM_ BO_ 2583430398 "Loran-C TD Data";
+CM_ BO_ 2583430654 "Loran-C Range Data";
+CM_ BO_ 2583430910 "Loran-C Signal Data";
 CM_ BO_ 2583432446 "Label";
 CM_ BO_ 2583432702 "Channel Source Configuration";
 CM_ BO_ 2583433470 "Route and WP Service - Database List";

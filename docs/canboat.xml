@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.7.0
+CANboat version v4.8.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -26,8 +26,8 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.7.0</Version>
-  <Copyright>CANboat version v4.7.0
+  <Version>4.8.0</Version>
+  <Copyright>CANboat version v4.8.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -2004,6 +2004,12 @@ limitations under the License.
     </LookupIndirectEnumeration>
   </LookupIndirectEnumerations>
   <LookupBitEnumerations>
+    <LookupBitEnumeration Name='STATION_STATUS' MaxValue='3'>
+      <BitPair Bit='0' Name='Station in use' />
+      <BitPair Bit='1' Name='Low SNR' />
+      <BitPair Bit='2' Name='Cycle Error' />
+      <BitPair Bit='3' Name='Blink' />
+    </LookupBitEnumeration>
     <LookupBitEnumeration Name='ENGINE_STATUS_1' MaxValue='15'>
       <BitPair Bit='0' Name='Check Engine' />
       <BitPair Bit='1' Name='Over Temperature' />
@@ -12301,8 +12307,204 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>0</FieldCount>
-      <Length>0</Length>
+      <FieldCount>15</FieldCount>
+      <Length>20</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>alertType</Id>
+          <Name>Alert Type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>ALERT_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>alertCategory</Id>
+          <Name>Alert Category</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>4</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>ALERT_CATEGORY</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>alertSystem</Id>
+          <Name>Alert System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>alertSubSystem</Id>
+          <Name>Alert Sub-System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>alertId</Id>
+          <Name>Alert ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>dataSourceNetworkIdName</Id>
+          <Name>Data Source Network ID NAME</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>18446744073709551615</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>dataSourceInstance</Id>
+          <Name>Data Source Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>dataSourceIndexSource</Id>
+          <Name>Data Source Index-Source</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>alertOccurrenceNumber</Id>
+          <Name>Alert Occurrence Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>alertControl</Id>
+          <Name>Alert Control</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>userDefinedAlertAssignment</Id>
+          <Name>User Defined Alert Assignment</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>130</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>132</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>reactivationPeriod</Id>
+          <Name>Reactivation Period</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>136</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>temporarySilencePeriod</Id>
+          <Name>Temporary Silence Period</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>escalationPeriod</Id>
+          <Name>Escalation Period</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>152</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>126987</PGN>
@@ -12311,13 +12513,201 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>0</FieldCount>
-      <Length>0</Length>
+      <FieldCount>14</FieldCount>
+      <MinLength>17</MinLength>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>11</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1CountField>10</RepeatingFieldSet1CountField>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>alertType</Id>
+          <Name>Alert Type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>ALERT_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>alertCategory</Id>
+          <Name>Alert Category</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>4</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>ALERT_CATEGORY</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>alertSystem</Id>
+          <Name>Alert System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>alertSubSystem</Id>
+          <Name>Alert Sub-System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>alertId</Id>
+          <Name>Alert ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>dataSourceNetworkIdName</Id>
+          <Name>Data Source Network ID NAME</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>18446744073709551615</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>dataSourceInstance</Id>
+          <Name>Data Source Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>dataSourceIndexSource</Id>
+          <Name>Data Source Index-Source</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>alertOccurrenceNumber</Id>
+          <Name>Alert Occurrence Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>numberOfParameters</Id>
+          <Name>Number of Parameters</Name>
+          <Description>Total Number of Threshold Parameters</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>parameterNumber</Id>
+          <Name>Parameter Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>136</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>triggerMethod</Id>
+          <Name>Trigger Method</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>thresholdDataFormat</Id>
+          <Name>Threshold Data Format</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>152</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>thresholdLevel</Id>
+          <Name>Threshold Level</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>160</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>18446744073709551615</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>126988</PGN>
@@ -12326,13 +12716,188 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>0</FieldCount>
-      <Length>0</Length>
+      <FieldCount>13</FieldCount>
+      <MinLength>17</MinLength>
+      <RepeatingFieldSet1Size>3</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>11</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1CountField>10</RepeatingFieldSet1CountField>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>alertType</Id>
+          <Name>Alert Type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>ALERT_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>alertCategory</Id>
+          <Name>Alert Category</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>4</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>ALERT_CATEGORY</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>alertSystem</Id>
+          <Name>Alert System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>alertSubSystem</Id>
+          <Name>Alert Sub-System</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>alertId</Id>
+          <Name>Alert ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>dataSourceNetworkIdName</Id>
+          <Name>Data Source Network ID NAME</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>18446744073709551615</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>dataSourceInstance</Id>
+          <Name>Data Source Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>dataSourceIndexSource</Id>
+          <Name>Data Source Index-Source</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>alertOccurrenceNumber</Id>
+          <Name>Alert Occurrence Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>numberOfParameters</Id>
+          <Name>Number of Parameters</Name>
+          <Description>Total Number of Value Parameters</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>valueParameterNumber</Id>
+          <Name>Value Parameter Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>136</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>valueDataFormat</Id>
+          <Name>Value Data Format</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>valueData</Id>
+          <Name>Value Data</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>152</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>18446744073709551615</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>126992</PGN>
@@ -26452,6 +27017,503 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130052</PGN>
+      <Id>loranCTdData</Id>
+      <Description>Loran-C TD Data</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>15</FieldCount>
+      <Length>32</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>groupRepetitionIntervalGri</Id>
+          <Name>Group Repetition Interval (GRI)</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>masterRange</Id>
+          <Name>Master Range</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>vSecondaryTd</Id>
+          <Name>V Secondary TD</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>wSecondaryTd</Id>
+          <Name>W Secondary TD</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>xSecondaryTd</Id>
+          <Name>X Secondary TD</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>ySecondaryTd</Id>
+          <Name>Y Secondary TD</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>160</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>zSecondaryTd</Id>
+          <Name>Z Secondary TD</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>stationStatusMaster</Id>
+          <Name>Station status: Master</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>224</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>stationStatusV</Id>
+          <Name>Station status: V</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>228</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>stationStatusW</Id>
+          <Name>Station status: W</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>232</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>stationStatusX</Id>
+          <Name>Station status: X</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>236</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>stationStatusY</Id>
+          <Name>Station status: Y</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>240</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>stationStatusZ</Id>
+          <Name>Station status: Z</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>244</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>mode</Id>
+          <Name>Mode</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>248</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>RESIDUAL_MODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>252</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130053</PGN>
+      <Id>loranCRangeData</Id>
+      <Description>Loran-C Range Data</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>15</FieldCount>
+      <Length>32</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>groupRepetitionIntervalGri</Id>
+          <Name>Group Repetition Interval (GRI)</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>masterRange</Id>
+          <Name>Master Range</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>vSecondaryRange</Id>
+          <Name>V Secondary Range</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>wSecondaryRange</Id>
+          <Name>W Secondary Range</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>xSecondaryRange</Id>
+          <Name>X Secondary Range</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>ySecondaryRange</Id>
+          <Name>Y Secondary Range</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>160</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>zSecondaryRange</Id>
+          <Name>Z Secondary Range</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>stationStatusMaster</Id>
+          <Name>Station status: Master</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>224</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>stationStatusV</Id>
+          <Name>Station status: V</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>228</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>stationStatusW</Id>
+          <Name>Station status: W</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>232</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>stationStatusX</Id>
+          <Name>Station status: X</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>236</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>stationStatusY</Id>
+          <Name>Station status: Y</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>240</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>stationStatusZ</Id>
+          <Name>Station status: Z</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>244</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>STATION_STATUS</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>mode</Id>
+          <Name>Mode</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>248</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>RESIDUAL_MODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>252</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130054</PGN>
+      <Id>loranCSignalData</Id>
+      <Description>Loran-C Signal Data</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>5</FieldCount>
+      <Length>15</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>groupRepetitionIntervalGri</Id>
+          <Name>Group Repetition Interval (GRI)</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>stationIdentifier</Id>
+          <Name>Station identifier</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>stationSnr</Id>
+          <Name>Station SNR</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>dB</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>SIGNAL_TO_NOISE_RATIO</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>stationEcd</Id>
+          <Name>Station ECD</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>stationAsf</Id>
+          <Name>Station ASF</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130060</PGN>
       <Id>label</Id>
       <Description>Label</Description>
@@ -26474,14 +27536,151 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>0</FieldCount>
-      <Length>0</Length>
+      <FieldCount>11</FieldCount>
+      <Length>19</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>dataSourceChannelId</Id>
+          <Name>Data Source Channel ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>sourceSelectionStatus</Id>
+          <Name>Source Selection Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>10</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>nameSelectionCriteriaMask</Id>
+          <Name>NAME Selection Criteria Mask</Name>
+          <BitLength>12</BitLength>
+          <BitOffset>12</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceName</Id>
+          <Name>Source NAME</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>18446744073709551615</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>pgn</Id>
+          <Name>PGN</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>16777213</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>dataSourceInstanceFieldNumber</Id>
+          <Name>Data Source Instance Field Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>dataSourceInstanceValue</Id>
+          <Name>Data Source Instance Value</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>secondaryEnumerationFieldNumber</Id>
+          <Name>Secondary Enumeration Field Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>secondaryEnumerationFieldValue</Id>
+          <Name>Secondary Enumeration Field Value</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>136</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>parameterFieldNumber</Id>
+          <Name>Parameter Field Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>130064</PGN>
@@ -28152,9 +29351,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Humidity</Description>
       <Type>Single</Type>
       <Complete>true</Complete>
-      <FieldCount>5</FieldCount>
-      <Length>7</Length>
-      <TransmissionIrregular>true</TransmissionIrregular>
+      <FieldCount>6</FieldCount>
+      <Length>8</Length>
+      <TransmissionInterval>2000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -28223,6 +29422,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>262.132</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -29385,17 +30594,89 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130560</PGN>
       <Id>payloadMass</Id>
       <Description>Payload Mass</Description>
-      <Type>Fast</Type>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>0</FieldCount>
-      <Length>0</Length>
+      <FieldCount>6</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>measurementStatus</Id>
+          <Name>Measurement Status</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>5</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>measurementId</Id>
+          <Name>Measurement ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>payloadMass</Id>
+          <Name>Payload Mass</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>130567</PGN>
@@ -30756,13 +32037,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>2</FieldCount>
-      <Length>2</Length>
+      <FieldCount>3</FieldCount>
+      <Length>8</Length>
       <TransmissionInterval>200</TransmissionInterval>
       <Fields>
         <Field>
@@ -30772,6 +32050,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-127</RangeMin>
@@ -30785,11 +32064,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>8</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-127</RangeMin>
           <RangeMax>125</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
