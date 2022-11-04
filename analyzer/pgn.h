@@ -234,9 +234,15 @@ typedef struct
     .description = desc                                                                                             \
   }
 
-#define SIGNALTONOISERATIO_FIELD(nam, desc)                                                                          \
+#define SIGNALTONOISERATIO_UFIX16_FIELD(nam, desc)                                                                   \
   {                                                                                                                  \
     .name = nam, .size = BYTES(2), .resolution = 0.01, .fieldType = "SIGNALTONOISERATIO_UFIX16", .description = desc \
+  }
+
+#define SIGNALTONOISERATIO_FIX16_FIELD(nam, desc)                                                                \
+  {                                                                                                              \
+    .name = nam, .size = BYTES(2), .resolution = 0.01, .hasSign = true, .fieldType = "SIGNALTONOISERATIO_FIX16", \
+    .description = desc                                                                                          \
   }
 
 #define VERSION_FIELD(nam)                                                     \
@@ -2284,13 +2290,74 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Alert Configuration", 126986, PACKET_INCOMPLETE, PACKET_FAST, {END_OF_FIELDS}}
+    {"Alert Configuration",
+     126986,
+     PACKET_INCOMPLETE | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      UINT8_FIELD("Alert System"),
+      UINT8_FIELD("Alert Sub-System"),
+      UINT16_FIELD("Alert ID"),
+      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      UINT8_FIELD("Data Source Instance"),
+      UINT8_FIELD("Data Source Index-Source"),
+      UINT8_FIELD("Alert Occurrence Number"),
+      /* Unknown field lengths past this point, except Alert Control is likely 2 bits */
+      SIMPLE_FIELD("Alert Control", 2),
+      SIMPLE_FIELD("User Defined Alert Assignment", 2),
+      RESERVED_FIELD(4),
+      UINT8_FIELD("Reactivation Period"),
+      UINT8_FIELD("Temporary Silence Period"),
+      UINT8_FIELD("Escalation Period"),
+      END_OF_FIELDS}}
 
     ,
-    {"Alert Threshold", 126987, PACKET_INCOMPLETE, PACKET_FAST, {END_OF_FIELDS}}
+    {"Alert Threshold",
+     126987,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      UINT8_FIELD("Alert System"),
+      UINT8_FIELD("Alert Sub-System"),
+      UINT16_FIELD("Alert ID"),
+      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      UINT8_FIELD("Data Source Instance"),
+      UINT8_FIELD("Data Source Index-Source"),
+      UINT8_FIELD("Alert Occurrence Number"),
+      UINT8_DESC_FIELD("Number of Parameters", "Total Number of Threshold Parameters"),
+      UINT8_FIELD("Parameter Number"),
+      UINT8_FIELD("Trigger Method"),
+      UINT8_FIELD("Threshold Data Format"),
+      SIMPLE_FIELD("Threshold Level", BYTES(8)),
+      END_OF_FIELDS},
+     .repeatingField1 = 10,
+     .repeatingCount1 = 4,
+     .repeatingStart1 = 11}
 
     ,
-    {"Alert Value", 126988, PACKET_INCOMPLETE, PACKET_FAST, {END_OF_FIELDS}}
+    {"Alert Value",
+     126988,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      UINT8_FIELD("Alert System"),
+      UINT8_FIELD("Alert Sub-System"),
+      UINT16_FIELD("Alert ID"),
+      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      UINT8_FIELD("Data Source Instance"),
+      UINT8_FIELD("Data Source Index-Source"),
+      UINT8_FIELD("Alert Occurrence Number"),
+      UINT8_DESC_FIELD("Number of Parameters", "Total Number of Value Parameters"),
+      UINT8_FIELD("Value Parameter Number"),
+      UINT8_FIELD("Value Data Format"),
+      SIMPLE_FIELD("Value Data", BYTES(8)),
+      END_OF_FIELDS},
+     .repeatingField1 = 10,
+     .repeatingCount1 = 3,
+     .repeatingStart1 = 11}
 
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
@@ -3538,7 +3605,7 @@ Pgn pgnList[] = {
      {SIMPLE_DESC_FIELD("SV Elevation Mask", BYTES(2), "Will not use SV below this elevation"),
       DILUTION_OF_PRECISION_UFIX16_FIELD("PDOP Mask", "Will not report position above this PDOP"),
       DILUTION_OF_PRECISION_UFIX16_FIELD("PDOP Switch", "Will report 2D position above this PDOP"),
-      SIGNALTONOISERATIO_FIELD("SNR Mask", "Will not use SV below this SNR"),
+      SIGNALTONOISERATIO_UFIX16_FIELD("SNR Mask", "Will not use SV below this SNR"),
       LOOKUP_FIELD("GNSS Mode (desired)", 3, GNSS_MODE),
       LOOKUP_FIELD("DGNSS Mode (desired)", 3, DGNSS_MODE),
       SIMPLE_FIELD("Position/Velocity Filter", 2),
@@ -3576,7 +3643,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("PRN"),
       ANGLE_I16_FIELD("Elevation", NULL),
       ANGLE_U16_FIELD("Azimuth", NULL),
-      SIGNALTONOISERATIO_FIELD("SNR", NULL),
+      SIGNALTONOISERATIO_UFIX16_FIELD("SNR", NULL),
       INT32_FIELD("Range residuals", NULL),
       LOOKUP_FIELD("Status", 4, SATELLITE_STATUS),
       RESERVED_FIELD(4),
@@ -4237,10 +4304,85 @@ Pgn pgnList[] = {
      .interval = UINT16_MAX}
 
     ,
+    {"Loran-C TD Data",
+     130052,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {SIMPLE_SIGNED_FIELD("Group Repetition Interval (GRI)", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Master Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("V Secondary TD", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("W Secondary TD", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("X Secondary TD", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Y Secondary TD", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Z Secondary TD", BYTES(4)),
+      BITLOOKUP_FIELD("Station status: Master", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: V", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: W", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: X", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: Y", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: Z", 4, STATION_STATUS),
+      LOOKUP_FIELD("Mode", 4, RESIDUAL_MODE),
+      RESERVED_FIELD(4),
+      END_OF_FIELDS},
+     .interval = 0}
+
+    ,
+    {"Loran-C Range Data",
+     130053,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {SIMPLE_SIGNED_FIELD("Group Repetition Interval (GRI)", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Master Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("V Secondary Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("W Secondary Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("X Secondary Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Y Secondary Range", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Z Secondary Range", BYTES(4)),
+      BITLOOKUP_FIELD("Station status: Master", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: V", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: W", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: X", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: Y", 4, STATION_STATUS),
+      BITLOOKUP_FIELD("Station status: Z", 4, STATION_STATUS),
+      LOOKUP_FIELD("Mode", 4, RESIDUAL_MODE),
+      RESERVED_FIELD(4),
+      END_OF_FIELDS},
+     .interval = 0}
+
+    ,
+    {"Loran-C Signal Data",
+     130054,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {SIMPLE_SIGNED_FIELD("Group Repetition Interval (GRI)", BYTES(4)),
+      STRING_FIX_FIELD("Station identifier", BYTES(1)),
+      SIGNALTONOISERATIO_FIX16_FIELD("Station SNR", NULL),
+      SIMPLE_SIGNED_FIELD("Station ECD", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("Station ASF", BYTES(4)),
+      END_OF_FIELDS},
+     .interval = 0}
+
+    ,
     {"Label", 130060, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {END_OF_FIELDS}}
 
     ,
-    {"Channel Source Configuration", 130061, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {END_OF_FIELDS}}
+    {"Channel Source Configuration",
+     130061,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
+     {UINT8_FIELD("Data Source Channel ID"),
+      SIMPLE_FIELD("Source Selection Status", 2),
+      RESERVED_FIELD(2),
+      BINARY_FIELD("NAME Selection Criteria Mask", 12, NULL),
+      SIMPLE_FIELD("Source NAME", BYTES(8)),
+      PGN_FIELD("PGN", NULL),
+      UINT8_FIELD("Data Source Instance Field Number"),
+      UINT8_FIELD("Data Source Instance Value"),
+      UINT8_FIELD("Secondary Enumeration Field Number"),
+      UINT8_FIELD("Secondary Enumeration Field Value"),
+      UINT8_FIELD("Parameter Field Number"),
+      END_OF_FIELDS},
+     .interval = 0}
 
     ,
     {"Route and WP Service - Database List",
@@ -4521,8 +4663,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Source", BYTES(1), HUMIDITY_SOURCE),
       PERCENTAGE_U16_FIELD("Actual Humidity"),
       PERCENTAGE_U16_FIELD("Set Humidity"),
+      RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .interval = 2000}
 
     ,
     {"Actual Pressure",
@@ -4667,12 +4810,23 @@ Pgn pgnList[] = {
      .interval = 1000}
 
     ,
-    {"Payload Mass", 130560, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {END_OF_FIELDS}}
+    {"Payload Mass",
+     130560,
+     PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_SINGLE,
+     {UINT8_FIELD("SID"),
+      SIMPLE_FIELD("Measurement Status", 3),
+      RESERVED_FIELD(5),
+      UINT8_FIELD("Measurement ID"),
+      UINT32_FIELD("Payload Mass"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .interval = 0}
 
     /* http://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
 
     This PGN may be requested or used to command and configure a number of Watermaker controls. The Command Group Function PGN
-    126208 is used perform the following: start/stop a production, start/stop rinse or flush operation , start/stop low and high
+    126208 is used perform the following: start/stop a production, start/stop rinse or flush operation, start/stop low and high
     pressure pump and perform an emergency stop. The Request Group Function PGN 126208 or ISO Request PGN 059904 may be used to
     request this PGN. This PGN also provides Watermaker status and measurement information. The PGN is broadcast periodically.
 
@@ -4840,9 +4994,12 @@ Pgn pgnList[] = {
     ,
     {"Small Craft Status",
      130576,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_NOT_SEEN,
      PACKET_SINGLE,
-     {SIMPLE_SIGNED_FIELD("Port trim tab", BYTES(1)), SIMPLE_SIGNED_FIELD("Starboard trim tab", BYTES(1)), END_OF_FIELDS},
+     {PERCENTAGE_I8_FIELD("Port trim tab"),
+      PERCENTAGE_I8_FIELD("Starboard trim tab"),
+      RESERVED_FIELD(BYTES(6)),
+      END_OF_FIELDS},
      .interval = 200}
 
     ,
