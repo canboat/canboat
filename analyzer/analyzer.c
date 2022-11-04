@@ -789,7 +789,8 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
 
   if (strcmp(fieldName, "PGN") == 0)
   {
-    refPgn = data[0] + (data[1] << 8) + (data[2] << 16);
+    size_t off = startBit / 8;
+    refPgn = data[off] + (data[off + 1] << 8) + (data[off + 2] << 16);
   }
 
   logDebug("PGN %u: printField <%s>, \"%s\": bits=%zu proprietary=%u refPgn=%u\n",
@@ -820,19 +821,22 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     char  *oldSep   = sep;
     size_t location2;
 
-    if (showJson)
+    if (field->ft->pf != fieldPrintVariable)
     {
-      mprintf("%s\"%s\":", getSep(), fieldName);
-      sep = ",";
-      if (showBytes)
+      if (showJson)
       {
-        mprintf("{");
+        mprintf("%s\"%s\":", getSep(), fieldName);
+        sep = ",";
+        if (showBytes)
+        {
+          mprintf("{");
+        }
       }
-    }
-    else
-    {
-      mprintf("%s %s = ", getSep(), fieldName);
-      sep = ";";
+      else
+      {
+        mprintf("%s %s = ", getSep(), fieldName);
+        sep = ";";
+      }
     }
     location2 = mlocation();
     logDebug(
@@ -848,7 +852,7 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
         logError("PGN %u: field \"%s\" print routine did not print anything\n", field->pgn->pgn, field->name);
         r = false;
       }
-      else if (showBytes)
+      else if (showBytes && field->ft->pf != fieldPrintVariable)
       {
         location2 = mlocation();
         if (mchr(location2 - 1) == '}')
@@ -1067,7 +1071,7 @@ extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, siz
 {
   Field *refField;
 
-  refField = getField(refPgn, data[-1] - 1);
+  refField = getField(refPgn, data[startBit / 8 - 1] - 1);
   if (refField)
   {
     return printField(refField, fieldName, data, dataLen, startBit, bits);

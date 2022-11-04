@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.8.0
+CANboat version v4.8.1
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -26,8 +26,8 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.8.0</Version>
-  <Copyright>CANboat version v4.8.0
+  <Version>4.8.1</Version>
+  <Copyright>CANboat version v4.8.1
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -31882,7 +31882,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>0</RangeMax>
+          <RangeMax>-1</RangeMax>
           <FieldType>BITLOOKUP</FieldType>
           <LookupBitEnumeration>ENTERTAINMENT_PLAY_STATUS_BITFIELD</LookupBitEnumeration>
         </Field>

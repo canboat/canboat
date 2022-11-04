@@ -450,6 +450,8 @@ extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size
 
 extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
+  const char *s = NULL;
+
   int64_t value;
   int64_t maxValue;
 
@@ -461,8 +463,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
 
   if (field->unit && field->unit[0] == '=' && isdigit(field->unit[1]))
   {
-    char        lookfor[20];
-    const char *s;
+    char lookfor[20];
 
     sprintf(lookfor, "=%" PRId64, value);
     if (strcmp(lookfor, field->unit) != 0)
@@ -472,24 +473,13 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
       return false;
     }
     s = field->description;
-    if (!s)
+    if (s == NULL)
     {
       s = lookfor + 1;
     }
-    if (showJson)
-    {
-      mprintf("\"%s\"", s);
-    }
-    else
-    {
-      mprintf("%s", s);
-    }
-    return true;
   }
 
-  const char *s = NULL;
-
-  if (field->lookup.type != LOOKUP_TYPE_NONE && value >= 0)
+  if (s == NULL && field->lookup.type != LOOKUP_TYPE_NONE && value >= 0)
   {
     if (field->lookup.type == LOOKUP_TYPE_PAIR)
     {

@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [4.8.1]
+
+### Fixed
+
+- #338: fix reference field lookup
+
 ## [4.8.0]
 
 ### Added
@@ -501,7 +507,9 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.7.0...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.8.1...HEAD
+[4.8.1]: https://github.com/canboat/canboat/compare/v4.8.0...v4.8.1
+[4.8.0]: https://github.com/canboat/canboat/compare/v4.7.0...v4.8.0
 [4.7.0]: https://github.com/canboat/canboat/compare/v4.6.1...v4.7.0
 [4.6.1]: https://github.com/canboat/canboat/compare/v4.6.0...v4.6.1
 [4.6.0]: https://github.com/canboat/canboat/compare/v4.5.2...v4.6.0

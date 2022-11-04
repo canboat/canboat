@@ -8,3 +8,5 @@
 {"timestamp":"2020-08-22-13:52:57.591","prio":7,"src":36,"dst":255,"pgn":126993,"description":"Heartbeat","fields":{"Data transmit offset":"00:00:00.001","Sequence Counter":36}}
 {"timestamp":"2011-04-25-10:16:40.505","prio":3,"src":36,"dst":255,"pgn":126992,"description":"System Time","fields":{"SID":16,"Source":"GPS","Date":"2011.04.25","Time":"10:16:50.0001"}}
 {"timestamp":"2021-01-30-20:43:21.684","prio":6,"src":1,"dst":255,"pgn":126998,"description":"Configuration Information","fields":{"Installation Description #1":"hello","Installation Description #2":"wórld"}}
+{"timestamp":"2020-04-19T00:35:55.571Z","prio":2,"src":0,"dst":67,"pgn":126208,"description":"NMEA - Command group function","fields":{"Function Code":"1","PGN":126998,"Number of Parameters":1,"list":[{"Parameter":2,"Value":"YD:VOLUME 60"}]}}
+{"timestamp":"2021-07-29T10:18:31.758Z","prio":6,"src":36,"dst":0,"pgn":126208,"description":"NMEA - Acknowledge group function","fields":{"Function Code":"2","PGN":65410,"PGN error code":"Acknowledge","Transmission interval/Priority error code":"Transmit Interval/Priority not supported","Number of Parameters":2,"list":[{"Parameter":"Acknowledge"}]}}
