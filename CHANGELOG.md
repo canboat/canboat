@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #346: Fix RangeMax for lookups that interfere with "reserved" values.
 - #345: Remove duplicate field length indication from PGN 129797.
 - #343: Add test for repeatingfieldset without count (PGN 126464).
 - #342: Remove STRING_VAR type and incorrect PGN 130323 samples.

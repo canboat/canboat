@@ -2281,7 +2281,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ISO_COMMAND</LookupEnumeration>
         </Field>
@@ -2365,7 +2365,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ISO_COMMAND</LookupEnumeration>
         </Field>
@@ -2445,7 +2445,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ISO_COMMAND</LookupEnumeration>
         </Field>
@@ -2525,7 +2525,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ISO_COMMAND</LookupEnumeration>
         </Field>
@@ -2605,7 +2605,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ISO_COMMAND</LookupEnumeration>
         </Field>
@@ -12112,7 +12112,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ALERT_RESPONSE_COMMAND</LookupEnumeration>
         </Field>
@@ -15791,7 +15791,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ACCEPTABILITY</LookupEnumeration>
         </Field>
@@ -18254,7 +18254,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TRACKING</LookupEnumeration>
         </Field>
@@ -19542,7 +19542,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -19625,7 +19625,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>63</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TIME_STAMP</LookupEnumeration>
         </Field>
@@ -19725,7 +19725,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>14</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>NAV_STATUS</LookupEnumeration>
         </Field>
@@ -19739,7 +19739,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIS_SPECIAL_MANEUVER</LookupEnumeration>
         </Field>
@@ -19823,7 +19823,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -19905,7 +19905,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>63</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TIME_STAMP</LookupEnumeration>
         </Field>
@@ -20136,7 +20136,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -20218,7 +20218,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>63</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TIME_STAMP</LookupEnumeration>
         </Field>
@@ -20331,7 +20331,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>15</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POSITION_FIX_DEVICE</LookupEnumeration>
         </Field>
@@ -20493,7 +20493,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -20575,7 +20575,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>63</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TIME_STAMP</LookupEnumeration>
         </Field>
@@ -20649,7 +20649,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>29</RangeMax>
+          <RangeMax>31</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ATON_TYPE</LookupEnumeration>
         </Field>
@@ -20715,7 +20715,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>15</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POSITION_FIX_DEVICE</LookupEnumeration>
         </Field>
@@ -23760,7 +23760,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -23914,7 +23914,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>15</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POSITION_FIX_DEVICE</LookupEnumeration>
         </Field>
@@ -23965,7 +23965,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -24145,7 +24145,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIS_VERSION</LookupEnumeration>
         </Field>
@@ -24159,7 +24159,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>15</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POSITION_FIX_DEVICE</LookupEnumeration>
         </Field>
@@ -24238,7 +24238,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -24391,7 +24391,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -24521,7 +24521,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -24637,7 +24637,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -24719,7 +24719,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>63</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TIME_STAMP</LookupEnumeration>
         </Field>
@@ -24968,7 +24968,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -25058,7 +25058,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -25193,7 +25193,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -25284,7 +25284,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -25422,7 +25422,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -25576,7 +25576,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -25708,7 +25708,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -25983,7 +25983,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -26735,7 +26735,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -26832,7 +26832,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -36584,7 +36584,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>24</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ENTERTAINMENT_PLAY_STATUS</LookupEnumeration>
         </Field>
@@ -41114,7 +41114,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -41423,7 +41423,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -41857,7 +41857,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -42073,7 +42073,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -42229,7 +42229,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>
@@ -42386,7 +42386,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
         </Field>

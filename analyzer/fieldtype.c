@@ -70,7 +70,16 @@ static double getMinRange(const char *name, uint32_t size, double resolution, bo
   return r;
 }
 
-static double getMaxRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset)
+#ifdef EXPLAIN
+uint64_t g_max;
+
+static void fillMaxRangeLookup(size_t n, const char *s)
+{
+  g_max = CB_MAX(g_max, n);
+}
+#endif
+
+static double getMaxRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset, LookupInfo *lookup)
 {
   uint64_t specialvalues = (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
   uint32_t highbit       = (sign && offset == 0) ? (size - 1) : size;
@@ -82,6 +91,22 @@ static double getMaxRange(const char *name, uint32_t size, double resolution, bo
   {
     maxValue += offset;
   }
+
+#ifdef EXPLAIN
+  if (lookup != NULL && lookup->type == LOOKUP_TYPE_PAIR)
+  {
+    // maybe the specialValues are actually lookups, correct these.
+    // Remember, when EXPLAIN is set the lookup function is like:
+    // void lookupYES_NO(EnumPairCallback cb)
+    // {
+    //   (cb)(0, "No");
+    //   (cb)(1, "Yes");
+    // }
+    g_max = maxValue;
+    (*lookup->function.pairEnumerator)(fillMaxRangeLookup);
+    maxValue = g_max;
+  }
+#endif
 
   r = maxValue * resolution;
   logDebug(
@@ -239,7 +264,7 @@ extern void fillFieldType(bool doUnitFixup)
     if (ft->size != 0 && ft->resolution != 0.0 && ft->hasSign != Null && ft->rangeMax == 0.0)
     {
       ft->rangeMin = getMinRange(ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset);
-      ft->rangeMax = getMaxRange(ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset);
+      ft->rangeMax = getMaxRange(ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset, NULL);
     }
     else
     {
@@ -347,7 +372,7 @@ extern void fillFieldType(bool doUnitFixup)
       if (f->size != 0 && f->resolution != 0.0 && ft->hasSign != Null && isnan(f->rangeMax))
       {
         f->rangeMin = getMinRange(f->name, f->size, f->resolution, f->hasSign, f->offset);
-        f->rangeMax = getMaxRange(f->name, f->size, f->resolution, f->hasSign, f->offset);
+        f->rangeMax = getMaxRange(f->name, f->size, f->resolution, f->hasSign, f->offset, &f->lookup);
       }
 
       f->pgn   = &pgnList[i];

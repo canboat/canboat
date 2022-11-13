@@ -135,7 +135,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253},
+            "RangeMax":255},
           {
             "Order":2,
             "Id":"messageSize",
@@ -208,7 +208,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253},
+            "RangeMax":255},
           {
             "Order":2,
             "Id":"maxPackets",
@@ -277,7 +277,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253},
+            "RangeMax":255},
           {
             "Order":2,
             "Id":"totalMessageSize",
@@ -346,7 +346,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253},
+            "RangeMax":255},
           {
             "Order":2,
             "Id":"messageSize",
@@ -415,7 +415,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253},
+            "RangeMax":255},
           {
             "Order":2,
             "Id":"reason",
@@ -9821,7 +9821,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Acknowledge", "value": 0},
               {"name": "Temporary Silence", "value": 1},
@@ -13301,7 +13301,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Bad level", "value": 0},
               {"name": "Bad frequency", "value": 1},
@@ -15543,7 +15543,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Cancelled", "value": 0},
               {"name": "Acquiring", "value": 1},
@@ -16751,7 +16751,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -16834,7 +16834,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":61,
+            "RangeMax":63,
             "EnumValues":[
               {"name": "Not available", "value": 60},
               {"name": "Manual input mode", "value": 61},
@@ -16930,7 +16930,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":14,
             "EnumValues":[
               {"name": "Under way using engine", "value": 0},
               {"name": "At anchor", "value": 1},
@@ -16957,7 +16957,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Not available", "value": 0},
               {"name": "Not engaged in special maneuver", "value": 1},
@@ -17061,7 +17061,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -17143,7 +17143,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":61,
+            "RangeMax":63,
             "EnumValues":[
               {"name": "Not available", "value": 60},
               {"name": "Manual input mode", "value": 61},
@@ -17399,7 +17399,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -17481,7 +17481,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":61,
+            "RangeMax":63,
             "EnumValues":[
               {"name": "Not available", "value": 60},
               {"name": "Manual input mode", "value": 61},
@@ -17638,7 +17638,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":15,
             "EnumValues":[
               {"name": "Default: undefined", "value": 0},
               {"name": "GPS", "value": 1},
@@ -17824,7 +17824,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -17906,7 +17906,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":61,
+            "RangeMax":63,
             "EnumValues":[
               {"name": "Not available", "value": 60},
               {"name": "Manual input mode", "value": 61},
@@ -17971,7 +17971,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":29,
+            "RangeMax":31,
             "EnumValues":[
               {"name": "Default: Type of AtoN not specified", "value": 0},
               {"name": "Reference point", "value": 1},
@@ -18070,7 +18070,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":15,
             "EnumValues":[
               {"name": "Default: undefined", "value": 0},
               {"name": "GPS", "value": 1},
@@ -20885,7 +20885,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -21037,7 +21037,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":15,
             "EnumValues":[
               {"name": "Default: undefined", "value": 0},
               {"name": "GPS", "value": 1},
@@ -21117,7 +21117,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -21332,7 +21332,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "ITU-R M.1371-1", "value": 0},
               {"name": "ITU-R M.1371-3", "value": 1},
@@ -21349,7 +21349,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":15,
             "EnumValues":[
               {"name": "Default: undefined", "value": 0},
               {"name": "GPS", "value": 1},
@@ -21463,7 +21463,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -21637,7 +21637,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -21791,7 +21791,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -21931,7 +21931,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -22013,7 +22013,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":61,
+            "RangeMax":63,
             "EnumValues":[
               {"name": "Not available", "value": 60},
               {"name": "Manual input mode", "value": 61},
@@ -22266,7 +22266,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -22381,7 +22381,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -22538,7 +22538,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -22655,7 +22655,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -22841,7 +22841,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -23015,7 +23015,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -23169,7 +23169,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -23451,7 +23451,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -24264,7 +24264,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -24387,7 +24387,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -33615,7 +33615,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":24,
             "EnumValues":[
               {"name": "Play", "value": 0},
               {"name": "Pause", "value": 1},
@@ -37659,7 +37659,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -37940,7 +37940,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -38374,7 +38374,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -38566,7 +38566,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -38708,7 +38708,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},
@@ -38850,7 +38850,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Initial", "value": 0},
               {"name": "First retransmission", "value": 1},

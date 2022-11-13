@@ -2957,7 +2957,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":255,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ISO_COMMAND"
           },
@@ -3041,7 +3041,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":255,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ISO_COMMAND"
           },
@@ -3121,7 +3121,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":255,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ISO_COMMAND"
           },
@@ -3201,7 +3201,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":255,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ISO_COMMAND"
           },
@@ -3281,7 +3281,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":255,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ISO_COMMAND"
           },
@@ -12280,7 +12280,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_RESPONSE_COMMAND"
           },
@@ -15932,7 +15932,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ACCEPTABILITY"
           },
@@ -18372,7 +18372,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TRACKING"
           },
@@ -19655,7 +19655,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -19738,7 +19738,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":61,
+            "RangeMax":63,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TIME_STAMP"
           },
@@ -19838,7 +19838,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"NAV_STATUS"
           },
@@ -19852,7 +19852,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_SPECIAL_MANEUVER"
           },
@@ -19936,7 +19936,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -20018,7 +20018,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":61,
+            "RangeMax":63,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TIME_STAMP"
           },
@@ -20249,7 +20249,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -20331,7 +20331,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":61,
+            "RangeMax":63,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TIME_STAMP"
           },
@@ -20444,7 +20444,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":15,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POSITION_FIX_DEVICE"
           },
@@ -20606,7 +20606,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -20688,7 +20688,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":61,
+            "RangeMax":63,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TIME_STAMP"
           },
@@ -20762,7 +20762,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":29,
+            "RangeMax":31,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ATON_TYPE"
           },
@@ -20828,7 +20828,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":15,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POSITION_FIX_DEVICE"
           },
@@ -23820,7 +23820,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -23974,7 +23974,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":15,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POSITION_FIX_DEVICE"
           },
@@ -24025,7 +24025,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -24205,7 +24205,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_VERSION"
           },
@@ -24219,7 +24219,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":15,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POSITION_FIX_DEVICE"
           },
@@ -24298,7 +24298,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -24451,7 +24451,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -24581,7 +24581,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -24693,7 +24693,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -24775,7 +24775,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":61,
+            "RangeMax":63,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TIME_STAMP"
           },
@@ -25018,7 +25018,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -25105,7 +25105,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -25237,7 +25237,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -25325,7 +25325,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -25459,7 +25459,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -25610,7 +25610,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -25739,7 +25739,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -26011,7 +26011,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -26755,7 +26755,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -26852,7 +26852,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -36332,7 +36332,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":24,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_PLAY_STATUS"
           },
@@ -40697,7 +40697,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -40998,7 +40998,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -41419,7 +41419,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -41626,7 +41626,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -41777,7 +41777,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },
@@ -41929,7 +41929,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPEAT_INDICATOR"
           },

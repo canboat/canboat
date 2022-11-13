@@ -171,7 +171,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -251,7 +251,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -327,7 +327,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -403,7 +403,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -479,7 +479,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -10776,7 +10776,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Acknowledge' />
             <EnumPair Value='1' Name='Temporary Silence' />
@@ -14660,7 +14660,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Bad level' />
             <EnumPair Value='1' Name='Bad frequency' />
@@ -17154,7 +17154,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Cancelled' />
             <EnumPair Value='1' Name='Acquiring' />
@@ -18496,7 +18496,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -18588,7 +18588,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>63</RangeMax>
           <EnumValues>
             <EnumPair Value='60' Name='Not available' />
             <EnumPair Value='61' Name='Manual input mode' />
@@ -18693,7 +18693,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>14</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Under way using engine' />
             <EnumPair Value='1' Name='At anchor' />
@@ -18722,7 +18722,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Not available' />
             <EnumPair Value='1' Name='Not engaged in special maneuver' />
@@ -18836,7 +18836,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -18927,7 +18927,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>63</RangeMax>
           <EnumValues>
             <EnumPair Value='60' Name='Not available' />
             <EnumPair Value='61' Name='Manual input mode' />
@@ -19211,7 +19211,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -19302,7 +19302,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>63</RangeMax>
           <EnumValues>
             <EnumPair Value='60' Name='Not available' />
             <EnumPair Value='61' Name='Manual input mode' />
@@ -19470,7 +19470,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>15</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Default: undefined' />
             <EnumPair Value='1' Name='GPS' />
@@ -19674,7 +19674,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -19765,7 +19765,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>63</RangeMax>
           <EnumValues>
             <EnumPair Value='60' Name='Not available' />
             <EnumPair Value='61' Name='Manual input mode' />
@@ -19836,7 +19836,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>29</RangeMax>
+          <RangeMax>31</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Default: Type of AtoN not specified' />
             <EnumPair Value='1' Name='Reference point' />
@@ -19944,7 +19944,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>15</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Default: undefined' />
             <EnumPair Value='1' Name='GPS' />
@@ -23049,7 +23049,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -23217,7 +23217,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>15</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Default: undefined' />
             <EnumPair Value='1' Name='GPS' />
@@ -23304,7 +23304,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -23535,7 +23535,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='ITU-R M.1371-1' />
             <EnumPair Value='1' Name='ITU-R M.1371-3' />
@@ -23554,7 +23554,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>15</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Default: undefined' />
             <EnumPair Value='1' Name='GPS' />
@@ -23679,7 +23679,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -23870,7 +23870,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -24039,7 +24039,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -24193,7 +24193,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -24284,7 +24284,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>63</RangeMax>
           <EnumValues>
             <EnumPair Value='60' Name='Not available' />
             <EnumPair Value='61' Name='Manual input mode' />
@@ -24563,7 +24563,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -24690,7 +24690,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -24863,7 +24863,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -24992,7 +24992,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -25195,7 +25195,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -25386,7 +25386,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -25555,7 +25555,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -25863,7 +25863,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -26761,7 +26761,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -26896,7 +26896,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -37108,7 +37108,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>24</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Play' />
             <EnumPair Value='1' Name='Pause' />
@@ -41564,7 +41564,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -41873,7 +41873,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -42347,7 +42347,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -42559,7 +42559,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -42715,7 +42715,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />
@@ -42871,7 +42871,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Initial' />
             <EnumPair Value='1' Name='First retransmission' />

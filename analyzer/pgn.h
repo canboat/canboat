@@ -66,6 +66,7 @@ typedef struct
   } function;
   uint8_t val1Order;
   size_t  size;
+  size_t  max;
 } LookupInfo;
 
 #ifdef EXPLAIN
