@@ -43,7 +43,6 @@ extern bool fieldPrintSpare(Field *field, char *fieldName, uint8_t *data, size_t
 extern bool fieldPrintStringFix(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintStringVar(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 
@@ -1106,16 +1105,6 @@ FieldType fieldTypeList[] = {
        "are supported.",
      .pf     = fieldPrintStringFix,
      .v1Type = "ASCII text"},
-    {.name                = "STRING_VAR",
-     .description         = "A varying length string containing single byte codepoints.",
-     .encodingDescription = "The length of the string is determined either with a start (0x02) and stop (0x01) byte, or with a "
-                            "starting length byte (> 0x02), or an indication that the string is empty which is encoded by either "
-                            "0x01 or 0x00 as the first byte.",
-     .comment
-     = "It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values "
-       "are supported.",
-     .variableSize = True,
-     .pf           = fieldPrintStringVar},
 
     {.name        = "STRING_LZ",
      .description = "A varying length string containing single byte codepoints encoded with a length byte and terminating zero.",

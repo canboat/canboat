@@ -3,8 +3,8 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"4.8.1",
-    "Copyright":"CANboat version v4.8.1\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"4.8.2",
+    "Copyright":"CANboat version v4.8.2\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
     {
         "Name":"ELECTRICAL_CURRENT",
@@ -259,13 +259,6 @@
       "Description":"A fixed length string containing single byte codepoints.",
       "EncodingDescription":"The length of the string is determined by the PGN field definition. Trailing bytes have been observed as '@', ' ', 0x0 or 0xff.",
       "Comment":"It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported."
-      },
-    {
-        "Name":"STRING_VAR",
-      "Description":"A varying length string containing single byte codepoints.",
-      "EncodingDescription":"The length of the string is determined either with a start (0x02) and stop (0x01) byte, or with a starting length byte (> 0x02), or an indication that the string is empty which is encoded by either 0x01 or 0x00 as the first byte.",
-      "Comment":"It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.",
-      "VariableSize":true
       },
     {
         "Name":"STRING_LZ",

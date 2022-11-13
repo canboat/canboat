@@ -18,4 +18,4 @@ limitations under the License.
 
 */
 
-#define VERSION "4.8.1"
+#define VERSION "4.8.2"

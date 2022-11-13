@@ -1019,60 +1019,6 @@ extern bool fieldPrintStringFix(Field *field, char *fieldName, uint8_t *data, si
   return printString(fieldName, data, len);
 }
 
-extern bool fieldPrintStringVar(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
-{
-  size_t len;
-
-  if (!adjustDataLenStart(&data, &dataLen, &startBit))
-  {
-    return false;
-  }
-
-  // No space in message for string, don't print anything
-  if (dataLen == 0)
-  {
-    len = 0;
-  }
-  else
-  {
-    // STRINGVAR format is <start> [ <data> ... ] <stop>
-    //                  <len> [ <data> ... ] (with len > 2)
-    //                  <stop>                                 zero length data
-    //                  <#00>  ???
-    if (*data == 0x02)
-    {
-      data++;
-      dataLen--;
-      for (len = 0; len < dataLen && data[len] != 0x01; len++)
-        ;
-      dataLen = len + 2;
-    }
-    else if (*data > 0x02)
-    {
-      dataLen = *data++;
-      len     = dataLen - 1;
-
-      // This is actually more like a STRINGLAU control byte, not sure
-      // whether these fields are actually just STRINGLAU?
-      if (*data == 0x01)
-      {
-        logDebug("field '%s' looks like STRING_LAU not STRING_VAR format\n", fieldName);
-        data++;
-        len--;
-      }
-    }
-    else
-    {
-      dataLen = 1;
-      len     = 0;
-    }
-  }
-
-  *bits = BYTES(dataLen);
-
-  return printString(fieldName, data, len);
-}
-
 extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
   // STRINGLZ format is <len> [ <data> ... ]

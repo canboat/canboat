@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.8.1
+CANboat version v4.8.2
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -26,8 +26,8 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.8.1</Version>
-  <Copyright>CANboat version v4.8.1
+  <Version>4.8.2</Version>
+  <Copyright>CANboat version v4.8.2
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -268,12 +268,6 @@ limitations under the License.
       <Description>A fixed length string containing single byte codepoints.</Description>
       <EncodingDescription>The length of the string is determined by the PGN field definition. Trailing bytes have been observed as '@', ' ', 0x0 or 0xff.</EncodingDescription>
       <Comment>It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.</Comment>
-    </FieldType>
-    <FieldType Name="STRING_VAR">
-      <Description>A varying length string containing single byte codepoints.</Description>
-      <EncodingDescription>The length of the string is determined either with a start (0x02) and stop (0x01) byte, or with a starting length byte (> 0x02), or an indication that the string is empty which is encoded by either 0x01 or 0x00 as the first byte.</EncodingDescription>
-      <Comment>It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.</Comment>
-      <VariableSize>true</VariableSize>
     </FieldType>
     <FieldType Name="STRING_LZ">
       <Description>A varying length string containing single byte codepoints encoded with a length byte and terminating zero.</Description>
