@@ -10,6 +10,12 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #334: Log error when missing fields are present in repeating set.
+
+## [4.8.1]
+
+### Fixed
+
 - #338: fix reference field lookup
 
 ## [4.8.0]

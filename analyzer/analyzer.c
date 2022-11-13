@@ -1049,6 +1049,10 @@ bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool sh
   if (r)
   {
     mwrite(stdout);
+    if (variableFields > 0 && g_variableFieldRepeat[0] < UINT8_MAX)
+    {
+      logError("PGN %u has %zu missing fields in repeating set\n", msg->pgn, variableFields);
+    }
   }
   else
   {
