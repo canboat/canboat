@@ -2,7 +2,7 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"4.8.2",
+    "Version":"4.9.0",
     "PGNs": [
     
       {
@@ -21739,9 +21739,6 @@
         "Type":"Fast",
         "Complete":true,
         "Length":8,
-        "RepeatingFieldSet1Size":1,
-        "RepeatingFieldSet1StartField":8,
-        "RepeatingFieldSet1CountField":7,
         "Fields":[
           {
             "Order":1,

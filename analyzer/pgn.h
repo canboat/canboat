@@ -3969,10 +3969,7 @@ Pgn pgnList[] = {
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
      .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
-     .interval        = UINT16_MAX,
-     .repeatingField1 = 7,
-     .repeatingCount1 = 1,
-     .repeatingStart1 = 8}
+     .interval        = UINT16_MAX}
 
     ,
     {"AIS SAR Aircraft Position Report",

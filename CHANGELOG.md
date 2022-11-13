@@ -6,10 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
-## [4.8.2]
+## [4.9.0]
 
 ### Fixed
 
+- #345: Remove duplicate field length indication from PGN 129797.
+- #343: Add test for repeatingfieldset without count (PGN 126464).
 - #342: Remove STRING_VAR type and incorrect PGN 130323 samples.
 - #334: Log error when missing fields are present in repeating set.
 
@@ -514,8 +516,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.8.2...HEAD
-[4.8.2]: https://github.com/canboat/canboat/compare/v4.8.1...v4.8.2
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.9.0...HEAD
+[4.9.0]: https://github.com/canboat/canboat/compare/v4.8.1...v4.9.0
 [4.8.1]: https://github.com/canboat/canboat/compare/v4.8.0...v4.8.1
 [4.8.0]: https://github.com/canboat/canboat/compare/v4.7.0...v4.8.0
 [4.7.0]: https://github.com/canboat/canboat/compare/v4.6.1...v4.7.0

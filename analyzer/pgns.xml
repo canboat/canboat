@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.8.2
+CANboat version v4.9.0
 
 (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.8.2</Version>
+  <Version>4.9.0</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -23985,9 +23985,6 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>true</Complete>
       <Length>8</Length>
-      <RepeatingFieldSet1Size>1</RepeatingFieldSet1Size>
-      <RepeatingFieldSet1StartField>8</RepeatingFieldSet1StartField>
-      <RepeatingFieldSet1CountField>7</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
           <Order>1</Order>
