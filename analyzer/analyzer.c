@@ -955,9 +955,12 @@ bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool sh
   r                        = true;
   for (i = 0, startBit = 0; (startBit >> 3) < length; i++)
   {
-    Field *field;
+    Field *field = &pgn->fieldList[i];
 
-    field = &pgn->fieldList[i];
+    if (variableFields == 0)
+    {
+      repetition = 0;
+    }
 
     if (pgn->repeatingCount1 > 0 && field->order == pgn->repeatingStart1 && repetition == 0)
     {
@@ -982,20 +985,15 @@ bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool sh
         sep = "";
       }
       // Only now is g_variableFieldRepeat set
-      variableFields     = pgn->repeatingCount2 * g_variableFieldRepeat[0];
-      variableFieldCount = pgn->repeatingCount1;
+      variableFields     = pgn->repeatingCount2 * g_variableFieldRepeat[1];
+      variableFieldCount = pgn->repeatingCount2;
       variableFieldStart = pgn->repeatingStart2;
       repetition         = 1;
     }
 
     if (variableFields > 0)
     {
-      variableFields--;
-      if (variableFields == 0)
-      {
-        repetition = 0;
-      }
-      else if (i + 1 == variableFieldStart + variableFieldCount)
+      if (i + 1 == variableFieldStart + variableFieldCount)
       {
         i     = variableFieldStart - 1;
         field = &pgn->fieldList[i];
@@ -1006,13 +1004,14 @@ bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool sh
           sep = "";
         }
       }
-      logDebug("variableFields: repetition=%d field=%" PRIu8 " variableFieldStart=%" PRIu8 " variableFieldsCount=%" PRIu8
+      logDebug("variableFields: repetition=%d field=%" PRIu8 " variableFieldStart=%" PRIu8 " variableFieldCount=%" PRIu8
                " remaining=%zu\n",
                repetition,
                i + 1,
                variableFieldStart,
                variableFieldCount,
                variableFields);
+      variableFields--;
     }
 
     if (!field->camelName && !field->name)
@@ -1074,11 +1073,15 @@ bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool sh
 extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
   Field *refField;
+  bool   r;
 
   refField = getField(refPgn, data[startBit / 8 - 1] - 1);
   if (refField)
   {
-    return printField(refField, fieldName, data, dataLen, startBit, bits);
+    logDebug("Field %s: found variable field %u '%s'\n", fieldName, refPgn, refField->name);
+    r = printField(refField, fieldName, data, dataLen, startBit, bits);
+    *bits = (*bits + 7) & ~ 0x07; // round to bytes
+    return r;
   }
 
   logError("Field %s: cannot derive variable length for PGN %d field # %d\n", fieldName, refPgn, data[-1]);

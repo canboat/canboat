@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #347: Repeating sets analysis bug fixes.
 - #346: Fix RangeMax for lookups that interfere with "reserved" values.
 - #345: Remove duplicate field length indication from PGN 129797.
 - #343: Add test for repeatingfieldset without count (PGN 126464).
