@@ -6,9 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [4.9.1]
+
 ### Fixed
 
-- n2kd: fix secondary key determination broken in v4.4.0.
+- #348: analyzer -json: Fix invalid JSON when first field is missing.
+- #349: n2kd: fix secondary key determination broken in v4.4.0.
 
 ## [4.9.0]
 
@@ -522,7 +525,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.9.0...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.9.1...HEAD
+[4.9.1]: https://github.com/canboat/canboat/compare/v4.9.0...v4.9.1
 [4.9.0]: https://github.com/canboat/canboat/compare/v4.8.1...v4.9.0
 [4.8.1]: https://github.com/canboat/canboat/compare/v4.8.0...v4.8.1
 [4.8.0]: https://github.com/canboat/canboat/compare/v4.7.0...v4.8.0

@@ -817,8 +817,9 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
 
   if (field->ft != NULL && field->ft->pf != NULL)
   {
-    size_t location = mlocation();
-    char  *oldSep   = sep;
+    size_t location            = mlocation();
+    char  *oldSep              = sep;
+    size_t oldClosingBracesLen = strlen(closingBraces);
     size_t location2;
 
     if (field->ft->pf != fieldPrintVariable)
@@ -870,6 +871,7 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     {
       mset(location);
       sep = oldSep;
+      closingBraces[oldClosingBracesLen] = '\0';
     }
     return r;
   }
