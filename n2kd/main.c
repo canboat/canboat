@@ -235,11 +235,11 @@ size_t maxPgnList;
  * is completely separate from that of any other.
  */
 static char *secondaryKeyList[] = {
-    "Instance\"",        // A different tank or sensor. Note no leading " so any instance will do.
-    "\"Reference\"",     // A different type of data value, for instance "True" and "Apparent"
-    "\"User ID\"",       // Different AIS transmission source (station)
-    "\"Message ID\"",    // Different AIS transmission source (station)
-    "\"Proprietary ID\"" // Different SonicHub item
+    "Instance\":",        // A different tank or sensor. Note no leading " so any instance will do.
+    "\"Reference\":",     // A different type of data value, for instance "True" and "Apparent"
+    "\"User ID\":",       // Different AIS transmission source (station)
+    "\"Message ID\":",    // Different AIS transmission source (station)
+    "\"Proprietary ID\":" // Different SonicHub item
 };
 
 static int secondaryKeyTimeout[] = {SENSOR_TIMEOUT, SENSOR_TIMEOUT, AIS_TIMEOUT, AIS_TIMEOUT, SONICHUB_TIMEOUT, SENSOR_TIMEOUT};
@@ -877,6 +877,15 @@ static bool storeMessage(char *line, size_t len)
     {
       logDebug("Found 2nd key %d = %s\n", k, secondaryKeyList[k]);
       s += strlen(secondaryKeyList[k]);
+      if (*s == '{')
+      {
+        s = strstr(s, "name\":");
+        if (s == NULL)
+        {
+          continue;
+        }
+        s += STRSIZE("name\":");
+      }
       while (strchr(SKIP_CHARACTERS, *s))
       {
         s++;

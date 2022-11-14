@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+### Fixed
+
+- n2kd: fix secondary key determination broken in v4.4.0.
+
 ## [4.9.0]
 
 ### Fixed
