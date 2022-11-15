@@ -34,7 +34,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
-- #125: Added PGNs 130052 (Loran-C TD Data), 130054 (Loran-C Range Data), and 130054 (Loran-C Signal Data)
+- #125: Added PGNs 130052 (Loran-C TD Data), 130053 (Loran-C Range Data), and 130054 (Loran-C Signal Data)
 - Added fields for PGN 126986 (Alert Configuration) with some field lengths unknown
 - Added fields for PGN 126987 (Alert Threshold) and PGN 126988 (Alert Value)
 - Added fields for PGN 130061 (Channel Source Configuration) and PGN 130560 (Payload Mass)
