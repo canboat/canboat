@@ -1,4 +1,4 @@
-VERSION "4.9.1"
+VERSION "4.9.2"
 
 
 NS_ : 
@@ -1350,6 +1350,7 @@ CM_ BO_ 2582645502 "Alert Configuration";
 CM_ BO_ 2582645758 "Alert Threshold";
 CM_ BO_ 2582646014 "Alert Value";
 CM_ BO_ 2582647038 "System Time";
+CM_ SG_ 2582647038 time "Seconds since midnight";
 CM_ BO_ 2582647294 "Heartbeat";
 CM_ SG_ 2582647294 dataTransmitOffset "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset.";
 CM_ BO_ 2582648062 "Product Information";
@@ -1409,6 +1410,7 @@ CM_ BO_ 2583167998 "Position Delta, Rapid Update";
 CM_ BO_ 2583168254 "Altitude Delta, Rapid Update";
 CM_ BO_ 2583168510 "GNSS Position Data";
 CM_ BO_ 2583169534 "Time & Date";
+CM_ SG_ 2583169534 time "Seconds since midnight";
 CM_ BO_ 2583170814 "AIS Class A Position Report";
 CM_ BO_ 2583171070 "AIS Class B Position Report";
 CM_ BO_ 2583171326 "AIS Class B Extended Position Report";

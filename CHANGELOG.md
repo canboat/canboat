@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [4.9.2]
+
+### Fixed
+- Fix #350: Add ranges
+- Fix #351: list-product-information update
+- Fix #352: request for PGN126996 on new source
+
 ## [4.9.1]
 
 ### Fixed
@@ -525,7 +532,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.9.1...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.9.2...HEAD
+[4.9.2]: https://github.com/canboat/canboat/compare/v4.9.1...v4.9.2
 [4.9.1]: https://github.com/canboat/canboat/compare/v4.9.0...v4.9.1
 [4.9.0]: https://github.com/canboat/canboat/compare/v4.8.1...v4.9.0
 [4.8.1]: https://github.com/canboat/canboat/compare/v4.8.0...v4.8.1
