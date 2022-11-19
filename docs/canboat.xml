@@ -299,6 +299,8 @@ limitations under the License.
       <Description>MMSI</Description>
       <EncodingDescription>The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.</EncodingDescription>
       <URL>https://navcen.uscg.gov/maritime-mobile-service-identity</URL>
+      <Bits>32</Bits>
+      <Signed>false</Signed>
     </FieldType>
     <FieldType Name="VARIABLE">
       <Description>Variable</Description>
@@ -12960,11 +12962,14 @@ limitations under the License.
           <Order>5</Order>
           <Id>time</Id>
           <Name>Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -13279,11 +13284,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>5</Order>
           <Id>activationTime</Id>
           <Name>Activation Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -13330,11 +13338,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>9</Order>
           <Id>positionTime</Id>
           <Name>Position Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -13430,6 +13441,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>240</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -18162,11 +18176,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>2</Order>
           <Id>time</Id>
           <Name>Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -18405,11 +18422,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>14</Order>
           <Id>utcOfFix</Id>
           <Name>UTC of Fix</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -19231,11 +19251,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>3</Order>
           <Id>time</Id>
           <Name>Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -19482,11 +19505,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>2</Order>
           <Id>time</Id>
           <Name>Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -19554,6 +19580,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -19835,6 +19864,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -20148,6 +20180,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -20505,6 +20540,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -21192,11 +21230,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>7</Order>
           <Id>etaTime</Id>
           <Name>ETA Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -23610,6 +23651,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -23772,6 +23816,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -23846,11 +23893,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>9</Order>
           <Id>positionTime</Id>
           <Name>Position Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -23977,6 +24027,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -24103,11 +24156,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>13</Order>
           <Id>etaTime</Id>
           <Name>ETA Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>376</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -24250,6 +24306,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -24297,6 +24356,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -24403,6 +24465,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -24649,6 +24714,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -24980,6 +25048,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25014,6 +25085,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
       </Fields>
@@ -25070,6 +25144,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25117,6 +25194,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25205,6 +25285,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25296,6 +25379,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25340,6 +25426,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25434,6 +25523,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25468,6 +25560,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25504,6 +25599,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25588,6 +25686,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25720,6 +25821,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -25995,6 +26099,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -26322,9 +26429,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>11</Order>
           <Id>timeOfPosition</Id>
           <Name>Time of Position</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -26388,9 +26498,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>18</Order>
           <Id>timeOfReceipt</Id>
           <Name>Time of Receipt</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -26583,9 +26696,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>11</Order>
           <Id>timeOfPosition</Id>
           <Name>Time of Position</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -26649,9 +26765,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>18</Order>
           <Id>timeOfReceipt</Id>
           <Name>Time of Receipt</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -26747,6 +26866,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -26844,6 +26966,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -26946,6 +27071,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -27755,9 +27883,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>6</Order>
           <Id>databaseTimestamp</Id>
           <Name>Database Timestamp</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -28004,9 +28135,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>routeWpListTimestamp</Id>
           <Name>Route/WP-List Timestamp</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -29711,11 +29845,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>5</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -29852,11 +29989,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -29993,11 +30133,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -30166,11 +30309,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -30377,11 +30523,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -40540,11 +40689,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>7</Order>
           <Id>startTime</Id>
           <Name>Start Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -40772,11 +40924,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>7</Order>
           <Id>startTime</Id>
           <Name>Start Time</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
@@ -41152,6 +41307,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -41461,6 +41619,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>
@@ -41563,6 +41724,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>256</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
           <FieldType>MMSI</FieldType>
         </Field>
         <Field>

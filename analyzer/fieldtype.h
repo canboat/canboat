@@ -1151,6 +1151,11 @@ FieldType fieldTypeList[] = {
 
     {.name        = "MMSI",
      .description = "MMSI",
+     .resolution    = 1,
+     .size          = 32,
+     .hasSign       = False,
+     .rangeMin      = 2000000, // Minimal valid MMSI is coastal station (00) MID (2xx)
+     .rangeMax      = 999999999,
      .encodingDescription
      = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. "
        "The first three or four digits are special, see the USCG link for a detailed explanation.",

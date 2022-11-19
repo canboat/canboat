@@ -58,9 +58,9 @@ $(ANALYZER_EXPLAIN): $(ANALYZER_EXPLAIN_SOURCES)
 $(XMLFILE): $(ANALYZER_EXPLAIN_DEP)
 	$(ANALYZER_EXPLAIN) -explain-xml -camel -v1 >$(XMLFILE)
 
-$(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE)
+$(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE) fixup-version.py
 	python3 fixup-version.py $(ANALYZER) $(XSD2FILE)
-	$(ANALYZER_EXPLAIN) -explain-xml -camel >$(XML2FILE) 
+	$(ANALYZER_EXPLAIN) -explain-xml -camel >$(XML2FILE)
 	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
 
 $(HTML2FILE): $(XSL2FILE) $(XML2FILE)
@@ -72,23 +72,23 @@ $(NGTXMLFILE): $(ANALYZER_EXPLAIN_DEP)
 $(IKXMLFILE): $(ANALYZER_EXPLAIN_DEP)
 	$(ANALYZER_EXPLAIN) -explain-ik-xml -camel -v1 >$(IKXMLFILE)
 
-$(JSONFILE): $(XMLFILE) pgns2json.xslt
+$(JSONFILE): $(XMLFILE) pgns2json.xslt validate-json.py
 	xsltproc pgns2json.xslt $(XMLFILE) >$(@)
 	python3 validate-json.py $(@)
 
-$(JSON2FILE): $(XML2FILE) canboat2json.xslt
+$(JSON2FILE): $(XML2FILE) canboat2json.xslt validate-json.py
 	xsltproc canboat2json.xslt $(XML2FILE) >$(@)
-	python3 validate-json.py $(@)
+	python3 validate-json.py --range $(@)
 
-$(NGTJSONFILE): $(NGTXMLFILE) pgns2json.xslt
+$(NGTJSONFILE): $(NGTXMLFILE) pgns2json.xslt validate-json.py
 	xsltproc pgns2json.xslt $(NGTXMLFILE) >$(@)
 	python3 validate-json.py $(@)
 
-$(IKJSONFILE): $(IKXMLFILE) pgns2json.xslt
+$(IKJSONFILE): $(IKXMLFILE) pgns2json.xslt validate-json.py
 	xsltproc pgns2json.xslt $(IKXMLFILE) >$(@)
 	python3 validate-json.py $(@)
 
-$(NPMFILE): ../common/version.h $(ANALYZER)
+$(NPMFILE): ../common/version.h $(ANALYZER) fixup-version.py
 	python3 fixup-version.py $(ANALYZER) $(NPMFILE)
 
 generated: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE) $(NPMFILE) $(HTML2FILE)

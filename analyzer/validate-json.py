@@ -34,8 +34,14 @@ if (sys.argv[1] == '--line-by-line'):
 
 res = 0
 allowedDuplicates = { } # 'Reserved', 'Spare' }
+checkRange = False
+allowedNoRange = { 'RESERVED', 'SPARE', 'BINARY', 'VARIABLE', 'STRING_LAU', 'STRING_LZ', 'STRING_FIX' }
 
-file = open(sys.argv[1])
+if (sys.argv[1] == '--range'):
+    checkRange = True
+    file = open(sys.argv[2])
+else:
+    file = open(sys.argv[1])
 data = json.loads(file.read())
 pgns = data["PGNs"]
 pMap = {}
@@ -61,6 +67,17 @@ for pgn in pgns:
                     res = 1
                 else:
                     nMap[fid] = order
+            if (checkRange):
+                if (not 'FieldType' in field):
+                    print("ERROR: PGN", prn, "'" +  desc + "' field " , order , fid , "has no FieldType")
+                    print(field)
+                    res = 1
+                else:
+                    ft = field['FieldType']
+                    if (not 'RangeMax' in field and not ft in allowedNoRange):
+                        print("ERROR: PGN", prn, "'" +  desc + "' field " , order , fid , "has no rangeMax")
+                        print(field)
+                        res = 1
 
 file.close()
 

@@ -81,12 +81,15 @@ limitations under the License.
           <Order>4</Order>
           <Id>uptime</Id>
           <Name>Uptime</Name>
+          <Description>Seconds since midnight</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>s</Units>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86402</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>

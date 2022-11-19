@@ -201,7 +201,7 @@
   </xsl:template>
 
   <!-- number (no support for javascript mantissa) -->
-  <xsl:template match="text()[string(number())!='NaN' and . != '000000000' and . != '999999999']">
+  <xsl:template match="text()[string(number())!='NaN']">
     <xsl:value-of select="."/>
   </xsl:template>
 
