@@ -780,7 +780,7 @@ static void checkSrcIsKnown(int src, time_t n)
   // Oops, no product info for this source
   logInfo("New device src=%d seen\n", src);
 
-  if (stream[stdoutfd].type == DATA_OUTPUT_COPY || stream[stdoutfd].type == DATA_OUTPUT_COPY)
+  if (stream[stdoutfd].type == DATA_OUTPUT_COPY || stream[stdoutfd].type == DATA_OUTPUT_STREAM)
   {
     char         strTmp[DATE_LENGTH];
     StringBuffer msg = sbNew;

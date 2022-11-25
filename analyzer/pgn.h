@@ -521,7 +521,8 @@ typedef struct
 
 #define MMSI_FIELD(nam)                                                 \
   {                                                                     \
-    .name = nam, .size = BYTES(4), .resolution = 1, .fieldType = "MMSI" \
+    .name = nam, .size = BYTES(4), .resolution = 1, .hasSign = false,   \
+    .rangeMin = 2000000, .rangeMax = 999999999, .fieldType = "MMSI"     \
   }
 
 #define DECIMAL_FIELD(nam, len, desc)                                                      \
@@ -660,14 +661,15 @@ typedef struct
     .description = desc                                                                                               \
   }
 
-#define TIME_FIELD(nam)                                                                   \
-  {                                                                                       \
-    .name = nam, .size = BYTES(4), .resolution = 0.0001, .unit = "s", .fieldType = "TIME" \
+#define TIME_FIELD(nam)                                                                                      \
+  {                                                                                                          \
+    .name = nam, .size = BYTES(4), .resolution = 0.0001, .unit = "s", .hasSign = false, .fieldType = "TIME", \
+    .description = "Seconds since midnight", .rangeMin = 0, .rangeMax = 86402                                \
   }
 
-#define DATE_FIELD(nam)                                                              \
-  {                                                                                  \
-    .name = nam, .size = BYTES(2), .resolution = 1, .unit = "d", .fieldType = "DATE" \
+#define DATE_FIELD(nam)                                                                                \
+  {                                                                                                    \
+    .name = nam, .size = BYTES(2), .resolution = 1, .unit = "d", .hasSign = false, .fieldType = "DATE" \
   }
 
 #define VARIABLE_FIELD(nam, desc)                                                   \

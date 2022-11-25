@@ -3,8 +3,8 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"4.9.1",
-    "Copyright":"CANboat version v4.9.1\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"4.9.2",
+    "Copyright":"CANboat version v4.9.2\n\n(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
     {
         "Name":"ELECTRICAL_CURRENT",
@@ -295,7 +295,9 @@
         "Name":"MMSI",
       "Description":"MMSI",
       "EncodingDescription":"The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.",
-      "URL":"https://navcen.uscg.gov/maritime-mobile-service-identity"
+      "URL":"https://navcen.uscg.gov/maritime-mobile-service-identity",
+      "Bits":32,
+      "Signed":false
       },
     {
         "Name":"VARIABLE",
@@ -13119,11 +13121,14 @@
             "Order":5,
             "Id":"time",
             "Name":"Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":32,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           }
@@ -13427,11 +13432,14 @@
             "Order":5,
             "Id":"activationTime",
             "Name":"Activation Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -13478,11 +13486,14 @@
             "Order":9,
             "Id":"positionTime",
             "Name":"Position Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":104,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -13578,6 +13589,9 @@
             "BitOffset":240,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -18281,11 +18295,14 @@
             "Order":2,
             "Id":"time",
             "Name":"Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":16,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -18523,11 +18540,14 @@
             "Order":14,
             "Id":"utcOfFix",
             "Name":"UTC of Fix",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":168,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -19344,11 +19364,14 @@
             "Order":3,
             "Id":"time",
             "Name":"Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":24,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -19595,11 +19618,14 @@
             "Order":2,
             "Id":"time",
             "Name":"Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":16,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -19667,6 +19693,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -19948,6 +19977,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -20261,6 +20293,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -20618,6 +20653,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -21305,11 +21343,14 @@
             "Order":7,
             "Id":"etaTime",
             "Name":"ETA Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -23673,6 +23714,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -23832,6 +23876,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -23906,11 +23953,14 @@
             "Order":9,
             "Id":"positionTime",
             "Name":"Position Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":112,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -24037,6 +24087,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -24163,11 +24216,14 @@
             "Order":13,
             "Id":"etaTime",
             "Name":"ETA Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":376,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -24310,6 +24366,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -24357,6 +24416,9 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -24463,6 +24525,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -24705,6 +24770,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25030,6 +25098,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25064,6 +25135,9 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           }
         ]
@@ -25117,6 +25191,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25164,6 +25241,9 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25249,6 +25329,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25337,6 +25420,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25381,6 +25467,9 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25471,6 +25560,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25505,6 +25597,9 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25541,6 +25636,9 @@
             "BitOffset":112,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25622,6 +25720,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -25751,6 +25852,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -26023,6 +26127,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -26346,9 +26453,12 @@
             "Order":11,
             "Id":"timeOfPosition",
             "Name":"Time of Position",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -26412,9 +26522,12 @@
             "Order":18,
             "Id":"timeOfReceipt",
             "Name":"Time of Receipt",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -26603,9 +26716,12 @@
             "Order":11,
             "Id":"timeOfPosition",
             "Name":"Time of Position",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -26669,9 +26785,12 @@
             "Order":18,
             "Id":"timeOfReceipt",
             "Name":"Time of Receipt",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -26767,6 +26886,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -26864,6 +26986,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -26966,6 +27091,9 @@
             "BitOffset":224,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -27754,9 +27882,12 @@
             "Order":6,
             "Id":"databaseTimestamp",
             "Name":"Database Timestamp",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -27995,9 +28126,12 @@
             "Order":4,
             "Id":"routeWpListTimestamp",
             "Name":"Route/WP-List Timestamp",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -29669,11 +29803,14 @@
             "Order":5,
             "Id":"measurementTime",
             "Name":"Measurement Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":24,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -29809,11 +29946,14 @@
             "Order":4,
             "Id":"measurementTime",
             "Name":"Measurement Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":24,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -29946,11 +30086,14 @@
             "Order":4,
             "Id":"measurementTime",
             "Name":"Measurement Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":24,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -30115,11 +30258,14 @@
             "Order":4,
             "Id":"measurementTime",
             "Name":"Measurement Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":24,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -30322,11 +30468,14 @@
             "Order":4,
             "Id":"measurementTime",
             "Name":"Measurement Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":24,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -40149,11 +40298,14 @@
             "Order":7,
             "Id":"startTime",
             "Name":"Start Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -40375,11 +40527,14 @@
             "Order":7,
             "Id":"startTime",
             "Name":"Start Time",
+            "Description":"Seconds since midnight",
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
             "Unit":"s",
             "Resolution":0.0001,
+            "RangeMin":0,
+            "RangeMax":86402,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },
@@ -40735,6 +40890,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -41036,6 +41194,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
@@ -41138,6 +41299,9 @@
             "BitOffset":256,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
             "FieldType":"MMSI"
           },
           {
