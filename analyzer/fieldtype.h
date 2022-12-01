@@ -45,6 +45,7 @@ extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, si
 extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 
 typedef enum Bool
 {
@@ -331,8 +332,9 @@ FieldType fieldTypeList[] = {
        "encodings. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that "
        "the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive "
        "value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
-     .url = "https://en.wikipedia.org/wiki/Binary_number",
-     .pf  = fieldPrintNumber},
+     .url    = "https://en.wikipedia.org/wiki/Binary_number",
+     .v1Type = "Number",
+     .pf     = fieldPrintNumber},
 
     {.name          = "INTEGER",
      .description   = "Signed integral number",
@@ -462,6 +464,13 @@ FieldType fieldTypeList[] = {
      .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
                 "occurs that has no corresponding textual explanation.",
      .pf      = fieldPrintBitLookup},
+
+    {.name        = "FIELDTYPE_LOOKUP",
+     .description = "Number value where each value encodes for a distinct meaning including a fieldtype of a following field",
+     .encodingDescription = "Each lookup has a LookupEnumeration defining what the possible values mean",
+     .comment             = "These values are fully reverse engineered and there are likely some unknown datatypes",
+     .hasSign             = False,
+     .pf                  = fieldPrintLookup},
 
     {.name          = "MANUFACTURER",
      .description   = "Manufacturer",
@@ -1151,11 +1160,11 @@ FieldType fieldTypeList[] = {
 
     {.name        = "MMSI",
      .description = "MMSI",
-     .resolution    = 1,
-     .size          = 32,
-     .hasSign       = False,
-     .rangeMin      = 2000000, // Minimal valid MMSI is coastal station (00) MID (2xx)
-     .rangeMax      = 999999999,
+     .resolution  = 1,
+     .size        = 32,
+     .hasSign     = False,
+     .rangeMin    = 2000000, // Minimal valid MMSI is coastal station (00) MID (2xx)
+     .rangeMax    = 999999999,
      .encodingDescription
      = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. "
        "The first three or four digits are special, see the USCG link for a detailed explanation.",
@@ -1166,7 +1175,13 @@ FieldType fieldTypeList[] = {
      .description = "Variable",
      .encodingDescription
      = "The definition of the field is that of the reference PGN and reference field, this is totally variable.",
-     .pf = fieldPrintVariable}};
+     .pf = fieldPrintVariable},
+
+    {.name                = "KEY_VALUE",
+     .description         = "Key/value",
+     .encodingDescription = "The definition of the field is defined by a lookup done on the Type field. The length is defined by "
+                            "the preceding length and sign fields.",
+     .pf                  = fieldPrintKeyValue}};
 
 const size_t fieldTypeCount = ARRAY_SIZE(fieldTypeList);
 

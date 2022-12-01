@@ -240,6 +240,13 @@
       "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation."
       },
     {
+        "Name":"FIELDTYPE_LOOKUP",
+      "Description":"Number value where each value encodes for a distinct meaning including a fieldtype of a following field",
+      "EncodingDescription":"Each lookup has a LookupEnumeration defining what the possible values mean",
+      "Comment":"These values are fully reverse engineered and there are likely some unknown datatypes",
+      "Signed":false
+      },
+    {
         "Name":"TIME",
       "Description":"Time",
       "URL":"https://en.wikipedia.org/wiki/Time",
@@ -303,6 +310,11 @@
         "Name":"VARIABLE",
       "Description":"Variable",
       "EncodingDescription":"The definition of the field is that of the reference PGN and reference field, this is totally variable."
+      },
+    {
+        "Name":"KEY_VALUE",
+      "Description":"Key/value",
+      "EncodingDescription":"The definition of the field is defined by a lookup done on the Type field. The length is defined by the preceding length and sign fields."
       }
     ],
     "MissingEnumerations":[
@@ -2805,6 +2817,44 @@
           {"Name":"Controller over current cut-out", "Bit":1},
           {"Name":"Controller over temperature cut-out", "Bit":2},
           {"Name":"Manufacturer defined", "Bit":3}
+        ]
+      }
+    ],
+    "LookupFieldTypeEnumerations":[
+      {
+        "Name":"BANDG_KEY_VALUE",
+        "MaxValue":0,
+        "EnumFieldTypeValues":[
+        {"name": "Tacking Performance", "value": 50, "FieldType": "NUMBER", "Resolution": 0.004, "Unit": "%"},
+        {"name": "Heel Angle", "value": 52, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Optimale Wind Angle", "value": 53, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Average True Wind Direction", "value": 80, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Target TWA", "value": 83, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Unknown", "value": 100, "FieldType": "NUMBER"},
+        {"name": "Course", "value": 105, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Dead Reckoning Distance", "value": 129, "FieldType": "NUMBER", "Resolution": 1, "Unit": "m"},
+        {"name": "Leeway Angle", "value": 130, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Tide Rate", "value": 131, "FieldType": "NUMBER", "Resolution": 0.001, "Unit": "m/s"},
+        {"name": "Tide Set", "value": 132, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Polar Performance", "value": 124, "FieldType": "NUMBER", "Resolution": 0.004, "Unit": "%"},
+        {"name": "Polar Boat Speed", "value": 126, "FieldType": "NUMBER", "Resolution": 0.001, "Unit": "m/s"},
+        {"name": "Velocity made Good", "value": 127, "FieldType": "NUMBER", "Resolution": 0.001, "Unit": "m/s"},
+        {"name": "Heading on Opposite Tack", "value": 154, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Trim Angle", "value": 155, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Wind Angle to Mast", "value": 157, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Dead Reckoning Bearing", "value": 211, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Chain Length", "value": 284, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m"},
+        {"name": "VMG Performance", "value": 285, "FieldType": "NUMBER", "Resolution": 0.004, "Unit": "%"},
+        {"name": "Bias Advantage", "value": 305, "FieldType": "NUMBER", "Resolution": 1, "Unit": "m"},
+        {"name": "Opposite Tack COG", "value": 306, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Opposite Tack Target Heading", "value": 307, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Mast Rake", "value": 308, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Next Leg Bearing", "value": 309, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Next Leg Target Speed", "value": 310, "FieldType": "NUMBER", "Resolution": 0.001, "Unit": "m/s"},
+        {"name": "Ground Wind Direction", "value": 311, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Ground Wind Speed", "value": 312, "FieldType": "NUMBER", "Resolution": 0.001, "Unit": "m/s"},
+        {"name": "Wind Phase", "value": 337, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
+        {"name": "Wind Lift", "value": 338, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"}
         ]
       }
     ],
@@ -31938,7 +31988,7 @@
             "BitLength":32,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":-1,
+            "RangeMax":0,
             "FieldType":"BITLOOKUP",
             "LookupBitEnumeration":"ENTERTAINMENT_PLAY_STATUS_BITFIELD"
           },
@@ -39404,14 +39454,17 @@
       },
       {
         "PGN":130824,
-        "Id":"bGWindData",
-        "Description":"B&G: Wind data",
+        "Id":"bGKeyValueData",
+        "Description":"B&G: key-value data",
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":6,
-        "Length":8,
+        "MinLength":2,
+        "RepeatingFieldSet1Size":3,
+        "RepeatingFieldSet1StartField":4,
+        "RepeatingFieldSet1CountField":0,
         "Fields":[
           {
             "Order":1,
@@ -39457,43 +39510,39 @@
           },
           {
             "Order":4,
-            "Id":"field4",
-            "Name":"Field 4",
-            "BitLength":8,
+            "Id":"key",
+            "Name":"Key",
+            "BitLength":12,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
+            "RangeMax":4093,
+            "FieldType":"LOOKUP",
+            "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE"
           },
           {
             "Order":5,
-            "Id":"field5",
-            "Name":"Field 5",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
+            "Id":"length",
+            "Name":"Length",
+            "Description":"Length of field 7",
+            "BitLength":4,
+            "BitOffset":28,
+            "BitStart":4,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":13,
             "FieldType":"NUMBER"
           },
           {
             "Order":6,
-            "Id":"timestamp",
-            "Name":"Timestamp",
-            "Description":"Increasing field, what else can it be?",
-            "BitLength":32,
-            "BitOffset":32,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":4294967293,
-            "FieldType":"NUMBER"
+            "Id":"value",
+            "Name":"Value",
+            "Description":"Data value",
+            "BitLengthVariable":true,
+            "FieldType":"KEY_VALUE"
           }
         ]
       },

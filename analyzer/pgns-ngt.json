@@ -143,6 +143,7 @@
             "BitLength":16,
             "BitOffset":88,
             "BitStart":0,
+            "Type":"Number",
             "Resolution":0.001,
             "Signed":false,
             "RangeMin":0,

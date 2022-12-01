@@ -251,6 +251,12 @@ limitations under the License.
       <EncodingDescription>Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have any combination of bits set.</EncodingDescription>
       <Comment>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</Comment>
     </FieldType>
+    <FieldType Name="FIELDTYPE_LOOKUP">
+      <Description>Number value where each value encodes for a distinct meaning including a fieldtype of a following field</Description>
+      <EncodingDescription>Each lookup has a LookupEnumeration defining what the possible values mean</EncodingDescription>
+      <Comment>These values are fully reverse engineered and there are likely some unknown datatypes</Comment>
+      <Signed>false</Signed>
+    </FieldType>
     <FieldType Name="TIME">
       <Description>Time</Description>
       <URL>https://en.wikipedia.org/wiki/Time</URL>
@@ -305,6 +311,10 @@ limitations under the License.
     <FieldType Name="VARIABLE">
       <Description>Variable</Description>
       <EncodingDescription>The definition of the field is that of the reference PGN and reference field, this is totally variable.</EncodingDescription>
+    </FieldType>
+    <FieldType Name="KEY_VALUE">
+      <Description>Key/value</Description>
+      <EncodingDescription>The definition of the field is defined by a lookup done on the Type field. The length is defined by the preceding length and sign fields.</EncodingDescription>
     </FieldType>
   </FieldTypes>
   <MissingEnumerations>
@@ -2104,6 +2114,70 @@ limitations under the License.
       <BitPair Bit='3' Name='Manufacturer defined' />
     </LookupBitEnumeration>
   </LookupBitEnumerations>
+  <LookupFieldTypeEnumerations>
+    <LookupFieldTypeEnumeration Name='BANDG_KEY_VALUE' MaxValue='0'>
+      <EnumFieldType Value='50' Name='Tacking Performance' FieldType='NUMBER' Signed='false'
+ Resolution='0.004' Unit='%'/>
+      <EnumFieldType Value='52' Name='Heel Angle' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='53' Name='Optimale Wind Angle' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='80' Name='Average True Wind Direction' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='83' Name='Target TWA' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='100' Name='Unknown' FieldType='NUMBER' Signed='true'
+/>
+      <EnumFieldType Value='105' Name='Course' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='129' Name='Dead Reckoning Distance' FieldType='NUMBER' Signed='true'
+ Resolution='1' Unit='m'/>
+      <EnumFieldType Value='130' Name='Leeway Angle' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='131' Name='Tide Rate' FieldType='NUMBER' Signed='true'
+ Resolution='0.001' Unit='m/s'/>
+      <EnumFieldType Value='132' Name='Tide Set' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='124' Name='Polar Performance' FieldType='NUMBER' Signed='false'
+ Resolution='0.004' Unit='%'/>
+      <EnumFieldType Value='126' Name='Polar Boat Speed' FieldType='NUMBER' Signed='true'
+ Resolution='0.001' Unit='m/s'/>
+      <EnumFieldType Value='127' Name='Velocity made Good' FieldType='NUMBER' Signed='true'
+ Resolution='0.001' Unit='m/s'/>
+      <EnumFieldType Value='154' Name='Heading on Opposite Tack' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='155' Name='Trim Angle' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='157' Name='Wind Angle to Mast' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='211' Name='Dead Reckoning Bearing' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='284' Name='Chain Length' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='m'/>
+      <EnumFieldType Value='285' Name='VMG Performance' FieldType='NUMBER' Signed='false'
+ Resolution='0.004' Unit='%'/>
+      <EnumFieldType Value='305' Name='Bias Advantage' FieldType='NUMBER' Signed='true'
+ Resolution='1' Unit='m'/>
+      <EnumFieldType Value='306' Name='Opposite Tack COG' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='307' Name='Opposite Tack Target Heading' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='308' Name='Mast Rake' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='309' Name='Next Leg Bearing' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='310' Name='Next Leg Target Speed' FieldType='NUMBER' Signed='true'
+ Resolution='0.001' Unit='m/s'/>
+      <EnumFieldType Value='311' Name='Ground Wind Direction' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='312' Name='Ground Wind Speed' FieldType='NUMBER' Signed='true'
+ Resolution='0.001' Unit='m/s'/>
+      <EnumFieldType Value='337' Name='Wind Phase' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+      <EnumFieldType Value='338' Name='Wind Lift' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+    </LookupFieldTypeEnumeration>
+  </LookupFieldTypeEnumerations>
   <PGNs>
     <PGNInfo>
       <PGN>0</PGN>
@@ -32022,7 +32096,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>-1</RangeMax>
+          <RangeMax>0</RangeMax>
           <FieldType>BITLOOKUP</FieldType>
           <LookupBitEnumeration>ENTERTAINMENT_PLAY_STATUS_BITFIELD</LookupBitEnumeration>
         </Field>
@@ -39752,8 +39826,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130824</PGN>
-      <Id>bGWindData</Id>
-      <Description>B&amp;G: Wind data</Description>
+      <Id>bGKeyValueData</Id>
+      <Description>B&amp;G: key-value data</Description>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -39763,7 +39837,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>6</FieldCount>
-      <Length>8</Length>
+      <MinLength>2</MinLength>
+      <RepeatingFieldSet1Size>3</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1CountField>0</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -39809,43 +39886,39 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>field4</Id>
-          <Name>Field 4</Name>
-          <BitLength>8</BitLength>
+          <Id>key</Id>
+          <Name>Key</Name>
+          <BitLength>12</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>4093</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupFieldTypeEnumeration>BANDG_KEY_VALUE</LookupFieldTypeEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>field5</Id>
-          <Name>Field 5</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
+          <Id>length</Id>
+          <Name>Length</Name>
+          <Description>Length of field 7</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>13</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>timestamp</Id>
-          <Name>Timestamp</Name>
-          <Description>Increasing field, what else can it be?</Description>
-          <BitLength>32</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4294967293</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Data value</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <FieldType>KEY_VALUE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

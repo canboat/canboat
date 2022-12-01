@@ -80,17 +80,20 @@ typedef enum GeoFormats
   GEO_DMS
 } GeoFormats;
 
-extern bool       showRaw;
-extern bool       showData;
-extern bool       showJson;
-extern bool       showJsonEmpty;
-extern bool       showJsonValue;
-extern bool       showBytes;
-extern bool       showSI;
-extern GeoFormats showGeo;
-extern char      *sep;
-extern char       closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
-extern bool       g_skip;
+extern bool        showRaw;
+extern bool        showData;
+extern bool        showJson;
+extern bool        showJsonEmpty;
+extern bool        showJsonValue;
+extern bool        showBytes;
+extern bool        showSI;
+extern GeoFormats  showGeo;
+extern char       *sep;
+extern char        closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
+extern bool        g_skip;
+extern const char *g_ft;
+extern int64_t     g_sign;
+extern int64_t     g_length;
 
 /* analyzer.c */
 

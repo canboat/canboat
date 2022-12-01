@@ -41,8 +41,8 @@ limitations under the License.
 
           This has as children some basic string elements followed by
           the different complex types that we use to define the PGNs:
-          Physical Quantities, Field Types, and three types of enumerations:
-          Missing, Lookup and LookupBit.
+          Physical Quantities, Field Types, and five types of enumerations:
+          Missing, Lookup, LookupIndirect, LookupBit and LookupFieldtype.
           The last element is the list of PGNs themselves.
         </xs:documentation>
       </xs:annotation>
@@ -57,6 +57,7 @@ limitations under the License.
       <xs:element type="LookupEnumerations" name="LookupEnumerations"/>
       <xs:element type="LookupIndirectEnumerations" name="LookupIndirectEnumerations"/>
       <xs:element type="LookupBitEnumerations" name="LookupBitEnumerations"/>
+      <xs:element type="LookupFieldTypeEnumerations" name="LookupFieldTypeEnumerations"/>
       <xs:element type="PGNs" name="PGNs"/>
     </xs:sequence>
     <xs:attribute type="xs:float" name="Version"/>
@@ -154,6 +155,43 @@ limitations under the License.
   <xs:complexType name="LookupBitEnumerations">
     <xs:sequence>
       <xs:element type="LookupBitEnumeration" name="LookupBitEnumeration" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="EnumFieldType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:short" name="Value" />
+        <xs:attribute type="xs:string" name="Name" />
+        <xs:attribute type="xs:string" name="FieldType" use="optional" />
+        <xs:attribute type="xs:boolean" name="Signed" use="optional" />
+        <xs:attribute type="xs:float" name="Resolution" use="optional" />
+        <xs:attribute type="xs:string" name="Unit" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="LookupFieldTypeEnumeration">
+    <xs:annotation>
+      <xs:documentation>
+        The LookupFieldTypeEnumeration is a list of EnumFieldType elements with a name.
+        This allows the PGN field to refer to this when it contains a lookup
+        field, for instance 0 = No, 1 = Yes. The special null-like values
+        for Unknown and Error are not placed in this list.
+        This is different from a LookupEnumeration in that it also defines
+        a set of field attributes for a following variable field.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element type="EnumFieldType" name="EnumFieldType" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name"/>
+    <xs:attribute type="xs:int" name="MaxValue"/>
+  </xs:complexType>
+
+  <xs:complexType name="LookupFieldTypeEnumerations">
+    <xs:sequence>
+      <xs:element type="LookupFieldTypeEnumeration" name="LookupFieldTypeEnumeration" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -469,6 +507,15 @@ limitations under the License.
           <xs:documentation>
             When the FieldType is BITLOOKUP, the field value has to be interpreted as
             a number of bits, with each bit forming a flag whose meaning is given in the lookup table.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupFieldTypeEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is LOOKUP_FIELDTYPE, the field value has meaning derived from 
+            the lookup table mentioned here. It also defines the field type of a
+            following variable field.
           </xs:documentation>
         </xs:annotation>
       </xs:element>

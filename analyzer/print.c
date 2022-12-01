@@ -151,7 +151,7 @@ bool adjustDataLenStart(uint8_t **data, size_t *dataLen, size_t *startBit)
   return false;
 }
 
-static bool extractNumberByOrder(Pgn *pgn, size_t order, uint8_t *data, size_t dataLen, int64_t *value)
+bool extractNumberByOrder(Pgn *pgn, size_t order, uint8_t *data, size_t dataLen, int64_t *value)
 {
   Field *field     = &pgn->fieldList[order - 1];
   size_t bitOffset = getFieldOffsetByOrder(pgn, order);
@@ -481,7 +481,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
 
   if (s == NULL && field->lookup.type != LOOKUP_TYPE_NONE && value >= 0)
   {
-    if (field->lookup.type == LOOKUP_TYPE_PAIR)
+    if (field->lookup.type == LOOKUP_TYPE_PAIR || field->lookup.type == LOOKUP_TYPE_FIELDTYPE)
     {
       s = (*field->lookup.function.pair)((size_t) value);
     }
@@ -1152,4 +1152,48 @@ extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_
     mprintf("\"");
   }
   return true;
+}
+
+const char *g_ft     = NULL;
+int64_t     g_sign   = 0;
+int64_t     g_length = 0;
+
+extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+{
+  bool  r = false;
+  Field f = *field;
+
+  *bits = ((size_t) g_length) * 8;
+  logDebug("fieldPrintKeyValue('%s') sign=%" PRId64 " bits=%zu\n", fieldName, g_sign, *bits);
+
+  if (dataLen >= ((startBit + *bits) >> 3))
+  {
+    f.ft = NULL;
+    if (g_ft != NULL)
+    {
+      f.ft = getFieldType(g_ft);
+    }
+    if (f.ft != NULL)
+    {
+      f.size       = *bits;
+      f.unit       = f.ft->unit;
+      f.resolution = f.ft->resolution;
+      f.hasSign    = g_sign > 0;
+      r            = (f.ft->pf)(&f, fieldName, data, dataLen, startBit, bits);
+    }
+    else
+    {
+      r = fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
+    }
+  }
+  else
+  {
+    logError("PGN %u key-value has insufficient bytes for field %s\n", field->pgn->pgn, fieldName);
+  }
+
+  g_ft     = NULL;
+  g_sign   = 0;
+  g_length = 0;
+
+  return r;
 }

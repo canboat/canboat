@@ -43,13 +43,15 @@ typedef struct Pgn       Pgn;
 typedef void (*EnumPairCallback)(size_t value, const char *name);
 typedef void (*BitPairCallback)(size_t value, const char *name);
 typedef void (*EnumTripletCallback)(size_t value1, size_t value2, const char *name);
+typedef void (*EnumFieldtypeCallback)(size_t value, const char *name, const char *ft);
 
 typedef enum LookupType
 {
   LOOKUP_TYPE_NONE,
   LOOKUP_TYPE_PAIR,
   LOOKUP_TYPE_TRIPLET,
-  LOOKUP_TYPE_BIT
+  LOOKUP_TYPE_BIT,
+  LOOKUP_TYPE_FIELDTYPE
 } LookupType;
 
 typedef struct
@@ -63,6 +65,7 @@ typedef struct
     void (*pairEnumerator)(EnumPairCallback);
     void (*bitEnumerator)(BitPairCallback);
     void (*tripletEnumerator)(EnumTripletCallback);
+    void (*fieldtypeEnumerator)(EnumFieldtypeCallback);
   } function;
   uint8_t val1Order;
   size_t  size;
@@ -73,10 +76,12 @@ typedef struct
 #define LOOKUP_PAIR_MEMBER .lookup.function.pairEnumerator
 #define LOOKUP_BIT_MEMBER .lookup.function.bitEnumerator
 #define LOOKUP_TRIPLET_MEMBER .lookup.function.tripletEnumerator
+#define LOOKUP_FIELDTYPE_MEMBER .lookup.function.fieldtypeEnumerator
 #else
 #define LOOKUP_PAIR_MEMBER .lookup.function.pair
 #define LOOKUP_BIT_MEMBER .lookup.function.pair
 #define LOOKUP_TRIPLET_MEMBER .lookup.function.triplet
+#define LOOKUP_FIELDTYPE_MEMBER .lookup.function.pair
 #endif
 
 typedef struct
@@ -120,6 +125,12 @@ typedef struct
   {                                                                                               \
     .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_PAIR, \
     LOOKUP_PAIR_MEMBER = lookup##typ, .lookup.name = xstr(typ), .fieldType = "LOOKUP"             \
+  }
+
+#define LOOKUP_FIELDTYPE_FIELD(nam, len, typ)                                                          \
+  {                                                                                                    \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_FIELDTYPE, \
+    LOOKUP_FIELDTYPE_MEMBER = lookup##typ, .lookup.name = xstr(typ), .fieldType = "LOOKUP"             \
   }
 
 #define LOOKUP_TRIPLET_FIELD(nam, len, typ, desc, order)                                                                      \
@@ -519,10 +530,10 @@ typedef struct
     .name = nam, .size = len, .resolution = 1, .hasSign = true, .fieldType = "INTEGER" \
   }
 
-#define MMSI_FIELD(nam)                                                 \
-  {                                                                     \
-    .name = nam, .size = BYTES(4), .resolution = 1, .hasSign = false,   \
-    .rangeMin = 2000000, .rangeMax = 999999999, .fieldType = "MMSI"     \
+#define MMSI_FIELD(nam)                                                                                           \
+  {                                                                                                               \
+    .name = nam, .size = BYTES(4), .resolution = 1, .hasSign = false, .rangeMin = 2000000, .rangeMax = 999999999, \
+    .fieldType = "MMSI"                                                                                           \
   }
 
 #define DECIMAL_FIELD(nam, len, desc)                                                      \
@@ -677,6 +688,11 @@ typedef struct
     .name = nam, .size = LEN_VARIABLE, .description = desc, .fieldType = "VARIABLE" \
   }
 
+#define KEY_VALUE_FIELD(nam, desc)                                                   \
+  {                                                                                  \
+    .name = nam, .size = LEN_VARIABLE, .description = desc, .fieldType = "KEY_VALUE" \
+  }
+
 #define ENERGY_UINT32_FIELD(nam)                                                                \
   {                                                                                             \
     .name = nam, .size = BYTES(4), .resolution = 1, .unit = "kWh", .fieldType = "ENERGY_UINT32" \
@@ -812,10 +828,12 @@ typedef struct
 #define LOOKUP_TYPE(type, length) extern void lookup##type(EnumPairCallback cb);
 #define LOOKUP_TYPE_TRIPLET(type, length) extern void lookup##type(EnumTripletCallback cb);
 #define LOOKUP_TYPE_BITFIELD(type, length) extern void lookup##type(BitPairCallback cb);
+#define LOOKUP_TYPE_FIELDTYPE(type, length) extern void lookup##type(EnumFieldtypeCallback cb);
 #else
 #define LOOKUP_TYPE(type, length) extern const char *lookup##type(size_t val);
 #define LOOKUP_TYPE_TRIPLET(type, length) extern const char *lookup##type(size_t val1, size_t val2);
 #define LOOKUP_TYPE_BITFIELD(type, length) extern const char *lookup##type(size_t val);
+#define LOOKUP_TYPE_FIELDTYPE(type, length) extern const char *lookup##type(size_t val);
 #endif
 
 #include "lookup.h"
@@ -886,6 +904,7 @@ bool   extractNumber(const Field *field,
                      size_t       bits,
                      int64_t     *value,
                      int64_t     *maxValue);
+bool   extractNumberByOrder(Pgn *pgn, size_t order, uint8_t *data, size_t dataLen, int64_t *value);
 
 void camelCase(bool upperCamelCase);
 
@@ -3971,8 +3990,8 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
-     .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
-     .interval        = UINT16_MAX}
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .interval = UINT16_MAX}
 
     ,
     {"AIS SAR Aircraft Position Report",
@@ -4996,10 +5015,7 @@ Pgn pgnList[] = {
      130576,
      PACKET_NOT_SEEN,
      PACKET_SINGLE,
-     {PERCENTAGE_I8_FIELD("Port trim tab"),
-      PERCENTAGE_I8_FIELD("Starboard trim tab"),
-      RESERVED_FIELD(BYTES(6)),
-      END_OF_FIELDS},
+     {PERCENTAGE_I8_FIELD("Port trim tab"), PERCENTAGE_I8_FIELD("Starboard trim tab"), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS},
      .interval = 200}
 
     ,
@@ -5824,15 +5840,17 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"B&G: Wind data",
+    {"B&G: key-value data",
      130824,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(381),
-      UINT8_FIELD("Field 4"),
-      UINT8_FIELD("Field 5"),
-      SIMPLE_DESC_FIELD("Timestamp", BYTES(4), "Increasing field, what else can it be?"),
-      END_OF_FIELDS}}
+      LOOKUP_FIELDTYPE_FIELD("Key", 12, BANDG_KEY_VALUE),
+      SIMPLE_DESC_FIELD("Length", 4, "Length of field 7"),
+      KEY_VALUE_FIELD("Value", "Data value"),
+      END_OF_FIELDS},
+     .repeatingCount1 = 3,
+     .repeatingStart1 = 4}
 
     /* M/V Dirona */
     ,

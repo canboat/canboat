@@ -35,7 +35,7 @@ if (sys.argv[1] == '--line-by-line'):
 res = 0
 allowedDuplicates = { } # 'Reserved', 'Spare' }
 checkRange = False
-allowedNoRange = { 'RESERVED', 'SPARE', 'BINARY', 'VARIABLE', 'STRING_LAU', 'STRING_LZ', 'STRING_FIX' }
+allowedNoRange = { 'RESERVED', 'SPARE', 'BINARY', 'VARIABLE', 'STRING_LAU', 'STRING_LZ', 'STRING_FIX', 'KEY_VALUE' }
 
 if (sys.argv[1] == '--range'):
     checkRange = True
