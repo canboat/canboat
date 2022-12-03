@@ -466,11 +466,12 @@ FieldType fieldTypeList[] = {
      .pf      = fieldPrintBitLookup},
 
     {.name        = "FIELDTYPE_LOOKUP",
-     .description = "Number value where each value encodes for a distinct meaning including a fieldtype of a following field",
-     .encodingDescription = "Each lookup has a LookupEnumeration defining what the possible values mean",
-     .comment             = "These values are fully reverse engineered and there are likely some unknown datatypes",
-     .hasSign             = False,
-     .pf                  = fieldPrintLookup},
+     .description = "Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field",
+     .encodingDescription = "Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean",
+     .comment = "These values have been determined by reverse engineering, given the known values it is anticipated that there are "
+                "unkown enumeration values and some known values have incorrect datatypes",
+     .hasSign = False,
+     .pf      = fieldPrintLookup},
 
     {.name          = "MANUFACTURER",
      .description   = "Manufacturer",
@@ -1177,11 +1178,12 @@ FieldType fieldTypeList[] = {
      = "The definition of the field is that of the reference PGN and reference field, this is totally variable.",
      .pf = fieldPrintVariable},
 
-    {.name                = "KEY_VALUE",
-     .description         = "Key/value",
-     .encodingDescription = "The definition of the field is defined by a lookup done on the Type field. The length is defined by "
-                            "the preceding length and sign fields.",
-     .pf                  = fieldPrintKeyValue}};
+    {.name        = "KEY_VALUE",
+     .description = "Key/value",
+     .encodingDescription
+     = "The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by "
+       "the preceding length field.",
+     .pf = fieldPrintKeyValue}};
 
 const size_t fieldTypeCount = ARRAY_SIZE(fieldTypeList);
 

@@ -288,6 +288,16 @@
                         <xsl:value-of select="LookupBitEnumeration"/>
                       </a>
                     </xsl:when>
+                    <xsl:when test="LookupFieldTypeEnumeration">
+                      lookup
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="concat('#lookup-', LookupFieldTypeEnumeration)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="LookupFieldTypeEnumeration"/>
+                      </a>
+                      that defines the next variable field's type.
+                    </xsl:when>
                     <xsl:otherwise>
                       <xsl:if test="Signed = 'true'">
                         signed
@@ -413,6 +423,58 @@
             </td>
             <td>
               <xsl:value-of select="@Name"/>
+            </td>
+          </tr>
+        </xsl:for-each>
+      </table>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template name="lookupfieldtype-list">
+    <h2 id='lookupfieldtype-enumerations'>Lookup with FieldType enumerations</h2>
+    <xsl:for-each select="/PGNDefinitions/LookupFieldTypeEnumerations/*">
+      <h3>
+        <xsl:attribute name="id">
+          <xsl:value-of select="concat('lookup-', @Name)"/>
+        </xsl:attribute>
+        <xsl:value-of select="@Name"/>
+        (0 - <xsl:value-of select="@MaxValue"/>)
+      </h3>
+      <table>
+        <tr>
+          <th>Value</th>
+          <th>Description</th>
+          <th>Unit</th>
+          <th>Type</th>
+        </tr>
+        <xsl:for-each select="EnumFieldType">
+          <tr>
+            <td>
+              <xsl:value-of select="@Value"/>
+            </td>
+            <td>
+              <xsl:value-of select="@Name"/>
+            </td>
+            <td>
+              <xsl:value-of select="@Resolution"/>
+              <xsl:text> </xsl:text>
+              <xsl:value-of select="@Unit"/>
+            </td>
+            <td>
+              <xsl:choose>
+                <xsl:when test="@Signed = 'true' and @FieldType = 'NUMBER'">
+                  signed
+                </xsl:when>
+                <xsl:when test="@Signed = 'false' and @FieldType = 'NUMBER'">
+                  unsigned
+                </xsl:when>
+              </xsl:choose>
+              <a>
+                <xsl:attribute name="href">
+                  <xsl:value-of select="concat('#ft-', @FieldType)"/>
+                </xsl:attribute>
+                <xsl:value-of select="@FieldType"/> 
+              </a>
             </td>
           </tr>
         </xsl:for-each>
@@ -559,6 +621,7 @@
           <a href="#lookup-enumerations">Lookup enumerations</a>
           <a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a>
           <a href="#bitfield-enumerations">Bitfield enumerations</a>
+          <a href="#lookupfieldtype-enumerations">Lookup with FieldType enumerations</a>
           <a href="#notes">Notes</a>
         </div>
 
@@ -748,6 +811,7 @@
           <xsl:call-template name="lookup-list"/>
           <xsl:call-template name="indirect-lookup-list"/>
           <xsl:call-template name="lookupbit-list"/>
+          <xsl:call-template name="lookupfieldtype-list"/>
 
           <h2 id='notes'>Notes</h2>
           <h3 id='offset'>Excess-K offset</h3>

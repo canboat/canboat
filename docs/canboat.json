@@ -241,9 +241,9 @@
       },
     {
         "Name":"FIELDTYPE_LOOKUP",
-      "Description":"Number value where each value encodes for a distinct meaning including a fieldtype of a following field",
-      "EncodingDescription":"Each lookup has a LookupEnumeration defining what the possible values mean",
-      "Comment":"These values are fully reverse engineered and there are likely some unknown datatypes",
+      "Description":"Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field",
+      "EncodingDescription":"Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean",
+      "Comment":"These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes",
       "Signed":false
       },
     {
@@ -314,7 +314,7 @@
     {
         "Name":"KEY_VALUE",
       "Description":"Key/value",
-      "EncodingDescription":"The definition of the field is defined by a lookup done on the Type field. The length is defined by the preceding length and sign fields."
+      "EncodingDescription":"The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field."
       }
     ],
     "MissingEnumerations":[
@@ -340,7 +340,7 @@
       },
       {
         "Name":"Interval",
-        "Value":"The transmission interval is not known"
+        "Value":"The default transmission interval is not known"
       }
     ],
     "LookupEnumerations":[
@@ -39458,13 +39458,12 @@
         "Description":"B&G: key-value data",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Lookups","Interval"
         ],
         "FieldCount":6,
         "MinLength":2,
         "RepeatingFieldSet1Size":3,
         "RepeatingFieldSet1StartField":4,
-        "RepeatingFieldSet1CountField":0,
         "Fields":[
           {
             "Order":1,

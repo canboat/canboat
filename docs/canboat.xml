@@ -252,9 +252,9 @@ limitations under the License.
       <Comment>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</Comment>
     </FieldType>
     <FieldType Name="FIELDTYPE_LOOKUP">
-      <Description>Number value where each value encodes for a distinct meaning including a fieldtype of a following field</Description>
-      <EncodingDescription>Each lookup has a LookupEnumeration defining what the possible values mean</EncodingDescription>
-      <Comment>These values are fully reverse engineered and there are likely some unknown datatypes</Comment>
+      <Description>Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field</Description>
+      <EncodingDescription>Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean</EncodingDescription>
+      <Comment>These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes</Comment>
       <Signed>false</Signed>
     </FieldType>
     <FieldType Name="TIME">
@@ -314,7 +314,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="KEY_VALUE">
       <Description>Key/value</Description>
-      <EncodingDescription>The definition of the field is defined by a lookup done on the Type field. The length is defined by the preceding length and sign fields.</EncodingDescription>
+      <EncodingDescription>The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field.</EncodingDescription>
     </FieldType>
   </FieldTypes>
   <MissingEnumerations>
@@ -323,7 +323,7 @@ limitations under the License.
     <MissingAttribute Name="Resolution">The resolution of one or more fields is likely incorrect</MissingAttribute>
     <MissingAttribute Name="Lookups">One or more of the lookup fields contain missing or incorrect values</MissingAttribute>
     <MissingAttribute Name="SampleData">The PGN has not been seen in any logfiles yet</MissingAttribute>
-    <MissingAttribute Name="Interval">The transmission interval is not known</MissingAttribute>
+    <MissingAttribute Name="Interval">The default transmission interval is not known</MissingAttribute>
   </MissingEnumerations>
   <LookupEnumerations>
     <LookupEnumeration Name='INDUSTRY_CODE' MaxValue='7'>
@@ -39831,16 +39831,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>6</FieldCount>
       <MinLength>2</MinLength>
       <RepeatingFieldSet1Size>3</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
-      <RepeatingFieldSet1CountField>0</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
           <Order>1</Order>

@@ -40532,15 +40532,12 @@ limitations under the License.
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>2</Length>
       <RepeatingFieldSet1Size>3</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
-      <RepeatingFieldSet1CountField>0</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
           <Order>1</Order>

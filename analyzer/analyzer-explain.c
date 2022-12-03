@@ -948,7 +948,7 @@ static void explainMissingXML(void)
          "One or more of the lookup fields contain missing or incorrect values");
   printf(
       "    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "SampleData", "The PGN has not been seen in any logfiles yet");
-  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "Interval", "The transmission interval is not known");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "Interval", "The default transmission interval is not known");
 
   printf("  </MissingEnumerations>\n");
 }
