@@ -486,6 +486,20 @@ FieldType fieldTypeList[] = {
 
     // Specific typed numeric fields
 
+    {.name = "FIX16_1", .description = "Fixed point signed with 1 digit resolution", .resolution = 0.1, .baseFieldType = "FIX16"},
+
+    {.name = "FIX32_2", .description = "Fixed point signed with 2 digits resolution", .resolution = 0.01, .baseFieldType = "FIX32"},
+
+    {.name          = "UFIX32_2",
+     .description   = "Fixed point unsigned with 2 digits resolution",
+     .resolution    = 0.001,
+     .baseFieldType = "UFIX32"},
+
+    {.name          = "UFIX16_3",
+     .description   = "Fixed point unsigned with 3 digits resolution",
+     .resolution    = 0.001,
+     .baseFieldType = "UFIX16"},
+
     {.name          = "DILUTION_OF_PRECISION_FIX16",
      .description   = "Dilution of precision",
      .url           = "https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
@@ -937,6 +951,13 @@ FieldType fieldTypeList[] = {
      .resolution    = 0.004,
      .unit          = "%",
      .baseFieldType = "UFIX16"},
+
+    {.name                = "PERCENTAGE_FIX16_D",
+     .description         = "Percentage, promille range",
+     .encodingDescription = "Percentage in promille (1/10 %)",
+     .resolution          = 0.1,
+     .unit                = "%",
+     .baseFieldType       = "FIX16"},
 
     {.name                = "ROTATION_FIX16",
      .description         = "Rotational speed",

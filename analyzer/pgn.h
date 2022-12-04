@@ -5843,7 +5843,7 @@ Pgn pgnList[] = {
     {"B&G: key-value data",
      130824,
      PACKET_LOOKUPS_UNKNOWN,
-     PACKET_SINGLE,
+     PACKET_FAST,
      {COMPANY(381),
       LOOKUP_FIELDTYPE_FIELD("Key", 12, BANDG_KEY_VALUE),
       SIMPLE_DESC_FIELD("Length", 4, "Length of field 7"),
