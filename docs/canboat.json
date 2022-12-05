@@ -26946,7 +26946,7 @@
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
-        "FieldCount":16,
+        "FieldCount":17,
         "Length":35,
         "TransmissionIrregular":true,
         "Fields":[
@@ -27110,7 +27110,7 @@
             "Order":13,
             "Id":"spare13",
             "Name":"Spare",
-            "BitLength":6,
+            "BitLength":2,
             "BitOffset":258,
             "BitStart":2,
             "Resolution":1,
@@ -27118,6 +27118,20 @@
           },
           {
             "Order":14,
+            "Id":"gnssType",
+            "Name":"GNSS type",
+            "BitLength":4,
+            "BitOffset":260,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":15,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"POSITION_FIX_DEVICE"
+          },
+          {
+            "Order":15,
             "Id":"aisTransceiverInformation",
             "Name":"AIS Transceiver information",
             "BitLength":5,
@@ -27131,8 +27145,8 @@
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
           {
-            "Order":15,
-            "Id":"reserved15",
+            "Order":16,
+            "Id":"reserved16",
             "Name":"Reserved",
             "BitLength":3,
             "BitOffset":269,
@@ -27141,7 +27155,7 @@
             "FieldType":"RESERVED"
           },
           {
-            "Order":16,
+            "Order":17,
             "Id":"sequenceId",
             "Name":"Sequence ID",
             "BitLength":8,
@@ -31938,7 +31952,7 @@
             "BitLength":32,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":-1,
+            "RangeMax":0,
             "FieldType":"BITLOOKUP",
             "LookupBitEnumeration":"ENTERTAINMENT_PLAY_STATUS_BITFIELD"
           },

@@ -26926,7 +26926,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <FieldCount>16</FieldCount>
+      <FieldCount>17</FieldCount>
       <Length>35</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -27090,7 +27090,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>13</Order>
           <Id>spare13</Id>
           <Name>Spare</Name>
-          <BitLength>6</BitLength>
+          <BitLength>2</BitLength>
           <BitOffset>258</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
@@ -27098,6 +27098,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>14</Order>
+          <Id>gnssType</Id>
+          <Name>GNSS type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>260</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>POSITION_FIX_DEVICE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>15</Order>
           <Id>aisTransceiverInformation</Id>
           <Name>AIS Transceiver information</Name>
           <BitLength>5</BitLength>
@@ -27111,8 +27125,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>AIS_TRANSCEIVER</LookupEnumeration>
         </Field>
         <Field>
-          <Order>15</Order>
-          <Id>reserved15</Id>
+          <Order>16</Order>
+          <Id>reserved16</Id>
           <Name>Reserved</Name>
           <BitLength>3</BitLength>
           <BitOffset>269</BitOffset>
@@ -27121,7 +27135,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
-          <Order>16</Order>
+          <Order>17</Order>
           <Id>sequenceId</Id>
           <Name>Sequence ID</Name>
           <BitLength>8</BitLength>
@@ -32022,7 +32036,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>-1</RangeMax>
+          <RangeMax>0</RangeMax>
           <FieldType>BITLOOKUP</FieldType>
           <LookupBitEnumeration>ENTERTAINMENT_PLAY_STATUS_BITFIELD</LookupBitEnumeration>
         </Field>
