@@ -43,13 +43,15 @@ ANALYZER_EXPLAIN_DEP=$(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_SOURCES)
 CFLAGS?=-Wall -O2
 LDLIBS=-lm
 
+CC=emcc
+
 all: $(TARGETS)
 
 analyzer: $(ANALYZER)
 
 $(ANALYZER): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
 	@mkdir -p $(TARGETDIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o analyzer.html -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(ANALYZER_EXPLAIN): $(ANALYZER_EXPLAIN_SOURCES)
 	@mkdir -p $(TARGETDIR)
