@@ -762,14 +762,6 @@ static void fillGlobalsBasedOnFieldName(const char *fieldName, uint8_t *data, si
     return;
   }
 
-  if (strcmp(fieldName, "Sign") == 0)
-  {
-    extractNumber(NULL, data, dataLen, startBit, bits, &value, &maxValue);
-    logDebug("for next field: sign = %" PRId64 "\n", value);
-    g_sign = value;
-    return;
-  }
-
   if (strcmp(fieldName, "Length") == 0)
   {
     extractNumber(NULL, data, dataLen, startBit, bits, &value, &maxValue);

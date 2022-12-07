@@ -127,10 +127,16 @@ limitations under the License.
   {                                         \
     switch (val)                            \
     {
-#define LOOKUP_FIELDTYPE(type, n, str, ft) \
-  case n:                                  \
-    g_ft = ft;                             \
-    return str;
+#define LOOKUP_FIELDTYPE(type, n, str, ft)                  \
+  case n: {                                                 \
+    static Field f;                                         \
+    if (f.name == NULL)                                     \
+    {                                                       \
+      fillFieldTypeLookupField(&f, xstr(type), n, str, ft); \
+    }                                                       \
+    g_ftf = &f;                                             \
+    return str;                                             \
+  }
 
 #define LOOKUP_END \
   }                \

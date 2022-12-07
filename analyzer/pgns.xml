@@ -40529,7 +40529,7 @@ limitations under the License.
       <PGN>130824</PGN>
       <Id>bGKeyValueData</Id>
       <Description>B&amp;G: key-value data</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Lookups</MissingAttribute>
@@ -40592,48 +40592,238 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>4093</RangeMax>
           <EnumFieldTypeValues>
-            <EnumFieldType Value='50' Name='Tacking Performance' FieldType='Number' Signed='false'
+            <EnumFieldType Value='0' Name='Altitude' FieldType='Number' Signed='false'
  Resolution='0.004' Unit='%'/>
-            <EnumFieldType Value='52' Name='Heel Angle' FieldType='Number' Signed='true'
+            <EnumFieldType Value='11' Name='Rudder Angle' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
-            <EnumFieldType Value='53' Name='Optimale Wind Angle' FieldType='Number' Signed='true'
+            <EnumFieldType Value='16' Name='User 5' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='17' Name='User 6' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='18' Name='User 7' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='19' Name='User 8' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='20' Name='User 9' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='21' Name='User 10' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='22' Name='User 11' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='23' Name='User 12' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='24' Name='User 13' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='25' Name='User 14' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='26' Name='User 15' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='27' Name='User 16' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='28' Name='Outside Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='29' Name='Outside Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='30' Name='Water Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='31' Name='Water Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='50' Name='Tacking Performance' FieldType='Number' Signed='true'
+ Resolution='0.1' Unit='%'/>
+            <EnumFieldType Value='52' Name='Attitude Roll' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='53' Name='Optimum Wind Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='56' Name='User 1' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='57' Name='User 2' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='58' Name='User 3' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='59' Name='User 4' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='60' Name='Roll Rate' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='64' Name='Forestay' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='65' Name='Water Speed' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='77' Name='Wind Speed Apparent' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='79' Name='Wind Speed Apparent' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
             <EnumFieldType Value='80' Name='Average True Wind Direction' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='81' Name='Wind Angle Apparent' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='83' Name='Target TWA' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='85' Name='Wind Speed True' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='86' Name='Wind Speed True' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='89' Name='Wind Angle True' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='100' Name='Unknown' FieldType='Number' Signed='true'
 />
+            <EnumFieldType Value='102' Name='Keel Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='103' Name='Canard Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='104' Name='Keel Trim Tab Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='105' Name='Course' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
-            <EnumFieldType Value='129' Name='Dead Reckoning Distance' FieldType='Number' Signed='true'
- Resolution='1' Unit='m'/>
+            <EnumFieldType Value='109' Name='Wind Direction' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='111' Name='Next Leg AWA' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='113' Name='Next Leg AWS' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='117' Name='Race Timer' FieldType='(null)' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='124' Name='Polar Performance' FieldType='Number' Signed='true'
+ Resolution='0.1' Unit='%'/>
+            <EnumFieldType Value='125' Name='Target Boat Speed' FieldType='Number' Signed='true'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='126' Name='Polar Speed' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='127' Name='VMG to Wind' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='129' Name='DR Distance' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
             <EnumFieldType Value='130' Name='Leeway Angle' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
-            <EnumFieldType Value='131' Name='Tide Rate' FieldType='Number' Signed='true'
- Resolution='0.001' Unit='m/s'/>
-            <EnumFieldType Value='132' Name='Tide Set' FieldType='Number' Signed='true'
+            <EnumFieldType Value='131' Name='Current Drift' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='132' Name='Current Set' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
-            <EnumFieldType Value='124' Name='Polar Performance' FieldType='Number' Signed='false'
- Resolution='0.004' Unit='%'/>
-            <EnumFieldType Value='126' Name='Polar Boat Speed' FieldType='Number' Signed='true'
- Resolution='0.001' Unit='m/s'/>
-            <EnumFieldType Value='127' Name='Velocity made Good' FieldType='Number' Signed='true'
- Resolution='0.001' Unit='m/s'/>
+            <EnumFieldType Value='135' Name='Barometric Pressure' FieldType='Number' Signed='false'
+ Resolution='100' Unit='Pa'/>
+            <EnumFieldType Value='152' Name='Distance to Start Line' FieldType='Number' Signed='true'
+ Resolution='0.01' Unit='m'/>
             <EnumFieldType Value='154' Name='Heading on Opposite Tack' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
-            <EnumFieldType Value='155' Name='Trim Angle' FieldType='Number' Signed='true'
+            <EnumFieldType Value='155' Name='Attitude Pitch' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='156' Name='Mast Angle' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='157' Name='Wind Angle to Mast' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
-            <EnumFieldType Value='211' Name='Dead Reckoning Bearing' FieldType='Number' Signed='true'
+            <EnumFieldType Value='158' Name='Pitch Angle' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
-            <EnumFieldType Value='284' Name='Chain Length' FieldType='Number' Signed='true'
+            <EnumFieldType Value='163' Name='Daggerboard Position' FieldType='Number' Signed='false'
+/>
+            <EnumFieldType Value='164' Name='Boom Position' FieldType='Number' Signed='false'
+/>
+            <EnumFieldType Value='185' Name='MOB DR Bearing' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='186' Name='MOB DR Range' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m'/>
-            <EnumFieldType Value='285' Name='VMG Performance' FieldType='Number' Signed='false'
- Resolution='0.004' Unit='%'/>
-            <EnumFieldType Value='305' Name='Bias Advantage' FieldType='Number' Signed='true'
- Resolution='1' Unit='m'/>
+            <EnumFieldType Value='194' Name='Depth' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='195' Name='Depth' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='199' Name='Aft Depth' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='205' Name='Odometer' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='207' Name='Trip Distance' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='211' Name='DR Bearing' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='233' Name='Course Over Ground' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='235' Name='Speed Over Ground' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='239' Name='Remote 0' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='240' Name='Remote 1' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='241' Name='Remote 2' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='242' Name='Remote 3' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='243' Name='Remote 4' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='244' Name='Remote 5' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='245' Name='Remote 6' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='246' Name='Remote 7' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='247' Name='Remote 8' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='248' Name='Remote 9' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='256' Name='Layline Time' FieldType='(null)' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='258' Name='Layline Distance' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='259' Name='Layline Distance' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='260' Name='Sailing Time to Waypoint' FieldType='(null)' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='261' Name='Sailing Distance to Waypoint' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='262' Name='Sailing ETA' FieldType='(null)' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='265' Name='Trip Time' FieldType='(null)' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='270' Name='Bow(?) Latitude' FieldType='Latitude' Signed='true'
+ Resolution='1e-07' Unit='deg'/>
+            <EnumFieldType Value='271' Name='Bow(?) Longitude' FieldType='Latitude' Signed='true'
+ Resolution='1e-07' Unit='deg'/>
+            <EnumFieldType Value='272' Name='Start Line Bearing' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='273' Name='Start Line Bias' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='274' Name='Distance to Start Line Port' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='275' Name='Distance to Start Line Starboard' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='280' Name='Bias Advantage in Boat Lengths' FieldType='Number' Signed='true'
+ Resolution='0.1'/>
+            <EnumFieldType Value='281' Name='Distance to Start Line in Boat Lengths' FieldType='Number' Signed='true'
+ Resolution='0.1'/>
+            <EnumFieldType Value='282' Name='Backstay' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='283' Name='Boom Vang' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='284' Name='Chain Length' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='285' Name='VMG Performance' FieldType='Number' Signed='true'
+ Resolution='0.1' Unit='%'/>
+            <EnumFieldType Value='286' Name='Inner Forestay Load' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='287' Name='Inner Forestay Halyard Load' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='288' Name='Jib Furl' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='289' Name='Jib Halyard Load' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='290' Name='Outhaul Load' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='291' Name='Plow Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='292' Name='Cunningham' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='293' Name='Jacuzzi Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='294' Name='Pool Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='296' Name='Keel Draught' FieldType='Number' Signed='true'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='297' Name='Boom Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='298' Name='Code Zero Load' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='301' Name='Distance Behind Start Line' FieldType='Number' Signed='true'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='302' Name='Distance Behind Start Line in Boat Lengths' FieldType='Number' Signed='true'
+ Resolution='0.1'/>
+            <EnumFieldType Value='305' Name='Bias Advantage' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
             <EnumFieldType Value='306' Name='Opposite Tack COG' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='307' Name='Opposite Tack Target Heading' FieldType='Number' Signed='true'
@@ -40643,14 +40833,72 @@ limitations under the License.
             <EnumFieldType Value='309' Name='Next Leg Bearing' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='310' Name='Next Leg Target Speed' FieldType='Number' Signed='true'
- Resolution='0.001' Unit='m/s'/>
+ Resolution='0.01' Unit='m/s'/>
             <EnumFieldType Value='311' Name='Ground Wind Direction' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='312' Name='Ground Wind Speed' FieldType='Number' Signed='true'
- Resolution='0.001' Unit='m/s'/>
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='313' Name='Mast Cant Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='314' Name='Rudder Toe In' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='315' Name='Daggerboard Port' FieldType='Number' Signed='false'
+/>
+            <EnumFieldType Value='316' Name='Daggerboard Starboard' FieldType='Number' Signed='false'
+/>
+            <EnumFieldType Value='317' Name='User 17' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='318' Name='User 18' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='319' Name='User 19' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='320' Name='User 20' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='321' Name='User 21' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='322' Name='User 22' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='323' Name='User 23' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='324' Name='User 24' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='325' Name='User 25' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='326' Name='User 26' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='327' Name='User 27' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='328' Name='User 28' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='329' Name='User 29' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='330' Name='User 30' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='331' Name='User 31' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='332' Name='User 32' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='336' Name='Average True Wind Direction' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='337' Name='Wind Phase' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='338' Name='Wind Lift' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='380' Name='Active Perf Mode' FieldType='Integer' Signed='true'
+/>
+            <EnumFieldType Value='381' Name='Gust Bear Away' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='382' Name='TWS Bear Away' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='383' Name='Heel Compensation' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='384' Name='Pilot Net Course' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='385' Name='Pilot Target Wind Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='386' Name='Pilot Weather Helm' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='387' Name='Pilot Mean Heel' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
           </EnumFieldTypeValues>
         </Field>

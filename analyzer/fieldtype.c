@@ -114,7 +114,7 @@ static double getMaxRange(const char *name, uint32_t size, double resolution, bo
   return r;
 }
 
-static void fixupUnit(Field *f)
+void fixupUnit(Field *f)
 {
   if (showSI)
   {
@@ -182,6 +182,13 @@ static void fixupUnit(Field *f)
     }
   }
 }
+
+#ifndef EXPLAIN
+static LookupInfo fieldtypeEnums[] = {
+#define LOOKUP_TYPE_FIELDTYPE(type, length) {.name = xstr(type), .size = length, .function.pair = lookup##type},
+#include "lookup.h"
+};
+#endif
 
 extern void fillFieldType(bool doUnitFixup)
 {
@@ -409,5 +416,34 @@ extern void fillFieldType(bool doUnitFixup)
     logDebug("PGN %u has %u fields\n", pgnList[i].pgn, j);
   }
 
+#ifndef EXPLAIN
+  for (size_t i = 0; i < ARRAY_SIZE(fieldtypeEnums); i++)
+  {
+    uint32_t maxValue = (1 << fieldtypeEnums[i].size) - 1;
+
+    for (size_t j = 0; j < maxValue; j++)
+    {
+      /* DISCARD */ (fieldtypeEnums[i].function.pair)(j); // Initialize all internal fields on init
+    }
+  }
+#endif
+
   logDebug("Filled all fieldtypes\n");
+}
+
+extern void fillFieldTypeLookupField(Field *f, const char *lookup, const size_t key, const char *str, const char *ft)
+{
+  f->ft = getFieldType(ft);
+  if (f->ft == NULL)
+  {
+    logAbort("LookupFieldType %s(%d) contains an invalid fieldtype '%s'\n", lookup, key, ft);
+  }
+  f->unit       = f->ft->unit;
+  f->resolution = f->ft->resolution;
+  f->hasSign    = f->ft->hasSign == True;
+  f->name       = str;
+  if (f->unit != NULL)
+  {
+    fixupUnit(f);
+  }
 }

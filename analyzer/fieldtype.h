@@ -46,6 +46,7 @@ extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, siz
 extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern void fixupUnit(Field *f);
 
 typedef enum Bool
 {
@@ -1215,5 +1216,6 @@ extern const size_t                  fieldTypeCount;
 
 extern FieldType *getFieldType(const char *name);
 extern void       fillFieldType(bool doUnitFixup);
+extern void       fillFieldTypeLookupField(Field *f, const char *lookup, const size_t key, const char *str, const char *ft);
 
 #endif // FIELD_H_INCLUDED

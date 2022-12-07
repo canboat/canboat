@@ -237,13 +237,13 @@ static bool extractNumberNotEmpty(const Field *field,
     reserved = 0;
   }
 
-  if (field->pgn->repeatingField1 == field->order)
+  if (field->pgn != NULL && field->pgn->repeatingField1 == field->order)
   {
     logDebug("The first repeating fieldset repeats %" PRId64 " times\n", *value);
     g_variableFieldRepeat[0] = *value;
   }
 
-  if (field->pgn->repeatingField2 == field->order)
+  if (field->pgn != NULL && field->pgn->repeatingField2 == field->order)
   {
     logDebug("The second repeating fieldset repeats %" PRId64 " times\n", *value);
     g_variableFieldRepeat[1] = *value;
@@ -491,7 +491,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
 
       logDebug("Triplet extraction for field '%s'\n", field->name);
 
-      if (extractNumberByOrder(field->pgn, field->lookup.val1Order, data, dataLen, &val1))
+      if (field->pgn != NULL && extractNumberByOrder(field->pgn, field->lookup.val1Order, data, dataLen, &val1))
       {
         s = (*field->lookup.function.triplet)((size_t) val1, (size_t) value);
       }
@@ -1154,32 +1154,24 @@ extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_
   return true;
 }
 
-const char *g_ft     = NULL;
-int64_t     g_sign   = 0;
-int64_t     g_length = 0;
+const Field *g_ftf    = NULL;
+int64_t      g_length = 0;
 
 extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  bool  r = false;
-  Field f = *field;
+  bool r = false;
 
   *bits = ((size_t) g_length) * 8;
-  logDebug("fieldPrintKeyValue('%s') sign=%" PRId64 " bits=%zu\n", fieldName, g_sign, *bits);
+  logDebug("fieldPrintKeyValue('%s') bits=%zu\n", fieldName, *bits);
 
   if (dataLen >= ((startBit + *bits) >> 3))
   {
-    f.ft = NULL;
-    if (g_ft != NULL)
+    if (g_ftf != NULL)
     {
-      f.ft = getFieldType(g_ft);
-    }
-    if (f.ft != NULL)
-    {
-      f.size       = *bits;
-      f.unit       = f.ft->unit;
-      f.resolution = f.ft->resolution;
-      f.hasSign    = g_sign > 0;
-      r            = (f.ft->pf)(&f, fieldName, data, dataLen, startBit, bits);
+      Field f = *g_ftf;
+      f.size  = *bits;
+      f.name  = fieldName;
+      r       = (f.ft->pf)(&f, fieldName, data, dataLen, startBit, bits);
     }
     else
     {
@@ -1188,11 +1180,10 @@ extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, siz
   }
   else
   {
-    logError("PGN %u key-value has insufficient bytes for field %s\n", field->pgn->pgn, fieldName);
+    logError("PGN %u key-value has insufficient bytes for field %s\n", field->pgn ? field->pgn->pgn : 0, fieldName);
   }
 
-  g_ft     = NULL;
-  g_sign   = 0;
+  g_ftf    = NULL;
   g_length = 0;
 
   return r;
