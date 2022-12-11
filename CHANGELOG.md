@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [Unreleased]
+
+### Fixed
+- Fix #358: Repair heading and temperature lookups in NMEA0183.
+
 ## [4.9.2]
 
 ### Fixed

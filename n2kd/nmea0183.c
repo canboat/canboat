@@ -64,23 +64,6 @@ extern bool  rateLimit;
  * PGN 129802 "AIS Safety Related Broadcast Message"       -> !AIVDM   PGN incomplete
  * PGN 129809 "AIS Class B "CS" Static Data Report, Part A"-> !AIVDM
  * PGN 129810 "AIS Class B "CS" Static Data Report, Part B"-> !AIVDM
- * Typical output of these from analyzer:
- * {"timestamp":"2010-09-12-10:57:41.217","prio":"2","src":"36","dst":"255","pgn":"127250","description":"Vessel
- Heading","fields":{"SID":"116","Heading":"10.1","Deviation":"0.0","Variation":"0.0","Reference":"Magnetic"}}
- * {"timestamp":"2010-09-12-11:00:20.269","prio":"2","src":"13","dst":"255","pgn":"130306","description":"Wind Data","fields":{"Wind
- Speed":"5.00","Wind Angle":"308.8","Reference":"Apparent"}}
- * {"timestamp":"2012-12-01-12:53:19.929","prio":"3","src":"35","dst":"255","pgn":"128267","description":"Water
- Depth","fields":{"SID":"70","Depth":"0.63","Offset":"0.500"}}
- * {"timestamp":"2015-12-07-21:51:11.381","prio":"2","src":"4","dst":"255","pgn":"128259","description":"Speed","fields":{"Speed
- Water Referenced":0.30}}
- * {"timestamp":"2015-12-09-21:53:47.497","prio":"2","src":"1","dst":"255","pgn":"127245","description":"Rudder","fields":{"Angle
- Order":-0.0,"Position":6.8}}
- * {"timestamp":"2015-12-11T17:56:55.755Z","prio":6,"src":2,"dst":255,"pgn":129539,"description":"GNSS
- DOPs","fields":{"SID":239,"Desired Mode":"3D","Actual Mode":"3D","HDOP":1.21,"VDOP":1.83,"TDOP":327.67}}
- * {"timestamp":"2016-04-14T20:27:02.303Z","prio":5,"src":35,"dst":255,"pgn":130311,"description":"Environmental
- Parameters","fields":{"SID":222,"Temperature Source":"Sea Temperature","Temperature":17.16}}
- * {"timestamp":"2016-04-20T21:03:57.631Z","prio":6,"src":35,"dst":255,"pgn":128275,"description":"Distance
- Log","fields":{"Log":57688,"Trip Log":57688}}
  */
 
 #define PGN_SYSTEM_TIME (126992)
@@ -229,12 +212,12 @@ static void nmea0183VesselHeading(StringBuffer *msg183, int src, const char *msg
   double heading;
   double deviation;
   double variation;
-  char   referenceString[30];
+  int64_t reference;
 
-  if (getJSONNumber(msg, "Heading", &heading, U_ANGLE) && getJSONValue(msg, "Reference", referenceString, sizeof(referenceString)))
+  if (getJSONNumber(msg, "Heading", &heading, U_ANGLE) && getJSONLookupValue(msg, "Reference", &reference))
   {
     if (getJSONNumber(msg, "Deviation", &deviation, U_ANGLE) && getJSONNumber(msg, "Variation", &variation, U_ANGLE)
-        && strcmp(referenceString, "Magnetic") == 0)
+        && reference == 1)
     {
       /* Enough info for HDG message */
 
@@ -247,11 +230,11 @@ static void nmea0183VesselHeading(StringBuffer *msg183, int src, const char *msg
                             fabs(variation),
                             ((variation < 0.0) ? 'W' : 'E'));
     }
-    else if (strcmp(referenceString, "True") == 0)
+    else if (reference == 0)
     {
       nmea0183CreateMessage(msg183, src, "HDT,%.1f,T", heading);
     }
-    else if (strcmp(referenceString, "Magnetic") == 0)
+    else if (reference == 1)
     {
       nmea0183CreateMessage(msg183, src, "HDM,%.1f,M", heading);
     }
@@ -279,19 +262,18 @@ Field Number:
 
 static void nmea0183WindData(StringBuffer *msg183, int src, const char *msg)
 {
-  double speed;
-  double angle;
-  char   referenceString[30];
+  double  speed;
+  double  angle;
+  int64_t reference;
 
   if (getJSONNumber(msg, "Wind Speed", &speed, U_VELOCITY) && getJSONNumber(msg, "Wind Angle", &angle, U_ANGLE)
-      && getJSONValue(msg, "Reference", referenceString, sizeof(referenceString)))
+      && getJSONLookupValue(msg, "Reference", &reference))
   {
-    if (strcmp(referenceString, "True") == 0)
+    if (reference == 3)
     {
       nmea0183CreateMessage(msg183, src, "MWV,%.1f,T,%.1f,K,A", angle, SPEED_M_S_TO_KMH(speed));
-      nmea0183CreateMessage(msg183, src, "MWD,,T,%.1f,M,%.1f,N,%.1f,M", angle, SPEED_M_S_TO_KNOTS(speed), speed);
     }
-    else if (strcmp(referenceString, "Apparent") == 0)
+    else if (reference == 2)
     {
       nmea0183CreateMessage(msg183, src, "MWV,%.1f,R,%.1f,K,A", angle, SPEED_M_S_TO_KMH(speed));
     }
@@ -421,10 +403,10 @@ Field Number:
 
 static void nmea0183WaterTemperature(StringBuffer *msg183, int src, const char *msg)
 {
-  double temp;
-  char   sourceString[30];
+  double  temp;
+  int64_t source;
 
-  if (getJSONValue(msg, "Temperature Source", sourceString, sizeof(sourceString)) && (strcmp(sourceString, "Sea Temperature") == 0)
+  if (getJSONLookupValue(msg, "Temperature Source", &source) && (source == 0)
       && getJSONNumber(msg, "Temperature", &temp, U_TEMPERATURE))
   {
     nmea0183CreateMessage(msg183, src, "MTW,%.1f,C", TEMP_K_TO_C(temp));
