@@ -5900,6 +5900,19 @@ Pgn pgnList[] = {
      {COMPANY(1857), END_OF_FIELDS}}
 
     ,
+    {"B&G: User and Remote rename",
+     130833,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(381),
+      LOOKUP_FIELDTYPE_FIELD("Data Type", 12, BANDG_KEY_VALUE),
+      SIMPLE_DESC_FIELD("Length", 4, "Length of field 8"),
+      RESERVED_FIELD(BYTES(1)),
+      LOOKUP_FIELD("Decimals", 8, BANDG_DECIMALS),
+      STRING_FIX_FIELD("Short name", BYTES(8)),
+      STRING_FIX_FIELD("Long name", BYTES(16)), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Engine and Tank Configuration",
      130834,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
