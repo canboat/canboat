@@ -1,4 +1,7 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema version="2.0.0"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="PGNDefinitions" type="PGNDefinitions">
     <xs:annotation>
       <xs:documentation>
@@ -46,6 +49,15 @@ limitations under the License.
           The last element is the list of PGNs themselves.
         </xs:documentation>
       </xs:annotation>
+      <xs:element type="xs:string" name="SchemaVersion">
+        <xs:annotation>
+          <xs:documentation>
+            This is the version of the schema that the XML instance
+            document uses.  The version of the schema is found in the
+            version attribute in the xs:schema top-level element.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:string" name="Comment"/>
       <xs:element type="xs:string" name="CreatorCode"/>
       <xs:element type="xs:string" name="License"/>
@@ -59,7 +71,6 @@ limitations under the License.
       <xs:element type="LookupBitEnumerations" name="LookupBitEnumerations"/>
       <xs:element type="PGNs" name="PGNs"/>
     </xs:sequence>
-    <xs:attribute type="xs:float" name="Version"/>
   </xs:complexType>
 
   <xs:complexType name="EnumPair">

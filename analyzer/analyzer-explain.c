@@ -975,9 +975,13 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
   {
     printf("<?xml-stylesheet type=\"text/xsl\" href=\"canboat.xsl\"?>\n");
   }
-  printf("<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
-         "Version=\"0.1\">\n"
-         "  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
+  if (!doV1) {
+      printf("<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
+             "  <SchemaVersion>" SCHEMA_VERSION "</SchemaVersion>\n");
+  } else {
+      printf("<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" Version=\"0.1\">\n");
+  }
+  printf("  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
          "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
          "  <License>Apache License Version 2.0</License>\n"
          "  <Version>" VERSION "</Version>\n");
