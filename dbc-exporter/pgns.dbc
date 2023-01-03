@@ -1744,6 +1744,7 @@ VAL_ 2583497214 source 0 "Inside" 1 "Outside" ;
 VAL_ 2583497470 source 0 "Atmospheric" 1 "Water" 2 "Steam" 3 "Compressed Air" 4 "Hydraulic" 5 "Filter" 6 "AltimeterSetting" 7 "Oil" 8 "Fuel" ;
 VAL_ 2583497726 source 0 "Atmospheric" 1 "Water" 2 "Steam" 3 "Compressed Air" 4 "Hydraulic" 5 "Filter" 6 "AltimeterSetting" 7 "Oil" 8 "Fuel" ;
 VAL_ 2583497982 source 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" 15 "Shaft Seal Temperature" ;
+VAL_ 2583565310 videoProtocols 0 "PAL" 1 "NTSC" ;
 VAL_ 2583565310 tunerRegions 0 "USA" 1 "Europe" 2 "Asia" 3 "Middle East" 4 "Latin America" 5 "Australia" 6 "Russia" 7 "Japan" ;
 VAL_ 2583565310 defaultSettings 0 "Save current settings as user default" 1 "Load user default" 2 "Load manufacturer default" ;
 VAL_ 2583565310 power 0 "No" 1 "Yes" ;

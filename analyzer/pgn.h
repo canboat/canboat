@@ -5043,7 +5043,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Default Settings", 2, ENTERTAINMENT_DEFAULT_SETTINGS),
       LOOKUP_FIELD("Tuner regions", 4, ENTERTAINMENT_REGIONS),
       UINT8_FIELD("Max favorites"),
-      BITLOOKUP_FIELD("Video protocols", 4, VIDEO_PROTOCOLS),
+      LOOKUP_FIELD("Video protocols", 4, VIDEO_PROTOCOLS),
       RESERVED_FIELD(44),
       END_OF_FIELDS}}
 
