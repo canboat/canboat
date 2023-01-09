@@ -11,6 +11,11 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Fixed
 - Fix #358: Repair heading and temperature lookups in NMEA0183.
 
+### Changed
+
+- #270: Added SchemaVersion element to the XSD and generated XML/JSON
+  files, and removed the old Version attribute.
+
 ## [4.9.2]
 
 ### Fixed
