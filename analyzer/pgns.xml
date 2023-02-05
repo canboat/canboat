@@ -32991,12 +32991,15 @@ limitations under the License.
           <BitLength>4</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <EnumBitValues>
-            <EnumPair Bit='0' Name='PAL' />
-            <EnumPair Bit='1' Name='NTSC' />
-          </EnumBitValues>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='PAL' />
+            <EnumPair Value='1' Name='NTSC' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>6</Order>

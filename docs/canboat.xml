@@ -1823,14 +1823,6 @@ limitations under the License.
       <EnumPair Value='7' Name='Internal temperature sensor' />
       <EnumPair Value='8' Name='Battery voltage sensor' />
     </LookupEnumeration>
-    <LookupEnumeration Name='ENTERTAINMENT_REPEAT_BITFIELD' MaxValue='3'>
-      <EnumPair Value='0' Name='Song' />
-      <EnumPair Value='1' Name='Play queue' />
-    </LookupEnumeration>
-    <LookupEnumeration Name='ENTERTAINMENT_SHUFFLE_BITFIELD' MaxValue='3'>
-      <EnumPair Value='0' Name='Play queue' />
-      <EnumPair Value='1' Name='All' />
-    </LookupEnumeration>
     <LookupEnumeration Name='SONICHUB_TUNING' MaxValue='255'>
       <EnumPair Value='1' Name='Seeking up' />
       <EnumPair Value='2' Name='Tuned' />
@@ -2103,6 +2095,14 @@ limitations under the License.
       <BitPair Bit='1' Name='Controller over current cut-out' />
       <BitPair Bit='2' Name='Controller over temperature cut-out' />
       <BitPair Bit='3' Name='Manufacturer defined' />
+    </LookupBitEnumeration>
+    <LookupBitEnumeration Name='ENTERTAINMENT_REPEAT_BITFIELD' MaxValue='1'>
+      <BitPair Bit='0' Name='Song' />
+      <BitPair Bit='1' Name='Play queue' />
+    </LookupBitEnumeration>
+    <LookupBitEnumeration Name='ENTERTAINMENT_SHUFFLE_BITFIELD' MaxValue='1'>
+      <BitPair Bit='0' Name='Play queue' />
+      <BitPair Bit='1' Name='All' />
     </LookupBitEnumeration>
   </LookupBitEnumerations>
   <PGNs>
@@ -32562,10 +32562,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>15</RangeMax>
-          <FieldType>BITLOOKUP</FieldType>
-          <LookupBitEnumeration>VIDEO_PROTOCOLS</LookupBitEnumeration>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>VIDEO_PROTOCOLS</LookupEnumeration>
         </Field>
         <Field>
           <Order>6</Order>

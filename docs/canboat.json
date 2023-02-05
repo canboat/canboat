@@ -2444,22 +2444,6 @@
         ]
       },
       {
-        "Name":"ENTERTAINMENT_REPEAT_BITFIELD",
-        "MaxValue":3,
-        "EnumValues":[
-          {"Name":"Song", "Value":0},
-          {"Name":"Play queue", "Value":1}
-        ]
-      },
-      {
-        "Name":"ENTERTAINMENT_SHUFFLE_BITFIELD",
-        "MaxValue":3,
-        "EnumValues":[
-          {"Name":"Play queue", "Value":0},
-          {"Name":"All", "Value":1}
-        ]
-      },
-      {
         "Name":"SONICHUB_TUNING",
         "MaxValue":255,
         "EnumValues":[
@@ -2806,6 +2790,22 @@
           {"Name":"Controller over current cut-out", "Bit":1},
           {"Name":"Controller over temperature cut-out", "Bit":2},
           {"Name":"Manufacturer defined", "Bit":3}
+        ]
+      },
+      {
+        "Name":"ENTERTAINMENT_REPEAT_BITFIELD",
+        "MaxValue":1,
+        "EnumBitValues":[
+          {"Name":"Song", "Bit":0},
+          {"Name":"Play queue", "Bit":1}
+        ]
+      },
+      {
+        "Name":"ENTERTAINMENT_SHUFFLE_BITFIELD",
+        "MaxValue":1,
+        "EnumBitValues":[
+          {"Name":"Play queue", "Bit":0},
+          {"Name":"All", "Bit":1}
         ]
       }
     ],
@@ -32465,10 +32465,11 @@
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
             "RangeMin":0,
-            "RangeMax":15,
-            "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"VIDEO_PROTOCOLS"
+            "RangeMax":13,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"VIDEO_PROTOCOLS"
           },
           {
             "Order":6,

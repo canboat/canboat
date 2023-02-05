@@ -29912,11 +29912,14 @@
             "BitLength":4,
             "BitOffset":16,
             "BitStart":0,
+            "Type":"Lookup table",
             "Resolution":1,
             "Signed":false,
-            "EnumBitValues":[
-              {"0": "PAL"},
-              {"1": "NTSC"}]},
+            "RangeMin":0,
+            "RangeMax":13,
+            "EnumValues":[
+              {"name": "PAL", "value": 0},
+              {"name": "NTSC", "value": 1}]},
           {
             "Order":6,
             "Id":"reserved",
