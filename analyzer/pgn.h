@@ -4920,6 +4920,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
       UINT8_DESC_FIELD("Number", "Source number per type"),
+      LOOKUP_FIELD("Type", BYTES(1), ENTERTAINMENT_TYPE),
       LOOKUP_FIELD("Zone", BYTES(1), ENTERTAINMENT_ZONE),
       UINT32_DESC_FIELD("Group ID", "Unique group ID"),
       UINT16_DESC_FIELD("ID offset", "First ID in this PGN"),
@@ -4929,8 +4930,8 @@ Pgn pgnList[] = {
       UINT32_FIELD("ID"),
       STRINGLAU_FIELD("Name"),
       STRINGLAU_FIELD("Artist")},
-     .repeatingField1 = 6,
-     .repeatingCount1 = 2,
+     .repeatingField1 = 7,
+     .repeatingCount1 = 3,
      .repeatingStart1 = 9,
      .url             = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
