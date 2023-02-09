@@ -22,26 +22,39 @@ import sys
 import re
 import subprocess
 
-analyzer = sys.argv[1]
-filename = sys.argv[2]
-newline  = '\n'
-if (sys.argv[1] == '-w'):
-    analyzer = sys.argv[2]
-    filename = sys.argv[3]
-    newline  = '\r\n'
+newline = '\n'
+do_schema_version = False
+n=1
 
-version = subprocess.check_output([analyzer, "-version"], encoding='utf8')
+if (sys.argv[n] == '-w'):
+    newline = '\r\n'
+    n = n+1
+if (sys.argv[n] == '-s'):
+    do_schema_version = True
+    n = n+1
 
-version = str(version).split('\n')[0]
+analyzer = sys.argv[n]
+filename = sys.argv[n+1]
 
-print("Replacing version in",filename,"with",version)
+if not do_schema_version:
+    version = subprocess.check_output([analyzer, "-version"], encoding='utf8')
+    version = str(version).split('\n')[0]
+    print("Replacing version in",filename,"with",version)
+else:
+    version = subprocess.check_output([analyzer, "-schema-version"], encoding='utf8')
+    version = str(version).split('\n')[0]
+    print("Replacing schema version in",filename,"with",version)
+
 
 with open(filename,'r') as file:
     filedata = file.read()
 
-filedata = re.sub('"version": "[^"]*"', '"version": "' + version + '"', filedata)
-filedata = re.sub('CANboat version v[.0-9]*"', 'CANboat version v' + version, filedata)
-filedata = re.sub('^VERSION "[^"]*"', 'VERSION "' + version + '"', filedata)
+if not do_schema_version:
+    filedata = re.sub('"version": "[^"]*"', '"version": "' + version + '"', filedata)
+    filedata = re.sub('CANboat version v[.0-9]*', 'CANboat version v' + version, filedata)
+    filedata = re.sub('^VERSION "[^"]*"', 'VERSION "' + version + '"', filedata)
+else:
+    filedata = re.sub('version="[.0-9]*"', 'version="' + version + '"', filedata)
 
 with open(filename,'w', newline=newline) as file:
     file.write(filedata)

@@ -60,6 +60,7 @@ $(XMLFILE): $(ANALYZER_EXPLAIN_DEP)
 
 $(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE) fixup-version.py
 	python3 fixup-version.py $(ANALYZER) $(XSD2FILE)
+	python3 fixup-version.py -s $(ANALYZER) $(XSD2FILE)
 	$(ANALYZER_EXPLAIN) -explain-xml -camel >$(XML2FILE)
 	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
 

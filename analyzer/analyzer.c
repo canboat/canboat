@@ -143,6 +143,11 @@ int main(int argc, char **argv)
       printf("%s\n", VERSION);
       exit(0);
     }
+    else if (strcasecmp(av[1], "-schema-version") == 0)
+    {
+      printf("%s\n", SCHEMA_VERSION);
+      exit(0);
+    }
     else if (strcasecmp(av[1], "-camel") == 0)
     {
       camelCase(false);
