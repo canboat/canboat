@@ -8,6 +8,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+## [4.10.0]
+
 ### Fixed
 - Fix #358: Repair heading and temperature lookups in NMEA0183.
 - Fixed lookup types in PGN 130573 and PGN 130579.
@@ -548,7 +550,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.9.2...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.10.0...HEAD
+[4.10.0]: https://github.com/canboat/canboat/compare/v4.9.2...v4.10.0
 [4.9.2]: https://github.com/canboat/canboat/compare/v4.9.1...v4.9.2
 [4.9.1]: https://github.com/canboat/canboat/compare/v4.9.0...v4.9.1
 [4.9.0]: https://github.com/canboat/canboat/compare/v4.8.1...v4.9.0
