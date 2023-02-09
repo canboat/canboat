@@ -11,6 +11,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Fixed
 - Fix #358: Repair heading and temperature lookups in NMEA0183.
 - Fixed lookup types in PGN 130573 and PGN 130579.
+- Fix #373: Repair `analyzer -nv` and `analyzer -debug` output.
 
 ### Changed
 

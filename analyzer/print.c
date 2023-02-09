@@ -74,6 +74,18 @@ extern char mchr(size_t location)
   return mbuf[location];
 }
 
+extern void minsert(size_t location, const char *str)
+{
+  size_t len = strlen(str);
+
+  if (mp + len - mbuf <= sizeof(mbuf))
+  {
+    memmove(mbuf + location + len, mbuf + location, mp - mbuf - location);
+    memmove(mbuf + location, str, len);
+    mp += len;
+  }
+}
+
 extern void mwrite(FILE *stream)
 {
   fwrite(mbuf, sizeof(char), mp - mbuf, stream);
@@ -172,10 +184,6 @@ extern void printEmpty(const char *fieldName, int64_t exceptionValue)
   {
     if (showJsonEmpty)
     {
-      if (showBytes)
-      {
-        mprintf("\"value\":");
-      }
       mprintf("null");
     }
     else
@@ -298,10 +306,6 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
   logDebug("fieldPrintNumber <%s> resolution=%g unit='%s'\n", fieldName, field->resolution, (field->unit ? field->unit : "-"));
   if (field->resolution == 1.0 && field->unitOffset == 0.0)
   {
-    if (showJson && showBytes)
-    {
-      mprintf("\"value\":");
-    }
     mprintf("%" PRId64, value);
     if (!showJson && unit != NULL)
     {
@@ -326,10 +330,6 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
 
     if (showJson)
     {
-      if (showBytes)
-      {
-        mprintf("\"value\":");
-      }
       mprintf("%.*f", precision, a);
     }
     else if (unit != NULL && strcmp(unit, "m") == 0 && a >= 1000.0)
@@ -400,11 +400,6 @@ extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size
   if (!adjustDataLenStart(&data, &dataLen, &startBit))
   {
     return false;
-  }
-
-  if (showJson && showBytes)
-  {
-    mprintf("\"value\":");
   }
 
   bitMask = 1 << startBit;
@@ -503,18 +498,10 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
   {
     if (showJsonValue)
     {
-      if (!showBytes)
-      {
-        mprintf("{");
-      }
-      mprintf("\"value\":%" PRId64 ",\"name\":\"%s\"}", value, s);
+      mprintf("%" PRId64 ",\"name\":\"%s\"}", value, s);
     }
     else if (showJson)
     {
-      if (showBytes)
-      {
-        mprintf("\"value\":");
-      }
       mprintf("\"%s\"", s);
     }
     else
@@ -530,7 +517,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
     }
     else if (showJsonValue)
     {
-      mprintf("{\"value\":%" PRId64, value);
+      mprintf("%" PRId64, value);
       if (showJsonEmpty)
       {
         mprintf(",\"name\":null");
@@ -621,12 +608,12 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
 
   logDebug("RES_BITFIELD length %u value %" PRIx64 "\n", *bits, value);
 
-  if (showJson)
+  if (showJsonValue)
   {
-    if (showBytes)
-    {
-      mprintf("\"value\":");
-    }
+    sep = "[";
+  }
+  else if (showJson)
+  {
     sep = "[";
   }
   else
@@ -700,11 +687,6 @@ extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_
   absVal = (value < 0) ? -value : value;
   dd     = (double) value * field->resolution;
 
-  if (showJson && showBytes)
-  {
-    mprintf("\"value\":");
-  }
-
   if (showGeo == GEO_DD)
   {
     mprintf("%10.7f", dd);
@@ -713,11 +695,7 @@ extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_
   {
     if (showJsonValue)
     {
-      if (!showBytes)
-      {
-        mprintf("{");
-      }
-      mprintf("\"value\":%" PRId64 ",\"name\":", value);
+      mprintf("%" PRId64 ",\"name\":", value);
     }
     if (showGeo == GEO_DM)
     {
@@ -802,15 +780,7 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   {
     if (showJsonValue)
     {
-      if (!showBytes)
-      {
-        mprintf("{");
-      }
-      mprintf("\"value\":%" PRIu64 ",\"name\":", t);
-    }
-    else if (showBytes)
-    {
-      mprintf("\"value\":");
+      mprintf("%" PRIu64 ",\"name\":", t);
     }
     if (units != 0)
     {
@@ -883,18 +853,10 @@ extern bool fieldPrintDate(Field *field, char *fieldName, uint8_t *data, size_t 
   {
     if (showJsonValue)
     {
-      if (!showBytes)
-      {
-        mprintf("{");
-      }
-      mprintf("\"value\":%" PRIu16 ",\"name\":\"%s\"}", d, buf);
+      mprintf("%" PRIu16 ",\"name\":\"%s\"}", d, buf);
     }
     else
     {
-      if (showBytes)
-      {
-        mprintf("\"value\":");
-      }
       mprintf("\"%s\"", buf);
     }
   }
@@ -984,10 +946,6 @@ static bool printString(char *fieldName, uint8_t *data, size_t len)
 
   if (showJson)
   {
-    if (showBytes)
-    {
-      mprintf("\"value\":");
-    }
     mprintf("\"");
     print_ascii_json_escaped(data, len);
     mprintf("\"");

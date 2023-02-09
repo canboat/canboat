@@ -103,5 +103,6 @@ extern void   mwrite(FILE *stream);
 extern size_t mlocation(void);
 extern void   mset(size_t location);
 extern char   mchr(size_t location);
+extern void   minsert(size_t location, const char *str);
 extern void   printEmpty(const char *name, int64_t exceptionValue);
 extern bool   adjustDataLenStart(uint8_t **data, size_t *dataLen, size_t *startBit);

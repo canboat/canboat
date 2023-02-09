@@ -689,7 +689,13 @@ static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
 
   if (showJson)
   {
-    mprintf(",\"bytes\":\"");
+    size_t location = mlocation();
+
+    if (location == 0 || mchr(location - 1) != '{')
+    {
+      mprintf(",");
+    }
+    mprintf("\"bytes\":\"");
   }
   else
   {
@@ -795,7 +801,7 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
   if (strcmp(fieldName, "PGN") == 0)
   {
     size_t off = startBit / 8;
-    refPgn = data[off] + (data[off + 1] << 8) + (data[off + 2] << 16);
+    refPgn     = data[off] + (data[off + 1] << 8) + (data[off + 2] << 16);
   }
 
   logDebug("PGN %u: printField <%s>, \"%s\": bits=%zu proprietary=%u refPgn=%u\n",
@@ -825,7 +831,8 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     size_t location            = mlocation();
     char  *oldSep              = sep;
     size_t oldClosingBracesLen = strlen(closingBraces);
-    size_t location2;
+    size_t location2           = 0;
+    size_t location3;
 
     if (field->ft->pf != fieldPrintVariable)
     {
@@ -833,9 +840,9 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
       {
         mprintf("%s\"%s\":", getSep(), fieldName);
         sep = ",";
-        if (showBytes)
+        if (showBytes || showJsonValue)
         {
-          mprintf("{");
+          location2 = mlocation();
         }
       }
       else
@@ -844,7 +851,7 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
         sep = ";";
       }
     }
-    location2 = mlocation();
+    location3 = mlocation();
     logDebug(
         "PGN %u: printField <%s>, \"%s\": calling function for %s\n", field->pgn->pgn, field->name, fieldName, field->fieldType);
     g_skip = false;
@@ -853,17 +860,17 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     logDebug("PGN %u: printField <%s>, \"%s\": result %d bits=%zu\n", field->pgn->pgn, field->name, fieldName, r, *bits);
     if (r && !g_skip)
     {
-      if (location2 == mlocation())
+      if (location3 == mlocation() && !showBytes)
       {
         logError("PGN %u: field \"%s\" print routine did not print anything\n", field->pgn->pgn, field->name);
         r = false;
       }
       else if (showBytes && field->ft->pf != fieldPrintVariable)
       {
-        location2 = mlocation();
-        if (mchr(location2 - 1) == '}')
+        location3 = mlocation();
+        if (mchr(location3 - 1) == '}')
         {
-          mset(location2 - 1);
+          mset(location3 - 1);
         }
         showBytesOrBits(data + (startBit >> 3), startBit & 7, *bits);
         if (showJson)
@@ -871,11 +878,20 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
           mprintf("}");
         }
       }
+      if (location2 != 0)
+      {
+        location3 = mlocation();
+        if (mchr(location3 - 1) == '}')
+        {
+          // Prepend {"value":
+          minsert(location2, "{\"value\":");
+        }
+      }
     }
     if (!r || g_skip)
     {
       mset(location);
-      sep = oldSep;
+      sep                                = oldSep;
       closingBraces[oldClosingBracesLen] = '\0';
     }
     return r;
@@ -987,8 +1003,7 @@ bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool sh
     {
       if (showJson)
       {
-        mprintf("%s\"list\":[{", getSep());
-        strcat(closingBraces, "]}");
+        mprintf("}],\"list2\":[{");
         sep = "";
       }
       // Only now is g_variableFieldRepeat set
@@ -1086,8 +1101,8 @@ extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, siz
   if (refField)
   {
     logDebug("Field %s: found variable field %u '%s'\n", fieldName, refPgn, refField->name);
-    r = printField(refField, fieldName, data, dataLen, startBit, bits);
-    *bits = (*bits + 7) & ~ 0x07; // round to bytes
+    r     = printField(refField, fieldName, data, dataLen, startBit, bits);
+    *bits = (*bits + 7) & ~0x07; // round to bytes
     return r;
   }
 
