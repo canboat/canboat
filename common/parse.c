@@ -403,7 +403,7 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
   {
     return -1;
   }
-  tiden = time(NULL);
+  tiden = (time_t) (getNow() / UINT64_C(1000));
   localtime_r(&tiden, &tm);
   strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT", &tm);
   sprintf(m->timestamp + strlen(m->timestamp), "%s", token);
@@ -498,4 +498,86 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
   }
   logError("Unable to parse incoming message '%s', r = %d\n", sbGet(in), r);
   return false;
+}
+
+int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
+{
+  char         *nexttoken;
+  char         *p;
+  char         *token;
+  int           i;
+  int           r;
+  static time_t tiden = 0;
+  struct tm     tm;
+  time_t        now;
+  unsigned int  millis = 0;
+  unsigned int  secs;
+  unsigned long n;
+
+  // parse timestamp. Actisense doesn't give us date so let's figure it out ourself
+  token = strtok_r(msg, " ", &nexttoken);
+  if (!token || token[0] != 'A')
+  {
+    logError("No message or does not start with 'A'\n");
+    return -1;
+  }
+  token++;
+
+  r = sscanf(token, "%u.%u", &secs, &millis);
+  if (r < 1)
+  {
+    return -1;
+  }
+
+  if (tiden == 0)
+  {
+    tiden = (time_t) (getNow() / UINT64_C(1000)) - secs;
+  }
+  now = tiden + secs;
+
+  localtime_r(&now, &tm);
+  strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT%H:%M:%S", &tm);
+  sprintf(m->timestamp + strlen(m->timestamp), ",%3.3u", millis);
+
+  // parse <SRC><DST><P>
+  token = strtok_r(NULL, " ", &nexttoken);
+  if (!token)
+  {
+    return -1;
+  }
+  n       = strtoul(token, NULL, 16);
+  m->prio = n & 0xf;
+  m->dst  = (n >> 4) & 0xff;
+  m->dst  = (n >> 12) & 0xff;
+
+  // parse <PGN>
+  token = strtok_r(NULL, " ", &nexttoken);
+  if (!token)
+  {
+    logError("Incomplete message\n");
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
+    return -1;
+  }
+  m->pgn = strtoul(token, NULL, 16);
+
+  // parse DATA
+  p = nexttoken;
+  for (i = 0; i < FASTPACKET_MAX_SIZE; i++)
+  {
+    if (*p == '\0' || isspace(*p))
+    {
+      break;
+    }
+    if (scanHex(&p, &m->data[i]))
+    {
+      logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
+      return 2;
+    }
+  }
+  m->len = i;
+
+  return 0;
 }

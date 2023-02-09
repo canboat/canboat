@@ -18,6 +18,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - #270: Added SchemaVersion element to the XSD and generated XML/JSON
   files, and removed the old Version attribute.
 
+### Added
+
+- #372: Add support for Actisense N2K ASCII protocol to analyzer.
+
 ## [4.9.2]
 
 ### Fixed

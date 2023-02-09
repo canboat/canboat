@@ -35,6 +35,11 @@ uint64_t getNow(void)
 {
   struct timeval tv;
 
+  if (*fixedTimestamp != '\0')
+  {
+    return UINT64_C(1672527600000); // 2023-01-01 00:00
+  }
+
   if (gettimeofday(&tv, (void *) 0) == 0)
   {
     uint64_t t    = tv.tv_sec;

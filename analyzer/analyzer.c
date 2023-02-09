@@ -34,7 +34,8 @@ enum RawFormats
   RAWFORMAT_CHETCO,
   RAWFORMAT_GARMIN_CSV1,
   RAWFORMAT_GARMIN_CSV2,
-  RAWFORMAT_YDWG02
+  RAWFORMAT_YDWG02,
+  RAWFORMAT_ACTISENSE_N2K_ASCII
 };
 
 enum RawFormats format = RAWFORMAT_UNKNOWN;
@@ -349,6 +350,10 @@ int main(int argc, char **argv)
         r = parseRawFormatYDWG02(msg, &m, showJson);
         break;
 
+      case RAWFORMAT_ACTISENSE_N2K_ASCII:
+        r = parseRawFormatActisenseN2KAscii(msg, &m, showJson);
+        break;
+
       default:
         logError("Unknown message format\n");
         exit(1);
@@ -434,6 +439,16 @@ static enum RawFormats detectFormat(const char *msg)
       logInfo("Detected YDWG-02 protocol with one line per frame\n");
       multiPackets = MULTIPACKETS_SEPARATE;
       return RAWFORMAT_YDWG02;
+    }
+  }
+
+  {
+    int a, b, c, d;
+    if (sscanf(msg, "A%d.%d %x %x ", &a, &b, &c, &d) == 4 || sscanf(msg, "A%d %x %x ", &a, &b, &c) == 3)
+    {
+      logInfo("Detected Actisense N2K Ascii protocol with all frames on one line\n");
+      multiPackets = MULTIPACKETS_COALESCED;
+      return RAWFORMAT_ACTISENSE_N2K_ASCII;
     }
   }
 
