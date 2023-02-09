@@ -9,12 +9,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
       - name: update & install tools
         run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils
+
       - name: make
         run: make
+
       - name: make generated
         run: make generated
+
       - name: check there is no git diff output
         run: git diff --exit-code
