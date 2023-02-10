@@ -8,6 +8,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Fixed
+- Added Type field to PGN 130571.
+
 ## [4.10.0]
 
 ### Fixed
