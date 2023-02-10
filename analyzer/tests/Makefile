@@ -83,7 +83,7 @@ test7:
 # This tests capability to read Actisense N2K Ascii format
 #
 test8:	
-	$(ANALYZER) < pgn-test-actisense.in > $(TEMPDIR)/pgn-test-actisense.out -nv -debug -q -json -fixtime pgn-test 2> $(TEMPDIR)/pgn-test-actisense.err
+	TZ=UTC-1 $(ANALYZER) < pgn-test-actisense.in > $(TEMPDIR)/pgn-test-actisense.out -nv -debug -q -json -fixtime pgn-test 2> $(TEMPDIR)/pgn-test-actisense.err
 	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-test-actisense.out
 	diff $(TEMPDIR)/pgn-test-actisense.out pgn-test-actisense.out
 	diff $(TEMPDIR)/pgn-test-actisense.err pgn-test-actisense.err
