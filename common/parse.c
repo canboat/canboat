@@ -548,7 +548,7 @@ int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
   n       = strtoul(token, NULL, 16);
   m->prio = n & 0xf;
   m->dst  = (n >> 4) & 0xff;
-  m->dst  = (n >> 12) & 0xff;
+  m->src  = (n >> 12) & 0xff;
 
   // parse <PGN>
   token = strtok_r(NULL, " ", &nexttoken);

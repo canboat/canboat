@@ -1,0 +1,6 @@
+< {"timestamp":"2023-01-01T00:00:00,154","prio":2,"src":127,"dst":13,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude":{"value":53.1801401,"bytes":"39 A5 B2 1F"},"Longitude":{"value": 5.4284125,"bytes":"5D 4F 3C 03"}}}
+94
+
+> {"timestamp":"2023-01-01T00:00:00,154","prio":2,"src":0,"dst":13,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude":{"value":53.1801401,"bytes":"39 A5 B2 1F"},"Longitude":{"value": 5.4284125,"bytes":"5D 4F 3C 03"}}}
+118
+
