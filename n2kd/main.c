@@ -14,7 +14,7 @@ from stdin, collects this data and sends this out on three types of TCP clients:
 - Write-only port to write to serial device (NGT-1, iKonvert, YDWG, etc.)
 
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 

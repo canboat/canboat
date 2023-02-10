@@ -1,7 +1,7 @@
 #
 # Makefile for all UNIX style platforms including Cygwin
 #
-# (C) 2009-2017, Kees Verruijt, Harlingen, The Netherlands
+# (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands
 #
 # $Id:$
 #

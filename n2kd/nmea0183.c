@@ -5,7 +5,7 @@ Convert JSON encoded NMEA2000 PGNs to NMEA0183.
 At this moment it only supports what one of the authors needed: sensor data
 other than GPS and AIS: depth, heading, wind.
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 

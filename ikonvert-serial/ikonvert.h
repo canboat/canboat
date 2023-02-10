@@ -1,7 +1,7 @@
 /*
  Defines to interface with a Digital Yacht iKonvert
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 

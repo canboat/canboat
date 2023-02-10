@@ -7,7 +7,7 @@
 # 1970-01-01-00:00:00.000,6,59904,0,255,3,14,f0,01
 #
 #
-# (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+# (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 #
 # This file is part of CANboat.
 #
