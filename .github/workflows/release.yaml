@@ -26,6 +26,11 @@ jobs:
           grep -q "CANboat version v${CANBOAT_VERSION}" docs/canboat.xml
           echo "Checking if docs/canboat.xml contains \"<Version>${CANBOAT_VERSION}</Version>\""
           grep -q "<Version>${CANBOAT_VERSION}</Version>" docs/canboat.xml
+          export SCHEMA_VERSION=$(sed -En 's/.*\ SCHEMA_VERSION\ \"([0-9]+\.)([0-9]+\.)?([0-9]+)\"/\1\2\3/p' common/version.h)
+          echo "Checking if docs/canboat.xsd contains \"xs:version=\"${SCHEMA_VERSION}\""
+          grep -q "xs:schema version=\"${SCHEMA_VERSION}\"" docs/canboat.xsd
+          echo "Checking if docs/canboat.json contains version \"SchemaVersion\":\"${SCHEMA_VERSION}\""
+          grep -q "\"SchemaVersion\":\"${SCHEMA_VERSION}\"" docs/canboat.json
           echo "Github tag should match version in common/version.h"
           test "${GITHUB_REF##*/}" == "v${CANBOAT_VERSION}"
 
