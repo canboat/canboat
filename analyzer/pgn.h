@@ -519,10 +519,10 @@ typedef struct
     .name = nam, .size = len, .resolution = 1, .hasSign = true, .fieldType = "INTEGER" \
   }
 
-#define MMSI_FIELD(nam)                                                 \
-  {                                                                     \
-    .name = nam, .size = BYTES(4), .resolution = 1, .hasSign = false,   \
-    .rangeMin = 2000000, .rangeMax = 999999999, .fieldType = "MMSI"     \
+#define MMSI_FIELD(nam)                                                                                           \
+  {                                                                                                               \
+    .name = nam, .size = BYTES(4), .resolution = 1, .hasSign = false, .rangeMin = 2000000, .rangeMax = 999999999, \
+    .fieldType = "MMSI"                                                                                           \
   }
 
 #define DECIMAL_FIELD(nam, len, desc)                                                      \
@@ -2695,16 +2695,17 @@ Pgn pgnList[] = {
     {"Load Controller Connection State/Control",
      127500,
      PACKET_COMPLETE,
-     PACKET_FAST,
+     PACKET_SINGLE,
      {UINT8_FIELD("Sequence ID"),
       UINT8_FIELD("Connection ID"),
       UINT8_FIELD("State"),
       UINT8_FIELD("Status"),
       UINT8_FIELD("Operational Status & Control"),
       UINT8_FIELD("PWM Duty Cycle"),
-      UINT16_FIELD("TimeON"),
-      UINT16_FIELD("TimeOFF"),
-      END_OF_FIELDS}}
+      UINT8_FIELD("TimeON"),
+      UINT8_FIELD("TimeOFF"),
+      END_OF_FIELDS},
+     .url = "https://github.com/canboat/canboat/issues/366"}
 
     ,
     {"Binary Switch Bank Status",
@@ -3971,8 +3972,8 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
-     .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
-     .interval        = UINT16_MAX}
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .interval = UINT16_MAX}
 
     ,
     {"AIS SAR Aircraft Position Report",
@@ -4996,10 +4997,7 @@ Pgn pgnList[] = {
      130576,
      PACKET_NOT_SEEN,
      PACKET_SINGLE,
-     {PERCENTAGE_I8_FIELD("Port trim tab"),
-      PERCENTAGE_I8_FIELD("Starboard trim tab"),
-      RESERVED_FIELD(BYTES(6)),
-      END_OF_FIELDS},
+     {PERCENTAGE_I8_FIELD("Port trim tab"), PERCENTAGE_I8_FIELD("Starboard trim tab"), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS},
      .interval = 200}
 
     ,

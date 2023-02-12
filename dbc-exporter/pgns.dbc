@@ -470,8 +470,14 @@ BO_ 2582776574 PGN_127498_engineParametersStati: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582777086 PGN_127500_loadControllerConnect: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ timeoff : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ timeon : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ pwmDutyCycle : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ operationalStatusControl : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ status : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ state : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ connectionId : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sequenceId : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582777342 PGN_127501_binarySwitchBankStatu: 8 Vector__XXX
  SG_ indicator28 : 62|2@1+ (1,0) [0|0] "" Vector__XXX

@@ -14936,12 +14936,13 @@
         "PGN":127500,
         "Id":"loadControllerConnectionStateControl",
         "Description":"Load Controller Connection State/Control",
-        "Type":"Fast",
+        "URL":"https://github.com/canboat/canboat/issues/366",
+        "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
         ],
         "FieldCount":8,
-        "Length":10,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -15025,26 +15026,26 @@
             "Order":7,
             "Id":"timeon",
             "Name":"TimeON",
-            "BitLength":16,
+            "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65533,
+            "RangeMax":253,
             "FieldType":"NUMBER"
           },
           {
             "Order":8,
             "Id":"timeoff",
             "Name":"TimeOFF",
-            "BitLength":16,
-            "BitOffset":64,
+            "BitLength":8,
+            "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65533,
+            "RangeMax":253,
             "FieldType":"NUMBER"
           }
         ]

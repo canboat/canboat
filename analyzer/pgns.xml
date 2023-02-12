@@ -13493,12 +13493,12 @@ limitations under the License.
       <PGN>127500</PGN>
       <Id>loadControllerConnectionStateControl</Id>
       <Description>Load Controller Connection State/Control</Description>
-      <Type>Fast</Type>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>10</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -13582,27 +13582,27 @@ limitations under the License.
           <Order>7</Order>
           <Id>timeon</Id>
           <Name>TimeON</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>timeoff</Id>
           <Name>TimeOFF</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>253</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>

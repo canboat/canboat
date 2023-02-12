@@ -8,6 +8,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Changed
+- #366: PGN 127500 field lengths and framing type changed
+
 ## [4.10.0]
 
 ### Fixed
