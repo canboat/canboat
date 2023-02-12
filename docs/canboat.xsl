@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="1.0" exclude-result-prefixes="xs">
 
   <xsl:key name="Missing" match="/PGNDefinitions/MissingEnumerations/MissingAttribute" use="@Name" />
@@ -551,7 +550,7 @@
       <body>
 
         <div id="sidenav" class="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&#215;</a>
+          <a class="closebtn" onclick="closeNav(event)">&#215;</a>
           <a href="#main">Top</a>
           <a href="#pgn-list">PGN list</a>
           <a href="#physical-quantities">Physical Quantities</a>
@@ -563,7 +562,7 @@
         </div>
 
         <div id="sidenav-closed" class="sidenav">
-          <a href="javascript:void(0)" onclick="openNav()" id="hamburger">
+          <a onclick="openNav(event)" id="hamburger">
             <span/>
             <span/>
             <span/>
