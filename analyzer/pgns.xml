@@ -40225,7 +40225,7 @@ limitations under the License.
       <PGN>130824</PGN>
       <Id>bGWindData</Id>
       <Description>B&amp;G: Wind data</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>

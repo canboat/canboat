@@ -39409,7 +39409,7 @@
         "PGN":130824,
         "Id":"bGWindData",
         "Description":"B&G: Wind data",
-        "Type":"Single",
+        "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
