@@ -175,26 +175,58 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *data, int length)
 void checkPgnList(void)
 {
   size_t i;
-  int    prn = 0;
+  int    prev_prn = 0;
 
   for (i = 0; i < pgnListSize; i++)
   {
+    int  pgnRangeIndex = 0;
+    int  prn           = pgnList[i].pgn;
     Pgn *pgn;
 
-    if (pgnList[i].pgn < prn)
+    if (prn < prev_prn)
     {
-      logError("Internal error: PGN %d is not sorted correctly\n", pgnList[i].pgn);
+      logError("Internal error: PGN %d is not sorted correctly\n", prn);
       exit(2);
     }
-    if (pgnList[i].pgn == prn || pgnList[i].fallback)
+
+    if (prn < ACTISENSE_BEM)
+    {
+      while (prn > pgnRange[pgnRangeIndex].pgnEnd && pgnRangeIndex < pgnRangeSize)
+      {
+        pgnRangeIndex++;
+      }
+      if (prn < pgnRange[pgnRangeIndex].pgnStart || prn > pgnRange[pgnRangeIndex].pgnEnd)
+      {
+        logError("Internal error: PGN %d is not part of a valid PRN range\n", prn);
+        exit(2);
+      }
+      if (pgnRange[pgnRangeIndex].pgnStep == 256 && (prn & 0xff) != 0)
+      {
+        logError("Internal error: PGN %d (0x%x) is PDU1 and must have a PGN ending in 0x00\n", prn, prn);
+        exit(2);
+      }
+      if (!(pgnRange[pgnRangeIndex].type == pgnList[i].type || pgnRange[pgnRangeIndex].type == PACKET_MIXED
+            || pgnList[i].type == PACKET_ISO_TP))
+      {
+        logError("Internal error: PGN %d (0x%x) is in range 0x%x-0x%x and must have packet type %s\n",
+                 prn,
+                 prn,
+                 pgnRange[pgnRangeIndex].pgnStart,
+                 pgnRange[pgnRangeIndex].pgnEnd,
+                 PACKET_TYPE_STR[pgnRange[pgnRangeIndex].type]);
+        exit(2);
+      }
+    }
+
+    if (prn == prev_prn || pgnList[i].fallback)
     {
       continue;
     }
-    prn = pgnList[i].pgn;
-    pgn = searchForPgn(prn);
+    prev_prn = prn;
+    pgn      = searchForPgn(prev_prn);
     if (pgn != &pgnList[i])
     {
-      logError("Internal error: PGN %d is not found correctly\n", prn);
+      logError("Internal error: PGN %d is not found correctly\n", prev_prn);
       exit(2);
     }
   }
@@ -420,3 +452,4 @@ void camelCase(bool upperCamelCase)
     }
   }
 }
+

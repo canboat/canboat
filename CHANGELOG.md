@@ -8,6 +8,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Fixed
+- #377: Ensure PGNs are correct framing type (packet type) and fix PGN 130824 B&G Wind Data.
+
 ### Changed
 - #366: PGN 127500 field lengths and framing type changed
 
