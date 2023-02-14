@@ -325,8 +325,10 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Industry Group</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>1 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h2 id="pgn-61184">0xEF00: Manufacturer Proprietary single-frame addressed</h2><p>Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-61184">0xEF00:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>10</td><td>Arbitrary address capable</td><td>Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims</td><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h2 id="pgn-61184">0xEF00: Manufacturer Proprietary single-frame addressed</h2><p>Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-61184">0xEF00:
             PGN 61184
             - Seatalk: Wireless Keypad Light Control</h3><p>
               This PGN description applies when the following field(s) match:
