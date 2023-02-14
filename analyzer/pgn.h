@@ -1087,7 +1087,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
       SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
       LOOKUP_FIELD("Industry Group", 3, INDUSTRY_CODE),
-      RESERVED_FIELD(1),
+      // "Arbitrary address capable" is explained at https://embeddedflakes.com/network-management-in-sae-j1939/#Arbitrary_Address_Capable
+      SIMPLE_DESC_FIELD("Arbitrary address capable", 1, "Field indicates whether the device is capable to claim arbitrary source "
+                                                        "address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims"),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This network management message is used to claim network address, reply to devices requesting the claimed "

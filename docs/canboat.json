@@ -3460,13 +3460,17 @@
           },
           {
             "Order":10,
-            "Id":"reserved10",
-            "Name":"Reserved",
+            "Id":"arbitraryAddressCapable",
+            "Name":"Arbitrary address capable",
+            "Description":"Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims",
             "BitLength":1,
             "BitOffset":63,
             "BitStart":7,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":1,
+            "FieldType":"NUMBER"
           }
         ]
       },

@@ -2784,13 +2784,17 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved10</Id>
-          <Name>Reserved</Name>
+          <Id>arbitraryAddressCapable</Id>
+          <Name>Arbitrary address capable</Name>
+          <Description>Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims</Description>
           <BitLength>1</BitLength>
           <BitOffset>63</BitOffset>
           <BitStart>7</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
