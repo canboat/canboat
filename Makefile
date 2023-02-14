@@ -32,7 +32,7 @@ ROOT_MOD=0644
 
 all:	bin compile
 	@echo "The binaries are now built and are in $(BUILDDIR)"
-	@echo "Use 'make generated' to recreate generated XML, JSON and DBC files."
+	@echo "Use 'make generated' to recreate generated XML, HTML, JSON and DBC files."
 
 compile: bin
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
@@ -44,6 +44,11 @@ tests:  compile
 generated: tests
 	$(MAKE) -C analyzer generated
 	$(MAKE) -C dbc-exporter
+
+# Builder image can be removed with `docker image rm canboat-builder`
+docker-build: ## runs `make clean generated` in `ubuntu:22.04` Docker image
+	@docker build -t canboat-builder .
+	@docker run -it --rm -v $(shell pwd):/project canboat-builder clean generated
 
 bin:	$(BUILDDIR)
 

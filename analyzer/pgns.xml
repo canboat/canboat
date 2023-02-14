@@ -853,13 +853,17 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved10</Id>
-          <Name>Reserved</Name>
+          <Id>arbitraryAddressCapable</Id>
+          <Name>Arbitrary address capable</Name>
+          <Description>Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims</Description>
           <BitLength>1</BitLength>
           <BitOffset>63</BitOffset>
           <BitStart>7</BitStart>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -13493,12 +13497,12 @@ limitations under the License.
       <PGN>127500</PGN>
       <Id>loadControllerConnectionStateControl</Id>
       <Description>Load Controller Connection State/Control</Description>
-      <Type>Fast</Type>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>10</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -13582,27 +13586,27 @@ limitations under the License.
           <Order>7</Order>
           <Id>timeon</Id>
           <Name>TimeON</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>timeoff</Id>
           <Name>TimeOFF</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>253</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -40251,7 +40255,7 @@ limitations under the License.
       <PGN>130824</PGN>
       <Id>bGWindData</Id>
       <Description>B&amp;G: Wind data</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>

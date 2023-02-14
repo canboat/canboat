@@ -529,7 +529,7 @@ static void explainPGNXML(Pgn pgn)
     printXML(6, "Explanation", pgn.explanation);
     printXML(6, "URL", pgn.url);
   }
-  printXML(6, "Type", (pgn.type == PACKET_ISO11783 ? "ISO" : (pgn.type == PACKET_FAST ? "Fast" : "Single")));
+  printXML(6, "Type", PACKET_TYPE_STR[pgn.type]);
   printXML(6, "Complete", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));
   if (pgn.fallback)
   {
@@ -975,11 +975,16 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
   {
     printf("<?xml-stylesheet type=\"text/xsl\" href=\"canboat.xsl\"?>\n");
   }
-  if (!doV1) {
-      printf("<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
-             "  <SchemaVersion>" SCHEMA_VERSION "</SchemaVersion>\n");
-  } else {
-      printf("<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" Version=\"0.1\">\n");
+  if (!doV1)
+  {
+    printf(
+        "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
+        "  <SchemaVersion>" SCHEMA_VERSION "</SchemaVersion>\n");
+  }
+  else
+  {
+    printf("<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+           "Version=\"0.1\">\n");
   }
   printf("  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
          "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"

@@ -2107,7 +2107,7 @@ limitations under the License.
   </LookupBitEnumerations>
   <PGNs>
     <PGNInfo>
-      <PGN>0</PGN>
+      <PGN>59392</PGN>
       <Id>0xe8000xeeffStandardizedSingleFrameAddressed</Id>
       <Description>0xE800-0xEEFF: Standardized single-frame addressed</Description>
       <Explanation>Standardized PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to 0xEE00 (59392 - 60928). When this is shown during analysis it means the PGN is not reverse engineered yet.</Explanation>
@@ -2784,13 +2784,17 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved10</Id>
-          <Name>Reserved</Name>
+          <Id>arbitraryAddressCapable</Id>
+          <Name>Arbitrary address capable</Name>
+          <Description>Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims</Description>
           <BitLength>1</BitLength>
           <BitOffset>63</BitOffset>
           <BitStart>7</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -7591,7 +7595,7 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
-      <PGN>65536</PGN>
+      <PGN>126208</PGN>
       <Id>0x1ed000x1ee00StandardizedFastPacketAddressed</Id>
       <Description>0x1ED00 - 0x1EE00: Standardized fast-packet addressed</Description>
       <Explanation>Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (65536 - 126464). When this is shown during analysis it means the PGN is not reverse engineered yet.</Explanation>
@@ -14792,13 +14796,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127500</PGN>
       <Id>loadControllerConnectionStateControl</Id>
       <Description>Load Controller Connection State/Control</Description>
-      <Type>Fast</Type>
+      <URL>https://github.com/canboat/canboat/issues/366</URL>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>8</FieldCount>
-      <Length>10</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -14882,26 +14887,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>7</Order>
           <Id>timeon</Id>
           <Name>TimeON</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>timeoff</Id>
           <Name>TimeOFF</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -39770,7 +39775,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130824</PGN>
       <Id>bGWindData</Id>
       <Description>B&amp;G: Wind data</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>

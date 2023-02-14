@@ -50,7 +50,7 @@ BO_ 2565538046 PGN_60160_isoTransportProtocolDa: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2565734654 PGN_60928_isoAddressClaim: 8 Vector__XXX
- SG_ reserved10 : 63|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ arbitraryAddressCapable : 63|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryGroup : 60|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ systemInstance : 56|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ deviceClass : 49|7@1+ (1,0) [0|0] "" Vector__XXX
@@ -470,8 +470,14 @@ BO_ 2582776574 PGN_127498_engineParametersStati: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582777086 PGN_127500_loadControllerConnect: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ timeoff : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ timeon : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ pwmDutyCycle : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ operationalStatusControl : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ status : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ state : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ connectionId : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sequenceId : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582777342 PGN_127501_binarySwitchBankStatu: 8 Vector__XXX
  SG_ indicator28 : 62|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -1249,6 +1255,7 @@ CM_ SG_ 2565341438 pgn "Parameter Group Number of requested information";
 CM_ BO_ 2565472510 "ISO Request";
 CM_ BO_ 2565538046 "ISO Transport Protocol, Data Transfer";
 CM_ BO_ 2565734654 "ISO Address Claim";
+CM_ SG_ 2565734654 arbitraryAddressCapable "Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims";
 CM_ SG_ 2565734654 systemInstance "ISO Device Class Instance";
 CM_ SG_ 2565734654 deviceFunction "ISO Function";
 CM_ SG_ 2565734654 deviceInstanceUpper "ISO Function Instance";

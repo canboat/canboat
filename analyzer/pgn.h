@@ -519,10 +519,10 @@ typedef struct
     .name = nam, .size = len, .resolution = 1, .hasSign = true, .fieldType = "INTEGER" \
   }
 
-#define MMSI_FIELD(nam)                                                 \
-  {                                                                     \
-    .name = nam, .size = BYTES(4), .resolution = 1, .hasSign = false,   \
-    .rangeMin = 2000000, .rangeMax = 999999999, .fieldType = "MMSI"     \
+#define MMSI_FIELD(nam)                                                                                           \
+  {                                                                                                               \
+    .name = nam, .size = BYTES(4), .resolution = 1, .hasSign = false, .rangeMin = 2000000, .rangeMax = 999999999, \
+    .fieldType = "MMSI"                                                                                           \
   }
 
 #define DECIMAL_FIELD(nam, len, desc)                                                      \
@@ -838,15 +838,22 @@ typedef enum PacketType
 {
   PACKET_SINGLE,
   PACKET_FAST,
-  PACKET_ISO11783
+  PACKET_ISO_TP,
+  PACKET_MIXED,
 } PacketType;
+
+#ifdef GLOBALS
+const char *PACKET_TYPE_STR[PACKET_MIXED + 1] = {"Single", "Fast", "ISO", "Mixed"};
+#else
+extern const char *PACKET_TYPE_STR[];
+#endif
 
 struct Pgn
 {
   char       *description;
   uint32_t    pgn;
   uint16_t    complete;      /* Either PACKET_COMPLETE or bit values set for various unknown items */
-  PacketType  type;          /* Single, Fast or ISO11783 */
+  PacketType  type;          /* Single, Fast or ISO_TP */
   Field       fieldList[30]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t    fieldCount;    /* Filled by C, no need to set in initializers. */
   uint32_t    size;          /* Filled by C, no need to set in initializers. */
@@ -863,6 +870,15 @@ struct Pgn
   uint8_t     repeatingField1;  /* Which field explains how often the repeating fields set #1 repeats? 255 = there is no field */
   uint8_t     repeatingField2;  /* Which field explains how often the repeating fields set #2 repeats? 255 = there is no field */
 };
+
+typedef struct PgnRange
+{
+  uint32_t    pgnStart;
+  uint32_t    pgnEnd;
+  uint32_t    pgnStep;
+  const char *who;
+  PacketType  type;
+} PgnRange;
 
 // Returns the first pgn that matches the given id, or NULL if not found.
 Pgn *searchForPgn(int pgn);
@@ -893,12 +909,21 @@ void camelCase(bool upperCamelCase);
 extern void fillLookups(void);
 
 #ifdef GLOBALS
+PgnRange pgnRange[] = {{0xe800, 0xee00, 256, "ISO 11783", PACKET_SINGLE},
+                       {0xef00, 0xef00, 256, "NMEA", PACKET_SINGLE},
+                       {0xf000, 0xfeff, 1, "NMEA", PACKET_SINGLE},
+                       {0xff00, 0xffff, 1, "Manufacturer", PACKET_SINGLE},
+                       {0x1ed00, 0x1ee00, 256, "NMEA", PACKET_FAST},
+                       {0x1ef00, 0x1ef00, 256, "Manufacturer", PACKET_FAST},
+                       {0x1f000, 0x1feff, 1, "NMEA", PACKET_MIXED},
+                       {0x1ff00, 0x1ffff, 1, "Manufacturer", PACKET_FAST}};
+
 Pgn pgnList[] = {
 
     /* PDU1 (addressed) single-frame PGN range 0E800 to 0xEEFF (59392 - 61183) */
 
     {"0xE800-0xEEFF: Standardized single-frame addressed",
-     0,
+     0xe800,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {BINARY_FIELD("Data", BYTES(8), NULL), END_OF_FIELDS},
@@ -1062,7 +1087,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
       SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
       LOOKUP_FIELD("Industry Group", 3, INDUSTRY_CODE),
-      RESERVED_FIELD(1),
+      // "Arbitrary address capable" is explained at https://embeddedflakes.com/network-management-in-sae-j1939/#Arbitrary_Address_Capable
+      SIMPLE_DESC_FIELD("Arbitrary address capable", 1, "Field indicates whether the device is capable to claim arbitrary source "
+                                                        "address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims"),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This network management message is used to claim network address, reply to devices requesting the claimed "
@@ -1405,7 +1432,7 @@ Pgn pgnList[] = {
     {"ISO Commanded Address",
      65240,
      PACKET_COMPLETE,
-     PACKET_ISO11783,
+     PACKET_ISO_TP,
      /* ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in
      the data portion of the message must match the name information of the node whose network address is to be set. */
      {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
@@ -1669,11 +1696,11 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Autopilot Mode", 65480, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
 
-    /* PDU1 (addressed) fast-packet PGN range 0x10000 to 0x1EE00 (65536 - 126464) */
+    /* PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (126208 - 126464) */
     /* Only 0x1ED00 and 0x1EE00 seem to be used? */
     ,
     {"0x1ED00 - 0x1EE00: Standardized fast-packet addressed",
-     65536,
+     0x1ed00,
      PACKET_INCOMPLETE_LOOKUP,
      PACKET_FAST,
      {BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), NULL), END_OF_FIELDS},
@@ -2695,16 +2722,17 @@ Pgn pgnList[] = {
     {"Load Controller Connection State/Control",
      127500,
      PACKET_COMPLETE,
-     PACKET_FAST,
+     PACKET_SINGLE,
      {UINT8_FIELD("Sequence ID"),
       UINT8_FIELD("Connection ID"),
       UINT8_FIELD("State"),
       UINT8_FIELD("Status"),
       UINT8_FIELD("Operational Status & Control"),
       UINT8_FIELD("PWM Duty Cycle"),
-      UINT16_FIELD("TimeON"),
-      UINT16_FIELD("TimeOFF"),
-      END_OF_FIELDS}}
+      UINT8_FIELD("TimeON"),
+      UINT8_FIELD("TimeOFF"),
+      END_OF_FIELDS},
+     .url = "https://github.com/canboat/canboat/issues/366"}
 
     ,
     {"Binary Switch Bank Status",
@@ -3971,8 +3999,8 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
-     .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
-     .interval        = UINT16_MAX}
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .interval = UINT16_MAX}
 
     ,
     {"AIS SAR Aircraft Position Report",
@@ -4997,10 +5025,7 @@ Pgn pgnList[] = {
      130576,
      PACKET_NOT_SEEN,
      PACKET_SINGLE,
-     {PERCENTAGE_I8_FIELD("Port trim tab"),
-      PERCENTAGE_I8_FIELD("Starboard trim tab"),
-      RESERVED_FIELD(BYTES(6)),
-      END_OF_FIELDS},
+     {PERCENTAGE_I8_FIELD("Port trim tab"), PERCENTAGE_I8_FIELD("Starboard trim tab"), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS},
      .interval = 200}
 
     ,
@@ -5828,7 +5853,7 @@ Pgn pgnList[] = {
     {"B&G: Wind data",
      130824,
      PACKET_INCOMPLETE,
-     PACKET_SINGLE,
+     PACKET_FAST,
      {COMPANY(381),
       UINT8_FIELD("Field 4"),
       UINT8_FIELD("Field 5"),
@@ -6309,9 +6334,12 @@ Pgn pgnList[] = {
       UINT32_FIELD("Rejected TX requests"),
       END_OF_FIELDS}}};
 
-size_t pgnListSize = ARRAY_SIZE(pgnList);
+const size_t pgnListSize  = ARRAY_SIZE(pgnList);
+const size_t pgnRangeSize = ARRAY_SIZE(pgnRange);
 
 #else
-extern Pgn    pgnList[];
-extern size_t pgnListSize;
+extern Pgn         pgnList[];
+extern size_t      pgnListSize;
+extern PgnRange    pgnRange[];
+extern size_t      pgnRangeSize;
 #endif
