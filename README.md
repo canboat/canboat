@@ -15,9 +15,10 @@ To use the programs included in this project you may need a supported CAN interf
 
 For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 
-where you can find instructions on how to build the programs on your own computer and how to start 
-extending the PGN database.
-Short build instructions are also found in [BUILDING.md].
+## Building, Development and Testing
+
+In [Wiki](https://github.com/canboat/canboat/wiki) you can find instructions on how to build the programs on your own computer 
+and how to start extending the PGN database. Short instructions are also found in [BUILDING.md](./BUILDING.md).
 
 ## Version history
 
@@ -26,6 +27,7 @@ See [Changelog](CHANGELOG.md).
 ## Related Projects
 
 - [canboatjs](https://github.com/canboat/canboatjs) Pure JavaScript NMEA 2000 decoder and encoder
+
 
 ---
 

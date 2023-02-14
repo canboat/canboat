@@ -12,6 +12,20 @@ Optional if you want to re-generate the JSON, XML and DBC files:
 * `xmllint`
 * `python3`
 
+
+### Building everything in [Docker](https://www.docker.com/)
+
+```bash
+make docker-build
+```
+
+or
+
+```bash
+docker build -t canboat-builder .
+docker run -it --rm -v $(pwd)/:/project canboat-builder clean generated
+```
+
 ### Building the binaries on Linux
 
 The first line is for use with Debian/Ubuntu/PopOS! etc.

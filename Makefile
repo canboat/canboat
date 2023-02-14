@@ -45,6 +45,11 @@ generated: tests
 	$(MAKE) -C analyzer generated
 	$(MAKE) -C dbc-exporter
 
+# Builder image can be removed with `docker image rm canboat-builder`
+docker-build: ## runs `make clean generated` in `ubuntu:22.04` Docker image
+	@docker build -t canboat-builder .
+	@docker run -it --rm -v $(shell pwd):/project canboat-builder clean generated
+
 bin:	$(BUILDDIR)
 
 $(BUILDDIR):
