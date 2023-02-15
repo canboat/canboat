@@ -8812,15 +8812,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              fast-packet 
             PGN is
             
-              at least 18
-            bytes long and contains 11 fields.
+              at least 15
+            bytes long and contains 12 fields.
 
             
-        The 2 fields starting at field 
+        The 3 fields starting at field 
         9 
-        (with name "ID")
+        (with name "ID type")
         form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
-        6 
+        7 
         (with name "ID count".)
       </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -8828,30 +8828,33 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-ENTERTAINMENT_SOURCE">ENTERTAINMENT_SOURCE</a></td></tr><tr><td>2</td><td>Number</td><td>Source number per type</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Zone</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Type</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-ENTERTAINMENT_ZONE">ENTERTAINMENT_ZONE</a></td></tr><tr><td>4</td><td>Group ID</td><td>Unique group ID</td><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>ID offset</td><td>First ID in this PGN</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>ID count</td><td>Number of IDs in this PGN</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Total ID count</td><td>Total IDs in group</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>ID type</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-ENTERTAINMENT_TYPE">ENTERTAINMENT_TYPE</a></td></tr><tr><td>4</td><td>Zone</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-ENTERTAINMENT_ID_TYPE">ENTERTAINMENT_ID_TYPE</a></td></tr><tr class="repeatmarker"><td class="repeating">9<div>Set 1</div></td><td>ID</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#lookup-ENTERTAINMENT_ZONE">ENTERTAINMENT_ZONE</a></td></tr><tr><td>5</td><td>Group ID</td><td>Unique group ID</td><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Name</td><td/><td> </td><td>
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>ID offset</td><td>First ID in this PGN</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>ID count</td><td>Number of IDs in this PGN</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Total ID count</td><td>Total IDs in group</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr class="repeatmarker"><td class="repeating">9<div>Set 1</div></td><td>ID type</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-ENTERTAINMENT_ID_TYPE">ENTERTAINMENT_ID_TYPE</a></td></tr><tr><td class="repeating">10<div>Set 1</div></td><td>ID</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Name</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr><tr class="repeatmarker"><td>11</td><td>Artist</td><td/><td> </td><td>
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr><tr class="repeatmarker"><td>12</td><td>Artist</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr></table><p>
               Source:
