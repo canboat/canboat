@@ -9,6 +9,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ## [Unreleased]
 
 ### Fixed
+- #376: Added Type field to PGN 130571.
 - #377: Ensure PGNs are correct framing type (packet type) and fix PGN 130824 B&G Wind Data.
 - #365: Produce a `canboat.html` file
 

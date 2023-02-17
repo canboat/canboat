@@ -31643,11 +31643,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>11</FieldCount>
-      <MinLength>18</MinLength>
-      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <FieldCount>12</FieldCount>
+      <MinLength>15</MinLength>
+      <RepeatingFieldSet1Size>3</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>9</RepeatingFieldSet1StartField>
-      <RepeatingFieldSet1CountField>6</RepeatingFieldSet1CountField>
+      <RepeatingFieldSet1CountField>7</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -31679,10 +31679,24 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>3</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>ENTERTAINMENT_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
           <Id>zone</Id>
           <Name>Zone</Name>
           <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -31692,12 +31706,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>ENTERTAINMENT_ZONE</LookupEnumeration>
         </Field>
         <Field>
-          <Order>4</Order>
+          <Order>5</Order>
           <Id>groupId</Id>
           <Name>Group ID</Name>
           <Description>Unique group ID</Description>
           <BitLength>32</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -31706,26 +31720,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>5</Order>
+          <Order>6</Order>
           <Id>idOffset</Id>
           <Name>ID offset</Name>
           <Description>First ID in this PGN</Description>
           <BitLength>16</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>idCount</Id>
-          <Name>ID count</Name>
-          <Description>Number of IDs in this PGN</Description>
-          <BitLength>16</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -31735,11 +31735,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>totalIdCount</Id>
-          <Name>Total ID count</Name>
-          <Description>Total IDs in group</Description>
+          <Id>idCount</Id>
+          <Name>ID count</Name>
+          <Description>Number of IDs in this PGN</Description>
           <BitLength>16</BitLength>
-          <BitOffset>88</BitOffset>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -31749,10 +31749,24 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
+          <Id>totalIdCount</Id>
+          <Name>Total ID count</Name>
+          <Description>Total IDs in group</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
           <Id>idType</Id>
           <Name>ID type</Name>
           <BitLength>8</BitLength>
-          <BitOffset>104</BitOffset>
+          <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -31762,11 +31776,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>ENTERTAINMENT_ID_TYPE</LookupEnumeration>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>10</Order>
           <Id>id</Id>
           <Name>ID</Name>
           <BitLength>32</BitLength>
-          <BitOffset>112</BitOffset>
+          <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -31775,14 +31789,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>11</Order>
           <Id>name</Id>
           <Name>Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <FieldType>STRING_LAU</FieldType>
         </Field>
         <Field>
-          <Order>11</Order>
+          <Order>12</Order>
           <Id>artist</Id>
           <Name>Artist</Name>
           <BitLengthVariable>true</BitLengthVariable>
