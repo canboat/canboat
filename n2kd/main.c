@@ -908,7 +908,7 @@ static bool storeMessage(char *line, size_t len)
       key2 = malloc(e - s + 1);
       if (!key2)
       {
-        logAbort("Out of memory allocating %u bytes", e - s);
+        logAbort("Out of memory allocating %u bytes\n", e - s);
       }
       memcpy(key2, s, e - s);
       key2[e - s] = 0;
@@ -927,7 +927,7 @@ static bool storeMessage(char *line, size_t len)
     pgn = calloc(1, sizeof(Pgn) + sizeof(Message));
     if (!pgn)
     {
-      logAbort("Out of memory allocating %u bytes", sizeof(Pgn) + sizeof(Message));
+      logAbort("Out of memory allocating %u bytes\n", sizeof(Pgn) + sizeof(Message));
     }
     pgnIdx[idx]           = pgn;
     pgnList[maxPgnList++] = &pgnIdx[idx];
@@ -956,7 +956,7 @@ static bool storeMessage(char *line, size_t len)
       pgn->p_description = malloc(e - s + 1);
       if (!pgn->p_description)
       {
-        logAbort("Out of memory allocating %u bytes", e - s);
+        logAbort("Out of memory allocating %u bytes\n", e - s);
       }
       memcpy(pgn->p_description, s, e - s);
       pgn->p_description[e - s] = 0;
@@ -1011,7 +1011,7 @@ static bool storeMessage(char *line, size_t len)
     pgn     = realloc(pgnIdx[idx], newSize);
     if (!pgn)
     {
-      logAbort("Out of memory allocating %u bytes", newSize);
+      logAbort("Out of memory allocating %u bytes\n", newSize);
     }
     pgnIdx[idx]              = pgn;
     pgn->p_message[i].m_src  = (uint8_t) src;
@@ -1031,7 +1031,7 @@ static bool storeMessage(char *line, size_t len)
   }
   if (!m->m_text)
   {
-    logAbort("Out of memory allocating %u bytes", len + 1);
+    logAbort("Out of memory allocating %u bytes\n", len + 1);
   }
   memcpy(m->m_text, line, len);
   m->m_text[len]     = '\n';
@@ -1237,7 +1237,7 @@ static void verifyStdin(void)
       {
         if (strstr(stream[i].buffer, "\"version\":") == NULL || strstr(stream[i].buffer, "\"showLookupValues\":true") == NULL)
         {
-          logAbort("Standard input must be piped from `analyzer` in `-json -nv` mode");
+          logAbort("Standard input must be piped from `analyzer` in `-json -nv` mode\n");
         }
         remain = stream[i].buffer + stream[i].len - (line_end + 1);
         memcpy(stream[i].buffer, line_end + 1, remain);
@@ -1247,7 +1247,7 @@ static void verifyStdin(void)
     }
     else
     {
-      logAbort("Cannot read from piped input from `analyzer`");
+      logAbort("Cannot read from piped input from `analyzer`\n");
     }
   }
 }

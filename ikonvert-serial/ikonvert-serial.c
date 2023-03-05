@@ -65,8 +65,8 @@ StringBuffer dataBuffer;  // Temporary buffer during parse or generate
 StringBuffer txList;      // TX list to send to iKonvert
 StringBuffer rxList;      // RX list to send to iKonvert
 
-uint64_t lastNow;      // Epoch time of last timestamp
-uint64_t lastTS;       // Last timestamp received from iKonvert. Beware roll-around, max value is 999999
+uint64_t lastNow; // Epoch time of last timestamp
+uint64_t lastTS;  // Last timestamp received from iKonvert. Beware roll-around, max value is 999999
 
 static void processInBuffer(StringBuffer *in, StringBuffer *out);
 static void processReadBuffer(StringBuffer *in, int out);
@@ -310,7 +310,7 @@ int main(int argc, char **argv)
       }
       if (r == 0)
       {
-        logAbort("EOF on device");
+        logAbort("EOF on device\n");
       }
     }
 
@@ -328,7 +328,7 @@ int main(int argc, char **argv)
       }
       if (r == 0)
       {
-        logAbort("EOF on stdin");
+        logAbort("EOF on stdin\n");
       }
     }
 
@@ -345,7 +345,7 @@ int main(int argc, char **argv)
       }
       if (r == 0)
       {
-        logAbort("EOF on stdout");
+        logAbort("EOF on stdout\n");
       }
     }
 
@@ -684,10 +684,10 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     }
     if (parseInt(&msg, &errors, -1))
     {
-      n2k->data[1] = (uint8_t)(errors >> 0);
-      n2k->data[2] = (uint8_t)(errors >> 8);
-      n2k->data[3] = (uint8_t)(errors >> 16);
-      n2k->data[4] = (uint8_t)(errors >> 24);
+      n2k->data[1] = (uint8_t) (errors >> 0);
+      n2k->data[2] = (uint8_t) (errors >> 8);
+      n2k->data[3] = (uint8_t) (errors >> 16);
+      n2k->data[4] = (uint8_t) (errors >> 24);
       if (verbose)
       {
         logInfo("CAN Bus errors %d\n", errors);
@@ -703,10 +703,10 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     }
     if (parseInt(&msg, &uptime, 0) && uptime != 0)
     {
-      n2k->data[6] = (uint8_t)(uptime >> 0);
-      n2k->data[7] = (uint8_t)(uptime >> 8);
-      n2k->data[8] = (uint8_t)(uptime >> 16);
-      n2k->data[9] = (uint8_t)(uptime >> 24);
+      n2k->data[6] = (uint8_t) (uptime >> 0);
+      n2k->data[7] = (uint8_t) (uptime >> 8);
+      n2k->data[8] = (uint8_t) (uptime >> 16);
+      n2k->data[9] = (uint8_t) (uptime >> 24);
       if (verbose)
       {
         logInfo("iKonvert uptime %ds\n", uptime);
@@ -722,10 +722,10 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     }
     if (parseInt(&msg, &rejected, 0) && rejected != 0)
     {
-      n2k->data[11] = (uint8_t)(rejected >> 0);
-      n2k->data[12] = (uint8_t)(rejected >> 8);
-      n2k->data[13] = (uint8_t)(rejected >> 16);
-      n2k->data[14] = (uint8_t)(rejected >> 24);
+      n2k->data[11] = (uint8_t) (rejected >> 0);
+      n2k->data[12] = (uint8_t) (rejected >> 8);
+      n2k->data[13] = (uint8_t) (rejected >> 16);
+      n2k->data[14] = (uint8_t) (rejected >> 24);
       if (verbose)
       {
         logInfo("iKonvert rejected %d TX message requests\n", rejected);

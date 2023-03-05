@@ -8,6 +8,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+## Fixed
+- End all logAbort messages with a newline.
+
 ## [4.10.1]
 
 ### Fixed
