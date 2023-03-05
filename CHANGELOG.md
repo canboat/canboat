@@ -8,7 +8,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+## [4.10.1]
+
 ### Fixed
+- #383: Add NMEA 2000 v3.002 PGNs.
 - #376: Added Type field to PGN 130571.
 - #377: Ensure PGNs are correct framing type (packet type) and fix PGN 130824 B&G Wind Data.
 - #365: Produce a `canboat.html` file
@@ -558,7 +561,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.10.0...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.10.1...HEAD
+[4.10.1]: https://github.com/canboat/canboat/compare/v4.10.0...v4.10.1
 [4.10.0]: https://github.com/canboat/canboat/compare/v4.9.2...v4.10.0
 [4.9.2]: https://github.com/canboat/canboat/compare/v4.9.1...v4.9.2
 [4.9.1]: https://github.com/canboat/canboat/compare/v4.9.0...v4.9.1

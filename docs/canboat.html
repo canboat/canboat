@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta charset="UTF-8"/><meta name="description" content="CANBoat PGN documentation"/><link rel="stylesheet" type="text/css" href="canboat.css"/><script src="canboat.js"></script><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet"/></head><body><div id="sidenav" class="sidenav"><a class="closebtn" onclick="closeNav(event)">×</a><a href="#main">Top</a><a href="#pgn-list">PGN list</a><a href="#physical-quantities">Physical Quantities</a><a href="#field-types">Field Types</a><a href="#lookup-enumerations">Lookup enumerations</a><a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a><a href="#bitfield-enumerations">Bitfield enumerations</a><a href="#notes">Notes</a></div><div id="sidenav-closed" class="sidenav"><a onclick="openNav(event)" id="hamburger"><span></span><span></span><span></span></a></div><div id="main"><p>
             The CANBoat project PGN documentation version
-            4.10.0.
-          </p><h3>Copyright</h3><p class="xs">CANboat version v4.10.0
+            4.10.1.
+          </p><h3>Copyright</h3><p class="xs">CANboat version v4.10.1
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -3950,6 +3950,80 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>14</td><td>Engine Torque</td><td/><td>%<div class="xs">-127 .. 125</div></td><td>8 bits
                   
                         signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-127490">0x1F202:
+            PGN 127490
+            - Electric Drive Status, Dynamic</h3><p>This PGN is used to report status of Electric Drive Status control and can be used with Command Group Function (PGN Electric propulsion motor status) to command equipment. </p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            12
+            bytes long and contains 8 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Inverter/Motor Identifier</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Operating Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>4</td><td>Motor Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Inverter Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Coolant Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Gear Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Shaft Torque</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-127491">0x1F203:
+            PGN 127491
+            - Electric Energy Storage Status, Dynamic</h3><p>This PGN is used to provide electric propulsion motor status and relevant data.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            15
+            bytes long and contains 10 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Energy Storage Identifier</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>State of Charge</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Time Remaining</td><td>Time remaining at current rate of discharge</td><td>60 <a href="#pq-TIME">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-TIME">TIME</a></td></tr><tr><td>4</td><td>Highest Cell Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Lowest Cell Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Average Cell Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Max Discharge Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.5</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Max Charge Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.5</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Cooling System Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Heating System Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-127493">0x1F205:
             PGN 127493
             - Transmission Parameters, Dynamic</h3><p/><p>
@@ -3980,7 +4054,110 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-127496">0x1F208:
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-127494">0x1F206:
+            PGN 127494
+            - Electric Drive Information</h3><p>This PGN is used to provide information about electric motor specifications and ratings.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            28
+            bytes long and contains 13 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Inverter/Motor Identifier</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Motor Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>4</td><td>Motor Voltage Rating</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.3</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Maximum Continuous Motor Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Maximum Boost Motor Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Maximum Motor Temperature Rating</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Rated Motor Speed</td><td/><td>0.25 <a href="#pq-ANGULAR_VELOCITY">rpm</a><div class="xs">0 .. 16383.25</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Maximum Controller Temperature Rating</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Motor Shaft Torque Rating</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Motor DC-Voltage Derating Threshold</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.3</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>12</td><td>Motor DC-Voltage Cut Off Threshold</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.3</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>13</td><td>Drive/Motor Hours</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-TIME">TIME</a></td></tr></table><h3 id="pgn-127495">0x1F207:
+            PGN 127495
+            - Electric Energy Storage Information</h3><p>This PGN is used to provide the status on power storage sources such as batteries.This PGN is new in v3.0 and has not been observed yet; field lengths and precisions are guesses.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            21
+            bytes long and contains 16 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Energy Storage Identifier</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Motor Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>4</td><td>Storage Chemistry/Conversion</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Maximum Temperature Derating</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Maximum Temperature Shut Off</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Minimum Temperature Derating</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Minimum Temperature Shut Off</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Usable Battery Energy</td><td/><td><a href="#pq-ELECTRICAL_ENERGY">kWh</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>State of Health</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Battery Cycle Counter</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>12</td><td>Battery Full Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>13</td><td>Battery Empty Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>15</td><td>Maximum Charge (SOC)</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>16</td><td>Minimum Charge (SOC)</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-127496">0x1F208:
             PGN 127496
             - Trip Parameters, Vessel</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -4558,7 +4735,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 127510
             - Charger Configuration Status</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
@@ -4854,7 +5031,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-128000">0x1F400:
             PGN 128000
-            - Leeway Angle</h3><p/><p>
+            - Leeway Angle</h3><p>This PGN provides the Nautical Leeway Angle. Nautical leeway angle is defined as the angle between the direction a vessel is heading (pointing) and the direction it is actually travelling (tracking thru the water). It is commonly provided by dual-axis speed sensors.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The transmission interval is not known</li></ul></p><p>
             This
@@ -4872,7 +5049,90 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>40 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
-              <a href="https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf">https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf</a></p><h3 id="pgn-128006">0x1F406:
+              <a href="https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf">https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf</a></p><h3 id="pgn-128001">0x1F401:
+            PGN 128001
+            - Vessel Acceleration</h3><p>The Vessel Acceleration PGN transmits the acceleration of the vessel in all three axes, ahead/astern, port/starboard, and up/down.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 5 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Longitudinal Acceleration</td><td/><td><div class="xs">-32767 .. 32765</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Transverse Acceleration</td><td/><td><div class="xs">-32767 .. 32765</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Vertical Acceleration</td><td/><td><div class="xs">-32767 .. 32765</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-128002">0x1F402:
+            PGN 128002
+            - Electric Drive Status, Rapid Update</h3><p>This PGN is used to provide the Electric Propulsion Drive System Status.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            7
+            bytes long and contains 6 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Inverter/Motor Controller</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Active Motor Mode</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Brake Mode</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Rotational Shaft Speed</td><td/><td>0.25 <a href="#pq-ANGULAR_VELOCITY">rpm</a><div class="xs">0 .. 16383.25</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Motor DC Voltage</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.3</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Motor DC Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.5</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-128003">0x1F403:
+            PGN 128003
+            - Electric Energy Storage Status, Rapid Update</h3><p>Electric Energy Storage Status message provides important energy storage information global at a rapid update rate.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 7 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Energy Storage Identifier</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Battery Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Isolation Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Battery Error</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Battery Voltage</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.3</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Battery Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.5</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-128006">0x1F406:
             PGN 128006
             - Thruster Control Status</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -5095,7 +5355,162 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         signed
                       <a href="#ft-TIME">TIME</a></td></tr><tr><td>14</td><td>UTC of Fix</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86402</div></td><td>32 bits
                   <a href="#ft-TIME">TIME</a></td></tr><tr><td>15</td><td>Name</td><td/><td> </td><td>1784 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr></table><h3 id="pgn-128776">0x1F708:
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr></table><h3 id="pgn-128538">0x1F61A:
+            PGN 128538
+            - Elevator Car Status</h3><p>This PGN provides the status information of an elevator car. This includes the elevator car id and type, sensors for load and weight limits, smoke detection, door status, motor status, and brake status. Also provided are weight and speed measurements, current and destination deck location, proximity switch status, inertial measurement unit status and Emergency button and buzzer status.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            22
+            bytes long and contains 32 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Elevator Car ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Elevator Car Usage</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Smoke Sensor Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Limit Switch Sensor Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Proximity Switch Sensor Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Inertial Measurement Unit (IMU) Sensor Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Elevator Load Limit Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Elevator Load Balance Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Elevator Load Sensor 1 Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Elevator Load Sensor 2 Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>12</td><td>Elevator Load Sensor 3 Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>13</td><td>Elevator Load Sensor 4 Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>15</td><td>Elevator Car Motion Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>16</td><td>Elevator Car Door Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>17</td><td>Elevator Car Emergency Button Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>18</td><td>Elevator Car Buzzer Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>19</td><td>Open Door Button Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>20</td><td>Close Door Button Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>21</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>22</td><td>Current Deck</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>23</td><td>Destination Deck</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>24</td><td>Total Number of Decks</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>25</td><td>Weight of Load Cell 1</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>26</td><td>Weight of Load Cell 2</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>27</td><td>Weight of Load Cell 3</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>28</td><td>Weight of Load Cell 4</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>29</td><td>Speed of Elevator Car</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>30</td><td>Elevator Brake Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>31</td><td>Elevator Motor rotation control Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>32</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-128768">0x1F700:
+            PGN 128768
+            - Elevator Motor Control</h3><p>This PGN provides the status of an elevator motor controller. Settings of the elevator motor controller may be changed using the NMEA Command Group Function.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            4
+            bytes long and contains 6 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Elevator Car ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Elevator Car Usage</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Motor Acceleration/Deceleration profile selection</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Motor Rotational Control Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-128769">0x1F701:
+            PGN 128769
+            - Elevator Deck Push Button</h3><p>Transmit data of Deck controller to Elevator Main controller.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 6 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Elevator Call Button ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Deck Button ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Elevator Car Usage</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Elevator Car Button Selection</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>24 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-128776">0x1F708:
             PGN 128776
             - Windlass Control Status</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -5217,7 +5632,34 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-TIME">TIME</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
-              <a href="https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf">https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf</a></p><h3 id="pgn-129025">0x1F801:
+              <a href="https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf">https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf</a></p><h3 id="pgn-128780">0x1F70C:
+            PGN 128780
+            - Linear Actuator Control/Status</h3><p>Actuator is a broad description of any device that embodies moving an object between two fixed limits, such as raising or lowering an outboard engine assembly. In the context of this PGN, the word "Device" refers to the object being moved. In the case of multiple Actuators per controller, the Actuator Identifier field specifies which Actuator the PGN message is intended for, and all following data fields refer only to that Actuator. This PGN supports manufacturer calibrated systems and retrofit systems where it is impractical for the installer to enter the Maximum Travel distance of the device.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 6 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Actuator Identifier</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Commanded Device Position</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Device Position</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Maximum Device Travel</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Direction of Travel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-129025">0x1F801:
             PGN 129025
             - Position, Rapid Update</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -7602,10 +8044,34 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            0
-            bytes long and contains 0 fields.
+            
+              at least 9
+            bytes long and contains 8 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr></table><h3 id="pgn-130061">0x1FC0D:
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Hardware Channel ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Data Source Instance Field Number</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Data Source Instance Value</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Secondary Enumeration Field Number</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Secondary Enumeration Field Value</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Parameter Field Number</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Label</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr></table><h3 id="pgn-130061">0x1FC0D:
             PGN 130061
             - Channel Source Configuration</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -8575,7 +9041,52 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>18</td><td>Station ID</td><td/><td> </td><td>64 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr></table><h3 id="pgn-130560">0x1FE00:
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr></table><h3 id="pgn-130330">0x1FD1A:
+            PGN 130330
+            - Lighting System Settings</h3><p>This PGN provides a lighting controller settings and number of supported capabilities.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 9
+            bytes long and contains 12 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Global Enable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Default Settings/Commands</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>4</td><td>Name of the lighting controller</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr><tr><td>5</td><td>Max Scenes</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Max Scene Configuration Count</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Max Zones</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Max Color Sequences</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Max Color Sequence Color Count</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Number of Programs</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Controller Capabilities</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>12</td><td>Identify Device</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130560">0x1FE00:
             PGN 130560
             - Payload Mass</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -8600,6 +9111,276 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130561">0x1FE01:
+            PGN 130561
+            - Lighting Zone</h3><p>This PGN is used to report or configure a name for a given zone. A zone is a grouping of devices that are controlled by a Scene. This PGN is only sent upon request.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 13
+            bytes long and contains 14 fields.
+
+            
+              It is not transmitted at a regular interval, but when data is available or it is requested.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Zone Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Zone Name</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr><tr><td>3</td><td>Red Component</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Green Component</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Blue Component</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Color Temperature</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Intensity</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Program ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Program Color Sequence Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Program Intensity</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Program Rate</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>12</td><td>Program Color Sequence</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>13</td><td>Zone Enabled</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130562">0x1FE02:
+            PGN 130562
+            - Lighting Scene</h3><p>A Lighting Scene is a sequence of zone program configurations.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 3
+            bytes long and contains 12 fields.
+
+            
+        The 8 fields starting at field 
+        5 
+        (with name "Configuration Index")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        4 
+        (with name "Configuration Count".)
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Scene Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Zone Name</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr><tr><td>3</td><td>Control</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Configuration Count</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr class="repeatmarker"><td class="repeating">5<div>Set 1</div></td><td>Configuration Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">6<div>Set 1</div></td><td>Zone Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Devices ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">8<div>Set 1</div></td><td>Program Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Program Color Sequence Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Program Intensity</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Program Rate</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Program Color Sequence Rate</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130563">0x1FE03:
+            PGN 130563
+            - Lighting Device</h3><p>This PGN is used to provide status and capabilities of a lighting device. A lighting device may be a virtual device connected to a lighting controller or physical device on the network.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 17
+            bytes long and contains 18 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Device ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Device Capabilities</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Color Capabilities</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Zone Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Name of Lighting Device</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr><tr><td>6</td><td>Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Red Component</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Green Component</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Blue Component</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Color Temperature</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Intensity</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>12</td><td>Program ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>13</td><td>Program Color Sequence Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>14</td><td>Program Intensity</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>15</td><td>Program Rate</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>16</td><td>Program Color Sequence Rate</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>17</td><td>Enabled</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>18</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130564">0x1FE04:
+            PGN 130564
+            - Lighting Device Enumeration</h3><p>This PGN allows for enumeration of the lighting devices on the controller.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 3
+            bytes long and contains 5 fields.
+
+            
+        The 2 fields starting at field 
+        4 
+        (with name "Device ID")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        3 
+        (with name "Number of Devices".)
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Index of First Device</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Total Number of Devices</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Number of Devices</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Device ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">5<div>Set 1</div></td><td>Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130565">0x1FE05:
+            PGN 130565
+            - Lighting Color Sequence</h3><p>Sequences could be 1 to (PGN Lighting – System Configuration) Max Color Sequence Color Count colors.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 3
+            bytes long and contains 8 fields.
+
+            
+        The 5 fields starting at field 
+        3 
+        (with name "Color Index")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        2 
+        (with name "Color Count".)
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Sequence Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Color Count</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr class="repeatmarker"><td class="repeating">3<div>Set 1</div></td><td>Color Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">4<div>Set 1</div></td><td>Red Component</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">5<div>Set 1</div></td><td>Green Component</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">6<div>Set 1</div></td><td>Blue Component</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Color Temperature</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr class="repeatmarker"><td>8</td><td>Intensity</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130566">0x1FE06:
+            PGN 130566
+            - Lighting Program</h3><p>This PGN describes an available program on the controller. Can be a built in required NMEA one or a custom vendor program.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 2
+            bytes long and contains 5 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Program ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Name of Program</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr><tr><td>3</td><td>Description</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr><tr><td>4</td><td>Program Capabilities</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130567">0x1FE07:
             PGN 130567
             - Watermaker Input Setting and Status</h3><p/><p>

@@ -1,4 +1,4 @@
-VERSION "4.10.0"
+VERSION "4.10.1"
 
 
 NS_ : 
@@ -448,6 +448,14 @@ BO_ 2582774270 PGN_127489_engineParametersDynam: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2582774526 PGN_127490_electricDriveStatusDy: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2582774782 PGN_127491_electricEnergyStorage: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2582775294 PGN_127493_transmissionParameter: 8 Vector__XXX
  SG_ reserved7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ discreteStatus1 : 48|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -456,6 +464,14 @@ BO_ 2582775294 PGN_127493_transmissionParameter: 8 Vector__XXX
  SG_ reserved : 10|6@1+ (1,0) [0|0] "" Vector__XXX
  SG_ transmissionGear : 8|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2582775550 PGN_127494_electricDriveInformat: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2582775806 PGN_127495_electricEnergyStorage: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582776062 PGN_127496_tripParametersVessel: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
@@ -640,6 +656,22 @@ BO_ 2582905086 PGN_128000_leewayAngle: 8 Vector__XXX
  SG_ leewayAngle : 8|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2582905342 PGN_128001_vesselAcceleration: 8 Vector__XXX
+ SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ verticalAcceleration : 40|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ transverseAcceleration : 24|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ longitudinalAcceleration : 8|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2582905854 PGN_128003_electricEnergyStorage: 8 Vector__XXX
+ SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ batteryCurrent : 32|16@1- (0.1,0) [0|0] "A" Vector__XXX
+ SG_ batteryVoltage : 16|16@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ batteryError : 12|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ isolationStatus : 10|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ batteryStatus : 8|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ energyStorageIdentifier : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2582906622 PGN_128006_thrusterControlStatus: 8 Vector__XXX
  SG_ azimuthControl : 48|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ commandTimeout : 40|8@1+ (0.005,0) [0|0] "s" Vector__XXX
@@ -689,6 +721,26 @@ BO_ 2583038206 PGN_128520_trackedTargetData: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2583042814 PGN_128538_elevatorCarStatus: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583101694 PGN_128768_elevatorMotorControl: 8 Vector__XXX
+ SG_ reserved : 30|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ motorRotationalControlStatus : 28|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ motorAccelerationDecelerationPro : 24|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ elevatorCarUsage : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ elevatorCarId : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583101950 PGN_128769_elevatorDeckPushButto: 8 Vector__XXX
+ SG_ reserved : 40|24@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ elevatorCarButtonSelection : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ elevatorCarUsage : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ deckButtonId : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ elevatorCallButtonId : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2583103742 PGN_128776_windlassControlStatus: 8 Vector__XXX
  SG_ reserved14 : 52|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ windlassControlEvents : 48|4@1+ (1,0) [0|0] "" Vector__XXX
@@ -720,6 +772,14 @@ BO_ 2583103998 PGN_128777_anchorWindlassOperati: 8 Vector__XXX
 BO_ 2583104254 PGN_128778_anchorWindlassMonitor: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583104766 PGN_128780_linearActuatorControl: 8 Vector__XXX
+ SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ directionOfTravel : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ maximumDeviceTravel : 24|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ devicePosition : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ commandedDevicePosition : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ actuatorIdentifier : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583167486 PGN_129025_positionRapidUpdate: 8 Vector__XXX
  SG_ longitude : 32|32@1- (1e-07,0) [0|0] "deg" Vector__XXX
@@ -1075,6 +1135,10 @@ BO_ 2583500030 PGN_130324_mooredBuoyStationData: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2583501566 PGN_130330_lightingSystemSetting: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2583560446 PGN_130560_payloadMass: 8 Vector__XXX
  SG_ reserved6 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ payloadMass : 24|32@1+ (1,0) [0|0] "" Vector__XXX
@@ -1082,6 +1146,30 @@ BO_ 2583560446 PGN_130560_payloadMass: 8 Vector__XXX
  SG_ reserved : 11|5@1+ (1,0) [0|0] "" Vector__XXX
  SG_ measurementStatus : 8|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583560702 PGN_130561_lightingZone: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583560958 PGN_130562_lightingScene: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583561214 PGN_130563_lightingDevice: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583561470 PGN_130564_lightingDeviceEnumera: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583561726 PGN_130565_lightingColorSequence: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583561982 PGN_130566_lightingProgram: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583562238 PGN_130567_watermakerInputSettin: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
@@ -1372,7 +1460,11 @@ CM_ BO_ 2582714878 "Attitude";
 CM_ BO_ 2582715134 "Magnetic Variation";
 CM_ BO_ 2582774014 "Engine Parameters, Rapid Update";
 CM_ BO_ 2582774270 "Engine Parameters, Dynamic";
+CM_ BO_ 2582774526 "Electric Drive Status, Dynamic";
+CM_ BO_ 2582774782 "Electric Energy Storage Status, Dynamic";
 CM_ BO_ 2582775294 "Transmission Parameters, Dynamic";
+CM_ BO_ 2582775550 "Electric Drive Information";
+CM_ BO_ 2582775806 "Electric Energy Storage Information";
 CM_ BO_ 2582776062 "Trip Parameters, Vessel";
 CM_ BO_ 2582776318 "Trip Parameters, Engine";
 CM_ BO_ 2582776574 "Engine Parameters, Static";
@@ -1396,6 +1488,8 @@ CM_ BO_ 2582840062 "AC Power / Current - Phase C";
 CM_ BO_ 2582841086 "Converter Status";
 CM_ BO_ 2582841342 "DC Voltage/Current";
 CM_ BO_ 2582905086 "Leeway Angle";
+CM_ BO_ 2582905342 "Vessel Acceleration";
+CM_ BO_ 2582905854 "Electric Energy Storage Status, Rapid Update";
 CM_ BO_ 2582906622 "Thruster Control Status";
 CM_ BO_ 2582906878 "Thruster Information";
 CM_ BO_ 2582907134 "Thruster Motor Status";
@@ -1406,11 +1500,15 @@ CM_ SG_ 2582973438 offset "Distance between transducer and surface (positive) or
 CM_ SG_ 2582973438 depth "Depth below transducer";
 CM_ BO_ 2582975486 "Distance Log";
 CM_ BO_ 2583038206 "Tracked Target Data";
+CM_ BO_ 2583042814 "Elevator Car Status";
+CM_ BO_ 2583101694 "Elevator Motor Control";
+CM_ BO_ 2583101950 "Elevator Deck Push Button";
 CM_ BO_ 2583103742 "Windlass Control Status";
 CM_ SG_ 2583103742 commandTimeout "If timeout elapses the thruster stops operating and reverts to static mode";
 CM_ SG_ 2583103742 speedControl "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100";
 CM_ BO_ 2583103998 "Anchor Windlass Operating Status";
 CM_ BO_ 2583104254 "Anchor Windlass Monitoring Status";
+CM_ BO_ 2583104766 "Linear Actuator Control/Status";
 CM_ BO_ 2583167486 "Position, Rapid Update";
 CM_ BO_ 2583167742 "COG & SOG, Rapid Update";
 CM_ BO_ 2583167998 "Position Delta, Rapid Update";
@@ -1491,7 +1589,14 @@ CM_ BO_ 2583499262 "Salinity Station Data";
 CM_ BO_ 2583499518 "Current Station Data";
 CM_ BO_ 2583499774 "Meteorological Station Data";
 CM_ BO_ 2583500030 "Moored Buoy Station Data";
+CM_ BO_ 2583501566 "Lighting System Settings";
 CM_ BO_ 2583560446 "Payload Mass";
+CM_ BO_ 2583560702 "Lighting Zone";
+CM_ BO_ 2583560958 "Lighting Scene";
+CM_ BO_ 2583561214 "Lighting Device";
+CM_ BO_ 2583561470 "Lighting Device Enumeration";
+CM_ BO_ 2583561726 "Lighting Color Sequence";
+CM_ BO_ 2583561982 "Lighting Program";
 CM_ BO_ 2583562238 "Watermaker Input Setting and Status";
 CM_ BO_ 2583562750 "Current Status and File";
 CM_ BO_ 2583563006 "Library Data File";
@@ -1564,15 +1669,23 @@ BA_ "SystemMessageLongSymbol" BO_ 2582648574 "PGN_126998_configurationInformatio
 BA_ "SystemMessageLongSymbol" BO_ 2582708734 "PGN_127233_manOverboardNotification";
 BA_ "SystemMessageLongSymbol" BO_ 2582774014 "PGN_127488_engineParametersRapidUpdate";
 BA_ "SystemMessageLongSymbol" BO_ 2582774270 "PGN_127489_engineParametersDynamic";
+BA_ "SystemMessageLongSymbol" BO_ 2582774526 "PGN_127490_electricDriveStatusDynamic";
+BA_ "SystemMessageLongSymbol" BO_ 2582774782 "PGN_127491_electricEnergyStorageStatusDynamic";
 BA_ "SystemMessageLongSymbol" BO_ 2582775294 "PGN_127493_transmissionParametersDynamic";
+BA_ "SystemMessageLongSymbol" BO_ 2582775550 "PGN_127494_electricDriveInformation";
+BA_ "SystemMessageLongSymbol" BO_ 2582775806 "PGN_127495_electricEnergyStorageInformation";
 BA_ "SystemMessageLongSymbol" BO_ 2582776574 "PGN_127498_engineParametersStatic";
 BA_ "SystemMessageLongSymbol" BO_ 2582777086 "PGN_127500_loadControllerConnectionStateControl";
 BA_ "SystemMessageLongSymbol" BO_ 2582777342 "PGN_127501_binarySwitchBankStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2582779646 "PGN_127510_chargerConfigurationStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2582780158 "PGN_127512_agsConfigurationStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2582780414 "PGN_127513_batteryConfigurationStatus";
+BA_ "SystemMessageLongSymbol" BO_ 2582905854 "PGN_128003_electricEnergyStorageStatusRapidUpdate";
+BA_ "SystemSignalLongSymbol" SG_ 2583101694 motorAccelerationDecelerationPro "motorAccelerationDecelerationProfileSelection";
+BA_ "SystemMessageLongSymbol" BO_ 2583101950 "PGN_128769_elevatorDeckPushButton";
 BA_ "SystemMessageLongSymbol" BO_ 2583103998 "PGN_128777_anchorWindlassOperatingStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2583104254 "PGN_128778_anchorWindlassMonitoringStatus";
+BA_ "SystemMessageLongSymbol" BO_ 2583104766 "PGN_128780_linearActuatorControlStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2583167998 "PGN_129027_positionDeltaRapidUpdate";
 BA_ "SystemMessageLongSymbol" BO_ 2583168254 "PGN_129028_altitudeDeltaRapidUpdate";
 BA_ "SystemMessageLongSymbol" BO_ 2583170814 "PGN_129038_aisClassAPositionReport";
@@ -1617,6 +1730,8 @@ BA_ "SystemMessageLongSymbol" BO_ 2583496446 "PGN_130310_environmentalParameters
 BA_ "SystemMessageLongSymbol" BO_ 2583496702 "PGN_130311_environmentalParameters";
 BA_ "SystemMessageLongSymbol" BO_ 2583497982 "PGN_130316_temperatureExtendedRange";
 BA_ "SystemMessageLongSymbol" BO_ 2583499774 "PGN_130323_meteorologicalStationData";
+BA_ "SystemMessageLongSymbol" BO_ 2583501566 "PGN_130330_lightingSystemSettings";
+BA_ "SystemMessageLongSymbol" BO_ 2583561470 "PGN_130564_lightingDeviceEnumeration";
 BA_ "SystemMessageLongSymbol" BO_ 2583562238 "PGN_130567_watermakerInputSettingAndStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2583565566 "PGN_130580_systemConfigurationDeprecated";
 BA_ "SystemMessageLongSymbol" BO_ 2583565822 "PGN_130581_zoneConfigurationDeprecated";
