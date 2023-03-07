@@ -11,6 +11,11 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ## Fixed
 - End all logAbort messages with a newline.
 
+## Added
+- #385: Allow analyzer to read mixed RAWFORMAT_PLAIN and RAWFORMAT_FAST input.
+        A new `-format <fmt>` option has been added, this new mode is only enabled when
+        `-format PLAIN_OR_FAST` is selected.
+
 ## [4.10.1]
 
 ### Fixed
