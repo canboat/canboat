@@ -5078,7 +5078,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {SIMPLE_FIELD("Global Enable", 2),
-      SIMPLE_FIELD("Default Settings/Commands", 3),
+      LOOKUP_FIELD("Default Settings/Command", 3, LIGHTING_COMMAND),
       RESERVED_FIELD(3),
       STRINGLAU_FIELD("Name of the lighting controller"),
       SIMPLE_FIELD("Max Scenes", 8),
@@ -5089,7 +5089,6 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Number of Programs", 8),
       SIMPLE_FIELD("Controller Capabilities", 8),
       SIMPLE_FIELD("Identify Device", 32),
-      RESERVED_FIELD(2),
       END_OF_FIELDS},
      .explanation = "This PGN provides a lighting controller settings and number of supported capabilities."}
 
