@@ -30,6 +30,7 @@ enum RawFormats
   RAWFORMAT_UNKNOWN,
   RAWFORMAT_PLAIN,
   RAWFORMAT_FAST,
+  RAWFORMAT_PLAIN_OR_FAST,
   RAWFORMAT_AIRMAR,
   RAWFORMAT_CHETCO,
   RAWFORMAT_GARMIN_CSV1,
@@ -39,6 +40,17 @@ enum RawFormats
 };
 
 enum RawFormats format = RAWFORMAT_UNKNOWN;
+
+const char *RAW_FORMAT_STR[] = {"UNKNOWN",
+                                "PLAIN",
+                                "FAST",
+                                "PLAIN_OR_FAST",
+                                "AIRMAR",
+                                "CHETCO",
+                                "GARMIN_CSV1",
+                                "GARMIN_CSV2",
+                                "YDWG02",
+                                "ACTISENSE_N2K_ASCII"};
 
 enum MultiPackets
 {
@@ -97,6 +109,7 @@ static void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
   printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
+         "-format <fmt> "
          "[-src <src> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
@@ -117,6 +130,12 @@ static void usage(char **argv, char **av)
 #ifndef SKIP_SETSYSTEMCLOCK
   printf("     -clocksrc         Set the systemclock from time info from this NMEA source address\n");
 #endif
+  printf("     -format <fmt>     Select a particular format, either: ");
+  for (size_t i = 1; i < ARRAY_SIZE(RAW_FORMAT_STR); i++)
+  {
+    printf("%s, ", RAW_FORMAT_STR[i]);
+  }
+  printf("\n");
   printf("     -version          Print the version of the program and quit\n");
   printf("\nThe following options are used to debug the analyzer:\n");
   printf("     -raw              Print raw bytes (obsolete, use -data)\n");
@@ -250,12 +269,33 @@ int main(int argc, char **argv)
       file = fopen(av[2], "r");
       if (!file)
       {
-        printf("Cannot open file %s\n", av[2]);
-        exit(1);
+        logAbort("Cannot open file %s\n", av[2]);
       }
       ac--;
       av++;
     }
+    else if (ac > 2 && strcasecmp(av[1], "-format") == 0)
+    {
+      for (size_t i = 1; i < ARRAY_SIZE(RAW_FORMAT_STR); i++)
+      {
+        if (strcasecmp(av[2], RAW_FORMAT_STR[i]) == 0)
+        {
+          format = (enum RawFormats) i;
+          if (format != RAWFORMAT_PLAIN && format != RAWFORMAT_PLAIN_OR_FAST)
+          {
+            multiPackets = MULTIPACKETS_COALESCED;
+          }
+          break;
+        }
+      }
+      if (format == RAWFORMAT_UNKNOWN)
+      {
+        logAbort("Unknown message format '%s'\n", av[2]);
+      }
+      ac--;
+      av++;
+    }
+
     else
     {
       onlyPgn = strtol(av[1], 0, 10);
@@ -315,6 +355,18 @@ int main(int argc, char **argv)
 
     switch (format)
     {
+      case RAWFORMAT_PLAIN_OR_FAST:
+        multiPackets = MULTIPACKETS_SEPARATE;
+        r            = parseRawFormatPlain(msg, &m, showJson);
+        logDebug("plain_or_fast: plain r=%d\n", r);
+        if (r < 0)
+        {
+          multiPackets = MULTIPACKETS_COALESCED;
+          r            = parseRawFormatFast(msg, &m, showJson);
+          logDebug("plain_or_fast: fast r=%d\n", r);
+        }
+        break;
+
       case RAWFORMAT_PLAIN:
         r = parseRawFormatPlain(msg, &m, showJson);
         if (r >= 0)
