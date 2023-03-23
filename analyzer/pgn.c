@@ -56,6 +56,9 @@ Pgn *searchForPgn(int pgn)
     }
     if (pgn < pgnList[mid].pgn)
     {
+      if (mid == 0) {
+        return NULL;
+      }
       end = mid - 1;
     }
     else
