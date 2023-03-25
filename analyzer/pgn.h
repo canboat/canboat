@@ -4913,6 +4913,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Source", BYTES(1), TEMPERATURE_SOURCE),
       TEMPERATURE_FIELD("Actual Temperature"),
       TEMPERATURE_FIELD("Set Temperature"),
+      RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval = 2000}
 
