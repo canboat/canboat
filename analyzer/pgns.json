@@ -28375,7 +28375,7 @@
         "Description":"Temperature",
         "Type":"Single",
         "Complete":true,
-        "Length":7,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -28455,7 +28455,16 @@
             "Resolution":0.01,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":655.33}]},
+            "RangeMax":655.33},
+          {
+            "Order":6,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false}]},
       {
         "PGN":130313,
         "Id":"humidity",
