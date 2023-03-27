@@ -1082,6 +1082,7 @@ BO_ 2583496702 PGN_130311_environmentalParamete: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583496958 PGN_130312_temperature: 8 Vector__XXX
+ SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ setTemperature : 40|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ actualTemperature : 24|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ source : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1097,6 +1098,7 @@ BO_ 2583497214 PGN_130313_humidity: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583497470 PGN_130314_actualPressure: 8 Vector__XXX
+ SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ pressure : 24|32@1- (0.1,0) [0|0] "Pa" Vector__XXX
  SG_ source : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
