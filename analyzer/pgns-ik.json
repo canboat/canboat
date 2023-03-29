@@ -60,6 +60,7 @@
             "BitOffset":48,
             "BitStart":0,
             "Units":"s",
+            "Type":"Time",
             "Resolution":0.0001,
             "Signed":false,
             "RangeMin":0,

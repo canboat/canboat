@@ -461,7 +461,8 @@ FieldType fieldTypeList[] = {
                             "any combination of bits set.",
      .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
                 "occurs that has no corresponding textual explanation.",
-     .pf      = fieldPrintBitLookup},
+     .pf      = fieldPrintBitLookup,
+    .v1Type   = "Bitfield"},
 
     {.name          = "MANUFACTURER",
      .description   = "Manufacturer",
@@ -652,7 +653,7 @@ FieldType fieldTypeList[] = {
 
     {.name = "VOLUME_UFIX32_DL", .description = "Volume", .resolution = 0.1, .physical = &VOLUME, .baseFieldType = "UFIX32"},
 
-    {.name = "TIME", .description = "Time", .physical = &TIME, .pf = fieldPrintTime},
+    {.name = "TIME", .description = "Time", .physical = &TIME, .pf = fieldPrintTime, .v1Type = "Time"},
 
     {.name                = "TIME_UFIX32",
      .description         = "Time",
@@ -744,7 +745,8 @@ FieldType fieldTypeList[] = {
      .resolution    = 60,
      .size          = 16,
      .hasSign       = True,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "TIME",
+     .v1Type        = "Integer"},
 
     {.name                = "DATE",
      .description         = "Date",
@@ -752,7 +754,8 @@ FieldType fieldTypeList[] = {
      .physical            = &DATE,
      .size                = 16,
      .hasSign             = False,
-     .pf                  = fieldPrintDate},
+     .pf                  = fieldPrintDate,
+     .v1Type              = "Date"},
 
     {.name          = "VOLTAGE_UFIX16_10MV",
      .description   = "Voltage",
