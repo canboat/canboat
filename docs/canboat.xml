@@ -31233,8 +31233,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Temperature</Description>
       <Type>Single</Type>
       <Complete>true</Complete>
-      <FieldCount>5</FieldCount>
-      <Length>7</Length>
+      <FieldCount>6</FieldCount>
+      <Length>8</Length>
       <TransmissionInterval>2000</TransmissionInterval>
       <Fields>
         <Field>
@@ -31306,6 +31306,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -31405,8 +31415,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Actual Pressure</Description>
       <Type>Single</Type>
       <Complete>true</Complete>
-      <FieldCount>4</FieldCount>
-      <Length>7</Length>
+      <FieldCount>5</FieldCount>
+      <Length>8</Length>
       <TransmissionInterval>2000</TransmissionInterval>
       <Fields>
         <Field>
@@ -31463,6 +31473,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>214748364.5</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>PRESSURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

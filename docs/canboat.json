@@ -31134,8 +31134,8 @@
         "Description":"Temperature",
         "Type":"Single",
         "Complete":true,
-        "FieldCount":5,
-        "Length":7,
+        "FieldCount":6,
+        "Length":8,
         "TransmissionInterval":2000,
         "Fields":[
           {
@@ -31207,6 +31207,16 @@
             "RangeMax":655.33,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
+          },
+          {
+            "Order":6,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -31306,8 +31316,8 @@
         "Description":"Actual Pressure",
         "Type":"Single",
         "Complete":true,
-        "FieldCount":4,
-        "Length":7,
+        "FieldCount":5,
+        "Length":8,
         "TransmissionInterval":2000,
         "Fields":[
           {
@@ -31364,6 +31374,16 @@
             "RangeMax":214748364.5,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"PRESSURE"
+          },
+          {
+            "Order":5,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },

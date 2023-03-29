@@ -31285,7 +31285,7 @@ limitations under the License.
       <Description>Temperature</Description>
       <Type>Single</Type>
       <Complete>true</Complete>
-      <Length>7</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -31371,6 +31371,16 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>
@@ -31469,7 +31479,7 @@ limitations under the License.
       <Description>Actual Pressure</Description>
       <Type>Single</Type>
       <Complete>true</Complete>
-      <Length>7</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -31533,6 +31543,16 @@ limitations under the License.
           <Signed>true</Signed>
           <RangeMin>-214748364.7</RangeMin>
           <RangeMax>214748364.5</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>
