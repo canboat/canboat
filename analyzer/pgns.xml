@@ -37463,7 +37463,7 @@ limitations under the License.
           <BitLength>256</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -37828,7 +37828,7 @@ limitations under the License.
           <BitLength>256</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -38118,7 +38118,7 @@ limitations under the License.
           <BitLength>256</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -38422,7 +38422,7 @@ limitations under the License.
           <BitLength>256</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -38543,7 +38543,7 @@ limitations under the License.
           <BitLength>256</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -38664,7 +38664,7 @@ limitations under the License.
           <BitLength>256</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -38824,7 +38824,7 @@ limitations under the License.
           <BitLength>256</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -40470,7 +40470,7 @@ limitations under the License.
           <BitLength>40</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -40820,7 +40820,7 @@ limitations under the License.
           <BitLength>80</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -40927,7 +40927,7 @@ limitations under the License.
           <BitLength>80</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -41034,7 +41034,7 @@ limitations under the License.
           <BitLength>80</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -41128,7 +41128,7 @@ limitations under the License.
           <BitLength>112</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -41235,7 +41235,7 @@ limitations under the License.
           <BitLength>104</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -41496,7 +41496,7 @@ limitations under the License.
           <BitLength>80</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -42041,7 +42041,7 @@ limitations under the License.
           <BitLength>40</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -42948,7 +42948,7 @@ limitations under the License.
           <BitLength>96</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -43043,7 +43043,7 @@ limitations under the License.
           <BitLength>96</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -43138,7 +43138,7 @@ limitations under the License.
           <BitLength>96</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
@@ -43233,7 +43233,7 @@ limitations under the License.
           <BitLength>96</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Type>String with start/stop byte</Type>
+          <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
         </Field>
       </Fields>
