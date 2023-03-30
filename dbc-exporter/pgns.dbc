@@ -1,4 +1,4 @@
-VERSION "4.10.1"
+VERSION "4.11.0"
 
 
 NS_ : 
@@ -62,21 +62,25 @@ BO_ 2565734654 PGN_60928_isoAddressClaim: 8 Vector__XXX
  SG_ uniqueNumber : 0|21@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566777342 PGN_65001_bus1PhaseCBasicAcQuant: 8 Vector__XXX
+ SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ acFrequency : 32|16@1+ (0.0078125,0) [0|0] "Hz" Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
 BO_ 2566777598 PGN_65002_bus1PhaseBBasicAcQuant: 8 Vector__XXX
+ SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ acFrequency : 32|16@1+ (0.0078125,0) [0|0] "Hz" Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
 BO_ 2566777854 PGN_65003_bus1PhaseABasicAcQuant: 8 Vector__XXX
+ SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ acFrequency : 32|16@1+ (0.0078125,0) [0|0] "Hz" Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
 BO_ 2566778110 PGN_65004_bus1AverageBasicAcQuan: 8 Vector__XXX
+ SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ acFrequency : 32|16@1+ (0.0078125,0) [0|0] "Hz" Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
@@ -84,6 +88,12 @@ BO_ 2566778110 PGN_65004_bus1AverageBasicAcQuan: 8 Vector__XXX
 BO_ 2566778366 PGN_65005_utilityTotalAcEnergy: 8 Vector__XXX
  SG_ totalEnergyImport : 32|32@1+ (1,0) [0|0] "kWh" Vector__XXX
  SG_ totalEnergyExport : 0|32@1+ (1,0) [0|0] "kWh" Vector__XXX
+
+BO_ 2566778622 PGN_65006_utilityPhaseCAcReactiv: 8 Vector__XXX
+ SG_ reserved : 34|30@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactorLagging : 32|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactor : 16|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ reactivePower : 0|16@1+ (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566778878 PGN_65007_utilityPhaseCAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
@@ -95,6 +105,12 @@ BO_ 2566779134 PGN_65008_utilityPhaseCBasicAcQu: 8 Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
+BO_ 2566779390 PGN_65009_utilityPhaseBAcReactiv: 8 Vector__XXX
+ SG_ reserved : 34|30@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactorLagging : 32|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactor : 16|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ reactivePower : 0|16@1+ (1,0) [0|0] "VAR" Vector__XXX
+
 BO_ 2566779646 PGN_65010_utilityPhaseBAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
  SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
@@ -105,6 +121,12 @@ BO_ 2566779902 PGN_65011_utilityPhaseBBasicAcQu: 8 Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
+BO_ 2566780158 PGN_65012_utilityPhaseAAcReactiv: 8 Vector__XXX
+ SG_ reserved : 50|14@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "VAR" Vector__XXX
+
 BO_ 2566780414 PGN_65013_utilityPhaseAAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
  SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
@@ -114,6 +136,12 @@ BO_ 2566780670 PGN_65014_utilityPhaseABasicAcQu: 8 Vector__XXX
  SG_ acFrequency : 32|16@1+ (0.0078125,0) [0|0] "Hz" Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
+
+BO_ 2566780926 PGN_65015_utilityTotalAcReactive: 8 Vector__XXX
+ SG_ reserved : 50|14@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566781182 PGN_65016_utilityTotalAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
@@ -129,6 +157,12 @@ BO_ 2566781694 PGN_65018_generatorTotalAcEnergy: 8 Vector__XXX
  SG_ totalEnergyImport : 32|32@1+ (1,0) [0|0] "kWh" Vector__XXX
  SG_ totalEnergyExport : 0|32@1+ (1,0) [0|0] "kWh" Vector__XXX
 
+BO_ 2566781950 PGN_65019_generatorPhaseCAcReact: 8 Vector__XXX
+ SG_ reserved : 50|14@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "VAR" Vector__XXX
+
 BO_ 2566782206 PGN_65020_generatorPhaseCAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1- (1,0) [0|0] "VAR" Vector__XXX
  SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
@@ -138,6 +172,12 @@ BO_ 2566782462 PGN_65021_generatorPhaseCBasicAc: 8 Vector__XXX
  SG_ acFrequency : 32|16@1+ (0.0078125,0) [0|0] "Hz" Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
+
+BO_ 2566782718 PGN_65022_generatorPhaseBAcReact: 8 Vector__XXX
+ SG_ reserved : 50|14@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566782974 PGN_65023_generatorPhaseBAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
@@ -149,6 +189,12 @@ BO_ 2566783230 PGN_65024_generatorPhaseBBasicAc: 8 Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
+BO_ 2566783486 PGN_65025_generatorPhaseAAcReact: 8 Vector__XXX
+ SG_ reserved : 50|14@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "VAR" Vector__XXX
+
 BO_ 2566783742 PGN_65026_generatorPhaseAAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
  SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
@@ -158,6 +204,12 @@ BO_ 2566783998 PGN_65027_generatorPhaseABasicAc: 8 Vector__XXX
  SG_ acFrequency : 32|16@1+ (0.0078125,0) [0|0] "Hz" Vector__XXX
  SG_ lineNeutralAcRmsVoltage : 16|16@1+ (1,0) [0|0] "V" Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
+
+BO_ 2566784254 PGN_65028_generatorTotalAcReacti: 8 Vector__XXX
+ SG_ reserved : 50|14@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.10352e-05,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566784510 PGN_65029_generatorTotalAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
@@ -185,27 +237,6 @@ BO_ 2566849790 PGN_65284_maretronProprietaryDcB: 8 Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2566850046 PGN_65285_multiplexed: 8 Vector__XXX
- SG_ m140_actualTemperature m140 : 24|16@1+ (0.01,0) [0|0] "K" Vector__XXX
- SG_ m140_temperatureSource m140 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m135_bootState m135 : 16|4@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m140_industryCode_1 m140 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m135_industryCode m135 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m140_reserved_1 m140 : 11|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m135_reserved m135 : 11|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode M : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2566850558 PGN_65287_multiplexed: 8 Vector__XXX
- SG_ m135_accessSeedKey m135 : 24|32@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m135_reserved6 m135 : 22|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m135_accessLevel m135 : 19|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m135_formatCode m135 : 16|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m1857_industryCode_1 m1857 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m135_industryCode m135 : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m1857_reserved_1 m1857 : 11|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m135_reserved m135 : 11|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode M : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2566850814 PGN_65288_seatalkAlarm: 8 Vector__XXX
  SG_ alarmPriority : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ alarmGroup : 40|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -217,21 +248,25 @@ BO_ 2566850814 PGN_65288_seatalkAlarm: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566851070 PGN_65289_simnetTrimTabSensorCal: 8 Vector__XXX
+ SG_ reserved4 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566851326 PGN_65290_simnetPaddleWheelSpeed: 8 Vector__XXX
+ SG_ reserved4 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566851838 PGN_65292_simnetClearFluidLevelW: 8 Vector__XXX
+ SG_ reserved4 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566852094 PGN_65293_simnetLgc2000Configura: 8 Vector__XXX
+ SG_ reserved4 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
@@ -246,7 +281,7 @@ BO_ 2566856190 PGN_65309_navicoWirelessBatteryS: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566856958 PGN_65312_navicoWirelessSignalSt: 8 Vector__XXX
- SG_ reserved6 : 32|24@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved6 : 32|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ signalStrength : 24|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ unknown : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
@@ -288,6 +323,7 @@ BO_ 2566869502 PGN_65361_seatalkSilenceAlarm: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566872062 PGN_65371_seatalkKeypadMessage: 8 Vector__XXX
+ SG_ reserved11 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ encoderPosition : 48|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved9 : 44|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ secondKeyState : 42|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -300,6 +336,7 @@ BO_ 2566872062 PGN_65371_seatalkKeypadMessage: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566872830 PGN_65374_seatalkKeypadHeartbeat: 8 Vector__XXX
+ SG_ reserved7 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
  SG_ status : 32|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ variant : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ proprietaryId : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -312,6 +349,14 @@ BO_ 2566874110 PGN_65379_seatalkPilotMode: 8 Vector__XXX
  SG_ pilotModeData : 32|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ subMode : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ pilotMode : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2566881534 PGN_65408_airmarDepthQualityFact: 8 Vector__XXX
+ SG_ reserved6 : 28|36@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ depthQualityFactor : 24|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sid : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
@@ -335,6 +380,7 @@ BO_ 2566882046 PGN_65410_airmarDeviceInformatio: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566899966 PGN_65480_simnetAutopilotMode: 8 Vector__XXX
+ SG_ reserved4 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
@@ -425,12 +471,14 @@ BO_ 2582713598 PGN_127252_heave: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582714878 PGN_127257_attitude: 8 Vector__XXX
+ SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ roll : 40|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ pitch : 24|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ yaw : 8|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582715134 PGN_127258_magneticVariation: 8 Vector__XXX
+ SG_ reserved6 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ variation : 32|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ ageOfService : 16|16@1+ (1,0) [0|0] "d" Vector__XXX
  SG_ reserved : 12|4@1+ (1,0) [0|0] "" Vector__XXX
@@ -588,7 +636,7 @@ BO_ 2582779134 PGN_127508_batteryStatus: 8 Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582779390 PGN_127509_inverterStatus: 8 Vector__XXX
- SG_ reserved : 30|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 30|34@1+ (1,0) [0|0] "" Vector__XXX
  SG_ inverterEnable : 28|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ operatingState : 24|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ dcInstance : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -599,7 +647,19 @@ BO_ 2582779646 PGN_127510_chargerConfigurationS: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2582779902 PGN_127511_inverterConfiguration: 8 Vector__XXX
+ SG_ loadSenseInterval : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ loadSensePowerThreshold : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ loadSenseEnableDisable : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ inverterMode : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 26|6@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ inverterEnableDisable : 24|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ dcInstance : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ acInstance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2582780158 PGN_127512_agsConfigurationStatu: 8 Vector__XXX
+ SG_ reserved : 24|40@1+ (1,0) [0|0] "" Vector__XXX
  SG_ agsMode : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ generatorInstance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -609,6 +669,7 @@ BO_ 2582780414 PGN_127513_batteryConfigurationS: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582780670 PGN_127514_agsStatus: 8 Vector__XXX
+ SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ generatorOffReason : 40|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ generatorOnReason : 32|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ generatorState : 24|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -662,6 +723,15 @@ BO_ 2582905342 PGN_128001_vesselAcceleration: 8 Vector__XXX
  SG_ transverseAcceleration : 24|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ longitudinalAcceleration : 8|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2582905598 PGN_128002_electricDriveStatusRa: 8 Vector__XXX
+ SG_ motorDcCurrent : 48|16@1- (0.1,0) [0|0] "A" Vector__XXX
+ SG_ motorDcVoltage : 32|16@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ rotationalShaftSpeed : 16|16@1+ (0.25,0) [0|0] "rpm" Vector__XXX
+ SG_ reserved : 12|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ brakeMode : 10|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ activeMotorMode : 8|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ inverterMotorController : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582905854 PGN_128003_electricEnergyStorage: 8 Vector__XXX
  SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
@@ -726,7 +796,7 @@ BO_ 2583042814 PGN_128538_elevatorCarStatus: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583101694 PGN_128768_elevatorMotorControl: 8 Vector__XXX
- SG_ reserved : 30|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 30|34@1+ (1,0) [0|0] "" Vector__XXX
  SG_ motorRotationalControlStatus : 28|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ motorAccelerationDecelerationPro : 24|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ elevatorCarUsage : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -742,7 +812,7 @@ BO_ 2583101950 PGN_128769_elevatorDeckPushButto: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583103742 PGN_128776_windlassControlStatus: 8 Vector__XXX
- SG_ reserved14 : 52|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved14 : 52|12@1+ (1,0) [0|0] "" Vector__XXX
  SG_ windlassControlEvents : 48|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ commandTimeout : 40|8@1+ (0.005,0) [0|0] "s" Vector__XXX
  SG_ anchorLight : 38|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -770,8 +840,13 @@ BO_ 2583103998 PGN_128777_anchorWindlassOperati: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583104254 PGN_128778_anchorWindlassMonitor: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ totalMotorTime : 40|16@1+ (60,0) [0|0] "s" Vector__XXX
+ SG_ motorCurrent : 32|8@1+ (1,0) [0|0] "A" Vector__XXX
+ SG_ controllerVoltage : 24|8@1+ (0.2,0) [0|0] "V" Vector__XXX
+ SG_ windlassMonitoringEvents : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ windlassId : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583104766 PGN_128780_linearActuatorControl: 8 Vector__XXX
  SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
@@ -794,6 +869,7 @@ BO_ 2583167742 PGN_129026_cogSogRapidUpdate: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583167998 PGN_129027_positionDeltaRapidUpd: 8 Vector__XXX
+ SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ longitudeDelta : 40|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ latitudeDelta : 24|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ timeDelta : 8|16@1+ (1,0) [0|0] "" Vector__XXX
@@ -858,6 +934,7 @@ BO_ 2583234046 PGN_129285_navigationRouteWpInfo: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583235582 PGN_129291_setDriftRapidUpdate: 8 Vector__XXX
+ SG_ reserved6 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ drift : 32|16@1+ (0.01,0) [0|0] "m/s" Vector__XXX
  SG_ set : 16|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ reserved : 10|6@1+ (1,0) [0|0] "" Vector__XXX
@@ -902,6 +979,7 @@ BO_ 2583300606 PGN_129545_gnssRaimOutput: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583300862 PGN_129546_gnssRaimSettings: 8 Vector__XXX
+ SG_ reserved : 32|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ pseudorangeResidualFilteringTime : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ probabilityOfMissedDetection : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ probabilityOfFalseAlarm : 8|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -968,6 +1046,10 @@ BO_ 2583366142 PGN_129801_aisAddressedSafetyRel: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583366398 PGN_129802_aisSafetyRelatedBroad: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583366654 PGN_129803_aisInterrogation: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -1105,6 +1187,7 @@ BO_ 2583497470 PGN_130314_actualPressure: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583497726 PGN_130315_setPressure: 8 Vector__XXX
+ SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ pressure : 24|32@1+ (0.1,0) [0|0] "Pa" Vector__XXX
  SG_ source : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1231,6 +1314,7 @@ BO_ 2583565822 PGN_130581_zoneConfigurationDepr: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583566078 PGN_130582_zoneVolume: 8 Vector__XXX
+ SG_ reserved7 : 32|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ channel : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 20|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ mute : 18|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -1356,21 +1440,29 @@ CM_ BO_ 2566777598 "Bus #1 Phase B Basic AC Quantities";
 CM_ BO_ 2566777854 "Bus #1 Phase A Basic AC Quantities";
 CM_ BO_ 2566778110 "Bus #1 Average Basic AC Quantities";
 CM_ BO_ 2566778366 "Utility Total AC Energy";
+CM_ BO_ 2566778622 "Utility Phase C AC Reactive Power";
 CM_ BO_ 2566778878 "Utility Phase C AC Power";
 CM_ BO_ 2566779134 "Utility Phase C Basic AC Quantities";
+CM_ BO_ 2566779390 "Utility Phase B AC Reactive Power";
 CM_ BO_ 2566779646 "Utility Phase B AC Power";
 CM_ BO_ 2566779902 "Utility Phase B Basic AC Quantities";
+CM_ BO_ 2566780158 "Utility Phase A AC Reactive Power";
 CM_ BO_ 2566780414 "Utility Phase A AC Power";
 CM_ BO_ 2566780670 "Utility Phase A Basic AC Quantities";
+CM_ BO_ 2566780926 "Utility Total AC Reactive Power";
 CM_ BO_ 2566781182 "Utility Total AC Power";
 CM_ BO_ 2566781438 "Utility Average Basic AC Quantities";
 CM_ BO_ 2566781694 "Generator Total AC Energy";
+CM_ BO_ 2566781950 "Generator Phase C AC Reactive Power";
 CM_ BO_ 2566782206 "Generator Phase C AC Power";
 CM_ BO_ 2566782462 "Generator Phase C Basic AC Quantities";
+CM_ BO_ 2566782718 "Generator Phase B AC Reactive Power";
 CM_ BO_ 2566782974 "Generator Phase B AC Power";
 CM_ BO_ 2566783230 "Generator Phase B Basic AC Quantities";
+CM_ BO_ 2566783486 "Generator Phase A AC Reactive Power";
 CM_ BO_ 2566783742 "Generator Phase A AC Power";
 CM_ BO_ 2566783998 "Generator Phase A Basic AC Quantities";
+CM_ BO_ 2566784254 "Generator Total AC Reactive Power";
 CM_ BO_ 2566784510 "Generator Total AC Power";
 CM_ BO_ 2566784766 "Generator Average Basic AC Quantities";
 CM_ BO_ 2566848766 "Furuno: Heave";
@@ -1379,15 +1471,6 @@ CM_ SG_ 2566848766 manufacturerCode "Furuno";
 CM_ BO_ 2566849790 "Maretron: Proprietary DC Breaker Current";
 CM_ SG_ 2566849790 industryCode "Marine Industry";
 CM_ SG_ 2566849790 manufacturerCode "Maretron";
-CM_ BO_ 2566850046 "Multiplexed message";
-CM_ SG_ 2566850046 m140_industryCode_1 "Marine Industry";
-CM_ SG_ 2566850046 m135_industryCode "Marine Industry";
-CM_ SG_ 2566850046 manufacturerCode "Airmar";
-CM_ BO_ 2566850558 "Multiplexed message";
-CM_ SG_ 2566850558 m135_accessSeedKey "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208.";
-CM_ SG_ 2566850558 m1857_industryCode_1 "Marine Industry";
-CM_ SG_ 2566850558 m135_industryCode "Marine Industry";
-CM_ SG_ 2566850558 manufacturerCode "Airmar";
 CM_ BO_ 2566850814 "Seatalk: Alarm";
 CM_ SG_ 2566850814 industryCode "Marine Industry";
 CM_ SG_ 2566850814 manufacturerCode "Raymarine";
@@ -1430,6 +1513,9 @@ CM_ SG_ 2566872830 manufacturerCode "Raymarine";
 CM_ BO_ 2566874110 "Seatalk: Pilot Mode";
 CM_ SG_ 2566874110 industryCode "Marine Industry";
 CM_ SG_ 2566874110 manufacturerCode "Raymarine";
+CM_ BO_ 2566881534 "Airmar: Depth Quality Factor";
+CM_ SG_ 2566881534 industryCode "Marine Industry";
+CM_ SG_ 2566881534 manufacturerCode "Airmar";
 CM_ BO_ 2566881790 "Airmar: Speed Pulse Count";
 CM_ SG_ 2566881790 industryCode "Marine Industry";
 CM_ SG_ 2566881790 manufacturerCode "Airmar";
@@ -1481,6 +1567,7 @@ CM_ BO_ 2582778878 "Charger Status";
 CM_ BO_ 2582779134 "Battery Status";
 CM_ BO_ 2582779390 "Inverter Status";
 CM_ BO_ 2582779646 "Charger Configuration Status";
+CM_ BO_ 2582779902 "Inverter Configuration Status";
 CM_ BO_ 2582780158 "AGS Configuration Status";
 CM_ BO_ 2582780414 "Battery Configuration Status";
 CM_ BO_ 2582780670 "AGS Status";
@@ -1491,6 +1578,7 @@ CM_ BO_ 2582841086 "Converter Status";
 CM_ BO_ 2582841342 "DC Voltage/Current";
 CM_ BO_ 2582905086 "Leeway Angle";
 CM_ BO_ 2582905342 "Vessel Acceleration";
+CM_ BO_ 2582905598 "Electric Drive Status, Rapid Update";
 CM_ BO_ 2582905854 "Electric Energy Storage Status, Rapid Update";
 CM_ BO_ 2582906622 "Thruster Control Status";
 CM_ BO_ 2582906878 "Thruster Information";
@@ -1556,6 +1644,7 @@ CM_ BO_ 2583365630 "Radio Frequency/Mode/Power";
 CM_ BO_ 2583365886 "AIS UTC/Date Inquiry";
 CM_ BO_ 2583366142 "AIS Addressed Safety Related Message";
 CM_ BO_ 2583366398 "AIS Safety Related Broadcast Message";
+CM_ BO_ 2583366654 "AIS Interrogation";
 CM_ BO_ 2583366910 "AIS Assignment Mode Command";
 CM_ BO_ 2583367166 "AIS Data Link Management Message";
 CM_ BO_ 2583367422 "AIS Channel Management";
@@ -1649,13 +1738,21 @@ BA_ "SystemMessageLongSymbol" BO_ 2566777342 "PGN_65001_bus1PhaseCBasicAcQuantit
 BA_ "SystemMessageLongSymbol" BO_ 2566777598 "PGN_65002_bus1PhaseBBasicAcQuantities";
 BA_ "SystemMessageLongSymbol" BO_ 2566777854 "PGN_65003_bus1PhaseABasicAcQuantities";
 BA_ "SystemMessageLongSymbol" BO_ 2566778110 "PGN_65004_bus1AverageBasicAcQuantities";
+BA_ "SystemMessageLongSymbol" BO_ 2566778622 "PGN_65006_utilityPhaseCAcReactivePower";
 BA_ "SystemMessageLongSymbol" BO_ 2566779134 "PGN_65008_utilityPhaseCBasicAcQuantities";
+BA_ "SystemMessageLongSymbol" BO_ 2566779390 "PGN_65009_utilityPhaseBAcReactivePower";
 BA_ "SystemMessageLongSymbol" BO_ 2566779902 "PGN_65011_utilityPhaseBBasicAcQuantities";
+BA_ "SystemMessageLongSymbol" BO_ 2566780158 "PGN_65012_utilityPhaseAAcReactivePower";
 BA_ "SystemMessageLongSymbol" BO_ 2566780670 "PGN_65014_utilityPhaseABasicAcQuantities";
+BA_ "SystemMessageLongSymbol" BO_ 2566780926 "PGN_65015_utilityTotalAcReactivePower";
 BA_ "SystemMessageLongSymbol" BO_ 2566781438 "PGN_65017_utilityAverageBasicAcQuantities";
+BA_ "SystemMessageLongSymbol" BO_ 2566781950 "PGN_65019_generatorPhaseCAcReactivePower";
 BA_ "SystemMessageLongSymbol" BO_ 2566782462 "PGN_65021_generatorPhaseCBasicAcQuantities";
+BA_ "SystemMessageLongSymbol" BO_ 2566782718 "PGN_65022_generatorPhaseBAcReactivePower";
 BA_ "SystemMessageLongSymbol" BO_ 2566783230 "PGN_65024_generatorPhaseBBasicAcQuantities";
+BA_ "SystemMessageLongSymbol" BO_ 2566783486 "PGN_65025_generatorPhaseAAcReactivePower";
 BA_ "SystemMessageLongSymbol" BO_ 2566783998 "PGN_65027_generatorPhaseABasicAcQuantities";
+BA_ "SystemMessageLongSymbol" BO_ 2566784254 "PGN_65028_generatorTotalAcReactivePower";
 BA_ "SystemMessageLongSymbol" BO_ 2566784766 "PGN_65030_generatorAverageBasicAcQuantities";
 BA_ "SystemMessageLongSymbol" BO_ 2566849790 "PGN_65284_maretronProprietaryDcBreakerCurrent";
 BA_ "SystemMessageLongSymbol" BO_ 2566851070 "PGN_65289_simnetTrimTabSensorCalibration";
@@ -1665,6 +1762,7 @@ BA_ "SystemMessageLongSymbol" BO_ 2566852094 "PGN_65293_simnetLgc2000Configurati
 BA_ "SystemMessageLongSymbol" BO_ 2566856190 "PGN_65309_navicoWirelessBatteryStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2566856958 "PGN_65312_navicoWirelessSignalStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2566869246 "PGN_65360_seatalkPilotLockedHeading";
+BA_ "SystemMessageLongSymbol" BO_ 2566881534 "PGN_65408_airmarDepthQualityFactor";
 BA_ "SystemMessageLongSymbol" BO_ 2566882046 "PGN_65410_airmarDeviceInformation";
 BA_ "SystemMessageLongSymbol" BO_ 2582511870 "PGN_126464_pgnListTransmitAndReceive";
 BA_ "SystemMessageLongSymbol" BO_ 2582648574 "PGN_126998_configurationInformation";
@@ -1680,8 +1778,10 @@ BA_ "SystemMessageLongSymbol" BO_ 2582776574 "PGN_127498_engineParametersStatic"
 BA_ "SystemMessageLongSymbol" BO_ 2582777086 "PGN_127500_loadControllerConnectionStateControl";
 BA_ "SystemMessageLongSymbol" BO_ 2582777342 "PGN_127501_binarySwitchBankStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2582779646 "PGN_127510_chargerConfigurationStatus";
+BA_ "SystemMessageLongSymbol" BO_ 2582779902 "PGN_127511_inverterConfigurationStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2582780158 "PGN_127512_agsConfigurationStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2582780414 "PGN_127513_batteryConfigurationStatus";
+BA_ "SystemMessageLongSymbol" BO_ 2582905598 "PGN_128002_electricDriveStatusRapidUpdate";
 BA_ "SystemMessageLongSymbol" BO_ 2582905854 "PGN_128003_electricEnergyStorageStatusRapidUpdate";
 BA_ "SystemSignalLongSymbol" SG_ 2583101694 motorAccelerationDecelerationPro "motorAccelerationDecelerationProfileSelection";
 BA_ "SystemMessageLongSymbol" BO_ 2583101950 "PGN_128769_elevatorDeckPushButton";
@@ -1754,16 +1854,20 @@ BA_ "SystemMessageLongSymbol" BO_ 2583642366 "PGN_130880_airmarAdditionalWeather
 VAL_ 2565341438 control 0 "ACK" 1 "NAK" 2 "Access Denied" 3 "Address Busy" ;
 VAL_ 2565734654 industryGroup 0 "Global" 1 "Highway" 2 "Agriculture" 3 "Construction" 4 "Marine" 5 "Industrial" ;
 VAL_ 2565734654 deviceClass 0 "Reserved for 2000 Use" 10 "System tools" 20 "Safety systems" 25 "Internetwork device" 30 "Electrical Distribution" 35 "Electrical Generation" 40 "Steering and Control surfaces" 50 "Propulsion" 60 "Navigation" 70 "Communication" 75 "Sensor Communication Interface" 80 "Instrumentation/general systems" 85 "External Environment" 90 "Internal Environment" 100 "Deck + cargo + fishing equipment systems" 120 "Display" 125 "Entertainment" ;
-VAL_ 2566850046 m140_temperatureSource 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" 15 "Shaft Seal Temperature" ;
-VAL_ 2566850046 m135_bootState 0 "in Startup Monitor" 1 "running Bootloader" 2 "running Application" ;
-VAL_ 2566850046 manufacturerCode 135 "airmarBootStateAcknowledgment" 140 "lowranceTemperature" ;
-VAL_ 2566850558 m135_accessLevel 0 "Locked" 1 "unlocked level 1" 2 "unlocked level 2" ;
-VAL_ 2566850558 manufacturerCode 135 "airmarAccessLevel" 1857 "simnetConfigureTemperatureSensor" ;
+VAL_ 2566778622 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
+VAL_ 2566779390 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
+VAL_ 2566780158 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
+VAL_ 2566780926 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
+VAL_ 2566781950 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
+VAL_ 2566782718 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
+VAL_ 2566783486 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
+VAL_ 2566784254 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566850814 alarmGroup 0 "Instrument" 1 "Autopilot" 2 "Radar" 3 "Chart Plotter" 4 "AIS" ;
 VAL_ 2566850814 alarmId 0 "No Alarm" 1 "Shallow Depth" 2 "Deep Depth" 3 "Shallow Anchor" 4 "Deep Anchor" 5 "Off Course" 6 "AWA High" 7 "AWA Low" 8 "AWS High" 9 "AWS Low" 10 "TWA High" 11 "TWA Low" 12 "TWS High" 13 "TWS Low" 14 "WP Arrival" 15 "Boat Speed High" 16 "Boat Speed Low" 17 "Sea Temperature High" 18 "Sea Temperature Low" 19 "Pilot Watch" 20 "Pilot Off Course" 21 "Pilot Wind Shift" 22 "Pilot Low Battery" 23 "Pilot Last Minute Of Watch" 24 "Pilot No NMEA Data" 25 "Pilot Large XTE" 26 "Pilot NMEA DataError" 27 "Pilot CU Disconnected" 28 "Pilot Auto Release" 29 "Pilot Way Point Advance" 30 "Pilot Drive Stopped" 31 "Pilot Type Unspecified" 32 "Pilot Calibration Required" 33 "Pilot Last Heading" 34 "Pilot No Pilot" 35 "Pilot Route Complete" 36 "Pilot Variable Text" 37 "GPS Failure" 38 "MOB" 39 "Seatalk1 Anchor" 40 "Pilot Swapped Motor Power" 41 "Pilot Standby Too Fast To Fish" 42 "Pilot No GPS Fix" 43 "Pilot No GPS COG" 44 "Pilot Start Up" 45 "Pilot Too Slow" 46 "Pilot No Compass" 47 "Pilot Rate Gyro Fault" 48 "Pilot Current Limit" 49 "Pilot Way Point Advance Port" 50 "Pilot Way Point Advance Stbd" 51 "Pilot No Wind Data" 52 "Pilot No Speed Data" 53 "Pilot Seatalk Fail1" 54 "Pilot Seatalk Fail2" 55 "Pilot Warning Too Fast To Fish" 56 "Pilot Auto Dockside Fail" 57 "Pilot Turn Too Fast" 58 "Pilot No Nav Data" 59 "Pilot Lost Waypoint Data" 60 "Pilot EEPROM Corrupt" 61 "Pilot Rudder Feedback Fail" 62 "Pilot Autolearn Fail1" 63 "Pilot Autolearn Fail2" 64 "Pilot Autolearn Fail3" 65 "Pilot Autolearn Fail4" 66 "Pilot Autolearn Fail5" 67 "Pilot Autolearn Fail6" 68 "Pilot Warning Cal Required" 69 "Pilot Warning OffCourse" 70 "Pilot Warning XTE" 71 "Pilot Warning Wind Shift" 72 "Pilot Warning Drive Short" 73 "Pilot Warning Clutch Short" 74 "Pilot Warning Solenoid Short" 75 "Pilot Joystick Fault" 76 "Pilot No Joystick Data" 77 "not assigned" 78 "not assigned" 79 "not assigned" 80 "Pilot Invalid Command" 81 "AIS TX Malfunction" 82 "AIS Antenna VSWR fault" 83 "AIS Rx channel 1 malfunction" 84 "AIS Rx channel 2 malfunction" 85 "AIS No sensor position in use" 86 "AIS No valid SOG information" 87 "AIS No valid COG information" 88 "AIS 12V alarm" 89 "AIS 6V alarm" 90 "AIS Noise threshold exceeded channel A" 91 "AIS Noise threshold exceeded channel B" 92 "AIS Transmitter PA fault" 93 "AIS 3V3 alarm" 94 "AIS Rx channel 70 malfunction" 95 "AIS Heading lost/invalid" 96 "AIS internal GPS lost" 97 "AIS No sensor position" 98 "AIS Lock failure" 99 "AIS Internal GGA timeout" 100 "AIS Protocol stack restart" 101 "Pilot No IPS communications" 102 "Pilot Power-On or Sleep-Switch Reset While Engaged" 103 "Pilot Unexpected Reset While Engaged" 104 "AIS Dangerous Target" 105 "AIS Lost Target" 106 "AIS Safety Related Message (used to silence)" 107 "AIS Connection Lost" 108 "No Fix" ;
 VAL_ 2566850814 alarmStatus 0 "Alarm condition not met" 1 "Alarm condition met and not silenced" 2 "Alarm condition met and silenced" ;
 VAL_ 2566869502 alarmGroup 0 "Instrument" 1 "Autopilot" 2 "Radar" 3 "Chart Plotter" 4 "AIS" ;
 VAL_ 2566869502 alarmId 0 "No Alarm" 1 "Shallow Depth" 2 "Deep Depth" 3 "Shallow Anchor" 4 "Deep Anchor" 5 "Off Course" 6 "AWA High" 7 "AWA Low" 8 "AWS High" 9 "AWS Low" 10 "TWA High" 11 "TWA Low" 12 "TWS High" 13 "TWS Low" 14 "WP Arrival" 15 "Boat Speed High" 16 "Boat Speed Low" 17 "Sea Temperature High" 18 "Sea Temperature Low" 19 "Pilot Watch" 20 "Pilot Off Course" 21 "Pilot Wind Shift" 22 "Pilot Low Battery" 23 "Pilot Last Minute Of Watch" 24 "Pilot No NMEA Data" 25 "Pilot Large XTE" 26 "Pilot NMEA DataError" 27 "Pilot CU Disconnected" 28 "Pilot Auto Release" 29 "Pilot Way Point Advance" 30 "Pilot Drive Stopped" 31 "Pilot Type Unspecified" 32 "Pilot Calibration Required" 33 "Pilot Last Heading" 34 "Pilot No Pilot" 35 "Pilot Route Complete" 36 "Pilot Variable Text" 37 "GPS Failure" 38 "MOB" 39 "Seatalk1 Anchor" 40 "Pilot Swapped Motor Power" 41 "Pilot Standby Too Fast To Fish" 42 "Pilot No GPS Fix" 43 "Pilot No GPS COG" 44 "Pilot Start Up" 45 "Pilot Too Slow" 46 "Pilot No Compass" 47 "Pilot Rate Gyro Fault" 48 "Pilot Current Limit" 49 "Pilot Way Point Advance Port" 50 "Pilot Way Point Advance Stbd" 51 "Pilot No Wind Data" 52 "Pilot No Speed Data" 53 "Pilot Seatalk Fail1" 54 "Pilot Seatalk Fail2" 55 "Pilot Warning Too Fast To Fish" 56 "Pilot Auto Dockside Fail" 57 "Pilot Turn Too Fast" 58 "Pilot No Nav Data" 59 "Pilot Lost Waypoint Data" 60 "Pilot EEPROM Corrupt" 61 "Pilot Rudder Feedback Fail" 62 "Pilot Autolearn Fail1" 63 "Pilot Autolearn Fail2" 64 "Pilot Autolearn Fail3" 65 "Pilot Autolearn Fail4" 66 "Pilot Autolearn Fail5" 67 "Pilot Autolearn Fail6" 68 "Pilot Warning Cal Required" 69 "Pilot Warning OffCourse" 70 "Pilot Warning XTE" 71 "Pilot Warning Wind Shift" 72 "Pilot Warning Drive Short" 73 "Pilot Warning Clutch Short" 74 "Pilot Warning Solenoid Short" 75 "Pilot Joystick Fault" 76 "Pilot No Joystick Data" 77 "not assigned" 78 "not assigned" 79 "not assigned" 80 "Pilot Invalid Command" 81 "AIS TX Malfunction" 82 "AIS Antenna VSWR fault" 83 "AIS Rx channel 1 malfunction" 84 "AIS Rx channel 2 malfunction" 85 "AIS No sensor position in use" 86 "AIS No valid SOG information" 87 "AIS No valid COG information" 88 "AIS 12V alarm" 89 "AIS 6V alarm" 90 "AIS Noise threshold exceeded channel A" 91 "AIS Noise threshold exceeded channel B" 92 "AIS Transmitter PA fault" 93 "AIS 3V3 alarm" 94 "AIS Rx channel 70 malfunction" 95 "AIS Heading lost/invalid" 96 "AIS internal GPS lost" 97 "AIS No sensor position" 98 "AIS Lock failure" 99 "AIS Internal GGA timeout" 100 "AIS Protocol stack restart" 101 "Pilot No IPS communications" 102 "Pilot Power-On or Sleep-Switch Reset While Engaged" 103 "Pilot Unexpected Reset While Engaged" 104 "AIS Dangerous Target" 105 "AIS Lost Target" 106 "AIS Safety Related Message (used to silence)" 107 "AIS Connection Lost" 108 "No Fix" ;
+VAL_ 2566881534 depthQualityFactor 0 "Depth unlocked" 1 "Quality 10%" 2 "Quality 20%" 3 "Quality 30%" 4 "Quality 40%" 5 "Quality 50%" 6 "Quality 60%" 7 "Quality 70%" 8 "Quality 80%" 9 "Quality 90%" 10 "Quality 100%" ;
 VAL_ 2582647038 source 0 "GPS" 1 "GLONASS" 2 "Radio Station" 3 "Local Cesium clock" 4 "Local Rubidium clock" 5 "Local Crystal clock" ;
 VAL_ 2582647294 equipmentStatus 0 "Operational" 1 "Fault" ;
 VAL_ 2582647294 controller2State 0 "Error Active" 1 "Error Passive" 2 "Bus Off" ;
