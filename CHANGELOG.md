@@ -16,6 +16,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## Fixed
 - End all logAbort messages with a newline.
+- #389: Missing fieldtypes in v1 pgns.xml
+- #391: Incorrect field sizes for PGN 129285.
 - #393: Make sure single frame PGNs are 8 bytes and all PGNs fill the last byte.
         This actually found a few small bugs in PGNs:
         PGN 128778: Field length for Controller Voltage was incorrect.
