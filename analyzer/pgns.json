@@ -37339,7 +37339,7 @@
             "Order":4,
             "Id":"messageId",
             "Name":"Message ID",
-            "Description":null,
+            "Description":"Zone Name",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,

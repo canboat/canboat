@@ -41191,7 +41191,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description></Description>
+          <Description>Zone Name</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>

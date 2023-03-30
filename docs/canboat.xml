@@ -1714,6 +1714,7 @@ limitations under the License.
       <EnumPair Value='37' Name='SiriusXM Title' />
       <EnumPair Value='38' Name='SiriusXM Artist' />
       <EnumPair Value='40' Name='SiriusXM Genre' />
+      <EnumPair Value='45' Name='Zone Name' />
     </LookupEnumeration>
     <LookupEnumeration Name='SONICHUB_CONTROL' MaxValue='255'>
       <EnumPair Value='0' Name='Set' />
@@ -40593,7 +40594,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description></Description>
+          <Description>Zone Name</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
