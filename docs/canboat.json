@@ -2942,6 +2942,7 @@
         "Id":"isoTransportProtocolConnectionManagementRequestToSend",
         "Description":"ISO Transport Protocol, Connection Management - Request To Send",
         "Explanation":"ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to prepare the receiver for the fact that this sender wants to transmit a long message. The receiver will respond with CTS.",
+        "URL":"https://embeddedflakes.com/j1939-transport-protocol/",
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -3026,6 +3027,7 @@
         "Id":"isoTransportProtocolConnectionManagementClearToSend",
         "Description":"ISO Transport Protocol, Connection Management - Clear To Send",
         "Explanation":"ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to signal to the sender that the receive is ready to receive a number of frames.",
+        "URL":"https://embeddedflakes.com/j1939-transport-protocol/",
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -3106,6 +3108,7 @@
         "Id":"isoTransportProtocolConnectionManagementEndOfMessage",
         "Description":"ISO Transport Protocol, Connection Management - End Of Message",
         "Explanation":"ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to mark the end of the message.",
+        "URL":"https://embeddedflakes.com/j1939-transport-protocol/",
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -3186,6 +3189,7 @@
         "Id":"isoTransportProtocolConnectionManagementBroadcastAnnounce",
         "Description":"ISO Transport Protocol, Connection Management - Broadcast Announce",
         "Explanation":"ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce a broadcast of a long message spanning multiple frames.",
+        "URL":"https://embeddedflakes.com/j1939-transport-protocol/",
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -3266,10 +3270,11 @@
         "Id":"isoTransportProtocolConnectionManagementAbort",
         "Description":"ISO Transport Protocol, Connection Management - Abort",
         "Explanation":"ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce an abort of a long message spanning multiple frames.",
+        "URL":"https://embeddedflakes.com/j1939-transport-protocol/",
         "Type":"Single",
         "Complete":true,
         "FieldCount":4,
-        "Length":7,
+        "Length":8,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -3302,7 +3307,7 @@
             "Order":3,
             "Id":"reserved",
             "Name":"Reserved",
-            "BitLength":16,
+            "BitLength":24,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
@@ -3313,7 +3318,7 @@
             "Id":"pgn",
             "Name":"PGN",
             "BitLength":24,
-            "BitOffset":32,
+            "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
@@ -3482,8 +3487,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":7,
-        "Length":6,
+        "FieldCount":8,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -3580,6 +3585,16 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"reserved8",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -3591,8 +3606,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":6,
-        "Length":5,
+        "FieldCount":7,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -3674,6 +3689,16 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"reserved7",
+            "Name":"Reserved",
+            "BitLength":24,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -3766,8 +3791,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":6,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -3813,6 +3838,16 @@
             "RangeMax":511.9765625,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"FREQUENCY"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -3824,8 +3859,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":6,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -3871,6 +3906,16 @@
             "RangeMax":511.9765625,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"FREQUENCY"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -3882,8 +3927,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":6,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -3929,6 +3974,16 @@
             "RangeMax":511.9765625,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"FREQUENCY"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -3940,8 +3995,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":3,
-        "Length":6,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -3987,6 +4042,16 @@
             "RangeMax":511.9765625,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"FREQUENCY"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -4041,8 +4106,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":4,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -4086,6 +4151,16 @@
             "RangeMax":2,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":30,
+            "BitOffset":34,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -4215,8 +4290,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":4,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -4260,6 +4335,16 @@
             "RangeMax":2,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":30,
+            "BitOffset":34,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -4389,8 +4474,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":6,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -4435,6 +4520,16 @@
             "RangeMax":2,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":14,
+            "BitOffset":50,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -4564,8 +4659,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":6,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -4610,6 +4705,16 @@
             "RangeMax":2,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":14,
+            "BitOffset":50,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -4782,8 +4887,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":6,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -4828,6 +4933,16 @@
             "RangeMax":2,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":14,
+            "BitOffset":50,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -4957,8 +5072,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":6,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -5003,6 +5118,16 @@
             "RangeMax":2,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":14,
+            "BitOffset":50,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -5132,8 +5257,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":6,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -5178,6 +5303,16 @@
             "RangeMax":2,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":14,
+            "BitOffset":50,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -5307,8 +5442,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":6,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -5353,6 +5488,16 @@
             "RangeMax":2,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":14,
+            "BitOffset":50,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -5827,8 +5972,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":4,
-        "Length":2,
+        "FieldCount":5,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -5876,15 +6021,25 @@
             "Order":4,
             "Id":"bootState",
             "Name":"Boot State",
-            "BitLength":4,
+            "BitLength":3,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
+            "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"BOOT_STATE"
+          },
+          {
+            "Order":5,
+            "Id":"reserved5",
+            "Name":"Reserved",
+            "BitLength":45,
+            "BitOffset":19,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -5896,8 +6051,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":5,
-        "Length":5,
+        "FieldCount":6,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -5969,6 +6124,16 @@
             "RangeMax":655.33,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
+          },
+          {
+            "Order":6,
+            "Id":"reserved6",
+            "Name":"Reserved",
+            "BitLength":24,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -6114,8 +6279,8 @@
         "Complete":false,
         "Missing":["Interval"
         ],
-        "FieldCount":3,
-        "Length":2,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -6158,6 +6323,16 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"reserved4",
+            "Name":"Reserved",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -6171,7 +6346,7 @@
         "Missing":["Interval"
         ],
         "FieldCount":7,
-        "Length":7,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -6219,13 +6394,13 @@
             "Order":4,
             "Id":"formatCode",
             "Name":"Format Code",
-            "BitLength":3,
+            "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":6,
+            "RangeMax":253,
             "FieldType":"NUMBER"
           },
           {
@@ -6233,8 +6408,8 @@
             "Id":"accessLevel",
             "Name":"Access Level",
             "BitLength":3,
-            "BitOffset":19,
-            "BitStart":3,
+            "BitOffset":24,
+            "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -6246,9 +6421,9 @@
             "Order":6,
             "Id":"reserved6",
             "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":22,
-            "BitStart":6,
+            "BitLength":5,
+            "BitOffset":27,
+            "BitStart":3,
             "Resolution":1,
             "FieldType":"RESERVED"
           },
@@ -6258,7 +6433,7 @@
             "Name":"Access Seed/Key",
             "Description":"When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208.",
             "BitLength":32,
-            "BitOffset":24,
+            "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
@@ -6276,8 +6451,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":3,
-        "Length":2,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -6320,6 +6495,16 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"reserved4",
+            "Name":"Reserved",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -6448,8 +6633,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":3,
-        "Length":2,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -6492,6 +6677,16 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"reserved4",
+            "Name":"Reserved",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -6503,8 +6698,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":3,
-        "Length":2,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -6547,6 +6742,16 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"reserved4",
+            "Name":"Reserved",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -6558,8 +6763,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":3,
-        "Length":2,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -6602,6 +6807,16 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"reserved4",
+            "Name":"Reserved",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -6613,8 +6828,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":3,
-        "Length":2,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -6657,6 +6872,16 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"reserved4",
+            "Name":"Reserved",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -6775,7 +7000,7 @@
         "Missing":["Fields","Interval"
         ],
         "FieldCount":6,
-        "Length":7,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -6850,7 +7075,7 @@
             "Order":6,
             "Id":"reserved6",
             "Name":"Reserved",
-            "BitLength":24,
+            "BitLength":32,
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
@@ -7264,8 +7489,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":10,
-        "Length":7,
+        "FieldCount":11,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -7396,6 +7621,16 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":11,
+            "Id":"reserved11",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -7407,8 +7642,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":6,
-        "Length":5,
+        "FieldCount":7,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -7490,6 +7725,16 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"reserved7",
+            "Name":"Reserved",
+            "BitLength":24,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -7597,8 +7842,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":5,
-        "Length":3,
+        "FieldCount":6,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -7668,6 +7913,16 @@
             "RangeMax":13,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIRMAR_DEPTH_QUALITY_FACTOR"
+          },
+          {
+            "Order":6,
+            "Id":"reserved6",
+            "Name":"Reserved",
+            "BitLength":36,
+            "BitOffset":28,
+            "BitStart":4,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -7896,8 +8151,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":3,
-        "Length":2,
+        "FieldCount":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -7940,6 +8195,16 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"reserved4",
+            "Name":"Reserved",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -10427,8 +10692,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
         ],
-        "FieldCount":16,
-        "Length":23,
+        "FieldCount":6,
+        "Length":6,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -10506,165 +10771,13 @@
           },
           {
             "Order":6,
-            "Id":"calibrationStatus",
-            "Name":"Calibration Status",
-            "BitLength":8,
+            "Id":"reserved6",
+            "Name":"Reserved",
+            "BitLength":22,
             "BitOffset":26,
             "BitStart":2,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_CALIBRATE_STATUS"
-          },
-          {
-            "Order":7,
-            "Id":"verifyScore",
-            "Name":"Verify Score",
-            "Description":"TBD",
-            "BitLength":8,
-            "BitOffset":34,
-            "BitStart":2,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":8,
-            "Id":"xAxisGainValue",
-            "Name":"X-axis gain value",
-            "Description":"default 100, range 50 to 500",
-            "BitLength":16,
-            "BitOffset":42,
-            "BitStart":2,
-            "Resolution":0.01,
-            "Signed":true,
-            "RangeMin":-327.67,
-            "RangeMax":327.65,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":9,
-            "Id":"yAxisGainValue",
-            "Name":"Y-axis gain value",
-            "Description":"default 100, range 50 to 500",
-            "BitLength":16,
-            "BitOffset":58,
-            "BitStart":2,
-            "Resolution":0.01,
-            "Signed":true,
-            "RangeMin":-327.67,
-            "RangeMax":327.65,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":10,
-            "Id":"zAxisGainValue",
-            "Name":"Z-axis gain value",
-            "Description":"default 100, range 50 to 500",
-            "BitLength":16,
-            "BitOffset":74,
-            "BitStart":2,
-            "Resolution":0.01,
-            "Signed":true,
-            "RangeMin":-327.67,
-            "RangeMax":327.65,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":11,
-            "Id":"xAxisLinearOffset",
-            "Name":"X-axis linear offset",
-            "BitLength":16,
-            "BitOffset":90,
-            "BitStart":2,
-            "Unit":"T",
-            "Resolution":0.01,
-            "Signed":true,
-            "RangeMin":-327.67,
-            "RangeMax":327.65,
-            "FieldType":"NUMBER",
-            "PhysicalQuantity":"MAGNETIC_FIELD"
-          },
-          {
-            "Order":12,
-            "Id":"yAxisLinearOffset",
-            "Name":"Y-axis linear offset",
-            "BitLength":16,
-            "BitOffset":106,
-            "BitStart":2,
-            "Unit":"T",
-            "Resolution":0.01,
-            "Signed":true,
-            "RangeMin":-327.67,
-            "RangeMax":327.65,
-            "FieldType":"NUMBER",
-            "PhysicalQuantity":"MAGNETIC_FIELD"
-          },
-          {
-            "Order":13,
-            "Id":"zAxisLinearOffset",
-            "Name":"Z-axis linear offset",
-            "BitLength":16,
-            "BitOffset":122,
-            "BitStart":2,
-            "Unit":"T",
-            "Resolution":0.01,
-            "Signed":true,
-            "RangeMin":-327.67,
-            "RangeMax":327.65,
-            "FieldType":"NUMBER",
-            "PhysicalQuantity":"MAGNETIC_FIELD"
-          },
-          {
-            "Order":14,
-            "Id":"xAxisAngularOffset",
-            "Name":"X-axis angular offset",
-            "BitLength":16,
-            "BitOffset":138,
-            "BitStart":2,
-            "Unit":"deg",
-            "Resolution":0.1,
-            "Signed":true,
-            "RangeMin":-3276.7,
-            "RangeMax":3276.5,
-            "FieldType":"NUMBER",
-            "PhysicalQuantity":"ANGLE"
-          },
-          {
-            "Order":15,
-            "Id":"pitchAndRollDamping",
-            "Name":"Pitch and Roll damping",
-            "Description":"default 30, range 0 to 200",
-            "BitLength":16,
-            "BitOffset":154,
-            "BitStart":2,
-            "Unit":"s",
-            "Resolution":0.05,
-            "Signed":true,
-            "RangeMin":-1638.35,
-            "RangeMax":1638.25,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
-          },
-          {
-            "Order":16,
-            "Id":"compassRateGyroDamping",
-            "Name":"Compass/Rate gyro damping",
-            "Description":"default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations",
-            "BitLength":16,
-            "BitOffset":170,
-            "BitStart":2,
-            "Unit":"s",
-            "Resolution":0.05,
-            "Signed":true,
-            "RangeMin":-1638.35,
-            "RangeMax":1638.25,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -14184,8 +14297,8 @@
         "Description":"Attitude",
         "Type":"Single",
         "Complete":true,
-        "FieldCount":4,
-        "Length":7,
+        "FieldCount":5,
+        "Length":8,
         "TransmissionInterval":1000,
         "Fields":[
           {
@@ -14245,6 +14358,16 @@
             "RangeMax":3.2765,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ANGLE"
+          },
+          {
+            "Order":5,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -14254,8 +14377,8 @@
         "Description":"Magnetic Variation",
         "Type":"Single",
         "Complete":true,
-        "FieldCount":5,
-        "Length":6,
+        "FieldCount":6,
+        "Length":8,
         "TransmissionInterval":1000,
         "Fields":[
           {
@@ -14324,6 +14447,16 @@
             "RangeMax":3.2765,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ANGLE"
+          },
+          {
+            "Order":6,
+            "Id":"reserved6",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -17371,7 +17504,7 @@
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
-        "Length":4,
+        "Length":8,
         "TransmissionInterval":1500,
         "Fields":[
           {
@@ -17445,7 +17578,7 @@
             "Order":6,
             "Id":"reserved",
             "Name":"Reserved",
-            "BitLength":2,
+            "BitLength":34,
             "BitOffset":30,
             "BitStart":6,
             "Resolution":1,
@@ -17625,8 +17758,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
         ],
-        "FieldCount":8,
-        "Length":7,
+        "FieldCount":9,
+        "Length":8,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -17683,24 +17816,21 @@
           },
           {
             "Order":5,
-            "Id":"inverterMode",
-            "Name":"Inverter Mode",
-            "BitLength":8,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":6,
             "BitOffset":26,
             "BitStart":2,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"RESERVED"
           },
           {
             "Order":6,
-            "Id":"loadSenseEnableDisable",
-            "Name":"Load Sense Enable/Disable",
+            "Id":"inverterMode",
+            "Name":"Inverter Mode",
             "BitLength":8,
-            "BitOffset":34,
-            "BitStart":2,
+            "BitOffset":32,
+            "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -17709,11 +17839,11 @@
           },
           {
             "Order":7,
-            "Id":"loadSensePowerThreshold",
-            "Name":"Load Sense Power Threshold",
+            "Id":"loadSenseEnableDisable",
+            "Name":"Load Sense Enable/Disable",
             "BitLength":8,
-            "BitOffset":42,
-            "BitStart":2,
+            "BitOffset":40,
+            "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -17722,11 +17852,24 @@
           },
           {
             "Order":8,
+            "Id":"loadSensePowerThreshold",
+            "Name":"Load Sense Power Threshold",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
             "Id":"loadSenseInterval",
             "Name":"Load Sense Interval",
             "BitLength":8,
-            "BitOffset":50,
-            "BitStart":2,
+            "BitOffset":56,
+            "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -17743,8 +17886,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
         ],
-        "FieldCount":3,
-        "Length":3,
+        "FieldCount":4,
+        "Length":8,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -17785,6 +17928,16 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":40,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -17946,8 +18099,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
         ],
-        "FieldCount":6,
-        "Length":6,
+        "FieldCount":7,
+        "Length":8,
         "TransmissionInterval":1500,
         "Fields":[
           {
@@ -18027,6 +18180,16 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -18567,8 +18730,8 @@
         "Complete":false,
         "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
         ],
-        "FieldCount":6,
-        "Length":7,
+        "FieldCount":7,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -18611,11 +18774,21 @@
           },
           {
             "Order":4,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":4,
+            "BitOffset":12,
+            "BitStart":4,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":5,
             "Id":"rotationalShaftSpeed",
             "Name":"Rotational Shaft Speed",
             "BitLength":16,
-            "BitOffset":12,
-            "BitStart":4,
+            "BitOffset":16,
+            "BitStart":0,
             "Unit":"rpm",
             "Resolution":0.25,
             "Signed":false,
@@ -18625,12 +18798,12 @@
             "PhysicalQuantity":"ANGULAR_VELOCITY"
           },
           {
-            "Order":5,
+            "Order":6,
             "Id":"motorDcVoltage",
             "Name":"Motor DC Voltage",
             "BitLength":16,
-            "BitOffset":28,
-            "BitStart":4,
+            "BitOffset":32,
+            "BitStart":0,
             "Unit":"V",
             "Resolution":0.1,
             "Signed":false,
@@ -18640,12 +18813,12 @@
             "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
           },
           {
-            "Order":6,
+            "Order":7,
             "Id":"motorDcCurrent",
             "Name":"Motor DC Current",
             "BitLength":16,
-            "BitOffset":44,
-            "BitStart":4,
+            "BitOffset":48,
+            "BitStart":0,
             "Unit":"A",
             "Resolution":0.1,
             "Signed":true,
@@ -19986,7 +20159,7 @@
         "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
         ],
         "FieldCount":6,
-        "Length":4,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -20057,7 +20230,7 @@
             "Order":6,
             "Id":"reserved",
             "Name":"Reserved",
-            "BitLength":2,
+            "BitLength":34,
             "BitOffset":30,
             "BitStart":6,
             "Resolution":1,
@@ -20164,7 +20337,7 @@
         "Missing":["Interval"
         ],
         "FieldCount":14,
-        "Length":7,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -20344,7 +20517,7 @@
             "Order":14,
             "Id":"reserved14",
             "Name":"Reserved",
-            "BitLength":4,
+            "BitLength":12,
             "BitOffset":52,
             "BitStart":4,
             "Resolution":1,
@@ -20511,7 +20684,7 @@
         "Missing":["Interval"
         ],
         "FieldCount":7,
-        "Length":9,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -20556,14 +20729,14 @@
             "Order":4,
             "Id":"controllerVoltage",
             "Name":"Controller voltage",
-            "BitLength":16,
+            "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
             "Unit":"V",
             "Resolution":0.2,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13106.6,
+            "RangeMax":50.6,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
           },
@@ -20572,7 +20745,7 @@
             "Id":"motorCurrent",
             "Name":"Motor current",
             "BitLength":8,
-            "BitOffset":40,
+            "BitOffset":32,
             "BitStart":0,
             "Unit":"A",
             "Resolution":1,
@@ -20587,7 +20760,7 @@
             "Id":"totalMotorTime",
             "Name":"Total Motor Time",
             "BitLength":16,
-            "BitOffset":48,
+            "BitOffset":40,
             "BitStart":0,
             "Unit":"s",
             "Resolution":60,
@@ -20602,7 +20775,7 @@
             "Id":"reserved",
             "Name":"Reserved",
             "BitLength":8,
-            "BitOffset":64,
+            "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
@@ -20838,8 +21011,8 @@
         "Complete":false,
         "Missing":["SampleData"
         ],
-        "FieldCount":4,
-        "Length":7,
+        "FieldCount":5,
+        "Length":8,
         "TransmissionInterval":100,
         "Fields":[
           {
@@ -20893,6 +21066,16 @@
             "RangeMin":-32767,
             "RangeMax":32765,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -21618,8 +21801,8 @@
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
-        "FieldCount":22,
-        "Length":25,
+        "FieldCount":23,
+        "Length":27,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -21924,6 +22107,16 @@
             "RangeMax":1,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_COMMUNICATION_STATE"
+          },
+          {
+            "Order":23,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":15,
+            "BitOffset":201,
+            "BitStart":1,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -21933,9 +22126,11 @@
         "Description":"AIS Class B Extended Position Report",
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
-        "Complete":true,
-        "FieldCount":26,
-        "Length":53,
+        "Complete":false,
+        "Missing":["SampleData"
+        ],
+        "FieldCount":27,
+        "Length":54,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -22284,6 +22479,16 @@
             "RangeMax":29,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
+          },
+          {
+            "Order":27,
+            "Id":"reserved27",
+            "Name":"Reserved",
+            "BitLength":5,
+            "BitOffset":427,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -23325,8 +23530,8 @@
         "Complete":false,
         "Missing":["SampleData"
         ],
-        "FieldCount":5,
-        "Length":6,
+        "FieldCount":6,
+        "Length":8,
         "TransmissionInterval":1000,
         "Fields":[
           {
@@ -23395,6 +23600,16 @@
             "RangeMax":655.33,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"SPEED"
+          },
+          {
+            "Order":6,
+            "Id":"reserved6",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -23635,8 +23850,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData"
         ],
-        "FieldCount":10,
-        "Length":13,
+        "FieldCount":11,
+        "Length":14,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -23779,6 +23994,16 @@
             "RangeMax":2,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
+          },
+          {
+            "Order":11,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":6,
+            "BitOffset":106,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -24381,7 +24606,7 @@
         "Description":"GNSS RAIM Output",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution"
+        "Missing":["Fields","FieldLengths","Resolution","SampleData"
         ],
         "FieldCount":10,
         "Length":9,
@@ -24522,10 +24747,10 @@
         "Description":"GNSS RAIM Settings",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution"
+        "Missing":["Fields","FieldLengths","Resolution","SampleData"
         ],
-        "FieldCount":4,
-        "Length":4,
+        "FieldCount":5,
+        "Length":8,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -24579,6 +24804,16 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":32,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -25728,8 +25963,8 @@
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
-        "FieldCount":20,
-        "Length":74,
+        "FieldCount":21,
+        "Length":75,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -25997,6 +26232,16 @@
             "RangeMax":29,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
+          },
+          {
+            "Order":21,
+            "Id":"reserved21",
+            "Name":"Reserved",
+            "BitLength":3,
+            "BitOffset":597,
+            "BitStart":5,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -26166,8 +26411,8 @@
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
-        "FieldCount":10,
-        "Length":11,
+        "FieldCount":11,
+        "Length":12,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -26289,6 +26534,16 @@
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
+          },
+          {
+            "Order":11,
+            "Id":"reserved11",
+            "Name":"Reserved",
+            "BitLength":6,
+            "BitOffset":90,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -27055,14 +27310,12 @@
         "Id":"aisInterrogation",
         "Description":"AIS Interrogation",
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
-        "Type":"Single",
+        "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
         ],
-        "FieldCount":10,
-        "MinLength":6,
-        "RepeatingFieldSet1Size":4,
-        "RepeatingFieldSet1StartField":7,
+        "FieldCount":19,
+        "Length":23,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -27142,8 +27395,8 @@
           },
           {
             "Order":7,
-            "Id":"destinationId",
-            "Name":"Destination ID",
+            "Id":"destinationId1",
+            "Name":"Destination ID 1",
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,
@@ -27155,21 +27408,11 @@
           },
           {
             "Order":8,
-            "Id":"reserved8",
-            "Name":"Reserved",
-            "BitLength":2,
+            "Id":"messageId11",
+            "Name":"Message ID 1.1",
+            "BitLength":6,
             "BitOffset":80,
             "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":9,
-            "Id":"messageIdA",
-            "Name":"Message ID A",
-            "BitLength":6,
-            "BitOffset":82,
-            "BitStart":2,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -27178,16 +27421,136 @@
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
           {
+            "Order":9,
+            "Id":"slotOffset11",
+            "Name":"Slot Offset 1.1",
+            "BitLength":12,
+            "BitOffset":86,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4093,
+            "FieldType":"NUMBER"
+          },
+          {
             "Order":10,
-            "Id":"slotOffsetA",
-            "Name":"Slot Offset A",
-            "BitLength":16,
-            "BitOffset":88,
+            "Id":"spare10",
+            "Name":"Spare",
+            "BitLength":2,
+            "BitOffset":98,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"SPARE"
+          },
+          {
+            "Order":11,
+            "Id":"messageId12",
+            "Name":"Message ID 1.2",
+            "BitLength":6,
+            "BitOffset":100,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":61,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
+          },
+          {
+            "Order":12,
+            "Id":"slotOffset12",
+            "Name":"Slot Offset 1.2",
+            "BitLength":12,
+            "BitOffset":106,
+            "BitStart":2,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4093,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":13,
+            "Id":"spare13",
+            "Name":"Spare",
+            "BitLength":2,
+            "BitOffset":118,
+            "BitStart":6,
+            "Resolution":1,
+            "FieldType":"SPARE"
+          },
+          {
+            "Order":14,
+            "Id":"destinationId2",
+            "Name":"Destination ID 2",
+            "BitLength":32,
+            "BitOffset":120,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":2000000,
+            "RangeMax":999999999,
+            "FieldType":"MMSI"
+          },
+          {
+            "Order":15,
+            "Id":"messageId21",
+            "Name":"Message ID 2.1",
+            "BitLength":6,
+            "BitOffset":152,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65533,
+            "RangeMax":61,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIS_MESSAGE_ID"
+          },
+          {
+            "Order":16,
+            "Id":"slotOffset21",
+            "Name":"Slot Offset 2.1",
+            "BitLength":12,
+            "BitOffset":158,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4093,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":17,
+            "Id":"spare17",
+            "Name":"Spare",
+            "BitLength":2,
+            "BitOffset":170,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"SPARE"
+          },
+          {
+            "Order":18,
+            "Id":"reserved18",
+            "Name":"Reserved",
+            "BitLength":4,
+            "BitOffset":172,
+            "BitStart":4,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":19,
+            "Id":"sid",
+            "Name":"SID",
+            "BitLength":8,
+            "BitOffset":176,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
             "FieldType":"NUMBER"
           }
         ]
@@ -27766,10 +28129,10 @@
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution"
+        "Missing":["Fields","FieldLengths","Resolution","SampleData"
         ],
         "FieldCount":17,
-        "Length":27,
+        "Length":28,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -27925,7 +28288,7 @@
             "Order":12,
             "Id":"reserved12",
             "Name":"Reserved",
-            "BitLength":2,
+            "BitLength":4,
             "BitOffset":180,
             "BitStart":4,
             "Resolution":1,
@@ -27936,8 +28299,8 @@
             "Id":"shipAndCargoFilter",
             "Name":"Ship and Cargo Filter",
             "BitLength":8,
-            "BitOffset":182,
-            "BitStart":6,
+            "BitOffset":184,
+            "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -27949,8 +28312,8 @@
             "Id":"spare14",
             "Name":"Spare",
             "BitLength":22,
-            "BitOffset":190,
-            "BitStart":6,
+            "BitOffset":192,
+            "BitStart":0,
             "Resolution":1,
             "FieldType":"SPARE"
           },
@@ -27959,8 +28322,8 @@
             "Id":"reserved15",
             "Name":"Reserved",
             "BitLength":2,
-            "BitOffset":212,
-            "BitStart":4,
+            "BitOffset":214,
+            "BitStart":6,
             "Resolution":1,
             "FieldType":"RESERVED"
           },
@@ -27969,8 +28332,8 @@
             "Id":"reportingInterval",
             "Name":"Reporting Interval",
             "BitLength":4,
-            "BitOffset":214,
-            "BitStart":6,
+            "BitOffset":216,
+            "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -27983,8 +28346,8 @@
             "Id":"quietTime",
             "Name":"Quiet Time",
             "BitLength":4,
-            "BitOffset":218,
-            "BitStart":2,
+            "BitOffset":220,
+            "BitStart":4,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -29866,8 +30229,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData"
         ],
-        "FieldCount":12,
-        "MinLength":14,
+        "FieldCount":13,
+        "MinLength":15,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -30005,6 +30368,14 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":13,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -31393,8 +31764,8 @@
         "Description":"Set Pressure",
         "Type":"Single",
         "Complete":true,
-        "FieldCount":4,
-        "Length":7,
+        "FieldCount":5,
+        "Length":8,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -31451,6 +31822,16 @@
             "RangeMax":429496729.3,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"PRESSURE"
+          },
+          {
+            "Order":5,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -35386,8 +35767,8 @@
         "Complete":false,
         "Missing":["FieldLengths","SampleData","Interval"
         ],
-        "FieldCount":6,
-        "Length":4,
+        "FieldCount":7,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -35469,6 +35850,16 @@
             "RangeMax":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_CHANNEL"
+          },
+          {
+            "Order":7,
+            "Id":"reserved7",
+            "Name":"Reserved",
+            "BitLength":32,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -42955,11 +43346,10 @@
         "Id":"maretronSwitchStatusCounter",
         "Description":"Maretron: Switch Status Counter",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["Interval"
-        ],
+        "Complete":true,
         "FieldCount":12,
-        "Length":15,
+        "Length":14,
+        "TransmissionInterval":15000,
         "Fields":[
           {
             "Order":1,
@@ -43116,7 +43506,7 @@
             "Order":12,
             "Id":"reserved12",
             "Name":"Reserved",
-            "BitLength":16,
+            "BitLength":6,
             "BitOffset":106,
             "BitStart":2,
             "Resolution":1,
@@ -43184,11 +43574,10 @@
         "Id":"maretronSwitchStatusTimer",
         "Description":"Maretron: Switch Status Timer",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["Interval"
-        ],
+        "Complete":true,
         "FieldCount":12,
         "Length":23,
+        "TransmissionInterval":15000,
         "Fields":[
           {
             "Order":1,

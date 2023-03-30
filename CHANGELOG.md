@@ -9,10 +9,21 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ## [Unreleased]
 
 ## Fixed
-- End all logAbort messages with a newline.
 
 ## Added
-- #385: Allow analyzer to read mixed RAWFORMAT_PLAIN and RAWFORMAT_FAST input.
+
+## [4.11.0]
+
+## Fixed
+- End all logAbort messages with a newline.
+- #393: Make sure single frame PGNs are 8 bytes and all PGNs fill the last byte.
+        This actually found a few small bugs in PGNs:
+        PGN 128778: Field length for Controller Voltage was incorrect.
+        PGN 126802 Airmar 34: Field names were copy/pasted and thus incorrect.
+        PGN 129803: Field names changed (but this PGN is not seen yet) to match ITU.
+
+## Added
+- #385: Allow analyzer to read mixed `RAWFORMAT_PLAIN` and `RAWFORMAT_FAST` input.
         A new `-format <fmt>` option has been added, this new mode is only enabled when
         `-format PLAIN_OR_FAST` is selected.
 
@@ -569,7 +580,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.10.1...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.11.0...HEAD
+[4.11.0]: https://github.com/canboat/canboat/compare/v4.10.1...v4.11.0
 [4.10.1]: https://github.com/canboat/canboat/compare/v4.10.0...v4.10.1
 [4.10.0]: https://github.com/canboat/canboat/compare/v4.9.2...v4.10.0
 [4.9.2]: https://github.com/canboat/canboat/compare/v4.9.1...v4.9.2

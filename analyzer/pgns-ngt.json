@@ -9,7 +9,7 @@
         "PGN":262161,
         "Id":"actisenseOperatingMode",
         "Description":"Actisense: Operating mode",
-        "Type":"Single",
+        "Type":"Fast",
         "Complete":false,
         "Missing":[
           "Interval"],
@@ -79,7 +79,7 @@
         "PGN":262384,
         "Id":"actisenseStartupStatus",
         "Description":"Actisense: Startup status",
-        "Type":"Single",
+        "Type":"Fast",
         "Complete":false,
         "Missing":[
           "Fields",
@@ -175,7 +175,7 @@
         "PGN":262386,
         "Id":"actisenseSystemStatus",
         "Description":"Actisense: System status",
-        "Type":"Single",
+        "Type":"Fast",
         "Complete":false,
         "Missing":[
           "Fields",
@@ -500,7 +500,7 @@
         "PGN":262388,
         "Id":"actisense",
         "Description":"Actisense: ?",
-        "Type":"Single",
+        "Type":"Fast",
         "Complete":false,
         "Missing":[
           "Fields",

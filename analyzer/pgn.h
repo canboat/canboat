@@ -266,9 +266,9 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 0.1, .unit = "V", .fieldType = "VOLTAGE_UFIX16_100MV" \
   }
 
-#define VOLTAGE_U16_200MV_FIELD(nam)                                                                   \
-  {                                                                                                    \
-    .name = nam, .size = BYTES(2), .resolution = 0.2, .unit = "V", .fieldType = "VOLTAGE_UFIX16_200MV" \
+#define VOLTAGE_UFIX8_200MV_FIELD(nam)                                                                \
+  {                                                                                                   \
+    .name = nam, .size = BYTES(1), .resolution = 0.2, .unit = "V", .fieldType = "VOLTAGE_UFIX8_200MV" \
   }
 
 #define VOLTAGE_I16_10MV_FIELD(nam)                                                                                    \
@@ -851,13 +851,13 @@ extern const char *PACKET_TYPE_STR[];
 
 struct Pgn
 {
-  char       *description;
-  uint32_t    pgn;
-  uint16_t    complete;      /* Either PACKET_COMPLETE or bit values set for various unknown items */
-  PacketType  type;          /* Single, Fast or ISO_TP */
-  Field       fieldList[33]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
-  uint32_t    fieldCount;    /* Filled by C, no need to set in initializers. */
-  uint32_t    size;          /* Filled by C, no need to set in initializers. */
+  char      *description;
+  uint32_t   pgn;
+  uint16_t   complete;      /* Either PACKET_COMPLETE or bit values set for various unknown items */
+  PacketType type;          /* Single, Fast or ISO_TP */
+  Field      fieldList[33]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
+  uint32_t   fieldCount;    /* Filled by C, no need to set in initializers. */
+  // uint32_t    size;          /* Filled by C, no need to set in initializers. */
   char       *camelDescription; /* Filled by C, no need to set in initializers. */
   bool        fallback;         /* true = this is a catch-all for unknown PGNs */
   bool        hasMatchFields;   /* true = there are multiple PGNs with same PRN */
@@ -1007,6 +1007,7 @@ Pgn pgnList[] = {
       PGN_FIELD("PGN", NULL),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
+     .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN’s role in the transport process is to prepare the receiver "
                     "for the fact that this sender wants to transmit a long message. The receiver will respond with CTS."}
@@ -1023,6 +1024,7 @@ Pgn pgnList[] = {
       PGN_FIELD("PGN", NULL),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
+     .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN’s role in the transport process is to signal to the sender "
                     "that the receive is ready to receive a number of frames."}
@@ -1039,6 +1041,7 @@ Pgn pgnList[] = {
       PGN_FIELD("PGN", NULL),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
+     .url      = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation
      = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that "
        "have 9 or more data bytes. This PGN’s role in the transport process is to mark the end of the message."}
@@ -1055,6 +1058,7 @@ Pgn pgnList[] = {
       PGN_FIELD("PGN", NULL),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
+     .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce a broadcast "
                     "of a long message spanning multiple frames."}
@@ -1066,10 +1070,11 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {MATCH_LOOKUP_FIELD("Group Function Code", BYTES(1), 255, ISO_COMMAND),
       BINARY_FIELD("Reason", BYTES(1), NULL),
-      RESERVED_FIELD(BYTES(2)),
+      RESERVED_FIELD(BYTES(3)),
       PGN_FIELD("PGN", NULL),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
+     .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce an abort "
                     "of a long message spanning multiple frames."}
@@ -1123,6 +1128,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Variant"),
       UINT8_FIELD("Wireless Setting"),
       UINT8_FIELD("Wired Setting"),
+      RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS}}
 
     ,
@@ -1130,7 +1136,12 @@ Pgn pgnList[] = {
      61184,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(1851), UINT8_FIELD("PID"), UINT8_FIELD("Variant"), UINT8_FIELD("Beep Control"), END_OF_FIELDS}}
+     {COMPANY(1851),
+      UINT8_FIELD("PID"),
+      UINT8_FIELD("Variant"),
+      UINT8_FIELD("Beep Control"),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS}}
 
     ,
     {"Victron Battery Register",
@@ -1162,6 +1173,7 @@ Pgn pgnList[] = {
      {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
       VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS}}
 
     ,
@@ -1172,6 +1184,7 @@ Pgn pgnList[] = {
      {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
       VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS}}
 
     ,
@@ -1182,6 +1195,7 @@ Pgn pgnList[] = {
      {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
       VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS}}
 
     ,
@@ -1192,6 +1206,7 @@ Pgn pgnList[] = {
      {VOLTAGE_U16_V_FIELD("Line-Line AC RMS Voltage"),
       VOLTAGE_U16_V_FIELD("Line-Neutral AC RMS Voltage"),
       FREQUENCY_FIELD("AC Frequency", 1 / 128.0),
+      RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS}}
 
     ,
@@ -1209,6 +1224,7 @@ Pgn pgnList[] = {
      {POWER_U16_VAR_FIELD("Reactive Power", NULL),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      RESERVED_FIELD(BYTES(3) + 6),
       END_OF_FIELDS}}
 
     ,
@@ -1237,6 +1253,7 @@ Pgn pgnList[] = {
      {POWER_U16_VAR_FIELD("Reactive Power", NULL),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      RESERVED_FIELD(BYTES(3) + 6),
       END_OF_FIELDS}}
 
     ,
@@ -1265,6 +1282,7 @@ Pgn pgnList[] = {
      {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      RESERVED_FIELD(BYTES(1) + 6),
       END_OF_FIELDS}}
 
     ,
@@ -1293,6 +1311,7 @@ Pgn pgnList[] = {
      {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      RESERVED_FIELD(BYTES(1) + 6),
       END_OF_FIELDS}}
 
     ,
@@ -1328,6 +1347,7 @@ Pgn pgnList[] = {
      {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      RESERVED_FIELD(BYTES(1) + 6),
       END_OF_FIELDS}}
 
     ,
@@ -1356,6 +1376,7 @@ Pgn pgnList[] = {
      {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      RESERVED_FIELD(BYTES(1) + 6),
       END_OF_FIELDS}}
 
     ,
@@ -1384,6 +1405,7 @@ Pgn pgnList[] = {
      {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      RESERVED_FIELD(BYTES(1) + 6),
       END_OF_FIELDS}}
 
     ,
@@ -1412,6 +1434,7 @@ Pgn pgnList[] = {
      {POWER_I32_VAR_OFFSET_FIELD("Reactive Power"),
       POWER_FACTOR_U16_FIELD,
       LOOKUP_FIELD("Power Factor Lagging", 2, POWER_FACTOR),
+      RESERVED_FIELD(BYTES(1) + 6),
       END_OF_FIELDS}}
 
     ,
@@ -1489,7 +1512,7 @@ Pgn pgnList[] = {
      65285,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {COMPANY(135), LOOKUP_FIELD("Boot State", 4, BOOT_STATE), END_OF_FIELDS},
+     {COMPANY(135), LOOKUP_FIELD("Boot State", 3, BOOT_STATE), RESERVED_FIELD(45), END_OF_FIELDS},
      .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
@@ -1500,6 +1523,7 @@ Pgn pgnList[] = {
      {COMPANY(140),
       LOOKUP_FIELD("Temperature Source", BYTES(1), TEMPERATURE_SOURCE),
       TEMPERATURE_FIELD("Actual Temperature"),
+      RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS}}
 
     ,
@@ -1521,7 +1545,7 @@ Pgn pgnList[] = {
      65286,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {COMPANY(135), END_OF_FIELDS},
+     {COMPANY(135), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS},
      .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
@@ -1530,9 +1554,9 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {COMPANY(135),
-      SIMPLE_FIELD("Format Code", 3),
+      UINT8_FIELD("Format Code"),
       LOOKUP_FIELD("Access Level", 3, ACCESS_LEVEL),
-      RESERVED_FIELD(2),
+      RESERVED_FIELD(5),
       UINT32_DESC_FIELD(
           "Access Seed/Key",
           "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208."),
@@ -1540,7 +1564,11 @@ Pgn pgnList[] = {
      .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
-    {"Simnet: Configure Temperature Sensor", 65287, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
+    {"Simnet: Configure Temperature Sensor",
+     65287,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
     {"Seatalk: Alarm",
@@ -1555,16 +1583,32 @@ Pgn pgnList[] = {
       BINARY_FIELD("Alarm Priority", BYTES(2), NULL),
       END_OF_FIELDS}},
 
-    {"Simnet: Trim Tab Sensor Calibration", 65289, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
+    {"Simnet: Trim Tab Sensor Calibration",
+     65289,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
-    {"Simnet: Paddle Wheel Speed Configuration", 65290, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
+    {"Simnet: Paddle Wheel Speed Configuration",
+     65290,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
-    {"Simnet: Clear Fluid Level Warnings", 65292, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
+    {"Simnet: Clear Fluid Level Warnings",
+     65292,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
-    {"Simnet: LGC-2000 Configuration", 65293, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
+    {"Simnet: LGC-2000 Configuration",
+     65293,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
     {"Navico: Wireless Battery Status",
@@ -1583,7 +1627,7 @@ Pgn pgnList[] = {
      65312,
      PACKET_FIELDS_UNKNOWN,
      PACKET_SINGLE,
-     {COMPANY(275), UINT8_FIELD("Unknown"), PERCENTAGE_U8_FIELD("Signal Strength"), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS}}
+     {COMPANY(275), UINT8_FIELD("Unknown"), PERCENTAGE_U8_FIELD("Signal Strength"), RESERVED_FIELD(BYTES(4)), END_OF_FIELDS}}
 
     ,
     {"Seatalk: Pilot Wind Datum",
@@ -1595,6 +1639,7 @@ Pgn pgnList[] = {
       ANGLE_U16_FIELD("Rolling Average Wind Angle", NULL),
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS}},
+
     {"Seatalk: Pilot Heading",
      65359,
      PACKET_INCOMPLETE,
@@ -1642,6 +1687,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Second key state", 2),
       RESERVED_FIELD(4),
       UINT8_FIELD("Encoder Position"),
+      RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS}}
 
     ,
@@ -1649,7 +1695,12 @@ Pgn pgnList[] = {
      65374,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(1851), UINT8_FIELD("Proprietary ID"), UINT8_FIELD("Variant"), UINT8_FIELD("Status"), END_OF_FIELDS}}
+     {COMPANY(1851),
+      UINT8_FIELD("Proprietary ID"),
+      UINT8_FIELD("Variant"),
+      UINT8_FIELD("Status"),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS}}
 
     ,
     {"Seatalk: Pilot Mode",
@@ -1667,7 +1718,11 @@ Pgn pgnList[] = {
      65408,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(135), UINT8_FIELD("SID"), LOOKUP_FIELD("Depth Quality Factor", 4, AIRMAR_DEPTH_QUALITY_FACTOR), END_OF_FIELDS},
+     {COMPANY(135),
+      UINT8_FIELD("SID"),
+      LOOKUP_FIELD("Depth Quality Factor", 4, AIRMAR_DEPTH_QUALITY_FACTOR),
+      RESERVED_FIELD(36),
+      END_OF_FIELDS},
      .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
@@ -1698,7 +1753,7 @@ Pgn pgnList[] = {
      .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
-    {"Simnet: Autopilot Mode", 65480, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), END_OF_FIELDS}}
+    {"Simnet: Autopilot Mode", 65480, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     /* PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (126208 - 126464) */
     /* Only 0x1ED00 and 0x1EE00 seem to be used? */
@@ -2082,18 +2137,7 @@ Pgn pgnList[] = {
      {COMPANY(135),
       MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 34, AIRMAR_COMMAND),
       LOOKUP_FIELD_DESC("COG substitution for HDG", 2, YES_NO, "Allow use of COG when HDG not available?"),
-      LOOKUP_FIELD("Calibration Status", BYTES(1), AIRMAR_CALIBRATE_STATUS),
-      UINT8_DESC_FIELD("Verify Score", "TBD"),
-      GAIN_FIELD("X-axis gain value", "default 100, range 50 to 500"),
-      GAIN_FIELD("Y-axis gain value", "default 100, range 50 to 500"),
-      GAIN_FIELD("Z-axis gain value", "default 100, range 50 to 500"),
-      MAGNETIC_FIX16_FIELD("X-axis linear offset", "default 0, range -320.00 to 320.00"),
-      MAGNETIC_FIX16_FIELD("Y-axis linear offset", "default 0, range -320.00 to 320.00"),
-      MAGNETIC_FIX16_FIELD("Z-axis linear offset", "default 0, range -320.00 to 320.00"),
-      ANGLE_FIX16_DDEG_FIELD("X-axis angular offset", "default 0, range 0 to 3600"),
-      TIME_FIX16_5CS_FIELD("Pitch and Roll damping", "default 30, range 0 to 200"),
-      TIME_FIX16_5CS_FIELD("Compass/Rate gyro damping",
-                           "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"),
+      RESERVED_FIELD(22),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .url      = "http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf"}
@@ -2250,7 +2294,7 @@ Pgn pgnList[] = {
     {"0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed",
      126976,
      PACKET_INCOMPLETE,
-     PACKET_SINGLE,
+     PACKET_MIXED,
      {BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), NULL), END_OF_FIELDS},
      .fallback    = true,
      .explanation = "Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to "
@@ -2610,6 +2654,7 @@ Pgn pgnList[] = {
       ANGLE_I16_FIELD("Yaw", NULL),
       ANGLE_I16_FIELD("Pitch", NULL),
       ANGLE_I16_FIELD("Roll", NULL),
+      RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval = 1000}
 
@@ -2625,6 +2670,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       DATE_FIELD("Age of service"),
       ANGLE_I16_FIELD("Variation", NULL),
+      RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
      .interval = 1000}
 
@@ -3009,7 +3055,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("DC Instance"),
       LOOKUP_FIELD("Operating State", 4, INVERTER_STATE),
       LOOKUP_FIELD("Inverter Enable", 2, OFF_ON),
-      RESERVED_FIELD(2),
+      RESERVED_FIELD(2 + BYTES(4)),
       END_OF_FIELDS},
      .interval = 1500,
      .url      = "https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf"}
@@ -3046,6 +3092,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("AC Instance"),
       UINT8_FIELD("DC Instance"),
       SIMPLE_FIELD("Inverter Enable/Disable", 2),
+      RESERVED_FIELD(6),
       UINT8_FIELD("Inverter Mode"),
       UINT8_FIELD("Load Sense Enable/Disable"),
       UINT8_FIELD("Load Sense Power Threshold"),
@@ -3058,7 +3105,7 @@ Pgn pgnList[] = {
      127512,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {INSTANCE_FIELD, UINT8_FIELD("Generator Instance"), UINT8_FIELD("AGS Mode"), END_OF_FIELDS},
+     {INSTANCE_FIELD, UINT8_FIELD("Generator Instance"), UINT8_FIELD("AGS Mode"), RESERVED_FIELD(BYTES(5)), END_OF_FIELDS},
      .interval = UINT16_MAX}
 
     /* #143, @ksltd writes that it is definitely 10 bytes and that
@@ -3101,6 +3148,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Generator State"),
       UINT8_FIELD("Generator On Reason"),
       UINT8_FIELD("Generator Off Reason"),
+      RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
      .interval = 1500}
 
@@ -3197,6 +3245,7 @@ Pgn pgnList[] = {
      {UINT8_FIELD("Inverter/Motor Controller"),
       SIMPLE_FIELD("Active Motor Mode", 2),
       SIMPLE_FIELD("Brake Mode", 2),
+      RESERVED_FIELD(4),
       ROTATION_UFIX16_RPM_FIELD("Rotational Shaft Speed", NULL),
       VOLTAGE_U16_100MV_FIELD("Motor DC Voltage"),
       CURRENT_FIX16_DA_FIELD("Motor DC Current"),
@@ -3378,7 +3427,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Elevator Car Usage"),
       SIMPLE_FIELD("Motor Acceleration/Deceleration profile selection", 4),
       SIMPLE_FIELD("Motor Rotational Control Status", 2),
-      RESERVED_FIELD(2),
+      RESERVED_FIELD(2 + BYTES(4)),
       END_OF_FIELDS},
      .explanation = "This PGN provides the status of an elevator motor controller. Settings of the elevator motor controller may "
                     "be changed using the NMEA Command Group Function."}
@@ -3415,7 +3464,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Anchor Light", 2, OFF_ON),
       TIME_UFIX8_5MS_FIELD("Command Timeout", "If timeout elapses the thruster stops operating and reverts to static mode"),
       BITLOOKUP_FIELD("Windlass Control Events", 4, WINDLASS_CONTROL),
-      RESERVED_FIELD(4),
+      RESERVED_FIELD(12),
       END_OF_FIELDS},
      .url = "https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf"}
 
@@ -3445,7 +3494,7 @@ Pgn pgnList[] = {
      {UINT8_FIELD("SID"),
       UINT8_FIELD("Windlass ID"),
       BITLOOKUP_FIELD("Windlass Monitoring Events", 8, WINDLASS_MONITORING),
-      VOLTAGE_U16_200MV_FIELD("Controller voltage"),
+      VOLTAGE_UFIX8_200MV_FIELD("Controller voltage"),
       CURRENT_UFIX8_A_FIELD("Motor current"),
       TIME_UFIX16_MIN_FIELD("Total Motor Time", NULL),
       RESERVED_FIELD(BYTES(1)),
@@ -3503,6 +3552,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Time Delta", BYTES(2)),
       SIMPLE_SIGNED_FIELD("Latitude Delta", BYTES(2)),
       SIMPLE_SIGNED_FIELD("Longitude Delta", BYTES(2)),
+      RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval = 100}
 
@@ -3619,6 +3669,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Can handle Msg 22", 1, YES_NO),
       LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
       LOOKUP_FIELD("AIS communication state", 1, AIS_COMMUNICATION_STATE),
+      RESERVED_FIELD(15),
       END_OF_FIELDS},
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
@@ -3626,7 +3677,7 @@ Pgn pgnList[] = {
     ,
     {"AIS Class B Extended Position Report",
      129040,
-     PACKET_COMPLETE,
+     PACKET_NOT_SEEN,
      PACKET_FAST,
      {LOOKUP_FIELD("Message ID", 6, AIS_MESSAGE_ID),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
@@ -3654,6 +3705,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AIS mode", 1, AIS_MODE),
       SPARE_FIELD(4),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(5),
       END_OF_FIELDS},
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
@@ -3815,6 +3867,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(6),
       ANGLE_U16_FIELD("Set", NULL),
       SPEED_U16_CM_FIELD("Drift"),
+      RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
      .interval = 1000}
 
@@ -3866,6 +3919,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Max Correction Age", BYTES(2)),
       LENGTH_UFIX16_CM_FIELD("Antenna Altitude for 2D Mode"),
       LOOKUP_FIELD("Use Antenna Altitude for 2D Mode", 2, YES_NO),
+      RESERVED_FIELD(6),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
@@ -3968,7 +4022,7 @@ Pgn pgnList[] = {
     ,
     {"GNSS RAIM Output",
      129545,
-     PACKET_INCOMPLETE,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {UINT8_FIELD("SID"),
       SIMPLE_FIELD("Integrity flag", 4),
@@ -3986,12 +4040,13 @@ Pgn pgnList[] = {
     ,
     {"GNSS RAIM Settings",
      129546,
-     PACKET_INCOMPLETE,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_SINGLE,
      {UINT8_FIELD("Radial Position Error Maximum Threshold"),
       UINT8_FIELD("Probability of False Alarm"),
       UINT8_FIELD("Probability of Missed Detection"),
       UINT8_FIELD("Pseudorange Residual Filtering Time Constant"),
+      RESERVED_FIELD(BYTES(4)),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
@@ -4164,6 +4219,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
       RESERVED_FIELD(1),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
       END_OF_FIELDS},
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
@@ -4204,6 +4260,7 @@ Pgn pgnList[] = {
       BINARY_FIELD("Sequence Number for ID 1", 2, "reserved"),
       RESERVED_FIELD(6),
       BINARY_FIELD("Sequence Number for ID n", 2, "reserved"),
+      RESERVED_FIELD(6),
       END_OF_FIELDS},
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
@@ -4319,23 +4376,29 @@ Pgn pgnList[] = {
     {"AIS Interrogation",
      129803,
      PACKET_INCOMPLETE,
-     PACKET_SINGLE,
+     PACKET_FAST,
      {LOOKUP_FIELD("Message ID", 6, AIS_MESSAGE_ID),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       MMSI_FIELD("Source ID"),
       RESERVED_FIELD(1),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       SPARE_FIELD(2),
-      MMSI_FIELD("Destination ID"),
-      RESERVED_FIELD(2),
-      LOOKUP_FIELD("Message ID A", 6, AIS_MESSAGE_ID),
-      SIMPLE_FIELD("Slot Offset A", 16),
+      MMSI_FIELD("Destination ID 1"),
+      LOOKUP_FIELD("Message ID 1.1", 6, AIS_MESSAGE_ID),
+      SIMPLE_FIELD("Slot Offset 1.1", 12),
+      SPARE_FIELD(2),
+      LOOKUP_FIELD("Message ID 1.2", 6, AIS_MESSAGE_ID),
+      SIMPLE_FIELD("Slot Offset 1.2", 12),
+      SPARE_FIELD(2),
+      MMSI_FIELD("Destination ID 2"),
+      LOOKUP_FIELD("Message ID 2.1", 6, AIS_MESSAGE_ID),
+      SIMPLE_FIELD("Slot Offset 2.1", 12),
+      SPARE_FIELD(2),
+      RESERVED_FIELD(4),
+      UINT8_FIELD("SID"),
       END_OF_FIELDS},
-     .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
-     .interval        = UINT16_MAX,
-     .repeatingField1 = 255,
-     .repeatingCount1 = 4,
-     .repeatingStart1 = 7}
+     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .interval = UINT16_MAX}
 
     ,
     {"AIS Assignment Mode Command",
@@ -4410,7 +4473,7 @@ Pgn pgnList[] = {
     ,
     {"AIS Class B Group Assignment",
      129807,
-     PACKET_INCOMPLETE,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {LOOKUP_FIELD("Message ID", 6, AIS_MESSAGE_ID),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
@@ -4423,7 +4486,7 @@ Pgn pgnList[] = {
       LONGITUDE_I32_FIELD("South West Longitude Corner 1"),
       LATITUDE_I32_FIELD("South West Latitude Corner 2"),
       LOOKUP_FIELD("Station Type", 4, STATION_TYPE),
-      RESERVED_FIELD(2),
+      RESERVED_FIELD(4),
       UINT8_FIELD("Ship and Cargo Filter"),
       SPARE_FIELD(22),
       RESERVED_FIELD(2),
@@ -4707,6 +4770,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("WP Identification Method", 2),
       SIMPLE_FIELD("Route Status", 2),
       UINT16_FIELD("XTE Limit for the Route"),
+      RESERVED_FIELD(2),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
@@ -4953,6 +5017,7 @@ Pgn pgnList[] = {
       INSTANCE_FIELD,
       LOOKUP_FIELD("Source", BYTES(1), PRESSURE_SOURCE),
       PRESSURE_UFIX32_DPA_FIELD("Pressure"),
+      RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
@@ -5490,6 +5555,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Mute", 2, YES_NO),
       RESERVED_FIELD(4),
       LOOKUP_FIELD("Channel", 8, ENTERTAINMENT_CHANNEL),
+      RESERVED_FIELD(BYTES(4)),
       END_OF_FIELDS}}
 
     ,
@@ -6332,8 +6398,9 @@ Pgn pgnList[] = {
       UINT8_FIELD("ON Counter"),
       UINT8_FIELD("ERROR Counter"),
       LOOKUP_FIELD("Switch Status", 2, OFF_ON),
-      RESERVED_FIELD(BYTES(2)),
-      END_OF_FIELDS}}
+      RESERVED_FIELD(6),
+      END_OF_FIELDS},
+     .interval = 15000}
 
     ,
     {"Simnet: Fuel Flow Turbine Configuration",
@@ -6357,7 +6424,8 @@ Pgn pgnList[] = {
       TIME_UFIX32_S_FIELD("Accumulated ERROR Period", NULL),
       LOOKUP_FIELD("Switch Status", 2, OFF_ON),
       RESERVED_FIELD(6),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 15000}
 
     ,
     {"Simnet: Fluid Level Warning", 130838, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {COMPANY(1857), END_OF_FIELDS}}
@@ -6639,7 +6707,7 @@ Pgn pgnList[] = {
     {"Actisense: Operating mode",
      ACTISENSE_BEM + 0x11,
      PACKET_COMPLETE,
-     PACKET_SINGLE,
+     PACKET_FAST,
      {UINT8_FIELD("SID"),
       UINT16_FIELD("Model ID"),
       UINT32_FIELD("Serial ID"),
@@ -6651,7 +6719,7 @@ Pgn pgnList[] = {
     {"Actisense: Startup status",
      ACTISENSE_BEM + 0xf0,
      PACKET_INCOMPLETE,
-     PACKET_SINGLE,
+     PACKET_FAST,
      {UINT8_FIELD("SID"),
       UINT16_FIELD("Model ID"),
       UINT32_FIELD("Serial ID"),
@@ -6665,7 +6733,7 @@ Pgn pgnList[] = {
     {"Actisense: System status",
      ACTISENSE_BEM + 0xf2,
      PACKET_INCOMPLETE,
-     PACKET_SINGLE,
+     PACKET_FAST,
      {UINT8_FIELD("SID"),
       UINT16_FIELD("Model ID"),
       UINT32_FIELD("Serial ID"),
@@ -6698,14 +6766,14 @@ Pgn pgnList[] = {
     {"Actisense: ?",
      ACTISENSE_BEM + 0xf4,
      PACKET_INCOMPLETE,
-     PACKET_SINGLE,
+     PACKET_FAST,
      {UINT8_FIELD("SID"), UINT16_FIELD("Model ID"), UINT32_FIELD("Serial ID"), END_OF_FIELDS}}
 
     ,
     {"iKonvert: Network status",
      IKONVERT_BEM,
      PACKET_COMPLETE,
-     PACKET_SINGLE,
+     PACKET_FAST,
      {UINT8_FIELD("CAN network load"),
       UINT32_FIELD("Errors"),
       UINT8_FIELD("Device count"),

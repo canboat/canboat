@@ -31,7 +31,7 @@ limitations under the License.
       <PGN>262161</PGN>
       <Id>actisenseOperatingMode</Id>
       <Description>Actisense: Operating mode</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
@@ -109,7 +109,7 @@ limitations under the License.
       <PGN>262384</PGN>
       <Id>actisenseStartupStatus</Id>
       <Description>Actisense: Startup status</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
@@ -215,7 +215,7 @@ limitations under the License.
       <PGN>262386</PGN>
       <Id>actisenseSystemStatus</Id>
       <Description>Actisense: System status</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
@@ -569,7 +569,7 @@ limitations under the License.
       <PGN>262388</PGN>
       <Id>actisense</Id>
       <Description>Actisense: ?</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>

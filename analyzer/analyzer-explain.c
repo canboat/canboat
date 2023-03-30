@@ -204,7 +204,18 @@ static unsigned int getMinimalPgnLength(Pgn *pgn, bool *isVariable)
     }
   }
 
+  if (length % 8 != 0)
+  {
+    logAbort("PGN %u '%s' has a length of %u bits that does not fill bytes exactly\n", pgn->pgn, pgn->description, length);
+  }
+
   length /= 8; // Bits to bytes
+
+  if (pgn->type == PACKET_SINGLE && length != 8 && pgn->pgn != 59904)
+  {
+    logAbort("PGN %u '%s' has a length %u bytes but a single-frame PGN should be 8 bytes\n", pgn->pgn, pgn->description, length);
+  }
+
   logDebug("PGN %u len=%u\n", pgn->pgn, length);
   return length;
 }

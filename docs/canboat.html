@@ -172,7 +172,9 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-60416">0xEC00:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><p>
+              Source:
+              <a href="https://embeddedflakes.com/j1939-transport-protocol/">https://embeddedflakes.com/j1939-transport-protocol/</a></p><h3 id="pgn-60416">0xEC00:
             PGN 60416
             - ISO Transport Protocol, Connection Management - Clear To Send</h3><p>
               This PGN description applies when the following field(s) match:
@@ -201,7 +203,9 @@ limitations under the License.
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-60416">0xEC00:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><p>
+              Source:
+              <a href="https://embeddedflakes.com/j1939-transport-protocol/">https://embeddedflakes.com/j1939-transport-protocol/</a></p><h3 id="pgn-60416">0xEC00:
             PGN 60416
             - ISO Transport Protocol, Connection Management - End Of Message</h3><p>
               This PGN description applies when the following field(s) match:
@@ -230,7 +234,9 @@ limitations under the License.
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-60416">0xEC00:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><p>
+              Source:
+              <a href="https://embeddedflakes.com/j1939-transport-protocol/">https://embeddedflakes.com/j1939-transport-protocol/</a></p><h3 id="pgn-60416">0xEC00:
             PGN 60416
             - ISO Transport Protocol, Connection Management - Broadcast Announce</h3><p>
               This PGN description applies when the following field(s) match:
@@ -259,7 +265,9 @@ limitations under the License.
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-60416">0xEC00:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><p>
+              Source:
+              <a href="https://embeddedflakes.com/j1939-transport-protocol/">https://embeddedflakes.com/j1939-transport-protocol/</a></p><h3 id="pgn-60416">0xEC00:
             PGN 60416
             - ISO Transport Protocol, Connection Management - Abort</h3><p>
               This PGN description applies when the following field(s) match:
@@ -269,7 +277,7 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            7
+            8
             bytes long and contains 4 fields.
 
             
@@ -279,11 +287,13 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-ISO_COMMAND">ISO_COMMAND</a></td></tr><tr><td>2</td><td>Reason</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-BINARY">BINARY</a></td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>24 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>4</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-60928">0xEE00:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><p>
+              Source:
+              <a href="https://embeddedflakes.com/j1939-transport-protocol/">https://embeddedflakes.com/j1939-transport-protocol/</a></p><h3 id="pgn-60928">0xEE00:
             PGN 60928
             - ISO Address Claim</h3><p>This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination.</p><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -338,8 +348,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 7 fields.
+            8
+            bytes long and contains 8 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -363,7 +373,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Wired Setting</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-61184">0xEF00:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-61184">0xEF00:
             PGN 61184
             - Seatalk: Wireless Keypad Control</h3><p>
               This PGN description applies when the following field(s) match:
@@ -373,8 +384,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            5
-            bytes long and contains 6 fields.
+            8
+            bytes long and contains 7 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -394,7 +405,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Beep Control</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-61184">0xEF00:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-61184">0xEF00:
             PGN 61184
             - Victron Battery Register</h3><p>
               This PGN description applies when the following field(s) match:
@@ -430,8 +442,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
@@ -442,7 +454,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>AC Frequency</td><td/><td>0.0078125 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 511.9765625</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-65002">0xFDEA:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65002">0xFDEA:
             PGN 65002
             - Bus #1 Phase B Basic AC Quantities</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -450,8 +463,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
@@ -462,7 +475,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>AC Frequency</td><td/><td>0.0078125 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 511.9765625</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-65003">0xFDEB:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65003">0xFDEB:
             PGN 65003
             - Bus #1 Phase A Basic AC Quantities</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -470,8 +484,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
@@ -482,7 +496,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>AC Frequency</td><td/><td>0.0078125 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 511.9765625</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-65004">0xFDEC:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65004">0xFDEC:
             PGN 65004
             - Bus #1 Average Basic AC Quantities</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -490,8 +505,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
@@ -502,7 +517,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>AC Frequency</td><td/><td>0.0078125 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 511.9765625</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-65005">0xFDED:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65005">0xFDED:
             PGN 65005
             - Utility Total AC Energy</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -527,8 +543,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            4
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
@@ -539,7 +555,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr></table><h3 id="pgn-65007">0xFDEF:
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>30 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65007">0xFDEF:
             PGN 65007
             - Utility Phase C AC Power</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -589,8 +606,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            4
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
@@ -601,7 +618,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr></table><h3 id="pgn-65010">0xFDF2:
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>30 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65010">0xFDF2:
             PGN 65010
             - Utility Phase B AC Power</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -651,8 +669,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
@@ -664,7 +682,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr></table><h3 id="pgn-65013">0xFDF5:
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65013">0xFDF5:
             PGN 65013
             - Utility Phase A AC Power</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -714,8 +733,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
@@ -727,7 +746,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr></table><h3 id="pgn-65016">0xFDF8:
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65016">0xFDF8:
             PGN 65016
             - Utility Total AC Power</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -794,8 +814,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
@@ -807,7 +827,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr></table><h3 id="pgn-65020">0xFDFC:
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65020">0xFDFC:
             PGN 65020
             - Generator Phase C AC Power</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -857,8 +878,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
@@ -870,7 +891,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr></table><h3 id="pgn-65023">0xFDFF:
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65023">0xFDFF:
             PGN 65023
             - Generator Phase B AC Power</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -920,8 +942,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
@@ -933,7 +955,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr></table><h3 id="pgn-65026">0xFE02:
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65026">0xFE02:
             PGN 65026
             - Generator Phase A AC Power</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -983,8 +1006,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
@@ -996,7 +1019,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr></table><h3 id="pgn-65029">0xFE05:
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65029">0xFE05:
             PGN 65029
             - Generator Total AC Power</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -1148,8 +1172,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            2
-            bytes long and contains 4 fields.
+            8
+            bytes long and contains 5 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1160,10 +1184,11 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Boot State</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Boot State</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-BOOT_STATE">BOOT_STATE</a></td></tr></table><p>
+                      <a href="#lookup-BOOT_STATE">BOOT_STATE</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>45 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
               <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-65285">0xFF05:
             PGN 65285
@@ -1175,8 +1200,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            5
-            bytes long and contains 5 fields.
+            8
+            bytes long and contains 6 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>140:
                   Lowrance</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1193,7 +1218,8 @@ limitations under the License.
                       <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td></tr><tr><td>5</td><td>Actual Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-65286">0xFF06:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>24 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65286">0xFF06:
             PGN 65286
             - Chetco: Dimmer</h3><p>
               This PGN description applies when the following field(s) match:
@@ -1243,8 +1269,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1255,7 +1281,8 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr></table><p>
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
               <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-65287">0xFF07:
             PGN 65287
@@ -1267,7 +1294,7 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            7
+            8
             bytes long and contains 7 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
@@ -1279,13 +1306,13 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Format Code</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Format Code</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Access Level</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-ACCESS_LEVEL">ACCESS_LEVEL</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-ACCESS_LEVEL">ACCESS_LEVEL</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>5 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>7</td><td>Access Seed/Key</td><td>When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208.</td><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
@@ -1301,8 +1328,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1313,7 +1340,8 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr></table><h3 id="pgn-65288">0xFF08:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65288">0xFF08:
             PGN 65288
             - Seatalk: Alarm</h3><p>
               This PGN description applies when the following field(s) match:
@@ -1356,8 +1384,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1368,7 +1396,8 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr></table><h3 id="pgn-65290">0xFF0A:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65290">0xFF0A:
             PGN 65290
             - Simnet: Paddle Wheel Speed Configuration</h3><p>
               This PGN description applies when the following field(s) match:
@@ -1378,8 +1407,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1390,7 +1419,8 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr></table><h3 id="pgn-65292">0xFF0C:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65292">0xFF0C:
             PGN 65292
             - Simnet: Clear Fluid Level Warnings</h3><p>
               This PGN description applies when the following field(s) match:
@@ -1400,8 +1430,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1412,7 +1442,8 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr></table><h3 id="pgn-65293">0xFF0D:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65293">0xFF0D:
             PGN 65293
             - Simnet: LGC-2000 Configuration</h3><p>
               This PGN description applies when the following field(s) match:
@@ -1422,8 +1453,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1434,7 +1465,8 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr></table><h3 id="pgn-65309">0xFF1D:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65309">0xFF1D:
             PGN 65309
             - Navico: Wireless Battery Status</h3><p>
               This PGN description applies when the following field(s) match:
@@ -1476,7 +1508,7 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            7
+            8
             bytes long and contains 6 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
@@ -1494,7 +1526,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Signal Strength</td><td/><td>%<div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>32 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65345">0xFF41:
             PGN 65345
             - Seatalk: Pilot Wind Datum</h3><p>
@@ -1623,8 +1655,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            7
-            bytes long and contains 10 fields.
+            8
+            bytes long and contains 11 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1654,7 +1686,8 @@ limitations under the License.
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>10</td><td>Encoder Position</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-65374">0xFF5E:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65374">0xFF5E:
             PGN 65374
             - SeaTalk: Keypad Heartbeat</h3><p>
               This PGN description applies when the following field(s) match:
@@ -1664,8 +1697,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            5
-            bytes long and contains 6 fields.
+            8
+            bytes long and contains 7 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1685,7 +1718,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-65379">0xFF63:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65379">0xFF63:
             PGN 65379
             - Seatalk: Pilot Mode</h3><p>
               This PGN description applies when the following field(s) match:
@@ -1721,8 +1755,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            3
-            bytes long and contains 5 fields.
+            8
+            bytes long and contains 6 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1739,7 +1773,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Depth Quality Factor</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_DEPTH_QUALITY_FACTOR">AIRMAR_DEPTH_QUALITY_FACTOR</a></td></tr></table><p>
+                      <a href="#lookup-AIRMAR_DEPTH_QUALITY_FACTOR">AIRMAR_DEPTH_QUALITY_FACTOR</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>36 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
               <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-65409">0xFF81:
             PGN 65409
@@ -1821,8 +1856,8 @@ limitations under the License.
             This
              single-frame 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -1833,7 +1868,8 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr></table><h2 id="pgn-126208">0x1ED00 - 0x1EE00: Standardized fast-packet addressed</h2><p>Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (65536 - 126464). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126208">0x1ED00:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h2 id="pgn-126208">0x1ED00 - 0x1EE00: Standardized fast-packet addressed</h2><p>Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (65536 - 126464). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126208">0x1ED00:
             PGN 126208
             - NMEA - Request group function</h3><p>
               This PGN description applies when the following field(s) match:
@@ -2702,8 +2738,8 @@ limitations under the License.
             This
              fast-packet 
             PGN is
-            23
-            bytes long and contains 16 fields.
+            6
+            bytes long and contains 6 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -2723,40 +2759,8 @@ limitations under the License.
                       <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td></tr><tr><td>5</td><td>COG substitution for HDG</td><td>Allow use of COG when HDG not available?</td><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td></tr><tr><td>6</td><td>Calibration Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-AIRMAR_CALIBRATE_STATUS">AIRMAR_CALIBRATE_STATUS</a></td></tr><tr><td>7</td><td>Verify Score</td><td>TBD</td><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>X-axis gain value</td><td>default 100, range 50 to 500</td><td>0.01 <div class="xs">-327.67 .. 327.65</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Y-axis gain value</td><td>default 100, range 50 to 500</td><td>0.01 <div class="xs">-327.67 .. 327.65</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Z-axis gain value</td><td>default 100, range 50 to 500</td><td>0.01 <div class="xs">-327.67 .. 327.65</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>X-axis linear offset</td><td/><td>0.01 <a href="#pq-MAGNETIC_FIELD">T</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>12</td><td>Y-axis linear offset</td><td/><td>0.01 <a href="#pq-MAGNETIC_FIELD">T</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>13</td><td>Z-axis linear offset</td><td/><td>0.01 <a href="#pq-MAGNETIC_FIELD">T</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>14</td><td>X-axis angular offset</td><td/><td>0.1 <a href="#pq-ANGLE">deg</a><div class="xs">-3276.7 .. 3276.5</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>15</td><td>Pitch and Roll damping</td><td>default 30, range 0 to 200</td><td>0.05 <a href="#pq-TIME">s</a><div class="xs">-1638.35 .. 1638.25</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-TIME">TIME</a></td></tr><tr><td>16</td><td>Compass/Rate gyro damping</td><td>default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations</td><td>0.05 <a href="#pq-TIME">s</a><div class="xs">-1638.35 .. 1638.25</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-TIME">TIME</a></td></tr></table><p>
+                      <a href="#lookup-YES_NO">YES_NO</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>22 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
               <a href="http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf">http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf</a></p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
@@ -3828,8 +3832,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            7
-            bytes long and contains 4 fields.
+            8
+            bytes long and contains 5 fields.
 
             
               It is normally transmitted every 1000 milliseconds.
@@ -3845,7 +3849,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Roll</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-127258">0x1F11A:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-127258">0x1F11A:
             PGN 127258
             - Magnetic Variation</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -3853,8 +3858,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 5 fields.
+            8
+            bytes long and contains 6 fields.
 
             
               It is normally transmitted every 1000 milliseconds.
@@ -3871,7 +3876,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-DATE">DATE</a></td></tr><tr><td>5</td><td>Variation</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-127488">0x1F200:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-127488">0x1F200:
             PGN 127488
             - Engine Parameters, Rapid Update</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -4708,7 +4714,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            4
+            8
             bytes long and contains 6 fields.
 
             
@@ -4728,7 +4734,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-INVERTER_STATE">INVERTER_STATE</a></td></tr><tr><td>5</td><td>Inverter Enable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>34 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
               <a href="https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf">https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf</a></p><h3 id="pgn-127510">0x1F216:
@@ -4783,8 +4789,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            7
-            bytes long and contains 8 fields.
+            8
+            bytes long and contains 9 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -4800,16 +4806,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Inverter Enable/Disable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Inverter Mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>6</td><td>Inverter Mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Load Sense Enable/Disable</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Load Sense Enable/Disable</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Load Sense Power Threshold</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Load Sense Power Threshold</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Load Sense Interval</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Load Sense Interval</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-127512">0x1F218:
@@ -4820,8 +4827,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            3
-            bytes long and contains 3 fields.
+            8
+            bytes long and contains 4 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -4834,7 +4841,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>AGS Mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-127513">0x1F219:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>40 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-127513">0x1F219:
             PGN 127513
             - Battery Configuration Status</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -4884,8 +4892,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 6 fields.
+            8
+            bytes long and contains 7 fields.
 
             
               It is normally transmitted every 1500 milliseconds.
@@ -4907,7 +4915,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Generator Off Reason</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-127744">0x1F300:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-127744">0x1F300:
             PGN 127744
             - AC Power / Current - Phase A</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -5081,8 +5090,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            7
-            bytes long and contains 6 fields.
+            8
+            bytes long and contains 7 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Inverter/Motor Controller</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -5093,13 +5102,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Brake Mode</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Rotational Shaft Speed</td><td/><td>0.25 <a href="#pq-ANGULAR_VELOCITY">rpm</a><div class="xs">0 .. 16383.25</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>Rotational Shaft Speed</td><td/><td>0.25 <a href="#pq-ANGULAR_VELOCITY">rpm</a><div class="xs">0 .. 16383.25</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Motor DC Voltage</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.3</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Motor DC Voltage</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.3</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Motor DC Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.5</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Motor DC Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.5</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-128003">0x1F403:
@@ -5464,7 +5474,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            4
+            8
             bytes long and contains 6 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -5482,7 +5492,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Motor Rotational Control Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>34 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-128769">0x1F701:
             PGN 128769
             - Elevator Deck Push Button</h3><p>Transmit data of Deck controller to Elevator Main controller.</p><p>
@@ -5518,7 +5528,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            7
+            8
             bytes long and contains 14 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -5556,7 +5566,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-TIME">TIME</a></td></tr><tr><td>13</td><td>Windlass Control Events</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
                   
                       bitfield
-                      <a href="#lookupbit-WINDLASS_CONTROL">WINDLASS_CONTROL</a></td></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>4 bits
+                      <a href="#lookupbit-WINDLASS_CONTROL">WINDLASS_CONTROL</a></td></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>12 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
               <a href="https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf">https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf</a></p><h3 id="pgn-128777">0x1F709:
@@ -5608,7 +5618,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            9
+            8
             bytes long and contains 7 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -5620,7 +5630,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Windlass Monitoring Events</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       bitfield
-                      <a href="#lookupbit-WINDLASS_MONITORING">WINDLASS_MONITORING</a></td></tr><tr><td>4</td><td>Controller voltage</td><td/><td>0.2 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 13106.6</div></td><td>16 bits
+                      <a href="#lookupbit-WINDLASS_MONITORING">WINDLASS_MONITORING</a></td></tr><tr><td>4</td><td>Controller voltage</td><td/><td>0.2 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 50.6</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Motor current</td><td/><td><a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">0 .. 253</div></td><td>8 bits
@@ -5715,8 +5725,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            7
-            bytes long and contains 4 fields.
+            8
+            bytes long and contains 5 fields.
 
             
               It is normally transmitted every 100 milliseconds.
@@ -5732,7 +5742,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Longitude Delta</td><td/><td><div class="xs">-32767 .. 32765</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-129028">0x1F804:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-129028">0x1F804:
             PGN 129028
             - Altitude Delta, Rapid Update</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -5930,8 +5941,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            25
-            bytes long and contains 22 fields.
+            27
+            bytes long and contains 23 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -5995,18 +6006,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-AIS_MODE">AIS_MODE</a></td></tr><tr><td>22</td><td>AIS communication state</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-AIS_COMMUNICATION_STATE">AIS_COMMUNICATION_STATE</a></td></tr></table><p>
+                      <a href="#lookup-AIS_COMMUNICATION_STATE">AIS_COMMUNICATION_STATE</a></td></tr><tr><td>23</td><td>Reserved</td><td/><td/><td>15 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129040">0x1F810:
             PGN 129040
             - AIS Class B Extended Position Report</h3><p/><p>
-                This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
-              </p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            53
-            bytes long and contains 26 fields.
+            54
+            bytes long and contains 27 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -6076,7 +6088,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>26</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td></tr></table><p>
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td></tr><tr><td>27</td><td>Reserved</td><td/><td/><td>5 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129041">0x1F811:
             PGN 129041
@@ -6364,8 +6377,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            6
-            bytes long and contains 5 fields.
+            8
+            bytes long and contains 6 fields.
 
             
               It is normally transmitted every 1000 milliseconds.
@@ -6382,7 +6395,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Drift</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-129301">0x1F915:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-129301">0x1F915:
             PGN 129301
             - Navigation - Route / Time to+from Mark</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -6457,8 +6471,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            13
-            bytes long and contains 10 fields.
+            14
+            bytes long and contains 11 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -6492,7 +6506,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Use Antenna Altitude for 2D Mode</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td></tr></table><h3 id="pgn-129539">0x1FA03:
+                      <a href="#lookup-YES_NO">YES_NO</a></td></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-129539">0x1FA03:
             PGN 129539
             - GNSS DOPs</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -6666,7 +6681,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129545
             - GNSS RAIM Output</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
@@ -6707,12 +6722,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129546
             - GNSS RAIM Settings</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              single-frame 
             PGN is
-            4
-            bytes long and contains 4 fields.
+            8
+            bytes long and contains 5 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -6728,7 +6743,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Pseudorange Residual Filtering Time Constant</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-129547">0x1FA0B:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>32 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-129547">0x1FA0B:
             PGN 129547
             - GNSS Pseudorange Error Statistics</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -7051,8 +7067,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            74
-            bytes long and contains 20 fields.
+            75
+            bytes long and contains 21 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -7106,7 +7122,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>20</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td></tr></table><p>
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td></tr><tr><td>21</td><td>Reserved</td><td/><td/><td>3 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129795">0x1FB03:
             PGN 129795
@@ -7163,8 +7180,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            11
-            bytes long and contains 10 fields.
+            12
+            bytes long and contains 11 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -7188,7 +7205,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Sequence Number for ID 1</td><td>reserved</td><td/><td>2 bits
                   <a href="#ft-BINARY">BINARY</a></td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>6 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>10</td><td>Sequence Number for ID n</td><td>reserved</td><td/><td>2 bits
-                  <a href="#ft-BINARY">BINARY</a></td></tr></table><p>
+                  <a href="#ft-BINARY">BINARY</a></td></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129797">0x1FB05:
             PGN 129797
@@ -7420,18 +7438,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
-             single-frame 
+             fast-packet 
             PGN is
-            
-              at least 6
-            bytes long and contains 10 fields.
+            23
+            bytes long and contains 19 fields.
 
             
-        The 4 fields starting at field 
-        7 
-        (with name "Destination ID")
-        form repeating set 1. The set is repeated until there is no more data in the PGN.
-      
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
@@ -7447,14 +7459,35 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr class="repeatmarker"><td class="repeating">7<div>Set 1</div></td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>7</td><td>Destination ID 1</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td></tr><tr><td class="repeating">8<div>Set 1</div></td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Message ID A</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                      <a href="#ft-MMSI">MMSI</a></td></tr><tr><td>8</td><td>Message ID 1.1</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                       lookup
-                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Slot Offset A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td></tr><tr><td>9</td><td>Slot Offset 1.1</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>11</td><td>Message ID 1.2</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td></tr><tr><td>12</td><td>Slot Offset 1.2</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>13</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>14</td><td>Destination ID 2</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td></tr><tr><td>15</td><td>Message ID 2.1</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td></tr><tr><td>16</td><td>Slot Offset 2.1</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>17</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>18</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>19</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr></table><p>
@@ -7622,11 +7655,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129807
             - AIS Class B Group Assignment</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            27
+            28
             bytes long and contains 17 fields.
 
             
@@ -7660,7 +7693,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Station Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-STATION_TYPE">STATION_TYPE</a></td></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-STATION_TYPE">STATION_TYPE</a></td></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>13</td><td>Ship and Cargo Filter</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -8217,8 +8250,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              fast-packet 
             PGN is
             
-              at least 14
-            bytes long and contains 12 fields.
+              at least 15
+            bytes long and contains 13 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -8255,7 +8288,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>12</td><td>XTE Limit for the Route</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130067">0x1FC13:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>13</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130067">0x1FC13:
             PGN 130067
             - Route and WP Service - Route - WP Name &amp; Position</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -8767,8 +8801,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            7
-            bytes long and contains 4 fields.
+            8
+            bytes long and contains 5 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -8784,7 +8818,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-PRESSURE_SOURCE">PRESSURE_SOURCE</a></td></tr><tr><td>4</td><td>Pressure</td><td/><td>0.1 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 429496729.3</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130316">0x1FD0C:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130316">0x1FD0C:
             PGN 130316
             - Temperature Extended Range</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -9956,8 +9991,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              single-frame 
             PGN is
-            4
-            bytes long and contains 6 fields.
+            8
+            bytes long and contains 7 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Zone ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -9975,7 +10010,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-ENTERTAINMENT_CHANNEL">ENTERTAINMENT_CHANNEL</a></td></tr></table><h3 id="pgn-130583">0x1FE17:
+                      <a href="#lookup-ENTERTAINMENT_CHANNEL">ENTERTAINMENT_CHANNEL</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>32 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130583">0x1FE17:
             PGN 130583
             - Available Audio EQ presets</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -12233,14 +12269,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             - Maretron: Switch Status Counter</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>137</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The transmission interval is not known</li></ul></p><p>
+                This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
+              </p><p>
             This
              fast-packet 
             PGN is
-            15
+            14
             bytes long and contains 12 fields.
 
+            
+              It is normally transmitted every 15000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>137:
                   Maretron</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12272,7 +12310,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Switch Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>16 bits
+                      <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>6 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130837">0x1FF15:
             PGN 130837
             - Simnet: Fuel Flow Turbine Configuration</h3><p>
@@ -12300,14 +12338,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             - Maretron: Switch Status Timer</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>137</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The transmission interval is not known</li></ul></p><p>
+                This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
+              </p><p>
             This
              fast-packet 
             PGN is
             23
             bytes long and contains 12 fields.
 
+            
+              It is normally transmitted every 15000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>137:
                   Maretron</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   

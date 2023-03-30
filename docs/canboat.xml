@@ -2266,6 +2266,7 @@ limitations under the License.
       <Id>isoTransportProtocolConnectionManagementRequestToSend</Id>
       <Description>ISO Transport Protocol, Connection Management - Request To Send</Description>
       <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to prepare the receiver for the fact that this sender wants to transmit a long message. The receiver will respond with CTS.</Explanation>
+      <URL>https://embeddedflakes.com/j1939-transport-protocol/</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -2350,6 +2351,7 @@ limitations under the License.
       <Id>isoTransportProtocolConnectionManagementClearToSend</Id>
       <Description>ISO Transport Protocol, Connection Management - Clear To Send</Description>
       <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to signal to the sender that the receive is ready to receive a number of frames.</Explanation>
+      <URL>https://embeddedflakes.com/j1939-transport-protocol/</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -2430,6 +2432,7 @@ limitations under the License.
       <Id>isoTransportProtocolConnectionManagementEndOfMessage</Id>
       <Description>ISO Transport Protocol, Connection Management - End Of Message</Description>
       <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to mark the end of the message.</Explanation>
+      <URL>https://embeddedflakes.com/j1939-transport-protocol/</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -2510,6 +2513,7 @@ limitations under the License.
       <Id>isoTransportProtocolConnectionManagementBroadcastAnnounce</Id>
       <Description>ISO Transport Protocol, Connection Management - Broadcast Announce</Description>
       <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce a broadcast of a long message spanning multiple frames.</Explanation>
+      <URL>https://embeddedflakes.com/j1939-transport-protocol/</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -2590,10 +2594,11 @@ limitations under the License.
       <Id>isoTransportProtocolConnectionManagementAbort</Id>
       <Description>ISO Transport Protocol, Connection Management - Abort</Description>
       <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce an abort of a long message spanning multiple frames.</Explanation>
+      <URL>https://embeddedflakes.com/j1939-transport-protocol/</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>4</FieldCount>
-      <Length>7</Length>
+      <Length>8</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -2626,7 +2631,7 @@ limitations under the License.
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>16</BitLength>
+          <BitLength>24</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -2637,7 +2642,7 @@ limitations under the License.
           <Id>pgn</Id>
           <Name>PGN</Name>
           <BitLength>24</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -2877,8 +2882,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>7</FieldCount>
-      <Length>6</Length>
+      <FieldCount>8</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -2976,6 +2981,16 @@ limitations under the License.
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>reserved8</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -2990,8 +3005,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
-      <Length>5</Length>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3073,6 +3088,16 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3237,8 +3262,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>6</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3284,6 +3309,16 @@ limitations under the License.
           <RangeMax>511.9765625</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>FREQUENCY</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3296,8 +3331,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>6</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3343,6 +3378,16 @@ limitations under the License.
           <RangeMax>511.9765625</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>FREQUENCY</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3355,8 +3400,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>6</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3402,6 +3447,16 @@ limitations under the License.
           <RangeMax>511.9765625</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>FREQUENCY</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3417,8 +3472,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>6</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3464,6 +3519,16 @@ limitations under the License.
           <RangeMax>511.9765625</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>FREQUENCY</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3521,8 +3586,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>4</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3566,6 +3631,16 @@ limitations under the License.
           <RangeMax>2</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POWER_FACTOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>30</BitLength>
+          <BitOffset>34</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3698,8 +3773,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>4</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3743,6 +3818,16 @@ limitations under the License.
           <RangeMax>2</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POWER_FACTOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>30</BitLength>
+          <BitOffset>34</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3875,8 +3960,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>6</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -3921,6 +4006,16 @@ limitations under the License.
           <RangeMax>2</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POWER_FACTOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>14</BitLength>
+          <BitOffset>50</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -4053,8 +4148,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>6</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -4099,6 +4194,16 @@ limitations under the License.
           <RangeMax>2</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POWER_FACTOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>14</BitLength>
+          <BitOffset>50</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -4276,8 +4381,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>6</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -4322,6 +4427,16 @@ limitations under the License.
           <RangeMax>2</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POWER_FACTOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>14</BitLength>
+          <BitOffset>50</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -4454,8 +4569,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>6</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -4500,6 +4615,16 @@ limitations under the License.
           <RangeMax>2</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POWER_FACTOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>14</BitLength>
+          <BitOffset>50</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -4632,8 +4757,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>6</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -4678,6 +4803,16 @@ limitations under the License.
           <RangeMax>2</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POWER_FACTOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>14</BitLength>
+          <BitOffset>50</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -4810,8 +4945,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>6</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -4856,6 +4991,16 @@ limitations under the License.
           <RangeMax>2</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POWER_FACTOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>14</BitLength>
+          <BitOffset>50</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -5406,8 +5551,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
-      <Length>2</Length>
+      <FieldCount>5</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -5455,15 +5600,25 @@ limitations under the License.
           <Order>4</Order>
           <Id>bootState</Id>
           <Name>Boot State</Name>
-          <BitLength>4</BitLength>
+          <BitLength>3</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>BOOT_STATE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved5</Id>
+          <Name>Reserved</Name>
+          <BitLength>45</BitLength>
+          <BitOffset>19</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -5476,8 +5631,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>5</FieldCount>
-      <Length>5</Length>
+      <FieldCount>6</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -5549,6 +5704,16 @@ limitations under the License.
           <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -5700,8 +5865,8 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -5745,6 +5910,16 @@ limitations under the License.
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
         </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -5758,7 +5933,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
-      <Length>7</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -5806,13 +5981,13 @@ limitations under the License.
           <Order>4</Order>
           <Id>formatCode</Id>
           <Name>Format Code</Name>
-          <BitLength>3</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
+          <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -5820,8 +5995,8 @@ limitations under the License.
           <Id>accessLevel</Id>
           <Name>Access Level</Name>
           <BitLength>3</BitLength>
-          <BitOffset>19</BitOffset>
-          <BitStart>3</BitStart>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -5833,9 +6008,9 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved6</Id>
           <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>22</BitOffset>
-          <BitStart>6</BitStart>
+          <BitLength>5</BitLength>
+          <BitOffset>27</BitOffset>
+          <BitStart>3</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
@@ -5845,7 +6020,7 @@ limitations under the License.
           <Name>Access Seed/Key</Name>
           <Description>When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208.</Description>
           <BitLength>32</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -5867,8 +6042,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -5911,6 +6086,16 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -6047,8 +6232,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -6091,6 +6276,16 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -6106,8 +6301,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -6150,6 +6345,16 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -6165,8 +6370,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -6209,6 +6414,16 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -6224,8 +6439,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -6268,6 +6483,16 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -6392,7 +6617,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>6</FieldCount>
-      <Length>7</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -6467,7 +6692,7 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved6</Id>
           <Name>Reserved</Name>
-          <BitLength>24</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -6895,8 +7120,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>10</FieldCount>
-      <Length>7</Length>
+      <FieldCount>11</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -7028,6 +7253,16 @@ limitations under the License.
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved11</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -7042,8 +7277,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
-      <Length>5</Length>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -7125,6 +7360,16 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -7240,8 +7485,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>5</FieldCount>
-      <Length>3</Length>
+      <FieldCount>6</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -7311,6 +7556,16 @@ limitations under the License.
           <RangeMax>13</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_DEPTH_QUALITY_FACTOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>36</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -7547,8 +7802,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -7591,6 +7846,16 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -10222,8 +10487,8 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <FieldCount>16</FieldCount>
-      <Length>23</Length>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -10301,165 +10566,13 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>calibrationStatus</Id>
-          <Name>Calibration Status</Name>
-          <BitLength>8</BitLength>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>22</BitLength>
           <BitOffset>26</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>AIRMAR_CALIBRATE_STATUS</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>verifyScore</Id>
-          <Name>Verify Score</Name>
-          <Description>TBD</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>34</BitOffset>
-          <BitStart>2</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>xAxisGainValue</Id>
-          <Name>X-axis gain value</Name>
-          <Description>default 100, range 50 to 500</Description>
-          <BitLength>16</BitLength>
-          <BitOffset>42</BitOffset>
-          <BitStart>2</BitStart>
-          <Resolution>0.01</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
-          <RangeMax>327.65</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>yAxisGainValue</Id>
-          <Name>Y-axis gain value</Name>
-          <Description>default 100, range 50 to 500</Description>
-          <BitLength>16</BitLength>
-          <BitOffset>58</BitOffset>
-          <BitStart>2</BitStart>
-          <Resolution>0.01</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
-          <RangeMax>327.65</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>10</Order>
-          <Id>zAxisGainValue</Id>
-          <Name>Z-axis gain value</Name>
-          <Description>default 100, range 50 to 500</Description>
-          <BitLength>16</BitLength>
-          <BitOffset>74</BitOffset>
-          <BitStart>2</BitStart>
-          <Resolution>0.01</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
-          <RangeMax>327.65</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>xAxisLinearOffset</Id>
-          <Name>X-axis linear offset</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>90</BitOffset>
-          <BitStart>2</BitStart>
-          <Unit>T</Unit>
-          <Resolution>0.01</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
-          <RangeMax>327.65</RangeMax>
-          <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>MAGNETIC_FIELD</PhysicalQuantity>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>yAxisLinearOffset</Id>
-          <Name>Y-axis linear offset</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>106</BitOffset>
-          <BitStart>2</BitStart>
-          <Unit>T</Unit>
-          <Resolution>0.01</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
-          <RangeMax>327.65</RangeMax>
-          <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>MAGNETIC_FIELD</PhysicalQuantity>
-        </Field>
-        <Field>
-          <Order>13</Order>
-          <Id>zAxisLinearOffset</Id>
-          <Name>Z-axis linear offset</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>122</BitOffset>
-          <BitStart>2</BitStart>
-          <Unit>T</Unit>
-          <Resolution>0.01</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
-          <RangeMax>327.65</RangeMax>
-          <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>MAGNETIC_FIELD</PhysicalQuantity>
-        </Field>
-        <Field>
-          <Order>14</Order>
-          <Id>xAxisAngularOffset</Id>
-          <Name>X-axis angular offset</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>138</BitOffset>
-          <BitStart>2</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>0.1</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
-          <RangeMax>3276.5</RangeMax>
-          <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>ANGLE</PhysicalQuantity>
-        </Field>
-        <Field>
-          <Order>15</Order>
-          <Id>pitchAndRollDamping</Id>
-          <Name>Pitch and Roll damping</Name>
-          <Description>default 30, range 0 to 200</Description>
-          <BitLength>16</BitLength>
-          <BitOffset>154</BitOffset>
-          <BitStart>2</BitStart>
-          <Unit>s</Unit>
-          <Resolution>0.05</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-1638.35</RangeMin>
-          <RangeMax>1638.25</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
-        </Field>
-        <Field>
-          <Order>16</Order>
-          <Id>compassRateGyroDamping</Id>
-          <Name>Compass/Rate gyro damping</Name>
-          <Description>default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations</Description>
-          <BitLength>16</BitLength>
-          <BitOffset>170</BitOffset>
-          <BitStart>2</BitStart>
-          <Unit>s</Unit>
-          <Resolution>0.05</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-1638.35</RangeMin>
-          <RangeMax>1638.25</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -11646,7 +11759,7 @@ limitations under the License.
       <Id>0x1f0000x1feffStandardizedMixedSingleFastPacketNonAddressed</Id>
       <Description>0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed</Description>
       <Explanation>Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815). When this is shown during analysis it means the PGN is not reverse engineered yet.</Explanation>
-      <Type>Single</Type>
+      <Type>Mixed</Type>
       <Complete>false</Complete>
       <Fallback>true</Fallback>
       <Missing>
@@ -14040,8 +14153,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Attitude</Description>
       <Type>Single</Type>
       <Complete>true</Complete>
-      <FieldCount>4</FieldCount>
-      <Length>7</Length>
+      <FieldCount>5</FieldCount>
+      <Length>8</Length>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
@@ -14102,6 +14215,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -14110,8 +14233,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Magnetic Variation</Description>
       <Type>Single</Type>
       <Complete>true</Complete>
-      <FieldCount>5</FieldCount>
-      <Length>6</Length>
+      <FieldCount>6</FieldCount>
+      <Length>8</Length>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
@@ -14180,6 +14303,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>3.2765</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -17250,7 +17383,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
-      <Length>4</Length>
+      <Length>8</Length>
       <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
@@ -17324,7 +17457,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>2</BitLength>
+          <BitLength>34</BitLength>
           <BitOffset>30</BitOffset>
           <BitStart>6</BitStart>
           <Resolution>1</Resolution>
@@ -17511,8 +17644,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <FieldCount>8</FieldCount>
-      <Length>7</Length>
+      <FieldCount>9</FieldCount>
+      <Length>8</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -17569,24 +17702,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>inverterMode</Id>
-          <Name>Inverter Mode</Name>
-          <BitLength>8</BitLength>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
           <BitOffset>26</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>loadSenseEnableDisable</Id>
-          <Name>Load Sense Enable/Disable</Name>
+          <Id>inverterMode</Id>
+          <Name>Inverter Mode</Name>
           <BitLength>8</BitLength>
-          <BitOffset>34</BitOffset>
-          <BitStart>2</BitStart>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -17595,11 +17725,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>loadSensePowerThreshold</Id>
-          <Name>Load Sense Power Threshold</Name>
+          <Id>loadSenseEnableDisable</Id>
+          <Name>Load Sense Enable/Disable</Name>
           <BitLength>8</BitLength>
-          <BitOffset>42</BitOffset>
-          <BitStart>2</BitStart>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -17608,11 +17738,24 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
+          <Id>loadSensePowerThreshold</Id>
+          <Name>Load Sense Power Threshold</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
           <Id>loadSenseInterval</Id>
           <Name>Load Sense Interval</Name>
           <BitLength>8</BitLength>
-          <BitOffset>50</BitOffset>
-          <BitStart>2</BitStart>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -17632,8 +17775,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>3</Length>
+      <FieldCount>4</FieldCount>
+      <Length>8</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -17674,6 +17817,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>40</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -17841,8 +17994,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
-      <Length>6</Length>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
       <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
@@ -17922,6 +18075,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -18478,8 +18641,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
-      <Length>7</Length>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -18522,11 +18685,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>12</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
           <Id>rotationalShaftSpeed</Id>
           <Name>Rotational Shaft Speed</Name>
           <BitLength>16</BitLength>
-          <BitOffset>12</BitOffset>
-          <BitStart>4</BitStart>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
           <Unit>rpm</Unit>
           <Resolution>0.25</Resolution>
           <Signed>false</Signed>
@@ -18536,12 +18709,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>ANGULAR_VELOCITY</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>5</Order>
+          <Order>6</Order>
           <Id>motorDcVoltage</Id>
           <Name>Motor DC Voltage</Name>
           <BitLength>16</BitLength>
-          <BitOffset>28</BitOffset>
-          <BitStart>4</BitStart>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
           <Unit>V</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
@@ -18551,12 +18724,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>POTENTIAL_DIFFERENCE</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>6</Order>
+          <Order>7</Order>
           <Id>motorDcCurrent</Id>
           <Name>Motor DC Current</Name>
           <BitLength>16</BitLength>
-          <BitOffset>44</BitOffset>
-          <BitStart>4</BitStart>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
           <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
@@ -19916,7 +20089,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>6</FieldCount>
-      <Length>4</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -19987,7 +20160,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>2</BitLength>
+          <BitLength>34</BitLength>
           <BitOffset>30</BitOffset>
           <BitStart>6</BitStart>
           <Resolution>1</Resolution>
@@ -20100,7 +20273,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>14</FieldCount>
-      <Length>7</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20280,7 +20453,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>14</Order>
           <Id>reserved14</Id>
           <Name>Reserved</Name>
-          <BitLength>4</BitLength>
+          <BitLength>12</BitLength>
           <BitOffset>52</BitOffset>
           <BitStart>4</BitStart>
           <Resolution>1</Resolution>
@@ -20449,7 +20622,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
-      <Length>9</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20494,14 +20667,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>controllerVoltage</Id>
           <Name>Controller voltage</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Unit>V</Unit>
           <Resolution>0.2</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13106.6</RangeMax>
+          <RangeMax>50.6</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>POTENTIAL_DIFFERENCE</PhysicalQuantity>
         </Field>
@@ -20510,7 +20683,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>motorCurrent</Id>
           <Name>Motor current</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>A</Unit>
           <Resolution>1</Resolution>
@@ -20525,7 +20698,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>totalMotorTime</Id>
           <Name>Total Motor Time</Name>
           <BitLength>16</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
           <Resolution>60</Resolution>
@@ -20540,7 +20713,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -20782,8 +20955,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
-      <Length>7</Length>
+      <FieldCount>5</FieldCount>
+      <Length>8</Length>
       <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
@@ -20837,6 +21010,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-32767</RangeMin>
           <RangeMax>32765</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -21563,8 +21746,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <FieldCount>22</FieldCount>
-      <Length>25</Length>
+      <FieldCount>23</FieldCount>
+      <Length>27</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -21870,6 +22053,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIS_COMMUNICATION_STATE</LookupEnumeration>
         </Field>
+        <Field>
+          <Order>23</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>15</BitLength>
+          <BitOffset>201</BitOffset>
+          <BitStart>1</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -21878,9 +22071,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>AIS Class B Extended Position Report</Description>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
-      <Complete>true</Complete>
-      <FieldCount>26</FieldCount>
-      <Length>53</Length>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <FieldCount>27</FieldCount>
+      <Length>54</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -22229,6 +22425,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>29</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIS_TRANSCEIVER</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>27</Order>
+          <Id>reserved27</Id>
+          <Name>Reserved</Name>
+          <BitLength>5</BitLength>
+          <BitOffset>427</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -23271,8 +23477,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>5</FieldCount>
-      <Length>6</Length>
+      <FieldCount>6</FieldCount>
+      <Length>8</Length>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
@@ -23341,6 +23547,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>SPEED</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -23593,8 +23809,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>10</FieldCount>
-      <Length>13</Length>
+      <FieldCount>11</FieldCount>
+      <Length>14</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -23737,6 +23953,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>2</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>106</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -24350,6 +24576,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
       <Length>9</Length>
@@ -24494,9 +24721,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
-      <Length>4</Length>
+      <FieldCount>5</FieldCount>
+      <Length>8</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -24550,6 +24778,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -25726,8 +25964,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <FieldCount>20</FieldCount>
-      <Length>74</Length>
+      <FieldCount>21</FieldCount>
+      <Length>75</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -25996,6 +26234,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIS_TRANSCEIVER</LookupEnumeration>
         </Field>
+        <Field>
+          <Order>21</Order>
+          <Id>reserved21</Id>
+          <Name>Reserved</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>597</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -26164,8 +26412,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <FieldCount>10</FieldCount>
-      <Length>11</Length>
+      <FieldCount>11</FieldCount>
+      <Length>12</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -26287,6 +26535,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved11</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>90</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -27069,17 +27327,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisInterrogation</Id>
       <Description>AIS Interrogation</Description>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <FieldCount>10</FieldCount>
-      <MinLength>6</MinLength>
-      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
-      <RepeatingFieldSet1StartField>7</RepeatingFieldSet1StartField>
+      <FieldCount>19</FieldCount>
+      <Length>23</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -27159,8 +27415,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>destinationId</Id>
-          <Name>Destination ID</Name>
+          <Id>destinationId1</Id>
+          <Name>Destination ID 1</Name>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -27172,21 +27428,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>reserved8</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
+          <Id>messageId11</Id>
+          <Name>Message ID 1.1</Name>
+          <BitLength>6</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>messageIdA</Id>
-          <Name>Message ID A</Name>
-          <BitLength>6</BitLength>
-          <BitOffset>82</BitOffset>
-          <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -27195,16 +27441,136 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>AIS_MESSAGE_ID</LookupEnumeration>
         </Field>
         <Field>
+          <Order>9</Order>
+          <Id>slotOffset11</Id>
+          <Name>Slot Offset 1.1</Name>
+          <BitLength>12</BitLength>
+          <BitOffset>86</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4093</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
           <Order>10</Order>
-          <Id>slotOffsetA</Id>
-          <Name>Slot Offset A</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>88</BitOffset>
+          <Id>spare10</Id>
+          <Name>Spare</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>98</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>messageId12</Id>
+          <Name>Message ID 1.2</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>100</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AIS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>slotOffset12</Id>
+          <Name>Slot Offset 1.2</Name>
+          <BitLength>12</BitLength>
+          <BitOffset>106</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4093</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>spare13</Id>
+          <Name>Spare</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>118</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>destinationId2</Id>
+          <Name>Destination ID 2</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
+          <FieldType>MMSI</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>messageId21</Id>
+          <Name>Message ID 2.1</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>61</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AIS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>slotOffset21</Id>
+          <Name>Slot Offset 2.1</Name>
+          <BitLength>12</BitLength>
+          <BitOffset>158</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4093</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>spare17</Id>
+          <Name>Spare</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>170</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>reserved18</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>172</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>19</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>176</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -27797,9 +28163,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>17</FieldCount>
-      <Length>27</Length>
+      <Length>28</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -27955,7 +28322,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>12</Order>
           <Id>reserved12</Id>
           <Name>Reserved</Name>
-          <BitLength>2</BitLength>
+          <BitLength>4</BitLength>
           <BitOffset>180</BitOffset>
           <BitStart>4</BitStart>
           <Resolution>1</Resolution>
@@ -27966,8 +28333,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>shipAndCargoFilter</Id>
           <Name>Ship and Cargo Filter</Name>
           <BitLength>8</BitLength>
-          <BitOffset>182</BitOffset>
-          <BitStart>6</BitStart>
+          <BitOffset>184</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -27979,8 +28346,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>spare14</Id>
           <Name>Spare</Name>
           <BitLength>22</BitLength>
-          <BitOffset>190</BitOffset>
-          <BitStart>6</BitStart>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>SPARE</FieldType>
         </Field>
@@ -27989,8 +28356,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>reserved15</Id>
           <Name>Reserved</Name>
           <BitLength>2</BitLength>
-          <BitOffset>212</BitOffset>
-          <BitStart>4</BitStart>
+          <BitOffset>214</BitOffset>
+          <BitStart>6</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
@@ -27999,8 +28366,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>reportingInterval</Id>
           <Name>Reporting Interval</Name>
           <BitLength>4</BitLength>
-          <BitOffset>214</BitOffset>
-          <BitStart>6</BitStart>
+          <BitOffset>216</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -28013,8 +28380,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>quietTime</Id>
           <Name>Quiet Time</Name>
           <BitLength>4</BitLength>
-          <BitOffset>218</BitOffset>
-          <BitStart>2</BitStart>
+          <BitOffset>220</BitOffset>
+          <BitStart>4</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -29933,8 +30300,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>12</FieldCount>
-      <MinLength>14</MinLength>
+      <FieldCount>13</FieldCount>
+      <MinLength>15</MinLength>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -30072,6 +30439,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -31492,8 +31867,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Set Pressure</Description>
       <Type>Single</Type>
       <Complete>true</Complete>
-      <FieldCount>4</FieldCount>
-      <Length>7</Length>
+      <FieldCount>5</FieldCount>
+      <Length>8</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -31550,6 +31925,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>429496729.3</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>PRESSURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -35584,8 +35969,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
-      <Length>4</Length>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -35667,6 +36052,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>253</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ENTERTAINMENT_CHANNEL</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -43437,12 +43832,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>maretronSwitchStatusCounter</Id>
       <Description>Maretron: Switch Status Counter</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>12</FieldCount>
-      <Length>15</Length>
+      <Length>14</Length>
+      <TransmissionInterval>15000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -43599,7 +43992,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>12</Order>
           <Id>reserved12</Id>
           <Name>Reserved</Name>
-          <BitLength>16</BitLength>
+          <BitLength>6</BitLength>
           <BitOffset>106</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
@@ -43672,12 +44065,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>maretronSwitchStatusTimer</Id>
       <Description>Maretron: Switch Status Timer</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>12</FieldCount>
       <Length>23</Length>
+      <TransmissionInterval>15000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>

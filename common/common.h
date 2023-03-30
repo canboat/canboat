@@ -263,7 +263,7 @@ int writeSerial(int handle, const uint8_t *data, size_t len);
    || ((n) >= 0x1FF00 && (n) <= 0x1FFFF) /* PDU2 (nonaddressed) fast-packet */  \
   )
 
-#define ALLOW_PGN_FAST_PACKET(n) ((n) >= 0x10000 && (n) < CANBOAT_PGN_START)
+#define ALLOW_PGN_FAST_PACKET(n) (((n) >= 0x10000 && (n) < 0x1FFFF) || (n) >= CANBOAT_PGN_START)
 #define ALLOW_PGN_SINGLE_FRAME(n) ((n) < 0x10000 || (n) >= 0x1F000)
 
 #define MAP_PGN_TO_CONTINUOUS_RANGE(n) ((n) - (0xE800))
