@@ -26175,7 +26175,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>31</Length>
+      <Length>27</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -26394,21 +26394,21 @@ limitations under the License.
           <Order>13</Order>
           <Id>altitude</Id>
           <Name>Altitude</Name>
-          <BitLength>64</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
-          <Resolution>1e-06</Resolution>
+          <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-9223372036854.775</RangeMin>
-          <RangeMax>9223372036854.775</RangeMax>
+          <RangeMin>-21474836.47</RangeMin>
+          <RangeMax>21474836.45</RangeMax>
         </Field>
         <Field>
           <Order>14</Order>
           <Id>reservedForRegionalApplications</Id>
           <Name>Reserved for Regional Applications</Name>
           <BitLength>8</BitLength>
-          <BitOffset>232</BitOffset>
+          <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
           <Type>Binary data</Type>
           <Resolution>1</Resolution>
@@ -26419,7 +26419,7 @@ limitations under the License.
           <Id>dte</Id>
           <Name>DTE</Name>
           <BitLength>1</BitLength>
-          <BitOffset>240</BitOffset>
+          <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
@@ -26436,7 +26436,7 @@ limitations under the License.
           <Id>reserved</Id>
           <Name>Reserved</Name>
           <BitLength>7</BitLength>
-          <BitOffset>241</BitOffset>
+          <BitOffset>209</BitOffset>
           <BitStart>1</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>

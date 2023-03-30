@@ -26678,7 +26678,7 @@
         "Missing":["Fields","FieldLengths","Resolution","SampleData"
         ],
         "FieldCount":16,
-        "Length":31,
+        "Length":27,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -26853,14 +26853,14 @@
             "Order":13,
             "Id":"altitude",
             "Name":"Altitude",
-            "BitLength":64,
+            "BitLength":32,
             "BitOffset":168,
             "BitStart":0,
             "Unit":"m",
-            "Resolution":1e-06,
+            "Resolution":0.01,
             "Signed":true,
-            "RangeMin":-9223372036854.775,
-            "RangeMax":9223372036854.775,
+            "RangeMin":-21474836.47,
+            "RangeMax":21474836.45,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"DISTANCE"
           },
@@ -26869,7 +26869,7 @@
             "Id":"reservedForRegionalApplications",
             "Name":"Reserved for Regional Applications",
             "BitLength":8,
-            "BitOffset":232,
+            "BitOffset":200,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
@@ -26879,7 +26879,7 @@
             "Id":"dte",
             "Name":"DTE",
             "BitLength":1,
-            "BitOffset":240,
+            "BitOffset":208,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
@@ -26893,7 +26893,7 @@
             "Id":"reserved",
             "Name":"Reserved",
             "BitLength":7,
-            "BitOffset":241,
+            "BitOffset":209,
             "BitStart":1,
             "Resolution":1,
             "FieldType":"RESERVED"
