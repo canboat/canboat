@@ -4,8 +4,8 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"4.11.0",
-    "Copyright":"CANboat version v4.11.0\n\n(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"4.11.1",
+    "Copyright":"CANboat version v4.11.1\n\n(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
     {
         "Name":"ELECTRICAL_CURRENT",
@@ -333,6 +333,17 @@
       }
     ],
     "LookupEnumerations":[
+      {
+        "Name":"LIGHTING_COMMAND",
+        "MaxValue":7,
+        "EnumValues":[
+          {"Name":"Idle", "Value":0},
+          {"Name":"Detect Devices", "Value":1},
+          {"Name":"Reboot", "Value":2},
+          {"Name":"Factory Reset", "Value":3},
+          {"Name":"Powering Up", "Value":4}
+        ]
+      },
       {
         "Name":"INDUSTRY_CODE",
         "MaxValue":7,
@@ -32867,7 +32878,7 @@
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
         ],
         "FieldCount":12,
-        "MinLength":9,
+        "MinLength":12,
         "Fields":[
           {
             "Order":1,
@@ -32884,24 +32895,25 @@
           },
           {
             "Order":2,
-            "Id":"defaultSettingsCommands",
-            "Name":"Default Settings/Commands",
-            "BitLength":4,
+            "Id":"defaultSettingsCommand",
+            "Name":"Default Settings/Command",
+            "BitLength":3,
             "BitOffset":2,
             "BitStart":2,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":13,
-            "FieldType":"NUMBER"
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"LIGHTING_COMMAND"
           },
           {
             "Order":3,
             "Id":"reserved",
             "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":6,
-            "BitStart":6,
+            "BitLength":3,
+            "BitOffset":5,
+            "BitStart":5,
             "Resolution":1,
             "FieldType":"RESERVED"
           },
@@ -32993,11 +33005,11 @@
             "Order":12,
             "Id":"identifyDevice",
             "Name":"Identify Device",
-            "BitLength":8,
+            "BitLength":32,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":4294967293,
             "FieldType":"NUMBER"
           }
         ]
@@ -33335,11 +33347,11 @@
             "Order":7,
             "Id":"devicesId",
             "Name":"Devices ID",
-            "BitLength":8,
+            "BitLength":32,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":4294967293,
             "FieldType":"NUMBER"
           },
           {
@@ -33409,19 +33421,19 @@
         "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
         ],
         "FieldCount":18,
-        "MinLength":17,
+        "MinLength":20,
         "Fields":[
           {
             "Order":1,
             "Id":"deviceId",
             "Name":"Device ID",
-            "BitLength":8,
+            "BitLength":32,
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":4294967293,
             "FieldType":"NUMBER"
           },
           {
@@ -33429,7 +33441,7 @@
             "Id":"deviceCapabilities",
             "Name":"Device Capabilities",
             "BitLength":8,
-            "BitOffset":8,
+            "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
@@ -33442,7 +33454,7 @@
             "Id":"colorCapabilities",
             "Name":"Color Capabilities",
             "BitLength":8,
-            "BitOffset":16,
+            "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
@@ -33455,7 +33467,7 @@
             "Id":"zoneIndex",
             "Name":"Zone Index",
             "BitLength":8,
-            "BitOffset":24,
+            "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
@@ -33623,7 +33635,7 @@
         "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
         ],
         "FieldCount":5,
-        "MinLength":3,
+        "MinLength":6,
         "RepeatingFieldSet1Size":2,
         "RepeatingFieldSet1StartField":4,
         "RepeatingFieldSet1CountField":3,
@@ -33632,52 +33644,52 @@
             "Order":1,
             "Id":"indexOfFirstDevice",
             "Name":"Index of First Device",
-            "BitLength":8,
+            "BitLength":16,
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":65533,
             "FieldType":"NUMBER"
           },
           {
             "Order":2,
             "Id":"totalNumberOfDevices",
             "Name":"Total Number of Devices",
-            "BitLength":8,
-            "BitOffset":8,
+            "BitLength":16,
+            "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":65533,
             "FieldType":"NUMBER"
           },
           {
             "Order":3,
             "Id":"numberOfDevices",
             "Name":"Number of Devices",
-            "BitLength":8,
-            "BitOffset":16,
+            "BitLength":16,
+            "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":65533,
             "FieldType":"NUMBER"
           },
           {
             "Order":4,
             "Id":"deviceId",
             "Name":"Device ID",
-            "BitLength":8,
-            "BitOffset":24,
+            "BitLength":32,
+            "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":4294967293,
             "FieldType":"NUMBER"
           },
           {
@@ -33685,7 +33697,7 @@
             "Id":"status",
             "Name":"Status",
             "BitLength":8,
-            "BitOffset":32,
+            "BitOffset":80,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,

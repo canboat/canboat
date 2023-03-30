@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta charset="UTF-8"/><meta name="description" content="CANBoat PGN documentation"/><link rel="stylesheet" type="text/css" href="canboat.css"/><script src="canboat.js"></script><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet"/></head><body><div id="sidenav" class="sidenav"><a class="closebtn" onclick="closeNav(event)">×</a><a href="#main">Top</a><a href="#pgn-list">PGN list</a><a href="#physical-quantities">Physical Quantities</a><a href="#field-types">Field Types</a><a href="#lookup-enumerations">Lookup enumerations</a><a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a><a href="#bitfield-enumerations">Bitfield enumerations</a><a href="#notes">Notes</a></div><div id="sidenav-closed" class="sidenav"><a onclick="openNav(event)" id="hamburger"><span></span><span></span><span></span></a></div><div id="main"><p>
             The CANBoat project PGN documentation version
-            4.11.0.
-          </p><h3>Copyright</h3><p class="xs">CANboat version v4.11.0
+            4.11.1.
+          </p><h3>Copyright</h3><p class="xs">CANboat version v4.11.1
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -9087,16 +9087,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              fast-packet 
             PGN is
             
-              at least 9
+              at least 12
             bytes long and contains 12 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Global Enable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Default Settings/Commands</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Default Settings/Command</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>2 bits
+                      lookup
+                      <a href="#lookup-LIGHTING_COMMAND">LIGHTING_COMMAND</a></td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>3 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>4</td><td>Name of the lighting controller</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LAU">STRING_LAU</a></td></tr><tr><td>5</td><td>Max Scenes</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -9120,7 +9120,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Controller Capabilities</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>12</td><td>Identify Device</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>12</td><td>Identify Device</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130560">0x1FE00:
@@ -9237,7 +9237,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">6<div>Set 1</div></td><td>Zone Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Devices ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Devices ID</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">8<div>Set 1</div></td><td>Program Index</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -9264,10 +9264,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              fast-packet 
             PGN is
             
-              at least 17
+              at least 20
             bytes long and contains 18 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Device ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Device ID</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Device Capabilities</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -9327,7 +9327,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              fast-packet 
             PGN is
             
-              at least 3
+              at least 6
             bytes long and contains 5 fields.
 
             
@@ -9337,16 +9337,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
         3 
         (with name "Number of Devices".)
-      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Index of First Device</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Index of First Device</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Total Number of Devices</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Total Number of Devices</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Number of Devices</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Number of Devices</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Device ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Device ID</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td class="repeating">5<div>Set 1</div></td><td>Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -13313,7 +13313,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           For more information see:
           <a href="https://navcen.uscg.gov/maritime-mobile-service-identity">https://navcen.uscg.gov/maritime-mobile-service-identity</a></p><h3 id="ft-VARIABLE">VARIABLE - Variable</h3><p/><p>
             Encoding:
-            The definition of the field is that of the reference PGN and reference field, this is totally variable.</p><h2 id="lookup-enumerations">Lookup enumerations</h2><h3 id="lookup-INDUSTRY_CODE">INDUSTRY_CODE
+            The definition of the field is that of the reference PGN and reference field, this is totally variable.</p><h2 id="lookup-enumerations">Lookup enumerations</h2><h3 id="lookup-LIGHTING_COMMAND">LIGHTING_COMMAND
+        (0 - 7)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Idle</td></tr><tr><td>1</td><td>Detect Devices</td></tr><tr><td>2</td><td>Reboot</td></tr><tr><td>3</td><td>Factory Reset</td></tr><tr><td>4</td><td>Powering Up</td></tr></table><h3 id="lookup-INDUSTRY_CODE">INDUSTRY_CODE
         (0 - 7)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Global</td></tr><tr><td>1</td><td>Highway</td></tr><tr><td>2</td><td>Agriculture</td></tr><tr><td>3</td><td>Construction</td></tr><tr><td>4</td><td>Marine</td></tr><tr><td>5</td><td>Industrial</td></tr></table><h3 id="lookup-MANUFACTURER_CODE">MANUFACTURER_CODE
         (0 - 2047)

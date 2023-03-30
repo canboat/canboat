@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v4.11.0
+CANboat version v4.11.1
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -25,7 +25,7 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>4.11.0</Version>
+  <Version>4.11.1</Version>
   <PGNs>
     <PGNInfo>
       <PGN>59392</PGN>
@@ -33188,7 +33188,7 @@ limitations under the License.
         <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>9</Length>
+      <Length>12</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -33205,24 +33205,31 @@ limitations under the License.
         </Field>
         <Field>
           <Order>2</Order>
-          <Id>defaultSettingsCommands</Id>
-          <Name>Default Settings/Commands</Name>
-          <BitLength>4</BitLength>
+          <Id>defaultSettingsCommand</Id>
+          <Name>Default Settings/Command</Name>
+          <BitLength>3</BitLength>
           <BitOffset>2</BitOffset>
           <BitStart>2</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>6</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Idle' />
+            <EnumPair Value='1' Name='Detect Devices' />
+            <EnumPair Value='2' Name='Reboot' />
+            <EnumPair Value='3' Name='Factory Reset' />
+            <EnumPair Value='4' Name='Powering Up' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>6</BitOffset>
-          <BitStart>6</BitStart>
+          <BitLength>3</BitLength>
+          <BitOffset>5</BitOffset>
+          <BitStart>5</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -33315,12 +33322,12 @@ limitations under the License.
           <Order>12</Order>
           <Id>identifyDevice</Id>
           <Name>Identify Device</Name>
-          <BitLength>8</BitLength>
+          <BitLength>32</BitLength>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -33668,12 +33675,12 @@ limitations under the License.
           <Order>7</Order>
           <Id>devicesId</Id>
           <Name>Devices ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>32</BitLength>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
@@ -33745,27 +33752,27 @@ limitations under the License.
         <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>17</Length>
+      <Length>20</Length>
       <Fields>
         <Field>
           <Order>1</Order>
           <Id>deviceId</Id>
           <Name>Device ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>deviceCapabilities</Id>
           <Name>Device Capabilities</Name>
           <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -33778,7 +33785,7 @@ limitations under the License.
           <Id>colorCapabilities</Id>
           <Name>Color Capabilities</Name>
           <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -33791,7 +33798,7 @@ limitations under the License.
           <Id>zoneIndex</Id>
           <Name>Zone Index</Name>
           <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -33966,7 +33973,7 @@ limitations under the License.
         <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>3</Length>
+      <Length>6</Length>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>3</RepeatingFieldSet1CountField>
@@ -33975,60 +33982,60 @@ limitations under the License.
           <Order>1</Order>
           <Id>indexOfFirstDevice</Id>
           <Name>Index of First Device</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>totalNumberOfDevices</Id>
           <Name>Total Number of Devices</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>numberOfDevices</Id>
-          <Name>Number of Devices</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
-          <Order>4</Order>
-          <Id>deviceId</Id>
-          <Name>Device ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <Order>3</Order>
+          <Id>numberOfDevices</Id>
+          <Name>Number of Devices</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>deviceId</Id>
+          <Name>Device ID</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>status</Id>
           <Name>Status</Name>
           <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>

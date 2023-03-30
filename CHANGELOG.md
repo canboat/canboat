@@ -8,13 +8,20 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
-## Fixed
+### Fixed
 
-## Added
+### Added
+
+## [4.11.1]
+
+### Fixed
+- #384: Updated lengths and lookup for lighting PGNs.
+
+### Added
 
 ## [4.11.0]
 
-## Fixed
+### Fixed
 - End all logAbort messages with a newline.
 - #389: Missing fieldtypes in v1 pgns.xml
 - #391: Incorrect field sizes for PGN 129285.
@@ -23,8 +30,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
         PGN 128778: Field length for Controller Voltage was incorrect.
         PGN 126802 Airmar 34: Field names were copy/pasted and thus incorrect.
         PGN 129803: Field names changed (but this PGN is not seen yet) to match ITU.
+- #387: analyzer: Don't crash when presented with PGN of 0.
 
-## Added
+### Added
 - #385: Allow analyzer to read mixed `RAWFORMAT_PLAIN` and `RAWFORMAT_FAST` input.
         A new `-format <fmt>` option has been added, this new mode is only enabled when
         `-format PLAIN_OR_FAST` is selected.
@@ -582,7 +590,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.11.0...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.11.1...HEAD
+[4.11.1]: https://github.com/canboat/canboat/compare/v4.11.0...v4.11.1
 [4.11.0]: https://github.com/canboat/canboat/compare/v4.10.1...v4.11.0
 [4.10.1]: https://github.com/canboat/canboat/compare/v4.10.0...v4.10.1
 [4.10.0]: https://github.com/canboat/canboat/compare/v4.9.2...v4.10.0
