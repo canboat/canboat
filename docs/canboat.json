@@ -2272,7 +2272,8 @@
           {"Name":"SiriusXM Channel", "Value":36},
           {"Name":"SiriusXM Title", "Value":37},
           {"Name":"SiriusXM Artist", "Value":38},
-          {"Name":"SiriusXM Genre", "Value":40}
+          {"Name":"SiriusXM Genre", "Value":40},
+          {"Name":"Zone Name", "Value":45}
         ]
       },
       {
@@ -40229,7 +40230,7 @@
             "Order":4,
             "Id":"messageId",
             "Name":"Message ID",
-            "Description":null,
+            "Description":"Zone Name",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
