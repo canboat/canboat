@@ -4301,7 +4301,7 @@ Pgn pgnList[] = {
                    19,
                    "Information used by the TDMA slot allocation algorithm and synchronization information"),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
-      DISTANCE_FIX64_FIELD("Altitude", NULL),
+      DISTANCE_FIX32_CM_FIELD("Altitude", NULL),
       BINARY_FIELD("Reserved for Regional Applications", BYTES(1), NULL),
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
       RESERVED_FIELD(7),
