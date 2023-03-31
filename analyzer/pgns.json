@@ -33967,7 +33967,7 @@
             "BitLength":256,
             "BitOffset":88,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130816,
@@ -34296,7 +34296,7 @@
             "BitLength":256,
             "BitOffset":56,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130816,
@@ -34557,7 +34557,7 @@
             "BitLength":256,
             "BitOffset":88,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130816,
@@ -34832,7 +34832,7 @@
             "BitLength":256,
             "BitOffset":72,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130816,
@@ -34941,7 +34941,7 @@
             "BitLength":256,
             "BitOffset":72,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130816,
@@ -35050,7 +35050,7 @@
             "BitLength":256,
             "BitOffset":72,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130816,
@@ -35195,7 +35195,7 @@
             "BitLength":256,
             "BitOffset":96,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130816,
@@ -36683,7 +36683,7 @@
             "BitLength":40,
             "BitOffset":64,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -37004,7 +37004,7 @@
             "BitLength":80,
             "BitOffset":72,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -37101,7 +37101,7 @@
             "BitLength":80,
             "BitOffset":72,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -37198,7 +37198,7 @@
             "BitLength":80,
             "BitOffset":72,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -37283,7 +37283,7 @@
             "BitLength":112,
             "BitOffset":32,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -37380,7 +37380,7 @@
             "BitLength":104,
             "BitOffset":40,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -37617,7 +37617,7 @@
             "BitLength":80,
             "BitOffset":88,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -38113,7 +38113,7 @@
             "BitLength":40,
             "BitOffset":88,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -38937,7 +38937,7 @@
             "BitLength":96,
             "BitOffset":56,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -39023,7 +39023,7 @@
             "BitLength":96,
             "BitOffset":56,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -39109,7 +39109,7 @@
             "BitLength":96,
             "BitOffset":56,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130820,
@@ -39195,7 +39195,7 @@
             "BitLength":96,
             "BitOffset":56,
             "BitStart":0,
-            "Type":"String with start/stop byte",
+            "Type":"ASCII string starting with length byte",
             "Signed":false}]},
       {
         "PGN":130821,

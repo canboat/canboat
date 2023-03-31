@@ -1118,7 +1118,7 @@ FieldType fieldTypeList[] = {
        "are supported.",
      .variableSize = True,
      .pf           = fieldPrintStringLZ,
-     .v1Type       = "String with start/stop byte"},
+     .v1Type       = "ASCII string starting with length byte"},
 
     {.name = "STRING_LAU",
      .description
