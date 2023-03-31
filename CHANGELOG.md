@@ -10,6 +10,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #396: Add missing Fusion message ID loopup value
+- #395: Altitude in PGN 129798 (SAR AIS) should be 32 bits
+- #394: v1 type for `STRING_LZ` is incorrect
+
 ### Added
 
 ## [4.11.1]
