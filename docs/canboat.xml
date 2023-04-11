@@ -1872,6 +1872,9 @@ limitations under the License.
       <EnumPair Value='23' Name='Lazy-S (Turn)' />
       <EnumPair Value='24' Name='Depth (Turn)' />
       <EnumPair Value='26' Name='Change course' />
+      <EnumPair Value='61' Name='Timer sync' />
+      <EnumPair Value='112' Name='Ping port end' />
+      <EnumPair Value='113' Name='Ping starboard end' />
     </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_DIRECTION' MaxValue='255'>
       <EnumPair Value='2' Name='Port' />

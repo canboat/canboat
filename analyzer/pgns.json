@@ -42425,7 +42425,10 @@
               {"name": "Zig Zag (Turn)", "value": 22},
               {"name": "Lazy-S (Turn)", "value": 23},
               {"name": "Depth (Turn)", "value": 24},
-              {"name": "Change course", "value": 26}]},
+              {"name": "Change course", "value": 26},
+              {"name": "Timer sync", "value": 61},
+              {"name": "Ping port end", "value": 112},
+              {"name": "Ping starboard end", "value": 113}]},
           {
             "Order":8,
             "Id":"unusedB",
@@ -42728,7 +42731,10 @@
               {"name": "Zig Zag (Turn)", "value": 22},
               {"name": "Lazy-S (Turn)", "value": 23},
               {"name": "Depth (Turn)", "value": 24},
-              {"name": "Change course", "value": 26}]},
+              {"name": "Change course", "value": 26},
+              {"name": "Timer sync", "value": 61},
+              {"name": "Ping port end", "value": 112},
+              {"name": "Ping starboard end", "value": 113}]},
           {
             "Order":8,
             "Id":"c",

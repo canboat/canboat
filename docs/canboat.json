@@ -2514,7 +2514,10 @@
           {"Name":"Zig Zag (Turn)", "Value":22},
           {"Name":"Lazy-S (Turn)", "Value":23},
           {"Name":"Depth (Turn)", "Value":24},
-          {"Name":"Change course", "Value":26}
+          {"Name":"Change course", "Value":26},
+          {"Name":"Timer sync", "Value":61},
+          {"Name":"Ping port end", "Value":112},
+          {"Name":"Ping starboard end", "Value":113}
         ]
       },
       {
