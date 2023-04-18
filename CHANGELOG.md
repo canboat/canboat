@@ -8,6 +8,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+
+## [4.12.0]
+
 ### Fixed
 
 - #396: Add missing Fusion message ID loopup value
@@ -594,7 +597,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.11.1...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v4.12.0...HEAD
+[4.12.0]: https://github.com/canboat/canboat/compare/v4.11.1...v4.12.0
 [4.11.1]: https://github.com/canboat/canboat/compare/v4.11.0...v4.11.1
 [4.11.0]: https://github.com/canboat/canboat/compare/v4.10.1...v4.11.0
 [4.10.1]: https://github.com/canboat/canboat/compare/v4.10.0...v4.10.1
