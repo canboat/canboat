@@ -1909,7 +1909,9 @@ limitations under the License.
       <EnumTriplet Value1='25' Value2='130' Name='PC Gateway' />
       <EnumTriplet Value1='25' Value2='131' Name='NMEA 2000 to Analog Gateway' />
       <EnumTriplet Value1='25' Value2='132' Name='Analog to NMEA 2000 Gateway' />
+      <EnumTriplet Value1='25' Value2='133' Name='NMEA 2000 bidirectional analog Gateway' />
       <EnumTriplet Value1='25' Value2='135' Name='NMEA 0183 Gateway' />
+      <EnumTriplet Value1='25' Value2='137' Name='Wifi Gateway' />
       <EnumTriplet Value1='25' Value2='140' Name='Router' />
       <EnumTriplet Value1='25' Value2='150' Name='Bridge' />
       <EnumTriplet Value1='25' Value2='160' Name='Repeater' />
@@ -1955,6 +1957,7 @@ limitations under the License.
       <EnumTriplet Value1='50' Value2='210' Name='Gauge Small' />
       <EnumTriplet Value1='60' Value2='130' Name='Bottom Depth' />
       <EnumTriplet Value1='60' Value2='135' Name='Bottom Depth/Speed' />
+      <EnumTriplet Value1='60' Value2='136' Name='Bottom Depth/Speed/Temperature' />
       <EnumTriplet Value1='60' Value2='140' Name='Ownship Attitude' />
       <EnumTriplet Value1='60' Value2='145' Name='Ownship Position (GNSS)' />
       <EnumTriplet Value1='60' Value2='150' Name='Ownship Position (Loran C)' />
