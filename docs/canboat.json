@@ -2570,7 +2570,7 @@
           {"Name":"Analog to NMEA 2000 Gateway", "Value1":25, "Value2":132},
           {"Name":"NMEA 2000 to Serial Gateway", "Value1":25, "Value2":133},
           {"Name":"NMEA 0183 Gateway", "Value1":25, "Value2":135},
-          {"Name":"Wifi Gateway", "Value1":25, "Value2":137},
+          {"Name":"NMEA 2000 Wireless Gateway", "Value1":25, "Value2":137},
           {"Name":"Router", "Value1":25, "Value2":140},
           {"Name":"Bridge", "Value1":25, "Value2":150},
           {"Name":"Repeater", "Value1":25, "Value2":160},
