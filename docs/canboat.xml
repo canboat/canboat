@@ -1911,6 +1911,7 @@ limitations under the License.
       <EnumTriplet Value1='25' Value2='132' Name='Analog to NMEA 2000 Gateway' />
       <EnumTriplet Value1='25' Value2='133' Name='NMEA 2000 to Serial Gateway' />
       <EnumTriplet Value1='25' Value2='135' Name='NMEA 0183 Gateway' />
+      <EnumTriplet Value1='25' Value2='136' Name='NMEA Network Gateway' />
       <EnumTriplet Value1='25' Value2='137' Name='NMEA 2000 Wireless Gateway' />
       <EnumTriplet Value1='25' Value2='140' Name='Router' />
       <EnumTriplet Value1='25' Value2='150' Name='Bridge' />
