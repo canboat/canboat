@@ -53,6 +53,7 @@ static bool isSerialDevice;
 static bool hexMode;
 static int  sendInitState;
 static int  sequentialStatusMessages;
+static int  debugReset = -1;
 
 int baudRate = B230400;
 int speed    = 230400;
@@ -71,6 +72,7 @@ uint64_t lastTS;  // Last timestamp received from iKonvert. Beware roll-around, 
 static void processInBuffer(StringBuffer *in, StringBuffer *out);
 static void processReadBuffer(StringBuffer *in, int out);
 static void initializeDevice(void);
+static void sendNextInitCommand(void);
 
 int main(int argc, char **argv)
 {
@@ -79,78 +81,80 @@ int main(int argc, char **argv)
   char          *name   = argv[0];
   char          *device = 0;
   struct stat    statbuf;
+  int ac = argc;
+  char **av = argv;
 
-  setProgName(argv[0]);
-  while (argc > 1)
+  setProgName(av[0]);
+  while (ac > 1)
   {
-    if (strcasecmp(argv[1], "-version") == 0)
+    if (strcasecmp(av[1], "-version") == 0)
     {
       printf("%s\n", VERSION);
       exit(0);
     }
-    else if (strcasecmp(argv[1], "-w") == 0)
+    else if (strcasecmp(av[1], "-w") == 0)
     {
       writeonly = true;
     }
-    else if (strcasecmp(argv[1], "-p") == 0)
+    else if (strcasecmp(av[1], "-p") == 0)
     {
       passthru = true;
     }
-    else if (strcasecmp(argv[1], "-r") == 0)
+    else if (strcasecmp(av[1], "-r") == 0)
     {
       readonly = true;
     }
-    else if (strcasecmp(argv[1], "-v") == 0)
+    else if (strcasecmp(av[1], "-v") == 0)
     {
       verbose = true;
     }
-    else if (strcasecmp(argv[1], "-x") == 0)
+    else if (strcasecmp(av[1], "-x") == 0)
     {
       hexMode = true;
     }
-    else if (strcasecmp(argv[1], "--rate-limit-off") == 0 || strcasecmp(argv[1], "-l") == 0)
+    else if (strcasecmp(av[1], "--rate-limit-off") == 0 || strcasecmp(argv[1], "-l") == 0)
     {
       rate_limit_off = true;
     }
-    else if (strcasecmp(argv[1], "-rx") == 0 && argc > 2)
+    else if (strcasecmp(av[1], "-rx") == 0 && ac > 2)
     {
-      argc--;
-      argv++;
+      ac--;
+      av++;
       if (sbGetLength(&rxList) > 0)
       {
         sbAppendString(&rxList, ",");
       }
-      sbAppendFormat(&rxList, "%s", argv[1]);
+      sbAppendFormat(&rxList, "%s", av[1]);
     }
-    else if (strcasecmp(argv[1], "-tx") == 0 && argc > 2)
+    else if (strcasecmp(av[1], "-tx") == 0 && ac > 2)
     {
-      argc--;
-      argv++;
+      ac--;
+      av++;
       if (sbGetLength(&txList) > 0)
       {
         sbAppendString(&txList, ",");
       }
-      sbAppendFormat(&txList, "%s", argv[1]);
+      sbAppendFormat(&txList, "%s", av[1]);
     }
-    else if (strcasecmp(argv[1], "-t") == 0 && argc > 2)
+    else if (strcasecmp(av[1], "-t") == 0 && ac > 2)
     {
-      argc--;
-      argv++;
-      timeout = strtol(argv[1], 0, 10);
+      ac--;
+      av++;
+      timeout = strtol(av[1], 0, 10);
       logDebug("timeout set to %ld seconds\n", timeout);
     }
-    else if (strcasecmp(argv[1], "-reset") == 0 && argc > 2)
+    else if (strcasecmp(av[1], "-reset") == 0 && ac > 2)
     {
-      argc--;
-      argv++;
-      resetTimeout = strtol(argv[1], 0, 10);
+      ac--;
+      av++;
+      resetTimeout = strtol(av[1], 0, 10);
       logDebug("reset timeout set to %ld seconds\n", resetTimeout);
     }
-    else if (strcasecmp(argv[1], "-s") == 0 && argc > 2)
+    else if (strcasecmp(av[1], "-s") == 0 && ac > 2)
     {
-      argc--;
-      argv++;
-      speed = strtol(argv[1], 0, 10);
+      ac--;
+      av++;
+      speed = strtol(av[1], 0, 10);
       switch (speed)
       {
         case 38400:
@@ -181,21 +185,21 @@ int main(int argc, char **argv)
       }
       logDebug("speed set to %d (%d) baud\n", speed, baudRate);
     }
-    else if (strcasecmp(argv[1], "-d") == 0)
+    else if (strcasecmp(av[1], "-d") == 0)
     {
       setLogLevel(LOGLEVEL_DEBUG);
     }
     else if (!device)
     {
-      device = argv[1];
+      device = av[1];
     }
     else
     {
       device = 0;
       break;
     }
-    argc--;
-    argv++;
+    ac--;
+    av++;
   }
 
   if (!device)
@@ -365,14 +369,20 @@ int main(int argc, char **argv)
     {
       uint64_t now = getNow();
 
+      if (debugReset > 0)
+      {
+        debugReset--;
+      }
+
       if (lastNow == 0)
       {
         lastNow = now;
       }
-      if (lastNow < now - 1000 * resetTimeout)
+      if (lastNow < now - 1000 * resetTimeout || debugReset == 0)
       {
-        lastNow = now;
-        initializeDevice();
+        close(handle);
+        logDebug("Restart process to reset\n");
+        execvp(argv[0], argv);
       }
     }
   }
@@ -500,6 +510,7 @@ static void initializeDevice(void)
   if (isSerialDevice)
   {
     sendInitState = SEND_ALL_INIT_MESSAGES;
+    sendNextInitCommand();
   }
   else
   {
