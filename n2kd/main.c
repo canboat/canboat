@@ -552,7 +552,26 @@ static void acceptNMEA0183StreamClient(int i)
 
 static void writeAndClose(int idx, char *data, size_t len)
 {
-  write(stream[idx].fd, data, len);
+  int r;
+
+#ifdef O_NONBLOCK
+  int flags = fcntl(stream[idx].fd, F_GETFL, 0);
+  fcntl(stream[idx].fd, F_SETFL, flags & ~O_NONBLOCK);
+#else
+  int ioctlOptionValue = 0;
+  ioctl(stream[idx].fd, FIONBIO, &ioctlOptionValue);
+#endif
+
+  while (len > 0)
+  {
+    r = write(stream[idx].fd, data, len);
+    if (r <= 0)
+    {
+      break;
+    }
+    len -= r;
+    data += r;
+  }
   closeStream(idx);
 }
 
