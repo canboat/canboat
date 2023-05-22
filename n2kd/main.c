@@ -73,6 +73,7 @@ static void acceptRawInputClient(int i);
 static void acceptJSONClient(int i);
 static void acceptJSONStreamClient(int i);
 static void acceptNMEA0183StreamClient(int i);
+static void acceptStatusClient(int i);
 
 /*
  * TCP clients or servers. We keep an array of TCP sockets, indexed by a small integer.
@@ -87,12 +88,14 @@ typedef enum StreamType
   CLIENT_JSON,
   CLIENT_JSON_STREAM,
   CLIENT_NMEA0183_STREAM,
+  CLIENT_STATUS_STREAM,
   SERVER_AIS,
   SERVER_INPUT_STREAM,
   SERVER_JSON,
   SERVER_JSON_STREAM,
   SERVER_NMEA0183_STREAM,
   SERVER_NMEA0183_DATAGRAM,
+  SERVER_STATUS,
   DATA_INPUT_STREAM,
   DATA_OUTPUT_SINK,
   DATA_OUTPUT_COPY,
@@ -107,12 +110,14 @@ const char *streamTypeName[] = {"Any",
                                 "JSON client",
                                 "JSON stream",
                                 "NMEA0183 stream",
+                                "Status stream",
                                 "AIS server",
                                 "Raw input server",
                                 "JSON server",
                                 "JSON stream server",
                                 "NMEA0183 stream server",
                                 "NMEA0183 datagram server",
+                                "Status server",
                                 "Data input stream",
                                 "Data output sink",
                                 "Data output copy",
@@ -126,12 +131,14 @@ ReadHandler readHandlers[SOCKET_TYPE_MAX] = {0,
                                              handleClientRequest,
                                              handleClientRequest,
                                              closeClientRequest,
+                                             closeClientRequest,
                                              acceptAISClient,
                                              acceptRawInputClient,
                                              acceptJSONClient,
                                              acceptJSONStreamClient,
                                              acceptNMEA0183StreamClient,
                                              0,
+                                             acceptStatusClient,
                                              handleClientRequest,
                                              closeClientRequest,
                                              closeClientRequest,
@@ -149,7 +156,7 @@ typedef struct StreamInfo
 {
   SOCKET       fd;
   StreamType   type;
-  int64_t      timeout;
+  uint64_t     timeout;
   ReadHandler  readHandler;
   char         buffer[32768]; /* Lines longer than this might get into trouble */
   StringBuffer writeBuffer;
@@ -194,10 +201,13 @@ StringBuffer nmeaMessage; /* Buffer for sending to NMEA0183 TCP clients */
  */
 typedef struct
 {
-  uint8_t m_src;
-  char   *m_key2;
-  time_t  m_time; // Message valid until this time
-  char   *m_text;
+  uint8_t  m_src;
+  uint32_t m_interval; // Interval to previous m_last
+  uint64_t m_time;     // Message valid until this time
+  uint64_t m_last;     // When received
+  uint32_t m_count;    // How many times received
+  char    *m_key2;
+  char    *m_text;
 } Message;
 
 /*
@@ -253,7 +263,10 @@ static int secondaryKeyTimeout[] = {SENSOR_TIMEOUT, SENSOR_TIMEOUT, AIS_TIMEOUT,
 
 /*****************************************************************************************/
 
-int64_t epoch(void)
+/*
+ * Return time in milliseconds since UNIX epoch
+ */
+uint64_t epoch(void)
 {
   struct timeval t;
 
@@ -261,7 +274,7 @@ int64_t epoch(void)
   {
     logAbort("Error on obtaining wall clock\n");
   }
-  return (int64_t) t.tv_sec * 1000 + t.tv_usec / 1000;
+  return (uint64_t) t.tv_sec * 1000 + t.tv_usec / 1000;
 }
 
 static void setHaveNMEA0183Client(void)
@@ -327,6 +340,7 @@ static int setFdUsed(SOCKET fd, StreamType ct)
     case CLIENT_JSON:
     case CLIENT_JSON_STREAM:
     case CLIENT_NMEA0183_STREAM:
+    case CLIENT_STATUS_STREAM:
     case DATA_OUTPUT_STREAM:
     case DATA_OUTPUT_COPY:
     case DATA_OUTPUT_NMEA0183_STREAM:
@@ -387,37 +401,60 @@ static void closeStream(int i)
   logDebug("closeStream(%d) (%u..%u fdMax=%d)\n", i, socketIdxMin, socketIdxMax, socketFdMax);
 }
 
-static char *getFullStateJSON(StreamType stream)
+static char *getFullStateJSON(StreamType stream, int64_t now)
 {
   StringBuffer state     = sbNew;
   char         separator = '{';
-  time_t       now       = time(0);
 
   int  i, s;
   Pgn *pgn;
 
-  for (i = 0; i < maxPgnList; i++)
+  if (stream == CLIENT_STATUS_STREAM)
   {
-    pgn = *pgnList[i];
-
-    // AIS data only goes to AIS clients, non-AIS data to non-AIS clients, but
-    // PRNs 129026 and 129029 go to both.
-    if ((stream == CLIENT_AIS) == (strncmp(pgn->p_description, "AIS", 3) == 0) || pgn->p_prn == 129026 || pgn->p_prn == 129029)
+    for (i = 0; i < maxPgnList; i++)
     {
+      pgn = *pgnList[i];
+
       sbAppendFormat(&state, "%c\"%u\":\n  {\"description\":\"%s\"\n", separator, pgn->p_prn, pgn->p_description);
 
       for (s = 0; s < pgn->p_maxSrc; s++)
       {
         Message *m = &pgn->p_message[s];
+        char last_ts[DATE_LENGTH];
 
-        if (m->m_time >= now)
-        {
-          sbAppendFormat(&state, "  ,\"%u%s%s\":%s", m->m_src, m->m_key2 ? "_" : "", m->m_key2 ? m->m_key2 : "", m->m_text);
-        }
+        storeTimestamp(last_ts, m->m_last);
+        sbAppendFormat(&state, "  ,\"%u%s%s\":{\"last\":\"%s\",\"interval\":%u,\"count\":%u}\n", m->m_src, m->m_key2 ? "_" : "",
+        m->m_key2 ? m->m_key2 : "", last_ts, m->m_interval, m->m_count);
       }
-      sbAppendString(&state, "  }\n");
-
+      sbAppendFormat(&state, "  }\n");
       separator = ',';
+    }
+  }
+  else
+  {
+    for (i = 0; i < maxPgnList; i++)
+    {
+      pgn = *pgnList[i];
+
+      // AIS data only goes to AIS clients, non-AIS data to non-AIS clients, but
+      // PRNs 129026 and 129029 go to both.
+      if ((stream == CLIENT_AIS) == (strncmp(pgn->p_description, "AIS", 3) == 0) || pgn->p_prn == 129026 || pgn->p_prn == 129029)
+      {
+        sbAppendFormat(&state, "%c\"%u\":\n  {\"description\":\"%s\"\n", separator, pgn->p_prn, pgn->p_description);
+
+        for (s = 0; s < pgn->p_maxSrc; s++)
+        {
+          Message *m = &pgn->p_message[s];
+
+          if (m->m_time >= now)
+          {
+            sbAppendFormat(&state, "  ,\"%u%s%s\":%s", m->m_src, m->m_key2 ? "_" : "", m->m_key2 ? m->m_key2 : "", m->m_text);
+          }
+        }
+        sbAppendString(&state, "  }\n");
+
+        separator = ',';
+      }
     }
   }
   if (separator == ',')
@@ -498,6 +535,9 @@ static void startTcpServers(void)
 
   tcpServer(port + 4, SERVER_AIS);
   logInfo("TCP AIS server listening on port %d\n", port + 4);
+
+  tcpServer(port + 5, SERVER_STATUS);
+  logInfo("TCP status server listening on port %d\n", port + 5);
 }
 
 void acceptClient(SOCKET s, StreamType ct)
@@ -548,6 +588,11 @@ static void acceptJSONStreamClient(int i)
 static void acceptNMEA0183StreamClient(int i)
 {
   acceptClient(stream[i].fd, CLIENT_NMEA0183_STREAM);
+}
+
+static void acceptStatusClient(int i)
+{
+  acceptClient(stream[i].fd, CLIENT_STATUS_STREAM);
 }
 
 static void writeAndClose(int idx, char *data, size_t len)
@@ -697,7 +742,7 @@ static void writeAllClients(void)
             {
               if (!aisState)
               {
-                aisState = getFullStateJSON(CLIENT_AIS);
+                aisState = getFullStateJSON(CLIENT_AIS, now);
               }
               writeAndClose(i, aisState, strlen(aisState));
             }
@@ -707,10 +752,17 @@ static void writeAllClients(void)
             {
               if (!state)
               {
-                state = getFullStateJSON(CLIENT_JSON);
+                state = getFullStateJSON(CLIENT_JSON, now);
                 logDebug("json=%s", state);
               }
               writeAndClose(i, state, strlen(state));
+            }
+            break;
+          case CLIENT_STATUS_STREAM:
+            {
+              char * statusState = getFullStateJSON(CLIENT_STATUS_STREAM, now);
+              writeAndClose(i, statusState, strlen(statusState));
+              free(statusState);
             }
             break;
           case CLIENT_NMEA0183_STREAM:
@@ -773,7 +825,7 @@ static void writeAllClients(void)
 #endif
 }
 
-static void checkSrcIsKnown(int src, time_t n)
+static void checkSrcIsKnown(int src, int64_t n)
 {
   static const int PRODUCT_INFO_IDX = PrnToIdx(126996);
   int              i;
@@ -817,12 +869,10 @@ static bool storeMessage(char *line, size_t len)
   int      i, idx, k;
   int      src = 0, dst = 255, prn = 0;
   Pgn     *pgn;
-  time_t   now;
+  int64_t  now = epoch();
   char    *key2 = 0;
   int      valid;
   char     value[16];
-
-  now = time(0);
 
   if (isLogLevelEnabled(LOG_DEBUG))
   {
@@ -1032,11 +1082,14 @@ static bool storeMessage(char *line, size_t len)
     {
       logAbort("Out of memory allocating %u bytes\n", newSize);
     }
-    pgnIdx[idx]              = pgn;
-    pgn->p_message[i].m_src  = (uint8_t) src;
-    pgn->p_message[i].m_key2 = key2;
-    key2                     = 0;
-    pgn->p_message[i].m_text = 0;
+    pgnIdx[idx]                  = pgn;
+    pgn->p_message[i].m_src      = (uint8_t) src;
+    pgn->p_message[i].m_key2     = key2;
+    key2                         = 0;
+    pgn->p_message[i].m_text     = 0;
+    pgn->p_message[i].m_interval = 0;
+    pgn->p_message[i].m_last     = 0;
+    pgn->p_message[i].m_count    = 0;
   }
 
   m = &pgn->p_message[i];
@@ -1073,7 +1126,13 @@ static bool storeMessage(char *line, size_t len)
   {
     free(key2);
   }
-  m->m_time = now + valid;
+  m->m_time = now + valid * INT64_C(1000) ;
+  if (m->m_last > 0)
+  {
+    m->m_interval = (uint32_t) (now - m->m_last);
+  }
+  m->m_last = now;
+  m->m_count++;
 
   if (prn != 126996)
   {

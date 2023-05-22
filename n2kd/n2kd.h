@@ -31,7 +31,7 @@ extern uint32_t protocol;
 extern int      debug;
 extern bool     unitSI;
 
-extern int64_t epoch(void);
+extern uint64_t epoch(void);
 
 typedef enum
 {
