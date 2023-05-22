@@ -952,7 +952,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. "
-                    "This message is the possible response to acknowledge the reception of a “normal broadcast” message or the "
+                    "This message is the possible response to acknowledge the reception of a 'normal broadcast' message or the "
                     "response to a specific command to indicate compliance or failure."}
 
     ,
@@ -1009,7 +1009,7 @@ Pgn pgnList[] = {
      .interval    = UINT16_MAX,
      .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
-                    "messages that have 9 or more data bytes. This PGN’s role in the transport process is to prepare the receiver "
+                    "messages that have 9 or more data bytes. This PGN's role in the transport process is to prepare the receiver "
                     "for the fact that this sender wants to transmit a long message. The receiver will respond with CTS."}
 
     ,
@@ -1026,7 +1026,7 @@ Pgn pgnList[] = {
      .interval    = UINT16_MAX,
      .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
-                    "messages that have 9 or more data bytes. This PGN’s role in the transport process is to signal to the sender "
+                    "messages that have 9 or more data bytes. This PGN's role in the transport process is to signal to the sender "
                     "that the receive is ready to receive a number of frames."}
 
     ,
@@ -1044,7 +1044,7 @@ Pgn pgnList[] = {
      .url      = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation
      = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that "
-       "have 9 or more data bytes. This PGN’s role in the transport process is to mark the end of the message."}
+       "have 9 or more data bytes. This PGN's role in the transport process is to mark the end of the message."}
 
     ,
     {"ISO Transport Protocol, Connection Management - Broadcast Announce",
@@ -1060,7 +1060,7 @@ Pgn pgnList[] = {
      .interval    = UINT16_MAX,
      .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
-                    "messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce a broadcast "
+                    "messages that have 9 or more data bytes. This PGN's role in the transport process is to announce a broadcast "
                     "of a long message spanning multiple frames."}
 
     ,
@@ -1076,7 +1076,7 @@ Pgn pgnList[] = {
      .interval    = UINT16_MAX,
      .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
-                    "messages that have 9 or more data bytes. This PGN’s role in the transport process is to announce an abort "
+                    "messages that have 9 or more data bytes. This PGN's role in the transport process is to announce an abort "
                     "of a long message spanning multiple frames."}
 
     ,
@@ -2473,12 +2473,12 @@ Pgn pgnList[] = {
      = "Reception of this PGN confirms that a device is still present on the network.  Reception of this PGN may also be used to "
        "maintain an address to NAME association table within the receiving device.  The transmission interval may be used by the "
        "receiving unit to determine the time-out value for the connection supervision.  The value contained in Field 1 of this PGN "
-       "reflects the PGN’s current Transmission Interval. Changes to this PGN’s Transmission Interval shall be reflected in Field "
+       "reflects the PGN's current Transmission Interval. Changes to this PGN's Transmission Interval shall be reflected in Field "
        "1.  The transmission interval can only be changed by using the Request Group Function PGN 126208 with no pairs of request "
        "parameters provided. Field 3 of the Request Group Function PGN 126208 may contain values between 1,000ms and 60,000ms.  "
        "This PGN cannot be requested by the ISO Request PGN 059904 or Request Group Function PGN 126208. In Request Group Function "
-       "PGN 126208, setting Field 3 to a value of 0xFFFF FFFF and Field 4 to a value of 0xFFFF: “Transmit now without changing "
-       "timing variables.” is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 "
+       "PGN 126208, setting Field 3 to a value of 0xFFFF FFFF and Field 4 to a value of 0xFFFF: 'Transmit now without changing "
+       "timing variables.' is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 "
        "of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See "
        "ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for "
        "additional context.",
