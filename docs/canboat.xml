@@ -614,6 +614,7 @@ limitations under the License.
       <EnumPair Value='85' Name='External Environment' />
       <EnumPair Value='90' Name='Internal Environment' />
       <EnumPair Value='100' Name='Deck + cargo + fishing equipment systems' />
+      <EnumPair Value='110' Name='Human Interface' />
       <EnumPair Value='120' Name='Display' />
       <EnumPair Value='125' Name='Entertainment' />
     </LookupEnumeration>
@@ -2001,6 +2002,9 @@ limitations under the License.
       <EnumTriplet Value1='85' Value2='160' Name='Aquatic' />
       <EnumTriplet Value1='90' Value2='130' Name='HVAC' />
       <EnumTriplet Value1='100' Value2='130' Name='Scale (Catch)' />
+      <EnumTriplet Value1='110' Value2='130' Name='Button Interface' />
+      <EnumTriplet Value1='110' Value2='135' Name='Switch Interface' />
+      <EnumTriplet Value1='110' Value2='140' Name='Analog Interface' />
       <EnumTriplet Value1='120' Value2='130' Name='Display' />
       <EnumTriplet Value1='120' Value2='140' Name='Alarm Enunciator' />
       <EnumTriplet Value1='125' Value2='130' Name='Multimedia Player' />

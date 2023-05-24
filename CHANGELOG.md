@@ -11,6 +11,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Added
 
 - #401: Added four new device function values
+- Added three new device function values
 
 ## [4.12.0]
 

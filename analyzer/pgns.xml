@@ -812,6 +812,7 @@ limitations under the License.
             <EnumPair Value='85' Name='External Environment' />
             <EnumPair Value='90' Name='Internal Environment' />
             <EnumPair Value='100' Name='Deck + cargo + fishing equipment systems' />
+            <EnumPair Value='110' Name='Human Interface' />
             <EnumPair Value='120' Name='Display' />
             <EnumPair Value='125' Name='Entertainment' />
           </EnumValues>
@@ -3198,6 +3199,7 @@ limitations under the License.
             <EnumPair Value='85' Name='External Environment' />
             <EnumPair Value='90' Name='Internal Environment' />
             <EnumPair Value='100' Name='Deck + cargo + fishing equipment systems' />
+            <EnumPair Value='110' Name='Human Interface' />
             <EnumPair Value='120' Name='Display' />
             <EnumPair Value='125' Name='Entertainment' />
           </EnumValues>
