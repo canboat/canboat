@@ -46,6 +46,7 @@ limitations under the License.
 #define FMT_2 2 // Debian ex:	"   can0  09F8027F   [8]  00 FC FF FF 00 00 FF FF"
 #define FMT_3 3 // candump log ex:	"(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF"
 #define FMT_4 4 // tshark of pcap:10131  29.555750              ?              CAN 16 XTD: 0x09fd0223   00 49 02 1c a7 fa ff ff
+#define FMT_5 5 // Navico port 8086: 0021200 0e 1d ff 9d 08 00 00 00 80 df 3f 9f 34 12 ff 0d
 
 void gettimeval(struct timeval *tv, double sec)
 {
@@ -89,9 +90,11 @@ int main(int argc, char **argv)
 
     // Process the CAN ID
     //
-    unsigned int canid       = 0;
-    int          size        = 0;
-    double       currentTime = 0.;
+    uint32_t canid       = 0;
+    int      size        = 0;
+    double   currentTime = 0.;
+    uint32_t currentTimeInt = 0;
+    uint8_t *u = (uint8_t *) &canid;
 
     // Determine which candump format is being used.
     //
@@ -101,9 +104,13 @@ int main(int argc, char **argv)
       // See if we can match one.
       //
       if (sscanf(msg, "<%x> [%d] ", &canid, &size) == 2)
+      {
         format = FMT_1;
+      }
       else if (sscanf(msg, " %*s %x [%d] ", &canid, &size) == 2)
+      {
         format = FMT_2;
+      }
       else if (sscanf(msg, "(%lf) %*s %8x#", &currentTime, &canid) == 2)
       {
         format           = FMT_3;
@@ -111,31 +118,54 @@ int main(int argc, char **argv)
         size             = (strlen(strchr(msg, '#')) - 1) / 2;
       }
       else if (strstr(msg, "CAN 16 XTD:") != NULL)
+      {
         format = FMT_4;
+      }
+      else if (sscanf(msg, "%07x %02hhx %02hhx %02hhx %02hhx", &currentTimeInt, u, u + 1, u + 2, u + 3) == 5)
+      {
+        format = FMT_5;
+      }
       else
+      {
         continue;
+      }
     }
     else if (format == FMT_1)
     {
       if (sscanf(msg, "<%x> [%d] ", &canid, &size) != 2)
+      {
         continue;
+      }
     }
     else if (format == FMT_2)
     {
       if (sscanf(msg, " %*s %x [%d] ", &canid, &size) != 2)
+      {
         continue;
+      }
     }
     else if (format == FMT_3)
     {
       if (sscanf(msg, "(%lf) %*s %8x#", &currentTime, &canid) != 2)
+      {
         continue;
+      }
       size = (strlen(strchr(msg, '#')) - 1) / 2;
     }
     else if (format == FMT_4)
     {
       if (sscanf(msg, "%*d %lf %*s CAN %d XTD: 0x%8x   ", &currentTime, &size, &canid) != 3)
+      {
         continue;
+      }
       size = size - 8;
+    }
+    else if (format == FMT_5)
+    {
+      if (sscanf(msg, "%07x %02hhx %02hhx %02hhx %02hhx %02x", &currentTimeInt, u, u + 1, u + 2, u + 3, &size) != 6)
+      {
+        continue;
+      }
     }
 
     unsigned int pri = 0;
@@ -188,10 +218,16 @@ int main(int argc, char **argv)
     int          i;
     char *       p;
     char         separator;
-    unsigned int data[MAX_DATA_BYTES];
+    unsigned int data;
 
     p = msg;
-    if (format == FMT_4)
+    if (format == FMT_5)
+    {
+      p = strstr(p, " ");
+      p += sizeof("0e 1d ff 9d 08 00 00 00");
+      separator = ' ';
+    }
+    else if (format == FMT_4)
     {
       p         = strstr(p, "XTD: ") + sizeof("XTD: ");
       separator = ' ';
@@ -217,8 +253,8 @@ int main(int argc, char **argv)
       }
       for (i = 0; i < size; i++, p += candump_data_inc)
       {
-        sscanf(p, "%2x", &data[i]);
-        fprintf(outfile, ",%02x", data[i]);
+        sscanf(p, "%2x", &data);
+        fprintf(outfile, ",%02x", data);
       }
     }
     fprintf(outfile, "\n");
