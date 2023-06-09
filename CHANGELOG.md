@@ -10,8 +10,19 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
-- #401: Added four new device function values
-- Added three new device function values
+- #401, #407: Added 7 new device function values to PGN 65240 and 60928.
+- #398: Add SIMNET_AP_EVENTS codes for B&G H5000 start features
+- Add command to request PGN transmit rate change
+- candump2analyzer: add support for Navico TCP candump
+- n2kd: Add status port to show counts and intervals of received PGNs
+
+### Fixed
+
+- ikonvert-serial: Improve iKonvert reset handling
+- Remove unicode characters from source
+- n2kd: write complete JSON state (use multiple blocking writes if necessary)
+- #408: n2k_monitor: avoid n2kd monitor forking every 30s
+
 
 ## [4.12.0]
 
