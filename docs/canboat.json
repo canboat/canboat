@@ -653,6 +653,7 @@
           {"Name":"External Environment", "Value":85},
           {"Name":"Internal Environment", "Value":90},
           {"Name":"Deck + cargo + fishing equipment systems", "Value":100},
+          {"Name":"Human Interface", "Value":110},
           {"Name":"Display", "Value":120},
           {"Name":"Entertainment", "Value":125}
         ]
@@ -2660,6 +2661,9 @@
           {"Name":"Aquatic", "Value1":85, "Value2":160},
           {"Name":"HVAC", "Value1":90, "Value2":130},
           {"Name":"Scale (Catch)", "Value1":100, "Value2":130},
+          {"Name":"Button Interface", "Value1":110, "Value2":130},
+          {"Name":"Switch Interface", "Value1":110, "Value2":135},
+          {"Name":"Analog Interface", "Value1":110, "Value2":140},
           {"Name":"Display", "Value1":120, "Value2":130},
           {"Name":"Alarm Enunciator", "Value1":120, "Value2":140},
           {"Name":"Multimedia Player", "Value1":125, "Value2":130},

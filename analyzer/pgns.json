@@ -735,6 +735,7 @@
               {"name": "External Environment", "value": 85},
               {"name": "Internal Environment", "value": 90},
               {"name": "Deck + cargo + fishing equipment systems", "value": 100},
+              {"name": "Human Interface", "value": 110},
               {"name": "Display", "value": 120},
               {"name": "Entertainment", "value": 125}]},
           {
@@ -2878,6 +2879,7 @@
               {"name": "External Environment", "value": 85},
               {"name": "Internal Environment", "value": 90},
               {"name": "Deck + cargo + fishing equipment systems", "value": 100},
+              {"name": "Human Interface", "value": 110},
               {"name": "Display", "value": 120},
               {"name": "Entertainment", "value": 125}]},
           {
