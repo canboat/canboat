@@ -4179,9 +4179,6 @@ limitations under the License.
             <EnumPair Value='74' Name='Pilot Warning Solenoid Short' />
             <EnumPair Value='75' Name='Pilot Joystick Fault' />
             <EnumPair Value='76' Name='Pilot No Joystick Data' />
-            <EnumPair Value='77' Name='not assigned' />
-            <EnumPair Value='78' Name='not assigned' />
-            <EnumPair Value='79' Name='not assigned' />
             <EnumPair Value='80' Name='Pilot Invalid Command' />
             <EnumPair Value='81' Name='AIS TX Malfunction' />
             <EnumPair Value='82' Name='AIS Antenna VSWR fault' />
@@ -5684,9 +5681,6 @@ limitations under the License.
             <EnumPair Value='74' Name='Pilot Warning Solenoid Short' />
             <EnumPair Value='75' Name='Pilot Joystick Fault' />
             <EnumPair Value='76' Name='Pilot No Joystick Data' />
-            <EnumPair Value='77' Name='not assigned' />
-            <EnumPair Value='78' Name='not assigned' />
-            <EnumPair Value='79' Name='not assigned' />
             <EnumPair Value='80' Name='Pilot Invalid Command' />
             <EnumPair Value='81' Name='AIS TX Malfunction' />
             <EnumPair Value='82' Name='AIS Antenna VSWR fault' />

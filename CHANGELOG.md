@@ -10,9 +10,6 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
-- #403: analyzer: unsigned fields with offset / PGN 127513 peukert exponent was wrong.
-- #411: analyzer: fix formatted printing of negative time offset values.
-- #410: analyzer: make -raw produce standard raw format.
 - #309: Simrad Autopilot work (phase 1)
 - #401, #407: Added 7 new device function values to PGN 65240 and 60928.
 - #398: Add SIMNET_AP_EVENTS codes for B&G H5000 start features
@@ -22,6 +19,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #404: analyzer/canboat.xml: remove useless duplicate values from lookups.
+- #403: analyzer: unsigned fields with offset / PGN 127513 peukert exponent was wrong.
+- #411: analyzer: fix formatted printing of negative time offset values.
+- #410: analyzer: make -raw produce standard raw format.
 - ikonvert-serial: Improve iKonvert reset handling
 - Remove unicode characters from source
 - n2kd: write complete JSON state (use multiple blocking writes if necessary)
