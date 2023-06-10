@@ -743,19 +743,26 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   uint64_t t;
   int      digits;
 
+  const char *sign = "";
+
   if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
   {
     return true;
   }
 
-  t = (uint64_t) value;
-
-  logDebug("fieldPrintTime(<%s>, \"%s\") t=%" PRIu64 " res=%g max=0x%" PRIx64 "\n",
+  logDebug("fieldPrintTime(<%s>, \"%s\") v=%" PRId64 " res=%g max=0x%" PRIx64 "\n",
            field->name,
            fieldName,
-           t,
+           value,
            field->resolution,
            maxValue);
+
+  if (value < 0)
+  {
+    value = -value;
+    sign = "-";
+  }
+
 
   if (field->resolution < 1.0)
   {
@@ -764,9 +771,10 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   else
   {
     unitspersecond = 1;
-    t *= (uint64_t) field->resolution;
+    value *= (int64_t) field->resolution;
   }
 
+  t       = (uint64_t) value;
   seconds = t / unitspersecond;
   units   = t % unitspersecond;
   minutes = seconds / 60;
@@ -780,15 +788,15 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   {
     if (showJsonValue)
     {
-      mprintf("%" PRIu64 ",\"name\":", t);
+      mprintf("%" PRId64 ",\"name\":", value);
     }
     if (units != 0)
     {
-      mprintf("\"%02u:%02u:%02u.%0*u\"", hours, minutes, seconds, digits, units);
+      mprintf("\"%s%02u:%02u:%02u.%0*u\"", sign, hours, minutes, seconds, digits, units);
     }
     else
     {
-      mprintf("\"%02u:%02u:%02u\"", hours, minutes, seconds);
+      mprintf("\"%s%02u:%02u:%02u\"", sign, hours, minutes, seconds);
     }
     if (showJsonValue)
     {
@@ -799,11 +807,11 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   {
     if (units)
     {
-      mprintf("%02u:%02u:%02u.%0*u", hours, minutes, seconds, digits, units);
+      mprintf("%s%02u:%02u:%02u.%0*u", sign, hours, minutes, seconds, digits, units);
     }
     else
     {
-      mprintf("%02u:%02u:%02u", hours, minutes, seconds);
+      mprintf("%s%02u:%02u:%02u", sign, hours, minutes, seconds);
     }
   }
   return true;
