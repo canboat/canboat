@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+- #403: analyzer: unsigned fields with offset / PGN 127513 peukert exponent was wrong.
 - #411: analyzer: fix formatted printing of negative time offset values.
 - #410: analyzer: make -raw produce standard raw format.
 - #309: Simrad Autopilot work (phase 1)

@@ -365,6 +365,7 @@ bool extractNumber(const Field *field,
     if (field && field->offset) /* J1939 Excess-K notation */
     {
       *value += field->offset;
+      maxv += field->offset;
     }
     else
     {
@@ -379,6 +380,14 @@ bool extractNumber(const Field *field,
         /* 1111.1111.1111.1111.1000.0000.0000.0000 ~maxvalue */
         *value |= ~maxv;
       }
+    }
+  }
+  else
+  {
+    if (field && field->offset) /* J1939 Excess-K notation */
+    {
+      *value += field->offset;
+      maxv += field->offset;
     }
   }
 
