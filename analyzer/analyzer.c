@@ -138,7 +138,7 @@ static void usage(char **argv, char **av)
   printf("\n");
   printf("     -version          Print the version of the program and quit\n");
   printf("\nThe following options are used to debug the analyzer:\n");
-  printf("     -raw              Print raw bytes (obsolete, use -data)\n");
+  printf("     -raw              Print the PGN in a format suitable to be fed to analyzer again (in standard raw format)\n");
   printf("     -data             Print the PGN three times: in hex, ascii and analyzed\n");
   printf("     -debug            Print raw value per field\n");
   printf("     -fixtime str      Print str as timestamp in logging\n");
@@ -524,10 +524,10 @@ static void printCanRaw(RawMessage *msg)
 
   if (showRaw && (!onlyPgn || onlyPgn == msg->pgn))
   {
-    fprintf(f, "%s %u %03u %03u %6u :", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn);
+    fprintf(f, "%s,%u,%u,%u,%u,%u", msg->timestamp, msg->prio, msg->pgn, msg->src, msg->dst, msg->len);
     for (i = 0; i < msg->len; i++)
     {
-      fprintf(f, " %02x", msg->data[i]);
+      fprintf(f, ",%02x", msg->data[i]);
     }
     putc('\n', f);
   }
