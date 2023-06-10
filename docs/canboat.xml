@@ -1678,17 +1678,112 @@ limitations under the License.
       <EnumPair Value='48' Name='Position' />
       <EnumPair Value='50' Name='Init #3' />
     </LookupEnumeration>
+    <LookupEnumeration Name='SIMRAD_AP_MODE' MaxValue='255'>
+      <EnumPair Value='2' Name='Heading' />
+      <EnumPair Value='3' Name='Wind' />
+      <EnumPair Value='10' Name='Nav' />
+      <EnumPair Value='11' Name='No Drift' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMRAD_DEVICE_MODEL' MaxValue='255'>
+      <EnumPair Value='0' Name='AC-12' />
+      <EnumPair Value='1' Name='Autopilot Controller' />
+      <EnumPair Value='100' Name='NAC-3' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMRAD_DEVICE_REPORT' MaxValue='255'>
+      <EnumPair Value='2' Name='Status' />
+      <EnumPair Value='3' Name='Send Status' />
+      <EnumPair Value='10' Name='Mode' />
+      <EnumPair Value='11' Name='Send Mode' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMRAD_AP_STATUS' MaxValue='255'>
+      <EnumPair Value='2' Name='Manual' />
+      <EnumPair Value='10' Name='Automatic' />
+      <EnumPair Value='16' Name='Automatic16' />
+    </LookupEnumeration>
     <LookupEnumeration Name='SIMRAD_COMMAND' MaxValue='255'>
       <EnumPair Value='50' Name='Text' />
     </LookupEnumeration>
     <LookupEnumeration Name='SIMRAD_TYPE' MaxValue='65535'>
       <EnumPair Value='0' Name='Heading Offset' />
+      <EnumPair Value='41' Name='Timezone offset' />
       <EnumPair Value='768' Name='Local field' />
       <EnumPair Value='1024' Name='Field angle' />
+      <EnumPair Value='4863' Name='Backlight level' />
+      <EnumPair Value='5160' Name='Time hour display' />
+      <EnumPair Value='5161' Name='Time format' />
+      <EnumPair Value='9983' Name='Night mode' />
+      <EnumPair Value='44079' Name='Night mode color' />
+      <EnumPair Value='55087' Name='Day mode invert' />
     </LookupEnumeration>
     <LookupEnumeration Name='SIMRAD_EVENT_COMMAND' MaxValue='255'>
       <EnumPair Value='1' Name='Alarm' />
       <EnumPair Value='2' Name='AP command' />
+      <EnumPair Value='255' Name='Autopilot' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_NIGHT_MODE' MaxValue='255'>
+      <EnumPair Value='2' Name='Day' />
+      <EnumPair Value='4' Name='Night' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_NIGHT_MODE_COLOR' MaxValue='255'>
+      <EnumPair Value='0' Name='Red' />
+      <EnumPair Value='1' Name='Green' />
+      <EnumPair Value='2' Name='Blue' />
+      <EnumPair Value='3' Name='White' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_DISPLAY_GROUP' MaxValue='255'>
+      <EnumPair Value='1' Name='Default' />
+      <EnumPair Value='2' Name='Group 1' />
+      <EnumPair Value='3' Name='Group 2' />
+      <EnumPair Value='4' Name='Group 3' />
+      <EnumPair Value='5' Name='Group 4' />
+      <EnumPair Value='6' Name='Group 5' />
+      <EnumPair Value='7' Name='Group 6' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_HOUR_DISPLAY' MaxValue='255'>
+      <EnumPair Value='0' Name='24 hour' />
+      <EnumPair Value='1' Name='12 hour' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_TIME_FORMAT' MaxValue='255'>
+      <EnumPair Value='1' Name='MM/dd/yyyy' />
+      <EnumPair Value='2' Name='dd/MM/yyyy' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_BACKLIGHT_LEVEL' MaxValue='255'>
+      <EnumPair Value='1' Name='Day mode' />
+      <EnumPair Value='4' Name='Night mode' />
+      <EnumPair Value='11' Name='Level 1' />
+      <EnumPair Value='22' Name='Level 2' />
+      <EnumPair Value='33' Name='Level 3' />
+      <EnumPair Value='44' Name='Level 4' />
+      <EnumPair Value='55' Name='Level 5' />
+      <EnumPair Value='66' Name='Level 6' />
+      <EnumPair Value='77' Name='Level 7' />
+      <EnumPair Value='88' Name='Level 8' />
+      <EnumPair Value='99' Name='Level 9' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_AP_EVENTS' MaxValue='255'>
+      <EnumPair Value='6' Name='Standby' />
+      <EnumPair Value='9' Name='Auto mode' />
+      <EnumPair Value='10' Name='Nav mode' />
+      <EnumPair Value='13' Name='Non Follow Up mode' />
+      <EnumPair Value='14' Name='Follow Up mode' />
+      <EnumPair Value='15' Name='Wind mode' />
+      <EnumPair Value='18' Name='Square (Turn)' />
+      <EnumPair Value='19' Name='C-Turn' />
+      <EnumPair Value='20' Name='U-Turn' />
+      <EnumPair Value='21' Name='Spiral (Turn)' />
+      <EnumPair Value='22' Name='Zig Zag (Turn)' />
+      <EnumPair Value='23' Name='Lazy-S (Turn)' />
+      <EnumPair Value='24' Name='Depth (Turn)' />
+      <EnumPair Value='26' Name='Change course' />
+      <EnumPair Value='61' Name='Timer sync' />
+      <EnumPair Value='112' Name='Ping port end' />
+      <EnumPair Value='113' Name='Ping starboard end' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_DIRECTION' MaxValue='255'>
+      <EnumPair Value='2' Name='Port' />
+      <EnumPair Value='3' Name='Starboard' />
+      <EnumPair Value='4' Name='Left rudder (port)' />
+      <EnumPair Value='5' Name='Right rudder (starboard)' />
     </LookupEnumeration>
     <LookupEnumeration Name='FUSION_MESSAGE_ID' MaxValue='255'>
       <EnumPair Value='1' Name='Request Status' />
@@ -1845,43 +1940,6 @@ limitations under the License.
     <LookupEnumeration Name='FUSION_POWER_STATE' MaxValue='255'>
       <EnumPair Value='1' Name='On' />
       <EnumPair Value='2' Name='Off' />
-    </LookupEnumeration>
-    <LookupEnumeration Name='SIMNET_BACKLIGHT_LEVEL' MaxValue='255'>
-      <EnumPair Value='1' Name='Day mode' />
-      <EnumPair Value='4' Name='Night mode' />
-      <EnumPair Value='11' Name='Level 1' />
-      <EnumPair Value='22' Name='Level 2' />
-      <EnumPair Value='33' Name='Level 3' />
-      <EnumPair Value='44' Name='Level 4' />
-      <EnumPair Value='55' Name='Level 5' />
-      <EnumPair Value='66' Name='Level 6' />
-      <EnumPair Value='77' Name='Level 7' />
-      <EnumPair Value='88' Name='Level 8' />
-      <EnumPair Value='99' Name='Level 9' />
-    </LookupEnumeration>
-    <LookupEnumeration Name='SIMNET_AP_EVENTS' MaxValue='255'>
-      <EnumPair Value='6' Name='Standby' />
-      <EnumPair Value='9' Name='Auto mode' />
-      <EnumPair Value='10' Name='Nav mode' />
-      <EnumPair Value='13' Name='Non Follow Up mode' />
-      <EnumPair Value='15' Name='Wind mode' />
-      <EnumPair Value='18' Name='Square (Turn)' />
-      <EnumPair Value='19' Name='C-Turn' />
-      <EnumPair Value='20' Name='U-Turn' />
-      <EnumPair Value='21' Name='Spiral (Turn)' />
-      <EnumPair Value='22' Name='Zig Zag (Turn)' />
-      <EnumPair Value='23' Name='Lazy-S (Turn)' />
-      <EnumPair Value='24' Name='Depth (Turn)' />
-      <EnumPair Value='26' Name='Change course' />
-      <EnumPair Value='61' Name='Timer sync' />
-      <EnumPair Value='112' Name='Ping port end' />
-      <EnumPair Value='113' Name='Ping starboard end' />
-    </LookupEnumeration>
-    <LookupEnumeration Name='SIMNET_DIRECTION' MaxValue='255'>
-      <EnumPair Value='2' Name='Port' />
-      <EnumPair Value='3' Name='Starboard' />
-      <EnumPair Value='4' Name='Left rudder (port)' />
-      <EnumPair Value='5' Name='Right rudder (starboard)' />
     </LookupEnumeration>
     <LookupEnumeration Name='PRIORITY' MaxValue='15'>
       <EnumPair Value='0' Name='0' />
@@ -2114,6 +2172,13 @@ limitations under the License.
       <BitPair Bit='1' Name='Controller over current cut-out' />
       <BitPair Bit='2' Name='Controller over temperature cut-out' />
       <BitPair Bit='3' Name='Manufacturer defined' />
+    </LookupBitEnumeration>
+    <LookupBitEnumeration Name='SIMRAD_AP_MODE_BITFIELD' MaxValue='15'>
+      <BitPair Bit='3' Name='Standby' />
+      <BitPair Bit='4' Name='Heading' />
+      <BitPair Bit='6' Name='Nav' />
+      <BitPair Bit='8' Name='No Drift' />
+      <BitPair Bit='10' Name='Wind' />
     </LookupBitEnumeration>
     <LookupBitEnumeration Name='ENTERTAINMENT_REPEAT_BITFIELD' MaxValue='1'>
       <BitPair Bit='0' Name='Song' />
@@ -6516,6 +6581,429 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>65305</PGN>
+      <Id>simnetDeviceStatus</Id>
+      <Description>Simnet: Device Status</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>model</Id>
+          <Name>Model</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_DEVICE_MODEL</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>report</Id>
+          <Name>Report</Name>
+          <Description>Status</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>2</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_DEVICE_REPORT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>status</Id>
+          <Name>Status</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_AP_STATUS</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>spare7</Id>
+          <Name>Spare</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65305</PGN>
+      <Id>simnetDeviceStatusRequest</Id>
+      <Description>Simnet: Device Status Request</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>model</Id>
+          <Name>Model</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_DEVICE_MODEL</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>report</Id>
+          <Name>Report</Name>
+          <Description>Send Status</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>3</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_DEVICE_REPORT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65305</PGN>
+      <Id>simnetPilotMode</Id>
+      <Description>Simnet: Pilot Mode</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>model</Id>
+          <Name>Model</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_DEVICE_MODEL</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>report</Id>
+          <Name>Report</Name>
+          <Description>Mode</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>10</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_DEVICE_REPORT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>mode</Id>
+          <Name>Mode</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>SIMRAD_AP_MODE_BITFIELD</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>spare7</Id>
+          <Name>Spare</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65305</PGN>
+      <Id>simnetDeviceModeRequest</Id>
+      <Description>Simnet: Device Mode Request</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>model</Id>
+          <Name>Model</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_DEVICE_MODEL</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>report</Id>
+          <Name>Report</Name>
+          <Description>Send Mode</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>11</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_DEVICE_REPORT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>65309</PGN>
       <Id>navicoWirelessBatteryStatus</Id>
       <Description>Navico: Wireless Battery Status</Description>
@@ -6716,6 +7204,114 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65341</PGN>
+      <Id>simnetAutopilotAngle</Id>
+      <Description>Simnet: Autopilot Angle</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>mode</Id>
+          <Name>Mode</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_AP_MODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>angle</Id>
+          <Name>Angle</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3.2767</RangeMin>
+          <RangeMax>3.2765</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -42694,6 +43290,87 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130821</PGN>
+      <Id>navicoAsciiData</Id>
+      <Description>Navico: ASCII Data</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>5</FieldCount>
+      <Length>259</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>message</Id>
+          <Name>Message</Name>
+          <BitLength>2048</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130821</PGN>
       <Id>furunoUnknown130821</Id>
       <Description>Furuno: Unknown 130821</Description>
       <Type>Fast</Type>
@@ -42878,6 +43555,75 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>navicoUnknown1</Id>
+      <Description>Navico: Unknown 1</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>4</FieldCount>
+      <Length>15</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>104</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -45196,6 +45942,65 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130845</PGN>
+      <Id>furunoMultiSatsInViewExtended</Id>
+      <Description>Furuno: Multi Sats In View Extended</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>3</FieldCount>
+      <Length>2</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130845</PGN>
       <Id>simnetCompassHeadingOffset</Id>
       <Description>Simnet: Compass Heading Offset</Description>
       <Type>Fast</Type>
@@ -45347,65 +46152,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130845</PGN>
-      <Id>furunoMultiSatsInViewExtended</Id>
-      <Description>Furuno: Multi Sats In View Extended</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Furuno</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>1855</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
@@ -45724,18 +46470,169 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130845</PGN>
-      <Id>simnetParameterHandle</Id>
-      <Description>Simnet: Parameter Handle</Description>
+      <Id>simnetSetTimezone</Id>
+      <Description>Simnet: Set Timezone</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>14</FieldCount>
+      <FieldCount>11</FieldCount>
+      <Length>14</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Timezone offset</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>41</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>spare8</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>localOffset</Id>
+          <Name>Local Offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>s</Unit>
+          <Resolution>60</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-1966020</RangeMin>
+          <RangeMax>1965900</RangeMax>
+          <FieldType>TIME</FieldType>
+          <PhysicalQuantity>TIME</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved11</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130845</PGN>
+      <Id>simnetSetTimeFormat</Id>
+      <Description>Simnet: Set Time Format</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>11</FieldCount>
       <Length>13</Length>
       <Fields>
         <Field>
@@ -45782,48 +46679,18 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
-          <BitLength>6</BitLength>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>repeatIndicator</Id>
-          <Name>Repeat Indicator</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>22</BitOffset>
-          <BitStart>6</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>3</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>REPEAT_INDICATOR</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>d</Id>
-          <Name>D</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>group</Id>
-          <Name>Group</Name>
+          <Id>a</Id>
+          <Name>A</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -45834,61 +46701,45 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>f</Id>
-          <Name>F</Name>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
-          <Order>9</Order>
-          <Id>g</Id>
-          <Name>G</Name>
-          <BitLength>8</BitLength>
+          <Order>7</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Time hour display</Description>
+          <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
+          <Match>5160</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_TYPE</LookupEnumeration>
         </Field>
         <Field>
-          <Order>10</Order>
-          <Id>h</Id>
-          <Name>H</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>i</Id>
-          <Name>I</Name>
+          <Order>8</Order>
+          <Id>spare8</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
-          <Order>12</Order>
-          <Id>j</Id>
-          <Name>J</Name>
+          <Order>9</Order>
+          <Id>b</Id>
+          <Name>B</Name>
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -45899,7 +46750,314 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>13</Order>
+          <Order>10</Order>
+          <Id>format</Id>
+          <Name>Format</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_TIME_FORMAT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved11</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130845</PGN>
+      <Id>simnetSetTimeHourDisplay</Id>
+      <Description>Simnet: Set Time Hour Display</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>11</FieldCount>
+      <Length>13</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Time format</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>5161</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>spare8</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>format</Id>
+          <Name>Format</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_HOUR_DISPLAY</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved11</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130845</PGN>
+      <Id>simnetSetBacklightLevel</Id>
+      <Description>Simnet: Set Backlight Level</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>11</FieldCount>
+      <Length>14</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>displayGroup</Id>
+          <Name>Display Group</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Backlight level</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>4863</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>spare8</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
           <Id>backlight</Id>
           <Name>Backlight</Name>
           <BitLength>8</BitLength>
@@ -45913,17 +47071,546 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>SIMNET_BACKLIGHT_LEVEL</LookupEnumeration>
         </Field>
         <Field>
-          <Order>14</Order>
-          <Id>l</Id>
-          <Name>L</Name>
-          <BitLength>16</BitLength>
+          <Order>11</Order>
+          <Id>reserved11</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
           <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130845</PGN>
+      <Id>simnetSetNightMode</Id>
+      <Description>Simnet: Set Night Mode</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>11</FieldCount>
+      <Length>14</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>displayGroup</Id>
+          <Name>Display Group</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Night mode</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>9983</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>spare8</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>nightMode</Id>
+          <Name>Night mode</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_NIGHT_MODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved11</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130845</PGN>
+      <Id>simnetSetNightColor</Id>
+      <Description>Simnet: Set Night Color</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>11</FieldCount>
+      <Length>14</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>displayGroup</Id>
+          <Name>Display Group</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Night mode color</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>44079</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>spare8</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>nightModeColor</Id>
+          <Name>Night mode color</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_NIGHT_MODE_COLOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved11</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130845</PGN>
+      <Id>simnetSetInvertDayColor</Id>
+      <Description>Simnet: Set Invert Day Color</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>11</FieldCount>
+      <Length>14</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>displayGroup</Id>
+          <Name>Display Group</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Day mode invert</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>55087</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>spare8</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>invert</Id>
+          <Name>Invert</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved11</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130845</PGN>
+      <Id>simnetParameterHandle</Id>
+      <Description>Simnet: Parameter Handle</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>4</FieldCount>
+      <Length>66</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>512</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -46115,6 +47802,173 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130850</PGN>
+      <Id>simnetApCommand</Id>
+      <Description>Simnet: AP Command</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>11</FieldCount>
+      <Length>11</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>NMEA 2000 address of commanded device</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved5</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Autopilot</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>255</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>255</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_EVENT_COMMAND</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>apStatus</Id>
+          <Name>AP status</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_AP_STATUS</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>apCommand</Id>
+          <Name>AP Command</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_EVENTS</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>direction</Id>
+          <Name>Direction</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DIRECTION</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>angle</Id>
+          <Name>Angle</Name>
+          <Description>Commanded angle change</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6.5533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130850</PGN>
       <Id>simnetEventCommandApCommand</Id>
       <Description>Simnet: Event Command: AP command</Description>
       <Type>Fast</Type>
@@ -46182,7 +48036,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMRAD_EVENT_COMMAND</LookupEnumeration>
         </Field>
@@ -46295,7 +48149,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>10</FieldCount>
+      <FieldCount>11</FieldCount>
       <Length>12</Length>
       <Fields>
         <Field>
@@ -46342,19 +48196,30 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>16</BitLength>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>NMEA 2000 address of commanded device</Description>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
+          <Id>reserved5</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
           <Description>Alarm</Description>
@@ -46365,12 +48230,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMRAD_EVENT_COMMAND</LookupEnumeration>
         </Field>
         <Field>
-          <Order>6</Order>
+          <Order>7</Order>
           <Id>c</Id>
           <Name>C</Name>
           <BitLength>8</BitLength>
@@ -46383,7 +48248,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>8</Order>
           <Id>alarm</Id>
           <Name>Alarm</Name>
           <BitLength>16</BitLength>
@@ -46396,7 +48261,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>8</Order>
+          <Order>9</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
           <BitLength>16</BitLength>
@@ -46409,7 +48274,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>10</Order>
           <Id>f</Id>
           <Name>F</Name>
           <BitLength>8</BitLength>
@@ -46422,7 +48287,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>11</Order>
           <Id>g</Id>
           <Name>G</Name>
           <BitLength>8</BitLength>
@@ -46505,7 +48370,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMRAD_EVENT_COMMAND</LookupEnumeration>
         </Field>
@@ -46524,8 +48389,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>controllingDevice</Id>
-          <Name>Controlling Device</Name>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>NMEA 2000 address of controlling device</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>

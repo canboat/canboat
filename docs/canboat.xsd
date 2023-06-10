@@ -76,7 +76,7 @@ limitations under the License.
   <xs:complexType name="EnumPair">
     <xs:simpleContent>
       <xs:extension base="xs:string">
-        <xs:attribute type="xs:short" name="Value" />
+        <xs:attribute type="xs:unsignedShort" name="Value" />
         <xs:attribute type="xs:string" name="Name" />
       </xs:extension>
     </xs:simpleContent>
@@ -107,8 +107,8 @@ limitations under the License.
   <xs:complexType name="EnumTriplet">
     <xs:simpleContent>
       <xs:extension base="xs:string">
-        <xs:attribute type="xs:short" name="Value1" />
-        <xs:attribute type="xs:short" name="Value2" />
+        <xs:attribute type="xs:unsignedShort" name="Value1" />
+        <xs:attribute type="xs:unsignedShort" name="Value2" />
         <xs:attribute type="xs:string" name="Name" />
       </xs:extension>
     </xs:simpleContent>
@@ -226,7 +226,7 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:short" name="Bits" minOccurs="0">
+      <xs:element type="xs:unsignedShort" name="Bits" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             The number of bits that this field takes up in the PGN, if this
@@ -325,7 +325,7 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:short" name="BitLength" minOccurs="0">
+      <xs:element type="xs:unsignedShort" name="BitLength" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             If present, the field has a fixed length and this element gives
@@ -333,7 +333,7 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:short" name="BitOffset" minOccurs="0">
+      <xs:element type="xs:unsignedShort" name="BitOffset" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             If present, the field is preceded by no other fields or only fixed
@@ -556,9 +556,9 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:short" name="FieldCount"/>
-      <xs:element type="xs:short" name="MinLength" minOccurs="0"/>
-      <xs:element type="xs:short" name="Length" minOccurs="0"/>
+      <xs:element type="xs:unsignedShort" name="FieldCount"/>
+      <xs:element type="xs:unsignedShort" name="MinLength" minOccurs="0"/>
+      <xs:element type="xs:unsignedShort" name="Length" minOccurs="0"/>
       <xs:element type="xs:byte" name="RepeatingFieldSet1Size" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
@@ -627,7 +627,7 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:short" name="TransmissionInterval" minOccurs="0">
+      <xs:element type="xs:unsignedShort" name="TransmissionInterval" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             When present, it reports the typical interval, in milliseconds, that the PGN repeats.
