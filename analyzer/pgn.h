@@ -640,7 +640,7 @@ typedef struct
 
 #define TIME_FIX16_MIN_FIELD(nam)                                                                                \
   {                                                                                                              \
-    .name = nam, .size = BYTES(2), .resolution = 60, .unit = "s", .hasSign = true, .fieldType = "TIME_FIX16_MIN" \
+    .name = nam, .size = BYTES(2), .resolution = 60., .unit = "s", .hasSign = true, .fieldType = "TIME_FIX16_MIN" \
   }
 
 #define TIME_UFIX24_MS_FIELD(nam, desc)                                                                               \
@@ -1611,6 +1611,52 @@ Pgn pgnList[] = {
      {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
+    {"Simnet: Device Status",
+     65305,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      LOOKUP_FIELD("Model", BYTES(1), SIMRAD_DEVICE_MODEL),
+      MATCH_LOOKUP_FIELD("Report", BYTES(1), 2, SIMRAD_DEVICE_REPORT),
+      LOOKUP_FIELD("Status", BYTES(1), SIMRAD_AP_STATUS),
+      SPARE_FIELD(BYTES(3)),
+      END_OF_FIELDS}}
+
+    ,
+    {"Simnet: Device Status Request",
+     65305,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      LOOKUP_FIELD("Model", BYTES(1), SIMRAD_DEVICE_MODEL),
+      MATCH_LOOKUP_FIELD("Report", BYTES(1), 3, SIMRAD_DEVICE_REPORT),
+      SPARE_FIELD(BYTES(4)),
+      END_OF_FIELDS}}
+
+    ,
+    {"Simnet: Pilot Mode",
+     65305,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      LOOKUP_FIELD("Model", BYTES(1), SIMRAD_DEVICE_MODEL),
+      MATCH_LOOKUP_FIELD("Report", BYTES(1), 10, SIMRAD_DEVICE_REPORT),
+      BITLOOKUP_FIELD("Mode", BYTES(2), SIMRAD_AP_MODE_BITFIELD),
+      SPARE_FIELD(BYTES(2)),
+      END_OF_FIELDS}}
+
+    ,
+    {"Simnet: Device Mode Request",
+     65305,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      LOOKUP_FIELD("Model", BYTES(1), SIMRAD_DEVICE_MODEL),
+      MATCH_LOOKUP_FIELD("Report", BYTES(1), 11, SIMRAD_DEVICE_REPORT),
+      SPARE_FIELD(BYTES(4)),
+      END_OF_FIELDS}}
+
+    ,
     {"Navico: Wireless Battery Status",
      65309,
      PACKET_INCOMPLETE,
@@ -1628,6 +1674,18 @@ Pgn pgnList[] = {
      PACKET_FIELDS_UNKNOWN,
      PACKET_SINGLE,
      {COMPANY(275), UINT8_FIELD("Unknown"), PERCENTAGE_U8_FIELD("Signal Strength"), RESERVED_FIELD(BYTES(4)), END_OF_FIELDS}}
+
+    ,
+    {"Simnet: Autopilot Angle",
+     65341,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(2)),
+      LOOKUP_FIELD("Mode", BYTES(1), SIMRAD_AP_MODE),
+      RESERVED_FIELD(BYTES(1)),
+      ANGLE_I16_FIELD("Angle", NULL),
+      END_OF_FIELDS}}
 
     ,
     {"Seatalk: Pilot Wind Datum",
@@ -6263,6 +6321,15 @@ Pgn pgnList[] = {
       STRINGLZ_FIELD("Genre", BYTES(12)),
       END_OF_FIELDS}}
 
+    // NAC-3 sends this once a second, with (decoded) data like this:
+    // \r\n1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,0.00,359.9,0.36,0.09,4.1,4.0,0,1.71,0.0,0.50,0.90,51.00,17.10,4.00,-7.43,231.28,4.06,1.8,0.00,0.0,0.0,0.0,0.0,
+    ,
+    {"Navico: ASCII Data", 130821, PACKET_INCOMPLETE , PACKET_FAST, 
+     {COMPANY(275),
+      SIMPLE_FIELD("A", BYTES(1)),
+      STRING_FIX_FIELD("Message", BYTES(256)),
+      END_OF_FIELDS}}
+
     /* M/V Dirona */
     ,
     {"Furuno: Unknown 130821",
@@ -6280,6 +6347,15 @@ Pgn pgnList[] = {
       UINT8_FIELD("G"),
       UINT8_FIELD("H"),
       UINT8_FIELD("I"),
+      END_OF_FIELDS}}
+
+    ,
+    {"Navico: Unknown 1",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      BINARY_FIELD("Data", BYTES(13), NULL),
       END_OF_FIELDS}}
 
     ,
@@ -6519,6 +6595,9 @@ Pgn pgnList[] = {
      {COMPANY(1857), END_OF_FIELDS}}
 
     ,
+    {"Furuno: Multi Sats In View Extended", 130845, PACKET_INCOMPLETE, PACKET_FAST, {COMPANY(1855), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Compass Heading Offset",
      130845,
      PACKET_INCOMPLETE,
@@ -6532,9 +6611,6 @@ Pgn pgnList[] = {
       ANGLE_I16_FIELD("Angle", NULL),
       UINT16_FIELD("Unused C"),
       END_OF_FIELDS}}
-
-    ,
-    {"Furuno: Multi Sats In View Extended", 130845, PACKET_INCOMPLETE, PACKET_FAST, {COMPANY(1855), END_OF_FIELDS}}
 
     ,
     {"Simnet: Compass Local Field",
@@ -6567,22 +6643,124 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"Simnet: Set Timezone",
+     130845,
+     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FAST,
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(2)),
+      UINT8_FIELD("A"),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 41, SIMRAD_TYPE),
+      SPARE_FIELD(BYTES(1)),
+      UINT8_FIELD("B"),
+      TIME_FIX16_MIN_FIELD("Local Offset"),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}}
+
+    ,
+    {"Simnet: Set Time Format",
+     130845,
+     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FAST,
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(2)),
+      UINT8_FIELD("A"),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 5160, SIMRAD_TYPE),
+      SPARE_FIELD(BYTES(1)),
+      UINT8_FIELD("B"),
+      LOOKUP_FIELD("Format", BYTES(1), SIMNET_TIME_FORMAT),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}}
+
+    ,
+    {"Simnet: Set Time Hour Display",
+     130845,
+     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FAST,
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(2)),
+      UINT8_FIELD("A"),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 5161, SIMRAD_TYPE),
+      SPARE_FIELD(BYTES(1)),
+      UINT8_FIELD("B"),
+      LOOKUP_FIELD("Format", BYTES(1), SIMNET_HOUR_DISPLAY),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}}
+
+    ,
+    {"Simnet: Set Backlight Level",
+     130845,
+     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FAST,
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(2)),
+      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 4863, SIMRAD_TYPE),
+      SPARE_FIELD(BYTES(1)),
+      UINT8_FIELD("A"),
+      LOOKUP_FIELD("Backlight", BYTES(1), SIMNET_BACKLIGHT_LEVEL),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS}}
+
+    ,
+    {"Simnet: Set Night Mode",
+     130845,
+     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FAST,
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(2)),
+      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 9983, SIMRAD_TYPE),
+      SPARE_FIELD(BYTES(1)),
+      UINT8_FIELD("A"),
+      LOOKUP_FIELD("Night mode", BYTES(1), SIMNET_NIGHT_MODE),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS}}
+
+    ,
+    {"Simnet: Set Night Color",
+     130845,
+     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FAST,
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(2)),
+      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 44079, SIMRAD_TYPE),
+      SPARE_FIELD(BYTES(1)),
+      UINT8_FIELD("A"),
+      LOOKUP_FIELD("Night mode color", BYTES(1), SIMNET_NIGHT_MODE_COLOR),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS}}
+
+    ,
+    {"Simnet: Set Invert Day Color",
+     130845,
+     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FAST,
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(2)),
+      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 55087, SIMRAD_TYPE),
+      SPARE_FIELD(BYTES(1)),
+      UINT8_FIELD("A"),
+      LOOKUP_FIELD("Invert", BYTES(1), YES_NO),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS}}
+
+    ,
     {"Simnet: Parameter Handle",
      130845,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {COMPANY(1857),
-      SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
-      UINT8_FIELD("D"),
-      UINT8_FIELD("Group"),
-      UINT8_FIELD("F"),
-      UINT8_FIELD("G"),
-      UINT8_FIELD("H"),
-      UINT8_FIELD("I"),
-      UINT8_FIELD("J"),
-      LOOKUP_FIELD("Backlight", BYTES(1), SIMNET_BACKLIGHT_LEVEL),
-      UINT16_FIELD("L"),
+      BINARY_FIELD("Data", BYTES(64), NULL),
       END_OF_FIELDS}}
 
     ,
@@ -6599,6 +6777,19 @@ Pgn pgnList[] = {
       UINT8_FIELD("Month"),
       UINT16_FIELD("Device Number"),
       VOLTAGE_U16_10MV_FIELD("Node Voltage"),
+      END_OF_FIELDS}}
+
+    ,
+    {"Simnet: AP Command", 130850, PACKET_INCOMPLETE , PACKET_FAST, 
+     {COMPANY(1857),
+      UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 255, SIMRAD_EVENT_COMMAND),
+      LOOKUP_FIELD("AP status", BYTES(1), SIMRAD_AP_STATUS),
+      LOOKUP_FIELD("AP Command", BYTES(1), SIMNET_AP_EVENTS),
+      SPARE_FIELD(BYTES(1)),
+      LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
+      ANGLE_U16_FIELD("Angle", "Commanded angle change"),
       END_OF_FIELDS}}
 
     ,
@@ -6623,7 +6814,8 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1857),
-      UINT16_FIELD("A"),
+      UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
+      RESERVED_FIELD(BYTES(1)),
       MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 1, SIMRAD_EVENT_COMMAND),
       UINT8_FIELD("C"),
       UINT16_FIELD("Alarm"),
@@ -6640,7 +6832,7 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 2, SIMRAD_EVENT_COMMAND),
       UINT16_FIELD("B"),
-      UINT8_FIELD("Controlling Device"),
+      UINT8_DESC_FIELD("Address", "NMEA 2000 address of controlling device"),
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
       UINT8_FIELD("C"),
       LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
