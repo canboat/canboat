@@ -732,12 +732,9 @@ static void explainPGNXML(Pgn pgn)
       {
         printf("          <RangeMin>%.16g</RangeMin>\n", f.rangeMin);
       }
-      else if (!doV1 && f.lookup.function.pairEnumerator != 0)
+      else if (!doV1 && f.lookup.function.pairEnumerator != NULL && !(f.unit && f.unit[0] == '='))
       {
-        if (!(f.unit && f.unit[0] == '='))
-        {
-          printf("          <RangeMin>%.16g</RangeMin>\n", 0.0);
-        }
+        printf("          <RangeMin>%.16g</RangeMin>\n", 0.0);
       }
 
       if (!isnan(f.rangeMax))
@@ -754,7 +751,13 @@ static void explainPGNXML(Pgn pgn)
       }
       else if (!doV1 && f.lookup.function.pairEnumerator != NULL && !(f.unit && f.unit[0] == '='))
       {
-        printf("          <RangeMax>%.16g</RangeMax>\n", (double) ((1 << f.size) - 1));
+        logDebug("PGN %u '%s' unit='%s' size=%u\n -> rangeMax %.16g\n",
+                 pgn.pgn,
+                 f.name,
+                 STRNULL(f.unit),
+                 f.size,
+                 (double) ((UINT64_C(1) << f.size) - 1));
+        printf("          <RangeMax>%.16g</RangeMax>\n", (double) ((UINT64_C(1) << f.size) - 1));
       }
 
       if (!doV1)

@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+- #413: docs: RangeMax for ENTERTAINMENT_PLAY_STATUS_BITFIELD is incorrect
 - #309: Simrad Autopilot work (phase 1)
 - #401, #407: Added 7 new device function values to PGN 65240 and 60928.
 - #398: Add SIMNET_AP_EVENTS codes for B&G H5000 start features

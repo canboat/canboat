@@ -35705,7 +35705,7 @@
             "BitLength":32,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":-1,
+            "RangeMax":4294967295,
             "FieldType":"BITLOOKUP",
             "LookupBitEnumeration":"ENTERTAINMENT_PLAY_STATUS_BITFIELD"
           },

@@ -369,6 +369,8 @@ extern void fillFieldType(bool doUnitFixup)
         pgnList[i].hasMatchFields = true;
       }
 
+      logDebug("%s size=%u res=%g sign=%u rangeMax=%g\n", f->name, f->size, f->resolution, ft->hasSign, f->rangeMax);
+
       if (f->size != 0 && f->resolution != 0.0 && ft->hasSign != Null && isnan(f->rangeMax))
       {
         f->rangeMin = getMinRange(f->name, f->size, f->resolution, f->hasSign, f->offset);
@@ -406,7 +408,7 @@ extern void fillFieldType(bool doUnitFixup)
       exit(2);
     }
     pgnList[i].fieldCount = j;
-    logDebug("PGN %u has %u fields\n", pgnList[i].pgn, j);
+    logDebug("PGN %u '%s' has %u fields\n", pgnList[i].pgn, pname, j);
   }
 
   logDebug("Filled all fieldtypes\n");

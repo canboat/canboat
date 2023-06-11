@@ -35861,7 +35861,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>-1</RangeMax>
+          <RangeMax>4294967295</RangeMax>
           <FieldType>BITLOOKUP</FieldType>
           <LookupBitEnumeration>ENTERTAINMENT_PLAY_STATUS_BITFIELD</LookupBitEnumeration>
         </Field>
