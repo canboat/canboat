@@ -468,7 +468,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
       return false;
     }
     s = field->description;
-    if (s == NULL)
+    if (s == NULL && field->lookup.type == LOOKUP_TYPE_NONE)
     {
       s = lookfor + 1;
     }
@@ -760,9 +760,8 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   if (value < 0)
   {
     value = -value;
-    sign = "-";
+    sign  = "-";
   }
-
 
   if (field->resolution < 1.0)
   {

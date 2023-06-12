@@ -20,6 +20,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #414: Matched fields should show name, not bare value in explanation.
 - #404: analyzer/canboat.xml: remove useless duplicate values from lookups.
 - #403: analyzer: unsigned fields with offset / PGN 127513 peukert exponent was wrong.
 - #411: analyzer: fix formatted printing of negative time offset values.
