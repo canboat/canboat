@@ -7014,12 +7014,14 @@
         "PGN":65305,
         "Id":"simnetDeviceStatus",
         "Description":"Simnet: Device Status",
+        "Explanation":"This PGN is reported by an Autopilot Computer (AC/NAC)",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution"
         ],
         "FieldCount":7,
         "Length":8,
+        "TransmissionInterval":1000,
         "Fields":[
           {
             "Order":1,
@@ -7123,12 +7125,14 @@
         "PGN":65305,
         "Id":"simnetDeviceStatusRequest",
         "Description":"Simnet: Device Status Request",
+        "Explanation":"This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller) to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution"
         ],
         "FieldCount":6,
         "Length":8,
+        "TransmissionInterval":1000,
         "Fields":[
           {
             "Order":1,
@@ -7218,12 +7222,14 @@
         "PGN":65305,
         "Id":"simnetPilotMode",
         "Description":"Simnet: Pilot Mode",
+        "Explanation":"This PGN is reported by an Autopilot Computer (AC/NAC)",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution"
         ],
         "FieldCount":7,
         "Length":8,
+        "TransmissionInterval":1000,
         "Fields":[
           {
             "Order":1,
@@ -7326,12 +7332,14 @@
         "PGN":65305,
         "Id":"simnetDeviceModeRequest",
         "Description":"Simnet: Device Mode Request",
+        "Explanation":"This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller) to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution"
         ],
         "FieldCount":6,
         "Length":8,
+        "TransmissionInterval":1000,
         "Fields":[
           {
             "Order":1,

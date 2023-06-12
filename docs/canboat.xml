@@ -6581,16 +6581,17 @@ limitations under the License.
       <PGN>65305</PGN>
       <Id>simnetDeviceStatus</Id>
       <Description>Simnet: Device Status</Description>
+      <Explanation>This PGN is reported by an Autopilot Computer (AC/NAC)</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
       <Length>8</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -6694,16 +6695,17 @@ limitations under the License.
       <PGN>65305</PGN>
       <Id>simnetDeviceStatusRequest</Id>
       <Description>Simnet: Device Status Request</Description>
+      <Explanation>This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller) to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>6</FieldCount>
       <Length>8</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -6793,16 +6795,17 @@ limitations under the License.
       <PGN>65305</PGN>
       <Id>simnetPilotMode</Id>
       <Description>Simnet: Pilot Mode</Description>
+      <Explanation>This PGN is reported by an Autopilot Computer (AC/NAC)</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
       <Length>8</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -6905,16 +6908,17 @@ limitations under the License.
       <PGN>65305</PGN>
       <Id>simnetDeviceModeRequest</Id>
       <Description>Simnet: Device Mode Request</Description>
+      <Explanation>This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller) to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>6</FieldCount>
       <Length>8</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>

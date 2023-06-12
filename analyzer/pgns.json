@@ -4071,8 +4071,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution",
-          "Interval"],
+          "Resolution"],
         "Length":8,
         "Fields":[
           {
@@ -4176,8 +4175,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution",
-          "Interval"],
+          "Resolution"],
         "Length":8,
         "Fields":[
           {
@@ -4265,8 +4263,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution",
-          "Interval"],
+          "Resolution"],
         "Length":8,
         "Fields":[
           {
@@ -4370,8 +4367,7 @@
         "Missing":[
           "Fields",
           "FieldLengths",
-          "Resolution",
-          "Interval"],
+          "Resolution"],
         "Length":8,
         "Fields":[
           {

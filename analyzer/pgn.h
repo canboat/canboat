@@ -638,8 +638,8 @@ typedef struct
     .description = desc                                                                                             \
   }
 
-#define TIME_FIX16_MIN_FIELD(nam)                                                                                \
-  {                                                                                                              \
+#define TIME_FIX16_MIN_FIELD(nam)                                                                                 \
+  {                                                                                                               \
     .name = nam, .size = BYTES(2), .resolution = 60., .unit = "s", .hasSign = true, .fieldType = "TIME_FIX16_MIN" \
   }
 
@@ -1620,7 +1620,9 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Report", BYTES(1), 2, SIMRAD_DEVICE_REPORT),
       LOOKUP_FIELD("Status", BYTES(1), SIMRAD_AP_STATUS),
       SPARE_FIELD(BYTES(3)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "This PGN is reported by an Autopilot Computer (AC/NAC)"}
 
     ,
     {"Simnet: Device Status Request",
@@ -1631,7 +1633,11 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Model", BYTES(1), SIMRAD_DEVICE_MODEL),
       MATCH_LOOKUP_FIELD("Report", BYTES(1), 3, SIMRAD_DEVICE_REPORT),
       SPARE_FIELD(BYTES(4)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2)."
+                    " It is used by the AC (AutoPilot Controller) to verify that there is an active controller."
+                    " If this PGN is not sent regularly the AC may report an error and go to standby."}
 
     ,
     {"Simnet: Pilot Mode",
@@ -1643,7 +1649,9 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Report", BYTES(1), 10, SIMRAD_DEVICE_REPORT),
       BITLOOKUP_FIELD("Mode", BYTES(2), SIMRAD_AP_MODE_BITFIELD),
       SPARE_FIELD(BYTES(2)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "This PGN is reported by an Autopilot Computer (AC/NAC)"}
 
     ,
     {"Simnet: Device Mode Request",
@@ -1654,7 +1662,11 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Model", BYTES(1), SIMRAD_DEVICE_MODEL),
       MATCH_LOOKUP_FIELD("Report", BYTES(1), 11, SIMRAD_DEVICE_REPORT),
       SPARE_FIELD(BYTES(4)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2)."
+                    " It is used by the AC (AutoPilot Controller) to verify that there is an active controller."
+                    " If this PGN is not sent regularly the AC may report an error and go to standby."}
 
     ,
     {"Navico: Wireless Battery Status",
@@ -6324,11 +6336,11 @@ Pgn pgnList[] = {
     // NAC-3 sends this once a second, with (decoded) data like this:
     // \r\n1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,0.00,359.9,0.36,0.09,4.1,4.0,0,1.71,0.0,0.50,0.90,51.00,17.10,4.00,-7.43,231.28,4.06,1.8,0.00,0.0,0.0,0.0,0.0,
     ,
-    {"Navico: ASCII Data", 130821, PACKET_INCOMPLETE , PACKET_FAST, 
-     {COMPANY(275),
-      SIMPLE_FIELD("A", BYTES(1)),
-      STRING_FIX_FIELD("Message", BYTES(256)),
-      END_OF_FIELDS}}
+    {"Navico: ASCII Data",
+     130821,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275), SIMPLE_FIELD("A", BYTES(1)), STRING_FIX_FIELD("Message", BYTES(256)), END_OF_FIELDS}}
 
     /* M/V Dirona */
     ,
@@ -6354,9 +6366,7 @@ Pgn pgnList[] = {
      130822,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275),
-      BINARY_FIELD("Data", BYTES(13), NULL),
-      END_OF_FIELDS}}
+     {COMPANY(275), BINARY_FIELD("Data", BYTES(13), NULL), END_OF_FIELDS}}
 
     ,
     {"Maretron: Proprietary Temperature High Range",
@@ -6645,7 +6655,7 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Set Timezone",
      130845,
-     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FIELDS_UNKNOWN,
      PACKET_FAST,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(2)),
@@ -6661,7 +6671,7 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Set Time Format",
      130845,
-     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FIELDS_UNKNOWN,
      PACKET_FAST,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(2)),
@@ -6677,7 +6687,7 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Set Time Hour Display",
      130845,
-     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FIELDS_UNKNOWN,
      PACKET_FAST,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(2)),
@@ -6693,7 +6703,7 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Set Backlight Level",
      130845,
-     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FIELDS_UNKNOWN,
      PACKET_FAST,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(2)),
@@ -6709,7 +6719,7 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Set Night Mode",
      130845,
-     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FIELDS_UNKNOWN,
      PACKET_FAST,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(2)),
@@ -6725,7 +6735,7 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Set Night Color",
      130845,
-     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FIELDS_UNKNOWN,
      PACKET_FAST,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(2)),
@@ -6741,7 +6751,7 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Set Invert Day Color",
      130845,
-     PACKET_FIELDS_UNKNOWN ,
+     PACKET_FIELDS_UNKNOWN,
      PACKET_FAST,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(2)),
@@ -6759,9 +6769,7 @@ Pgn pgnList[] = {
      130845,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     {COMPANY(1857),
-      BINARY_FIELD("Data", BYTES(64), NULL),
-      END_OF_FIELDS}}
+     {COMPANY(1857), BINARY_FIELD("Data", BYTES(64), NULL), END_OF_FIELDS}}
 
     ,
     {"Furuno: Motion Sensor Status Extended", 130846, PACKET_INCOMPLETE, PACKET_FAST, {COMPANY(1855), END_OF_FIELDS}}
@@ -6780,7 +6788,10 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Simnet: AP Command", 130850, PACKET_INCOMPLETE , PACKET_FAST, 
+    {"Simnet: AP Command",
+     130850,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
