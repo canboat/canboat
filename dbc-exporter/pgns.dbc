@@ -289,7 +289,7 @@ BO_ 2566856958 PGN_65312_navicoWirelessSignalSt: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566864382 PGN_65341_simnetAutopilotAngle: 8 Vector__XXX
- SG_ angle : 48|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ angle : 48|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
  SG_ reserved6 : 40|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ mode : 32|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved4 : 16|16@1+ (1,0) [0|0] "" Vector__XXX
@@ -1402,10 +1402,6 @@ BO_ 2583632126 PGN_130840_simnetDataUserGroupCo: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2583633662 PGN_130846_furunoMotionSensorSta: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2583633918 PGN_130847_seatalkNodeStatistics: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1732,7 +1728,6 @@ CM_ BO_ 2583630846 "Simnet: Set Engine and Tank Configuration";
 CM_ BO_ 2583631614 "Simnet: Fluid Level Warning";
 CM_ BO_ 2583631870 "Simnet: Pressure Sensor Configuration";
 CM_ BO_ 2583632126 "Simnet: Data User Group Configuration";
-CM_ BO_ 2583633662 "Furuno: Motion Sensor Status Extended";
 CM_ BO_ 2583633918 "SeaTalk: Node Statistics";
 CM_ BO_ 2583634942 "Simnet: Event Reply: AP command";
 CM_ BO_ 2583636222 "Simnet: Alarm Message";
@@ -1860,7 +1855,6 @@ BA_ "SystemMessageLongSymbol" BO_ 2583630846 "PGN_130835_simnetSetEngineAndTankC
 BA_ "SystemMessageLongSymbol" BO_ 2583631614 "PGN_130838_simnetFluidLevelWarning";
 BA_ "SystemMessageLongSymbol" BO_ 2583631870 "PGN_130839_simnetPressureSensorConfiguration";
 BA_ "SystemMessageLongSymbol" BO_ 2583632126 "PGN_130840_simnetDataUserGroupConfiguration";
-BA_ "SystemMessageLongSymbol" BO_ 2583633662 "PGN_130846_furunoMotionSensorStatusExtended";
 BA_ "SystemMessageLongSymbol" BO_ 2583634942 "PGN_130851_simnetEventReplyApCommand";
 BA_ "SystemMessageLongSymbol" BO_ 2583642366 "PGN_130880_airmarAdditionalWeatherData";
 VAL_ 2565341438 control 0 "ACK" 1 "NAK" 2 "Access Denied" 3 "Address Busy" ;

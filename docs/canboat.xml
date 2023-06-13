@@ -1694,8 +1694,7 @@ limitations under the License.
     </LookupEnumeration>
     <LookupEnumeration Name='SIMRAD_AP_STATUS' MaxValue='255'>
       <EnumPair Value='2' Name='Manual' />
-      <EnumPair Value='10' Name='Automatic' />
-      <EnumPair Value='16' Name='Automatic16' />
+      <EnumPair Value='16' Name='Automatic' />
     </LookupEnumeration>
     <LookupEnumeration Name='SIMRAD_COMMAND' MaxValue='255'>
       <EnumPair Value='50' Name='Text' />
@@ -1703,12 +1702,19 @@ limitations under the License.
     <LookupEnumeration Name='SIMRAD_TYPE' MaxValue='65535'>
       <EnumPair Value='0' Name='Heading Offset' />
       <EnumPair Value='41' Name='Timezone offset' />
+      <EnumPair Value='260' Name='True wind high' />
+      <EnumPair Value='264' Name='Deep water' />
+      <EnumPair Value='516' Name='True wind low' />
+      <EnumPair Value='517' Name='Low boat speed' />
+      <EnumPair Value='520' Name='Shallow water' />
       <EnumPair Value='768' Name='Local field' />
       <EnumPair Value='1024' Name='Field angle' />
+      <EnumPair Value='1800' Name='Anchor depth' />
       <EnumPair Value='4863' Name='Backlight level' />
       <EnumPair Value='5160' Name='Time hour display' />
       <EnumPair Value='5161' Name='Time format' />
       <EnumPair Value='9983' Name='Night mode' />
+      <EnumPair Value='32789' Name='No GPS fix' />
       <EnumPair Value='44079' Name='Night mode color' />
       <EnumPair Value='55087' Name='Day mode invert' />
     </LookupEnumeration>
@@ -1781,6 +1787,10 @@ limitations under the License.
       <EnumPair Value='3' Name='Starboard' />
       <EnumPair Value='4' Name='Left rudder (port)' />
       <EnumPair Value='5' Name='Right rudder (starboard)' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_ALARM' MaxValue='255'>
+      <EnumPair Value='57' Name='Low boat speed' />
+      <EnumPair Value='58' Name='Wind data missing' />
     </LookupEnumeration>
     <LookupEnumeration Name='FUSION_MESSAGE_ID' MaxValue='255'>
       <EnumPair Value='1' Name='Request Status' />
@@ -7308,9 +7318,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Unit>rad</Unit>
           <Resolution>0.0001</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-3.2767</RangeMin>
-          <RangeMax>3.2765</RangeMax>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6.5533</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
@@ -43572,7 +43582,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>4</FieldCount>
-      <Length>15</Length>
+      <Length>233</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -43620,7 +43630,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>104</BitLength>
+          <BitLength>1848</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -47547,19 +47557,18 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130845</PGN>
-      <Id>simnetParameterHandle</Id>
-      <Description>Simnet: Parameter Handle</Description>
+      <Id>simnetParameterReport</Id>
+      <Description>Simnet: Parameter Report</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
-      <Length>66</Length>
+      <FieldCount>11</FieldCount>
+      <Length>74</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -47605,10 +47614,273 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>NMEA 2000 address of commanded device</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <Description>00, 01 or FF observed</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>displayGroup</Id>
+          <Name>Display Group</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <Description>Various values observed</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>dataLength</Id>
+          <Name>Data Length</Name>
+          <Description>Number of significant bytes in the data field</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
           <Id>data</Id>
           <Name>Data</Name>
+          <Description>0 to 64 bytes of data</Description>
           <BitLength>512</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130846</PGN>
+      <Id>simnetParameterSet</Id>
+      <Description>Simnet: Parameter Set</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <FieldCount>11</FieldCount>
+      <Length>75</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>NMEA 2000 address of commanded device</Description>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <Description>00, 01 or FF observed</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>displayGroup</Id>
+          <Name>Display Group</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <Description>Various values observed</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMRAD_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>set</Id>
+          <Name>Set</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>dataLength</Id>
+          <Name>Data Length</Name>
+          <Description>Number of significant bytes in the data field</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <Description>0 to 64 bytes of data</Description>
+          <BitLength>512</BitLength>
+          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -48140,18 +48412,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130850</PGN>
-      <Id>simnetEventCommandAlarm</Id>
-      <Description>Simnet: Event Command: Alarm?</Description>
+      <Id>simnetAlarm</Id>
+      <Description>Simnet: Alarm</Description>
+      <Explanation>There may follow a PGN 130856 'Simnet: Alarm Text' message with a textual explanation of the alarm</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>11</FieldCount>
       <Length>12</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -48237,16 +48510,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>c</Id>
-          <Name>C</Name>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -48259,7 +48529,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_ALARM</LookupEnumeration>
         </Field>
         <Field>
           <Order>9</Order>
@@ -48477,6 +48748,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130856</PGN>
       <Id>simnetAlarmMessage</Id>
       <Description>Simnet: Alarm Message</Description>
+      <Explanation>Usually accompanied by a PGN 130850 'Simnet: Alarm' message with the same information in binary form.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -48484,10 +48756,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
       <Length>229</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>

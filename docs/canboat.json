@@ -2253,8 +2253,7 @@
         "MaxValue":255,
         "EnumValues":[
           {"Name":"Manual", "Value":2},
-          {"Name":"Automatic", "Value":10},
-          {"Name":"Automatic16", "Value":16}
+          {"Name":"Automatic", "Value":16}
         ]
       },
       {
@@ -2270,12 +2269,19 @@
         "EnumValues":[
           {"Name":"Heading Offset", "Value":0},
           {"Name":"Timezone offset", "Value":41},
+          {"Name":"True wind high", "Value":260},
+          {"Name":"Deep water", "Value":264},
+          {"Name":"True wind low", "Value":516},
+          {"Name":"Low boat speed", "Value":517},
+          {"Name":"Shallow water", "Value":520},
           {"Name":"Local field", "Value":768},
           {"Name":"Field angle", "Value":1024},
+          {"Name":"Anchor depth", "Value":1800},
           {"Name":"Backlight level", "Value":4863},
           {"Name":"Time hour display", "Value":5160},
           {"Name":"Time format", "Value":5161},
           {"Name":"Night mode", "Value":9983},
+          {"Name":"No GPS fix", "Value":32789},
           {"Name":"Night mode color", "Value":44079},
           {"Name":"Day mode invert", "Value":55087}
         ]
@@ -2384,6 +2390,14 @@
           {"Name":"Starboard", "Value":3},
           {"Name":"Left rudder (port)", "Value":4},
           {"Name":"Right rudder (starboard)", "Value":5}
+        ]
+      },
+      {
+        "Name":"SIMNET_ALARM",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Low boat speed", "Value":57},
+          {"Name":"Wind data missing", "Value":58}
         ]
       },
       {
@@ -7719,9 +7733,9 @@
             "BitStart":0,
             "Unit":"rad",
             "Resolution":0.0001,
-            "Signed":true,
-            "RangeMin":-3.2767,
-            "RangeMax":3.2765,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6.5533,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ANGLE"
           }
@@ -43149,7 +43163,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":4,
-        "Length":15,
+        "Length":233,
         "Fields":[
           {
             "Order":1,
@@ -43197,7 +43211,7 @@
             "Order":4,
             "Id":"data",
             "Name":"Data",
-            "BitLength":104,
+            "BitLength":1848,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
@@ -47007,14 +47021,15 @@
       },
       {
         "PGN":130845,
-        "Id":"simnetParameterHandle",
-        "Description":"Simnet: Parameter Handle",
+        "Id":"simnetParameterReport",
+        "Description":"Simnet: Parameter Report",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution"
         ],
-        "FieldCount":4,
-        "Length":66,
+        "FieldCount":11,
+        "Length":74,
+        "TransmissionIrregular":true,
         "Fields":[
           {
             "Order":1,
@@ -47060,10 +47075,270 @@
           },
           {
             "Order":4,
+            "Id":"address",
+            "Name":"Address",
+            "Description":"NMEA 2000 address of commanded device",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"b",
+            "Name":"B",
+            "Description":"00, 01 or FF observed",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"displayGroup",
+            "Name":"Display Group",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+          },
+          {
+            "Order":7,
+            "Id":"d",
+            "Name":"D",
+            "Description":"Various values observed",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"type",
+            "Name":"Type",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMRAD_TYPE"
+          },
+          {
+            "Order":9,
+            "Id":"spare9",
+            "Name":"Spare",
+            "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"SPARE"
+          },
+          {
+            "Order":10,
+            "Id":"dataLength",
+            "Name":"Data Length",
+            "Description":"Number of significant bytes in the data field",
+            "BitLength":8,
+            "BitOffset":72,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":11,
             "Id":"data",
             "Name":"Data",
+            "Description":"0 to 64 bytes of data",
             "BitLength":512,
+            "BitOffset":80,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130846,
+        "Id":"simnetParameterSet",
+        "Description":"Simnet: Parameter Set",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution"
+        ],
+        "FieldCount":11,
+        "Length":75,
+        "TransmissionIrregular":true,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Simrad",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1857,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"address",
+            "Name":"Address",
+            "Description":"NMEA 2000 address of commanded device",
+            "BitLength":8,
             "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"b",
+            "Name":"B",
+            "Description":"00, 01 or FF observed",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"displayGroup",
+            "Name":"Display Group",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+          },
+          {
+            "Order":7,
+            "Id":"d",
+            "Name":"D",
+            "Description":"Various values observed",
+            "BitLength":16,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"type",
+            "Name":"Type",
+            "BitLength":16,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMRAD_TYPE"
+          },
+          {
+            "Order":9,
+            "Id":"set",
+            "Name":"Set",
+            "BitLength":8,
+            "BitOffset":72,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"YES_NO"
+          },
+          {
+            "Order":10,
+            "Id":"dataLength",
+            "Name":"Data Length",
+            "Description":"Number of significant bytes in the data field",
+            "BitLength":8,
+            "BitOffset":80,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":11,
+            "Id":"data",
+            "Name":"Data",
+            "Description":"0 to 64 bytes of data",
+            "BitLength":512,
+            "BitOffset":88,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
@@ -47578,14 +47853,16 @@
       },
       {
         "PGN":130850,
-        "Id":"simnetEventCommandAlarm",
-        "Description":"Simnet: Event Command: Alarm?",
+        "Id":"simnetAlarm",
+        "Description":"Simnet: Alarm",
+        "Explanation":"There may follow a PGN 130856 'Simnet: Alarm Text' message with a textual explanation of the alarm",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution"
         ],
         "FieldCount":11,
         "Length":12,
+        "TransmissionIrregular":true,
         "Fields":[
           {
             "Order":1,
@@ -47671,16 +47948,13 @@
           },
           {
             "Order":7,
-            "Id":"c",
-            "Name":"C",
+            "Id":"reserved7",
+            "Name":"Reserved",
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"RESERVED"
           },
           {
             "Order":8,
@@ -47693,7 +47967,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_ALARM"
           },
           {
             "Order":9,
@@ -47907,12 +48182,14 @@
         "PGN":130856,
         "Id":"simnetAlarmMessage",
         "Description":"Simnet: Alarm Message",
+        "Explanation":"Usually accompanied by a PGN 130850 'Simnet: Alarm' message with the same information in binary form.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","SampleData"
         ],
         "FieldCount":7,
         "Length":229,
+        "TransmissionIrregular":true,
         "Fields":[
           {
             "Order":1,

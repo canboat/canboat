@@ -1696,7 +1696,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       LOOKUP_FIELD("Mode", BYTES(1), SIMRAD_AP_MODE),
       RESERVED_FIELD(BYTES(1)),
-      ANGLE_I16_FIELD("Angle", NULL),
+      ANGLE_U16_FIELD("Angle", NULL),
       END_OF_FIELDS}}
 
     ,
@@ -6366,7 +6366,7 @@ Pgn pgnList[] = {
      130822,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275), BINARY_FIELD("Data", BYTES(13), NULL), END_OF_FIELDS}}
+     {COMPANY(275), BINARY_FIELD("Data", BYTES(231), NULL), END_OF_FIELDS}}
 
     ,
     {"Maretron: Proprietary Temperature High Range",
@@ -6765,11 +6765,38 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Simnet: Parameter Handle",
+    {"Simnet: Parameter Report",
      130845,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(1857), BINARY_FIELD("Data", BYTES(64), NULL), END_OF_FIELDS}}
+     {COMPANY(1857),
+      UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
+      UINT8_DESC_FIELD("B", "00, 01 or FF observed"),
+      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      UINT8_DESC_FIELD("D", "Various values observed"),
+      LOOKUP_FIELD("Type", BYTES(2), SIMRAD_TYPE),
+      SPARE_FIELD(BYTES(1)),
+      UINT8_DESC_FIELD("Data Length", "Number of significant bytes in the data field"),
+      BINARY_FIELD("Data", BYTES(64), "0 to 64 bytes of data"),
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
+
+    ,
+    {"Simnet: Parameter Set",
+     130846,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1857),
+      UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
+      UINT8_DESC_FIELD("B", "00, 01 or FF observed"),
+      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      UINT16_DESC_FIELD("D", "Various values observed"),
+      LOOKUP_FIELD("Type", BYTES(2), SIMRAD_TYPE),
+      LOOKUP_FIELD("Set", BYTES(1), YES_NO),
+      UINT8_DESC_FIELD("Data Length", "Number of significant bytes in the data field"),
+      BINARY_FIELD("Data", BYTES(64), "0 to 64 bytes of data"),
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
 
     ,
     {"Furuno: Motion Sensor Status Extended", 130846, PACKET_INCOMPLETE, PACKET_FAST, {COMPANY(1855), END_OF_FIELDS}}
@@ -6820,7 +6847,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Simnet: Event Command: Alarm?",
+    {"Simnet: Alarm",
      130850,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -6828,12 +6855,14 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
       MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 1, SIMRAD_EVENT_COMMAND),
-      UINT8_FIELD("C"),
-      UINT16_FIELD("Alarm"),
+      RESERVED_FIELD(BYTES(1)),
+      LOOKUP_FIELD("Alarm", BYTES(2), SIMNET_ALARM),
       UINT16_FIELD("Message ID"),
       UINT8_FIELD("F"),
       UINT8_FIELD("G"),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval    = UINT16_MAX,
+     .explanation = "There may follow a PGN 130856 'Simnet: Alarm Text' message with a textual explanation of the alarm"}
 
     ,
     {"Simnet: Event Reply: AP command",
@@ -6861,7 +6890,9 @@ Pgn pgnList[] = {
       UINT8_FIELD("B"),
       UINT8_FIELD("C"),
       STRING_FIX_FIELD("Text", BYTES(FASTPACKET_MAX_SIZE)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval    = UINT16_MAX,
+     .explanation = "Usually accompanied by a PGN 130850 'Simnet: Alarm' message with the same information in binary form."}
 
     ,
     {"Airmar: Additional Weather Data",

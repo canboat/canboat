@@ -48,3 +48,32 @@
 2023-06-10T15:13:50.416Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,2f,d7,00,01,00,ff,ff,ff
 # Set day mode color inverted
 2023-06-10T15:13:29.131Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,2f,d7,00,01,01,ff,ff,ff
+
+# Alarm: "No GPS fix" enabled
+2023-06-12T14:57:14.042Z,3,130846,7,255,19,41,9f,ff,ff,01,ff,ff,15,80,01,08,15,00,00,00,00,04,50,01
+# Alarm: "No GPS fix" disabled
+2023-06-12T14:58:27.443Z,3,130846,7,255,19,41,9f,ff,ff,01,ff,ff,15,80,01,08,14,00,00,00,00,04,50,01
+# Alarm: "Shallow water" enabled (2.0m)
+2023-06-12T15:04:27.633Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,02,00,01,c8,00,ff,ff
+# Alarm: "Shallow water" disabled (2.0m)
+2023-06-12T15:05:37.393Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,02,00,01,00,00,ff,ff
+# Alarm: "Deep water" enabled (30.5m)
+2023-06-12T15:06:44.647Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,01,00,01,e8,0b,ff,ff
+# Alarm: "Deep water" disabled (30.5m)
+2023-06-12T15:07:15.009Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,01,00,01,00,00,ff,ff
+# Alarm: "Anchor depth" enabled 
+2023-06-12T15:09:26.023Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,07,00,01,00,ff,ff,ff
+# Alarm: "Anchor depth" disabled (strange, is the same?)
+2023-06-12T15:09:27.531Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,07,00,01,00,ff,ff,ff
+# Alarm: "Low boat speed" enabled
+2023-06-12T15:13:47.170Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,05,02,00,01,01,01,ff,ff
+# Alarm: "Low boat speed" disabled
+2023-06-12T15:13:48.709Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,05,02,00,01,00,00,ff,ff
+# Alarm: "True wind high" enabled
+2023-06-12T15:20:33.153Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,01,00,01,07,06,ff,ff
+# Alarm: "True wind high" disabled
+2023-06-12T15:20:34.558Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,01,00,01,00,00,ff,ff
+# Alarm: "True wind low" enabled
+2023-06-12T15:24:23.723Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,02,00,01,01,01,ff,ff
+# Alarm: "True wind low" disabled
+2023-06-12T15:24:24.856Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,02,00,01,00,00,ff,ff
