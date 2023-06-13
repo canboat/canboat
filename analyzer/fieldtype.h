@@ -45,6 +45,8 @@ extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, si
 extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
 extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern void fixupUnit(Field *f);
 
 typedef enum Bool
 {
@@ -331,8 +333,9 @@ FieldType fieldTypeList[] = {
        "encodings. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that "
        "the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive "
        "value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
-     .url = "https://en.wikipedia.org/wiki/Binary_number",
-     .pf  = fieldPrintNumber},
+     .url    = "https://en.wikipedia.org/wiki/Binary_number",
+     .v1Type = "Number",
+     .pf     = fieldPrintNumber},
 
     {.name          = "INTEGER",
      .description   = "Signed integral number",
@@ -464,6 +467,14 @@ FieldType fieldTypeList[] = {
      .pf      = fieldPrintBitLookup,
     .v1Type   = "Bitfield"},
 
+    {.name        = "FIELDTYPE_LOOKUP",
+     .description = "Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field",
+     .encodingDescription = "Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean",
+     .comment = "These values have been determined by reverse engineering, given the known values it is anticipated that there are "
+                "unkown enumeration values and some known values have incorrect datatypes",
+     .hasSign = False,
+     .pf      = fieldPrintLookup},
+
     {.name          = "MANUFACTURER",
      .description   = "Manufacturer",
      .size          = 11,
@@ -476,6 +487,20 @@ FieldType fieldTypeList[] = {
     {.name = "VERSION", .description = "Version", .resolution = 0.001, .baseFieldType = "UFIX16"},
 
     // Specific typed numeric fields
+
+    {.name = "FIX16_1", .description = "Fixed point signed with 1 digit resolution", .resolution = 0.1, .baseFieldType = "FIX16"},
+
+    {.name = "FIX32_2", .description = "Fixed point signed with 2 digits resolution", .resolution = 0.01, .baseFieldType = "FIX32"},
+
+    {.name          = "UFIX32_2",
+     .description   = "Fixed point unsigned with 2 digits resolution",
+     .resolution    = 0.001,
+     .baseFieldType = "UFIX32"},
+
+    {.name          = "UFIX16_3",
+     .description   = "Fixed point unsigned with 3 digits resolution",
+     .resolution    = 0.001,
+     .baseFieldType = "UFIX16"},
 
     {.name          = "DILUTION_OF_PRECISION_FIX16",
      .description   = "Dilution of precision",
@@ -931,6 +956,13 @@ FieldType fieldTypeList[] = {
      .unit          = "%",
      .baseFieldType = "UFIX16"},
 
+    {.name                = "PERCENTAGE_FIX16_D",
+     .description         = "Percentage, promille range",
+     .encodingDescription = "Percentage in promille (1/10 %)",
+     .resolution          = 0.1,
+     .unit                = "%",
+     .baseFieldType       = "FIX16"},
+
     {.name                = "ROTATION_FIX16",
      .description         = "Rotational speed",
      .encodingDescription = "Angular rotation in rad/s, in 1/32th of a thousandth radian",
@@ -1169,7 +1201,14 @@ FieldType fieldTypeList[] = {
      .description = "Variable",
      .encodingDescription
      = "The definition of the field is that of the reference PGN and reference field, this is totally variable.",
-     .pf = fieldPrintVariable}};
+     .pf = fieldPrintVariable},
+
+    {.name        = "KEY_VALUE",
+     .description = "Key/value",
+     .encodingDescription
+     = "The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by "
+       "the preceding length field.",
+     .pf = fieldPrintKeyValue}};
 
 const size_t fieldTypeCount = ARRAY_SIZE(fieldTypeList);
 
@@ -1180,5 +1219,6 @@ extern const size_t                  fieldTypeCount;
 
 extern FieldType *getFieldType(const char *name);
 extern void       fillFieldType(bool doUnitFixup);
+extern void       fillFieldTypeLookupField(Field *f, const char *lookup, const size_t key, const char *str, const char *ft);
 
 #endif // FIELD_H_INCLUDED

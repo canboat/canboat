@@ -401,6 +401,17 @@
     <xsl:call-template name="indent"/>{"<xsl:value-of select="@Bit"/>": "<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
+  <xsl:template match="EnumFieldTypeValues">
+    <xsl:call-template name="indent"/>"EnumFieldTypeValues":[<xsl:apply-templates/>]<xsl:if test="not(following-sibling::*)">}</xsl:if>
+  </xsl:template>
+
+  <xsl:template match="EnumFieldTypeValues/EnumFieldType">
+    <xsl:call-template name="indent"/>{"name": "<xsl:value-of select="@Name"/>", "value": <xsl:value-of select="@Value"/>
+    <xsl:if test="@Type">, "type": <xsl:value-of select="@Type"/>"</xsl:if>
+    <xsl:text>}</xsl:text>
+    <xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+  </xsl:template>
+
   <xsl:template match="MissingAttribute">["<xsl:value-of select="node()"/>"]<xsl:if test="not(position() = last())">,</xsl:if>
   </xsl:template>
 

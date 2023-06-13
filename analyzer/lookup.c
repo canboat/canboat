@@ -73,6 +73,11 @@ limitations under the License.
   {
 #define LOOKUP_TRIPLET(type, n1, n2, str) (cb)(n1, n2, str);
 
+#define LOOKUP_TYPE_FIELDTYPE(type, length)   \
+  void lookup##type(EnumFieldtypeCallback cb) \
+  {
+#define LOOKUP_FIELDTYPE(type, n, str, ft) (cb)(n, str, ft);
+
 #define LOOKUP_END }
 
 #else
@@ -116,6 +121,22 @@ limitations under the License.
 #define LOOKUP_TRIPLET(type, n1, n2, str) \
   case n1 * 256 + n2:                     \
     return str;
+
+#define LOOKUP_TYPE_FIELDTYPE(type, length) \
+  const char *lookup##type(size_t val)      \
+  {                                         \
+    switch (val)                            \
+    {
+#define LOOKUP_FIELDTYPE(type, n, str, ft)                  \
+  case n: {                                                 \
+    static Field f;                                         \
+    if (f.name == NULL)                                     \
+    {                                                       \
+      fillFieldTypeLookupField(&f, xstr(type), n, str, ft); \
+    }                                                       \
+    g_ftf = &f;                                             \
+    return str;                                             \
+  }
 
 #define LOOKUP_END \
   }                \

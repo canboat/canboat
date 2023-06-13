@@ -178,6 +178,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>

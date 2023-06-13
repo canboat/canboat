@@ -825,7 +825,29 @@ static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
   }
 }
 
-static uint32_t refPgn = 0; // Remember this over the entire set of fields
+static uint32_t g_refPgn = 0; // Remember this over the entire set of fields
+
+static void fillGlobalsBasedOnFieldName(const char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t bits)
+{
+  int64_t value;
+  int64_t maxValue;
+
+  if (strcmp(fieldName, "PGN") == 0)
+  {
+    extractNumber(NULL, data, dataLen, startBit, bits, &value, &maxValue);
+    logDebug("Reference PGN = %" PRId64 "\n", value);
+    g_refPgn = value;
+    return;
+  }
+
+  if (strcmp(fieldName, "Length") == 0)
+  {
+    extractNumber(NULL, data, dataLen, startBit, bits, &value, &maxValue);
+    logDebug("for next field: length = %" PRId64 "\n", value);
+    g_length = value;
+    return;
+  }
+}
 
 static bool printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
@@ -865,11 +887,7 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
     *bits = 0;
   }
 
-  if (strcmp(fieldName, "PGN") == 0)
-  {
-    size_t off = startBit / 8;
-    refPgn     = data[off] + (data[off + 1] << 8) + (data[off + 2] << 16);
-  }
+  fillGlobalsBasedOnFieldName(field->name, data, dataLen, startBit, *bits);
 
   logDebug("PGN %u: printField <%s>, \"%s\": bits=%zu proprietary=%u refPgn=%u\n",
            field->pgn->pgn,
@@ -877,11 +895,12 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
            fieldName,
            *bits,
            field->proprietary,
-           refPgn);
+           g_refPgn);
 
   if (field->proprietary)
   {
-    if ((refPgn >= 65280 && refPgn <= 65535) || (refPgn >= 126720 && refPgn <= 126975) || (refPgn >= 130816 && refPgn <= 131071))
+    if ((g_refPgn >= 65280 && g_refPgn <= 65535) || (g_refPgn >= 126720 && g_refPgn <= 126975)
+        || (g_refPgn >= 130816 && g_refPgn <= 131071))
     {
       // proprietary, allow field
     }
@@ -1164,16 +1183,16 @@ extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, siz
   Field *refField;
   bool   r;
 
-  refField = getField(refPgn, data[startBit / 8 - 1] - 1);
+  refField = getField(g_refPgn, data[startBit / 8 - 1] - 1);
   if (refField)
   {
-    logDebug("Field %s: found variable field %u '%s'\n", fieldName, refPgn, refField->name);
+    logDebug("Field %s: found variable field %u '%s'\n", fieldName, g_refPgn, refField->name);
     r     = printField(refField, fieldName, data, dataLen, startBit, bits);
     *bits = (*bits + 7) & ~0x07; // round to bytes
     return r;
   }
 
-  logError("Field %s: cannot derive variable length for PGN %d field # %d\n", fieldName, refPgn, data[-1]);
+  logError("Field %s: cannot derive variable length for PGN %d field # %d\n", fieldName, g_refPgn, data[-1]);
   *bits = 8; /* Gotta assume something */
   return false;
 }

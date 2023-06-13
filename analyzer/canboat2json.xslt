@@ -340,6 +340,12 @@
     <xsl:call-template name="indent"/><xsl:text>],</xsl:text>
   </xsl:template>
 
+  <xsl:template match="LookupFieldTypeEnumerations">
+    <xsl:call-template name="indent"/><xsl:text>"LookupFieldTypeEnumerations":[</xsl:text>
+    <xsl:apply-templates/>
+    <xsl:call-template name="indent"/><xsl:text>],</xsl:text>
+  </xsl:template>
+
   <xsl:template match="LookupIndirectEnumerations">
     <xsl:call-template name="indent"/><xsl:text>"LookupIndirectEnumerations":[</xsl:text>
     <xsl:apply-templates/>
@@ -375,6 +381,15 @@
         "Name":"<xsl:value-of select="@Name"/>",
         "MaxValue":<xsl:value-of select="@MaxValue"/>,
         "EnumValues":[<xsl:apply-templates/>
+        ]
+      }<xsl:if test="not(position() = last())">,</xsl:if>
+  </xsl:template>
+
+  <xsl:template match="LookupFieldTypeEnumerations/LookupFieldTypeEnumeration">
+    <xsl:call-template name="indent"/>{
+        "Name":"<xsl:value-of select="@Name"/>",
+        "MaxValue":<xsl:value-of select="@MaxValue"/>,
+        "EnumFieldTypeValues":[<xsl:apply-templates/>
         ]
       }<xsl:if test="not(position() = last())">,</xsl:if>
   </xsl:template>
@@ -425,6 +440,18 @@
     <xsl:call-template name="indent"/>  {"<xsl:value-of select="@Bit"/>":"<xsl:value-of select="@Name"/>"}<xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
   </xsl:template>
 
+  <xsl:template match="EnumFieldTypeValues">
+    <xsl:call-template name="indent"/>"EnumFieldTypeValues":[<xsl:apply-templates/>]<xsl:if test="not(following-sibling::*)">}</xsl:if>
+  </xsl:template>
+
+  <xsl:template match="LookupFieldTypeEnumeration/EnumFieldType">
+    <xsl:call-template name="indent"/>{"name": "<xsl:value-of select="@Name"/>", "value": <xsl:value-of select="@Value"/>
+    <xsl:if test="@FieldType">, "FieldType": "<xsl:value-of select="@FieldType"/>"</xsl:if>
+    <xsl:if test="@Resolution">, "Resolution": <xsl:value-of select="@Resolution"/></xsl:if>
+    <xsl:if test="@Unit">, "Unit": "<xsl:value-of select="@Unit"/>"</xsl:if>
+    <xsl:text>}</xsl:text>
+    <xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+  </xsl:template>
 
   <xsl:template match="PGNInfo">
     <xsl:call-template name="indent"/><xsl:apply-templates/><xsl:if test="not(position() = last())">,</xsl:if>

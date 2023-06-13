@@ -163,7 +163,7 @@ bool adjustDataLenStart(uint8_t **data, size_t *dataLen, size_t *startBit)
   return false;
 }
 
-static bool extractNumberByOrder(Pgn *pgn, size_t order, uint8_t *data, size_t dataLen, int64_t *value)
+bool extractNumberByOrder(Pgn *pgn, size_t order, uint8_t *data, size_t dataLen, int64_t *value)
 {
   Field *field     = &pgn->fieldList[order - 1];
   size_t bitOffset = getFieldOffsetByOrder(pgn, order);
@@ -245,13 +245,13 @@ static bool extractNumberNotEmpty(const Field *field,
     reserved = 0;
   }
 
-  if (field->pgn->repeatingField1 == field->order)
+  if (field->pgn != NULL && field->pgn->repeatingField1 == field->order)
   {
     logDebug("The first repeating fieldset repeats %" PRId64 " times\n", *value);
     g_variableFieldRepeat[0] = *value;
   }
 
-  if (field->pgn->repeatingField2 == field->order)
+  if (field->pgn != NULL && field->pgn->repeatingField2 == field->order)
   {
     logDebug("The second repeating fieldset repeats %" PRId64 " times\n", *value);
     g_variableFieldRepeat[1] = *value;
@@ -476,7 +476,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
 
   if (s == NULL && field->lookup.type != LOOKUP_TYPE_NONE && value >= 0)
   {
-    if (field->lookup.type == LOOKUP_TYPE_PAIR)
+    if (field->lookup.type == LOOKUP_TYPE_PAIR || field->lookup.type == LOOKUP_TYPE_FIELDTYPE)
     {
       s = (*field->lookup.function.pair)((size_t) value);
     }
@@ -486,7 +486,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
 
       logDebug("Triplet extraction for field '%s'\n", field->name);
 
-      if (extractNumberByOrder(field->pgn, field->lookup.val1Order, data, dataLen, &val1))
+      if (field->pgn != NULL && extractNumberByOrder(field->pgn, field->lookup.val1Order, data, dataLen, &val1))
       {
         s = (*field->lookup.function.triplet)((size_t) val1, (size_t) value);
       }
@@ -1117,4 +1117,39 @@ extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_
     mprintf("\"");
   }
   return true;
+}
+
+const Field *g_ftf    = NULL;
+int64_t      g_length = 0;
+
+extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+{
+  bool r = false;
+
+  *bits = ((size_t) g_length) * 8;
+  logDebug("fieldPrintKeyValue('%s') bits=%zu\n", fieldName, *bits);
+
+  if (dataLen >= ((startBit + *bits) >> 3))
+  {
+    if (g_ftf != NULL)
+    {
+      Field f = *g_ftf;
+      f.size  = *bits;
+      f.name  = fieldName;
+      r       = (f.ft->pf)(&f, fieldName, data, dataLen, startBit, bits);
+    }
+    else
+    {
+      r = fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
+    }
+  }
+  else
+  {
+    logError("PGN %u key-value has insufficient bytes for field %s\n", field->pgn ? field->pgn->pgn : 0, fieldName);
+  }
+
+  g_ftf    = NULL;
+  g_length = 0;
+
+  return r;
 }

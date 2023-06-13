@@ -1194,6 +1194,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1207,6 +1208,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1220,6 +1222,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1256,6 +1259,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1269,6 +1273,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1282,6 +1287,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1318,6 +1324,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1331,6 +1338,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1344,6 +1352,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1383,6 +1392,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1396,6 +1406,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1409,6 +1420,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1501,6 +1513,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
+          <Type>Number</Type>
           <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1555,6 +1568,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -1569,6 +1583,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -1596,6 +1611,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1609,6 +1625,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1622,6 +1639,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1635,6 +1653,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1675,6 +1694,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
+          <Type>Number</Type>
           <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1729,6 +1749,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -1743,6 +1764,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -1770,6 +1792,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1783,6 +1806,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1796,6 +1820,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1809,6 +1834,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1835,6 +1861,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -1849,6 +1876,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
+          <Type>Number</Type>
           <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1903,6 +1931,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -1917,6 +1946,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -1944,6 +1974,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1957,6 +1988,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1970,6 +2002,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -1983,6 +2016,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2009,6 +2043,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2023,6 +2058,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
+          <Type>Number</Type>
           <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2077,6 +2113,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2091,6 +2128,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2118,6 +2156,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2131,6 +2170,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2144,6 +2184,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2157,6 +2198,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2225,6 +2267,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2239,6 +2282,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
+          <Type>Number</Type>
           <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2293,6 +2337,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2307,6 +2352,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2334,6 +2380,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2347,6 +2394,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2360,6 +2408,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2373,6 +2422,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2399,6 +2449,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2413,6 +2464,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
+          <Type>Number</Type>
           <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2467,6 +2519,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2481,6 +2534,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2508,6 +2562,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2521,6 +2576,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2534,6 +2590,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2547,6 +2604,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2573,6 +2631,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2587,6 +2646,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
+          <Type>Number</Type>
           <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2641,6 +2701,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2655,6 +2716,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2682,6 +2744,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2695,6 +2758,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2708,6 +2772,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2721,6 +2786,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2747,6 +2813,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>VAR</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2761,6 +2828,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
+          <Type>Number</Type>
           <Resolution>6.10352e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2815,6 +2883,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>W</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2829,6 +2898,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>VA</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -2856,6 +2926,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2869,6 +2940,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2882,6 +2954,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.0078125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -2895,6 +2968,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -3326,6 +3400,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-2147483.647</RangeMin>
@@ -3428,6 +3503,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -5302,6 +5378,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -5315,6 +5392,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -5405,6 +5483,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -5418,6 +5497,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -5505,6 +5585,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -5518,6 +5599,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -6393,6 +6475,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -9444,6 +9527,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -9458,6 +9542,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -9472,6 +9557,7 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -9609,6 +9695,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -9622,6 +9709,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -9635,6 +9723,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -9648,6 +9737,7 @@ limitations under the License.
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Units>T</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -9661,6 +9751,7 @@ limitations under the License.
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Units>T</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -9674,6 +9765,7 @@ limitations under the License.
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
           <Units>T</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -9687,6 +9779,7 @@ limitations under the License.
           <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
           <Units>deg</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3276.7</RangeMin>
@@ -9819,6 +9912,156 @@ limitations under the License.
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Queried' />
+            <EnumPair Value='1' Name='Passed' />
+            <EnumPair Value='2' Name='Failed - timeout' />
+            <EnumPair Value='3' Name='Failed - tilt error' />
+            <EnumPair Value='4' Name='Failed - other' />
+            <EnumPair Value='5' Name='In progress' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>verifyScore</Id>
+          <Name>Verify Score</Name>
+          <Description>TBD</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>34</BitOffset>
+          <BitStart>2</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>xAxisGainValue</Id>
+          <Name>X-axis gain value</Name>
+          <Description>default 100, range 50 to 500</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>42</BitOffset>
+          <BitStart>2</BitStart>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>yAxisGainValue</Id>
+          <Name>Y-axis gain value</Name>
+          <Description>default 100, range 50 to 500</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>58</BitOffset>
+          <BitStart>2</BitStart>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>zAxisGainValue</Id>
+          <Name>Z-axis gain value</Name>
+          <Description>default 100, range 50 to 500</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>74</BitOffset>
+          <BitStart>2</BitStart>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>xAxisLinearOffset</Id>
+          <Name>X-axis linear offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>90</BitOffset>
+          <BitStart>2</BitStart>
+          <Units>T</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>yAxisLinearOffset</Id>
+          <Name>Y-axis linear offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>106</BitOffset>
+          <BitStart>2</BitStart>
+          <Units>T</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>zAxisLinearOffset</Id>
+          <Name>Z-axis linear offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>122</BitOffset>
+          <BitStart>2</BitStart>
+          <Units>T</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>xAxisAngularOffset</Id>
+          <Name>X-axis angular offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>138</BitOffset>
+          <BitStart>2</BitStart>
+          <Units>deg</Units>
+          <Type>Number</Type>
+          <Resolution>0.1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3276.7</RangeMin>
+          <RangeMax>3276.5</RangeMax>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>pitchAndRollDamping</Id>
+          <Name>Pitch and Roll damping</Name>
+          <Description>default 30, range 0 to 200</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>154</BitOffset>
+          <BitStart>2</BitStart>
+          <Units>s</Units>
+          <Resolution>0.05</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-1638.35</RangeMin>
+          <RangeMax>1638.25</RangeMax>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>compassRateGyroDamping</Id>
+          <Name>Compass/Rate gyro damping</Name>
+          <Description>default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>170</BitOffset>
+          <BitStart>2</BitStart>
+          <Units>s</Units>
+          <Resolution>0.05</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-1638.35</RangeMin>
+          <RangeMax>1638.25</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -9986,6 +10229,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -10091,6 +10335,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -10104,6 +10349,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -10211,6 +10457,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>K</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32.767</RangeMin>
@@ -12476,6 +12723,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -12797,6 +13045,7 @@ limitations under the License.
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -12810,6 +13059,7 @@ limitations under the License.
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13025,6 +13275,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -13038,6 +13289,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13051,6 +13303,7 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13064,6 +13317,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13077,6 +13331,7 @@ limitations under the License.
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13090,6 +13345,7 @@ limitations under the License.
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -13103,6 +13359,7 @@ limitations under the License.
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad/s</Units>
+          <Type>Number</Type>
           <Resolution>3.125e-05</Resolution>
           <Signed>true</Signed>
           <RangeMin>-1.02396875</RangeMin>
@@ -13116,6 +13373,7 @@ limitations under the License.
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32767</RangeMin>
@@ -13129,6 +13387,7 @@ limitations under the License.
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13193,6 +13452,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -13206,6 +13466,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -13252,6 +13513,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13265,6 +13527,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -13278,6 +13541,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -13342,6 +13606,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad/s</Units>
+          <Type>Number</Type>
           <Resolution>3.125e-08</Resolution>
           <Signed>true</Signed>
           <RangeMin>-67.10886396875</RangeMin>
@@ -13394,6 +13659,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -13440,6 +13706,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -13453,6 +13720,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -13466,6 +13734,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -13560,6 +13829,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -13610,6 +13880,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>rpm</Units>
+          <Type>Number</Type>
           <Resolution>0.25</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13623,6 +13894,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>100</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13686,6 +13958,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>100</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13727,6 +14000,7 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -13740,6 +14014,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>L/h</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3276.7</RangeMin>
@@ -13767,6 +14042,7 @@ limitations under the License.
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>100</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -13780,6 +14056,7 @@ limitations under the License.
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>1000</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -14210,6 +14487,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>100</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -14696,6 +14974,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -14709,6 +14988,7 @@ limitations under the License.
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Units>L</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -14763,6 +15043,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>L</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -14776,6 +15057,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>L/h</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3276.7</RangeMin>
@@ -14789,6 +15071,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>L/h</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3276.7</RangeMin>
@@ -14802,6 +15085,7 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>L/h</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3276.7</RangeMin>
@@ -14842,6 +15126,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>rpm</Units>
+          <Type>Number</Type>
           <Resolution>0.25</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16077,6 +16362,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16090,6 +16376,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16103,6 +16390,7 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16116,6 +16404,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16157,6 +16446,7 @@ limitations under the License.
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16254,6 +16544,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16267,6 +16558,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16280,6 +16572,7 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16293,6 +16586,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16334,6 +16628,7 @@ limitations under the License.
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
           <Units>Cos Phi</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16391,6 +16686,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
+          <Type>Number</Type>
           <Resolution>0.004</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16404,6 +16700,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>L</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16524,6 +16821,7 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16537,6 +16835,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>Ah</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16711,6 +17010,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -16724,6 +17024,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3276.7</RangeMin>
@@ -17356,6 +17657,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>Ah</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -17382,6 +17684,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.002</Resolution>
           <Signed>false</Signed>
           <Offset>500</Offset>
@@ -17552,6 +17855,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -17618,6 +17922,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -17684,6 +17989,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -17893,6 +18199,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -17906,6 +18213,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-83886.07000000001</RangeMin>
@@ -17955,6 +18263,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -18403,6 +18712,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18500,6 +18810,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>rpm</Units>
+          <Type>Number</Type>
           <Resolution>0.25</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18571,6 +18882,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18635,6 +18947,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18648,6 +18961,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18728,6 +19042,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18742,6 +19057,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32.767</RangeMin>
@@ -18756,6 +19072,7 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>10</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18809,6 +19126,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18823,6 +19141,7 @@ limitations under the License.
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18957,6 +19276,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18970,6 +19290,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18983,6 +19304,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -18996,6 +19318,7 @@ limitations under the License.
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -19009,6 +19332,7 @@ limitations under the License.
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -19993,6 +20317,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -20006,6 +20331,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -20110,6 +20436,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>0.2</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -20123,6 +20450,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>A</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -20341,6 +20669,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -20354,6 +20683,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -20527,6 +20857,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -20637,6 +20968,7 @@ limitations under the License.
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>1e-06</Resolution>
           <Signed>true</Signed>
           <RangeMin>-9223372036854.775</RangeMin>
@@ -20740,6 +21072,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>272</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -20753,6 +21086,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>288</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -20767,6 +21101,7 @@ limitations under the License.
           <BitOffset>304</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-21474836.47</RangeMin>
@@ -21063,6 +21398,7 @@ limitations under the License.
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21076,6 +21412,7 @@ limitations under the License.
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21123,6 +21460,7 @@ limitations under the License.
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21136,6 +21474,7 @@ limitations under the License.
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad/s</Units>
+          <Type>Number</Type>
           <Resolution>3.125e-05</Resolution>
           <Signed>true</Signed>
           <RangeMin>-1.02396875</RangeMin>
@@ -21404,6 +21743,7 @@ limitations under the License.
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21417,6 +21757,7 @@ limitations under the License.
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21464,6 +21805,7 @@ limitations under the License.
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21794,6 +22136,7 @@ limitations under the License.
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21807,6 +22150,7 @@ limitations under the License.
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21920,6 +22264,7 @@ limitations under the License.
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21968,6 +22313,7 @@ limitations under the License.
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21981,6 +22327,7 @@ limitations under the License.
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -21994,6 +22341,7 @@ limitations under the License.
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -22007,6 +22355,7 @@ limitations under the License.
           <BitOffset>240</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -22269,6 +22618,7 @@ limitations under the License.
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -22282,6 +22632,7 @@ limitations under the License.
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -22295,6 +22646,7 @@ limitations under the License.
           <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -22308,6 +22660,7 @@ limitations under the License.
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -22564,6 +22917,7 @@ limitations under the License.
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-21474836.47</RangeMin>
@@ -22599,6 +22953,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-21474836.47</RangeMin>
@@ -22613,6 +22968,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-21474836.47</RangeMin>
@@ -22627,6 +22983,7 @@ limitations under the License.
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-21474836.47</RangeMin>
@@ -22693,6 +23050,7 @@ limitations under the License.
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-21474836.47</RangeMin>
@@ -22800,6 +23158,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-21474836.47</RangeMin>
@@ -22846,6 +23205,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -22957,6 +23317,7 @@ limitations under the License.
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -22970,6 +23331,7 @@ limitations under the License.
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -23037,6 +23399,7 @@ limitations under the License.
           <BitOffset>256</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -23272,6 +23635,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -23285,6 +23649,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -23469,6 +23834,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -23482,6 +23848,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -23591,6 +23958,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -23604,6 +23972,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -23618,6 +23987,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>dB</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -23694,6 +24064,7 @@ limitations under the License.
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -23805,6 +24176,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -23818,6 +24190,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -23831,6 +24204,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -23923,6 +24297,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -23936,6 +24311,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -23949,6 +24325,7 @@ limitations under the License.
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Units>dB</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -24059,6 +24436,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/m</Units>
+          <Type>Number</Type>
           <Resolution>4.76837e-07</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -24073,6 +24451,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>s</Units>
+          <Type>Number</Type>
           <Resolution>4096</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -24087,6 +24466,7 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Units>semi-circle</Units>
+          <Type>Number</Type>
           <Resolution>1.90735e-06</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.06249809265136719</RangeMin>
@@ -24101,6 +24481,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>semi-circle/s</Units>
+          <Type>Number</Type>
           <Resolution>3.63798e-12</Resolution>
           <Signed>true</Signed>
           <RangeMin>-1.192056515719742e-07</RangeMin>
@@ -24115,6 +24496,7 @@ limitations under the License.
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Units>sqrt(m)</Units>
+          <Type>Number</Type>
           <Resolution>0.000488281</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -24129,6 +24511,7 @@ limitations under the License.
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Units>semi-circle</Units>
+          <Type>Number</Type>
           <Resolution>1.19209e-07</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.9999998807907104</RangeMin>
@@ -24143,6 +24526,7 @@ limitations under the License.
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Units>semi-circle</Units>
+          <Type>Number</Type>
           <Resolution>1.19209e-07</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.9999998807907104</RangeMin>
@@ -24157,6 +24541,7 @@ limitations under the License.
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Units>semi-circle</Units>
+          <Type>Number</Type>
           <Resolution>1.19209e-07</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.9999998807907104</RangeMin>
@@ -24171,6 +24556,7 @@ limitations under the License.
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
           <Units>s</Units>
+          <Type>Number</Type>
           <Resolution>9.53674e-07</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.0009756088256835938</RangeMin>
@@ -24185,6 +24571,7 @@ limitations under the License.
           <BitOffset>195</BitOffset>
           <BitStart>3</BitStart>
           <Units>s/s</Units>
+          <Type>Number</Type>
           <Resolution>3.63798e-12</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.721652319654822e-09</RangeMin>
@@ -25970,6 +26357,7 @@ limitations under the License.
           <BitOffset>296</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -25983,6 +26371,7 @@ limitations under the License.
           <BitOffset>312</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -25996,6 +26385,7 @@ limitations under the License.
           <BitOffset>328</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -26009,6 +26399,7 @@ limitations under the License.
           <BitOffset>344</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -26051,6 +26442,7 @@ limitations under the License.
           <BitOffset>408</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -26870,6 +27262,7 @@ limitations under the License.
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -26883,6 +27276,7 @@ limitations under the License.
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -26929,7 +27323,8 @@ limitations under the License.
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
-          <Resolution>0.01</Resolution>
+          <Type>Number</Type>
+          <Resolution>1e-06</Resolution>
           <Signed>true</Signed>
           <RangeMin>-21474836.47</RangeMin>
           <RangeMax>21474836.45</RangeMax>
@@ -26995,6 +27390,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>10</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -27008,6 +27404,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>10</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -29794,6 +30191,7 @@ limitations under the License.
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -29807,6 +30205,7 @@ limitations under the License.
           <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -29820,6 +30219,7 @@ limitations under the License.
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -29833,6 +30233,7 @@ limitations under the License.
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -30436,6 +30837,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>dB</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327.67</RangeMin>
@@ -32084,6 +32486,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -32097,6 +32500,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -32191,6 +32595,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>100</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -32299,6 +32704,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
+          <Type>Number</Type>
           <Resolution>0.004</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -32312,6 +32718,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>100</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -32483,6 +32890,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
+          <Type>Number</Type>
           <Resolution>0.004</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -32496,6 +32904,7 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
+          <Type>Number</Type>
           <Resolution>0.004</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -32579,6 +32988,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-214748364.7</RangeMin>
@@ -32662,6 +33072,7 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -32898,6 +33309,7 @@ limitations under the License.
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32.767</RangeMin>
@@ -32911,6 +33323,7 @@ limitations under the License.
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33180,6 +33593,7 @@ limitations under the License.
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33193,6 +33607,7 @@ limitations under the License.
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33206,6 +33621,7 @@ limitations under the License.
           <BitOffset>168</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33345,6 +33761,7 @@ limitations under the License.
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33358,6 +33775,7 @@ limitations under the License.
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33401,6 +33819,7 @@ limitations under the License.
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33414,6 +33833,7 @@ limitations under the License.
           <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>100</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33553,6 +33973,7 @@ limitations under the License.
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33566,6 +33987,7 @@ limitations under the License.
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33609,6 +34031,7 @@ limitations under the License.
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33648,6 +34071,7 @@ limitations under the License.
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>100</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33661,6 +34085,7 @@ limitations under the License.
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa/hr</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32767</RangeMin>
@@ -35049,6 +35474,7 @@ limitations under the License.
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>100</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -35062,6 +35488,7 @@ limitations under the License.
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>100</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -35075,6 +35502,7 @@ limitations under the License.
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>1000</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32767000</RangeMin>
@@ -35088,6 +35516,7 @@ limitations under the License.
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Units>Pa</Units>
+          <Type>Number</Type>
           <Resolution>1000</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -35101,6 +35530,7 @@ limitations under the License.
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
           <Units>L/h</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3276.7</RangeMin>
@@ -35114,6 +35544,7 @@ limitations under the License.
           <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
           <Units>L/h</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3276.7</RangeMin>
@@ -35410,6 +35841,7 @@ limitations under the License.
           <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>10</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -35614,6 +36046,7 @@ limitations under the License.
           <Name>Radio Frequency</Name>
           <BitLength>32</BitLength>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>10</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -36596,6 +37029,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -36609,6 +37043,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -36622,6 +37057,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -36635,6 +37071,7 @@ limitations under the License.
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -36648,6 +37085,7 @@ limitations under the License.
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -36661,6 +37099,7 @@ limitations under the License.
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -36684,6 +37123,7 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32.767</RangeMin>
@@ -36697,6 +37137,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32.767</RangeMin>
@@ -36710,6 +37151,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32.767</RangeMin>
@@ -36723,6 +37165,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32.767</RangeMin>
@@ -36736,6 +37179,7 @@ limitations under the License.
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32.767</RangeMin>
@@ -36749,6 +37193,7 @@ limitations under the License.
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Units>m/s</Units>
+          <Type>Number</Type>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32.767</RangeMin>
@@ -37650,6 +38095,7 @@ limitations under the License.
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -37663,6 +38109,7 @@ limitations under the License.
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -37946,6 +38393,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -38601,6 +39049,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -42002,6 +42451,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -44241,17 +44691,17 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130824</PGN>
-      <Id>bGWindData</Id>
-      <Description>B&amp;G: Wind data</Description>
+      <Id>bGKeyValueData</Id>
+      <Description>B&amp;G: key-value data</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>8</Length>
+      <Length>2</Length>
+      <RepeatingFieldSet1Size>3</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -44295,43 +44745,348 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>field4</Id>
-          <Name>Field 4</Name>
-          <BitLength>8</BitLength>
+          <Id>key</Id>
+          <Name>Key</Name>
+          <BitLength>12</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4093</RangeMax>
+          <EnumFieldTypeValues>
+            <EnumFieldType Value='0' Name='Altitude' FieldType='Number' Signed='false'
+ Resolution='0.004' Unit='%'/>
+            <EnumFieldType Value='11' Name='Rudder Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='16' Name='User 5' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='17' Name='User 6' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='18' Name='User 7' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='19' Name='User 8' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='20' Name='User 9' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='21' Name='User 10' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='22' Name='User 11' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='23' Name='User 12' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='24' Name='User 13' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='25' Name='User 14' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='26' Name='User 15' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='27' Name='User 16' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='28' Name='Outside Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='29' Name='Outside Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='30' Name='Water Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='31' Name='Water Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='50' Name='Tacking Performance' FieldType='Number' Signed='true'
+ Resolution='0.1' Unit='%'/>
+            <EnumFieldType Value='52' Name='Attitude Roll' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='53' Name='Optimum Wind Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='56' Name='User 1' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='57' Name='User 2' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='58' Name='User 3' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='59' Name='User 4' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='60' Name='Roll Rate' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='64' Name='Forestay' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='65' Name='Water Speed' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='77' Name='Wind Speed Apparent' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='79' Name='Wind Speed Apparent' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='80' Name='Average True Wind Direction' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='81' Name='Wind Angle Apparent' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='83' Name='Target TWA' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='85' Name='Wind Speed True' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='86' Name='Wind Speed True' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='89' Name='Wind Angle True' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='100' Name='Unknown' FieldType='Number' Signed='true'
+/>
+            <EnumFieldType Value='102' Name='Keel Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='103' Name='Canard Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='104' Name='Keel Trim Tab Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='105' Name='Course' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='109' Name='Wind Direction' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='111' Name='Next Leg AWA' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='113' Name='Next Leg AWS' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='117' Name='Race Timer' FieldType='(null)' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='124' Name='Polar Performance' FieldType='Number' Signed='true'
+ Resolution='0.1' Unit='%'/>
+            <EnumFieldType Value='125' Name='Target Boat Speed' FieldType='Number' Signed='true'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='126' Name='Polar Speed' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='127' Name='VMG to Wind' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='129' Name='DR Distance' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='130' Name='Leeway Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='131' Name='Current Drift' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='132' Name='Current Set' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='135' Name='Barometric Pressure' FieldType='Number' Signed='false'
+ Resolution='100' Unit='Pa'/>
+            <EnumFieldType Value='152' Name='Distance to Start Line' FieldType='Number' Signed='true'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='154' Name='Heading on Opposite Tack' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='155' Name='Attitude Pitch' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='156' Name='Mast Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='157' Name='Wind Angle to Mast' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='158' Name='Pitch Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='163' Name='Daggerboard Position' FieldType='Number' Signed='false'
+/>
+            <EnumFieldType Value='164' Name='Boom Position' FieldType='Number' Signed='false'
+/>
+            <EnumFieldType Value='185' Name='MOB DR Bearing' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='186' Name='MOB DR Range' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='194' Name='Depth' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='195' Name='Depth' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='199' Name='Aft Depth' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='205' Name='Odometer' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='207' Name='Trip Distance' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='211' Name='DR Bearing' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='233' Name='Course Over Ground' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='235' Name='Speed Over Ground' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='239' Name='Remote 0' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='240' Name='Remote 1' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='241' Name='Remote 2' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='242' Name='Remote 3' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='243' Name='Remote 4' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='244' Name='Remote 5' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='245' Name='Remote 6' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='246' Name='Remote 7' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='247' Name='Remote 8' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='248' Name='Remote 9' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='256' Name='Layline Time' FieldType='(null)' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='258' Name='Layline Distance' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='259' Name='Layline Distance' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='260' Name='Sailing Time to Waypoint' FieldType='(null)' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='261' Name='Sailing Distance to Waypoint' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='262' Name='Sailing ETA' FieldType='(null)' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='265' Name='Trip Time' FieldType='(null)' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='270' Name='Bow(?) Latitude' FieldType='Latitude' Signed='true'
+ Resolution='1e-07' Unit='deg'/>
+            <EnumFieldType Value='271' Name='Bow(?) Longitude' FieldType='Latitude' Signed='true'
+ Resolution='1e-07' Unit='deg'/>
+            <EnumFieldType Value='272' Name='Start Line Bearing' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='273' Name='Start Line Bias' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='274' Name='Distance to Start Line Port' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='275' Name='Distance to Start Line Starboard' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='280' Name='Bias Advantage in Boat Lengths' FieldType='Number' Signed='true'
+ Resolution='0.1'/>
+            <EnumFieldType Value='281' Name='Distance to Start Line in Boat Lengths' FieldType='Number' Signed='true'
+ Resolution='0.1'/>
+            <EnumFieldType Value='282' Name='Backstay' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='283' Name='Boom Vang' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='284' Name='Chain Length' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='285' Name='VMG Performance' FieldType='Number' Signed='true'
+ Resolution='0.1' Unit='%'/>
+            <EnumFieldType Value='286' Name='Inner Forestay Load' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='287' Name='Inner Forestay Halyard Load' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='288' Name='Jib Furl' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='289' Name='Jib Halyard Load' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='290' Name='Outhaul Load' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='291' Name='Plow Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='292' Name='Cunningham' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='293' Name='Jacuzzi Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='294' Name='Pool Temperature' FieldType='Temperature' Signed='false'
+ Resolution='0.01' Unit='K'/>
+            <EnumFieldType Value='296' Name='Keel Draught' FieldType='Number' Signed='true'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='297' Name='Boom Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='298' Name='Code Zero Load' FieldType='Number' Signed='false'
+ Resolution='0.001'/>
+            <EnumFieldType Value='301' Name='Distance Behind Start Line' FieldType='Number' Signed='true'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='302' Name='Distance Behind Start Line in Boat Lengths' FieldType='Number' Signed='true'
+ Resolution='0.1'/>
+            <EnumFieldType Value='305' Name='Bias Advantage' FieldType='Number' Signed='false'
+ Resolution='0.01' Unit='m'/>
+            <EnumFieldType Value='306' Name='Opposite Tack COG' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='307' Name='Opposite Tack Target Heading' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='308' Name='Mast Rake' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='309' Name='Next Leg Bearing' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='310' Name='Next Leg Target Speed' FieldType='Number' Signed='true'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='311' Name='Ground Wind Direction' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='312' Name='Ground Wind Speed' FieldType='Number' Signed='true'
+ Resolution='0.01' Unit='m/s'/>
+            <EnumFieldType Value='313' Name='Mast Cant Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='314' Name='Rudder Toe In' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='315' Name='Daggerboard Port' FieldType='Number' Signed='false'
+/>
+            <EnumFieldType Value='316' Name='Daggerboard Starboard' FieldType='Number' Signed='false'
+/>
+            <EnumFieldType Value='317' Name='User 17' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='318' Name='User 18' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='319' Name='User 19' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='320' Name='User 20' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='321' Name='User 21' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='322' Name='User 22' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='323' Name='User 23' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='324' Name='User 24' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='325' Name='User 25' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='326' Name='User 26' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='327' Name='User 27' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='328' Name='User 28' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='329' Name='User 29' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='330' Name='User 30' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='331' Name='User 31' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='332' Name='User 32' FieldType='Number' Signed='true'
+ Resolution='0.01'/>
+            <EnumFieldType Value='336' Name='Average True Wind Direction' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='337' Name='Wind Phase' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='338' Name='Wind Lift' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='380' Name='Active Perf Mode' FieldType='Integer' Signed='true'
+/>
+            <EnumFieldType Value='381' Name='Gust Bear Away' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='382' Name='TWS Bear Away' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='383' Name='Heel Compensation' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='384' Name='Pilot Net Course' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='385' Name='Pilot Target Wind Angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='386' Name='Pilot Weather Helm' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+            <EnumFieldType Value='387' Name='Pilot Mean Heel' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad'/>
+          </EnumFieldTypeValues>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>field5</Id>
-          <Name>Field 5</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
+          <Id>length</Id>
+          <Name>Length</Name>
+          <Description>Length of field 7</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>13</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>timestamp</Id>
-          <Name>Timestamp</Name>
-          <Description>Increasing field, what else can it be?</Description>
-          <BitLength>32</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Data value</Description>
+          <BitLengthVariable>true</BitLengthVariable>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -45011,6 +45766,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>L</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -46166,6 +46922,7 @@ limitations under the License.
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -46179,6 +46936,7 @@ limitations under the License.
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -46192,6 +46950,7 @@ limitations under the License.
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -46205,6 +46964,7 @@ limitations under the License.
           <BitOffset>240</BitOffset>
           <BitStart>0</BitStart>
           <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -46332,6 +47092,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -46345,6 +47106,7 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -46358,6 +47120,7 @@ limitations under the License.
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -46613,6 +47376,7 @@ limitations under the License.
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -46769,6 +47533,7 @@ limitations under the License.
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Units>%</Units>
+          <Type>Number</Type>
           <Resolution>0.004</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -46925,6 +47690,7 @@ limitations under the License.
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.2767</RangeMin>
@@ -48605,6 +49371,7 @@ limitations under the License.
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Units>V</Units>
+          <Type>Number</Type>
           <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -48966,6 +49733,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -49314,6 +50082,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Units>rad</Units>
+          <Type>Number</Type>
           <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
