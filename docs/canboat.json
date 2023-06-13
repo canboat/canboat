@@ -2672,6 +2672,18 @@
           {"Name":"Warm", "Value":1},
           {"Name":"Hot", "Value":2}
         ]
+      },
+      {
+        "Name":"BANDG_DECIMALS",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"0", "Value":0},
+          {"Name":"1", "Value":1},
+          {"Name":"2", "Value":2},
+          {"Name":"3", "Value":3},
+          {"Name":"4", "Value":4},
+          {"Name":"Auto", "Value":254}
+        ]
       }
     ],
     "LookupIndirectEnumerations":[
@@ -44026,6 +44038,131 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130833,
+        "Id":"bGUserAndRemoteRename",
+        "Description":"B&G: User and Remote rename",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":9,
+        "Length":30,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"B & G",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":381,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"dataType",
+            "Name":"Data Type",
+            "BitLength":12,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4093,
+            "FieldType":"LOOKUP",
+            "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE"
+          },
+          {
+            "Order":5,
+            "Id":"length",
+            "Name":"Length",
+            "Description":"Length of field 8",
+            "BitLength":4,
+            "BitOffset":28,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"reserved6",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":7,
+            "Id":"decimals",
+            "Name":"Decimals",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":254,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"BANDG_DECIMALS"
+          },
+          {
+            "Order":8,
+            "Id":"shortName",
+            "Name":"Short name",
+            "BitLength":64,
+            "BitOffset":48,
+            "BitStart":0,
+            "FieldType":"STRING_FIX"
+          },
+          {
+            "Order":9,
+            "Id":"longName",
+            "Name":"Long name",
+            "BitLength":128,
+            "BitOffset":112,
+            "BitStart":0,
+            "FieldType":"STRING_FIX"
           }
         ]
       },
