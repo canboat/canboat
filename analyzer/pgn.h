@@ -1630,14 +1630,29 @@ Pgn pgnList[] = {
      {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
-    {"Simnet: Device Status",
-     65305,
+    {"Simnet: AP Unknown 1",
+     65302,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1857),
-      LOOKUP_FIELD("Model", BYTES(1), SIMRAD_DEVICE_MODEL),
-      MATCH_LOOKUP_FIELD("Report", BYTES(1), 2, SIMRAD_DEVICE_REPORT),
-      LOOKUP_FIELD("Status", BYTES(1), SIMRAD_AP_STATUS),
+      UINT8_FIELD("A"),
+      UINT8_FIELD("B"),
+      UINT16_FIELD("C"),
+      UINT8_FIELD("D"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "Seen as sent by AC-42 only so far."}
+
+    ,
+    {"Simnet: Device Status",
+     65305,
+     PACKET_LOOKUPS_UNKNOWN,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      LOOKUP_FIELD("Model", BYTES(1), SIMNET_DEVICE_MODEL),
+      MATCH_LOOKUP_FIELD("Report", BYTES(1), 2, SIMNET_DEVICE_REPORT),
+      LOOKUP_FIELD("Status", BYTES(1), SIMNET_AP_STATUS),
       SPARE_FIELD(BYTES(3)),
       END_OF_FIELDS},
      .interval    = 1000,
@@ -1646,11 +1661,11 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Device Status Request",
      65305,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
      {COMPANY(1857),
-      LOOKUP_FIELD("Model", BYTES(1), SIMRAD_DEVICE_MODEL),
-      MATCH_LOOKUP_FIELD("Report", BYTES(1), 3, SIMRAD_DEVICE_REPORT),
+      LOOKUP_FIELD("Model", BYTES(1), SIMNET_DEVICE_MODEL),
+      MATCH_LOOKUP_FIELD("Report", BYTES(1), 3, SIMNET_DEVICE_REPORT),
       SPARE_FIELD(BYTES(4)),
       END_OF_FIELDS},
      .interval    = 1000,
@@ -1661,12 +1676,12 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Pilot Mode",
      65305,
-     PACKET_INCOMPLETE,
+     PACKET_LOOKUPS_UNKNOWN,
      PACKET_SINGLE,
      {COMPANY(1857),
-      LOOKUP_FIELD("Model", BYTES(1), SIMRAD_DEVICE_MODEL),
-      MATCH_LOOKUP_FIELD("Report", BYTES(1), 10, SIMRAD_DEVICE_REPORT),
-      BITLOOKUP_FIELD("Mode", BYTES(2), SIMRAD_AP_MODE_BITFIELD),
+      LOOKUP_FIELD("Model", BYTES(1), SIMNET_DEVICE_MODEL),
+      MATCH_LOOKUP_FIELD("Report", BYTES(1), 10, SIMNET_DEVICE_REPORT),
+      BITLOOKUP_FIELD("Mode", BYTES(2), SIMNET_AP_MODE_BITFIELD),
       SPARE_FIELD(BYTES(2)),
       END_OF_FIELDS},
      .interval    = 1000,
@@ -1675,17 +1690,30 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Device Mode Request",
      65305,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
      {COMPANY(1857),
-      LOOKUP_FIELD("Model", BYTES(1), SIMRAD_DEVICE_MODEL),
-      MATCH_LOOKUP_FIELD("Report", BYTES(1), 11, SIMRAD_DEVICE_REPORT),
+      LOOKUP_FIELD("Model", BYTES(1), SIMNET_DEVICE_MODEL),
+      MATCH_LOOKUP_FIELD("Report", BYTES(1), 11, SIMNET_DEVICE_REPORT),
       SPARE_FIELD(BYTES(4)),
       END_OF_FIELDS},
      .interval    = 1000,
      .explanation = "This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2)."
                     " It is used by the AC (AutoPilot Controller) to verify that there is an active controller."
                     " If this PGN is not sent regularly the AC may report an error and go to standby."}
+
+    ,
+    {"Simnet: Sailing Processor Status",
+     65305,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      LOOKUP_FIELD("Model", BYTES(1), SIMNET_DEVICE_MODEL),
+      MATCH_LOOKUP_FIELD("Report", BYTES(1), 23, SIMNET_DEVICE_REPORT),
+      BINARY_FIELD("Data", BYTES(4), ""),
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "This PGN has been seen to be reported by a Sailing Processor."}
 
     ,
     {"Navico: Wireless Battery Status",
@@ -1707,13 +1735,29 @@ Pgn pgnList[] = {
      {COMPANY(275), UINT8_FIELD("Unknown"), PERCENTAGE_U8_FIELD("Signal Strength"), RESERVED_FIELD(BYTES(4)), END_OF_FIELDS}}
 
     ,
+    {"Simnet: AP Unknown 2",
+     65340,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      UINT8_FIELD("A"),
+      UINT8_FIELD("B"),
+      UINT8_FIELD("C"),
+      UINT8_FIELD("D"),
+      UINT8_FIELD("E"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "Seen as sent by AC-42 only so far."}
+
+    ,
     {"Simnet: Autopilot Angle",
      65341,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(2)),
-      LOOKUP_FIELD("Mode", BYTES(1), SIMRAD_AP_MODE),
+      LOOKUP_FIELD("Mode", BYTES(1), SIMNET_AP_MODE),
       RESERVED_FIELD(BYTES(1)),
       ANGLE_U16_FIELD("Angle", NULL),
       END_OF_FIELDS}}
@@ -1840,6 +1884,22 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+
+    ,
+    {"Simnet: AP Unknown 3",
+     65420,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      UINT8_FIELD("A"),
+      UINT8_FIELD("B"),
+      UINT8_FIELD("C"),
+      UINT8_FIELD("D"),
+      UINT8_FIELD("E"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "Seen as sent by AC-42 only so far."}
 
     ,
     {"Simnet: Autopilot Mode", 65480, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
@@ -2561,11 +2621,13 @@ Pgn pgnList[] = {
      .explanation
      = "Reception of this PGN confirms that a device is still present on the network.  Reception of this PGN may also be used to "
        "maintain an address to NAME association table within the receiving device.  The transmission interval may be used by the "
-       "receiving unit to determine the time-out value for the connection supervision.  The value contained in Field 1 of this PGN "
+       "receiving unit to determine the time-out value for the connection supervision.  The value contained in Field 1 of this "
+       "PGN "
        "reflects the PGN's current Transmission Interval. Changes to this PGN's Transmission Interval shall be reflected in Field "
        "1.  The transmission interval can only be changed by using the Request Group Function PGN 126208 with no pairs of request "
        "parameters provided. Field 3 of the Request Group Function PGN 126208 may contain values between 1,000ms and 60,000ms.  "
-       "This PGN cannot be requested by the ISO Request PGN 059904 or Request Group Function PGN 126208. In Request Group Function "
+       "This PGN cannot be requested by the ISO Request PGN 059904 or Request Group Function PGN 126208. In Request Group "
+       "Function "
        "PGN 126208, setting Field 3 to a value of 0xFFFF FFFF and Field 4 to a value of 0xFFFF: 'Transmit now without changing "
        "timing variables.' is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 "
        "of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See "
@@ -2640,18 +2702,21 @@ Pgn pgnList[] = {
        "that of the vessel or the MOB device itself as identified in field “X”, position source. Additional information may "
        "include the current state of the MOB device, time of activation, and MOB device battery status.\n"
        "This PGN may be used to set a MOB waypoint, or to initiate an alert process.\n"
-       "This PGN may be used to command or register a MOB device emitter Ids or other applicable fields in the message with an MOB "
+       "This PGN may be used to command or register a MOB device emitter Ids or other applicable fields in the message with an "
+       "MOB "
        "System or other equipment. If the fields in this PGN are configured over the network, the Command Group Function (PGN "
        "126208) shall be used.\n"
        "Queries for this PGN shall be requested using either the ISO Request (PGN 059904) or the NMEA Request Group Function (PGN "
        "126208).\n"
-       "A device receiving an ISO (PGN 059904) for this PGN (127233), shall respond by providing as many of these PGNs (127233) as "
+       "A device receiving an ISO (PGN 059904) for this PGN (127233), shall respond by providing as many of these PGNs (127233) "
+       "as "
        "necessary for every MOB Emitter ID that has associated data fields.\n"
        "If a Request Group Function (PGN 126208) requesting this PGN (127233) is received, the receiving device shall respond in "
        "the following manner:\n"
        "•If no requested fields have been included with the Request Group Function then the response is to return one or more "
        "PGNs, just like responding to the ISO Request (PGN 055904) described above.\n"
-       "•If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response shall "
+       "•If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response "
+       "shall "
        "be filtered by these fields contained within this request resulting in one or more PGN (127233) responses.\n"
        "If the MOB Emitter ID requested is not considered a valid MOB Emitter ID by the receiving device, then the appropriate "
        "response would be the Acknowledge Group Function (PGN 126208), containing the error state for PGN error code (Field 3) of "
@@ -3604,9 +3669,11 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .explanation
      = "Actuator is a broad description of any device that embodies moving an object between two fixed limits, such as raising or "
-       "lowering an outboard engine assembly. In the context of this PGN, the word \"Device\" refers to the object being moved. In "
+       "lowering an outboard engine assembly. In the context of this PGN, the word \"Device\" refers to the object being moved. "
+       "In "
        "the case of multiple Actuators per controller, the Actuator Identifier field specifies which Actuator the PGN message is "
-       "intended for, and all following data fields refer only to that Actuator. This PGN supports manufacturer calibrated systems "
+       "intended for, and all following data fields refer only to that Actuator. This PGN supports manufacturer calibrated "
+       "systems "
        "and retrofit systems where it is impractical for the installer to enter the Maximum Travel distance of the device."}
 
     ,
@@ -5382,8 +5449,8 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Program Capabilities", 4),
       RESERVED_FIELD(4),
       END_OF_FIELDS},
-     .explanation
-     = "This PGN describes an available program on the controller. Can be a built in required NMEA one or a custom vendor program."}
+     .explanation = "This PGN describes an available program on the controller. Can be a built in required NMEA one or a custom "
+                    "vendor program."}
 
     /* http://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
 
@@ -5977,7 +6044,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 50, SIMRAD_COMMAND),
+      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 50, SIMNET_COMMAND),
       UINT8_FIELD("A"),
       UINT8_FIELD("B"),
       UINT8_FIELD("C"),
@@ -6412,7 +6479,9 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .repeatingField1 = UINT8_MAX,
      .repeatingCount1 = 3,
-     .repeatingStart1 = 4}
+     .repeatingStart1 = 4,
+     .interval        = 1000,
+     .explanation     = "Contains any number of key/value pairs, sent by various B&G devices such as MFDs and Sailing Processors."}
 
     /* M/V Dirona */
     ,
@@ -6427,6 +6496,13 @@ Pgn pgnList[] = {
       UINT8_FIELD("Field 7"),
       UINT16_FIELD("Field 8"),
       END_OF_FIELDS}}
+
+    ,
+    {"Navico: Unknown 2",
+     130825,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275), BINARY_FIELD("Data", BYTES(10), ""), END_OF_FIELDS}}
 
     /* Uwe Lovas has seen this from EP-70R */
     ,
@@ -6652,7 +6728,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Message ID", 6),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       SIMPLE_FIELD("Unused", BYTES(3)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 0, SIMRAD_TYPE),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 0, SIMNET_TYPE),
       UINT16_FIELD("Unused B"),
       ANGLE_I16_FIELD("Angle", NULL),
       UINT16_FIELD("Unused C"),
@@ -6667,7 +6743,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Message ID", 6),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       SIMPLE_FIELD("Unused", BYTES(3)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 768, SIMRAD_TYPE),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 768, SIMNET_TYPE),
       UINT16_FIELD("Unused B"),
       PERCENTAGE_U16_FIELD("Local field"),
       UINT16_FIELD("Unused C"),
@@ -6682,7 +6758,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Message ID", 6),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       SIMPLE_FIELD("Unused", BYTES(3)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 1024, SIMRAD_TYPE),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 1024, SIMNET_TYPE),
       UINT16_FIELD("Unused B"),
       ANGLE_I16_FIELD("Field angle", NULL),
       UINT16_FIELD("Unused C"),
@@ -6697,7 +6773,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       UINT8_FIELD("A"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 41, SIMRAD_TYPE),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 41, SIMNET_TYPE),
       SPARE_FIELD(BYTES(1)),
       UINT8_FIELD("B"),
       TIME_FIX16_MIN_FIELD("Local Offset"),
@@ -6713,7 +6789,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       UINT8_FIELD("A"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 5160, SIMRAD_TYPE),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 5160, SIMNET_TYPE),
       SPARE_FIELD(BYTES(1)),
       UINT8_FIELD("B"),
       LOOKUP_FIELD("Format", BYTES(1), SIMNET_TIME_FORMAT),
@@ -6729,7 +6805,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       UINT8_FIELD("A"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 5161, SIMRAD_TYPE),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 5161, SIMNET_TYPE),
       SPARE_FIELD(BYTES(1)),
       UINT8_FIELD("B"),
       LOOKUP_FIELD("Format", BYTES(1), SIMNET_HOUR_DISPLAY),
@@ -6745,7 +6821,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 4863, SIMRAD_TYPE),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 4863, SIMNET_TYPE),
       SPARE_FIELD(BYTES(1)),
       UINT8_FIELD("A"),
       LOOKUP_FIELD("Backlight", BYTES(1), SIMNET_BACKLIGHT_LEVEL),
@@ -6761,7 +6837,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 9983, SIMRAD_TYPE),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 9983, SIMNET_TYPE),
       SPARE_FIELD(BYTES(1)),
       UINT8_FIELD("A"),
       LOOKUP_FIELD("Night mode", BYTES(1), SIMNET_NIGHT_MODE),
@@ -6777,7 +6853,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 44079, SIMRAD_TYPE),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 44079, SIMNET_TYPE),
       SPARE_FIELD(BYTES(1)),
       UINT8_FIELD("A"),
       LOOKUP_FIELD("Night mode color", BYTES(1), SIMNET_NIGHT_MODE_COLOR),
@@ -6793,7 +6869,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 55087, SIMRAD_TYPE),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 55087, SIMNET_TYPE),
       SPARE_FIELD(BYTES(1)),
       UINT8_FIELD("A"),
       LOOKUP_FIELD("Invert", BYTES(1), YES_NO),
@@ -6810,10 +6886,27 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("B", "00, 01 or FF observed"),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       UINT8_DESC_FIELD("D", "Various values observed"),
-      LOOKUP_FIELD("Type", BYTES(2), SIMRAD_TYPE),
+      LOOKUP_FIELD("Type", BYTES(2), SIMNET_TYPE),
       SPARE_FIELD(BYTES(1)),
-      UINT8_DESC_FIELD("Data Length", "Number of significant bytes in the data field"),
+      UINT8_DESC_FIELD("G", "Some length indicator?"),
       BINARY_FIELD("Data", BYTES(64), "0 to 64 bytes of data"),
+      END_OF_FIELDS},
+     .interval = UINT16_MAX}
+
+    ,
+    {"Simnet: Set Alert Bitfield",
+     130846,
+     PACKET_FIELDS_UNKNOWN,
+     PACKET_FAST,
+     {COMPANY(1857),
+      UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
+      UINT8_DESC_FIELD("B", "00, 01 or FF observed"),
+      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      UINT16_DESC_FIELD("D", "Various values observed"),
+      MATCH_LOOKUP_FIELD("Type", BYTES(2), 32789, SIMNET_TYPE),
+      UINT8_DESC_FIELD("F", "00 and 01 observed"),
+      UINT8_DESC_FIELD("Length", "Length of bitfield"),
+      BITLOOKUP_FIELD("Alerts", BYTES(8), SIMNET_ALERT_BITFIELD),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
@@ -6827,7 +6920,7 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("B", "00, 01 or FF observed"),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       UINT16_DESC_FIELD("D", "Various values observed"),
-      LOOKUP_FIELD("Type", BYTES(2), SIMRAD_TYPE),
+      LOOKUP_FIELD("Type", BYTES(2), SIMNET_TYPE),
       LOOKUP_FIELD("Set", BYTES(1), YES_NO),
       UINT8_DESC_FIELD("Data Length", "Number of significant bytes in the data field"),
       BINARY_FIELD("Data", BYTES(64), "0 to 64 bytes of data"),
@@ -6858,8 +6951,8 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 255, SIMRAD_EVENT_COMMAND),
-      LOOKUP_FIELD("AP status", BYTES(1), SIMRAD_AP_STATUS),
+      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 255, SIMNET_EVENT_COMMAND),
+      LOOKUP_FIELD("AP status", BYTES(1), SIMNET_AP_STATUS),
       LOOKUP_FIELD("AP Command", BYTES(1), SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
@@ -6872,7 +6965,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1857),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 2, SIMRAD_EVENT_COMMAND),
+      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 2, SIMNET_EVENT_COMMAND),
       UINT16_FIELD("Unused A"),
       UINT8_FIELD("Controlling Device"),
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
@@ -6890,7 +6983,7 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 1, SIMRAD_EVENT_COMMAND),
+      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 1, SIMNET_EVENT_COMMAND),
       RESERVED_FIELD(BYTES(1)),
       LOOKUP_FIELD("Alarm", BYTES(2), SIMNET_ALARM),
       UINT16_FIELD("Message ID"),
@@ -6906,7 +6999,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1857),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 2, SIMRAD_EVENT_COMMAND),
+      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 2, SIMNET_EVENT_COMMAND),
       UINT16_FIELD("B"),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of controlling device"),
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
@@ -6919,7 +7012,7 @@ Pgn pgnList[] = {
     ,
     {"Simnet: Alarm Message",
      130856,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1857),
       UINT16_FIELD("Message ID"),
@@ -6929,6 +7022,22 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "Usually accompanied by a PGN 130850 'Simnet: Alarm' message with the same information in binary form."}
+
+    ,
+    {"Simnet: AP Unknown 4",
+     130860,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1857),
+      UINT8_FIELD("A"),
+      SIMPLE_SIGNED_FIELD("B", BYTES(4)),
+      SIMPLE_SIGNED_FIELD("C", BYTES(4)),
+      UINT32_FIELD("D"),
+      SIMPLE_SIGNED_FIELD("E", BYTES(4)),
+      UINT32_FIELD("F"),
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "Seen as sent by AC-42 and H5000 AP only so far."}
 
     ,
     {"Airmar: Additional Weather Data",

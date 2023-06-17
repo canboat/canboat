@@ -2232,7 +2232,7 @@
         ]
       },
       {
-        "Name":"SIMRAD_AP_MODE",
+        "Name":"SIMNET_AP_MODE",
         "MaxValue":255,
         "EnumValues":[
           {"Name":"Heading", "Value":2},
@@ -2242,26 +2242,27 @@
         ]
       },
       {
-        "Name":"SIMRAD_DEVICE_MODEL",
+        "Name":"SIMNET_DEVICE_MODEL",
         "MaxValue":255,
         "EnumValues":[
-          {"Name":"AC-12", "Value":0},
-          {"Name":"Autopilot Controller", "Value":1},
-          {"Name":"NAC-3", "Value":100}
+          {"Name":"AC", "Value":0},
+          {"Name":"Other device", "Value":1},
+          {"Name":"NAC", "Value":100}
         ]
       },
       {
-        "Name":"SIMRAD_DEVICE_REPORT",
+        "Name":"SIMNET_DEVICE_REPORT",
         "MaxValue":255,
         "EnumValues":[
           {"Name":"Status", "Value":2},
           {"Name":"Send Status", "Value":3},
           {"Name":"Mode", "Value":10},
-          {"Name":"Send Mode", "Value":11}
+          {"Name":"Send Mode", "Value":11},
+          {"Name":"Sailing Processor Status", "Value":23}
         ]
       },
       {
-        "Name":"SIMRAD_AP_STATUS",
+        "Name":"SIMNET_AP_STATUS",
         "MaxValue":255,
         "EnumValues":[
           {"Name":"Manual", "Value":2},
@@ -2269,14 +2270,14 @@
         ]
       },
       {
-        "Name":"SIMRAD_COMMAND",
+        "Name":"SIMNET_COMMAND",
         "MaxValue":255,
         "EnumValues":[
           {"Name":"Text", "Value":50}
         ]
       },
       {
-        "Name":"SIMRAD_TYPE",
+        "Name":"SIMNET_TYPE",
         "MaxValue":65535,
         "EnumValues":[
           {"Name":"Heading Offset", "Value":0},
@@ -2293,13 +2294,15 @@
           {"Name":"Time hour display", "Value":5160},
           {"Name":"Time format", "Value":5161},
           {"Name":"Night mode", "Value":9983},
-          {"Name":"No GPS fix", "Value":32789},
+          {"Name":"True wind shift", "Value":11524},
+          {"Name":"AP low boat speed", "Value":22296},
+          {"Name":"Alert bits", "Value":32789},
           {"Name":"Night mode color", "Value":44079},
           {"Name":"Day mode invert", "Value":55087}
         ]
       },
       {
-        "Name":"SIMRAD_EVENT_COMMAND",
+        "Name":"SIMNET_EVENT_COMMAND",
         "MaxValue":255,
         "EnumValues":[
           {"Name":"Alarm", "Value":1},
@@ -2945,7 +2948,7 @@
         ]
       },
       {
-        "Name":"SIMRAD_AP_MODE_BITFIELD",
+        "Name":"SIMNET_AP_MODE_BITFIELD",
         "MaxValue":15,
         "EnumBitValues":[
           {"Name":"Standby", "Bit":3},
@@ -2953,6 +2956,41 @@
           {"Name":"Nav", "Bit":6},
           {"Name":"No Drift", "Bit":8},
           {"Name":"Wind", "Bit":10}
+        ]
+      },
+      {
+        "Name":"SIMNET_ALERT_BITFIELD",
+        "MaxValue":63,
+        "EnumBitValues":[
+          {"Name":"No GPS fix", "Bit":0},
+          {"Name":"No active autopilot control unit", "Bit":2},
+          {"Name":"No autopilot computer", "Bit":4},
+          {"Name":"AP clutch overload", "Bit":6},
+          {"Name":"AP clutch disengaged", "Bit":8},
+          {"Name":"Rudder controller fault", "Bit":10},
+          {"Name":"No rudder response", "Bit":12},
+          {"Name":"Rudder drive overload", "Bit":14},
+          {"Name":"High drive supply", "Bit":16},
+          {"Name":"Low drive supply", "Bit":18},
+          {"Name":"Memory fail", "Bit":20},
+          {"Name":"AP position data missing", "Bit":22},
+          {"Name":"AP speed data missing", "Bit":24},
+          {"Name":"AP depth data missing", "Bit":26},
+          {"Name":"AP heading data missing", "Bit":28},
+          {"Name":"AP nav data missing", "Bit":30},
+          {"Name":"AP rudder data missing", "Bit":32},
+          {"Name":"AP wind data missing", "Bit":34},
+          {"Name":"AP off course", "Bit":36},
+          {"Name":"High drive temperature", "Bit":38},
+          {"Name":"Drive inhibit", "Bit":40},
+          {"Name":"Rudder limit", "Bit":42},
+          {"Name":"Drive computer missing", "Bit":44},
+          {"Name":"Drive ready missing", "Bit":46},
+          {"Name":"EVC com error", "Bit":48},
+          {"Name":"EVC override", "Bit":50},
+          {"Name":"Low CAN bus voltage", "Bit":52},
+          {"Name":"CAN bus supply overload", "Bit":54},
+          {"Name":"Wind sensor battery low", "Bit":56}
         ]
       },
       {
@@ -7211,13 +7249,132 @@
         ]
       },
       {
+        "PGN":65302,
+        "Id":"simnetApUnknown1",
+        "Description":"Simnet: AP Unknown 1",
+        "Explanation":"Seen as sent by AC-42 only so far.",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution"
+        ],
+        "FieldCount":8,
+        "Length":8,
+        "TransmissionInterval":1000,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Simrad",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1857,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"a",
+            "Name":"A",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"b",
+            "Name":"B",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"c",
+            "Name":"C",
+            "BitLength":16,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"d",
+            "Name":"D",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"reserved8",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
         "PGN":65305,
         "Id":"simnetDeviceStatus",
         "Description":"Simnet: Device Status",
         "Explanation":"This PGN is reported by an Autopilot Computer (AC/NAC)",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution"
+        "Missing":["Lookups"
         ],
         "FieldCount":7,
         "Length":8,
@@ -7277,7 +7434,7 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_DEVICE_MODEL"
+            "LookupEnumeration":"SIMNET_DEVICE_MODEL"
           },
           {
             "Order":5,
@@ -7293,7 +7450,7 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_DEVICE_REPORT"
+            "LookupEnumeration":"SIMNET_DEVICE_REPORT"
           },
           {
             "Order":6,
@@ -7307,7 +7464,7 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_AP_STATUS"
+            "LookupEnumeration":"SIMNET_AP_STATUS"
           },
           {
             "Order":7,
@@ -7327,9 +7484,7 @@
         "Description":"Simnet: Device Status Request",
         "Explanation":"This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller) to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.",
         "Type":"Single",
-        "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution"
-        ],
+        "Complete":true,
         "FieldCount":6,
         "Length":8,
         "TransmissionInterval":1000,
@@ -7388,7 +7543,7 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_DEVICE_MODEL"
+            "LookupEnumeration":"SIMNET_DEVICE_MODEL"
           },
           {
             "Order":5,
@@ -7404,7 +7559,7 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_DEVICE_REPORT"
+            "LookupEnumeration":"SIMNET_DEVICE_REPORT"
           },
           {
             "Order":6,
@@ -7425,7 +7580,7 @@
         "Explanation":"This PGN is reported by an Autopilot Computer (AC/NAC)",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution"
+        "Missing":["Lookups"
         ],
         "FieldCount":7,
         "Length":8,
@@ -7485,7 +7640,7 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_DEVICE_MODEL"
+            "LookupEnumeration":"SIMNET_DEVICE_MODEL"
           },
           {
             "Order":5,
@@ -7501,7 +7656,7 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_DEVICE_REPORT"
+            "LookupEnumeration":"SIMNET_DEVICE_REPORT"
           },
           {
             "Order":6,
@@ -7514,7 +7669,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"SIMRAD_AP_MODE_BITFIELD"
+            "LookupBitEnumeration":"SIMNET_AP_MODE_BITFIELD"
           },
           {
             "Order":7,
@@ -7533,6 +7688,101 @@
         "Id":"simnetDeviceModeRequest",
         "Description":"Simnet: Device Mode Request",
         "Explanation":"This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller) to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.",
+        "Type":"Single",
+        "Complete":true,
+        "FieldCount":6,
+        "Length":8,
+        "TransmissionInterval":1000,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Simrad",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1857,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"model",
+            "Name":"Model",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_DEVICE_MODEL"
+          },
+          {
+            "Order":5,
+            "Id":"report",
+            "Name":"Report",
+            "Description":"Send Mode",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Match":11,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_DEVICE_REPORT"
+          },
+          {
+            "Order":6,
+            "Id":"spare6",
+            "Name":"Spare",
+            "BitLength":32,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"SPARE"
+          }
+        ]
+      },
+      {
+        "PGN":65305,
+        "Id":"simnetSailingProcessorStatus",
+        "Description":"Simnet: Sailing Processor Status",
+        "Explanation":"This PGN has been seen to be reported by a Sailing Processor.",
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
@@ -7595,33 +7845,33 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_DEVICE_MODEL"
+            "LookupEnumeration":"SIMNET_DEVICE_MODEL"
           },
           {
             "Order":5,
             "Id":"report",
             "Name":"Report",
-            "Description":"Send Mode",
+            "Description":"Sailing Processor Status",
             "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
-            "Match":11,
+            "Match":23,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_DEVICE_REPORT"
+            "LookupEnumeration":"SIMNET_DEVICE_REPORT"
           },
           {
             "Order":6,
-            "Id":"spare6",
-            "Name":"Spare",
+            "Id":"data",
+            "Name":"Data",
             "BitLength":32,
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"SPARE"
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -7824,6 +8074,138 @@
         ]
       },
       {
+        "PGN":65340,
+        "Id":"simnetApUnknown2",
+        "Description":"Simnet: AP Unknown 2",
+        "Explanation":"Seen as sent by AC-42 only so far.",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution"
+        ],
+        "FieldCount":9,
+        "Length":8,
+        "TransmissionInterval":1000,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Simrad",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1857,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"a",
+            "Name":"A",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"b",
+            "Name":"B",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"c",
+            "Name":"C",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"d",
+            "Name":"D",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"e",
+            "Name":"E",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"reserved9",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
         "PGN":65341,
         "Id":"simnetAutopilotAngle",
         "Description":"Simnet: Autopilot Angle",
@@ -7898,7 +8280,7 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_AP_MODE"
+            "LookupEnumeration":"SIMNET_AP_MODE"
           },
           {
             "Order":6,
@@ -8978,6 +9360,138 @@
           {
             "Order":7,
             "Id":"reserved7",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
+        "PGN":65420,
+        "Id":"simnetApUnknown3",
+        "Description":"Simnet: AP Unknown 3",
+        "Explanation":"Seen as sent by AC-42 only so far.",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution"
+        ],
+        "FieldCount":9,
+        "Length":8,
+        "TransmissionInterval":1000,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Simrad",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1857,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"a",
+            "Name":"A",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"b",
+            "Name":"B",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"c",
+            "Name":"C",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"d",
+            "Name":"D",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"e",
+            "Name":"E",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"reserved9",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":56,
@@ -39512,7 +40026,7 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_COMMAND"
+            "LookupEnumeration":"SIMNET_COMMAND"
           },
           {
             "Order":6,
@@ -43534,14 +44048,16 @@
         "PGN":130824,
         "Id":"bGKeyValueData",
         "Description":"B&G: key-value data",
+        "Explanation":"Contains any number of key/value pairs, sent by various B&G devices such as MFDs and Sailing Processors.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Lookups","Interval"
+        "Missing":["Lookups"
         ],
         "FieldCount":6,
         "MinLength":2,
         "RepeatingFieldSet1Size":3,
         "RepeatingFieldSet1StartField":4,
+        "TransmissionInterval":1000,
         "Fields":[
           {
             "Order":1,
@@ -43740,6 +44256,71 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130825,
+        "Id":"navicoUnknown2",
+        "Description":"Navico: Unknown 2",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":12,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Navico",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":275,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":80,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -45918,7 +46499,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":8,
@@ -46070,7 +46651,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":8,
@@ -46221,7 +46802,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":8,
@@ -46366,7 +46947,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":8,
@@ -46518,7 +47099,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":8,
@@ -46669,7 +47250,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":8,
@@ -46821,7 +47402,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":8,
@@ -46973,7 +47554,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":8,
@@ -47125,7 +47706,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":8,
@@ -47277,7 +47858,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":8,
@@ -47450,7 +48031,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":9,
@@ -47464,9 +48045,9 @@
           },
           {
             "Order":10,
-            "Id":"dataLength",
-            "Name":"Data Length",
-            "Description":"Number of significant bytes in the data field",
+            "Id":"g",
+            "Name":"G",
+            "Description":"Some length indicator?",
             "BitLength":8,
             "BitOffset":72,
             "BitStart":0,
@@ -47486,6 +48067,175 @@
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130846,
+        "Id":"simnetSetAlertBitfield",
+        "Description":"Simnet: Set Alert Bitfield",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields"
+        ],
+        "FieldCount":11,
+        "Length":19,
+        "TransmissionIrregular":true,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Simrad",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1857,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"address",
+            "Name":"Address",
+            "Description":"NMEA 2000 address of commanded device",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"b",
+            "Name":"B",
+            "Description":"00, 01 or FF observed",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"displayGroup",
+            "Name":"Display Group",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+          },
+          {
+            "Order":7,
+            "Id":"d",
+            "Name":"D",
+            "Description":"Various values observed",
+            "BitLength":16,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"type",
+            "Name":"Type",
+            "Description":"Alert bits",
+            "BitLength":16,
+            "BitOffset":56,
+            "BitStart":0,
+            "Match":32789,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_TYPE"
+          },
+          {
+            "Order":9,
+            "Id":"f",
+            "Name":"F",
+            "Description":"00 and 01 observed",
+            "BitLength":8,
+            "BitOffset":72,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":10,
+            "Id":"length",
+            "Name":"Length",
+            "Description":"Length of bitfield",
+            "BitLength":8,
+            "BitOffset":80,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":11,
+            "Id":"alerts",
+            "Name":"Alerts",
+            "BitLength":64,
+            "BitOffset":88,
+            "BitStart":0,
+            "Resolution":1,
+            "RangeMin":0,
+            "RangeMax":0,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"SIMNET_ALERT_BITFIELD"
           }
         ]
       },
@@ -47611,7 +48361,7 @@
             "RangeMin":0,
             "RangeMax":65533,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_TYPE"
+            "LookupEnumeration":"SIMNET_TYPE"
           },
           {
             "Order":9,
@@ -47922,7 +48672,7 @@
             "RangeMin":0,
             "RangeMax":255,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_EVENT_COMMAND"
+            "LookupEnumeration":"SIMNET_EVENT_COMMAND"
           },
           {
             "Order":7,
@@ -47936,7 +48686,7 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_AP_STATUS"
+            "LookupEnumeration":"SIMNET_AP_STATUS"
           },
           {
             "Order":8,
@@ -48061,7 +48811,7 @@
             "RangeMin":0,
             "RangeMax":255,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_EVENT_COMMAND"
+            "LookupEnumeration":"SIMNET_EVENT_COMMAND"
           },
           {
             "Order":5,
@@ -48253,7 +49003,7 @@
             "RangeMin":0,
             "RangeMax":255,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_EVENT_COMMAND"
+            "LookupEnumeration":"SIMNET_EVENT_COMMAND"
           },
           {
             "Order":7,
@@ -48387,7 +49137,7 @@
             "RangeMin":0,
             "RangeMax":255,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMRAD_EVENT_COMMAND"
+            "LookupEnumeration":"SIMNET_EVENT_COMMAND"
           },
           {
             "Order":5,
@@ -48494,7 +49244,7 @@
         "Explanation":"Usually accompanied by a PGN 130850 'Simnet: Alarm' message with the same information in binary form.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData"
+        "Missing":["Fields","FieldLengths","Resolution"
         ],
         "FieldCount":7,
         "Length":229,
@@ -48589,6 +49339,141 @@
             "BitOffset":48,
             "BitStart":0,
             "FieldType":"STRING_FIX"
+          }
+        ]
+      },
+      {
+        "PGN":130860,
+        "Id":"simnetApUnknown4",
+        "Description":"Simnet: AP Unknown 4",
+        "Explanation":"Seen as sent by AC-42 and H5000 AP only so far.",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution"
+        ],
+        "FieldCount":9,
+        "Length":23,
+        "TransmissionInterval":1000,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Simrad",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1857,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"a",
+            "Name":"A",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"b",
+            "Name":"B",
+            "BitLength":32,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-2147483647,
+            "RangeMax":2147483645,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"c",
+            "Name":"C",
+            "BitLength":32,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-2147483647,
+            "RangeMax":2147483645,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"d",
+            "Name":"D",
+            "BitLength":32,
+            "BitOffset":88,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4294967293,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"e",
+            "Name":"E",
+            "BitLength":32,
+            "BitOffset":120,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-2147483647,
+            "RangeMax":2147483645,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"f",
+            "Name":"F",
+            "BitLength":32,
+            "BitOffset":152,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4294967293,
+            "FieldType":"NUMBER"
           }
         ]
       },

@@ -4584,15 +4584,130 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
-      <PGN>65305</PGN>
-      <Id>simnetDeviceStatus</Id>
-      <Description>Simnet: Device Status</Description>
+      <PGN>65302</PGN>
+      <Id>simnetApUnknown1</Id>
+      <Description>Simnet: AP Unknown 1</Description>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>c</Id>
+          <Name>C</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>reserved8</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65305</PGN>
+      <Id>simnetDeviceStatus</Id>
+      <Description>Simnet: Device Status</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Lookups</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <Fields>
@@ -4649,9 +4764,9 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <EnumValues>
-            <EnumPair Value='0' Name='AC-12' />
-            <EnumPair Value='1' Name='Autopilot Controller' />
-            <EnumPair Value='100' Name='NAC-3' />
+            <EnumPair Value='0' Name='AC' />
+            <EnumPair Value='1' Name='Other device' />
+            <EnumPair Value='100' Name='NAC' />
           </EnumValues>
         </Field>
         <Field>
@@ -4703,12 +4818,7 @@ limitations under the License.
       <Id>simnetDeviceStatusRequest</Id>
       <Description>Simnet: Device Status Request</Description>
       <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -4764,9 +4874,9 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <EnumValues>
-            <EnumPair Value='0' Name='AC-12' />
-            <EnumPair Value='1' Name='Autopilot Controller' />
-            <EnumPair Value='100' Name='NAC-3' />
+            <EnumPair Value='0' Name='AC' />
+            <EnumPair Value='1' Name='Other device' />
+            <EnumPair Value='100' Name='NAC' />
           </EnumValues>
         </Field>
         <Field>
@@ -4803,9 +4913,7 @@ limitations under the License.
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <Fields>
@@ -4862,9 +4970,9 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <EnumValues>
-            <EnumPair Value='0' Name='AC-12' />
-            <EnumPair Value='1' Name='Autopilot Controller' />
-            <EnumPair Value='100' Name='NAC-3' />
+            <EnumPair Value='0' Name='AC' />
+            <EnumPair Value='1' Name='Other device' />
+            <EnumPair Value='100' Name='NAC' />
           </EnumValues>
         </Field>
         <Field>
@@ -4917,6 +5025,99 @@ limitations under the License.
       <Id>simnetDeviceModeRequest</Id>
       <Description>Simnet: Device Mode Request</Description>
       <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>model</Id>
+          <Name>Model</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='AC' />
+            <EnumPair Value='1' Name='Other device' />
+            <EnumPair Value='100' Name='NAC' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>report</Id>
+          <Name>Report</Name>
+          <Description>Send Mode</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>11</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65305</PGN>
+      <Id>simnetSailingProcessorStatus</Id>
+      <Description>Simnet: Sailing Processor Status</Description>
+      <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
@@ -4978,20 +5179,20 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <EnumValues>
-            <EnumPair Value='0' Name='AC-12' />
-            <EnumPair Value='1' Name='Autopilot Controller' />
-            <EnumPair Value='100' Name='NAC-3' />
+            <EnumPair Value='0' Name='AC' />
+            <EnumPair Value='1' Name='Other device' />
+            <EnumPair Value='100' Name='NAC' />
           </EnumValues>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>report</Id>
           <Name>Report</Name>
-          <Description>Send Mode</Description>
+          <Description>Sailing Processor Status</Description>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Match>11</Match>
+          <Match>23</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -5000,11 +5201,12 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>spare6</Id>
-          <Name>Spare</Name>
+          <Id>data</Id>
+          <Name>Data</Name>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Type>Binary data</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -5202,6 +5404,136 @@ limitations under the License.
           <Name>Reserved</Name>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65340</PGN>
+      <Id>simnetApUnknown2</Id>
+      <Description>Simnet: AP Unknown 2</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>c</Id>
+          <Name>C</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>e</Id>
+          <Name>E</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>reserved9</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -6485,6 +6817,136 @@ limitations under the License.
         <Field>
           <Order>7</Order>
           <Id>reserved7</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65420</PGN>
+      <Id>simnetApUnknown3</Id>
+      <Description>Simnet: AP Unknown 3</Description>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>c</Id>
+          <Name>C</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>e</Id>
+          <Name>E</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>reserved9</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -44560,7 +45022,6 @@ limitations under the License.
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>2</Length>
       <RepeatingFieldSet1Size>3</RepeatingFieldSet1Size>
@@ -45071,6 +45532,73 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130825</PGN>
+      <Id>navicoUnknown2</Id>
+      <Description>Navico: Unknown 2</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>12</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>80</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Binary data</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>
@@ -49270,7 +49798,9 @@ limitations under the License.
             <EnumPair Value='5160' Name='Time hour display' />
             <EnumPair Value='5161' Name='Time format' />
             <EnumPair Value='9983' Name='Night mode' />
-            <EnumPair Value='32789' Name='No GPS fix' />
+            <EnumPair Value='11524' Name='True wind shift' />
+            <EnumPair Value='22296' Name='AP low boat speed' />
+            <EnumPair Value='32789' Name='Alert bits' />
             <EnumPair Value='44079' Name='Night mode color' />
             <EnumPair Value='55087' Name='Day mode invert' />
           </EnumValues>
@@ -49287,9 +49817,9 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>dataLength</Id>
-          <Name>Data Length</Name>
-          <Description>Number of significant bytes in the data field</Description>
+          <Id>g</Id>
+          <Name>G</Name>
+          <Description>Some length indicator?</Description>
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -49310,6 +49840,208 @@ limitations under the License.
           <Type>Binary data</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130846</PGN>
+      <Id>simnetSetAlertBitfield</Id>
+      <Description>Simnet: Set Alert Bitfield</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+      </Missing>
+      <Length>19</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>NMEA 2000 address of commanded device</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <Description>00, 01 or FF observed</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>displayGroup</Id>
+          <Name>Display Group</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Default' />
+            <EnumPair Value='2' Name='Group 1' />
+            <EnumPair Value='3' Name='Group 2' />
+            <EnumPair Value='4' Name='Group 3' />
+            <EnumPair Value='5' Name='Group 4' />
+            <EnumPair Value='6' Name='Group 5' />
+            <EnumPair Value='7' Name='Group 6' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <Description>Various values observed</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Alert bits</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32789</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>f</Id>
+          <Name>F</Name>
+          <Description>00 and 01 observed</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>length</Id>
+          <Name>Length</Name>
+          <Description>Length of bitfield</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>alerts</Id>
+          <Name>Alerts</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Bitfield</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='No GPS fix' />
+            <EnumPair Bit='2' Name='No active autopilot control unit' />
+            <EnumPair Bit='4' Name='No autopilot computer' />
+            <EnumPair Bit='6' Name='AP clutch overload' />
+            <EnumPair Bit='8' Name='AP clutch disengaged' />
+            <EnumPair Bit='10' Name='Rudder controller fault' />
+            <EnumPair Bit='12' Name='No rudder response' />
+            <EnumPair Bit='14' Name='Rudder drive overload' />
+            <EnumPair Bit='16' Name='High drive supply' />
+            <EnumPair Bit='18' Name='Low drive supply' />
+            <EnumPair Bit='20' Name='Memory fail' />
+            <EnumPair Bit='22' Name='AP position data missing' />
+            <EnumPair Bit='24' Name='AP speed data missing' />
+            <EnumPair Bit='26' Name='AP depth data missing' />
+            <EnumPair Bit='28' Name='AP heading data missing' />
+            <EnumPair Bit='30' Name='AP nav data missing' />
+            <EnumPair Bit='32' Name='AP rudder data missing' />
+            <EnumPair Bit='34' Name='AP wind data missing' />
+            <EnumPair Bit='36' Name='AP off course' />
+            <EnumPair Bit='38' Name='High drive temperature' />
+            <EnumPair Bit='40' Name='Drive inhibit' />
+            <EnumPair Bit='42' Name='Rudder limit' />
+            <EnumPair Bit='44' Name='Drive computer missing' />
+            <EnumPair Bit='46' Name='Drive ready missing' />
+            <EnumPair Bit='48' Name='EVC com error' />
+            <EnumPair Bit='50' Name='EVC override' />
+            <EnumPair Bit='52' Name='Low CAN bus voltage' />
+            <EnumPair Bit='54' Name='CAN bus supply overload' />
+            <EnumPair Bit='56' Name='Wind sensor battery low' />
+          </EnumBitValues>
         </Field>
       </Fields>
     </PGNInfo>
@@ -49457,7 +50189,9 @@ limitations under the License.
             <EnumPair Value='5160' Name='Time hour display' />
             <EnumPair Value='5161' Name='Time format' />
             <EnumPair Value='9983' Name='Night mode' />
-            <EnumPair Value='32789' Name='No GPS fix' />
+            <EnumPair Value='11524' Name='True wind shift' />
+            <EnumPair Value='22296' Name='AP low boat speed' />
+            <EnumPair Value='32789' Name='Alert bits' />
             <EnumPair Value='44079' Name='Night mode color' />
             <EnumPair Value='55087' Name='Day mode invert' />
           </EnumValues>
@@ -50421,7 +51155,6 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>229</Length>
       <Fields>
@@ -50513,6 +51246,139 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>ASCII text</Type>
           <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130860</PGN>
+      <Id>simnetApUnknown4</Id>
+      <Description>Simnet: AP Unknown 4</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+      </Missing>
+      <Length>23</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>c</Id>
+          <Name>C</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>e</Id>
+          <Name>E</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483647</RangeMin>
+          <RangeMax>2147483645</RangeMax>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>f</Id>
+          <Name>F</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>152</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>

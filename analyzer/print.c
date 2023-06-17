@@ -621,7 +621,7 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
     sep = "";
   }
 
-  for (bitValue = 1, bit = 0; bitValue <= maxValue; (bitValue *= 2), bit++)
+  for (bitValue = 1, bit = 0; bit < *bits; (bitValue <<= 1), bit++)
   {
     bool isSet = (value & bitValue) != 0;
     logDebug("RES_BITFIELD is bit %u value %" PRIx64 " set? = %d\n", bit, bitValue, isSet);
@@ -646,7 +646,14 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
       }
       else
       {
-        mprintf("%s\"%" PRIu64 "\"", sep, bitValue);
+        if (showJsonValue)
+        {
+          mprintf("%s{\"value\":%" PRIu64 ",\"name\":null}", sep, bitValue);
+        }
+        else
+        {
+          mprintf("%s%" PRIu64, sep, bitValue);
+        }
       }
       sep = ",";
     }

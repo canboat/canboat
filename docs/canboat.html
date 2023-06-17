@@ -1466,13 +1466,50 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65302">0xFF16:
+            PGN 65302
+            - Simnet: AP Unknown 1</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Seen as sent by AC-42 only so far.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 8 fields.
+
+            
+              It is normally transmitted every 1000 milliseconds.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65305">0xFF19:
             PGN 65305
             - Simnet: Device Status</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report</td><td>2</td></tr></table></p><p>This PGN is reported by an Autopilot Computer (AC/NAC)</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>One or more of the lookup fields contain missing or incorrect values</li></ul></p><p>
             This
              single-frame 
             PGN is
@@ -1493,21 +1530,21 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_DEVICE_MODEL">SIMRAD_DEVICE_MODEL</a></td></tr><tr><td>5</td><td>Report</td><td>2:
+                      <a href="#lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL</a></td></tr><tr><td>5</td><td>Report</td><td>2:
                   Status</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_DEVICE_REPORT">SIMRAD_DEVICE_REPORT</a></td></tr><tr><td>6</td><td>Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td></tr><tr><td>6</td><td>Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_AP_STATUS">SIMRAD_AP_STATUS</a></td></tr><tr><td>7</td><td>Spare</td><td/><td/><td>24 bits
+                      <a href="#lookup-SIMNET_AP_STATUS">SIMNET_AP_STATUS</a></td></tr><tr><td>7</td><td>Spare</td><td/><td/><td>24 bits
                   <a href="#ft-SPARE">SPARE</a></td></tr></table><h3 id="pgn-65305">0xFF19:
             PGN 65305
             - Simnet: Device Status Request</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report</td><td>3</td></tr></table></p><p>This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller) to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.</p><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
+              </p><p>
             This
              single-frame 
             PGN is
@@ -1528,18 +1565,18 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_DEVICE_MODEL">SIMRAD_DEVICE_MODEL</a></td></tr><tr><td>5</td><td>Report</td><td>3:
+                      <a href="#lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL</a></td></tr><tr><td>5</td><td>Report</td><td>3:
                   Send Status</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_DEVICE_REPORT">SIMRAD_DEVICE_REPORT</a></td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>32 bits
+                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>32 bits
                   <a href="#ft-SPARE">SPARE</a></td></tr></table><h3 id="pgn-65305">0xFF19:
             PGN 65305
             - Simnet: Pilot Mode</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report</td><td>10</td></tr></table></p><p>This PGN is reported by an Autopilot Computer (AC/NAC)</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>One or more of the lookup fields contain missing or incorrect values</li></ul></p><p>
             This
              single-frame 
             PGN is
@@ -1560,19 +1597,51 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_DEVICE_MODEL">SIMRAD_DEVICE_MODEL</a></td></tr><tr><td>5</td><td>Report</td><td>10:
+                      <a href="#lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL</a></td></tr><tr><td>5</td><td>Report</td><td>10:
                   Mode</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_DEVICE_REPORT">SIMRAD_DEVICE_REPORT</a></td></tr><tr><td>6</td><td>Mode</td><td/><td><div class="xs">0 .. 65535</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td></tr><tr><td>6</td><td>Mode</td><td/><td><div class="xs">0 .. 65535</div></td><td>16 bits
                   
                       bitfield
-                      <a href="#lookupbit-SIMRAD_AP_MODE_BITFIELD">SIMRAD_AP_MODE_BITFIELD</a></td></tr><tr><td>7</td><td>Spare</td><td/><td/><td>16 bits
+                      <a href="#lookupbit-SIMNET_AP_MODE_BITFIELD">SIMNET_AP_MODE_BITFIELD</a></td></tr><tr><td>7</td><td>Spare</td><td/><td/><td>16 bits
                   <a href="#ft-SPARE">SPARE</a></td></tr></table><h3 id="pgn-65305">0xFF19:
             PGN 65305
             - Simnet: Device Mode Request</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report</td><td>11</td></tr></table></p><p>This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller) to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.</p><p>
+                This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
+              </p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 6 fields.
+
+            
+              It is normally transmitted every 1000 milliseconds.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL</a></td></tr><tr><td>5</td><td>Report</td><td>11:
+                  Send Mode</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>32 bits
+                  <a href="#ft-SPARE">SPARE</a></td></tr></table><h3 id="pgn-65305">0xFF19:
+            PGN 65305
+            - Simnet: Sailing Processor Status</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report</td><td>23</td></tr></table></p><p>This PGN has been seen to be reported by a Sailing Processor.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
@@ -1595,12 +1664,12 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_DEVICE_MODEL">SIMRAD_DEVICE_MODEL</a></td></tr><tr><td>5</td><td>Report</td><td>11:
-                  Send Mode</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL</a></td></tr><tr><td>5</td><td>Report</td><td>23:
+                  Sailing Processor Status</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_DEVICE_REPORT">SIMRAD_DEVICE_REPORT</a></td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>32 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr></table><h3 id="pgn-65309">0xFF1D:
+                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td></tr><tr><td>6</td><td>Data</td><td/><td/><td>32 bits
+                  <a href="#ft-BINARY">BINARY</a></td></tr></table><h3 id="pgn-65309">0xFF1D:
             PGN 65309
             - Navico: Wireless Battery Status</h3><p>
               This PGN description applies when the following field(s) match:
@@ -1661,6 +1730,46 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>32 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65340">0xFF3C:
+            PGN 65340
+            - Simnet: AP Unknown 2</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Seen as sent by AC-42 only so far.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 9 fields.
+
+            
+              It is normally transmitted every 1000 milliseconds.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>E</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65341">0xFF3D:
             PGN 65341
             - Simnet: Autopilot Angle</h3><p>
@@ -1687,7 +1796,7 @@ limitations under the License.
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>Mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_AP_MODE">SIMRAD_AP_MODE</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_AP_MODE">SIMNET_AP_MODE</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>7</td><td>Angle</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
@@ -2010,7 +2119,47 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
-              <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-65480">0xFFC8:
+              <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-65420">0xFF8C:
+            PGN 65420
+            - Simnet: AP Unknown 3</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Seen as sent by AC-42 only so far.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 9 fields.
+
+            
+              It is normally transmitted every 1000 milliseconds.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>E</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65480">0xFFC8:
             PGN 65480
             - Simnet: Autopilot Mode</h3><p>
               This PGN description applies when the following field(s) match:
@@ -11003,7 +11152,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Text</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_COMMAND">SIMRAD_COMMAND</a></td></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_COMMAND">SIMNET_COMMAND</a></td></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -12214,9 +12363,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130824
             - B&amp;G: key-value data</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>381</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>381</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Contains any number of key/value pairs, sent by various B&amp;G devices such as MFDs and Sailing Processors.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>One or more of the lookup fields contain missing or incorrect values</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>One or more of the lookup fields contain missing or incorrect values</li></ul></p><p>
             This
              fast-packet 
             PGN is
@@ -12229,7 +12378,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         4 
         (with name "Key")
         form repeating set 1. The set is repeated until there is no more data in the PGN.
-      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>381:
+      
+              It is normally transmitted every 1000 milliseconds.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>381:
                   B &amp; G</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
@@ -12285,7 +12436,30 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Field 8</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130827">0x1FF0B:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130825">0x1FF09:
+            PGN 130825
+            - Navico: Unknown 2</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            12
+            bytes long and contains 4 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+                  Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Data</td><td/><td/><td>80 bits
+                  <a href="#ft-BINARY">BINARY</a></td></tr></table><h3 id="pgn-130827">0x1FF0B:
             PGN 130827
             - Lowrance: unknown</h3><p>
               This PGN description applies when the following field(s) match:
@@ -12966,7 +13140,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Heading Offset</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Angle</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
@@ -13010,7 +13184,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Local field</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Local field</td><td/><td>0.004 %<div class="xs">0 .. 262.132</div></td><td>16 bits
@@ -13054,7 +13228,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Field angle</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Field angle</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
@@ -13094,7 +13268,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Timezone offset</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
                   <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -13133,7 +13307,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Time hour display</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
                   <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -13172,7 +13346,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Time format</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
                   <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -13211,7 +13385,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Backlight level</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
                   <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -13250,7 +13424,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Night mode</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
                   <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -13289,7 +13463,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Night mode color</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
                   <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -13328,7 +13502,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Day mode invert</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
                   <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -13375,12 +13549,61 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Type</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>10</td><td>Data Length</td><td>Number of significant bytes in the data field</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>10</td><td>G</td><td>Some length indicator?</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Data</td><td>0 to 64 bytes of data</td><td/><td>512 bits
                   <a href="#ft-BINARY">BINARY</a></td></tr></table><h3 id="pgn-130846">0x1FF1E:
+            PGN 130846
+            - Simnet: Set Alert Bitfield</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>32789</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            19
+            bytes long and contains 11 fields.
+
+            
+              It is not transmitted at a regular interval, but when data is available or it is requested.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>B</td><td>00, 01 or FF observed</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td></tr><tr><td>7</td><td>D</td><td>Various values observed</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Type</td><td>32789:
+                  Alert bits</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>9</td><td>F</td><td>00 and 01 observed</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Length</td><td>Length of bitfield</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Alerts</td><td/><td><div class="xs">0 .. 0</div></td><td>64 bits
+                  
+                      bitfield
+                      <a href="#lookupbit-SIMNET_ALERT_BITFIELD">SIMNET_ALERT_BITFIELD</a></td></tr></table><h3 id="pgn-130846">0x1FF1E:
             PGN 130846
             - Simnet: Parameter Set</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13419,7 +13642,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Type</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_TYPE">SIMRAD_TYPE</a></td></tr><tr><td>9</td><td>Set</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>9</td><td>Set</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-YES_NO">YES_NO</a></td></tr><tr><td>10</td><td>Data Length</td><td>Number of significant bytes in the data field</td><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -13515,10 +13738,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_EVENT_COMMAND">SIMRAD_EVENT_COMMAND</a></td></tr><tr><td>7</td><td>AP status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td></tr><tr><td>7</td><td>AP status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_AP_STATUS">SIMRAD_AP_STATUS</a></td></tr><tr><td>8</td><td>AP Command</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_AP_STATUS">SIMNET_AP_STATUS</a></td></tr><tr><td>8</td><td>AP Command</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
@@ -13554,7 +13777,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   AP command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_EVENT_COMMAND">SIMRAD_EVENT_COMMAND</a></td></tr><tr><td>5</td><td>Unused A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td></tr><tr><td>5</td><td>Unused A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Controlling Device</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -13607,7 +13830,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Alarm</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_EVENT_COMMAND">SIMRAD_EVENT_COMMAND</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>8</td><td>Alarm</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
@@ -13646,7 +13869,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   AP command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMRAD_EVENT_COMMAND">SIMRAD_EVENT_COMMAND</a></td></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Address</td><td>NMEA 2000 address of controlling device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -13673,7 +13896,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Usually accompanied by a PGN 130850 'Simnet: Alarm' message with the same information in binary form.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
@@ -13701,7 +13924,49 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Text</td><td/><td> </td><td>1784 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr></table><h3 id="pgn-130880">0x1FF40:
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr></table><h3 id="pgn-130860">0x1FF2C:
+            PGN 130860
+            - Simnet: AP Unknown 4</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Seen as sent by AC-42 and H5000 AP only so far.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            23
+            bytes long and contains 9 fields.
+
+            
+              It is normally transmitted every 1000 milliseconds.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>E</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>F</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130880">0x1FF40:
             PGN 130880
             - Airmar: Additional Weather Data</h3><p>
               This PGN description applies when the following field(s) match:
@@ -14191,19 +14456,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 15)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Reserved</td></tr><tr><td>1</td><td>Connected</td></tr><tr><td>2</td><td>Connecting</td></tr><tr><td>3</td><td>Not connected</td></tr></table><h3 id="lookup-SONICHUB_COMMAND">SONICHUB_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Init #2</td></tr><tr><td>4</td><td>AM Radio</td></tr><tr><td>5</td><td>Zone Info</td></tr><tr><td>6</td><td>Source</td></tr><tr><td>8</td><td>Source List</td></tr><tr><td>9</td><td>Control</td></tr><tr><td>12</td><td>FM Radio</td></tr><tr><td>13</td><td>Playlist</td></tr><tr><td>14</td><td>Track</td></tr><tr><td>15</td><td>Artist</td></tr><tr><td>16</td><td>Album</td></tr><tr><td>19</td><td>Menu Item</td></tr><tr><td>20</td><td>Zones</td></tr><tr><td>23</td><td>Max Volume</td></tr><tr><td>24</td><td>Volume</td></tr><tr><td>25</td><td>Init #1</td></tr><tr><td>48</td><td>Position</td></tr><tr><td>50</td><td>Init #3</td></tr></table><h3 id="lookup-SIMRAD_AP_MODE">SIMRAD_AP_MODE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Init #2</td></tr><tr><td>4</td><td>AM Radio</td></tr><tr><td>5</td><td>Zone Info</td></tr><tr><td>6</td><td>Source</td></tr><tr><td>8</td><td>Source List</td></tr><tr><td>9</td><td>Control</td></tr><tr><td>12</td><td>FM Radio</td></tr><tr><td>13</td><td>Playlist</td></tr><tr><td>14</td><td>Track</td></tr><tr><td>15</td><td>Artist</td></tr><tr><td>16</td><td>Album</td></tr><tr><td>19</td><td>Menu Item</td></tr><tr><td>20</td><td>Zones</td></tr><tr><td>23</td><td>Max Volume</td></tr><tr><td>24</td><td>Volume</td></tr><tr><td>25</td><td>Init #1</td></tr><tr><td>48</td><td>Position</td></tr><tr><td>50</td><td>Init #3</td></tr></table><h3 id="lookup-SIMNET_AP_MODE">SIMNET_AP_MODE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Heading</td></tr><tr><td>3</td><td>Wind</td></tr><tr><td>10</td><td>Nav</td></tr><tr><td>11</td><td>No Drift</td></tr></table><h3 id="lookup-SIMRAD_DEVICE_MODEL">SIMRAD_DEVICE_MODEL
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Heading</td></tr><tr><td>3</td><td>Wind</td></tr><tr><td>10</td><td>Nav</td></tr><tr><td>11</td><td>No Drift</td></tr></table><h3 id="lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>AC-12</td></tr><tr><td>1</td><td>Autopilot Controller</td></tr><tr><td>100</td><td>NAC-3</td></tr></table><h3 id="lookup-SIMRAD_DEVICE_REPORT">SIMRAD_DEVICE_REPORT
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>AC</td></tr><tr><td>1</td><td>Other device</td></tr><tr><td>100</td><td>NAC</td></tr></table><h3 id="lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Status</td></tr><tr><td>3</td><td>Send Status</td></tr><tr><td>10</td><td>Mode</td></tr><tr><td>11</td><td>Send Mode</td></tr></table><h3 id="lookup-SIMRAD_AP_STATUS">SIMRAD_AP_STATUS
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Status</td></tr><tr><td>3</td><td>Send Status</td></tr><tr><td>10</td><td>Mode</td></tr><tr><td>11</td><td>Send Mode</td></tr><tr><td>23</td><td>Sailing Processor Status</td></tr></table><h3 id="lookup-SIMNET_AP_STATUS">SIMNET_AP_STATUS
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Manual</td></tr><tr><td>16</td><td>Automatic</td></tr></table><h3 id="lookup-SIMRAD_COMMAND">SIMRAD_COMMAND
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Manual</td></tr><tr><td>16</td><td>Automatic</td></tr></table><h3 id="lookup-SIMNET_COMMAND">SIMNET_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>50</td><td>Text</td></tr></table><h3 id="lookup-SIMRAD_TYPE">SIMRAD_TYPE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>50</td><td>Text</td></tr></table><h3 id="lookup-SIMNET_TYPE">SIMNET_TYPE
         (0 - 65535)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Heading Offset</td></tr><tr><td>41</td><td>Timezone offset</td></tr><tr><td>260</td><td>True wind high</td></tr><tr><td>264</td><td>Deep water</td></tr><tr><td>516</td><td>True wind low</td></tr><tr><td>517</td><td>Low boat speed</td></tr><tr><td>520</td><td>Shallow water</td></tr><tr><td>768</td><td>Local field</td></tr><tr><td>1024</td><td>Field angle</td></tr><tr><td>1800</td><td>Anchor depth</td></tr><tr><td>4863</td><td>Backlight level</td></tr><tr><td>5160</td><td>Time hour display</td></tr><tr><td>5161</td><td>Time format</td></tr><tr><td>9983</td><td>Night mode</td></tr><tr><td>32789</td><td>No GPS fix</td></tr><tr><td>44079</td><td>Night mode color</td></tr><tr><td>55087</td><td>Day mode invert</td></tr></table><h3 id="lookup-SIMRAD_EVENT_COMMAND">SIMRAD_EVENT_COMMAND
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Heading Offset</td></tr><tr><td>41</td><td>Timezone offset</td></tr><tr><td>260</td><td>True wind high</td></tr><tr><td>264</td><td>Deep water</td></tr><tr><td>516</td><td>True wind low</td></tr><tr><td>517</td><td>Low boat speed</td></tr><tr><td>520</td><td>Shallow water</td></tr><tr><td>768</td><td>Local field</td></tr><tr><td>1024</td><td>Field angle</td></tr><tr><td>1800</td><td>Anchor depth</td></tr><tr><td>4863</td><td>Backlight level</td></tr><tr><td>5160</td><td>Time hour display</td></tr><tr><td>5161</td><td>Time format</td></tr><tr><td>9983</td><td>Night mode</td></tr><tr><td>11524</td><td>True wind shift</td></tr><tr><td>22296</td><td>AP low boat speed</td></tr><tr><td>32789</td><td>Alert bits</td></tr><tr><td>44079</td><td>Night mode color</td></tr><tr><td>55087</td><td>Day mode invert</td></tr></table><h3 id="lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Alarm</td></tr><tr><td>2</td><td>AP command</td></tr><tr><td>255</td><td>Autopilot</td></tr></table><h3 id="lookup-SIMNET_NIGHT_MODE">SIMNET_NIGHT_MODE
         (0 - 255)
@@ -14291,9 +14556,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 2^5-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>System error</td></tr><tr><td>1</td><td>Sensor error</td></tr><tr><td>2</td><td>No windlass motion detected</td></tr><tr><td>3</td><td>Retrieval docking distance reached</td></tr><tr><td>4</td><td>End of rode reached</td></tr></table><h3 id="lookupbit-WINDLASS_MONITORING">WINDLASS_MONITORING
         (0 - 2^7-1)
-      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Controller under voltage cut-out</td></tr><tr><td>1</td><td>Controller over current cut-out</td></tr><tr><td>2</td><td>Controller over temperature cut-out</td></tr><tr><td>3</td><td>Manufacturer defined</td></tr></table><h3 id="lookupbit-SIMRAD_AP_MODE_BITFIELD">SIMRAD_AP_MODE_BITFIELD
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Controller under voltage cut-out</td></tr><tr><td>1</td><td>Controller over current cut-out</td></tr><tr><td>2</td><td>Controller over temperature cut-out</td></tr><tr><td>3</td><td>Manufacturer defined</td></tr></table><h3 id="lookupbit-SIMNET_AP_MODE_BITFIELD">SIMNET_AP_MODE_BITFIELD
         (0 - 2^15-1)
-      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>3</td><td>Standby</td></tr><tr><td>4</td><td>Heading</td></tr><tr><td>6</td><td>Nav</td></tr><tr><td>8</td><td>No Drift</td></tr><tr><td>10</td><td>Wind</td></tr></table><h3 id="lookupbit-ENTERTAINMENT_REPEAT_BITFIELD">ENTERTAINMENT_REPEAT_BITFIELD
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>3</td><td>Standby</td></tr><tr><td>4</td><td>Heading</td></tr><tr><td>6</td><td>Nav</td></tr><tr><td>8</td><td>No Drift</td></tr><tr><td>10</td><td>Wind</td></tr></table><h3 id="lookupbit-SIMNET_ALERT_BITFIELD">SIMNET_ALERT_BITFIELD
+        (0 - 2^63-1)
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>No GPS fix</td></tr><tr><td>2</td><td>No active autopilot control unit</td></tr><tr><td>4</td><td>No autopilot computer</td></tr><tr><td>6</td><td>AP clutch overload</td></tr><tr><td>8</td><td>AP clutch disengaged</td></tr><tr><td>10</td><td>Rudder controller fault</td></tr><tr><td>12</td><td>No rudder response</td></tr><tr><td>14</td><td>Rudder drive overload</td></tr><tr><td>16</td><td>High drive supply</td></tr><tr><td>18</td><td>Low drive supply</td></tr><tr><td>20</td><td>Memory fail</td></tr><tr><td>22</td><td>AP position data missing</td></tr><tr><td>24</td><td>AP speed data missing</td></tr><tr><td>26</td><td>AP depth data missing</td></tr><tr><td>28</td><td>AP heading data missing</td></tr><tr><td>30</td><td>AP nav data missing</td></tr><tr><td>32</td><td>AP rudder data missing</td></tr><tr><td>34</td><td>AP wind data missing</td></tr><tr><td>36</td><td>AP off course</td></tr><tr><td>38</td><td>High drive temperature</td></tr><tr><td>40</td><td>Drive inhibit</td></tr><tr><td>42</td><td>Rudder limit</td></tr><tr><td>44</td><td>Drive computer missing</td></tr><tr><td>46</td><td>Drive ready missing</td></tr><tr><td>48</td><td>EVC com error</td></tr><tr><td>50</td><td>EVC override</td></tr><tr><td>52</td><td>Low CAN bus voltage</td></tr><tr><td>54</td><td>CAN bus supply overload</td></tr><tr><td>56</td><td>Wind sensor battery low</td></tr></table><h3 id="lookupbit-ENTERTAINMENT_REPEAT_BITFIELD">ENTERTAINMENT_REPEAT_BITFIELD
         (0 - 2^1-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Song</td></tr><tr><td>1</td><td>Play queue</td></tr></table><h3 id="lookupbit-ENTERTAINMENT_SHUFFLE_BITFIELD">ENTERTAINMENT_SHUFFLE_BITFIELD
         (0 - 2^1-1)
