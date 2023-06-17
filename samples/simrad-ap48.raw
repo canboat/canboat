@@ -55,10 +55,14 @@
 2023-06-12T14:58:27.443Z,3,130846,7,255,19,41,9f,ff,ff,01,ff,ff,15,80,01,08,14,00,00,00,00,04,50,01
 # Alarm: "Shallow water" enabled (2.0m)
 2023-06-12T15:04:27.633Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,02,00,01,c8,00,ff,ff
+# Alarm: "Shallow water" enabled (5.0m)
+2023-06-12T15:04:27.633Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,02,00,01,f4,01,ff,ff
 # Alarm: "Shallow water" disabled (2.0m)
 2023-06-12T15:05:37.393Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,02,00,01,00,00,ff,ff
-# Alarm: "Deep water" enabled (30.5m)
+# Alarm: "Deep water" enabled (30.48m)
 2023-06-12T15:06:44.647Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,01,00,01,e8,0b,ff,ff
+# Alarm: "Deep water" enabled (5m)
+2023-06-12T15:06:44.647Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,01,00,01,f4,01,ff,ff
 # Alarm: "Deep water" disabled (30.5m)
 2023-06-12T15:07:15.009Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,01,00,01,00,00,ff,ff
 # Alarm: "Anchor depth" enabled 
@@ -69,11 +73,11 @@
 2023-06-12T15:13:47.170Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,05,02,00,01,01,01,ff,ff
 # Alarm: "Low boat speed" disabled
 2023-06-12T15:13:48.709Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,05,02,00,01,00,00,ff,ff
-# Alarm: "True wind high" enabled
+# Alarm: "True wind high" enabled (30 kn) 0x0607 = 15.43 m/s = 29.99 kn 
 2023-06-12T15:20:33.153Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,01,00,01,07,06,ff,ff
 # Alarm: "True wind high" disabled
 2023-06-12T15:20:34.558Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,01,00,01,00,00,ff,ff
-# Alarm: "True wind low" enabled
+# Alarm: "True wind low" enabled (5 kn) 0x101 = 2.57 m/s = 4.99 kn
 2023-06-12T15:24:23.723Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,02,00,01,01,01,ff,ff
 # Alarm: "True wind low" disabled
 2023-06-12T15:24:24.856Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,02,00,01,00,00,ff,ff
