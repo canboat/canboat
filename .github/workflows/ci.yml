@@ -25,6 +25,10 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
+    defaults:
+        run:
+            shell: wsl-bash {0}
+
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
@@ -33,13 +37,10 @@ jobs:
         uses: Vampire/setup-wsl@v2
 
       - name: make
-        shell: wslbash {0}
         run: make
 
       - name: make generated
-        shell: wslbash {0}
         run: make generated
 
       - name: check there is no git diff output
-        shell: wslbash {0}
         run: git diff --exit-code
