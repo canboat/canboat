@@ -35,6 +35,9 @@ jobs:
 
       - name: update & install tools
         uses: msys2/setup-msys2@v2
+        with:
+            install: 
+                make
 
       - name: make
         run: make tests
