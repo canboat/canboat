@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-ubuntu:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
@@ -30,17 +30,16 @@ jobs:
         uses: actions/checkout@v3
 
       - name: update & install tools
-        shell: wslbash.exe
-        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils
+        uses: Vampire/setup-wsl@v2
 
       - name: make
-        shell: wslbash.exe
+        shell: wslbash {0}
         run: make
 
       - name: make generated
-        shell: wslbash.exe
+        shell: wslbash {0}
         run: make generated
 
       - name: check there is no git diff output
-        shell: wslbash.exe
+        shell: wslbash {0}
         run: git diff --exit-code
