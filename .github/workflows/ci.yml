@@ -25,19 +25,22 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
-    shell: wslbash.exe
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
 
       - name: update & install tools
+        shell: wslbash.exe
         run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils
 
       - name: make
+        shell: wslbash.exe
         run: make
 
       - name: make generated
+        shell: wslbash.exe
         run: make generated
 
       - name: check there is no git diff output
+        shell: wslbash.exe
         run: git diff --exit-code
