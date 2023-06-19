@@ -271,6 +271,16 @@ BO_ 2566852094 PGN_65293_simnetLgc2000Configura: 8 Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2566854398 PGN_65302_simnetApUnknown1: 8 Vector__XXX
+ SG_ reserved8 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ d : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ c : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ b : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ a : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2566856190 PGN_65309_navicoWirelessBatteryS: 8 Vector__XXX
  SG_ reserved7 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
  SG_ batteryChargeStatus : 32|8@1+ (1,0) [0|0] "%" Vector__XXX
@@ -284,6 +294,17 @@ BO_ 2566856958 PGN_65312_navicoWirelessSignalSt: 8 Vector__XXX
  SG_ reserved6 : 32|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ signalStrength : 24|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ unknown : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2566864126 PGN_65340_simnetApUnknown2: 8 Vector__XXX
+ SG_ reserved9 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ e : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ d : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ c : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ b : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ a : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
@@ -384,6 +405,17 @@ BO_ 2566882046 PGN_65410_airmarDeviceInformatio: 8 Vector__XXX
  SG_ supplyVoltage : 40|16@1+ (0.01,0) [0|0] "V" Vector__XXX
  SG_ internalDeviceTemperature : 24|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ sid : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2566884606 PGN_65420_simnetApUnknown3: 8 Vector__XXX
+ SG_ reserved9 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ e : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ d : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ c : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ b : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ a : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
@@ -1366,6 +1398,10 @@ BO_ 2583627774 PGN_130823_maretronProprietaryTe: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2583628286 PGN_130825_navicoUnknown2: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2583628798 PGN_130827_lowranceUnknown: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1415,6 +1451,10 @@ BO_ 2583634942 PGN_130851_simnetEventReplyApCom: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583636222 PGN_130856_simnetAlarmMessage: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583637246 PGN_130860_simnetApUnknown4: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -1495,12 +1535,18 @@ CM_ SG_ 2566851838 manufacturerCode "Simrad";
 CM_ BO_ 2566852094 "Simnet: LGC-2000 Configuration";
 CM_ SG_ 2566852094 industryCode "Marine Industry";
 CM_ SG_ 2566852094 manufacturerCode "Simrad";
+CM_ BO_ 2566854398 "Simnet: AP Unknown 1";
+CM_ SG_ 2566854398 industryCode "Marine Industry";
+CM_ SG_ 2566854398 manufacturerCode "Simrad";
 CM_ BO_ 2566856190 "Navico: Wireless Battery Status";
 CM_ SG_ 2566856190 industryCode "Marine Industry";
 CM_ SG_ 2566856190 manufacturerCode "Navico";
 CM_ BO_ 2566856958 "Navico: Wireless Signal Status";
 CM_ SG_ 2566856958 industryCode "Marine Industry";
 CM_ SG_ 2566856958 manufacturerCode "Navico";
+CM_ BO_ 2566864126 "Simnet: AP Unknown 2";
+CM_ SG_ 2566864126 industryCode "Marine Industry";
+CM_ SG_ 2566864126 manufacturerCode "Simrad";
 CM_ BO_ 2566864382 "Simnet: Autopilot Angle";
 CM_ SG_ 2566864382 industryCode "Marine Industry";
 CM_ SG_ 2566864382 manufacturerCode "Simrad";
@@ -1534,6 +1580,9 @@ CM_ SG_ 2566881790 manufacturerCode "Airmar";
 CM_ BO_ 2566882046 "Airmar: Device Information";
 CM_ SG_ 2566882046 industryCode "Marine Industry";
 CM_ SG_ 2566882046 manufacturerCode "Airmar";
+CM_ BO_ 2566884606 "Simnet: AP Unknown 3";
+CM_ SG_ 2566884606 industryCode "Marine Industry";
+CM_ SG_ 2566884606 manufacturerCode "Simrad";
 CM_ BO_ 2566899966 "Simnet: Autopilot Mode";
 CM_ SG_ 2566899966 industryCode "Marine Industry";
 CM_ SG_ 2566899966 manufacturerCode "Simrad";
@@ -1723,6 +1772,7 @@ CM_ BO_ 2583626494 "Simnet: Reprogram Data";
 CM_ BO_ 2583626750 "Simnet: Request Reprogram";
 CM_ BO_ 2583627518 "Navico: Unknown 1";
 CM_ BO_ 2583627774 "Maretron: Proprietary Temperature High Range";
+CM_ BO_ 2583628286 "Navico: Unknown 2";
 CM_ BO_ 2583628798 "Lowrance: unknown";
 CM_ BO_ 2583629054 "Simnet: Set Serial Number";
 CM_ BO_ 2583629822 "Suzuki: Engine and Storage Device Config";
@@ -1736,6 +1786,7 @@ CM_ BO_ 2583632126 "Simnet: Data User Group Configuration";
 CM_ BO_ 2583633918 "SeaTalk: Node Statistics";
 CM_ BO_ 2583634942 "Simnet: Event Reply: AP command";
 CM_ BO_ 2583636222 "Simnet: Alarm Message";
+CM_ BO_ 2583637246 "Simnet: AP Unknown 4";
 CM_ BO_ 2583642366 "Airmar: Additional Weather Data";
 CM_ BO_ 2583642622 "Airmar: Heater Control";
 CM_ BO_ 2583658750 "Airmar: POST";
