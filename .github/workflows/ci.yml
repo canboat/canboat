@@ -25,13 +25,16 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
+    defaults:
+        run:
+          shell: msys2 {0}
 
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
 
       - name: update & install tools
-        run: choco install make 
+        uses: msys2/setup-msys2@v2
 
       - name: make
         run: make tests
