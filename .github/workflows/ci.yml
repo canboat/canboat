@@ -35,6 +35,11 @@ jobs:
 
       - name: update & install tools
         uses: Vampire/setup-wsl@v2
+        with:
+            additional-packages:
+                xsltproc
+                libxml2-utils
+                build-essential
 
       - name: make
         run: make
