@@ -465,7 +465,7 @@ FieldType fieldTypeList[] = {
      .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
                 "occurs that has no corresponding textual explanation.",
      .pf      = fieldPrintBitLookup,
-    .v1Type   = "Bitfield"},
+     .v1Type  = "Bitfield"},
 
     {.name        = "FIELDTYPE_LOOKUP",
      .description = "Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field",
@@ -950,11 +950,11 @@ FieldType fieldTypeList[] = {
 
     {.name = "PERCENTAGE_INT8", .description = "Percentage", .unit = "%", .baseFieldType = "INT8"},
 
-    {.name          = "PERCENTAGE_UFIX16",
-     .description   = "Percentage, unsigned high range",
-     .resolution    = 0.004,
+    {.name          = "PERCENTAGE_FIX16",
+     .description   = "Percentage, high precision",
      .unit          = "%",
-     .baseFieldType = "UFIX16"},
+     .resolution    = RES_PERCENTAGE,
+     .baseFieldType = "FIX16"},
 
     {.name                = "PERCENTAGE_FIX16_D",
      .description         = "Percentage, promille range",

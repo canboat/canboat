@@ -3015,7 +3015,7 @@
         "Name":"BANDG_KEY_VALUE",
         "MaxValue":511,
         "EnumFieldTypeValues":[
-        {"name": "Altitude", "value": 0, "FieldType": "NUMBER", "Resolution": 0.004, "Unit": "%"},
+        {"name": "Altitude", "value": 0, "FieldType": "NUMBER"},
         {"name": "Rudder Angle", "value": 11, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad"},
         {"name": "User 5", "value": 16, "FieldType": "NUMBER", "Resolution": 0.01},
         {"name": "User 6", "value": 17, "FieldType": "NUMBER", "Resolution": 0.01},
@@ -18496,9 +18496,9 @@
             "BitStart":0,
             "Unit":"%",
             "Resolution":0.004,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":262.132,
+            "Signed":true,
+            "RangeMin":-131.068,
+            "RangeMax":131.06,
             "FieldType":"NUMBER"
           },
           {
@@ -32835,9 +32835,9 @@
             "BitStart":0,
             "Unit":"%",
             "Resolution":0.004,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":262.132,
+            "Signed":true,
+            "RangeMin":-131.068,
+            "RangeMax":131.06,
             "FieldType":"NUMBER"
           },
           {
@@ -33008,9 +33008,9 @@
             "BitStart":0,
             "Unit":"%",
             "Resolution":0.004,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":262.132,
+            "Signed":true,
+            "RangeMin":-131.068,
+            "RangeMax":131.06,
             "FieldType":"NUMBER"
           },
           {
@@ -33022,9 +33022,9 @@
             "BitStart":0,
             "Unit":"%",
             "Resolution":0.004,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":262.132,
+            "Signed":true,
+            "RangeMin":-131.068,
+            "RangeMax":131.06,
             "FieldType":"NUMBER"
           },
           {
@@ -46675,9 +46675,9 @@
             "BitStart":0,
             "Unit":"%",
             "Resolution":0.004,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":262.132,
+            "Signed":true,
+            "RangeMin":-131.068,
+            "RangeMax":131.06,
             "FieldType":"NUMBER"
           },
           {

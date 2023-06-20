@@ -2250,8 +2250,8 @@ limitations under the License.
   </LookupBitEnumerations>
   <LookupFieldTypeEnumerations>
     <LookupFieldTypeEnumeration Name='BANDG_KEY_VALUE' MaxValue='511'>
-      <EnumFieldType Value='0' Name='Altitude' FieldType='NUMBER' Signed='false'
- Resolution='0.004' Unit='%'/>
+      <EnumFieldType Value='0' Name='Altitude' FieldType='NUMBER' Signed='true'
+/>
       <EnumFieldType Value='11' Name='Rudder Angle' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad'/>
       <EnumFieldType Value='16' Name='User 5' FieldType='NUMBER' Signed='true'
@@ -18485,9 +18485,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>%</Unit>
           <Resolution>0.004</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>262.132</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-131.068</RangeMin>
+          <RangeMax>131.06</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -33048,9 +33048,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>%</Unit>
           <Resolution>0.004</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>262.132</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-131.068</RangeMin>
+          <RangeMax>131.06</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -33221,9 +33221,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>%</Unit>
           <Resolution>0.004</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>262.132</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-131.068</RangeMin>
+          <RangeMax>131.06</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -33235,9 +33235,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>%</Unit>
           <Resolution>0.004</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>262.132</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-131.068</RangeMin>
+          <RangeMax>131.06</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -47339,9 +47339,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>%</Unit>
           <Resolution>0.004</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>262.132</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-131.068</RangeMin>
+          <RangeMax>131.06</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>

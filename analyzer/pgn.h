@@ -753,9 +753,9 @@ typedef struct
     .name = nam, .size = BYTES(1), .resolution = 1, .hasSign = true, .unit = "%", .fieldType = "PERCENTAGE_INT8" \
   }
 
-#define PERCENTAGE_U16_FIELD(nam)                                                                              \
-  {                                                                                                            \
-    .name = nam, .size = BYTES(2), .resolution = RES_PERCENTAGE, .unit = "%", .fieldType = "PERCENTAGE_UFIX16" \
+#define PERCENTAGE_I16_FIELD(nam)                                                                                              \
+  {                                                                                                                            \
+    .name = nam, .size = BYTES(2), .resolution = RES_PERCENTAGE, .hasSign = true, .unit = "%", .fieldType = "PERCENTAGE_FIX16" \
   }
 
 #define ROTATION_FIX16_FIELD(nam)                                                                                               \
@@ -3147,7 +3147,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {SIMPLE_FIELD("Instance", 4),
       LOOKUP_FIELD("Type", 4, TANK_TYPE),
-      PERCENTAGE_U16_FIELD("Level"),
+      PERCENTAGE_I16_FIELD("Level"),
       VOLUME_UFIX32_DL_FIELD("Capacity"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
@@ -5116,7 +5116,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Temperature Source", 6, TEMPERATURE_SOURCE),
       LOOKUP_FIELD("Humidity Source", 2, HUMIDITY_SOURCE),
       TEMPERATURE_FIELD("Temperature"),
-      PERCENTAGE_U16_FIELD("Humidity"),
+      PERCENTAGE_I16_FIELD("Humidity"),
       PRESSURE_UFIX16_HPA_FIELD("Atmospheric Pressure"),
       END_OF_FIELDS},
      .explanation = "This PGN was introduced as a better version of PGN 130310, but it should no longer be generated and separate "
@@ -5145,8 +5145,8 @@ Pgn pgnList[] = {
      {UINT8_FIELD("SID"),
       INSTANCE_FIELD,
       LOOKUP_FIELD("Source", BYTES(1), HUMIDITY_SOURCE),
-      PERCENTAGE_U16_FIELD("Actual Humidity"),
-      PERCENTAGE_U16_FIELD("Set Humidity"),
+      PERCENTAGE_I16_FIELD("Actual Humidity"),
+      PERCENTAGE_I16_FIELD("Set Humidity"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval = 2000}
@@ -6745,7 +6745,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Unused", BYTES(3)),
       MATCH_LOOKUP_FIELD("Type", BYTES(2), 768, SIMNET_TYPE),
       UINT16_FIELD("Unused B"),
-      PERCENTAGE_U16_FIELD("Local field"),
+      PERCENTAGE_I16_FIELD("Local field"),
       UINT16_FIELD("Unused C"),
       END_OF_FIELDS}}
 

@@ -17007,9 +17007,9 @@ limitations under the License.
           <Units>%</Units>
           <Type>Number</Type>
           <Resolution>0.004</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>262.132</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-131.068</RangeMin>
+          <RangeMax>131.06</RangeMax>
         </Field>
         <Field>
           <Order>4</Order>
@@ -33031,9 +33031,9 @@ limitations under the License.
           <Units>%</Units>
           <Type>Number</Type>
           <Resolution>0.004</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>262.132</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-131.068</RangeMin>
+          <RangeMax>131.06</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
@@ -33217,9 +33217,9 @@ limitations under the License.
           <Units>%</Units>
           <Type>Number</Type>
           <Resolution>0.004</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>262.132</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-131.068</RangeMin>
+          <RangeMax>131.06</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
@@ -33231,9 +33231,9 @@ limitations under the License.
           <Units>%</Units>
           <Type>Number</Type>
           <Resolution>0.004</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>262.132</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-131.068</RangeMin>
+          <RangeMax>131.06</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
@@ -45080,8 +45080,8 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>4093</RangeMax>
           <EnumFieldTypeValues>
-            <EnumFieldType Value='0' Name='Altitude' FieldType='Number' Signed='false'
- Resolution='0.004' Unit='%'/>
+            <EnumFieldType Value='0' Name='Altitude' FieldType='Number' Signed='true'
+/>
             <EnumFieldType Value='11' Name='Rudder Angle' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='16' Name='User 5' FieldType='Number' Signed='true'
@@ -45975,8 +45975,8 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>4093</RangeMax>
           <EnumFieldTypeValues>
-            <EnumFieldType Value='0' Name='Altitude' FieldType='Number' Signed='false'
- Resolution='0.004' Unit='%'/>
+            <EnumFieldType Value='0' Name='Altitude' FieldType='Number' Signed='true'
+/>
             <EnumFieldType Value='11' Name='Rudder Angle' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad'/>
             <EnumFieldType Value='16' Name='User 5' FieldType='Number' Signed='true'
@@ -48370,9 +48370,9 @@ limitations under the License.
           <Units>%</Units>
           <Type>Number</Type>
           <Resolution>0.004</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>262.132</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-131.068</RangeMin>
+          <RangeMax>131.06</RangeMax>
         </Field>
         <Field>
           <Order>10</Order>

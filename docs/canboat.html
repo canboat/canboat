@@ -4912,9 +4912,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-TANK_TYPE">TANK_TYPE</a></td></tr><tr><td>3</td><td>Level</td><td/><td>0.004 %<div class="xs">0 .. 262.132</div></td><td>16 bits
+                      <a href="#lookup-TANK_TYPE">TANK_TYPE</a></td></tr><tr><td>3</td><td>Level</td><td/><td>0.004 %<div class="xs">-131.068 .. 131.06</div></td><td>16 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Capacity</td><td/><td>0.1 <a href="#pq-VOLUME">L</a><div class="xs">0 .. 429496729.3</div></td><td>32 bits
                   
                         unsigned
@@ -9016,9 +9016,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-HUMIDITY_SOURCE">HUMIDITY_SOURCE</a></td></tr><tr><td>4</td><td>Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Humidity</td><td/><td>0.004 %<div class="xs">0 .. 262.132</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Humidity</td><td/><td>0.004 %<div class="xs">-131.068 .. 131.06</div></td><td>16 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Atmospheric Pressure</td><td/><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553300</div></td><td>16 bits
                   
                         unsigned
@@ -9073,12 +9073,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-HUMIDITY_SOURCE">HUMIDITY_SOURCE</a></td></tr><tr><td>4</td><td>Actual Humidity</td><td/><td>0.004 %<div class="xs">0 .. 262.132</div></td><td>16 bits
+                      <a href="#lookup-HUMIDITY_SOURCE">HUMIDITY_SOURCE</a></td></tr><tr><td>4</td><td>Actual Humidity</td><td/><td>0.004 %<div class="xs">-131.068 .. 131.06</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Set Humidity</td><td/><td>0.004 %<div class="xs">0 .. 262.132</div></td><td>16 bits
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Set Humidity</td><td/><td>0.004 %<div class="xs">-131.068 .. 131.06</div></td><td>16 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130314">0x1FD0A:
             PGN 130314
@@ -13187,9 +13187,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Local field</td><td/><td>0.004 %<div class="xs">0 .. 262.132</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Local field</td><td/><td>0.004 %<div class="xs">-131.068 .. 131.06</div></td><td>16 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Unused C</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -14566,8 +14566,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 2^1-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Play queue</td></tr><tr><td>1</td><td>All</td></tr></table><h2 id="lookupfieldtype-enumerations">Lookup with FieldType enumerations</h2><h3 id="lookup-BANDG_KEY_VALUE">BANDG_KEY_VALUE
         (0 - 511)
-      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>0</td><td>Altitude</td><td>0.004 %</td><td>
-                  unsigned
+      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>0</td><td>Altitude</td><td> </td><td>
+                  signed
                 <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Rudder Angle</td><td>0.0001 rad</td><td>
                   signed
                 <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>16</td><td>User 5</td><td>0.01 </td><td>
