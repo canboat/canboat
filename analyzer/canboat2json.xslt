@@ -449,8 +449,11 @@
     <xsl:if test="@FieldType">, "FieldType": "<xsl:value-of select="@FieldType"/>"</xsl:if>
     <xsl:if test="@Resolution">, "Resolution": <xsl:value-of select="@Resolution"/></xsl:if>
     <xsl:if test="@Unit">, "Unit": "<xsl:value-of select="@Unit"/>"</xsl:if>
+    <xsl:if test="@Bits">, "Bits": "<xsl:value-of select="@Bits"/>"</xsl:if>
+    <xsl:if test="LookupEnumeration">, "LookupEnumeration": "<xsl:value-of select="LookupEnumeration"/>"</xsl:if>
+    <xsl:if test="LookupBitEnumeration">, "LookupBitEnumeration": "<xsl:value-of select="LookupBitEnumeration"/>"</xsl:if>
     <xsl:text>}</xsl:text>
-    <xsl:if test="not(position() = last())">,</xsl:if><xsl:apply-templates/>
+    <xsl:if test="not(position() = last())">,</xsl:if>
   </xsl:template>
 
   <xsl:template match="PGNInfo">

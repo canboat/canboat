@@ -77,8 +77,10 @@ LookupInfo fieldtypeEnums[] = {
 static void        explain(void);
 static void        explainXML(bool, bool, bool);
 static void        printXML(int indent, const char *element, const char *p);
+static void        printXMLUnsigned(int indent, const char *element, const unsigned int p);
 static const char *getV1Type(const FieldType *ft, const char *fieldName);
 static const char *getV2Type(const FieldType *ft);
+static void        explainFieldtypeXMLv1(size_t n, const char *s, const char *fts, const LookupInfo *lookup);
 
 static void usage(char **argv, char **av)
 {
@@ -252,9 +254,16 @@ static void explainBitText(size_t n, const char *s)
   printf("                  Bit: %zu=%s\n", n, s);
 }
 
-static void explainFieldtypeText(size_t n, const char *s, const char *ft)
+static void explainFieldtypeText(size_t n, const char *s, const char *ft, const LookupInfo *lookup)
 {
-  printf("                  Lookup: %zu=%s, fieldType '%s'\n", n, s, ft);
+  if (lookup != NULL)
+  {
+    printf("                  Lookup: %zu=%s, fieldType '%s', lookup '%s'\n", n, s, ft, lookup->name);
+  }
+  else
+  {
+    printf("                  Lookup: %zu=%s, fieldType '%s'\n", n, s, ft);
+  }
 }
 
 static void explainPairXMLv1(size_t n, const char *s)
@@ -271,7 +280,67 @@ static void explainBitXMLv1(size_t n, const char *s)
   printf("' />\n");
 }
 
-static void explainFieldtypeXMLv1(size_t n, const char *s, const char *fts)
+static void explainLookupFunction(const LookupInfo *lookup)
+{
+  switch (lookup->type)
+  {
+    case LOOKUP_TYPE_BIT: {
+      if (doV1)
+      {
+        printf("          <EnumBitValues>\n");
+        (lookup->function.bitEnumerator)(explainBitXMLv1);
+        printf("          </EnumBitValues>\n");
+      }
+      else
+      {
+        printXML(10, "LookupBitEnumeration", lookup->name);
+      }
+      break;
+    }
+
+    case LOOKUP_TYPE_PAIR: {
+      if (doV1)
+      {
+        printf("          <EnumValues>\n");
+        (lookup->function.pairEnumerator)(explainPairXMLv1);
+        printf("          </EnumValues>\n");
+      }
+      else
+      {
+        printXML(10, "LookupEnumeration", lookup->name);
+      }
+      break;
+    }
+
+    case LOOKUP_TYPE_TRIPLET: {
+      if (!doV1)
+      {
+        printXML(10, "LookupIndirectEnumeration", lookup->name);
+        printXMLUnsigned(10, "LookupIndirectEnumerationFieldOrder", lookup->val1Order);
+      }
+      break;
+    }
+
+    case LOOKUP_TYPE_FIELDTYPE: {
+      if (doV1)
+      {
+        printf("          <EnumFieldTypeValues>\n");
+        (lookup->function.fieldtypeEnumerator)(explainFieldtypeXMLv1);
+        printf("          </EnumFieldTypeValues>\n");
+      }
+      else
+      {
+        printXML(10, "LookupFieldTypeEnumeration", lookup->name);
+      }
+      break;
+    }
+
+    default:
+      break;
+  }
+}
+
+static void explainFieldtypeXMLv1(size_t n, const char *s, const char *fts, const LookupInfo *lookup)
 {
   FieldType *ft = getFieldType(fts);
 
@@ -294,8 +363,15 @@ static void explainFieldtypeXMLv1(size_t n, const char *s, const char *fts)
     {
       printf(" Unit='%s'", ft->unit);
     }
+    if (lookup != NULL && lookup->size != 0)
+    {
+      printf(" Bits='%zu'", lookup->size);
+    }
+    else if (ft->size != 0)
+    {
+      printf(" Bits='%u'", ft->size);
+    }
   }
-
   printf("/>\n");
 }
 
@@ -320,7 +396,7 @@ static void explainTripletXML2(size_t n1, size_t n2, const char *s)
   printf("' />\n");
 }
 
-static void explainFieldtypeXMLv2(size_t n, const char *s, const char *fts)
+static void explainFieldtypeXMLv2(size_t n, const char *s, const char *fts, const LookupInfo *lookup)
 {
   FieldType *ft = getFieldType(fts);
 
@@ -343,9 +419,25 @@ static void explainFieldtypeXMLv2(size_t n, const char *s, const char *fts)
     {
       printf(" Unit='%s'", ft->unit);
     }
+    if (lookup != NULL && lookup->size != 0)
+    {
+      printf(" Bits='%zu'", lookup->size);
+    }
+    else if (ft->size != 0)
+    {
+      printf(" Bits='%u'", ft->size);
+    }
   }
-
-  printf("/>\n");
+  if (lookup != NULL)
+  {
+    printf(">\n");
+    explainLookupFunction(lookup);
+    printf("      </EnumFieldType>\n");
+  }
+  else
+  {
+    printf("/>\n");
+  }
 }
 
 static void explainPGN(Pgn pgn)
@@ -630,29 +722,33 @@ static void explainPGNXML(Pgn pgn)
   {
     printf("      <Missing>\n");
 
-    if ((pgn.complete & PACKET_FIELDS_UNKNOWN) != 0)
+    if (bit(pgn.complete, PACKET_FIELDS_UNKNOWN))
     {
       printXML(8, "MissingAttribute", "Fields");
     }
-    if ((pgn.complete & PACKET_FIELD_LENGTHS_UNKNOWN) != 0)
+    if (bit(pgn.complete, PACKET_FIELD_LENGTHS_UNKNOWN))
     {
       printXML(8, "MissingAttribute", "FieldLengths");
     }
-    if ((pgn.complete & PACKET_RESOLUTION_UNKNOWN) != 0)
+    if (bit(pgn.complete, PACKET_RESOLUTION_UNKNOWN))
     {
       printXML(8, "MissingAttribute", "Resolution");
     }
-    if ((pgn.complete & PACKET_LOOKUPS_UNKNOWN) != 0)
+    if (bit(pgn.complete, PACKET_LOOKUPS_UNKNOWN))
     {
       printXML(8, "MissingAttribute", "Lookups");
     }
-    if ((pgn.complete & PACKET_NOT_SEEN) != 0)
+    if (bit(pgn.complete, PACKET_NOT_SEEN))
     {
       printXML(8, "MissingAttribute", "SampleData");
     }
-    if ((pgn.complete & PACKET_INTERVAL_UNKNOWN) != 0)
+    if (bit(pgn.complete, PACKET_INTERVAL_UNKNOWN))
     {
       printXML(8, "MissingAttribute", "Interval");
+    }
+    if (bit(pgn.complete, PACKET_MISSING_COMPANY_FIELDS))
+    {
+      printXML(8, "MissingAttribute", "NoCompanyFields");
     }
 
     printf("      </Missing>\n");
@@ -848,64 +944,9 @@ static void explainPGNXML(Pgn pgn)
         }
       }
 
-      if (f.lookup.function.pairEnumerator != NULL)
+      if (f.lookup.function.pairEnumerator != NULL && (!doV1 || f.unit == NULL || f.unit[0] != '='))
       {
-        switch (f.lookup.type)
-        {
-          case LOOKUP_TYPE_BIT: {
-            if (doV1)
-            {
-              printf("          <EnumBitValues>\n");
-              (f.lookup.function.bitEnumerator)(explainBitXMLv1);
-              printf("          </EnumBitValues>\n");
-            }
-            else
-            {
-              printXML(10, "LookupBitEnumeration", f.lookup.name);
-            }
-            break;
-          }
-
-          case LOOKUP_TYPE_PAIR: {
-            if (doV1 && !(f.unit && f.unit[0] == '='))
-            {
-              printf("          <EnumValues>\n");
-              (f.lookup.function.pairEnumerator)(explainPairXMLv1);
-              printf("          </EnumValues>\n");
-            }
-            else if (!doV1)
-            {
-              printXML(10, "LookupEnumeration", f.lookup.name);
-            }
-            break;
-          }
-
-          case LOOKUP_TYPE_TRIPLET: {
-            if (!doV1)
-            {
-              printXML(10, "LookupIndirectEnumeration", f.lookup.name);
-              printXMLUnsigned(10, "LookupIndirectEnumerationFieldOrder", f.lookup.val1Order);
-            }
-            break;
-          }
-
-          case LOOKUP_TYPE_FIELDTYPE: {
-            if (doV1 && !(f.unit && f.unit[0] == '='))
-            {
-              printf("          <EnumFieldTypeValues>\n");
-              (f.lookup.function.fieldtypeEnumerator)(explainFieldtypeXMLv1);
-              printf("          </EnumFieldTypeValues>\n");
-            }
-            else if (!doV1)
-            {
-              printXML(10, "LookupFieldTypeEnumeration", f.lookup.name);
-            }
-            break;
-          }
-
-          default:
-            break;
-        }
+        explainLookupFunction(&f.lookup);
       }
 
       if ((ft != NULL && ft->variableSize) || f.proprietary)
@@ -963,6 +1004,10 @@ static void explainMissingXML(void)
   printf(
       "    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "SampleData", "The PGN has not been seen in any logfiles yet");
   printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "Interval", "The default transmission interval is not known");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
+         "MissingCompanyFields",
+         "The manufacturer specific PGN seems to not contain the mandatory Company and Industry fields; this is likely a bug or at "
+         "least incompatibility in the device");
 
   printf("  </MissingEnumerations>\n");
 }

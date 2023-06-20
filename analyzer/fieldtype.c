@@ -448,4 +448,11 @@ extern void fillFieldTypeLookupField(Field *f, const char *lookup, const size_t 
   {
     fixupUnit(f);
   }
+
+  logDebug("fillFieldTypeLookupField(Field, lookup='%s', key=%zu, str='%s', ft='%s' unit='%s'\n",
+           lookup,
+           key,
+           str,
+           ft,
+           STRNULL(f->unit));
 }

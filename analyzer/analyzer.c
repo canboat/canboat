@@ -90,6 +90,7 @@ char  closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherw
 
 int    onlyPgn  = 0;
 int    onlySrc  = -1;
+int    onlyDst  = -1;
 int    clockSrc = -1;
 size_t heapSize = 0;
 
@@ -110,7 +111,7 @@ static void usage(char **argv, char **av)
   printf("Unknown or invalid argument %s\n", av[0]);
   printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
          "-format <fmt> "
-         "[-src <src> | <pgn>]] ["
+         "[-src <src> | -dst <dst> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
          "-clocksrc <src> | "
 #endif
@@ -253,6 +254,12 @@ int main(int argc, char **argv)
     else if (ac > 2 && strcasecmp(av[1], "-src") == 0)
     {
       onlySrc = strtol(av[2], 0, 10);
+      ac--;
+      av++;
+    }
+    else if (ac > 2 && strcasecmp(av[1], "-dst") == 0)
+    {
+      onlyDst = strtol(av[2], 0, 10);
       ac--;
       av++;
     }
@@ -516,6 +523,14 @@ static void printCanRaw(RawMessage *msg)
   {
     return;
   }
+  if (onlyDst >= 0 && onlyDst != msg->dst)
+  {
+    return;
+  }
+  if (onlyPgn > 0 && onlyPgn != msg->pgn)
+  {
+    return;
+  }
 
   if (showJson)
   {
@@ -647,6 +662,10 @@ static void printCanFormat(RawMessage *msg)
   Packet *p;
 
   if (onlySrc >= 0 && onlySrc != msg->src)
+  {
+    return;
+  }
+  if (onlyDst >= 0 && onlyDst != msg->dst)
   {
     return;
   }

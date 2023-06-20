@@ -170,16 +170,48 @@ limitations under the License.
   </xs:complexType>
 
   <xs:complexType name="EnumFieldType">
-    <xs:simpleContent>
-      <xs:extension base="xs:string">
-        <xs:attribute type="xs:short" name="Value" />
-        <xs:attribute type="xs:string" name="Name" />
-        <xs:attribute type="xs:string" name="FieldType" use="optional" />
-        <xs:attribute type="xs:boolean" name="Signed" use="optional" />
-        <xs:attribute type="xs:float" name="Resolution" use="optional" />
-        <xs:attribute type="xs:string" name="Unit" use="optional" />
-      </xs:extension>
-    </xs:simpleContent>
+    <xs:sequence>
+      <xs:element type="xs:string" name="LookupEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is LOOKUP, the field value has meaning derived from 
+            the lookup table mentioned here.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupIndirectEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is INDIRECT_LOOKUP, the field value has meaning derived from 
+            the lookup table mentioned here. It requires an additional first
+            value derived from the field indicated by LookupIndirectEnumerationField..
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupIndirectEnumerationFieldOrder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is INDIRECT_LOOKUP, the field value has meaning that
+            also depends on the value of the field mentioned by order in this element.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupBitEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is BITLOOKUP, the field value has to be interpreted as
+            a number of bits, with each bit forming a flag whose meaning is given in the lookup table.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="xs:unsignedShort" name="Value" />
+    <xs:attribute type="xs:string" name="Name" />
+    <xs:attribute type="xs:string" name="FieldType" use="optional" />
+    <xs:attribute type="xs:boolean" name="Signed" use="optional" />
+    <xs:attribute type="xs:float" name="Resolution" use="optional" />
+    <xs:attribute type="xs:string" name="Unit" use="optional" />
+    <xs:attribute type="xs:unsignedShort" name="Bits" use="optional" />
   </xs:complexType>
 
   <xs:complexType name="LookupFieldTypeEnumeration">

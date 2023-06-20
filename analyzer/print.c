@@ -293,19 +293,33 @@ extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t 
 
 extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
-  int64_t     value;
-  int64_t     maxValue;
-  double      a;
-  const char *unit = field->unit;
+  int64_t value;
+  int64_t maxValue;
+  double  a;
+
+  const char *unit       = field->unit;
+  double      resolution = field->resolution;
+
+  if (resolution == 0.0)
+  {
+    resolution = 1.0;
+  }
 
   if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
   {
     return true;
   }
 
-  logDebug("fieldPrintNumber <%s> resolution=%g unit='%s'\n", fieldName, field->resolution, (field->unit ? field->unit : "-"));
+  logDebug("fieldPrintNumber <%s> value=%" PRIx64 " max=%" PRIx64 " resolution=%g offset=%g unit='%s'\n",
+           fieldName,
+           value,
+           maxValue,
+           resolution,
+           field->unitOffset,
+           (field->unit ? field->unit : "None"));
   if (field->resolution == 1.0 && field->unitOffset == 0.0)
   {
+    logDebug("fieldPrintNumber <%s> print as integer %" PRId64 "\n", fieldName, value);
     mprintf("%" PRId64, value);
     if (!showJson && unit != NULL)
     {
@@ -1126,8 +1140,9 @@ extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_
   return true;
 }
 
-const Field *g_ftf    = NULL;
-int64_t      g_length = 0;
+const Field      *g_ftf    = NULL;
+const LookupInfo *g_lookup = NULL;
+int64_t           g_length = 0;
 
 extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
 {
@@ -1143,7 +1158,12 @@ extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, siz
       Field f = *g_ftf;
       f.size  = *bits;
       f.name  = fieldName;
-      r       = (f.ft->pf)(&f, fieldName, data, dataLen, startBit, bits);
+      if (g_lookup != NULL)
+      {
+        f.lookup = *g_lookup;
+      }
+      logDebug("fieldPrintKeyValue('%s') is actually a '%s' field\n", fieldName, f.ft->name);
+      r = (f.ft->pf)(&f, fieldName, data, dataLen, startBit, bits);
     }
     else
     {
@@ -1156,6 +1176,7 @@ extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, siz
   }
 
   g_ftf    = NULL;
+  g_lookup = NULL;
   g_length = 0;
 
   return r;

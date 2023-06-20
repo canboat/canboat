@@ -726,6 +726,7 @@ FieldType fieldTypeList[] = {
     {.name          = "TIME_UFIX16_MIN",
      .description   = "Time delta, 16 bits with minute resolution",
      .resolution    = 60,
+     .unit          = "s",
      .size          = 16,
      .hasSign       = False,
      .baseFieldType = "TIME"},

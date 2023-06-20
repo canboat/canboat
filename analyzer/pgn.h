@@ -37,13 +37,14 @@ limitations under the License.
 #define RES_ROTATION (1e-3 / 32.0)
 #define RES_HIRES_ROTATION (1e-6 / 32.0)
 
-typedef struct FieldType FieldType;
-typedef struct Pgn       Pgn;
+typedef struct FieldType  FieldType;
+typedef struct Pgn        Pgn;
+typedef struct LookupInfo LookupInfo;
 
 typedef void (*EnumPairCallback)(size_t value, const char *name);
 typedef void (*BitPairCallback)(size_t value, const char *name);
 typedef void (*EnumTripletCallback)(size_t value1, size_t value2, const char *name);
-typedef void (*EnumFieldtypeCallback)(size_t value, const char *name, const char *ft);
+typedef void (*EnumFieldtypeCallback)(size_t value, const char *name, const char *ft, const LookupInfo *lookup);
 
 typedef enum LookupType
 {
@@ -54,7 +55,7 @@ typedef enum LookupType
   LOOKUP_TYPE_FIELDTYPE
 } LookupType;
 
-typedef struct
+struct LookupInfo
 {
   const char *name;
   LookupType  type;
@@ -67,10 +68,9 @@ typedef struct
     void (*tripletEnumerator)(EnumTripletCallback);
     void (*fieldtypeEnumerator)(EnumFieldtypeCallback);
   } function;
-  uint8_t val1Order;
-  size_t  size;
-  size_t  max;
-} LookupInfo;
+  uint8_t val1Order; // Which field is the first field in a tripletEnumerator
+  size_t  size;      // Used in analyzer only
+};
 
 #ifdef EXPLAIN
 #define LOOKUP_PAIR_MEMBER .lookup.function.pairEnumerator
@@ -840,13 +840,14 @@ typedef struct
 
 typedef enum PacketComplete
 {
-  PACKET_COMPLETE              = 0,
-  PACKET_FIELDS_UNKNOWN        = 1,
-  PACKET_FIELD_LENGTHS_UNKNOWN = 2,
-  PACKET_RESOLUTION_UNKNOWN    = 4,
-  PACKET_LOOKUPS_UNKNOWN       = 8,
-  PACKET_NOT_SEEN              = 16,
-  PACKET_INTERVAL_UNKNOWN      = 32
+  PACKET_COMPLETE               = 0,
+  PACKET_FIELDS_UNKNOWN         = 1,
+  PACKET_FIELD_LENGTHS_UNKNOWN  = 2,
+  PACKET_RESOLUTION_UNKNOWN     = 4,
+  PACKET_LOOKUPS_UNKNOWN        = 8,
+  PACKET_NOT_SEEN               = 16,
+  PACKET_INTERVAL_UNKNOWN       = 32,
+  PACKET_MISSING_COMPANY_FIELDS = 64
 } PacketComplete;
 
 #define PACKET_INCOMPLETE (PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN)
@@ -1771,6 +1772,17 @@ Pgn pgnList[] = {
       ANGLE_U16_FIELD("Wind Datum", NULL),
       ANGLE_U16_FIELD("Rolling Average Wind Angle", NULL),
       RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS}},
+
+    {"Simnet: Magnetic Field",
+     65350,
+     PACKET_INCOMPLETE | PACKET_MISSING_COMPANY_FIELDS,
+     PACKET_SINGLE,
+     {ANGLE_I16_FIELD("A", NULL),
+      PERCENTAGE_U8_FIELD("B"),
+      ANGLE_I16_FIELD("C", NULL),
+      ANGLE_I16_FIELD("D", NULL),
+      RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS}},
 
     {"Seatalk: Pilot Heading",
@@ -6720,193 +6732,19 @@ Pgn pgnList[] = {
     {"Furuno: Multi Sats In View Extended", 130845, PACKET_INCOMPLETE, PACKET_FAST, {COMPANY(1855), END_OF_FIELDS}}
 
     ,
-    {"Simnet: Compass Heading Offset",
-     130845,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {COMPANY(1857),
-      SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
-      SIMPLE_FIELD("Unused", BYTES(3)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 0, SIMNET_TYPE),
-      UINT16_FIELD("Unused B"),
-      ANGLE_I16_FIELD("Angle", NULL),
-      UINT16_FIELD("Unused C"),
-      END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Compass Local Field",
-     130845,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
-     PACKET_FAST,
-     {COMPANY(1857),
-      SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
-      SIMPLE_FIELD("Unused", BYTES(3)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 768, SIMNET_TYPE),
-      UINT16_FIELD("Unused B"),
-      PERCENTAGE_I16_FIELD("Local field"),
-      UINT16_FIELD("Unused C"),
-      END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Compass Field Angle",
-     130845,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
-     PACKET_FAST,
-     {COMPANY(1857),
-      SIMPLE_FIELD("Message ID", 6),
-      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
-      SIMPLE_FIELD("Unused", BYTES(3)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 1024, SIMNET_TYPE),
-      UINT16_FIELD("Unused B"),
-      ANGLE_I16_FIELD("Field angle", NULL),
-      UINT16_FIELD("Unused C"),
-      END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Set Timezone",
-     130845,
-     PACKET_FIELDS_UNKNOWN,
-     PACKET_FAST,
-     {COMPANY(1857),
-      RESERVED_FIELD(BYTES(2)),
-      UINT8_FIELD("A"),
-      RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 41, SIMNET_TYPE),
-      SPARE_FIELD(BYTES(1)),
-      UINT8_FIELD("B"),
-      TIME_FIX16_MIN_FIELD("Local Offset"),
-      RESERVED_FIELD(BYTES(2)),
-      END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Set Time Format",
-     130845,
-     PACKET_FIELDS_UNKNOWN,
-     PACKET_FAST,
-     {COMPANY(1857),
-      RESERVED_FIELD(BYTES(2)),
-      UINT8_FIELD("A"),
-      RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 5160, SIMNET_TYPE),
-      SPARE_FIELD(BYTES(1)),
-      UINT8_FIELD("B"),
-      LOOKUP_FIELD("Format", BYTES(1), SIMNET_TIME_FORMAT),
-      RESERVED_FIELD(BYTES(2)),
-      END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Set Time Hour Display",
-     130845,
-     PACKET_FIELDS_UNKNOWN,
-     PACKET_FAST,
-     {COMPANY(1857),
-      RESERVED_FIELD(BYTES(2)),
-      UINT8_FIELD("A"),
-      RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 5161, SIMNET_TYPE),
-      SPARE_FIELD(BYTES(1)),
-      UINT8_FIELD("B"),
-      LOOKUP_FIELD("Format", BYTES(1), SIMNET_HOUR_DISPLAY),
-      RESERVED_FIELD(BYTES(2)),
-      END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Set Backlight Level",
-     130845,
-     PACKET_FIELDS_UNKNOWN,
-     PACKET_FAST,
-     {COMPANY(1857),
-      RESERVED_FIELD(BYTES(2)),
-      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
-      RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 4863, SIMNET_TYPE),
-      SPARE_FIELD(BYTES(1)),
-      UINT8_FIELD("A"),
-      LOOKUP_FIELD("Backlight", BYTES(1), SIMNET_BACKLIGHT_LEVEL),
-      RESERVED_FIELD(BYTES(3)),
-      END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Set Night Mode",
-     130845,
-     PACKET_FIELDS_UNKNOWN,
-     PACKET_FAST,
-     {COMPANY(1857),
-      RESERVED_FIELD(BYTES(2)),
-      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
-      RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 9983, SIMNET_TYPE),
-      SPARE_FIELD(BYTES(1)),
-      UINT8_FIELD("A"),
-      LOOKUP_FIELD("Night mode", BYTES(1), SIMNET_NIGHT_MODE),
-      RESERVED_FIELD(BYTES(3)),
-      END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Set Night Color",
-     130845,
-     PACKET_FIELDS_UNKNOWN,
-     PACKET_FAST,
-     {COMPANY(1857),
-      RESERVED_FIELD(BYTES(2)),
-      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
-      RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 44079, SIMNET_TYPE),
-      SPARE_FIELD(BYTES(1)),
-      UINT8_FIELD("A"),
-      LOOKUP_FIELD("Night mode color", BYTES(1), SIMNET_NIGHT_MODE_COLOR),
-      RESERVED_FIELD(BYTES(3)),
-      END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Set Invert Day Color",
-     130845,
-     PACKET_FIELDS_UNKNOWN,
-     PACKET_FAST,
-     {COMPANY(1857),
-      RESERVED_FIELD(BYTES(2)),
-      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
-      RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 55087, SIMNET_TYPE),
-      SPARE_FIELD(BYTES(1)),
-      UINT8_FIELD("A"),
-      LOOKUP_FIELD("Invert", BYTES(1), YES_NO),
-      RESERVED_FIELD(BYTES(3)),
-      END_OF_FIELDS}}
-
-    ,
-    {"Simnet: Parameter Report",
+    {"Simnet: Key Value",
      130845,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
-      UINT8_DESC_FIELD("B", "00, 01 or FF observed"),
+      LOOKUP_FIELD("Repeat Indicator", BYTES(1), REPEAT_INDICATOR),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       UINT8_DESC_FIELD("D", "Various values observed"),
-      LOOKUP_FIELD("Type", BYTES(2), SIMNET_TYPE),
+      LOOKUP_FIELDTYPE_FIELD("Key", BYTES(2), SIMNET_KEY_VALUE),
       SPARE_FIELD(BYTES(1)),
-      UINT8_DESC_FIELD("G", "Some length indicator?"),
-      BINARY_FIELD("Data", BYTES(64), "0 to 64 bytes of data"),
-      END_OF_FIELDS},
-     .interval = UINT16_MAX}
-
-    ,
-    {"Simnet: Set Alert Bitfield",
-     130846,
-     PACKET_FIELDS_UNKNOWN,
-     PACKET_FAST,
-     {COMPANY(1857),
-      UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
-      UINT8_DESC_FIELD("B", "00, 01 or FF observed"),
-      LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
-      UINT16_DESC_FIELD("D", "Various values observed"),
-      MATCH_LOOKUP_FIELD("Type", BYTES(2), 32789, SIMNET_TYPE),
-      UINT8_DESC_FIELD("F", "00 and 01 observed"),
-      UINT8_DESC_FIELD("Length", "Length of bitfield"),
-      BITLOOKUP_FIELD("Alerts", BYTES(8), SIMNET_ALERT_BITFIELD),
+      SIMPLE_DESC_FIELD("Length", BYTES(1), "Length of data field"),
+      KEY_VALUE_FIELD("Value", "Data value"),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
@@ -6920,10 +6758,10 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("B", "00, 01 or FF observed"),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       UINT16_DESC_FIELD("D", "Various values observed"),
-      LOOKUP_FIELD("Type", BYTES(2), SIMNET_TYPE),
-      LOOKUP_FIELD("Set", BYTES(1), YES_NO),
-      UINT8_DESC_FIELD("Data Length", "Number of significant bytes in the data field"),
-      BINARY_FIELD("Data", BYTES(64), "0 to 64 bytes of data"),
+      LOOKUP_FIELDTYPE_FIELD("Key", BYTES(2), SIMNET_KEY_VALUE),
+      SPARE_FIELD(BYTES(1)),
+      SIMPLE_DESC_FIELD("Length", BYTES(1), "Length of data field"),
+      KEY_VALUE_FIELD("Value", "Data value"),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 

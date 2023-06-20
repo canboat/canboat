@@ -192,6 +192,10 @@ int writeSerial(SOCKET handle, const uint8_t *data, size_t len);
 #define xstr(s) str(s)
 #define str(s) #s
 
+// Bitfield operations and tests
+
+#define bit(a, b) (((a) & (b)) != 0)
+
 /*
  * Notes on the NMEA 2000 packet structure
  * ---------------------------------------

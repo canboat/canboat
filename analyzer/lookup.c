@@ -54,6 +54,18 @@ limitations under the License.
 */
 
 #ifdef EXPLAIN
+#define LOOKUP_PAIR_FUNCTION function.pairEnumerator
+#define LOOKUP_BIT_FUNCTION function.bitEnumerator
+#define LOOKUP_TRIPLET_FUNCTION function.tripletEnumerator
+#define LOOKUP_FIELDTYPE_FUNCTION function.fieldtypeEnumerator
+#else
+#define LOOKUP_PAIR_FUNCTION function.pair
+#define LOOKUP_BIT_FUNCTION function.pair
+#define LOOKUP_TRIPLET_FUNCTION function.triplet
+#define LOOKUP_FIELDTYPE_FUNCTION function.pair
+#endif
+
+#ifdef EXPLAIN
 
 // Generate functions that are usable as callbacks that will loop over all
 // possible values.
@@ -76,7 +88,16 @@ limitations under the License.
 #define LOOKUP_TYPE_FIELDTYPE(type, length)   \
   void lookup##type(EnumFieldtypeCallback cb) \
   {
-#define LOOKUP_FIELDTYPE(type, n, str, ft) (cb)(n, str, ft);
+#define LOOKUP_FIELDTYPE(ftype, n, str, ft) (cb)(n, str, ft, NULL);
+#define LOOKUP_FIELDTYPE_LOOKUP(ftype, n, str, ft, bits, lt, ln) \
+  {                                                              \
+    static LookupInfo l;                                         \
+    l.name                   = xstr(ln);                         \
+    l.size                   = bits;                             \
+    l.type                   = LOOKUP_TYPE_##lt;                 \
+    l.LOOKUP_##lt##_FUNCTION = lookup##ln;                       \
+    (cb)(n, str, ft, &l);                                        \
+  }
 
 #define LOOKUP_END }
 
@@ -127,15 +148,32 @@ limitations under the License.
   {                                         \
     switch (val)                            \
     {
-#define LOOKUP_FIELDTYPE(type, n, str, ft)                  \
-  case n: {                                                 \
-    static Field f;                                         \
-    if (f.name == NULL)                                     \
-    {                                                       \
-      fillFieldTypeLookupField(&f, xstr(type), n, str, ft); \
-    }                                                       \
-    g_ftf = &f;                                             \
-    return str;                                             \
+#define LOOKUP_FIELDTYPE(ftype, n, str, ft)                  \
+  case n: {                                                  \
+    static Field f;                                          \
+    if (f.name == NULL)                                      \
+    {                                                        \
+      fillFieldTypeLookupField(&f, xstr(ftype), n, str, ft); \
+    }                                                        \
+    g_ftf = &f;                                              \
+    return str;                                              \
+  }
+#define LOOKUP_FIELDTYPE_LOOKUP(ftype, n, str, ft, bits, lt, ln) \
+  case n: {                                                      \
+    static Field      f;                                         \
+    static LookupInfo l;                                         \
+    l.name                   = xstr(ln);                         \
+    f.size                   = bits;                             \
+    l.size                   = bits;                             \
+    l.type                   = LOOKUP_TYPE_##lt;                 \
+    l.LOOKUP_##lt##_FUNCTION = lookup##ln;                       \
+    if (f.name == NULL)                                          \
+    {                                                            \
+      fillFieldTypeLookupField(&f, xstr(ftype), n, str, ft);     \
+    }                                                            \
+    g_ftf    = &f;                                               \
+    g_lookup = &l;                                               \
+    return str;                                                  \
   }
 
 #define LOOKUP_END \

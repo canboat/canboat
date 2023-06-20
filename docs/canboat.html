@@ -1829,6 +1829,30 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65350">0xFF46:
+            PGN 65350
+            - Simnet: Magnetic Field</h3><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li><li/></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 5 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>A</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>B</td><td/><td>%<div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>C</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>D</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65359">0xFF4F:
             PGN 65359
             - Seatalk: Pilot Heading</h3><p>
@@ -13107,412 +13131,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
             PGN 130845
-            - Simnet: Compass Heading Offset</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>0</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            14
-            bytes long and contains 10 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
-                  
-                      lookup
-                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td></tr><tr><td>6</td><td>Unused</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Type</td><td>0:
-                  Heading Offset</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Angle</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Unused C</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
-            PGN 130845
-            - Simnet: Compass Local Field</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>768</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            14
-            bytes long and contains 10 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
-                  
-                      lookup
-                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td></tr><tr><td>6</td><td>Unused</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Type</td><td>768:
-                  Local field</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Local field</td><td/><td>0.004 %<div class="xs">-131.068 .. 131.06</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Unused C</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
-            PGN 130845
-            - Simnet: Compass Field Angle</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>1024</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            14
-            bytes long and contains 10 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
-                  
-                      lookup
-                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td></tr><tr><td>6</td><td>Unused</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Type</td><td>1024:
-                  Field angle</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Field angle</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Unused C</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
-            PGN 130845
-            - Simnet: Set Timezone</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>41</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            14
-            bytes long and contains 11 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>7</td><td>Type</td><td>41:
-                  Timezone offset</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Local Offset</td><td/><td>60 <a href="#pq-TIME">s</a><div class="xs">-1966020 .. 1965900</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-TIME">TIME</a></td></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
-            PGN 130845
-            - Simnet: Set Time Format</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>5160</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            13
-            bytes long and contains 11 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>7</td><td>Type</td><td>5160:
-                  Time hour display</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Format</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TIME_FORMAT">SIMNET_TIME_FORMAT</a></td></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
-            PGN 130845
-            - Simnet: Set Time Hour Display</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>5161</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            13
-            bytes long and contains 11 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>7</td><td>Type</td><td>5161:
-                  Time format</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Format</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_HOUR_DISPLAY">SIMNET_HOUR_DISPLAY</a></td></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
-            PGN 130845
-            - Simnet: Set Backlight Level</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>4863</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            14
-            bytes long and contains 11 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>Display Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>7</td><td>Type</td><td>4863:
-                  Backlight level</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Backlight</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_BACKLIGHT_LEVEL">SIMNET_BACKLIGHT_LEVEL</a></td></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>24 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
-            PGN 130845
-            - Simnet: Set Night Mode</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>9983</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            14
-            bytes long and contains 11 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>Display Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>7</td><td>Type</td><td>9983:
-                  Night mode</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Night mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_NIGHT_MODE">SIMNET_NIGHT_MODE</a></td></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>24 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
-            PGN 130845
-            - Simnet: Set Night Color</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>44079</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            14
-            bytes long and contains 11 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>Display Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>7</td><td>Type</td><td>44079:
-                  Night mode color</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Night mode color</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_NIGHT_MODE_COLOR">SIMNET_NIGHT_MODE_COLOR</a></td></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>24 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
-            PGN 130845
-            - Simnet: Set Invert Day Color</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>55087</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            14
-            bytes long and contains 11 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>5</td><td>Display Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>7</td><td>Type</td><td>55087:
-                  Day mode invert</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>9</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Invert</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>24 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-130845">0x1FF1D:
-            PGN 130845
-            - Simnet: Parameter Report</h3><p>
+            - Simnet: Key Value</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -13520,7 +13139,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            74
+            
+              at least 10
             bytes long and contains 11 fields.
 
             
@@ -13537,73 +13157,27 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>B</td><td>00, 01 or FF observed</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td></tr><tr><td>7</td><td>D</td><td>Various values observed</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Type</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Key</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>10</td><td>G</td><td>Some length indicator?</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE</a>
+                      that defines the next variable field's type.
+                    </td></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>10</td><td>Length</td><td>Length of data field</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Data</td><td>0 to 64 bytes of data</td><td/><td>512 bits
-                  <a href="#ft-BINARY">BINARY</a></td></tr></table><h3 id="pgn-130846">0x1FF1E:
-            PGN 130846
-            - Simnet: Set Alert Bitfield</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Type</td><td>32789</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            19
-            bytes long and contains 11 fields.
-
-            
-              It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
-                  Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>B</td><td>00, 01 or FF observed</td><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td></tr><tr><td>7</td><td>D</td><td>Various values observed</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Type</td><td>32789:
-                  Alert bits</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>9</td><td>F</td><td>00 and 01 observed</td><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Length</td><td>Length of bitfield</td><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Alerts</td><td/><td><div class="xs">0 .. 0</div></td><td>64 bits
-                  
-                      bitfield
-                      <a href="#lookupbit-SIMNET_ALERT_BITFIELD">SIMNET_ALERT_BITFIELD</a></td></tr></table><h3 id="pgn-130846">0x1FF1E:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Value</td><td>Data value</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-KEY_VALUE">KEY_VALUE</a></td></tr></table><h3 id="pgn-130846">0x1FF1E:
             PGN 130846
             - Simnet: Parameter Set</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13613,7 +13187,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            75
+            
+              at least 11
             bytes long and contains 11 fields.
 
             
@@ -13639,17 +13214,18 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td></tr><tr><td>7</td><td>D</td><td>Various values observed</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Type</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Key</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_TYPE">SIMNET_TYPE</a></td></tr><tr><td>9</td><td>Set</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td></tr><tr><td>10</td><td>Data Length</td><td>Number of significant bytes in the data field</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE</a>
+                      that defines the next variable field's type.
+                    </td></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>10</td><td>Length</td><td>Length of data field</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Data</td><td>0 to 64 bytes of data</td><td/><td>512 bits
-                  <a href="#ft-BINARY">BINARY</a></td></tr></table><h3 id="pgn-130846">0x1FF1E:
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Value</td><td>Data value</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-KEY_VALUE">KEY_VALUE</a></td></tr></table><h3 id="pgn-130846">0x1FF1E:
             PGN 130846
             - Furuno: Motion Sensor Status Extended</h3><p>
               This PGN description applies when the following field(s) match:
@@ -14466,9 +14042,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Manual</td></tr><tr><td>16</td><td>Automatic</td></tr></table><h3 id="lookup-SIMNET_COMMAND">SIMNET_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>50</td><td>Text</td></tr></table><h3 id="lookup-SIMNET_TYPE">SIMNET_TYPE
-        (0 - 65535)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Heading Offset</td></tr><tr><td>41</td><td>Timezone offset</td></tr><tr><td>260</td><td>True wind high</td></tr><tr><td>264</td><td>Deep water</td></tr><tr><td>516</td><td>True wind low</td></tr><tr><td>517</td><td>Low boat speed</td></tr><tr><td>520</td><td>Shallow water</td></tr><tr><td>768</td><td>Local field</td></tr><tr><td>1024</td><td>Field angle</td></tr><tr><td>1800</td><td>Anchor depth</td></tr><tr><td>4863</td><td>Backlight level</td></tr><tr><td>5160</td><td>Time hour display</td></tr><tr><td>5161</td><td>Time format</td></tr><tr><td>9983</td><td>Night mode</td></tr><tr><td>11524</td><td>True wind shift</td></tr><tr><td>22296</td><td>AP low boat speed</td></tr><tr><td>32789</td><td>Alert bits</td></tr><tr><td>44079</td><td>Night mode color</td></tr><tr><td>55087</td><td>Day mode invert</td></tr></table><h3 id="lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>50</td><td>Text</td></tr></table><h3 id="lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Alarm</td></tr><tr><td>2</td><td>AP command</td></tr><tr><td>255</td><td>Autopilot</td></tr></table><h3 id="lookup-SIMNET_NIGHT_MODE">SIMNET_NIGHT_MODE
         (0 - 255)
@@ -14564,307 +14138,530 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 2^1-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Song</td></tr><tr><td>1</td><td>Play queue</td></tr></table><h3 id="lookupbit-ENTERTAINMENT_SHUFFLE_BITFIELD">ENTERTAINMENT_SHUFFLE_BITFIELD
         (0 - 2^1-1)
-      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Play queue</td></tr><tr><td>1</td><td>All</td></tr></table><h2 id="lookupfieldtype-enumerations">Lookup with FieldType enumerations</h2><h3 id="lookup-BANDG_KEY_VALUE">BANDG_KEY_VALUE
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Play queue</td></tr><tr><td>1</td><td>All</td></tr></table><h2 id="lookupfieldtype-enumerations">Lookup with FieldType enumerations</h2><h3 id="lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE
+        (0 - 65535)
+      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>0</td><td>Heading Offset</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>41</td><td>Timezone offset</td><td>60 </td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>260</td><td>True wind high</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>264</td><td>Deep water</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>516</td><td>True wind low</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>517</td><td>Low boat speed</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>520</td><td>Shallow water</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>768</td><td>Local field</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1024</td><td>Field angle</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1800</td><td>Anchor depth</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4863</td><td>Backlight level</td><td> %</td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5160</td><td>Time hour display</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5161</td><td>Time format</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9983</td><td>Night mode</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11524</td><td>True wind shift</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>22296</td><td>AP low boat speed</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>32789</td><td>Alert bits</td><td> </td><td>16 bits 
+              
+                  bitfield
+                  <a href="#lookupbit-SIMNET_ALERT_BITFIELD">SIMNET_ALERT_BITFIELD</a></td></tr><tr><td>44079</td><td>Night mode color</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>55087</td><td>Day mode invert</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-BANDG_KEY_VALUE">BANDG_KEY_VALUE
         (0 - 511)
-      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>0</td><td>Altitude</td><td> </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Rudder Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>16</td><td>User 5</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>17</td><td>User 6</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>18</td><td>User 7</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>19</td><td>User 8</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>20</td><td>User 9</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>21</td><td>User 10</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>22</td><td>User 11</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>23</td><td>User 12</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>24</td><td>User 13</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>25</td><td>User 14</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>26</td><td>User 15</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>27</td><td>User 16</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>28</td><td>Outside Temperature</td><td>0.01 K</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>29</td><td>Outside Temperature</td><td>0.01 K</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>30</td><td>Water Temperature</td><td>0.01 K</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>31</td><td>Water Temperature</td><td>0.01 K</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>50</td><td>Tacking Performance</td><td>0.1 %</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>52</td><td>Attitude Roll</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>53</td><td>Optimum Wind Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>56</td><td>User 1</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>57</td><td>User 2</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>58</td><td>User 3</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>59</td><td>User 4</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60</td><td>Roll Rate</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>64</td><td>Forestay</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>65</td><td>Water Speed</td><td>0.01 m/s</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>77</td><td>Wind Speed Apparent</td><td>0.01 m/s</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>79</td><td>Wind Speed Apparent</td><td>0.01 m/s</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>80</td><td>Average True Wind Direction</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>81</td><td>Wind Angle Apparent</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>83</td><td>Target TWA</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>85</td><td>Wind Speed True</td><td>0.01 m/s</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>86</td><td>Wind Speed True</td><td>0.01 m/s</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>89</td><td>Wind Angle True</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>100</td><td>Unknown</td><td> </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>102</td><td>Keel Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>103</td><td>Canard Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>104</td><td>Keel Trim Tab Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>105</td><td>Course</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>109</td><td>Wind Direction</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>111</td><td>Next Leg AWA</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>113</td><td>Next Leg AWS</td><td>0.01 m/s</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>117</td><td>Race Timer</td><td>0.001 </td><td><a href="#ft-TIME">TIME</a></td></tr><tr><td>124</td><td>Polar Performance</td><td>0.1 %</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>125</td><td>Target Boat Speed</td><td>0.01 m/s</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>126</td><td>Polar Speed</td><td>0.01 m/s</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>127</td><td>VMG to Wind</td><td>0.01 m/s</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>129</td><td>DR Distance</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>130</td><td>Leeway Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>131</td><td>Current Drift</td><td>0.01 m/s</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>132</td><td>Current Set</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>135</td><td>Barometric Pressure</td><td>100 Pa</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>152</td><td>Distance to Start Line</td><td>0.01 m</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>154</td><td>Heading on Opposite Tack</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>155</td><td>Attitude Pitch</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>156</td><td>Mast Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>157</td><td>Wind Angle to Mast</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>158</td><td>Pitch Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>163</td><td>Daggerboard Position</td><td> </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>164</td><td>Boom Position</td><td> </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>185</td><td>MOB DR Bearing</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>186</td><td>MOB DR Range</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>194</td><td>Depth</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>195</td><td>Depth</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>199</td><td>Aft Depth</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>205</td><td>Odometer</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>207</td><td>Trip Distance</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>211</td><td>DR Bearing</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>233</td><td>Course Over Ground</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>235</td><td>Speed Over Ground</td><td>0.01 m/s</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>239</td><td>Remote 0</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>240</td><td>Remote 1</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>241</td><td>Remote 2</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>242</td><td>Remote 3</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>243</td><td>Remote 4</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>244</td><td>Remote 5</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>245</td><td>Remote 6</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>246</td><td>Remote 7</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>247</td><td>Remote 8</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>248</td><td>Remote 9</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>256</td><td>Layline Time</td><td>0.001 </td><td><a href="#ft-TIME">TIME</a></td></tr><tr><td>258</td><td>Layline Distance</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>259</td><td>Layline Distance</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>260</td><td>Sailing Time to Waypoint</td><td>0.001 </td><td><a href="#ft-TIME">TIME</a></td></tr><tr><td>261</td><td>Sailing Distance to Waypoint</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>262</td><td>Sailing ETA</td><td>0.001 </td><td><a href="#ft-TIME">TIME</a></td></tr><tr><td>265</td><td>Trip Time</td><td>0.001 </td><td><a href="#ft-TIME">TIME</a></td></tr><tr><td>270</td><td>Bow(?) Latitude</td><td>1e-07 deg</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>271</td><td>Bow(?) Longitude</td><td>1e-07 deg</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>272</td><td>Start Line Bearing</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>273</td><td>Start Line Bias</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>274</td><td>Distance to Start Line Port</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>275</td><td>Distance to Start Line Starboard</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>280</td><td>Bias Advantage in Boat Lengths</td><td>0.1 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>281</td><td>Distance to Start Line in Boat Lengths</td><td>0.1 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>282</td><td>Backstay</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>283</td><td>Boom Vang</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>284</td><td>Chain Length</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>285</td><td>VMG Performance</td><td>0.1 %</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>286</td><td>Inner Forestay Load</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>287</td><td>Inner Forestay Halyard Load</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>288</td><td>Jib Furl</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>289</td><td>Jib Halyard Load</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>290</td><td>Outhaul Load</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>291</td><td>Plow Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>292</td><td>Cunningham</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>293</td><td>Jacuzzi Temperature</td><td>0.01 K</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>294</td><td>Pool Temperature</td><td>0.01 K</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>296</td><td>Keel Draught</td><td>0.01 m</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>297</td><td>Boom Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>298</td><td>Code Zero Load</td><td>0.001 </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>301</td><td>Distance Behind Start Line</td><td>0.01 m</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>302</td><td>Distance Behind Start Line in Boat Lengths</td><td>0.1 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>305</td><td>Bias Advantage</td><td>0.01 m</td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>306</td><td>Opposite Tack COG</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>307</td><td>Opposite Tack Target Heading</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>308</td><td>Mast Rake</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>309</td><td>Next Leg Bearing</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>310</td><td>Next Leg Target Speed</td><td>0.01 m/s</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>311</td><td>Ground Wind Direction</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>312</td><td>Ground Wind Speed</td><td>0.01 m/s</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>313</td><td>Mast Cant Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>314</td><td>Rudder Toe In</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>315</td><td>Daggerboard Port</td><td> </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>316</td><td>Daggerboard Starboard</td><td> </td><td>
-                  unsigned
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>317</td><td>User 17</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>318</td><td>User 18</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>319</td><td>User 19</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>320</td><td>User 20</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>321</td><td>User 21</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>322</td><td>User 22</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>323</td><td>User 23</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>324</td><td>User 24</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>325</td><td>User 25</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>326</td><td>User 26</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>327</td><td>User 27</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>328</td><td>User 28</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>329</td><td>User 29</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>330</td><td>User 30</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>331</td><td>User 31</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>332</td><td>User 32</td><td>0.01 </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>336</td><td>Average True Wind Direction</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>337</td><td>Wind Phase</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>338</td><td>Wind Lift</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>380</td><td>Active Perf Mode</td><td> </td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>381</td><td>Gust Bear Away</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>382</td><td>TWS Bear Away</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>383</td><td>Heel Compensation</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>384</td><td>Pilot Net Course</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>385</td><td>Pilot Target Wind Angle</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>386</td><td>Pilot Weather Helm</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>387</td><td>Pilot Mean Heel</td><td>0.0001 rad</td><td>
-                  signed
-                <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h2 id="notes">Notes</h2><h3 id="offset">Excess-K offset</h3><p>
+      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>0</td><td>Altitude</td><td> </td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Rudder Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>16</td><td>User 5</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>17</td><td>User 6</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>18</td><td>User 7</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>19</td><td>User 8</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>20</td><td>User 9</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>21</td><td>User 10</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>22</td><td>User 11</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>23</td><td>User 12</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>24</td><td>User 13</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>25</td><td>User 14</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>26</td><td>User 15</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>27</td><td>User 16</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>28</td><td>Outside Temperature</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>29</td><td>Outside Temperature</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>30</td><td>Water Temperature</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>31</td><td>Water Temperature</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>50</td><td>Tacking Performance</td><td>0.1 %</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>52</td><td>Attitude Roll</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>53</td><td>Optimum Wind Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>56</td><td>User 1</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>57</td><td>User 2</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>58</td><td>User 3</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>59</td><td>User 4</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60</td><td>Roll Rate</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>64</td><td>Forestay</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>65</td><td>Water Speed</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>77</td><td>Wind Speed Apparent</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>79</td><td>Wind Speed Apparent</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>80</td><td>Average True Wind Direction</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>81</td><td>Wind Angle Apparent</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>83</td><td>Target TWA</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>85</td><td>Wind Speed True</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>86</td><td>Wind Speed True</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>89</td><td>Wind Angle True</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>100</td><td>Unknown</td><td> </td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>102</td><td>Keel Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>103</td><td>Canard Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>104</td><td>Keel Trim Tab Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>105</td><td>Course</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>109</td><td>Wind Direction</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>111</td><td>Next Leg AWA</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>113</td><td>Next Leg AWS</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>117</td><td>Race Timer</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>124</td><td>Polar Performance</td><td>0.1 %</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>125</td><td>Target Boat Speed</td><td>0.01 m/s</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>126</td><td>Polar Speed</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>127</td><td>VMG to Wind</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>129</td><td>DR Distance</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>130</td><td>Leeway Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>131</td><td>Current Drift</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>132</td><td>Current Set</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>135</td><td>Barometric Pressure</td><td>100 Pa</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>152</td><td>Distance to Start Line</td><td>0.01 m</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>154</td><td>Heading on Opposite Tack</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>155</td><td>Attitude Pitch</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>156</td><td>Mast Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>157</td><td>Wind Angle to Mast</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>158</td><td>Pitch Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>163</td><td>Daggerboard Position</td><td> </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>164</td><td>Boom Position</td><td> </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>185</td><td>MOB DR Bearing</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>186</td><td>MOB DR Range</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>194</td><td>Depth</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>195</td><td>Depth</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>199</td><td>Aft Depth</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>205</td><td>Odometer</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>207</td><td>Trip Distance</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>211</td><td>DR Bearing</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>233</td><td>Course Over Ground</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>235</td><td>Speed Over Ground</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>239</td><td>Remote 0</td><td>0.001 </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>240</td><td>Remote 1</td><td>0.001 </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>241</td><td>Remote 2</td><td>0.001 </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>242</td><td>Remote 3</td><td>0.001 </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>243</td><td>Remote 4</td><td>0.001 </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>244</td><td>Remote 5</td><td>0.001 </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>245</td><td>Remote 6</td><td>0.001 </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>246</td><td>Remote 7</td><td>0.001 </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>247</td><td>Remote 8</td><td>0.001 </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>248</td><td>Remote 9</td><td>0.001 </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>256</td><td>Layline Time</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>258</td><td>Layline Distance</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>259</td><td>Layline Distance</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>260</td><td>Sailing Time to Waypoint</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>261</td><td>Sailing Distance to Waypoint</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>262</td><td>Sailing ETA</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>265</td><td>Trip Time</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>270</td><td>Bow(?) Latitude</td><td>1e-07 deg</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>271</td><td>Bow(?) Longitude</td><td>1e-07 deg</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>272</td><td>Start Line Bearing</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>273</td><td>Start Line Bias</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>274</td><td>Distance to Start Line Port</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>275</td><td>Distance to Start Line Starboard</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>280</td><td>Bias Advantage in Boat Lengths</td><td>0.1 </td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>281</td><td>Distance to Start Line in Boat Lengths</td><td>0.1 </td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>282</td><td>Backstay</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>283</td><td>Boom Vang</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>284</td><td>Chain Length</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>285</td><td>VMG Performance</td><td>0.1 %</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>286</td><td>Inner Forestay Load</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>287</td><td>Inner Forestay Halyard Load</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>288</td><td>Jib Furl</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>289</td><td>Jib Halyard Load</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>290</td><td>Outhaul Load</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>291</td><td>Plow Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>292</td><td>Cunningham</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>293</td><td>Jacuzzi Temperature</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>294</td><td>Pool Temperature</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>296</td><td>Keel Draught</td><td>0.01 m</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>297</td><td>Boom Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>298</td><td>Code Zero Load</td><td>0.001 </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>301</td><td>Distance Behind Start Line</td><td>0.01 m</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>302</td><td>Distance Behind Start Line in Boat Lengths</td><td>0.1 </td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>305</td><td>Bias Advantage</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>306</td><td>Opposite Tack COG</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>307</td><td>Opposite Tack Target Heading</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>308</td><td>Mast Rake</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>309</td><td>Next Leg Bearing</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>310</td><td>Next Leg Target Speed</td><td>0.01 m/s</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>311</td><td>Ground Wind Direction</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>312</td><td>Ground Wind Speed</td><td>0.01 m/s</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>313</td><td>Mast Cant Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>314</td><td>Rudder Toe In</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>315</td><td>Daggerboard Port</td><td> </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>316</td><td>Daggerboard Starboard</td><td> </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>317</td><td>User 17</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>318</td><td>User 18</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>319</td><td>User 19</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>320</td><td>User 20</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>321</td><td>User 21</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>322</td><td>User 22</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>323</td><td>User 23</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>324</td><td>User 24</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>325</td><td>User 25</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>326</td><td>User 26</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>327</td><td>User 27</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>328</td><td>User 28</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>329</td><td>User 29</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>330</td><td>User 30</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>331</td><td>User 31</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>332</td><td>User 32</td><td>0.01 </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>336</td><td>Average True Wind Direction</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>337</td><td>Wind Phase</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>338</td><td>Wind Lift</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>380</td><td>Active Perf Mode</td><td> </td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>381</td><td>Gust Bear Away</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>382</td><td>TWS Bear Away</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>383</td><td>Heel Compensation</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>384</td><td>Pilot Net Course</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>385</td><td>Pilot Target Wind Angle</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>386</td><td>Pilot Weather Helm</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>387</td><td>Pilot Mean Heel</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h2 id="notes">Notes</h2><h3 id="offset">Excess-K offset</h3><p>
             Some fields are not stored as a straight signed two's complement binary number,
             but as an binary number with an offset.
           </p><p>
