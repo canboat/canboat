@@ -1212,7 +1212,12 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
          "</PGNDefinitions>\n");
 }
 
-extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintVariable(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits)
 {
   return false;
 }

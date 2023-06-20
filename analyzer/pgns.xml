@@ -45252,7 +45252,7 @@ limitations under the License.
             <EnumFieldType Value='113' Name='Next Leg AWS' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='117' Name='Race Timer' FieldType='Time' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='124' Name='Polar Performance' FieldType='Number' Signed='true'
  Resolution='0.1' Unit='%' Bits='16'/>
             <EnumFieldType Value='125' Name='Target Boat Speed' FieldType='Number' Signed='true'
@@ -45328,19 +45328,19 @@ limitations under the License.
             <EnumFieldType Value='248' Name='Remote 9' FieldType='Number' Signed='false'
  Resolution='0.001' Bits='16'/>
             <EnumFieldType Value='256' Name='Layline Time' FieldType='Time' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='258' Name='Layline Distance' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
             <EnumFieldType Value='259' Name='Layline Distance' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
             <EnumFieldType Value='260' Name='Sailing Time to Waypoint' FieldType='Time' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='261' Name='Sailing Distance to Waypoint' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
             <EnumFieldType Value='262' Name='Sailing ETA' FieldType='Time' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='265' Name='Trip Time' FieldType='Time' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='270' Name='Bow(?) Latitude' FieldType='Latitude' Signed='true'
  Resolution='1e-07' Unit='deg' Bits='32'/>
             <EnumFieldType Value='271' Name='Bow(?) Longitude' FieldType='Latitude' Signed='true'
@@ -46147,7 +46147,7 @@ limitations under the License.
             <EnumFieldType Value='113' Name='Next Leg AWS' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='117' Name='Race Timer' FieldType='Time' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='124' Name='Polar Performance' FieldType='Number' Signed='true'
  Resolution='0.1' Unit='%' Bits='16'/>
             <EnumFieldType Value='125' Name='Target Boat Speed' FieldType='Number' Signed='true'
@@ -46223,19 +46223,19 @@ limitations under the License.
             <EnumFieldType Value='248' Name='Remote 9' FieldType='Number' Signed='false'
  Resolution='0.001' Bits='16'/>
             <EnumFieldType Value='256' Name='Layline Time' FieldType='Time' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='258' Name='Layline Distance' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
             <EnumFieldType Value='259' Name='Layline Distance' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
             <EnumFieldType Value='260' Name='Sailing Time to Waypoint' FieldType='Time' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='261' Name='Sailing Distance to Waypoint' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
             <EnumFieldType Value='262' Name='Sailing ETA' FieldType='Time' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='265' Name='Trip Time' FieldType='Time' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='270' Name='Bow(?) Latitude' FieldType='Latitude' Signed='true'
  Resolution='1e-07' Unit='deg' Bits='32'/>
             <EnumFieldType Value='271' Name='Bow(?) Longitude' FieldType='Latitude' Signed='true'
@@ -48269,17 +48269,13 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>d</Id>
-          <Name>D</Name>
-          <Description>Various values observed</Description>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
@@ -48297,7 +48293,7 @@ limitations under the License.
             <EnumFieldType Value='0' Name='Heading Offset' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
             <EnumFieldType Value='41' Name='Timezone offset' FieldType='Integer' Signed='true'
- Resolution='60' Bits='16'/>
+ Resolution='60' Unit='s' Bits='16'/>
             <EnumFieldType Value='260' Name='True wind high' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='264' Name='Deep water' FieldType='Number' Signed='false'
@@ -48308,10 +48304,10 @@ limitations under the License.
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='520' Name='Shallow water' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='768' Name='Local field' FieldType='Number' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='1024' Name='Field angle' FieldType='Number' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
+            <EnumFieldType Value='768' Name='Local field' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad' Bits='16'/>
+            <EnumFieldType Value='1024' Name='Field angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad' Bits='16'/>
             <EnumFieldType Value='1800' Name='Anchor depth' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='4863' Name='Backlight level' FieldType='Integer' Signed='false'
@@ -48345,8 +48341,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>length</Id>
-          <Name>Length</Name>
+          <Id>minlength</Id>
+          <Name>MinLength</Name>
           <Description>Length of data field</Description>
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>
@@ -48500,7 +48496,7 @@ limitations under the License.
             <EnumFieldType Value='0' Name='Heading Offset' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
             <EnumFieldType Value='41' Name='Timezone offset' FieldType='Integer' Signed='true'
- Resolution='60' Bits='16'/>
+ Resolution='60' Unit='s' Bits='16'/>
             <EnumFieldType Value='260' Name='True wind high' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='264' Name='Deep water' FieldType='Number' Signed='false'
@@ -48511,10 +48507,10 @@ limitations under the License.
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='520' Name='Shallow water' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='768' Name='Local field' FieldType='Number' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='1024' Name='Field angle' FieldType='Number' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
+            <EnumFieldType Value='768' Name='Local field' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad' Bits='16'/>
+            <EnumFieldType Value='1024' Name='Field angle' FieldType='Number' Signed='true'
+ Resolution='0.0001' Unit='rad' Bits='16'/>
             <EnumFieldType Value='1800' Name='Anchor depth' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='4863' Name='Backlight level' FieldType='Integer' Signed='false'

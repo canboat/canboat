@@ -901,28 +901,28 @@ typedef struct PgnRange
 } PgnRange;
 
 // Returns the first pgn that matches the given id, or NULL if not found.
-Pgn *searchForPgn(int pgn);
+const Pgn *searchForPgn(int pgn);
 
 // Returns the catch-all PGN that matches the given id.
-Pgn *searchForUnknownPgn(int pgnId);
+const Pgn *searchForUnknownPgn(int pgnId);
 
 // Returns a pointer (potentially invalid) to the first pgn that does not match "first".
-Pgn *endPgn(Pgn *first);
+const Pgn *endPgn(const Pgn *first);
 
-Pgn *getMatchingPgn(int pgnId, uint8_t *dataStart, int length);
+const Pgn *getMatchingPgn(int pgnId, const uint8_t *dataStart, int length);
 
-bool printPgn(RawMessage *msg, uint8_t *dataStart, int length, bool showData, bool showJson);
+bool printPgn(const RawMessage *msg, const uint8_t *dataStart, int length, bool showData, bool showJson);
 void checkPgnList(void);
 
-Field *getField(uint32_t pgn, uint32_t field);
-bool   extractNumber(const Field *field,
-                     uint8_t     *data,
-                     size_t       dataLen,
-                     size_t       startBit,
-                     size_t       bits,
-                     int64_t     *value,
-                     int64_t     *maxValue);
-bool   extractNumberByOrder(Pgn *pgn, size_t order, uint8_t *data, size_t dataLen, int64_t *value);
+const Field *getField(uint32_t pgn, uint32_t field);
+bool         extractNumber(const Field   *field,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t         bits,
+                           int64_t       *value,
+                           int64_t       *maxValue);
+bool         extractNumberByOrder(const Pgn *pgn, size_t order, const uint8_t *data, size_t dataLen, int64_t *value);
 
 void camelCase(bool upperCamelCase);
 
@@ -6740,10 +6740,10 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       LOOKUP_FIELD("Repeat Indicator", BYTES(1), REPEAT_INDICATOR),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
-      UINT8_DESC_FIELD("D", "Various values observed"),
+      RESERVED_FIELD(BYTES(1)),
       LOOKUP_FIELDTYPE_FIELD("Key", BYTES(2), SIMNET_KEY_VALUE),
       SPARE_FIELD(BYTES(1)),
-      SIMPLE_DESC_FIELD("Length", BYTES(1), "Length of data field"),
+      SIMPLE_DESC_FIELD("MinLength", BYTES(1), "Length of data field"),
       KEY_VALUE_FIELD("Value", "Data value"),
       END_OF_FIELDS},
      .interval = UINT16_MAX}

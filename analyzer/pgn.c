@@ -28,7 +28,7 @@ limitations under the License.
  * Return the first Pgn entry for which the pgn is found.
  * There can be multiple (with differing 'match' fields).
  */
-Pgn *searchForPgn(int pgn)
+const Pgn *searchForPgn(int pgn)
 {
   size_t start = 0;
   size_t end   = pgnListSize;
@@ -74,7 +74,7 @@ Pgn *searchForPgn(int pgn)
  * Return the last Pgn entry for which fallback == true && prn is smaller than requested.
  * This is slower, but is not used often.
  */
-Pgn *searchForUnknownPgn(int pgnId)
+const Pgn *searchForUnknownPgn(int pgnId)
 {
   Pgn *fallback = pgnList;
   Pgn *pgn;
@@ -103,11 +103,11 @@ Pgn *searchForUnknownPgn(int pgnId)
  * If all else fails, return an 'fallback' match-all PGN that
  * matches the fast/single frame, PDU1/PDU2 and proprietary/generic range.
  */
-Pgn *getMatchingPgn(int pgnId, uint8_t *data, int length)
+const Pgn *getMatchingPgn(int pgnId, const uint8_t *data, int length)
 {
-  Pgn *pgn = searchForPgn(pgnId);
-  int  prn;
-  int  i;
+  const Pgn *pgn = searchForPgn(pgnId);
+  int        prn;
+  int        i;
 
   if (pgn == NULL)
   {
@@ -183,9 +183,9 @@ void checkPgnList(void)
 
   for (i = 0; i < pgnListSize; i++)
   {
-    int  pgnRangeIndex = 0;
-    int  prn           = pgnList[i].pgn;
-    Pgn *pgn;
+    int        pgnRangeIndex = 0;
+    int        prn           = pgnList[i].pgn;
+    const Pgn *pgn;
 
     if (prn < prev_prn)
     {
@@ -236,9 +236,9 @@ void checkPgnList(void)
   }
 }
 
-Field *getField(uint32_t pgnId, uint32_t field)
+const Field *getField(uint32_t pgnId, uint32_t field)
 {
-  Pgn *pgn = searchForPgn(pgnId);
+  const Pgn *pgn = searchForPgn(pgnId);
 
   if (!pgn)
   {
@@ -298,13 +298,13 @@ Field *getField(uint32_t pgnId, uint32_t field)
  *
  */
 
-bool extractNumber(const Field *field,
-                   uint8_t     *data,
-                   size_t       dataLen,
-                   size_t       startBit,
-                   size_t       bits,
-                   int64_t     *value,
-                   int64_t     *maxValue)
+bool extractNumber(const Field   *field,
+                   const uint8_t *data,
+                   size_t         dataLen,
+                   size_t         startBit,
+                   size_t         bits,
+                   int64_t       *value,
+                   int64_t       *maxValue)
 {
   const bool  hasSign = field ? field->hasSign : false;
   const char *name    = field ? field->name : "<bits>";

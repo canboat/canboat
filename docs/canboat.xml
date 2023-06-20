@@ -2233,7 +2233,7 @@ limitations under the License.
       <EnumFieldType Value='0' Name='Heading Offset' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='41' Name='Timezone offset' FieldType='TIME' Signed='true'
- Resolution='60' Bits='16'/>
+ Resolution='60' Unit='s' Bits='16'/>
       <EnumFieldType Value='260' Name='True wind high' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='264' Name='Deep water' FieldType='NUMBER' Signed='false'
@@ -2244,10 +2244,10 @@ limitations under the License.
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='520' Name='Shallow water' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='768' Name='Local field' FieldType='NUMBER' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='1024' Name='Field angle' FieldType='NUMBER' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
+      <EnumFieldType Value='768' Name='Local field' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad' Bits='16'/>
+      <EnumFieldType Value='1024' Name='Field angle' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='1800' Name='Anchor depth' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='4863' Name='Backlight level' FieldType='NUMBER' Signed='false'
@@ -2270,7 +2270,7 @@ limitations under the License.
       <EnumFieldType Value='55087' Name='Day mode invert' FieldType='NUMBER' Signed='false'
  Bits='8'/>
     </LookupFieldTypeEnumeration>
-    <LookupFieldTypeEnumeration Name='BANDG_KEY_VALUE' MaxValue='511'>
+    <LookupFieldTypeEnumeration Name='BANDG_KEY_VALUE' MaxValue='4095'>
       <EnumFieldType Value='0' Name='Altitude' FieldType='NUMBER' Signed='true'
  Bits='16'/>
       <EnumFieldType Value='11' Name='Rudder Angle' FieldType='NUMBER' Signed='true'
@@ -2360,7 +2360,7 @@ limitations under the License.
       <EnumFieldType Value='113' Name='Next Leg AWS' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='117' Name='Race Timer' FieldType='TIME' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
       <EnumFieldType Value='124' Name='Polar Performance' FieldType='NUMBER' Signed='true'
  Resolution='0.1' Unit='%' Bits='16'/>
       <EnumFieldType Value='125' Name='Target Boat Speed' FieldType='NUMBER' Signed='true'
@@ -2436,19 +2436,19 @@ limitations under the License.
       <EnumFieldType Value='248' Name='Remote 9' FieldType='NUMBER' Signed='false'
  Resolution='0.001' Bits='16'/>
       <EnumFieldType Value='256' Name='Layline Time' FieldType='TIME' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
       <EnumFieldType Value='258' Name='Layline Distance' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='259' Name='Layline Distance' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='260' Name='Sailing Time to Waypoint' FieldType='TIME' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
       <EnumFieldType Value='261' Name='Sailing Distance to Waypoint' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='262' Name='Sailing ETA' FieldType='TIME' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
       <EnumFieldType Value='265' Name='Trip Time' FieldType='TIME' Signed='false'
- Resolution='0.001' Bits='32'/>
+ Resolution='0.001' Unit='s' Bits='32'/>
       <EnumFieldType Value='270' Name='Bow(?) Latitude' FieldType='NUMBER' Signed='true'
  Resolution='1e-07' Unit='deg' Bits='32'/>
       <EnumFieldType Value='271' Name='Bow(?) Longitude' FieldType='NUMBER' Signed='true'
@@ -47256,17 +47256,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>d</Id>
-          <Name>D</Name>
-          <Description>Various values observed</Description>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -47294,8 +47290,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>length</Id>
-          <Name>Length</Name>
+          <Id>minlength</Id>
+          <Name>MinLength</Name>
           <Description>Length of data field</Description>
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>

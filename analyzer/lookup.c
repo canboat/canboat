@@ -160,19 +160,17 @@ limitations under the License.
   }
 #define LOOKUP_FIELDTYPE_LOOKUP(ftype, n, str, ft, bits, lt, ln) \
   case n: {                                                      \
-    static Field      f;                                         \
-    static LookupInfo l;                                         \
-    l.name                   = xstr(ln);                         \
-    f.size                   = bits;                             \
-    l.size                   = bits;                             \
-    l.type                   = LOOKUP_TYPE_##lt;                 \
-    l.LOOKUP_##lt##_FUNCTION = lookup##ln;                       \
+    static Field f;                                              \
     if (f.name == NULL)                                          \
     {                                                            \
+      f.lookup.name                   = xstr(ln);                \
+      f.size                          = bits;                    \
+      f.lookup.size                   = bits;                    \
+      f.lookup.type                   = LOOKUP_TYPE_##lt;        \
+      f.lookup.LOOKUP_##lt##_FUNCTION = lookup##ln;              \
       fillFieldTypeLookupField(&f, xstr(ftype), n, str, ft);     \
     }                                                            \
-    g_ftf    = &f;                                               \
-    g_lookup = &l;                                               \
+    g_ftf = &f;                                                  \
     return str;                                                  \
   }
 

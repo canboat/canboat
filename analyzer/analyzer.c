@@ -102,8 +102,13 @@ static uint32_t currentTime = UINT32_MAX;
 
 static enum RawFormats detectFormat(const char *msg);
 static void            printCanFormat(RawMessage *msg);
-static bool            printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-static void            printCanRaw(RawMessage *msg);
+static bool            printField(const Field   *field,
+                                  const char    *fieldName,
+                                  const uint8_t *data,
+                                  size_t         dataLen,
+                                  size_t         startBit,
+                                  size_t        *bits);
+static void            printCanRaw(const RawMessage *msg);
 static void            showBuffers(void);
 
 static void usage(char **argv, char **av)
@@ -514,7 +519,7 @@ static enum RawFormats detectFormat(const char *msg)
   return RAWFORMAT_UNKNOWN;
 }
 
-static void printCanRaw(RawMessage *msg)
+static void printCanRaw(const RawMessage *msg)
 {
   size_t i;
   FILE  *f = stdout;
@@ -657,9 +662,9 @@ static void showBuffers(void)
 
 static void printCanFormat(RawMessage *msg)
 {
-  Pgn    *pgn;
-  size_t  buffer;
-  Packet *p;
+  const Pgn *pgn;
+  size_t     buffer;
+  Packet    *p;
 
   if (onlySrc >= 0 && onlySrc != msg->src)
   {
@@ -764,7 +769,7 @@ static void printCanFormat(RawMessage *msg)
   }
 }
 
-static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
+static void showBytesOrBits(const uint8_t *data, size_t startBit, size_t bits)
 {
   int64_t     value;
   int64_t     maxValue;
@@ -846,7 +851,7 @@ static void showBytesOrBits(uint8_t *data, size_t startBit, size_t bits)
 
 static uint32_t g_refPgn = 0; // Remember this over the entire set of fields
 
-static void fillGlobalsBasedOnFieldName(const char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t bits)
+static void fillGlobalsBasedOnFieldName(const char *fieldName, const uint8_t *data, size_t dataLen, size_t startBit, size_t bits)
 {
   int64_t value;
   int64_t maxValue;
@@ -868,7 +873,12 @@ static void fillGlobalsBasedOnFieldName(const char *fieldName, uint8_t *data, si
   }
 }
 
-static bool printField(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+static bool printField(const Field   *field,
+                       const char    *fieldName,
+                       const uint8_t *data,
+                       size_t         dataLen,
+                       size_t         startBit,
+                       size_t        *bits)
 {
   size_t bytes;
   double resolution;
@@ -1005,9 +1015,9 @@ static bool printField(Field *field, char *fieldName, uint8_t *data, size_t data
   return false;
 }
 
-bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool showJson)
+bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showData, bool showJson)
 {
-  Pgn *pgn;
+  const Pgn *pgn;
 
   size_t  i;
   size_t  bits;
@@ -1083,7 +1093,7 @@ bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool sh
   r                        = true;
   for (i = 0, startBit = 0; (startBit >> 3) < length; i++)
   {
-    Field *field = &pgn->fieldList[i];
+    const Field *field = &pgn->fieldList[i];
 
     if (variableFields == 0)
     {
@@ -1197,10 +1207,15 @@ bool printPgn(RawMessage *msg, uint8_t *data, int length, bool showData, bool sh
   return r;
 }
 
-extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintVariable(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits)
 {
-  Field *refField;
-  bool   r;
+  const Field *refField;
+  bool         r;
 
   refField = getField(g_refPgn, data[startBit / 8 - 1] - 1);
   if (refField)

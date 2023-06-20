@@ -130,14 +130,14 @@ extern char *getSep(void)
  *
  * It is currently only used for LOOKUP_TYPE_TRIPLET.
  */
-static size_t getFieldOffsetByOrder(Pgn *pgn, size_t order)
+static size_t getFieldOffsetByOrder(const Pgn *pgn, size_t order)
 {
   uint8_t i;
   size_t  bitOffset = 0;
 
   for (i = 0; i < order; i++)
   {
-    Field *field = &pgn->fieldList[i];
+    const Field *field = &pgn->fieldList[i];
 
     if (i + 1 == order)
     {
@@ -148,7 +148,7 @@ static size_t getFieldOffsetByOrder(Pgn *pgn, size_t order)
   return 0;
 }
 
-bool adjustDataLenStart(uint8_t **data, size_t *dataLen, size_t *startBit)
+bool adjustDataLenStart(const uint8_t **data, size_t *dataLen, size_t *startBit)
 {
   size_t bytes = *startBit >> 3;
 
@@ -163,10 +163,10 @@ bool adjustDataLenStart(uint8_t **data, size_t *dataLen, size_t *startBit)
   return false;
 }
 
-bool extractNumberByOrder(Pgn *pgn, size_t order, uint8_t *data, size_t dataLen, int64_t *value)
+bool extractNumberByOrder(const Pgn *pgn, size_t order, const uint8_t *data, size_t dataLen, int64_t *value)
 {
-  Field *field     = &pgn->fieldList[order - 1];
-  size_t bitOffset = getFieldOffsetByOrder(pgn, order);
+  const Field *field     = &pgn->fieldList[order - 1];
+  size_t       bitOffset = getFieldOffsetByOrder(pgn, order);
 
   size_t  startBit;
   int64_t maxValue;
@@ -216,14 +216,14 @@ extern void printEmpty(const char *fieldName, int64_t exceptionValue)
   }
 }
 
-static bool extractNumberNotEmpty(const Field *field,
-                                  const char  *fieldName,
-                                  uint8_t     *data,
-                                  size_t       dataLen,
-                                  size_t       startBit,
-                                  size_t       bits,
-                                  int64_t     *value,
-                                  int64_t     *maxValue)
+static bool extractNumberNotEmpty(const Field   *field,
+                                  const char    *fieldName,
+                                  const uint8_t *data,
+                                  size_t         dataLen,
+                                  size_t         startBit,
+                                  size_t         bits,
+                                  int64_t       *value,
+                                  int64_t       *maxValue)
 {
   int64_t reserved;
 
@@ -269,7 +269,12 @@ static bool extractNumberNotEmpty(const Field *field,
 }
 
 // This is only a different printer than fieldPrintNumber so the JSON can contain a string value
-extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintMMSI(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits)
 {
   int64_t value;
   int64_t maxValue;
@@ -291,7 +296,12 @@ extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t 
   return true;
 }
 
-extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintNumber(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits)
 {
   int64_t value;
   int64_t maxValue;
@@ -363,7 +373,12 @@ extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_
   return true;
 }
 
-extern bool fieldPrintFloat(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintFloat(const Field   *field,
+                            const char    *fieldName,
+                            const uint8_t *data,
+                            size_t         dataLen,
+                            size_t         startBit,
+                            size_t        *bits)
 {
   union
   {
@@ -403,7 +418,12 @@ extern bool fieldPrintFloat(Field *field, char *fieldName, uint8_t *data, size_t
 
   return true;
 }
-extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintDecimal(const Field   *field,
+                              const char    *fieldName,
+                              const uint8_t *data,
+                              size_t         dataLen,
+                              size_t         startBit,
+                              size_t        *bits)
 {
   uint8_t  value = 0;
   uint8_t  bitMask;
@@ -457,7 +477,12 @@ extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size
   return true;
 }
 
-extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintLookup(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits)
 {
   const char *s = NULL;
 
@@ -555,7 +580,12 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
  * Only print reserved fields if they are NOT all ones, in that case we have an incorrect
  * PGN definition.
  */
-extern bool fieldPrintReserved(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintReserved(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits)
 {
   int64_t value;
   int64_t maxValue;
@@ -577,7 +607,12 @@ extern bool fieldPrintReserved(Field *field, char *fieldName, uint8_t *data, siz
  * Only print spare fields if they are NOT all zeroes, in that case we have an incorrect
  * PGN definition.
  */
-extern bool fieldPrintSpare(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintSpare(const Field   *field,
+                            const char    *fieldName,
+                            const uint8_t *data,
+                            size_t         dataLen,
+                            size_t         startBit,
+                            size_t        *bits)
 {
   int64_t value;
   int64_t maxValue;
@@ -595,7 +630,12 @@ extern bool fieldPrintSpare(Field *field, char *fieldName, uint8_t *data, size_t
   return fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
 }
 
-extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintBitLookup(const Field   *field,
+                                const char    *fieldName,
+                                const uint8_t *data,
+                                size_t         dataLen,
+                                size_t         startBit,
+                                size_t        *bits)
 {
   int64_t value;
   int64_t maxValue;
@@ -686,7 +726,12 @@ extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, si
   return true;
 }
 
-extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintLatLon(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits)
 {
   uint64_t absVal;
   int64_t  value;
@@ -752,7 +797,12 @@ extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_
   return true;
 }
 
-extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintTime(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits)
 {
   uint64_t unitspersecond;
   uint32_t hours;
@@ -837,7 +887,12 @@ extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t 
   return true;
 }
 
-extern bool fieldPrintDate(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintDate(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits)
 {
   char       buf[sizeof("2008.03.10") + 1];
   time_t     t;
@@ -895,7 +950,7 @@ extern bool fieldPrintDate(Field *field, char *fieldName, uint8_t *data, size_t 
   return true;
 }
 
-static void print_ascii_json_escaped(uint8_t *data, int len)
+static void print_ascii_json_escaped(const uint8_t *data, int len)
 {
   int c;
   int k;
@@ -951,9 +1006,9 @@ static void print_ascii_json_escaped(uint8_t *data, int len)
   }
 }
 
-static bool printString(char *fieldName, uint8_t *data, size_t len)
+static bool printString(const char *fieldName, const uint8_t *data, size_t len)
 {
-  uint8_t *lastbyte;
+  const uint8_t *lastbyte;
 
   if (len > 0)
   {
@@ -989,7 +1044,12 @@ static bool printString(char *fieldName, uint8_t *data, size_t len)
 /**
  * Fixed length string where the length is defined by the field definition.
  */
-extern bool fieldPrintStringFix(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintStringFix(const Field   *field,
+                                const char    *fieldName,
+                                const uint8_t *data,
+                                size_t         dataLen,
+                                size_t         startBit,
+                                size_t        *bits)
 {
   size_t len = field->size / 8;
 
@@ -1005,7 +1065,12 @@ extern bool fieldPrintStringFix(Field *field, char *fieldName, uint8_t *data, si
   return printString(fieldName, data, len);
 }
 
-extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintStringLZ(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits)
 {
   // STRINGLZ format is <len> [ <data> ... ]
   size_t len;
@@ -1023,7 +1088,12 @@ extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, siz
   return printString(fieldName, data, len);
 }
 
-extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintStringLAU(const Field   *field,
+                                const char    *fieldName,
+                                const uint8_t *data,
+                                size_t         dataLen,
+                                size_t         startBit,
+                                size_t        *bits)
 {
   // STRINGLAU format is <len> <control> [ <data> ... ]
   // where <control> == 0 = UTF16
@@ -1078,7 +1148,12 @@ extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, si
   return r;
 }
 
-extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintBinary(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits)
 {
   size_t      i;
   size_t      remaining_bits;
@@ -1140,30 +1215,41 @@ extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_
   return true;
 }
 
-const Field      *g_ftf    = NULL;
-const LookupInfo *g_lookup = NULL;
-int64_t           g_length = 0;
+const Field *g_ftf    = NULL;
+int64_t      g_length = 0;
 
-extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool fieldPrintKeyValue(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits)
 {
   bool r = false;
 
-  *bits = ((size_t) g_length) * 8;
+  if (g_length != 0)
+  {
+    *bits = ((size_t) g_length) * 8;
+  }
+  else
+  {
+    *bits = field->size;
+  }
   logDebug("fieldPrintKeyValue('%s') bits=%zu\n", fieldName, *bits);
 
   if (dataLen >= ((startBit + *bits) >> 3))
   {
     if (g_ftf != NULL)
     {
-      Field f = *g_ftf;
-      f.size  = *bits;
-      f.name  = fieldName;
-      if (g_lookup != NULL)
+      const Field *f = g_ftf;
+
+      if (*bits == 0)
       {
-        f.lookup = *g_lookup;
+        *bits = f->size;
       }
-      logDebug("fieldPrintKeyValue('%s') is actually a '%s' field\n", fieldName, f.ft->name);
-      r = (f.ft->pf)(&f, fieldName, data, dataLen, startBit, bits);
+
+      logDebug("fieldPrintKeyValue('%s') is actually a '%s' field\n", fieldName, f->ft->name);
+      r = (f->ft->pf)(f, fieldName, data, dataLen, startBit, bits);
     }
     else
     {
@@ -1176,7 +1262,6 @@ extern bool fieldPrintKeyValue(Field *field, char *fieldName, uint8_t *data, siz
   }
 
   g_ftf    = NULL;
-  g_lookup = NULL;
   g_length = 0;
 
   return r;

@@ -13163,16 +13163,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td></tr><tr><td>7</td><td>D</td><td>Various values observed</td><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Key</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>8</td><td>Key</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE</a>
                       that defines the next variable field's type.
                     </td></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>10</td><td>Length</td><td>Length of data field</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>10</td><td>MinLength</td><td>Length of data field</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Value</td><td>Data value</td><td> </td><td>
@@ -14143,7 +14141,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>0</td><td>Heading Offset</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>41</td><td>Timezone offset</td><td>60 </td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>41</td><td>Timezone offset</td><td>60 s</td><td>16 bits 
               
                     signed
                   <a href="#ft-TIME">TIME</a></td></tr><tr><td>260</td><td>True wind high</td><td>0.01 m/s</td><td>16 bits 
@@ -14161,12 +14159,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>520</td><td>Shallow water</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>768</td><td>Local field</td><td>0.01 m/s</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>768</td><td>Local field</td><td>0.0001 rad</td><td>16 bits 
               
-                    unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1024</td><td>Field angle</td><td>0.01 m/s</td><td>16 bits 
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1024</td><td>Field angle</td><td>0.0001 rad</td><td>16 bits 
               
-                    unsigned
+                    signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1800</td><td>Anchor depth</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
@@ -14198,7 +14196,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-BANDG_KEY_VALUE">BANDG_KEY_VALUE
-        (0 - 511)
+        (0 - 4095)
       </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>0</td><td>Altitude</td><td> </td><td>16 bits 
               
                     signed
@@ -14331,7 +14329,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>113</td><td>Next Leg AWS</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>117</td><td>Race Timer</td><td>0.001 </td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>117</td><td>Race Timer</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
                   <a href="#ft-TIME">TIME</a></td></tr><tr><td>124</td><td>Polar Performance</td><td>0.1 %</td><td>16 bits 
@@ -14445,7 +14443,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>248</td><td>Remote 9</td><td>0.001 </td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>256</td><td>Layline Time</td><td>0.001 </td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>256</td><td>Layline Time</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
                   <a href="#ft-TIME">TIME</a></td></tr><tr><td>258</td><td>Layline Distance</td><td>0.01 m</td><td>32 bits 
@@ -14454,16 +14452,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>259</td><td>Layline Distance</td><td>0.01 m</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>260</td><td>Sailing Time to Waypoint</td><td>0.001 </td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>260</td><td>Sailing Time to Waypoint</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
                   <a href="#ft-TIME">TIME</a></td></tr><tr><td>261</td><td>Sailing Distance to Waypoint</td><td>0.01 m</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>262</td><td>Sailing ETA</td><td>0.001 </td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>262</td><td>Sailing ETA</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>265</td><td>Trip Time</td><td>0.001 </td><td>32 bits 
+                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>265</td><td>Trip Time</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
                   <a href="#ft-TIME">TIME</a></td></tr><tr><td>270</td><td>Bow(?) Latitude</td><td>1e-07 deg</td><td>32 bits 

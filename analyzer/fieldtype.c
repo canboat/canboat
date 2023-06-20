@@ -206,6 +206,7 @@ extern void fillFieldType(bool doUnitFixup)
       if (ft->unit == NULL)
       {
         ft->unit = ft->physical->abbreviation;
+        logDebug("Fieldtype '%s' inherits unit '%s' from physical type '%s'\n", ft->name, STRNULL(ft->unit), ft->physical->name);
       }
       if (ft->url == NULL)
       {
@@ -244,13 +245,20 @@ extern void fillFieldType(bool doUnitFixup)
       {
         ft->hasSign = base->hasSign;
       }
+      if (ft->unit == NULL && base->unit != NULL)
+      {
+        ft->unit = base->unit;
+        logDebug("Fieldtype '%s' inherits unit '%s' from base type '%s'\n", ft->name, ft->unit, base->name);
+      }
       if (ft->size == 0 && base->size != 0)
       {
         ft->size = base->size;
+        logDebug("Fieldtype '%s' inherits size %u from base type '%s'\n", ft->name, ft->size, base->name);
       }
       if (ft->resolution == 0.0 && base->resolution != 0.0)
       {
         ft->resolution = base->resolution;
+        logDebug("Fieldtype '%s' inherits resolution %g from base type '%s'\n", ft->name, ft->resolution, base->name);
       }
       else if (ft->resolution != 0.0 && base->resolution != 0.0 && ft->resolution != base->resolution)
       {
@@ -443,16 +451,18 @@ extern void fillFieldTypeLookupField(Field *f, const char *lookup, const size_t 
   f->unit       = f->ft->unit;
   f->resolution = f->ft->resolution;
   f->hasSign    = f->ft->hasSign == True;
+  f->size       = f->ft->size;
   f->name       = str;
   if (f->unit != NULL)
   {
     fixupUnit(f);
   }
 
-  logDebug("fillFieldTypeLookupField(Field, lookup='%s', key=%zu, str='%s', ft='%s' unit='%s'\n",
+  logDebug("fillFieldTypeLookupField(Field, lookup='%s', key=%zu, str='%s', ft='%s' unit='%s' bits=%u\n",
            lookup,
            key,
            str,
            ft,
-           STRNULL(f->unit));
+           STRNULL(f->unit),
+           f->size);
 }

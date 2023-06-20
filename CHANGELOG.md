@@ -8,6 +8,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+Note: Changes to XML v2 (canboat.xml, canboat.xsd, canboat.xsl) so this will
+constitute a new major release.
+
 ### Added
 
 - #413: docs: RangeMax for ENTERTAINMENT_PLAY_STATUS_BITFIELD is incorrect
