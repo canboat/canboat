@@ -21,17 +21,12 @@ limitations under the License.
 #ifndef COMMON_H_INCLUDED
 #define COMMON_H_INCLUDED
 
-#include "license.h"
-
-#ifdef WIN32
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,11 +35,12 @@ limitations under the License.
 #include <time.h>
 #include <unistd.h>
 
+#include "license.h"
+
 #ifndef WIN32
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <sys/ioctl.h>
 #include <sys/select.h>
@@ -56,27 +52,10 @@ limitations under the License.
 #define HAS_SYSLOG
 typedef int SOCKET;
 #else
-#include <winsock2.h>
-
-#include "winport.h"
-#endif
-
-#ifdef WIN32
-typedef unsigned char      uint8_t;
-typedef unsigned short int uint16_t;
-typedef unsigned int       uint32_t;
-typedef signed int         int32_t;
-typedef __int64            int64_t;
-typedef unsigned __int64   uint64_t;
-#define UINT64_C(x) ((uint64_t) (x))
-#define INT64_C(x) ((int64_t) (x))
-#define PRId64 "I64d"
-#define PRIu64 "I64u"
-#define PRIx64 "I64x"
-#define PRIX64 "I64X"
-#define strcasecmp _stricmp
-#define UINT16_MAX (0xffff)
-#define UINT32_MAX (0xffffffff)
+#define _CRT_SECURE_NO_WARNINGS
+#include <ws2tcpip.h>
+// Must come after ws2tcpip.h
+#include <windows.h>
 #endif
 
 #ifndef CB_MAX
@@ -198,9 +177,9 @@ enum ReadyDescriptor
 /*
  * Wait for R/W fd1, Read fd2 or Write fd3
  */
-int isReady(int fd1, int fd2, int fd3, int timeout);
+int isReady(SOCKET fd1, SOCKET fd2, SOCKET fd3, int timeout);
 
-int writeSerial(int handle, const uint8_t *data, size_t len);
+int writeSerial(SOCKET handle, const uint8_t *data, size_t len);
 
 #define UINT16_OUT_OF_RANGE (MAX_UINT16 - 1)
 #define UINT16_UNKNOWN (MAX_UINT16)

@@ -456,7 +456,7 @@ extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_
     return true;
   }
 
-  if (field->unit && field->unit[0] == '=' && isdigit(field->unit[1]))
+  if (field->unit && field->unit[0] == '=' && isdigit((unsigned char) field->unit[1]))
   {
     char lookfor[20];
 
@@ -945,7 +945,7 @@ static bool printString(char *fieldName, uint8_t *data, size_t len)
   {
     // rtrim funny stuff from end, we see all sorts
     lastbyte = &data[len - 1];
-    while (len > 0 && (*lastbyte == 0xff || isspace(*lastbyte) || *lastbyte == 0 || *lastbyte == '@'))
+    while (len > 0 && (*lastbyte == 0xff || isspace((unsigned char) *lastbyte) || *lastbyte == 0 || *lastbyte == '@'))
     {
       len--;
       lastbyte--;

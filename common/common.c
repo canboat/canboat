@@ -408,7 +408,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
   /* field has been found */
   loc += fieldLen + 2;
 
-  while (isspace(*loc))
+  while (isspace((unsigned char) *loc))
   {
     loc++;
   }
@@ -420,7 +420,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
 
   if (*loc != '"')
   {
-    while ((isdigit(*loc) || *loc == '.' || *loc == '-' || *loc == 'E' || *loc == 'e' || *loc == '+') && len > 1)
+    while ((isdigit((unsigned char) *loc) || *loc == '.' || *loc == '-' || *loc == 'E' || *loc == 'e' || *loc == '+') && len > 1)
     {
       *value++ = *loc++;
       len--;
@@ -513,7 +513,7 @@ static bool getJSONLookupList(const char *message, const char *fieldName, char *
   /* field has been found */
   loc += fieldLen + 2;
 
-  while (isspace(*loc))
+  while (isspace((unsigned char) *loc))
   {
     loc++;
   }
@@ -756,7 +756,7 @@ static void resolve_address(const char *url, char **host, const char **service)
 
 SOCKET open_socket_stream(const char *url)
 {
-  int             sockfd = INVALID_SOCKET;
+  SOCKET          sockfd = INVALID_SOCKET;
   int             n;
   struct addrinfo hints, *res, *addr;
   char           *host;
@@ -804,7 +804,7 @@ SOCKET open_socket_stream(const char *url)
 
 uint8_t scanNibble(char c)
 {
-  if (isdigit(c))
+  if (isdigit((unsigned char) c))
   {
     return c - '0';
   }
@@ -844,7 +844,7 @@ int scanHex(char **p, uint8_t *m)
   return 0;
 }
 
-int isReady(int fd1, int fd2, int fd3, int timeout)
+int isReady(SOCKET fd1, SOCKET fd2, SOCKET fd3, int timeout)
 {
   fd_set         fds;
   fd_set         fdw;
@@ -904,7 +904,7 @@ int isReady(int fd1, int fd2, int fd3, int timeout)
  * cater for this.
  *
  */
-int writeSerial(int handle, const uint8_t *data, size_t len)
+int writeSerial(SOCKET handle, const uint8_t *data, size_t len)
 {
   int     retryCount = 5;
   ssize_t written;

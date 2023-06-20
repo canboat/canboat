@@ -56,7 +56,8 @@ Pgn *searchForPgn(int pgn)
     }
     if (pgn < pgnList[mid].pgn)
     {
-      if (mid == 0) {
+      if (mid == 0)
+      {
         return NULL;
       }
       end = mid - 1;
@@ -413,7 +414,7 @@ static char *camelize(const char *str, bool upperCamelCase, int order)
 
   for (; *s; s++)
   {
-    if (isalpha(*s) || isdigit(*s))
+    if (isalpha((unsigned char) *s) || isdigit((unsigned char) *s))
     {
       if (lastIsAlpha)
       {

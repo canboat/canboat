@@ -160,7 +160,7 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
     }
     if (i < len)
     {
-      if (*p != ',' && !isspace(*p))
+      if (*p != ',' && !isspace((unsigned char) *p))
       {
         logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
         if (!showJson)
@@ -565,7 +565,7 @@ int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
   p = nexttoken;
   for (i = 0; i < FASTPACKET_MAX_SIZE; i++)
   {
-    if (*p == '\0' || isspace(*p))
+    if (*p == '\0' || isspace((unsigned char) *p))
     {
       break;
     }

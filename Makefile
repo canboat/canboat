@@ -52,8 +52,23 @@ docker-build: ## runs `make clean generated` in `ubuntu:22.04` Docker image
 
 bin:	$(BUILDDIR)
 
-$(BUILDDIR):
-	$(MKDIR) -p $(BUILDDIR)
+CYGWIN_DLL=$(BUILDDIR)/cygwin1.dll
+
+$(CYGWIN_DLL): $(BUILDDIR)
+	cp /usr/bin/cygwin1.dll $(CYGWIN_DLL)
+
+CYGWIN=$(findstring cygwin,$(PLATFORM))
+
+ifneq (,$(CYGWIN))
+bin:	$(CYGWIN_DLL)
+	@echo "Building in $(BUILDDIR) for '$(CYGWIN)' with $(CYGWIN_DLL)"
+else
+bin:
+	@echo "Building in $(BUILDDIR)"
+endif
+
+$(BUILDDIR): 
+	$(MKDIR) $(BUILDDIR)
 
 man1: man/man1
 
