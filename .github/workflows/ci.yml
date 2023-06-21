@@ -40,4 +40,4 @@ jobs:
             hardlinks: 1
 
       - name: make
-        run: make tests
+        run: make -C /cygdrive/d/a/canboat/canboat tests
