@@ -15,6 +15,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils
+
+      - name: make
+        run: make tests
+
       - name: Version in common/version.h must match release tag
         run: |
           export CANBOAT_VERSION=$(sed -En 's/.*\ VERSION\ \"([0-9]+\.)([0-9]+\.)?([0-9]+)\"/\1\2\3/p' common/version.h)
@@ -41,3 +47,34 @@ jobs:
             docs/canboat.json
             docs/canboat.xml
             docs/canboat.xsd
+
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+        run:
+          shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Cygwin
+        uses: egor-tensin/setup-cygwin@v4
+        with:
+            packages: make gcc-core
+            hardlinks: 1
+
+      - name: make
+        run: make -C /cygdrive/d/a/canboat/canboat
+
+      - name: zip
+        run: |
+          cd /cygdrive/d/a/canboat/canboat/rel/cygwin*/
+          zip 
+          zip "../windows-${GITHUB_REF##*/}.zip" *.exe
+
+      - name: Add release assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            rel/*.zip
