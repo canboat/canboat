@@ -326,6 +326,13 @@ BO_ 2566865406 PGN_65345_seatalkPilotWindDatum: 8 Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2566866686 PGN_65350_simnetMagneticField: 8 Vector__XXX
+ SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ d : 40|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ c : 24|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ b : 16|8@1+ (1,0) [0|0] "%" Vector__XXX
+ SG_ a : 0|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
+
 BO_ 2566868990 PGN_65359_seatalkPilotHeading: 8 Vector__XXX
  SG_ reserved7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ headingMagnetic : 40|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
@@ -657,7 +664,7 @@ BO_ 2582778110 PGN_127504_acOutputStatus: 8 Vector__XXX
 BO_ 2582778366 PGN_127505_fluidLevel: 8 Vector__XXX
  SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ capacity : 24|32@1+ (0.1,0) [0|0] "L" Vector__XXX
- SG_ level : 8|16@1+ (0.004,0) [0|0] "%" Vector__XXX
+ SG_ level : 8|16@1- (0.004,0) [0|0] "%" Vector__XXX
  SG_ type : 4|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 0|4@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -1198,7 +1205,7 @@ BO_ 2583496446 PGN_130310_environmentalParamete: 8 Vector__XXX
 
 BO_ 2583496702 PGN_130311_environmentalParamete: 8 Vector__XXX
  SG_ atmosphericPressure : 48|16@1+ (100,0) [0|0] "Pa" Vector__XXX
- SG_ humidity : 32|16@1+ (0.004,0) [0|0] "%" Vector__XXX
+ SG_ humidity : 32|16@1- (0.004,0) [0|0] "%" Vector__XXX
  SG_ temperature : 16|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ humiditySource : 14|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ temperatureSource : 8|6@1+ (1,0) [0|0] "" Vector__XXX
@@ -1214,8 +1221,8 @@ BO_ 2583496958 PGN_130312_temperature: 8 Vector__XXX
 
 BO_ 2583497214 PGN_130313_humidity: 8 Vector__XXX
  SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ setHumidity : 40|16@1+ (0.004,0) [0|0] "%" Vector__XXX
- SG_ actualHumidity : 24|16@1+ (0.004,0) [0|0] "%" Vector__XXX
+ SG_ setHumidity : 40|16@1- (0.004,0) [0|0] "%" Vector__XXX
+ SG_ actualHumidity : 24|16@1- (0.004,0) [0|0] "%" Vector__XXX
  SG_ source : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ instance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1553,6 +1560,7 @@ CM_ SG_ 2566864382 manufacturerCode "Simrad";
 CM_ BO_ 2566865406 "Seatalk: Pilot Wind Datum";
 CM_ SG_ 2566865406 industryCode "Marine Industry";
 CM_ SG_ 2566865406 manufacturerCode "Raymarine";
+CM_ BO_ 2566866686 "Simnet: Magnetic Field";
 CM_ BO_ 2566868990 "Seatalk: Pilot Heading";
 CM_ SG_ 2566868990 industryCode "Marine Industry";
 CM_ SG_ 2566868990 manufacturerCode "Raymarine";
