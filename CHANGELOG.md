@@ -8,6 +8,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+## [5.0.0]
+
 Note: Changes to XML v2 (canboat.xml, canboat.xsd, canboat.xsl) so this will
 constitute a new major release.
 
@@ -622,7 +624,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.12.0...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v5.0.0...HEAD
+[5.0.0]: https://github.com/canboat/canboat/compare/v4.12.0...v5.0.0
 [4.12.0]: https://github.com/canboat/canboat/compare/v4.11.1...v4.12.0
 [4.11.1]: https://github.com/canboat/canboat/compare/v4.11.0...v4.11.1
 [4.11.0]: https://github.com/canboat/canboat/compare/v4.10.1...v4.11.0
