@@ -27,17 +27,17 @@ jobs:
     runs-on: windows-latest
     defaults:
         run:
-          shell: msys2 {0}
+          shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
 
-      - name: update & install tools
-        uses: msys2/setup-msys2@v2
+      - name: Set up Cygwin
+        uses: egor-tensin/setup-cygwin@v4
         with:
-            install: 
-                make
+            packages: make gcc-core
+            hardlinks: 1
 
       - name: make
         run: make tests
