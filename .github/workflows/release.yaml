@@ -61,7 +61,7 @@ jobs:
       - name: Set up Cygwin
         uses: egor-tensin/setup-cygwin@v4
         with:
-            packages: make gcc-core
+            packages: make gcc-core zip
             hardlinks: 1
 
       - name: make
