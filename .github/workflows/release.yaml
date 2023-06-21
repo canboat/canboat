@@ -71,7 +71,7 @@ jobs:
         run: |
           cd /cygdrive/d/a/canboat/canboat/rel/cygwin*/
           zip 
-          zip "../windows-${GITHUB_REF##*/}.zip" *.exe
+          zip "../windows-${GITHUB_REF##*/}.zip" *.exe *.dll
 
       - name: Add release assets
         uses: softprops/action-gh-release@v1
