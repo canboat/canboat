@@ -45251,7 +45251,7 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
             <EnumFieldType Value='113' Name='Next Leg AWS' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='117' Name='Race Timer' FieldType='Time' Signed='false'
+            <EnumFieldType Value='117' Name='Race Timer' FieldType='Time' Signed='true'
  Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='124' Name='Polar Performance' FieldType='Number' Signed='true'
  Resolution='0.1' Unit='%' Bits='16'/>
@@ -45341,9 +45341,9 @@ limitations under the License.
  Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='265' Name='Trip Time' FieldType='Time' Signed='false'
  Resolution='0.001' Unit='s' Bits='32'/>
-            <EnumFieldType Value='270' Name='Bow(?) Latitude' FieldType='Latitude' Signed='true'
+            <EnumFieldType Value='270' Name='Bow Latitude' FieldType='Latitude' Signed='true'
  Resolution='1e-07' Unit='deg' Bits='32'/>
-            <EnumFieldType Value='271' Name='Bow(?) Longitude' FieldType='Latitude' Signed='true'
+            <EnumFieldType Value='271' Name='Bow Longitude' FieldType='Latitude' Signed='true'
  Resolution='1e-07' Unit='deg' Bits='32'/>
             <EnumFieldType Value='272' Name='Start Line Bearing' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
@@ -46146,7 +46146,7 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
             <EnumFieldType Value='113' Name='Next Leg AWS' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='117' Name='Race Timer' FieldType='Time' Signed='false'
+            <EnumFieldType Value='117' Name='Race Timer' FieldType='Time' Signed='true'
  Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='124' Name='Polar Performance' FieldType='Number' Signed='true'
  Resolution='0.1' Unit='%' Bits='16'/>
@@ -46236,9 +46236,9 @@ limitations under the License.
  Resolution='0.001' Unit='s' Bits='32'/>
             <EnumFieldType Value='265' Name='Trip Time' FieldType='Time' Signed='false'
  Resolution='0.001' Unit='s' Bits='32'/>
-            <EnumFieldType Value='270' Name='Bow(?) Latitude' FieldType='Latitude' Signed='true'
+            <EnumFieldType Value='270' Name='Bow Latitude' FieldType='Latitude' Signed='true'
  Resolution='1e-07' Unit='deg' Bits='32'/>
-            <EnumFieldType Value='271' Name='Bow(?) Longitude' FieldType='Latitude' Signed='true'
+            <EnumFieldType Value='271' Name='Bow Longitude' FieldType='Latitude' Signed='true'
  Resolution='1e-07' Unit='deg' Bits='32'/>
             <EnumFieldType Value='272' Name='Start Line Bearing' FieldType='Number' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
