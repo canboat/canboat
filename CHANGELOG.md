@@ -8,6 +8,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Fixed
+
+- Print raw negative times correctly (broken in 5.0.0).
+
 ## [5.0.1]
 
 ### Added

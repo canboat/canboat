@@ -858,7 +858,7 @@ extern bool fieldPrintTime(const Field   *field,
   {
     if (showJsonValue)
     {
-      mprintf("%" PRId64 ",\"name\":", value);
+      mprintf("%s%" PRId64 ",\"name\":", sign, value);
     }
     if (units != 0)
     {
