@@ -1744,17 +1744,18 @@ limitations under the License.
       <EnumPair Value='2' Name='dd/MM/yyyy' />
     </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_BACKLIGHT_LEVEL' MaxValue='255'>
+      <EnumPair Value='0' Name='10% (Min)' />
       <EnumPair Value='1' Name='Day mode' />
       <EnumPair Value='4' Name='Night mode' />
-      <EnumPair Value='11' Name='Level 1' />
-      <EnumPair Value='22' Name='Level 2' />
-      <EnumPair Value='33' Name='Level 3' />
-      <EnumPair Value='44' Name='Level 4' />
-      <EnumPair Value='55' Name='Level 5' />
-      <EnumPair Value='66' Name='Level 6' />
-      <EnumPair Value='77' Name='Level 7' />
-      <EnumPair Value='88' Name='Level 8' />
-      <EnumPair Value='99' Name='Level 9' />
+      <EnumPair Value='11' Name='20%' />
+      <EnumPair Value='22' Name='30%' />
+      <EnumPair Value='33' Name='40%' />
+      <EnumPair Value='44' Name='50%' />
+      <EnumPair Value='55' Name='60%' />
+      <EnumPair Value='66' Name='70%' />
+      <EnumPair Value='77' Name='80%' />
+      <EnumPair Value='88' Name='90%' />
+      <EnumPair Value='99' Name='100% (Max)' />
     </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_AP_EVENTS' MaxValue='255'>
       <EnumPair Value='6' Name='Standby' />
@@ -2250,14 +2251,22 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='1800' Name='Anchor depth' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='4863' Name='Backlight level' FieldType='NUMBER' Signed='false'
- Unit='%' Bits='8'/>
-      <EnumFieldType Value='5160' Name='Time hour display' FieldType='NUMBER' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='5161' Name='Time format' FieldType='NUMBER' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='9983' Name='Night mode' FieldType='NUMBER' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
+      <EnumFieldType Value='4863' Name='Backlight level' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_BACKLIGHT_LEVEL</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='5160' Name='Time format' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_TIME_FORMAT</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='5161' Name='Time hour display' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_HOUR_DISPLAY</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='9983' Name='Night mode' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_NIGHT_MODE</LookupEnumeration>
+      </EnumFieldType>
       <EnumFieldType Value='11524' Name='True wind shift' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='22296' Name='AP low boat speed' FieldType='NUMBER' Signed='false'
@@ -2265,8 +2274,10 @@ limitations under the License.
       <EnumFieldType Value='32789' Name='Alert bits' FieldType='BITLOOKUP' Bits='16'>
           <LookupBitEnumeration>SIMNET_ALERT_BITFIELD</LookupBitEnumeration>
       </EnumFieldType>
-      <EnumFieldType Value='44079' Name='Night mode color' FieldType='NUMBER' Signed='false'
- Bits='8'/>
+      <EnumFieldType Value='44079' Name='Night mode color' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_NIGHT_MODE_COLOR</LookupEnumeration>
+      </EnumFieldType>
       <EnumFieldType Value='55087' Name='Day mode invert' FieldType='NUMBER' Signed='false'
  Bits='8'/>
     </LookupFieldTypeEnumeration>

@@ -14054,7 +14054,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>MM/dd/yyyy</td></tr><tr><td>2</td><td>dd/MM/yyyy</td></tr></table><h3 id="lookup-SIMNET_BACKLIGHT_LEVEL">SIMNET_BACKLIGHT_LEVEL
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Day mode</td></tr><tr><td>4</td><td>Night mode</td></tr><tr><td>11</td><td>Level 1</td></tr><tr><td>22</td><td>Level 2</td></tr><tr><td>33</td><td>Level 3</td></tr><tr><td>44</td><td>Level 4</td></tr><tr><td>55</td><td>Level 5</td></tr><tr><td>66</td><td>Level 6</td></tr><tr><td>77</td><td>Level 7</td></tr><tr><td>88</td><td>Level 8</td></tr><tr><td>99</td><td>Level 9</td></tr></table><h3 id="lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>10% (Min)</td></tr><tr><td>1</td><td>Day mode</td></tr><tr><td>4</td><td>Night mode</td></tr><tr><td>11</td><td>20%</td></tr><tr><td>22</td><td>30%</td></tr><tr><td>33</td><td>40%</td></tr><tr><td>44</td><td>50%</td></tr><tr><td>55</td><td>60%</td></tr><tr><td>66</td><td>70%</td></tr><tr><td>77</td><td>80%</td></tr><tr><td>88</td><td>90%</td></tr><tr><td>99</td><td>100% (Max)</td></tr></table><h3 id="lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>6</td><td>Standby</td></tr><tr><td>9</td><td>Auto mode</td></tr><tr><td>10</td><td>Nav mode</td></tr><tr><td>13</td><td>Non Follow Up mode</td></tr><tr><td>14</td><td>Follow Up mode</td></tr><tr><td>15</td><td>Wind mode</td></tr><tr><td>18</td><td>Square (Turn)</td></tr><tr><td>19</td><td>C-Turn</td></tr><tr><td>20</td><td>U-Turn</td></tr><tr><td>21</td><td>Spiral (Turn)</td></tr><tr><td>22</td><td>Zig Zag (Turn)</td></tr><tr><td>23</td><td>Lazy-S (Turn)</td></tr><tr><td>24</td><td>Depth (Turn)</td></tr><tr><td>26</td><td>Change course</td></tr><tr><td>61</td><td>Timer sync</td></tr><tr><td>112</td><td>Ping port end</td></tr><tr><td>113</td><td>Ping starboard end</td></tr></table><h3 id="lookup-SIMNET_DIRECTION">SIMNET_DIRECTION
         (0 - 255)
@@ -14168,19 +14168,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1800</td><td>Anchor depth</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4863</td><td>Backlight level</td><td> %</td><td>8 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4863</td><td>Backlight level</td><td> </td><td>8 bits 
               
-                    unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5160</td><td>Time hour display</td><td>0.01 m/s</td><td>16 bits 
+                  lookup
+                  <a href="#lookup-SIMNET_BACKLIGHT_LEVEL">SIMNET_BACKLIGHT_LEVEL</a></td></tr><tr><td>5160</td><td>Time format</td><td> </td><td>8 bits 
               
-                    unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5161</td><td>Time format</td><td>0.01 m/s</td><td>16 bits 
+                  lookup
+                  <a href="#lookup-SIMNET_TIME_FORMAT">SIMNET_TIME_FORMAT</a></td></tr><tr><td>5161</td><td>Time hour display</td><td> </td><td>8 bits 
               
-                    unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9983</td><td>Night mode</td><td>0.01 m/s</td><td>16 bits 
+                  lookup
+                  <a href="#lookup-SIMNET_HOUR_DISPLAY">SIMNET_HOUR_DISPLAY</a></td></tr><tr><td>9983</td><td>Night mode</td><td> </td><td>8 bits 
               
-                    unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11524</td><td>True wind shift</td><td>0.01 m/s</td><td>16 bits 
+                  lookup
+                  <a href="#lookup-SIMNET_NIGHT_MODE">SIMNET_NIGHT_MODE</a></td></tr><tr><td>11524</td><td>True wind shift</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>22296</td><td>AP low boat speed</td><td>0.01 m/s</td><td>16 bits 
@@ -14191,8 +14191,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   bitfield
                   <a href="#lookupbit-SIMNET_ALERT_BITFIELD">SIMNET_ALERT_BITFIELD</a></td></tr><tr><td>44079</td><td>Night mode color</td><td> </td><td>8 bits 
               
-                    unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>55087</td><td>Day mode invert</td><td> </td><td>8 bits 
+                  lookup
+                  <a href="#lookup-SIMNET_NIGHT_MODE_COLOR">SIMNET_NIGHT_MODE_COLOR</a></td></tr><tr><td>55087</td><td>Day mode invert</td><td> </td><td>8 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-BANDG_KEY_VALUE">BANDG_KEY_VALUE

@@ -2340,17 +2340,18 @@
         "Name":"SIMNET_BACKLIGHT_LEVEL",
         "MaxValue":255,
         "EnumValues":[
+          {"Name":"10% (Min)", "Value":0},
           {"Name":"Day mode", "Value":1},
           {"Name":"Night mode", "Value":4},
-          {"Name":"Level 1", "Value":11},
-          {"Name":"Level 2", "Value":22},
-          {"Name":"Level 3", "Value":33},
-          {"Name":"Level 4", "Value":44},
-          {"Name":"Level 5", "Value":55},
-          {"Name":"Level 6", "Value":66},
-          {"Name":"Level 7", "Value":77},
-          {"Name":"Level 8", "Value":88},
-          {"Name":"Level 9", "Value":99}
+          {"Name":"20%", "Value":11},
+          {"Name":"30%", "Value":22},
+          {"Name":"40%", "Value":33},
+          {"Name":"50%", "Value":44},
+          {"Name":"60%", "Value":55},
+          {"Name":"70%", "Value":66},
+          {"Name":"80%", "Value":77},
+          {"Name":"90%", "Value":88},
+          {"Name":"100% (Max)", "Value":99}
         ]
       },
       {
@@ -3004,14 +3005,14 @@
         {"name": "Local field", "value": 768, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Field angle", "value": 1024, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Anchor depth", "value": 1800, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
-        {"name": "Backlight level", "value": 4863, "FieldType": "NUMBER", "Unit": "%", "Bits": "8"},
-        {"name": "Time hour display", "value": 5160, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
-        {"name": "Time format", "value": 5161, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
-        {"name": "Night mode", "value": 9983, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
+        {"name": "Backlight level", "value": 4863, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_BACKLIGHT_LEVEL"},
+        {"name": "Time format", "value": 5160, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_TIME_FORMAT"},
+        {"name": "Time hour display", "value": 5161, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_HOUR_DISPLAY"},
+        {"name": "Night mode", "value": 9983, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_NIGHT_MODE"},
         {"name": "True wind shift", "value": 11524, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "AP low boat speed", "value": 22296, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "Alert bits", "value": 32789, "FieldType": "BITLOOKUP", "Bits": "16", "LookupBitEnumeration": "SIMNET_ALERT_BITFIELD"},
-        {"name": "Night mode color", "value": 44079, "FieldType": "NUMBER", "Bits": "8"},
+        {"name": "Night mode color", "value": 44079, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_NIGHT_MODE_COLOR"},
         {"name": "Day mode invert", "value": 55087, "FieldType": "NUMBER", "Bits": "8"}
         ]
       },

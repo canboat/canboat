@@ -48310,20 +48310,20 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
             <EnumFieldType Value='1800' Name='Anchor depth' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='4863' Name='Backlight level' FieldType='Integer' Signed='false'
- Unit='%' Bits='8'/>
-            <EnumFieldType Value='5160' Name='Time hour display' FieldType='Number' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='5161' Name='Time format' FieldType='Number' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='9983' Name='Night mode' FieldType='Number' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
+            <EnumFieldType Value='4863' Name='Backlight level' FieldType='Lookup table' Signed='false'
+ Bits='8'/>
+            <EnumFieldType Value='5160' Name='Time format' FieldType='Lookup table' Signed='false'
+ Bits='8'/>
+            <EnumFieldType Value='5161' Name='Time hour display' FieldType='Lookup table' Signed='false'
+ Bits='8'/>
+            <EnumFieldType Value='9983' Name='Night mode' FieldType='Lookup table' Signed='false'
+ Bits='8'/>
             <EnumFieldType Value='11524' Name='True wind shift' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='22296' Name='AP low boat speed' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='32789' Name='Alert bits' FieldType='Bitfield' Bits='16'/>
-            <EnumFieldType Value='44079' Name='Night mode color' FieldType='Integer' Signed='false'
+            <EnumFieldType Value='44079' Name='Night mode color' FieldType='Lookup table' Signed='false'
  Bits='8'/>
             <EnumFieldType Value='55087' Name='Day mode invert' FieldType='Integer' Signed='false'
  Bits='8'/>
@@ -48513,20 +48513,20 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
             <EnumFieldType Value='1800' Name='Anchor depth' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='4863' Name='Backlight level' FieldType='Integer' Signed='false'
- Unit='%' Bits='8'/>
-            <EnumFieldType Value='5160' Name='Time hour display' FieldType='Number' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='5161' Name='Time format' FieldType='Number' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
-            <EnumFieldType Value='9983' Name='Night mode' FieldType='Number' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
+            <EnumFieldType Value='4863' Name='Backlight level' FieldType='Lookup table' Signed='false'
+ Bits='8'/>
+            <EnumFieldType Value='5160' Name='Time format' FieldType='Lookup table' Signed='false'
+ Bits='8'/>
+            <EnumFieldType Value='5161' Name='Time hour display' FieldType='Lookup table' Signed='false'
+ Bits='8'/>
+            <EnumFieldType Value='9983' Name='Night mode' FieldType='Lookup table' Signed='false'
+ Bits='8'/>
             <EnumFieldType Value='11524' Name='True wind shift' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='22296' Name='AP low boat speed' FieldType='Number' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
             <EnumFieldType Value='32789' Name='Alert bits' FieldType='Bitfield' Bits='16'/>
-            <EnumFieldType Value='44079' Name='Night mode color' FieldType='Integer' Signed='false'
+            <EnumFieldType Value='44079' Name='Night mode color' FieldType='Lookup table' Signed='false'
  Bits='8'/>
             <EnumFieldType Value='55087' Name='Day mode invert' FieldType='Integer' Signed='false'
  Bits='8'/>
