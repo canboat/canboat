@@ -451,8 +451,11 @@ extern void fillFieldTypeLookupField(Field *f, const char *lookup, const size_t 
   f->unit       = f->ft->unit;
   f->resolution = f->ft->resolution;
   f->hasSign    = f->ft->hasSign == True;
-  f->size       = f->ft->size;
-  f->name       = str;
+  if (f->size == 0)
+  {
+    f->size = f->ft->size;
+  }
+  f->name = str;
   if (f->unit != NULL)
   {
     fixupUnit(f);

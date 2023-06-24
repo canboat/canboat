@@ -1243,6 +1243,8 @@ extern bool fieldPrintKeyValue(const Field   *field,
     {
       const Field *f = g_ftf;
 
+      logDebug("fieldPrintKeyValue('%s') is actually a '%s' field bits=%u\n", fieldName, f->ft->name, f->size);
+
       if (*bits == 0)
       {
         *bits = f->size;
@@ -1252,7 +1254,6 @@ extern bool fieldPrintKeyValue(const Field   *field,
         *bits = f->lookup.size;
       }
 
-      logDebug("fieldPrintKeyValue('%s') is actually a '%s' field\n", fieldName, f->ft->name);
       r = (f->ft->pf)(f, fieldName, data, dataLen, startBit, bits);
     }
     else
