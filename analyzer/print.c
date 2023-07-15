@@ -327,7 +327,7 @@ extern bool fieldPrintNumber(const Field   *field,
            resolution,
            field->unitOffset,
            (field->unit ? field->unit : "None"));
-  if (field->resolution == 1.0 && field->unitOffset == 0.0)
+  if (resolution == 1.0 && field->unitOffset == 0.0)
   {
     logDebug("fieldPrintNumber <%s> print as integer %" PRId64 "\n", fieldName, value);
     mprintf("%" PRId64, value);
@@ -1246,6 +1246,10 @@ extern bool fieldPrintKeyValue(const Field   *field,
       if (*bits == 0)
       {
         *bits = f->size;
+      }
+      if(*bits ==0 && f->ft->name == "LOOKUP") 
+      {
+        *bits = f->lookup.size;
       }
 
       logDebug("fieldPrintKeyValue('%s') is actually a '%s' field\n", fieldName, f->ft->name);
