@@ -17,6 +17,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - #425: PGN 65293: Diverse Yacht Services: Load Cell
 - Raymarine Seatalk1 Brightness and Color
 
+### Fixed
+
+- ikonvert-serial timestamps are now ignoring time from ikonvert itself.
+
 ## [5.0.2]
 
 ### Fixed
