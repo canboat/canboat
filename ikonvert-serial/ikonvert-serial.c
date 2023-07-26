@@ -67,7 +67,6 @@ StringBuffer txList;      // TX list to send to iKonvert
 StringBuffer rxList;      // RX list to send to iKonvert
 
 uint64_t lastNow; // Epoch time of last timestamp
-uint64_t lastTS;  // Last timestamp received from iKonvert. Beware roll-around, max value is 999999
 
 static void processInBuffer(StringBuffer *in, StringBuffer *out);
 static void processReadBuffer(StringBuffer *in, int out);
@@ -445,23 +444,13 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
   }
 }
 
-static void computeIKonvertTime(RawMessage *msg, unsigned int t1, unsigned int t2)
+/**
+ * We used to trust the iKonvert timestamp, but it has been observed that its clock can be quite
+ * fast, e.g. the results are unreliable, so its much better to use the local clock.
+ */
+static void computeIKonvertTime(RawMessage *msg)
 {
-  uint64_t ts = t1 * 1000 + t2;
-
-  if (ts < lastTS) // Ooops, roll-around. Reset!
-  {
-    lastNow = 0;
-  }
-  if (lastNow == 0)
-  {
-    lastNow = getNow();
-    lastTS  = ts;
-  }
-  logDebug("computeIKonvertTime(%u, %u) -> ts=%llu lastTS=%llu lastNow = %llu\n", t1, t2, ts, lastTS, lastNow);
-  // Compute the difference between lastTS and ts
-  lastNow += ts - lastTS;
-  lastTS = ts;
+  lastNow = getNow();
   storeTimestamp(msg->timestamp, lastNow);
 }
 
@@ -501,7 +490,7 @@ static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
   msg->len = CB_MIN(sbGetLength(&dataBuffer), FASTPACKET_MAX_SIZE);
   memcpy(msg->data, sbGet(&dataBuffer), msg->len);
   sbEmpty(&dataBuffer);
-  computeIKonvertTime(msg, t1, t2);
+  computeIKonvertTime(msg);
   return true;
 }
 
