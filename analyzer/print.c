@@ -1249,7 +1249,7 @@ extern bool fieldPrintKeyValue(const Field   *field,
       {
         *bits = f->size;
       }
-      if(*bits ==0 && f->ft->name == "LOOKUP") 
+      if (*bits == 0 && f->ft && f->ft->name && strcmp(f->ft->name, "LOOKUP") == 0)
       {
         *bits = f->lookup.size;
       }
