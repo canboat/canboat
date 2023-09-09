@@ -58,9 +58,13 @@ Then restart the shell -again- and do:
 
 ### Building the binaries on Microsoft Windows
 
-Sorry, I no longer build on Windows myself, so please send me a PR with a working setup.
 It should still work with cygwin, but this is getting old and I suggest using WSL2, in which case the Linux hints above should work.
 
+Some binaries built with cygwin are now generated again using the github continuous integration tools. These suggest that
+it should build in the same way once `make` and `gcc-core` packages are installed:
+
+    cd canboat
+    make
 
 
 ### Building the generated code on Linux
@@ -89,8 +93,7 @@ Then restart the shell -again- and do:
 
 ### Building the generated code on Microsoft Windows
 
-Sorry, I no longer build on Windows myself, so please send me a PR with a working setup.
-It should still work with cygwin, but this is getting old and I suggest using WSL2, in which case the Linux hints above should work.
+The `generated` target is not supported.
 
 
 
