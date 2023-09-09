@@ -8,9 +8,16 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+## [5.0.2]
+
 ### Fixed
 
 - Print raw negative times correctly (broken in 5.0.0).
+
+### Added
+
+- #420: Fusion track album ID lookup added
+- Simnet 130845 multi-key/value pair PGN analysis
 
 ## [5.0.1]
 
@@ -21,7 +28,16 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ## [5.0.0]
 
 Note: Changes to XML v2 (canboat.xml, canboat.xsd, canboat.xsl) so this will
-constitute a new major release.
+constitute a new major release. The changes are small, the schema for canboat.xsd
+has been bumped to 2.1. The differences are:
+  - Dynamic field types, where a (repeating) set of fields defines a varying 
+    field, can now have a 'lookup' as well. 
+  - Some fields have changed from signed to unsigned.
+
+To see the changes, use:
+
+    git diff v4.12.0 docs/canboat.xml
+    git diff v4.12.0 docs/canboat.xsd
 
 ### Added
 
@@ -634,7 +650,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v5.0.1...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v5.0.2...HEAD
+[5.0.2]: https://github.com/canboat/canboat/compare/v5.0.1...v5.0.2
 [5.0.1]: https://github.com/canboat/canboat/compare/v5.0.0...v5.0.1
 [5.0.0]: https://github.com/canboat/canboat/compare/v4.12.0...v5.0.0
 [4.12.0]: https://github.com/canboat/canboat/compare/v4.11.1...v4.12.0

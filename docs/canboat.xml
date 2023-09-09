@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v5.0.1
+CANboat version v5.0.2
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -27,8 +27,8 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>5.0.1</Version>
-  <Copyright>CANboat version v5.0.1
+  <Version>5.0.2</Version>
+  <Copyright>CANboat version v5.0.2
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -1792,6 +1792,7 @@ limitations under the License.
       <EnumPair Value='4' Name='Track Info' />
       <EnumPair Value='5' Name='Track Title' />
       <EnumPair Value='6' Name='Track Artist' />
+      <EnumPair Value='7' Name='Track Album' />
       <EnumPair Value='9' Name='Track Progress' />
       <EnumPair Value='11' Name='AM/FM Station' />
       <EnumPair Value='12' Name='VHF' />
@@ -41966,7 +41967,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description></Description>
+          <Description>Track Album</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>

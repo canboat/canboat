@@ -2,7 +2,7 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"5.0.1",
+    "Version":"5.0.2",
     "PGNs": [
     
       {
@@ -38439,7 +38439,7 @@
             "Order":4,
             "Id":"messageId",
             "Name":"Message ID",
-            "Description":null,
+            "Description":"Track Album",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
