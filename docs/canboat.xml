@@ -2244,7 +2244,7 @@ limitations under the License.
       <EnumFieldType Value='517' Name='Low boat speed' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='520' Name='Shallow water' FieldType='NUMBER' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
+ Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='768' Name='Local field' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='1024' Name='Field angle' FieldType='NUMBER' Signed='true'

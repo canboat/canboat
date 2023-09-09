@@ -3001,7 +3001,7 @@
         {"name": "Deep water", "value": 264, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "32"},
         {"name": "True wind low", "value": 516, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "Low boat speed", "value": 517, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
-        {"name": "Shallow water", "value": 520, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
+        {"name": "Shallow water", "value": 520, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "32"},
         {"name": "Local field", "value": 768, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Field angle", "value": 1024, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Anchor depth", "value": 1800, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
