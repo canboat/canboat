@@ -11796,8 +11796,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":8,
-        "Length":8,
+        "FieldCount":9,
+        "Length":9,
         "Fields":[
           {
             "Order":1,
@@ -11908,6 +11908,16 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"unknown2",
+            "Name":"Unknown 2",
+            "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -11919,8 +11929,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":8,
-        "Length":8,
+        "FieldCount":9,
+        "Length":9,
         "Fields":[
           {
             "Order":1,
@@ -12031,6 +12041,16 @@
             "RangeMax":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_DISPLAY_COLOR"
+          },
+          {
+            "Order":9,
+            "Id":"unknown2",
+            "Name":"Unknown 2",
+            "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },

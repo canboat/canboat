@@ -9124,7 +9124,7 @@
           "FieldLengths",
           "Resolution",
           "Interval"],
-        "Length":8,
+        "Length":9,
         "Fields":[
           {
             "Order":1,
@@ -9237,7 +9237,17 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253}]},
+            "RangeMax":253},
+          {
+            "Order":9,
+            "Id":"unknown2",
+            "Name":"Unknown 2",
+            "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Type":"Binary data",
+            "Resolution":1,
+            "Signed":false}]},
       {
         "PGN":126720,
         "Id":"seatalk1DisplayColor",
@@ -9249,7 +9259,7 @@
           "FieldLengths",
           "Resolution",
           "Interval"],
-        "Length":8,
+        "Length":9,
         "Fields":[
           {
             "Order":1,
@@ -9366,7 +9376,17 @@
               {"name": "Day 1", "value": 0},
               {"name": "Day 2", "value": 2},
               {"name": "Red/Black", "value": 3},
-              {"name": "Inverse", "value": 4}]}]},
+              {"name": "Inverse", "value": 4}]},
+          {
+            "Order":9,
+            "Id":"unknown2",
+            "Name":"Unknown 2",
+            "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Type":"Binary data",
+            "Resolution":1,
+            "Signed":false}]},
       {
         "PGN":126720,
         "Id":"airmarAttitudeOffset",

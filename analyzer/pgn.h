@@ -2263,6 +2263,7 @@ Pgn pgnList[] = {
       BINARY_FIELD("Unknown 1", BYTES(1), NULL),
       MATCH_FIELD("Command", BYTES(1), 0, "Brightness"),
       PERCENTAGE_U8_FIELD("Brightness"),
+      BINARY_FIELD("Unknown 2", BYTES(1), NULL),
       END_OF_FIELDS}}
 
     ,
@@ -2276,6 +2277,7 @@ Pgn pgnList[] = {
       BINARY_FIELD("Unknown 1", BYTES(1), NULL),
       MATCH_FIELD("Command", BYTES(1), 1, "Color"),
       LOOKUP_FIELD("Color", BYTES(1), SEATALK_DISPLAY_COLOR),
+      BINARY_FIELD("Unknown 2", BYTES(1), NULL),
       END_OF_FIELDS}}
 
     ,

@@ -10013,7 +10013,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>8</Length>
+      <Length>9</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -10136,6 +10136,17 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
         </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>unknown2</Id>
+          <Name>Unknown 2</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Binary data</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -10150,7 +10161,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>8</Length>
+      <Length>9</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -10277,6 +10288,17 @@ limitations under the License.
             <EnumPair Value='3' Name='Red/Black' />
             <EnumPair Value='4' Name='Inverse' />
           </EnumValues>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>unknown2</Id>
+          <Name>Unknown 2</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Binary data</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>

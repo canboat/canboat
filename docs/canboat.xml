@@ -11725,8 +11725,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>8</FieldCount>
-      <Length>8</Length>
+      <FieldCount>9</FieldCount>
+      <Length>9</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11838,6 +11838,16 @@ limitations under the License.
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>unknown2</Id>
+          <Name>Unknown 2</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -11852,8 +11862,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>8</FieldCount>
-      <Length>8</Length>
+      <FieldCount>9</FieldCount>
+      <Length>9</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11964,6 +11974,16 @@ limitations under the License.
           <RangeMax>253</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SEATALK_DISPLAY_COLOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>unknown2</Id>
+          <Name>Unknown 2</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
