@@ -2962,6 +2962,82 @@ limitations under the License.
                       lookup
                       <a href="#lookup-SEATALK_DEVICE_ID">SEATALK_DEVICE_ID</a></td></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
+            - Seatalk1: Display Brightness</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>3212</td></tr><tr><td>Command</td><td>0</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            9
+            bytes long and contains 9 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
+                  Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Proprietary ID</td><td>3212:
+                  0x0c8c</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_NETWORK_GROUP">SEATALK_NETWORK_GROUP</a></td></tr><tr><td>6</td><td>Unknown 1</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td></tr><tr><td>7</td><td>Command</td><td>0:
+                  Brightness</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Brightness</td><td/><td>%<div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Unknown 2</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Seatalk1: Display Color</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>3212</td></tr><tr><td>Command</td><td>1</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            9
+            bytes long and contains 9 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
+                  Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Proprietary ID</td><td>3212:
+                  0x0c8c</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_NETWORK_GROUP">SEATALK_NETWORK_GROUP</a></td></tr><tr><td>6</td><td>Unknown 1</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td></tr><tr><td>7</td><td>Command</td><td>1:
+                  Color</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Color</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_DISPLAY_COLOR">SEATALK_DISPLAY_COLOR</a></td></tr><tr><td>9</td><td>Unknown 2</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
             - Airmar: Attitude Offset</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>135</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>32</td></tr></table></p><p/><p>
@@ -13928,7 +14004,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Auto</td></tr><tr><td>2</td><td>Standby</td></tr><tr><td>3</td><td>Wind</td></tr><tr><td>5</td><td>-1</td></tr><tr><td>6</td><td>-10</td></tr><tr><td>7</td><td>+1</td></tr><tr><td>8</td><td>+10</td></tr><tr><td>33</td><td>-1 and -10</td></tr><tr><td>34</td><td>+1 and +10</td></tr><tr><td>35</td><td>Track</td></tr></table><h3 id="lookup-SEATALK_DEVICE_ID">SEATALK_DEVICE_ID
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>3</td><td>S100</td></tr><tr><td>5</td><td>Course Computer</td></tr></table><h3 id="lookup-AIRMAR_CALIBRATE_FUNCTION">AIRMAR_CALIBRATE_FUNCTION
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>3</td><td>S100</td></tr><tr><td>5</td><td>Course Computer</td></tr></table><h3 id="lookup-SEATALK_NETWORK_GROUP">SEATALK_NETWORK_GROUP
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>None</td></tr><tr><td>1</td><td>Helm 1</td></tr><tr><td>2</td><td>Helm 2</td></tr><tr><td>3</td><td>Cockpit</td></tr><tr><td>4</td><td>Flybridge</td></tr><tr><td>5</td><td>Mast</td></tr><tr><td>6</td><td>Group 1</td></tr><tr><td>7</td><td>Group 2</td></tr><tr><td>8</td><td>Group 3</td></tr><tr><td>9</td><td>Group 4</td></tr><tr><td>10</td><td>Group 5</td></tr></table><h3 id="lookup-SEATALK_DISPLAY_COLOR">SEATALK_DISPLAY_COLOR
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Day 1</td></tr><tr><td>2</td><td>Day 2</td></tr><tr><td>3</td><td>Red/Black</td></tr><tr><td>4</td><td>Inverse</td></tr></table><h3 id="lookup-AIRMAR_CALIBRATE_FUNCTION">AIRMAR_CALIBRATE_FUNCTION
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Normal/cancel calibration</td></tr><tr><td>1</td><td>Enter calibration mode</td></tr><tr><td>2</td><td>Reset calibration to 0</td></tr><tr><td>3</td><td>Verify</td></tr><tr><td>4</td><td>Reset compass to defaults</td></tr><tr><td>5</td><td>Reset damping to defaults</td></tr></table><h3 id="lookup-AIRMAR_CALIBRATE_STATUS">AIRMAR_CALIBRATE_STATUS
         (0 - 255)

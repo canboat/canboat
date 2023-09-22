@@ -1730,6 +1730,33 @@
         ]
       },
       {
+        "Name":"SEATALK_NETWORK_GROUP",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"None", "Value":0},
+          {"Name":"Helm 1", "Value":1},
+          {"Name":"Helm 2", "Value":2},
+          {"Name":"Cockpit", "Value":3},
+          {"Name":"Flybridge", "Value":4},
+          {"Name":"Mast", "Value":5},
+          {"Name":"Group 1", "Value":6},
+          {"Name":"Group 2", "Value":7},
+          {"Name":"Group 3", "Value":8},
+          {"Name":"Group 4", "Value":9},
+          {"Name":"Group 5", "Value":10}
+        ]
+      },
+      {
+        "Name":"SEATALK_DISPLAY_COLOR",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Day 1", "Value":0},
+          {"Name":"Day 2", "Value":2},
+          {"Name":"Red/Black", "Value":3},
+          {"Name":"Inverse", "Value":4}
+        ]
+      },
+      {
         "Name":"AIRMAR_CALIBRATE_FUNCTION",
         "MaxValue":255,
         "EnumValues":[
@@ -11758,6 +11785,272 @@
             "RangeMax":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_DEVICE_ID"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
+        "Id":"seatalk1DisplayBrightness",
+        "Description":"Seatalk1: Display Brightness",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":9,
+        "Length":9,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Raymarine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1851,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"proprietaryId",
+            "Name":"Proprietary ID",
+            "Description":"0x0c8c",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":3212,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"group",
+            "Name":"Group",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK_NETWORK_GROUP"
+          },
+          {
+            "Order":6,
+            "Id":"unknown1",
+            "Name":"Unknown 1",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          },
+          {
+            "Order":7,
+            "Id":"command",
+            "Name":"Command",
+            "Description":"Brightness",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Match":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"brightness",
+            "Name":"Brightness",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Unit":"%",
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"unknown2",
+            "Name":"Unknown 2",
+            "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
+        "Id":"seatalk1DisplayColor",
+        "Description":"Seatalk1: Display Color",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":9,
+        "Length":9,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Raymarine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1851,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"proprietaryId",
+            "Name":"Proprietary ID",
+            "Description":"0x0c8c",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":3212,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"group",
+            "Name":"Group",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK_NETWORK_GROUP"
+          },
+          {
+            "Order":6,
+            "Id":"unknown1",
+            "Name":"Unknown 1",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          },
+          {
+            "Order":7,
+            "Id":"command",
+            "Name":"Command",
+            "Description":"Color",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Match":1,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"color",
+            "Name":"Color",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK_DISPLAY_COLOR"
+          },
+          {
+            "Order":9,
+            "Id":"unknown2",
+            "Name":"Unknown 2",
+            "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },

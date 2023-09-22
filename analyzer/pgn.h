@@ -2253,6 +2253,34 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"Seatalk1: Display Brightness",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1851),
+      MATCH_FIELD("Proprietary ID", BYTES(2), 3212, "0x0c8c"),
+      LOOKUP_FIELD("Group", BYTES(1), SEATALK_NETWORK_GROUP),
+      BINARY_FIELD("Unknown 1", BYTES(1), NULL),
+      MATCH_FIELD("Command", BYTES(1), 0, "Brightness"),
+      PERCENTAGE_U8_FIELD("Brightness"),
+      BINARY_FIELD("Unknown 2", BYTES(1), NULL),
+      END_OF_FIELDS}}
+
+    ,
+    {"Seatalk1: Display Color",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1851),
+      MATCH_FIELD("Proprietary ID", BYTES(2), 3212, "0x0c8c"),
+      LOOKUP_FIELD("Group", BYTES(1), SEATALK_NETWORK_GROUP),
+      BINARY_FIELD("Unknown 1", BYTES(1), NULL),
+      MATCH_FIELD("Command", BYTES(1), 1, "Color"),
+      LOOKUP_FIELD("Color", BYTES(1), SEATALK_DISPLAY_COLOR),
+      BINARY_FIELD("Unknown 2", BYTES(1), NULL),
+      END_OF_FIELDS}}
+
+    ,
     {"Airmar: Attitude Offset",
      126720,
      PACKET_COMPLETE,

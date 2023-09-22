@@ -8,6 +8,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Added
+
+- Raymarine Seatalk1 Brightness and Color
+
 ## [5.0.2]
 
 ### Fixed
