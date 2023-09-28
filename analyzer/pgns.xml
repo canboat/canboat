@@ -7195,7 +7195,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -7308,7 +7307,6 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -7754,8 +7752,8 @@ limitations under the License.
           <Order>9</Order>
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -7772,8 +7770,8 @@ limitations under the License.
           <Order>11</Order>
           <Id>parameter</Id>
           <Name>Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -8087,8 +8085,8 @@ limitations under the License.
           <Order>9</Order>
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -8105,8 +8103,8 @@ limitations under the License.
           <Order>11</Order>
           <Id>parameter</Id>
           <Name>Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -8427,8 +8425,8 @@ limitations under the License.
           <Order>9</Order>
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -8445,8 +8443,8 @@ limitations under the License.
           <Order>11</Order>
           <Id>parameter</Id>
           <Name>Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -8767,8 +8765,8 @@ limitations under the License.
           <Order>9</Order>
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -8785,8 +8783,8 @@ limitations under the License.
           <Order>11</Order>
           <Id>parameter</Id>
           <Name>Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -45458,7 +45456,6 @@ limitations under the License.
           <BitLength>12</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -45778,7 +45775,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>length</Id>
           <Name>Length</Name>
-          <Description>Length of field 7</Description>
+          <Description>Length of field 6</Description>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
           <BitStart>4</BitStart>
@@ -46353,7 +46350,6 @@ limitations under the License.
           <BitLength>12</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -48585,7 +48581,6 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -48788,7 +48783,6 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
