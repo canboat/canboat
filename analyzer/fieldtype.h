@@ -1298,7 +1298,18 @@ FieldType fieldTypeList[] = {
      .encodingDescription
      = "The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by "
        "the preceding length field.",
-     .pf = fieldPrintKeyValue}};
+     .pf = fieldPrintKeyValue},
+
+    {.name        = "FIELD_INDEX",
+     .description = "Field Index",
+     .resolution  = 1,
+     .size        = 8,
+     .hasSign     = False,
+     .rangeMin    = 1, // Minimum field index (.Order)
+     .rangeMax    = 253,
+ .encodingDescription
+     = "Index of the specified field in the PGN referenced.",
+     .pf = fieldPrintNumber}};
 
 const size_t fieldTypeCount = ARRAY_SIZE(fieldTypeList);
 

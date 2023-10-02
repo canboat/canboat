@@ -130,7 +130,7 @@ typedef struct
 #define LOOKUP_FIELDTYPE_FIELD(nam, len, typ)                                                          \
   {                                                                                                    \
     .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_FIELDTYPE, \
-    LOOKUP_FIELDTYPE_MEMBER = lookup##typ, .lookup.name = xstr(typ), .fieldType = "LOOKUP"             \
+    LOOKUP_FIELDTYPE_MEMBER = lookup##typ, .lookup.name = xstr(typ), .fieldType = "FIELDTYPE_LOOKUP"             \
   }
 
 #define LOOKUP_TRIPLET_FIELD(nam, len, typ, desc, order)                                                                      \
@@ -150,6 +150,12 @@ typedef struct
   {                                                                                                                               \
     .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookup##typ, \
     .lookup.name = xstr(typ), .fieldType = "BITLOOKUP"                                                                            \
+  }
+
+#define FIELDTYPE_LOOKUP(nam, len, typ)                                                                                            \
+  {                                                                                                                               \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_FIELDTYPE, LOOKUP_FIELDTYPE_MEMBER = lookup##typ, \
+    .lookup.name = xstr(typ), .fieldType = "LOOKUP_TYPE_FIELDTYPE"                                                                            \
   }
 
 #define UNKNOWN_LOOKUP_FIELD(nam, len)                                                                                  \
@@ -486,6 +492,11 @@ typedef struct
 #define UINT8_DESC_FIELD(nam, desc)                                                           \
   {                                                                                           \
     .name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "UINT8", .description = desc \
+  }
+
+#define FIELD_INDEX(nam, desc)                                                           \
+  {                                                                                           \
+    .name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "FIELD_INDEX", .description = desc \
   }
 
 #define UINT8_FIELD(nam) UINT8_DESC_FIELD(nam, NULL)
@@ -1939,7 +1950,7 @@ Pgn pgnList[] = {
       TIME_UFIX32_MS_FIELD("Transmission interval", NULL),
       TIME_UFIX16_CS_FIELD("Transmission interval offset", NULL),
       UINT8_DESC_FIELD("Number of Parameters", "How many parameter pairs will follow"),
-      UINT8_DESC_FIELD("Parameter", "Parameter index"),
+      FIELD_INDEX("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", "Parameter value"),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
@@ -1960,7 +1971,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Priority", 4, PRIORITY),
       RESERVED_FIELD(4),
       UINT8_DESC_FIELD("Number of Parameters", "How many parameter pairs will follow"),
-      UINT8_DESC_FIELD("Parameter", "Parameter index"),
+      FIELD_INDEX("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", "Parameter value"),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
@@ -2000,9 +2011,9 @@ Pgn pgnList[] = {
       UINT8_FIELD("Unique ID"),
       UINT8_FIELD("Number of Selection Pairs"),
       UINT8_FIELD("Number of Parameters"),
-      UINT8_FIELD("Selection Parameter"),
+      FIELD_INDEX("Selection Parameter", "Parameter index"),
       VARIABLE_FIELD("Selection Value", NULL),
-      UINT8_FIELD("Parameter"),
+      FIELD_INDEX("Parameter", "Parameter index"),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "This is the Read Fields variation of this group function PGN. The receiver shall respond by sending a Read "
@@ -2028,9 +2039,9 @@ Pgn pgnList[] = {
       UINT8_FIELD("Unique ID"),
       UINT8_FIELD("Number of Selection Pairs"),
       UINT8_FIELD("Number of Parameters"),
-      UINT8_FIELD("Selection Parameter"),
+      FIELD_INDEX("Selection Parameter", "Parameter index"),
       VARIABLE_FIELD("Selection Value", NULL),
-      UINT8_FIELD("Parameter"),
+      FIELD_INDEX("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", NULL),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
@@ -2057,9 +2068,9 @@ Pgn pgnList[] = {
       UINT8_FIELD("Unique ID"),
       UINT8_FIELD("Number of Selection Pairs"),
       UINT8_FIELD("Number of Parameters"),
-      UINT8_FIELD("Selection Parameter"),
+      FIELD_INDEX("Selection Parameter", "Parameter index"),
       VARIABLE_FIELD("Selection Value", NULL),
-      UINT8_FIELD("Parameter"),
+      FIELD_INDEX("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", NULL),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
@@ -2086,9 +2097,9 @@ Pgn pgnList[] = {
       UINT8_FIELD("Unique ID"),
       UINT8_FIELD("Number of Selection Pairs"),
       UINT8_FIELD("Number of Parameters"),
-      UINT8_FIELD("Selection Parameter"),
+      FIELD_INDEX("Selection Parameter", "Parameter index"),
       VARIABLE_FIELD("Selection Value", NULL),
-      UINT8_FIELD("Parameter"),
+      FIELD_INDEX("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", NULL),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
@@ -6514,7 +6525,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(381),
       LOOKUP_FIELDTYPE_FIELD("Key", 12, BANDG_KEY_VALUE),
-      SIMPLE_DESC_FIELD("Length", 4, "Length of field 7"),
+      SIMPLE_DESC_FIELD("Length", 4, "Length of field 6"),
       KEY_VALUE_FIELD("Value", "Data value"),
       END_OF_FIELDS},
      .repeatingField1 = UINT8_MAX,

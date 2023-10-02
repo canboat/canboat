@@ -317,6 +317,12 @@ limitations under the License.
       <Description>Key/value</Description>
       <EncodingDescription>The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field.</EncodingDescription>
     </FieldType>
+    <FieldType Name="FIELD_INDEX">
+      <Description>Field Index</Description>
+      <EncodingDescription>Index of the specified field in the PGN referenced.</EncodingDescription>
+      <Bits>8</Bits>
+      <Signed>false</Signed>
+    </FieldType>
   </FieldTypes>
   <MissingEnumerations>
     <MissingAttribute Name="Fields">The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</MissingAttribute>
@@ -9597,7 +9603,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -9703,7 +9709,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -9945,12 +9951,13 @@ limitations under the License.
           <Order>9</Order>
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
@@ -9963,12 +9970,13 @@ limitations under the License.
           <Order>11</Order>
           <Id>parameter</Id>
           <Name>Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>FIELD_INDEX</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -10096,12 +10104,13 @@ limitations under the License.
           <Order>9</Order>
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
@@ -10114,12 +10123,13 @@ limitations under the License.
           <Order>11</Order>
           <Id>parameter</Id>
           <Name>Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
           <Order>12</Order>
@@ -10254,12 +10264,13 @@ limitations under the License.
           <Order>9</Order>
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
@@ -10272,12 +10283,13 @@ limitations under the License.
           <Order>11</Order>
           <Id>parameter</Id>
           <Name>Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
           <Order>12</Order>
@@ -10412,12 +10424,13 @@ limitations under the License.
           <Order>9</Order>
           <Id>selectionParameter</Id>
           <Name>Selection Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
@@ -10430,12 +10443,13 @@ limitations under the License.
           <Order>11</Order>
           <Id>parameter</Id>
           <Name>Parameter</Name>
+          <Description>Parameter index</Description>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
           <Order>12</Order>
@@ -45088,14 +45102,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4093</RangeMax>
-          <FieldType>LOOKUP</FieldType>
+          <FieldType>FIELDTYPE_LOOKUP</FieldType>
           <LookupFieldTypeEnumeration>BANDG_KEY_VALUE</LookupFieldTypeEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>length</Id>
           <Name>Length</Name>
-          <Description>Length of field 7</Description>
+          <Description>Length of field 6</Description>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
           <BitStart>4</BitStart>
@@ -45694,7 +45708,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4093</RangeMax>
-          <FieldType>LOOKUP</FieldType>
+          <FieldType>FIELDTYPE_LOOKUP</FieldType>
           <LookupFieldTypeEnumeration>BANDG_KEY_VALUE</LookupFieldTypeEnumeration>
         </Field>
         <Field>
@@ -47580,7 +47594,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
-          <FieldType>LOOKUP</FieldType>
+          <FieldType>FIELDTYPE_LOOKUP</FieldType>
           <LookupFieldTypeEnumeration>SIMNET_KEY_VALUE</LookupFieldTypeEnumeration>
         </Field>
         <Field>
@@ -47741,7 +47755,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
-          <FieldType>LOOKUP</FieldType>
+          <FieldType>FIELDTYPE_LOOKUP</FieldType>
           <LookupFieldTypeEnumeration>SIMNET_KEY_VALUE</LookupFieldTypeEnumeration>
         </Field>
         <Field>

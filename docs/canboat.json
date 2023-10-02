@@ -316,6 +316,13 @@
         "Name":"KEY_VALUE",
       "Description":"Key/value",
       "EncodingDescription":"The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field."
+      },
+    {
+        "Name":"FIELD_INDEX",
+      "Description":"Field Index",
+      "EncodingDescription":"Index of the specified field in the PGN referenced.",
+      "Bits":8,
+      "Signed":false
       }
     ],
     "MissingEnumerations":[
@@ -9782,7 +9789,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"FIELD_INDEX"
           },
           {
             "Order":7,
@@ -9888,7 +9895,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"FIELD_INDEX"
           },
           {
             "Order":7,
@@ -10127,12 +10134,13 @@
             "Order":9,
             "Id":"selectionParameter",
             "Name":"Selection Parameter",
+            "Description":"Parameter index",
             "BitLength":8,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"FIELD_INDEX"
           },
           {
             "Order":10,
@@ -10145,12 +10153,13 @@
             "Order":11,
             "Id":"parameter",
             "Name":"Parameter",
+            "Description":"Parameter index",
             "BitLength":8,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"FIELD_INDEX"
           }
         ]
       },
@@ -10278,12 +10287,13 @@
             "Order":9,
             "Id":"selectionParameter",
             "Name":"Selection Parameter",
+            "Description":"Parameter index",
             "BitLength":8,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"FIELD_INDEX"
           },
           {
             "Order":10,
@@ -10296,12 +10306,13 @@
             "Order":11,
             "Id":"parameter",
             "Name":"Parameter",
+            "Description":"Parameter index",
             "BitLength":8,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"FIELD_INDEX"
           },
           {
             "Order":12,
@@ -10436,12 +10447,13 @@
             "Order":9,
             "Id":"selectionParameter",
             "Name":"Selection Parameter",
+            "Description":"Parameter index",
             "BitLength":8,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"FIELD_INDEX"
           },
           {
             "Order":10,
@@ -10454,12 +10466,13 @@
             "Order":11,
             "Id":"parameter",
             "Name":"Parameter",
+            "Description":"Parameter index",
             "BitLength":8,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"FIELD_INDEX"
           },
           {
             "Order":12,
@@ -10594,12 +10607,13 @@
             "Order":9,
             "Id":"selectionParameter",
             "Name":"Selection Parameter",
+            "Description":"Parameter index",
             "BitLength":8,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"FIELD_INDEX"
           },
           {
             "Order":10,
@@ -10612,12 +10626,13 @@
             "Order":11,
             "Id":"parameter",
             "Name":"Parameter",
+            "Description":"Parameter index",
             "BitLength":8,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"FIELD_INDEX"
           },
           {
             "Order":12,
@@ -44493,14 +44508,14 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4093,
-            "FieldType":"LOOKUP",
+            "FieldType":"FIELDTYPE_LOOKUP",
             "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE"
           },
           {
             "Order":5,
             "Id":"length",
             "Name":"Length",
-            "Description":"Length of field 7",
+            "Description":"Length of field 6",
             "BitLength":4,
             "BitOffset":28,
             "BitStart":4,
@@ -45067,7 +45082,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4093,
-            "FieldType":"LOOKUP",
+            "FieldType":"FIELDTYPE_LOOKUP",
             "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE"
           },
           {
@@ -46890,7 +46905,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"LOOKUP",
+            "FieldType":"FIELDTYPE_LOOKUP",
             "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE"
           },
           {
@@ -47048,7 +47063,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"LOOKUP",
+            "FieldType":"FIELDTYPE_LOOKUP",
             "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE"
           },
           {
