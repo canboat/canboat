@@ -1,4 +1,4 @@
-VERSION "5.0.2"
+VERSION "5.0.3"
 
 
 NS_ : 
@@ -260,12 +260,6 @@ BO_ 2566851326 PGN_65290_simnetPaddleWheelSpeed: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566851838 PGN_65292_simnetClearFluidLevelW: 8 Vector__XXX
- SG_ reserved4 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
- SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
- SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2566852094 PGN_65293_simnetLgc2000Configura: 8 Vector__XXX
  SG_ reserved4 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -1539,9 +1533,6 @@ CM_ SG_ 2566851326 manufacturerCode "Simrad";
 CM_ BO_ 2566851838 "Simnet: Clear Fluid Level Warnings";
 CM_ SG_ 2566851838 industryCode "Marine Industry";
 CM_ SG_ 2566851838 manufacturerCode "Simrad";
-CM_ BO_ 2566852094 "Simnet: LGC-2000 Configuration";
-CM_ SG_ 2566852094 industryCode "Marine Industry";
-CM_ SG_ 2566852094 manufacturerCode "Simrad";
 CM_ BO_ 2566854398 "Simnet: AP Unknown 1";
 CM_ SG_ 2566854398 industryCode "Marine Industry";
 CM_ SG_ 2566854398 manufacturerCode "Simrad";
@@ -1829,7 +1820,6 @@ BA_ "SystemMessageLongSymbol" BO_ 2566849790 "PGN_65284_maretronProprietaryDcBre
 BA_ "SystemMessageLongSymbol" BO_ 2566851070 "PGN_65289_simnetTrimTabSensorCalibration";
 BA_ "SystemMessageLongSymbol" BO_ 2566851326 "PGN_65290_simnetPaddleWheelSpeedConfiguration";
 BA_ "SystemMessageLongSymbol" BO_ 2566851838 "PGN_65292_simnetClearFluidLevelWarnings";
-BA_ "SystemMessageLongSymbol" BO_ 2566852094 "PGN_65293_simnetLgc2000Configuration";
 BA_ "SystemMessageLongSymbol" BO_ 2566856190 "PGN_65309_navicoWirelessBatteryStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2566856958 "PGN_65312_navicoWirelessSignalStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2566869246 "PGN_65360_seatalkPilotLockedHeading";

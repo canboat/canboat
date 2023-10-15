@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta charset="UTF-8"/><meta name="description" content="CANBoat PGN documentation"/><link rel="stylesheet" type="text/css" href="canboat.css"/><script src="canboat.js"></script><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet"/></head><body><div id="sidenav" class="sidenav"><a class="closebtn" onclick="closeNav(event)">×</a><a href="#main">Top</a><a href="#pgn-list">PGN list</a><a href="#physical-quantities">Physical Quantities</a><a href="#field-types">Field Types</a><a href="#lookup-enumerations">Lookup enumerations</a><a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a><a href="#bitfield-enumerations">Bitfield enumerations</a><a href="#lookupfieldtype-enumerations">Lookup with FieldType enumerations</a><a href="#notes">Notes</a></div><div id="sidenav-closed" class="sidenav"><a onclick="openNav(event)" id="hamburger"><span></span><span></span><span></span></a></div><div id="main"><p>
             The CANBoat project PGN documentation version
-            5.0.2.
-          </p><h3>Copyright</h3><p class="xs">CANboat version v5.0.2
+            5.0.3.
+          </p><h3>Copyright</h3><p class="xs">CANboat version v5.0.3
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -1466,7 +1466,36 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65302">0xFF16:
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-65293">0xFF0D:
+            PGN 65293
+            - Diverse Yacht Services: Load Cell</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>641</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 6 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>641:
+                  Diverse Yacht Services</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>6</td><td>Load Cell</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-65302">0xFF16:
             PGN 65302
             - Simnet: AP Unknown 1</h3><p>
               This PGN description applies when the following field(s) match:
