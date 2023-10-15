@@ -10,6 +10,11 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+## [5.0.3]
+
+### Added
+
+- #425: PGN 65293: Diverse Yacht Services: Load Cell
 - Raymarine Seatalk1 Brightness and Color
 
 ## [5.0.2]
@@ -654,7 +659,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v5.0.2...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v5.0.3...HEAD
+[5.0.3]: https://github.com/canboat/canboat/compare/v5.0.2...v5.0.3
 [5.0.2]: https://github.com/canboat/canboat/compare/v5.0.1...v5.0.2
 [5.0.1]: https://github.com/canboat/canboat/compare/v5.0.0...v5.0.1
 [5.0.0]: https://github.com/canboat/canboat/compare/v4.12.0...v5.0.0
