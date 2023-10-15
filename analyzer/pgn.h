@@ -1642,6 +1642,13 @@ Pgn pgnList[] = {
      {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
+    {"Diverse Yacht Services: Load Cell",
+     65293,
+     PACKET_RESOLUTION_UNKNOWN,
+     PACKET_SINGLE,
+     {COMPANY(641), INSTANCE_FIELD, RESERVED_FIELD(BYTES(1)), UINT32_FIELD("Load Cell"), END_OF_FIELDS}}
+
+    ,
     {"Simnet: AP Unknown 1",
      65302,
      PACKET_INCOMPLETE,
