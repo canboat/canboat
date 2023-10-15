@@ -127,7 +127,7 @@ extern void nmea0183CreateMessage(StringBuffer *msg183, int src, const char *for
   // and OpenCPN does not allow this.
 
   first  = 'A' + ((src >> 4) & 0xf);
-  second = 'A' + ((src) &0xf);
+  second = 'A' + ((src) & 0xf);
   if (first >= 'P')
   {
     first++;
@@ -209,9 +209,9 @@ Field Number:
 */
 static void nmea0183VesselHeading(StringBuffer *msg183, int src, const char *msg)
 {
-  double heading;
-  double deviation;
-  double variation;
+  double  heading;
+  double  deviation;
+  double  variation;
   int64_t reference;
 
   if (getJSONNumber(msg, "Heading", &heading, U_ANGLE) && getJSONLookupValue(msg, "Reference", &reference))

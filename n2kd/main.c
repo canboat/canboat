@@ -1,4 +1,4 @@
-//#define DEBUG
+// #define DEBUG
 /*
 
 Runs a TCP server, single threaded. It reads JSON styled NMEA 2000 records (lines)
@@ -420,11 +420,17 @@ static char *getFullStateJSON(StreamType stream, int64_t now)
       for (s = 0; s < pgn->p_maxSrc; s++)
       {
         Message *m = &pgn->p_message[s];
-        char last_ts[DATE_LENGTH];
+        char     last_ts[DATE_LENGTH];
 
         storeTimestamp(last_ts, m->m_last);
-        sbAppendFormat(&state, "  ,\"%u%s%s\":{\"last\":\"%s\",\"interval\":%u,\"count\":%u}\n", m->m_src, m->m_key2 ? "_" : "",
-        m->m_key2 ? m->m_key2 : "", last_ts, m->m_interval, m->m_count);
+        sbAppendFormat(&state,
+                       "  ,\"%u%s%s\":{\"last\":\"%s\",\"interval\":%u,\"count\":%u}\n",
+                       m->m_src,
+                       m->m_key2 ? "_" : "",
+                       m->m_key2 ? m->m_key2 : "",
+                       last_ts,
+                       m->m_interval,
+                       m->m_count);
       }
       sbAppendFormat(&state, "  }\n");
       separator = ',';
@@ -758,13 +764,12 @@ static void writeAllClients(void)
               writeAndClose(i, state, strlen(state));
             }
             break;
-          case CLIENT_STATUS_STREAM:
-            {
-              char * statusState = getFullStateJSON(CLIENT_STATUS_STREAM, now);
-              writeAndClose(i, statusState, strlen(statusState));
-              free(statusState);
-            }
-            break;
+          case CLIENT_STATUS_STREAM: {
+            char *statusState = getFullStateJSON(CLIENT_STATUS_STREAM, now);
+            writeAndClose(i, statusState, strlen(statusState));
+            free(statusState);
+          }
+          break;
           case CLIENT_NMEA0183_STREAM:
           case DATA_OUTPUT_NMEA0183_STREAM:
             logDebug("NMEA-> %d\n", nmeaMessage.len);
@@ -869,7 +874,7 @@ static bool storeMessage(char *line, size_t len)
   int      i, idx, k;
   int      src = 0, dst = 255, prn = 0;
   Pgn     *pgn;
-  int64_t  now = epoch();
+  int64_t  now  = epoch();
   char    *key2 = 0;
   int      valid;
   char     value[16];
@@ -1126,7 +1131,7 @@ static bool storeMessage(char *line, size_t len)
   {
     free(key2);
   }
-  m->m_time = now + valid * INT64_C(1000) ;
+  m->m_time = now + valid * INT64_C(1000);
   if (m->m_last > 0)
   {
     m->m_interval = (uint32_t) (now - m->m_last);

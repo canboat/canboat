@@ -45,8 +45,8 @@ typedef struct Client
   int            fd;
   ConnectionType ct;
   bool           reconnect;
-  char *         host;
-  char *         port;
+  char          *host;
+  char          *port;
   sockaddr_union sockaddr;
   socklen_t      socklen;
 } Client;
@@ -177,8 +177,8 @@ int storeNewClient(int i, int sockfd)
 
 int main(int argc, char **argv)
 {
-  char *         host = 0;
-  char *         port = 0;
+  char          *host = 0;
+  char          *port = 0;
   ConnectionType ct   = ClientUDP; // Default client type is UDP
   char           msg[LINESIZE];
   int            r;

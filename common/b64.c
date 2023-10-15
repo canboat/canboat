@@ -67,11 +67,11 @@ void sbAppendEncodeBase64(StringBuffer *sb, const uint8_t *data, size_t len, enu
    * input characters (including boundary effects)
    */
   char           otemp[((B64_CHUNKSIZE + 2) / 3) * 4 + 3];
-  char *         optr;
+  char          *optr;
   size_t         count;
   const uint8_t *in = data;
   unsigned char  u1, u2, u3;
-  const char *   encodeTable;
+  const char    *encodeTable;
 
   switch (encoding)
   {
@@ -141,10 +141,10 @@ void sbAppendDecodeBase64(StringBuffer *sb, const char *data, size_t len, enum B
 {
   const uint8_t *s    = (const uint8_t *) data;
   const uint8_t *end  = s + len;
-  uint8_t *      d    = 0;
+  uint8_t       *d    = 0;
   uint32_t       n    = 0;
   int            iter = 0;
-  const int *    decodeTable;
+  const int     *decodeTable;
 
   switch (encoding)
   {
@@ -179,9 +179,9 @@ void sbAppendDecodeBase64(StringBuffer *sb, const char *data, size_t len, enum B
         iter++;
         if (iter == 4) // Every 4 characters we have 24 bits of output data
         {
-          *d++ = (uint8_t)(n >> 16);
-          *d++ = (uint8_t)(n >> 8);
-          *d++ = (uint8_t)(n);
+          *d++ = (uint8_t) (n >> 16);
+          *d++ = (uint8_t) (n >> 8);
+          *d++ = (uint8_t) (n);
           n    = 0;
           iter = 0;
         }
@@ -191,12 +191,12 @@ void sbAppendDecodeBase64(StringBuffer *sb, const char *data, size_t len, enum B
   // Handle any remainder
   if (iter == 3)
   {
-    *d++ = (uint8_t)(n >> 10);
-    *d++ = (uint8_t)(n >> 2);
+    *d++ = (uint8_t) (n >> 10);
+    *d++ = (uint8_t) (n >> 2);
   }
   else if (iter == 2)
   {
-    *d++ = (uint8_t)(n >> 4);
+    *d++ = (uint8_t) (n >> 4);
   }
 
   sb->len = d - (uint8_t *) sbGet(sb);

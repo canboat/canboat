@@ -81,8 +81,8 @@ int main(int argc, char **argv)
   char          *name   = argv[0];
   char          *device = 0;
   struct stat    statbuf;
-  int ac = argc;
-  char **av = argv;
+  int            ac = argc;
+  char         **av = argv;
 
   setProgName(av[0]);
   while (ac > 1)

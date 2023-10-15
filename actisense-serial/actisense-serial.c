@@ -82,8 +82,8 @@ int main(int argc, char **argv)
 {
   int            handle;
   struct termios attr;
-  char *         name   = argv[0];
-  char *         device = 0;
+  char          *name   = argv[0];
+  char          *device = 0;
   struct stat    statbuf;
   int            speed = 115200;
   int            i;
@@ -282,7 +282,7 @@ int main(int argc, char **argv)
   for (wait = timeout;;)
   {
     unsigned char msg[BUFFER_SIZE];
-    int           r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, timeout);
+    int r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, timeout);
 
     if ((r & FD1_ReadReady) > 0)
     {
@@ -342,7 +342,7 @@ static void parseAndWriteIn(int handle, const unsigned char *cmd)
   unsigned int dst;
   unsigned int bytes;
 
-  char *       p;
+  char        *p;
   int          i;
   int          b;
   unsigned int byt;
@@ -509,7 +509,7 @@ static bool readIn(void)
  */
 static bool getInMsg(unsigned char *msg, size_t msgLen)
 {
-  char * p;
+  char  *p;
   size_t len;
 
   p = strchr(sbGet(&inBuffer), '\n');
@@ -679,7 +679,7 @@ static void ngtMessageReceived(const unsigned char *msg, size_t msgLen)
 {
   size_t i;
   char   line[1000];
-  char * p;
+  char  *p;
   char   dateStr[DATE_LENGTH];
 
   if (msgLen < 12)
@@ -708,7 +708,7 @@ static void n2kMessageReceived(const unsigned char *msg, size_t msgLen)
   size_t       i;
   unsigned int len;
   char         line[800];
-  char *       p;
+  char        *p;
   char         dateStr[DATE_LENGTH];
 
   if (msgLen < 11)

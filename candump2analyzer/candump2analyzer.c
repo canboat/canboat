@@ -90,11 +90,11 @@ int main(int argc, char **argv)
 
     // Process the CAN ID
     //
-    uint32_t canid       = 0;
-    int      size        = 0;
-    double   currentTime = 0.;
+    uint32_t canid          = 0;
+    int      size           = 0;
+    double   currentTime    = 0.;
     uint32_t currentTimeInt = 0;
-    uint8_t *u = (uint8_t *) &canid;
+    uint8_t *u              = (uint8_t *) &canid;
 
     // Determine which candump format is being used.
     //
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
     int            msec;
     char           timestamp[20];
     struct timeval tv;
-    struct tm *    utc;
+    struct tm     *utc;
 
     // If the candump format includes a usec timestamp, convert
     // that to a timeval, otherwise use gettimeofday.
@@ -216,7 +216,7 @@ int main(int argc, char **argv)
     // Now process the data bytes.
     //
     int          i;
-    char *       p;
+    char        *p;
     char         separator;
     unsigned int data;
 

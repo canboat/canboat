@@ -113,7 +113,7 @@ int main(int argc, char **argv)
   }
 
   command.functionCode = 0;
-  command.pgn[0]       = (pgn) &0xff;
+  command.pgn[0]       = (pgn) & 0xff;
   command.pgn[1]       = (pgn >> 8) & 0xff;
   command.pgn[2]       = (pgn >> 16);
   command.interval     = interval;

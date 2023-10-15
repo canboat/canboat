@@ -1300,22 +1300,21 @@ FieldType fieldTypeList[] = {
        "the preceding length field.",
      .pf = fieldPrintKeyValue},
 
-    {.name        = "FIELD_INDEX",
-     .description = "Field Index",
-     .resolution  = 1,
-     .size        = 8,
-     .hasSign     = False,
-     .rangeMin    = 1, // Minimum field index (.Order)
-     .rangeMax    = 253,
- .encodingDescription
-     = "Index of the specified field in the PGN referenced.",
-     .pf = fieldPrintNumber}};
+    {.name                = "FIELD_INDEX",
+     .description         = "Field Index",
+     .resolution          = 1,
+     .size                = 8,
+     .hasSign             = False,
+     .rangeMin            = 1, // Minimum field index (.Order)
+     .rangeMax            = 253,
+     .encodingDescription = "Index of the specified field in the PGN referenced.",
+     .pf                  = fieldPrintNumber}};
 
 const size_t fieldTypeCount = ARRAY_SIZE(fieldTypeList);
 
 #else
-extern FieldType                     fieldTypeList[];
-extern const size_t                  fieldTypeCount;
+extern FieldType    fieldTypeList[];
+extern const size_t fieldTypeCount;
 #endif // FIELDTYPE_GLOBALS
 
 extern FieldType *getFieldType(const char *name);

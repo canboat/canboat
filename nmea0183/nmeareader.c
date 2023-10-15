@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 {
   int            handle;
   struct termios attr;
-  char *         device = 0;
+  char          *device = 0;
   struct stat    statbuf;
 
   setProgName(argv[0]);

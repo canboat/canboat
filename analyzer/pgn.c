@@ -465,4 +465,3 @@ void camelCase(bool upperCamelCase)
     }
   }
 }
-

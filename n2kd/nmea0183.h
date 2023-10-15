@@ -31,7 +31,7 @@ limitations under the License.
  * NMEA 0183 uses various units, including metric derived and colonial.
  */
 #define SPEED_M_S_TO_KNOTS(s) (s * 1.94384)
-#define SPEED_M_S_TO_KMH(s) ((s) *3.6)
+#define SPEED_M_S_TO_KMH(s) ((s) * 3.6)
 #define DIST_M_TO_KM(d) ((d) / 1000.0)
 #define DIST_M_TO_NM(d) ((d) / 1852.0)
 

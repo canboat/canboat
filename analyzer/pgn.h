@@ -63,10 +63,10 @@ struct LookupInfo
   {
     const char *(*pair)(size_t val);
     const char *(*triplet)(size_t val1, size_t val2);
-    void (*pairEnumerator)(EnumPairCallback);
-    void (*bitEnumerator)(BitPairCallback);
-    void (*tripletEnumerator)(EnumTripletCallback);
-    void (*fieldtypeEnumerator)(EnumFieldtypeCallback);
+    void        (*pairEnumerator)(EnumPairCallback);
+    void        (*bitEnumerator)(BitPairCallback);
+    void        (*tripletEnumerator)(EnumTripletCallback);
+    void        (*fieldtypeEnumerator)(EnumFieldtypeCallback);
   } function;
   uint8_t val1Order; // Which field is the first field in a tripletEnumerator
   size_t  size;      // Used in analyzer only
@@ -130,7 +130,7 @@ typedef struct
 #define LOOKUP_FIELDTYPE_FIELD(nam, len, typ)                                                          \
   {                                                                                                    \
     .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_FIELDTYPE, \
-    LOOKUP_FIELDTYPE_MEMBER = lookup##typ, .lookup.name = xstr(typ), .fieldType = "FIELDTYPE_LOOKUP"             \
+    LOOKUP_FIELDTYPE_MEMBER = lookup##typ, .lookup.name = xstr(typ), .fieldType = "FIELDTYPE_LOOKUP"   \
   }
 
 #define LOOKUP_TRIPLET_FIELD(nam, len, typ, desc, order)                                                                      \
@@ -152,10 +152,10 @@ typedef struct
     .lookup.name = xstr(typ), .fieldType = "BITLOOKUP"                                                                            \
   }
 
-#define FIELDTYPE_LOOKUP(nam, len, typ)                                                                                            \
-  {                                                                                                                               \
-    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_FIELDTYPE, LOOKUP_FIELDTYPE_MEMBER = lookup##typ, \
-    .lookup.name = xstr(typ), .fieldType = "LOOKUP_TYPE_FIELDTYPE"                                                                            \
+#define FIELDTYPE_LOOKUP(nam, len, typ)                                                                   \
+  {                                                                                                       \
+    .name = nam, .size = len, .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_FIELDTYPE,    \
+    LOOKUP_FIELDTYPE_MEMBER = lookup##typ, .lookup.name = xstr(typ), .fieldType = "LOOKUP_TYPE_FIELDTYPE" \
   }
 
 #define UNKNOWN_LOOKUP_FIELD(nam, len)                                                                                  \
@@ -494,8 +494,8 @@ typedef struct
     .name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "UINT8", .description = desc \
   }
 
-#define FIELD_INDEX(nam, desc)                                                           \
-  {                                                                                           \
+#define FIELD_INDEX(nam, desc)                                                                      \
+  {                                                                                                 \
     .name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "FIELD_INDEX", .description = desc \
   }
 
@@ -7049,8 +7049,8 @@ const size_t pgnListSize  = ARRAY_SIZE(pgnList);
 const size_t pgnRangeSize = ARRAY_SIZE(pgnRange);
 
 #else
-extern Pgn         pgnList[];
-extern size_t      pgnListSize;
-extern PgnRange    pgnRange[];
-extern size_t      pgnRangeSize;
+extern Pgn      pgnList[];
+extern size_t   pgnListSize;
+extern PgnRange pgnRange[];
+extern size_t   pgnRangeSize;
 #endif
