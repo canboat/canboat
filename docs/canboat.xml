@@ -19367,11 +19367,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127509</PGN>
       <Id>inverterStatus</Id>
       <Description>Inverter Status</Description>
-      <URL>https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf</URL>
-      <Type>Single</Type>
+      <Explanation>The NMEA wrote in the link in the URL that this PGN is obsolete and superceded by PGN 127751, but that PGN reference is obviously incorrect. They probably meant PGN 127511. The other interesting thing is that this PGN is only four bytes long but still referenced as a Fast PGN, which matches various sources; see github issue #428.</Explanation>
+      <URL>https://web.archive.org/web/20140913025729/https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf</URL>
+      <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
-      <Length>8</Length>
+      <Length>4</Length>
       <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
@@ -19445,7 +19446,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>34</BitLength>
+          <BitLength>2</BitLength>
           <BitOffset>30</BitOffset>
           <BitStart>6</BitStart>
           <Resolution>1</Resolution>

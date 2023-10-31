@@ -678,12 +678,8 @@ BO_ 2582779134 PGN_127508_batteryStatus: 8 Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582779390 PGN_127509_inverterStatus: 8 Vector__XXX
- SG_ reserved : 30|34@1+ (1,0) [0|0] "" Vector__XXX
- SG_ inverterEnable : 28|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ operatingState : 24|4@1+ (1,0) [0|0] "" Vector__XXX
- SG_ dcInstance : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ acInstance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582779646 PGN_127510_chargerConfigurationS: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
@@ -1996,8 +1992,6 @@ VAL_ 2582777598 switch3 0 "Off" 1 "On" ;
 VAL_ 2582777598 switch2 0 "Off" 1 "On" ;
 VAL_ 2582777598 switch1 0 "Off" 1 "On" ;
 VAL_ 2582778366 type 0 "Fuel" 1 "Water" 2 "Gray water" 3 "Live well" 4 "Oil" 5 "Black water" ;
-VAL_ 2582779390 inverterEnable 0 "Off" 1 "On" ;
-VAL_ 2582779390 operatingState 0 "Invert" 1 "AC passthru" 2 "Load sense" 3 "Fault" 4 "Disabled" ;
 VAL_ 2582841086 rippleState 0 "Good" 1 "Warning" 2 "Error" ;
 VAL_ 2582841086 lowDcVoltageState 0 "Good" 1 "Warning" 2 "Error" ;
 VAL_ 2582841086 overloadState 0 "Good" 1 "Warning" 2 "Error" ;

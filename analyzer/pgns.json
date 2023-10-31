@@ -16209,9 +16209,9 @@
         "PGN":127509,
         "Id":"inverterStatus",
         "Description":"Inverter Status",
-        "Type":"Single",
+        "Type":"Fast",
         "Complete":true,
-        "Length":8,
+        "Length":4,
         "Fields":[
           {
             "Order":1,
@@ -16286,7 +16286,7 @@
             "Order":6,
             "Id":"reserved",
             "Name":"Reserved",
-            "BitLength":34,
+            "BitLength":2,
             "BitOffset":30,
             "BitStart":6,
             "Resolution":1,

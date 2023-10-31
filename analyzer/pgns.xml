@@ -17854,9 +17854,9 @@ limitations under the License.
       <PGN>127509</PGN>
       <Id>inverterStatus</Id>
       <Description>Inverter Status</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>8</Length>
+      <Length>4</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -17938,7 +17938,7 @@ limitations under the License.
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>34</BitLength>
+          <BitLength>2</BitLength>
           <BitOffset>30</BitOffset>
           <BitStart>6</BitStart>
           <Resolution>1</Resolution>

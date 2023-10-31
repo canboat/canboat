@@ -3261,16 +3261,22 @@ Pgn pgnList[] = {
     {"Inverter Status",
      127509,
      PACKET_COMPLETE,
-     PACKET_SINGLE,
+     PACKET_FAST,
      {INSTANCE_FIELD,
       UINT8_FIELD("AC Instance"),
       UINT8_FIELD("DC Instance"),
       LOOKUP_FIELD("Operating State", 4, INVERTER_STATE),
       LOOKUP_FIELD("Inverter Enable", 2, OFF_ON),
-      RESERVED_FIELD(2 + BYTES(4)),
+      RESERVED_FIELD(2),
       END_OF_FIELDS},
      .interval = 1500,
-     .url      = "https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf"}
+     .url
+     = "https://web.archive.org/web/20140913025729/https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf",
+     .explanation
+     = "The NMEA wrote in the link in the URL that this PGN is obsolete and superceded by PGN 127751, but that PGN reference is "
+       "obviously incorrect. They probably meant PGN 127511. "
+       "The other interesting thing is that this PGN is only four bytes long but still referenced as a Fast PGN, which matches "
+       "various sources; see github issue #428."}
 
     ,
     {"Charger Configuration Status",

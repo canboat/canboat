@@ -5150,13 +5150,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-127509">0x1F215:
             PGN 127509
-            - Inverter Status</h3><p/><p>
+            - Inverter Status</h3><p>The NMEA wrote in the link in the URL that this PGN is obsolete and superceded by PGN 127751, but that PGN reference is obviously incorrect. They probably meant PGN 127511. The other interesting thing is that this PGN is only four bytes long but still referenced as a Fast PGN, which matches various sources; see github issue #428.</p><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
               </p><p>
             This
-             single-frame 
+             fast-packet 
             PGN is
-            8
+            4
             bytes long and contains 6 fields.
 
             
@@ -5176,10 +5176,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-INVERTER_STATE">INVERTER_STATE</a></td></tr><tr><td>5</td><td>Inverter Enable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>34 bits
+                      <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><p>
               Source:
-              <a href="https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf">https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf</a></p><h3 id="pgn-127510">0x1F216:
+              <a href="https://web.archive.org/web/20140913025729/https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf">https://web.archive.org/web/20140913025729/https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf</a></p><h3 id="pgn-127510">0x1F216:
             PGN 127510
             - Charger Configuration Status</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:

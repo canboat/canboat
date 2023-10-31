@@ -8,6 +8,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Fixed
+
+- #428: PGN 127509 is FAST, not SINGLE.
+
 ### Added
 
 ## [5.0.3]
