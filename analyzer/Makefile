@@ -20,9 +20,8 @@ PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
 ANALYZER=$(TARGETDIR)/analyzer
-ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
 ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
-TARGETS=$(ANALYZER) $(ANALYZER_J1939) $(ANALYZER_EXPLAIN)
+TARGETS=$(ANALYZER) $(ANALYZER_EXPLAIN)
 XMLFILE=pgns.xml
 JSONFILE=pgns.json
 XSL2FILE=../docs/canboat.xsl
@@ -36,7 +35,6 @@ IKXMLFILE=pgns-ik.xml
 IKJSONFILE=pgns-ik.json
 NPMFILE=package.json
 HEADERS=analyzer.h pgn.h lookup.h fieldtype.h
-HEADERS_J1939=analyzer.h pgn-j1939.h lookup.h fieldtype.h
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 ANALYZER_EXPLAIN_SOURCES=analyzer-explain.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
@@ -52,10 +50,6 @@ analyzer: $(ANALYZER)
 $(ANALYZER): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
 	@mkdir -p $(TARGETDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
-
-$(ANALYZER_J1939): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS_J1939) $(COMMON) Makefile
-	@mkdir -p $(TARGETDIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_J1939) -I$(COMMONDIR) -DJ1939 pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(ANALYZER_EXPLAIN): $(ANALYZER_EXPLAIN_SOURCES)
 	@mkdir -p $(TARGETDIR)
