@@ -60,7 +60,11 @@ limitations under the License.
 #define max(x, y) ((x) >= (y) ? (x) : (y))
 #endif
 
+#ifdef J1939
+#include "pgn-j1939.h"
+#else
 #include "pgn.h"
+#endif
 
 #define DST_GLOBAL (0xff) /* The address used when a message is addressed to -all- stations */
 
