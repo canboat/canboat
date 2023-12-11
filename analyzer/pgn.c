@@ -85,7 +85,7 @@ const Pgn *searchForUnknownPgn(int pgnId)
     {
       fallback = pgn;
     }
-    if (pgn->pgn > pgnId)
+    if (pgn->pgn >= pgnId)
     {
       break;
     }
