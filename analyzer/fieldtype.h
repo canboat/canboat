@@ -732,7 +732,7 @@ FieldType fieldTypeList[] = {
 
     {.name          = "TEMPERATURE_UINT8_OFFSET",	/* used by PGN 65262 & 65270 */
      .description   = "Temperature",
-	 .offset		= 232,							/* offset to degrees Kelvin */
+	 .offset		= 233,							/* offset to degrees Kelvin */
      .resolution    = 1,
      .physical      = &TEMPERATURE,
      .baseFieldType = "UINT8",

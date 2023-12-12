@@ -596,7 +596,7 @@ typedef struct
 
 #define TEMPERATURE_UINT8_OFFSET_FIELD(nam)                                                              \
   {                                                                                          	 		 \
-    .name = nam, .size = BYTES(1), .offset = 232, .resolution = 1, .unit = "K", .fieldType = "TEMPERATURE_UINT8_OFFSET" \
+    .name = nam, .size = BYTES(1), .offset = 233, .resolution = 1, .unit = "K", .fieldType = "TEMPERATURE_UINT8_OFFSET" \
   }
 
 #define TEMPERATURE_U24_FIELD(nam)                                                                     \
@@ -1225,33 +1225,6 @@ Pgn pgnList[] = {
                     "0xFEFF (61440 - 65279). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
-	/* J1939 ECU #2 PGN 61443 */
-
-    ,
-    {"ECU #2",
-     61443,
-     PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {RESERVED_FIELD(BYTES(1)),
-	  PERCENTAGE_U8_HIGHRES_FIELD("Throttle Lever"),
-	  RESERVED_FIELD(BYTES(6)),
-	  END_OF_FIELDS}}
-
-
-
-	/* J1939 ECU #1 PGN 61444 */
-
-    ,
-    {"ECU #1",
-     61444,
-     PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {RESERVED_FIELD(BYTES(3)),
-	  ROTATION_UFIX16_RPM_HIGHRES_FIELD("Engine RPM", NULL),
-	  RESERVED_FIELD(BYTES(3)),
-	  END_OF_FIELDS}}
-
-
 
     /* Maretron ACM 100 manual documents PGN 65001-65030 */
 
@@ -1545,24 +1518,6 @@ Pgn pgnList[] = {
       CURRENT_UFIX16_A_FIELD("AC RMS Current"),
       END_OF_FIELDS}}
 
-	/* J1939 PGN 65226 See https://embeddedflakes.com/j1939-diagnostics-part-1/ */
-
-	,
-	{"Active Trouble Codes",
-	 65226,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {BINARY_FIELD("Malfunction Lamp Status", 2, "Fault Lamps"),	/* Lamp modes are: 0 = off, 01 = on		*/
-	  BINARY_FIELD("Red Stop Lamp Status", 2, "Fault Lamps"),		/* 10 = flashing 1Hz, 11 = flashing 2Hz	*/
-	  BINARY_FIELD("Amber Warning Lamp Status", 2, "Fault Lamps"),
-	  BINARY_FIELD("Protect Lamp Status", 2, "Fault Lamps"),
-	  RESERVED_FIELD(BYTES(1)),
-	  BINARY_FIELD("SPN", 19,"Suspect Parameter Number"),	/* These four fields comprise a Diagnostic Trouble Code (DTC) */
-	  BINARY_FIELD("FMI", 5,"Fault Mode Indicator"),		/* If there is more han one DTC the message is sent using TP  */
-	  BINARY_FIELD("CM", 1, "SPN Conversion Method"),		/* Not sure how to handle that actually... */
-	  BINARY_FIELD("OC", 7, "Occurance Count"),
-	  END_OF_FIELDS}}
-	 
     ,
     {"ISO Commanded Address",
      65240,
@@ -1582,61 +1537,6 @@ Pgn pgnList[] = {
       RESERVED_FIELD(1),
       UINT8_FIELD("New Source Address"),
       END_OF_FIELDS}}
-
-	/* J1939 PGN 65262 */
-
-	,
-	{"Engine Temp #1",
-	 65262,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {TEMPERATURE_UINT8_OFFSET_FIELD("Engine Coolant Temp"),
-	  END_OF_FIELDS}}
-
-	/* J1939 PGN 65266 */
-
-	,
-	{"Fuel Economy",
-	 65266,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {RESERVED_FIELD(BYTES(6)),
-	  PERCENTAGE_U8_HIGHRES_FIELD("Throttle Position"),
-	  END_OF_FIELDS}}
-
-	/* J1939 PGN 65269 */
-
-	,
-	{"Ambient Conditions",
-	 65269,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {PRESSURE_UINT8_KPA_FIELD("Barometric Pressure"),
-	  END_OF_FIELDS}}
-
-
-	/* J1939 PGN 65270 */
-
-	,
-	{"Inlet/Exhaust Conditions",
-	 65270,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {RESERVED_FIELD(BYTES(2)),
-	  TEMPERATURE_UINT8_OFFSET_FIELD("Intake Manifold Temp"),
-	  PRESSURE_UINT8_2KPA_FIELD("Air Inlet Pressure"),
-	  END_OF_FIELDS}}
-
-	/* J1939 PGN 65271 */
-
-	,
-	{"Vehicle Electrical Power",
-	 65271,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {RESERVED_FIELD(BYTES(4)),
-	  VOLTAGE_U16_50MV_FIELD("Battery Voltage"),
-	  END_OF_FIELDS}}
 
 
 

@@ -596,7 +596,7 @@ typedef struct
 
 #define TEMPERATURE_UINT8_OFFSET_FIELD(nam)                                                              \
   {                                                                                          	 		 \
-    .name = nam, .size = BYTES(1), .offset = 232, .resolution = 1, .unit = "K", .fieldType = "TEMPERATURE_UINT8_OFFSET" \
+    .name = nam, .size = BYTES(1), .offset = 233, .resolution = 1, .unit = "K", .fieldType = "TEMPERATURE_UINT8_OFFSET" \
   }
 
 #define TEMPERATURE_U24_FIELD(nam)                                                                     \
