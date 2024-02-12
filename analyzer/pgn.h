@@ -1871,10 +1871,10 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1851),
-      BINARY_FIELD("Pilot Mode", BYTES(1), NULL),
-      BINARY_FIELD("Sub Mode", BYTES(1), NULL),
+      BINARY_FIELD("Pilot Mode", BYTES(2), NULL),
+      BINARY_FIELD("Sub Mode", BYTES(2), NULL),
       BINARY_FIELD("Pilot Mode Data", BYTES(1), NULL),
-      RESERVED_FIELD(BYTES(3)),
+      RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS}},
 
     {"Airmar: Depth Quality Factor",
