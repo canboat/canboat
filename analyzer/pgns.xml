@@ -6644,7 +6644,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>pilotMode</Id>
           <Name>Pilot Mode</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Binary data</Type>
@@ -6655,8 +6655,8 @@ limitations under the License.
           <Order>5</Order>
           <Id>subMode</Id>
           <Name>Sub Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Binary data</Type>
           <Resolution>1</Resolution>
@@ -6667,7 +6667,7 @@ limitations under the License.
           <Id>pilotModeData</Id>
           <Name>Pilot Mode Data</Name>
           <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Binary data</Type>
           <Resolution>1</Resolution>
@@ -6677,8 +6677,8 @@ limitations under the License.
           <Order>7</Order>
           <Id>reserved7</Id>
           <Name>Reserved</Name>
-          <BitLength>24</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
