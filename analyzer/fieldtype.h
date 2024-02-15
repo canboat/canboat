@@ -318,6 +318,7 @@ static const PhysicalQuantity TEMPERATURE = {.name         = "TEMPERATURE",
                                              .abbreviation = "K",
                                              .url          = "https://en.wikipedia.org/wiki/Temperature"};
 
+
 static const PhysicalQuantity PRESSURE = {.name         = "PRESSURE",
                                           .description  = "Pressure",
                                           .abbreviation = "Pa",
@@ -729,6 +730,14 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "UFIX16",
      .v1Type        = "Temperature"},
 
+    {.name          = "TEMPERATURE_UINT8_OFFSET",	/* used by PGN 65262 & 65270 */
+     .description   = "Temperature",
+	 .offset		= 233,							/* offset to degrees Kelvin */
+     .resolution    = 1,
+     .physical      = &TEMPERATURE,
+     .baseFieldType = "UINT8",
+     .v1Type        = "Temperature"},
+
     {.name                = "TEMPERATURE_HIGH",
      .description         = "Temperature, high range",
      .encodingDescription = "This has a higher range but lower resolution than TEMPERATURE",
@@ -875,6 +884,12 @@ FieldType fieldTypeList[] = {
     {.name          = "VOLTAGE_UFIX16_10MV",
      .description   = "Voltage",
      .resolution    = 0.01,
+     .physical      = &POTENTIAL_DIFFERENCE,
+     .baseFieldType = "UFIX16"},
+
+    {.name          = "VOLTAGE_UFIX16_50MV",
+     .description   = "Voltage",
+     .resolution    = 0.05,
      .physical      = &POTENTIAL_DIFFERENCE,
      .baseFieldType = "UFIX16"},
 
@@ -1038,6 +1053,8 @@ FieldType fieldTypeList[] = {
 
     {.name = "PERCENTAGE_UINT8", .description = "Percentage, unsigned", .unit = "%", .baseFieldType = "UINT8"},
 
+    {.name = "PERCENTAGE_UINT8_HIGHRES", .description = "Percentage, unsigned", .unit = "%", .baseFieldType = "UINT8"},
+
     {.name = "PERCENTAGE_INT8", .description = "Percentage", .unit = "%", .baseFieldType = "INT8"},
 
     {.name          = "PERCENTAGE_FIX16",
@@ -1052,6 +1069,7 @@ FieldType fieldTypeList[] = {
      .resolution          = 0.1,
      .unit                = "%",
      .baseFieldType       = "FIX16"},
+
 
     {.name                = "ROTATION_FIX16",
      .description         = "Rotational speed",
@@ -1076,12 +1094,32 @@ FieldType fieldTypeList[] = {
      .unit                = "rpm",
      .physical            = &ANGULAR_VELOCITY,
      .baseFieldType       = "UFIX16"},
+ 
+    {.name                = "ROTATION_UFIX16_RPM_HIGHRES",
+     .description         = "Rotational speed, RPM",
+     .encodingDescription = "Angular rotation in 0.125 rpm",
+     .resolution          = 0.125,
+     .unit                = "rpm",
+     .physical            = &ANGULAR_VELOCITY,
+     .baseFieldType       = "UFIX16"},
 
     {.name          = "PRESSURE_UFIX16_HPA",
      .description   = "Pressure, 16 bit unsigned in hectopascal resolution",
      .resolution    = 100,
      .physical      = &PRESSURE,
      .baseFieldType = "UFIX16"},
+
+    {.name          = "PRESSURE_UINT8_2KPA",
+     .description   = "Pressure, 8 bit unsigned in 2 kilopascal resolution",
+     .resolution    = 2000,
+     .physical      = &PRESSURE,
+     .baseFieldType = "UINT8"},
+
+    {.name          = "PRESSURE_UINT8_KPA",
+     .description   = "Pressure, 8 bit unsigned in .5 kilopascal resolution",
+     .resolution    = 500,
+     .physical      = &PRESSURE,
+     .baseFieldType = "UINT8"},
 
     {.name          = "PRESSURE_UFIX16_KPA",
      .description   = "Pressure, 16 bit unsigned in kilopascal resolution.",

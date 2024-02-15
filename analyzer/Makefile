@@ -20,10 +20,14 @@ PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
 ANALYZER=$(TARGETDIR)/analyzer
+ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
 ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
-TARGETS=$(ANALYZER) $(ANALYZER_EXPLAIN)
+ANALYZER_EXPLAIN_J1939=$(TARGETDIR)/analyzer-explain-j1939
+TARGETS=$(ANALYZER) $(ANALYZER_J1939) $(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_J1939)
 XMLFILE=pgns.xml
+XMLFILE_J1939=pgns-j1939.xml
 JSONFILE=pgns.json
+JSONFILE_J1939=pgns-j1939.json
 XSL2FILE=../docs/canboat.xsl
 XML2FILE=../docs/canboat.xml
 XSD2FILE=../docs/canboat.xsd
@@ -35,10 +39,13 @@ IKXMLFILE=pgns-ik.xml
 IKJSONFILE=pgns-ik.json
 NPMFILE=package.json
 HEADERS=analyzer.h pgn.h lookup.h fieldtype.h
+HEADERS_J1939=analyzer.h pgn-j1939.h lookup.h fieldtype.h
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 ANALYZER_EXPLAIN_SOURCES=analyzer-explain.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
+ANALYZER_EXPLAIN_J1939_SOURCES=analyzer-explain.c pgn.c lookup.c print.c fieldtype.c $(HEADERS_J1939) $(COMMON) Makefile
 ANALYZER_EXPLAIN_DEP=$(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_SOURCES)
+ANALYZER_EXPLAIN_J1939_DEP=$(ANALYZER_EXPLAIN_J1939) $(ANALYZER_EXPLAIN_J1939_SOURCES)
 
 CFLAGS?=-Wall -O2
 LDLIBS=-lm
@@ -51,12 +58,23 @@ $(ANALYZER): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) 
 	@mkdir -p $(TARGETDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
+$(ANALYZER_J1939): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS_J1939) $(COMMON) Makefile
+	@mkdir -p $(TARGETDIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_J1939) -I$(COMMONDIR) -DJ1939 pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
+
 $(ANALYZER_EXPLAIN): $(ANALYZER_EXPLAIN_SOURCES)
 	@mkdir -p $(TARGETDIR)
 	$(CC) -DEXPLAIN $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
+$(ANALYZER_EXPLAIN_J1939): $(ANALYZER_EXPLAIN_J1939_SOURCES)
+	@mkdir -p $(TARGETDIR)
+	$(CC) -DEXPLAIN -DJ1939 $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN_J1939) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
+
 $(XMLFILE): $(ANALYZER_EXPLAIN_DEP)
 	$(ANALYZER_EXPLAIN) -explain-xml -camel -v1 >$(XMLFILE)
+
+$(XMLFILE_J1939): $(ANALYZER_EXPLAIN_J1939_DEP)
+	$(ANALYZER_EXPLAIN_J1939) -explain-xml -camel -v1 >$(XMLFILE_J1939)
 
 $(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE) fixup-version.py
 	python3 fixup-version.py $(ANALYZER) $(XSD2FILE)
@@ -75,6 +93,10 @@ $(IKXMLFILE): $(ANALYZER_EXPLAIN_DEP)
 
 $(JSONFILE): $(XMLFILE) pgns2json.xslt validate-json.py
 	xsltproc pgns2json.xslt $(XMLFILE) >$(@)
+	python3 validate-json.py $(@)
+
+$(JSONFILE_J1939): $(XMLFILE) pgns2json.xslt validate-json.py
+	xsltproc pgns2json.xslt $(XMLFILE_J1939) >$(@)
 	python3 validate-json.py $(@)
 
 $(JSON2FILE): $(XML2FILE) canboat2json.xslt validate-json.py

@@ -278,6 +278,11 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 0.01, .unit = "V", .fieldType = "VOLTAGE_UFIX16_10MV" \
   }
 
+#define VOLTAGE_U16_50MV_FIELD(nam)                                                                    \
+  {                                                                                                    \
+    .name = nam, .size = BYTES(2), .resolution = 0.05, .unit = "V", .fieldType = "VOLTAGE_UFIX16_50MV" \
+  }
+
 #define VOLTAGE_U16_100MV_FIELD(nam)                                                                   \
   {                                                                                                    \
     .name = nam, .size = BYTES(2), .resolution = 0.1, .unit = "V", .fieldType = "VOLTAGE_UFIX16_100MV" \
@@ -589,6 +594,11 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 0.01, .unit = "K", .fieldType = "TEMPERATURE" \
   }
 
+#define TEMPERATURE_UINT8_OFFSET_FIELD(nam)                                                              \
+  {                                                                                          	 		 \
+    .name = nam, .size = BYTES(1), .offset = 233, .resolution = 1, .unit = "K", .fieldType = "TEMPERATURE_UINT8_OFFSET" \
+  }
+
 #define TEMPERATURE_U24_FIELD(nam)                                                                     \
   {                                                                                                    \
     .name = nam, .size = BYTES(3), .resolution = 0.001, .unit = "K", .fieldType = "TEMPERATURE_UFIX24" \
@@ -759,6 +769,11 @@ typedef struct
     .name = nam, .size = BYTES(1), .resolution = 1, .unit = "%", .fieldType = "PERCENTAGE_UINT8" \
   }
 
+#define PERCENTAGE_U8_HIGHRES_FIELD(nam)                                                          \
+  {                                                                                               \
+    .name = nam, .size = BYTES(1), .resolution = .4, .unit = "%", .fieldType = "PERCENTAGE_UINT8_HIGHRES" \
+  }
+
 #define PERCENTAGE_I8_FIELD(nam)                                                                                 \
   {                                                                                                              \
     .name = nam, .size = BYTES(1), .resolution = 1, .hasSign = true, .unit = "%", .fieldType = "PERCENTAGE_INT8" \
@@ -779,6 +794,11 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 0.25, .hasSign = false, .unit = "rpm", .fieldType = "ROTATION_UFIX16_RPM" \
   }
 
+#define ROTATION_UFIX16_RPM_HIGHRES_FIELD(nam, desc)																				\
+  {																																	\
+	.name = nam, .size = BYTES(2), .resolution = 0.125, .hasSign = false, .unit = "rpm", .fieldType = "ROTATION_UFIX16_RPM_HIGHRES" \
+  }
+
 #define ROTATION_FIX32_FIELD(nam)                                                                                               \
   {                                                                                                                             \
     .name = nam, .size = BYTES(4), .resolution = (1e-6 / 32.0), .hasSign = true, .unit = "rad/s", .fieldType = "ROTATION_FIX32" \
@@ -787,6 +807,17 @@ typedef struct
 #define PRESSURE_UFIX16_HPA_FIELD(nam)                                                                 \
   {                                                                                                    \
     .name = nam, .size = BYTES(2), .resolution = 100, .unit = "Pa", .fieldType = "PRESSURE_UFIX16_HPA" \
+  }
+
+#define PRESSURE_UINT8_KPA_FIELD(nam)                                                                 \
+  {                                                                                                   \
+    .name = nam, .size = BYTES(1), .resolution = 500, .unit = "Pa", .fieldType = "PRESSURE_UINT8_KPA" \
+  }
+
+
+#define PRESSURE_UINT8_2KPA_FIELD(nam)                                                                   \
+  {                                                                                                      \
+    .name = nam, .size = BYTES(1), .resolution = 2000, .unit = "Pa", .fieldType = "PRESSURE_UINT8_2KPA" \
   }
 
 #define PRESSURE_UFIX16_KPA_FIELD(nam)                                                                                    \
@@ -1194,6 +1225,7 @@ Pgn pgnList[] = {
                     "0xFEFF (61440 - 65279). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
+
     /* Maretron ACM 100 manual documents PGN 65001-65030 */
 
     ,
@@ -1505,6 +1537,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(1),
       UINT8_FIELD("New Source Address"),
       END_OF_FIELDS}}
+
+
 
     /* proprietary PDU2 (non addressed) single-frame range 0xFF00 to 0xFFFF (65280 - 65535) */
 
