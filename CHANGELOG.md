@@ -16,6 +16,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+- #430: Add J1939 PGNs and `analyzer-j1939` and `analyzer-explain-j1939`.
+
 ## [5.0.3]
 
 ### Added
