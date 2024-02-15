@@ -12,6 +12,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 - #423: Add support for Garmin Backlight level + day/night mode.
 - #428: PGN 127509 is FAST, not SINGLE.
+- #436: Fix length of field in PGN 65379 (Seatalk Pilot Mode).
 
 ### Added
 
