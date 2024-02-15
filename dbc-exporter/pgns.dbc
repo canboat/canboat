@@ -376,10 +376,10 @@ BO_ 2566872830 PGN_65374_seatalkKeypadHeartbeat: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566874110 PGN_65379_seatalkPilotMode: 8 Vector__XXX
- SG_ reserved7 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
- SG_ pilotModeData : 32|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ subMode : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ pilotMode : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ pilotModeData : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ subMode : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ pilotMode : 16|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
