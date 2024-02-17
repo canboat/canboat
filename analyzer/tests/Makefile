@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 tests
 
 all:	tests
 
@@ -88,4 +88,13 @@ test8:
 	diff $(TEMPDIR)/pgn-test-actisense.out pgn-test-actisense.out
 	diff $(TEMPDIR)/pgn-test-actisense.err pgn-test-actisense.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8
+#
+# This tests that analyzer correctly interprets Raymarine PGN 65379 structure.
+# It should not return an error when parsing 126208 Group Command/Acknowledge messages to PGN 65379
+#
+test9:	
+	$(ANALYZER) < pgn-65379-test.in > $(TEMPDIR)/pgn-65379-test.out -debug -q -fixtime pgn-test 2> $(TEMPDIR)/pgn-65379-test.err
+	diff $(TEMPDIR)/pgn-65379-test.out pgn-65379-test.out
+	diff $(TEMPDIR)/pgn-65379-test.err pgn-65379-test.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9

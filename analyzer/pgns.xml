@@ -6647,9 +6647,18 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Binary data</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Standby' />
+            <EnumPair Value='64' Name='Auto, compass commanded' />
+            <EnumPair Value='256' Name='Vane, Wind Mode' />
+            <EnumPair Value='384' Name='Track Mode' />
+            <EnumPair Value='385' Name='No Drift, COG referenced (In track, course changes)' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>5</Order>

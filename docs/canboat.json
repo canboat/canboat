@@ -2749,6 +2749,17 @@
           {"Name":"95%", "Value":19},
           {"Name":"100%", "Value":20}
         ]
+      },
+      {
+        "Name":"SEATALK_PILOT_MODE_16",
+        "MaxValue":65535,
+        "EnumValues":[
+          {"Name":"Standby", "Value":0},
+          {"Name":"Auto, compass commanded", "Value":64},
+          {"Name":"Vane, Wind Mode", "Value":256},
+          {"Name":"Track Mode", "Value":384},
+          {"Name":"No Drift, COG referenced (In track, course changes)", "Value":385}
+        ]
       }
     ],
     "LookupIndirectEnumerations":[
@@ -9285,7 +9296,11 @@
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK_PILOT_MODE_16"
           },
           {
             "Order":5,
