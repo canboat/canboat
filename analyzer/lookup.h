@@ -2356,6 +2356,14 @@ LOOKUP(SIMNET_BACKLIGHT_LEVEL, 19, "95%")
 LOOKUP(SIMNET_BACKLIGHT_LEVEL, 20, "100%")
 LOOKUP_END
 
+LOOKUP_TYPE(SEATALK_PILOT_MODE_16, BYTES(2))
+LOOKUP(SEATALK_PILOT_MODE,   0, "Standby")
+LOOKUP(SEATALK_PILOT_MODE,  64, "Auto, compass commanded")
+LOOKUP(SEATALK_PILOT_MODE, 256, "Vane, Wind Mode")
+LOOKUP(SEATALK_PILOT_MODE, 384, "Track Mode")
+LOOKUP(SEATALK_PILOT_MODE, 385, "No Drift, COG referenced (In track, course changes)")
+LOOKUP_END
+
 // Keep this at the end, so a next include does not need to do this
 #undef LOOKUP_TYPE
 #undef LOOKUP_TYPE_TRIPLET
