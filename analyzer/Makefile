@@ -50,13 +50,15 @@ ANALYZER_EXPLAIN_J1939_DEP=$(ANALYZER_EXPLAIN_J1939) $(ANALYZER_EXPLAIN_J1939_SO
 CFLAGS?=-Wall -O2
 LDLIBS=-lm
 
+CC=emcc
+
 all: $(TARGETS)
 
 analyzer: $(ANALYZER)
 
 $(ANALYZER): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
 	@mkdir -p $(TARGETDIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o analyzer.html -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
 $(ANALYZER_J1939): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS_J1939) $(COMMON) Makefile
 	@mkdir -p $(TARGETDIR)
