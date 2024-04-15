@@ -1907,7 +1907,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1851),
-      BINARY_FIELD("Pilot Mode", BYTES(2), NULL),
+      LOOKUP_FIELD("Pilot Mode", BYTES(2), SEATALK_PILOT_MODE_16),
       BINARY_FIELD("Sub Mode", BYTES(2), NULL),
       BINARY_FIELD("Pilot Mode Data", BYTES(1), NULL),
       RESERVED_FIELD(BYTES(1)),
