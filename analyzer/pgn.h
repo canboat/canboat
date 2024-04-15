@@ -594,8 +594,8 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 0.01, .unit = "K", .fieldType = "TEMPERATURE" \
   }
 
-#define TEMPERATURE_UINT8_OFFSET_FIELD(nam)                                                              \
-  {                                                                                          	 		 \
+#define TEMPERATURE_UINT8_OFFSET_FIELD(nam)                                                                             \
+  {                                                                                                                     \
     .name = nam, .size = BYTES(1), .offset = 233, .resolution = 1, .unit = "K", .fieldType = "TEMPERATURE_UINT8_OFFSET" \
   }
 
@@ -734,6 +734,11 @@ typedef struct
     .name = nam, .hasSign = true, .fieldType = "POWER_FIX32_VAR_OFFSET" \
   }
 
+#define POWER_U8_FIELD(nam)                                                                 \
+  {                                                                                         \
+    .name = nam, .size = BYTES(1), .resolution = 1, .unit = "W", .fieldType = "POWER_UINT8" \
+  }
+
 #define POWER_U16_FIELD(nam)                                                                 \
   {                                                                                          \
     .name = nam, .size = BYTES(2), .resolution = 1, .unit = "W", .fieldType = "POWER_UINT16" \
@@ -769,8 +774,8 @@ typedef struct
     .name = nam, .size = BYTES(1), .resolution = 1, .unit = "%", .fieldType = "PERCENTAGE_UINT8" \
   }
 
-#define PERCENTAGE_U8_HIGHRES_FIELD(nam)                                                          \
-  {                                                                                               \
+#define PERCENTAGE_U8_HIGHRES_FIELD(nam)                                                                  \
+  {                                                                                                       \
     .name = nam, .size = BYTES(1), .resolution = .4, .unit = "%", .fieldType = "PERCENTAGE_UINT8_HIGHRES" \
   }
 
@@ -794,9 +799,10 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 0.25, .hasSign = false, .unit = "rpm", .fieldType = "ROTATION_UFIX16_RPM" \
   }
 
-#define ROTATION_UFIX16_RPM_HIGHRES_FIELD(nam, desc)																				\
-  {																																	\
-	.name = nam, .size = BYTES(2), .resolution = 0.125, .hasSign = false, .unit = "rpm", .fieldType = "ROTATION_UFIX16_RPM_HIGHRES" \
+#define ROTATION_UFIX16_RPM_HIGHRES_FIELD(nam, desc)                                     \
+  {                                                                                      \
+    .name = nam, .size = BYTES(2), .resolution = 0.125, .hasSign = false, .unit = "rpm", \
+    .fieldType = "ROTATION_UFIX16_RPM_HIGHRES"                                           \
   }
 
 #define ROTATION_FIX32_FIELD(nam)                                                                                               \
@@ -814,9 +820,8 @@ typedef struct
     .name = nam, .size = BYTES(1), .resolution = 500, .unit = "Pa", .fieldType = "PRESSURE_UINT8_KPA" \
   }
 
-
-#define PRESSURE_UINT8_2KPA_FIELD(nam)                                                                   \
-  {                                                                                                      \
+#define PRESSURE_UINT8_2KPA_FIELD(nam)                                                                  \
+  {                                                                                                     \
     .name = nam, .size = BYTES(1), .resolution = 2000, .unit = "Pa", .fieldType = "PRESSURE_UINT8_2KPA" \
   }
 
@@ -1225,7 +1230,6 @@ Pgn pgnList[] = {
                     "0xFEFF (61440 - 65279). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
-
     /* Maretron ACM 100 manual documents PGN 65001-65030 */
 
     ,
@@ -1537,8 +1541,6 @@ Pgn pgnList[] = {
       RESERVED_FIELD(1),
       UINT8_FIELD("New Source Address"),
       END_OF_FIELDS}}
-
-
 
     /* proprietary PDU2 (non addressed) single-frame range 0xFF00 to 0xFFFF (65280 - 65535) */
 
@@ -4618,12 +4620,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {RADIO_FREQUENCY_FIELD("Rx Frequency", 10),
       RADIO_FREQUENCY_FIELD("Tx Frequency", 10),
-      UINT8_FIELD("Radio Channel"),
-      UINT8_FIELD("Tx Power"),
-      UINT8_FIELD("Mode"),
-      UINT8_FIELD("Channel Bandwidth"),
+      STRING_FIX_FIELD("Radio Channel", BYTES(6)),
+      POWER_U8_FIELD("Tx Power"),
+      UINT16_FIELD("Mode"),
+      FREQUENCY_FIELD("Channel Bandwidth", 1),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .explanation = "The Radio Channel is NOT a numeric field, it has been observed to contain values such as 9000L1-L3 and "
+                    "9000F1-F3 (indicating private channels as allowed in some countries.)",
+     .interval    = UINT16_MAX}
 
     ,
     {"AIS UTC/Date Inquiry",

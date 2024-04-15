@@ -318,7 +318,6 @@ static const PhysicalQuantity TEMPERATURE = {.name         = "TEMPERATURE",
                                              .abbreviation = "K",
                                              .url          = "https://en.wikipedia.org/wiki/Temperature"};
 
-
 static const PhysicalQuantity PRESSURE = {.name         = "PRESSURE",
                                           .description  = "Pressure",
                                           .abbreviation = "Pa",
@@ -730,9 +729,9 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "UFIX16",
      .v1Type        = "Temperature"},
 
-    {.name          = "TEMPERATURE_UINT8_OFFSET",	/* used by PGN 65262 & 65270 */
+    {.name          = "TEMPERATURE_UINT8_OFFSET", /* used by PGN 65262 & 65270 */
      .description   = "Temperature",
-	 .offset		= 233,							/* offset to degrees Kelvin */
+     .offset        = 233, /* offset to degrees Kelvin */
      .resolution    = 1,
      .physical      = &TEMPERATURE,
      .baseFieldType = "UINT8",
@@ -1012,6 +1011,12 @@ FieldType fieldTypeList[] = {
      .physical      = &ELECTRICAL_REACTIVE_POWER,
      .baseFieldType = "FIX32"},
 
+    {.name          = "POWER_UINT8",
+     .description   = "Electrical power, either DC or AC Real power, in Watts",
+     .physical      = &ELECTRICAL_POWER,
+     .resolution    = 1,
+     .baseFieldType = "UINT8"},
+
     {.name          = "POWER_UINT16",
      .description   = "Electrical power, either DC or AC Real power, in Watts",
      .physical      = &ELECTRICAL_POWER,
@@ -1070,7 +1075,6 @@ FieldType fieldTypeList[] = {
      .unit                = "%",
      .baseFieldType       = "FIX16"},
 
-
     {.name                = "ROTATION_FIX16",
      .description         = "Rotational speed",
      .encodingDescription = "Angular rotation in rad/s, in 1/32th of a thousandth radian",
@@ -1094,7 +1098,7 @@ FieldType fieldTypeList[] = {
      .unit                = "rpm",
      .physical            = &ANGULAR_VELOCITY,
      .baseFieldType       = "UFIX16"},
- 
+
     {.name                = "ROTATION_UFIX16_RPM_HIGHRES",
      .description         = "Rotational speed, RPM",
      .encodingDescription = "Angular rotation in 0.125 rpm",
