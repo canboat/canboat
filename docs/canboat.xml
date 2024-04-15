@@ -29440,6 +29440,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129799</PGN>
       <Id>radioFrequencyModePower</Id>
       <Description>Radio Frequency/Mode/Power</Description>
+      <Explanation>The Radio Channel is NOT a numeric field, it has been observed to contain values such as 9000L1-L3 and 9000F1-F3 (indicating private channels as allowed in some countries.)</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -29448,7 +29449,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
       <FieldCount>6</FieldCount>
-      <Length>12</Length>
+      <Length>19</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -29485,53 +29486,53 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>3</Order>
           <Id>radioChannel</Id>
           <Name>Radio Channel</Name>
-          <BitLength>8</BitLength>
+          <BitLength>48</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>STRING_FIX</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>txPower</Id>
           <Name>Tx Power</Name>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>W</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_POWER</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>mode</Id>
           <Name>Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>channelBandwidth</Id>
           <Name>Channel Bandwidth</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>Hz</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>FREQUENCY</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>

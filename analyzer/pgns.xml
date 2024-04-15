@@ -28731,7 +28731,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <Length>12</Length>
+      <Length>19</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -28765,22 +28765,20 @@ limitations under the License.
           <Order>3</Order>
           <Id>radioChannel</Id>
           <Name>Radio Channel</Name>
-          <BitLength>8</BitLength>
+          <BitLength>48</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Type>ASCII text</Type>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>txPower</Id>
           <Name>Tx Power</Name>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
+          <Units>W</Units>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -28791,27 +28789,28 @@ limitations under the License.
           <Order>5</Order>
           <Id>mode</Id>
           <Name>Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>channelBandwidth</Id>
           <Name>Channel Bandwidth</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Units>Hz</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>

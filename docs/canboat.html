@@ -7889,13 +7889,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               Source:
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129799">0x1FB07:
             PGN 129799
-            - Radio Frequency/Mode/Power</h3><p/><p>
+            - Radio Frequency/Mode/Power</h3><p>The Radio Channel is NOT a numeric field, it has been observed to contain values such as 9000L1-L3 and 9000F1-F3 (indicating private channels as allowed in some countries.)</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            12
+            19
             bytes long and contains 6 fields.
 
             
@@ -7906,16 +7906,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Tx Frequency</td><td/><td>10 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 42949672930</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Radio Channel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Radio Channel</td><td/><td> </td><td>48 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr><tr><td>4</td><td>Tx Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Tx Power</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Mode</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Channel Bandwidth</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Channel Bandwidth</td><td/><td><a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-129800">0x1FB08:

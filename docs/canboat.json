@@ -29296,12 +29296,13 @@
         "PGN":129799,
         "Id":"radioFrequencyModePower",
         "Description":"Radio Frequency/Mode/Power",
+        "Explanation":"The Radio Channel is NOT a numeric field, it has been observed to contain values such as 9000L1-L3 and 9000F1-F3 (indicating private channels as allowed in some countries.)",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
         ],
         "FieldCount":6,
-        "Length":12,
+        "Length":19,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -29338,53 +29339,53 @@
             "Order":3,
             "Id":"radioChannel",
             "Name":"Radio Channel",
-            "BitLength":8,
+            "BitLength":48,
             "BitOffset":64,
             "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"STRING_FIX"
           },
           {
             "Order":4,
             "Id":"txPower",
             "Name":"Tx Power",
             "BitLength":8,
-            "BitOffset":72,
+            "BitOffset":112,
             "BitStart":0,
+            "Unit":"W",
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_POWER"
           },
           {
             "Order":5,
             "Id":"mode",
             "Name":"Mode",
-            "BitLength":8,
-            "BitOffset":80,
+            "BitLength":16,
+            "BitOffset":120,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
+            "RangeMax":65533,
             "FieldType":"NUMBER"
           },
           {
             "Order":6,
             "Id":"channelBandwidth",
             "Name":"Channel Bandwidth",
-            "BitLength":8,
-            "BitOffset":88,
+            "BitLength":16,
+            "BitOffset":136,
             "BitStart":0,
+            "Unit":"Hz",
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
+            "RangeMax":65533,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"FREQUENCY"
           }
         ]
       },
