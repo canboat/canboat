@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #439: Improve PGN 65379 Raymarine 
 - #442: Fix PGN 129799 Radio Frequency/Mode/Power field lengths and types.
 - #423: Add support for Garmin Backlight level + day/night mode.
 - #428: PGN 127509 is FAST, not SINGLE.
