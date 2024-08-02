@@ -80,6 +80,7 @@ Packet reassemblyBuffer[REASSEMBLY_BUFFER_SIZE];
 bool       showRaw       = false;
 bool       showData      = false;
 bool       showBytes     = false;
+bool       showAllBytes  = false;
 bool       showJson      = false;
 bool       showJsonEmpty = false;
 bool       showJsonValue = false;
@@ -150,6 +151,7 @@ static void usage(char **argv, char **av)
   printf("     -raw              Print the PGN in a format suitable to be fed to analyzer again (in standard raw format)\n");
   printf("     -data             Print the PGN three times: in hex, ascii and analyzed\n");
   printf("     -debug            Print raw value per field\n");
+  printf("     -debugdata        Print raw value per pgn\n");
   printf("     -fixtime str      Print str as timestamp in logging\n");
   printf("\n");
   exit(1);
@@ -193,6 +195,11 @@ int main(int argc, char **argv)
     {
       showJsonEmpty = true;
       showBytes     = true;
+    }
+    else if (strcasecmp(av[1], "-debugdata") == 0)
+    {
+      showJsonEmpty = true;
+      showAllBytes  = true;
     }
     else if (strcasecmp(av[1], "-d") == 0)
     {
@@ -1099,6 +1106,15 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
             msg->dst,
             msg->pgn,
             pgn->description);
+    if (showAllBytes)
+    {
+      mprintf(",\"data\":\"");
+      for (i = 0; i < length; i++)
+      {
+        mprintf("%2.02X", data[i]);
+      }
+      mprintf("\"");
+    }
     strcpy(closingBraces, "}");
     sep = ",\"fields\":{";
   }

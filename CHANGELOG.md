@@ -18,6 +18,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+- #444: Add analyzer2csv program and analyzer `-debugdata`.
 - #445: Add default priority to explanations.
 - #448: Add analyzer format `PLAIN_MIX_FAST`.
 - #430: Add J1939 PGNs and `analyzer-j1939` and `analyzer-explain-j1939`.
