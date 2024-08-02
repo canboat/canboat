@@ -1,11 +1,11 @@
 
   {
-    "SchemaVersion":"2.1.0",
+    "SchemaVersion":"2.1.1",
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"5.0.3",
-    "Copyright":"CANboat version v5.0.3\n\n(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"5.1.0",
+    "Copyright":"CANboat version v5.1.0\n\n(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
     {
         "Name":"ELECTRICAL_CURRENT",
@@ -3276,6 +3276,7 @@
         "PGN":59392,
         "Id":"isoAcknowledgement",
         "Description":"ISO Acknowledgement",
+        "Priority":6,
         "Explanation":"This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. This message is the possible response to acknowledge the reception of a 'normal broadcast' message or the response to a specific command to indicate compliance or failure.",
         "Type":"Single",
         "Complete":true,
@@ -3340,6 +3341,7 @@
         "PGN":59904,
         "Id":"isoRequest",
         "Description":"ISO Request",
+        "Priority":6,
         "Explanation":"As defined by ISO, this message has a data length of 3 bytes with no padding added to complete the single frame. The appropriate response to this message is based on the PGN being requested, and whether the receiver supports the requested PGN.",
         "Type":"Single",
         "Complete":true,
@@ -3793,6 +3795,7 @@
         "PGN":60928,
         "Id":"isoAddressClaim",
         "Description":"ISO Address Claim",
+        "Priority":6,
         "Explanation":"This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination.",
         "Type":"Single",
         "Complete":true,
@@ -4248,6 +4251,7 @@
         "PGN":65001,
         "Id":"bus1PhaseCBasicAcQuantities",
         "Description":"Bus #1 Phase C Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -4316,6 +4320,7 @@
         "PGN":65002,
         "Id":"bus1PhaseBBasicAcQuantities",
         "Description":"Bus #1 Phase B Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -4384,6 +4389,7 @@
         "PGN":65003,
         "Id":"bus1PhaseABasicAcQuantities",
         "Description":"Bus #1 Phase A Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -4452,6 +4458,7 @@
         "PGN":65004,
         "Id":"bus1AverageBasicAcQuantities",
         "Description":"Bus #1 Average Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -4520,6 +4527,7 @@
         "PGN":65005,
         "Id":"utilityTotalAcEnergy",
         "Description":"Utility Total AC Energy",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Resolution","Interval"
@@ -4563,6 +4571,7 @@
         "PGN":65006,
         "Id":"utilityPhaseCAcReactivePower",
         "Description":"Utility Phase C AC Reactive Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -4629,6 +4638,7 @@
         "PGN":65007,
         "Id":"utilityPhaseCAcPower",
         "Description":"Utility Phase C AC Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -4674,6 +4684,7 @@
         "PGN":65008,
         "Id":"utilityPhaseCBasicAcQuantities",
         "Description":"Utility Phase C Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -4747,6 +4758,7 @@
         "PGN":65009,
         "Id":"utilityPhaseBAcReactivePower",
         "Description":"Utility Phase B AC Reactive Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -4813,6 +4825,7 @@
         "PGN":65010,
         "Id":"utilityPhaseBAcPower",
         "Description":"Utility Phase B AC Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -4858,6 +4871,7 @@
         "PGN":65011,
         "Id":"utilityPhaseBBasicAcQuantities",
         "Description":"Utility Phase B Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -4931,6 +4945,7 @@
         "PGN":65012,
         "Id":"utilityPhaseAAcReactivePower",
         "Description":"Utility Phase A AC Reactive Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -4998,6 +5013,7 @@
         "PGN":65013,
         "Id":"utilityPhaseAAcPower",
         "Description":"Utility Phase A AC Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5043,6 +5059,7 @@
         "PGN":65014,
         "Id":"utilityPhaseABasicAcQuantities",
         "Description":"Utility Phase A Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5116,6 +5133,7 @@
         "PGN":65015,
         "Id":"utilityTotalAcReactivePower",
         "Description":"Utility Total AC Reactive Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5183,6 +5201,7 @@
         "PGN":65016,
         "Id":"utilityTotalAcPower",
         "Description":"Utility Total AC Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5228,6 +5247,7 @@
         "PGN":65017,
         "Id":"utilityAverageBasicAcQuantities",
         "Description":"Utility Average Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5301,6 +5321,7 @@
         "PGN":65018,
         "Id":"generatorTotalAcEnergy",
         "Description":"Generator Total AC Energy",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Resolution","Interval"
@@ -5344,6 +5365,7 @@
         "PGN":65019,
         "Id":"generatorPhaseCAcReactivePower",
         "Description":"Generator Phase C AC Reactive Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5411,6 +5433,7 @@
         "PGN":65020,
         "Id":"generatorPhaseCAcPower",
         "Description":"Generator Phase C AC Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5456,6 +5479,7 @@
         "PGN":65021,
         "Id":"generatorPhaseCBasicAcQuantities",
         "Description":"Generator Phase C Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5529,6 +5553,7 @@
         "PGN":65022,
         "Id":"generatorPhaseBAcReactivePower",
         "Description":"Generator Phase B AC Reactive Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5596,6 +5621,7 @@
         "PGN":65023,
         "Id":"generatorPhaseBAcPower",
         "Description":"Generator Phase B AC Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5641,6 +5667,7 @@
         "PGN":65024,
         "Id":"generatorPhaseBBasicAcQuantities",
         "Description":"Generator Phase B Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5714,6 +5741,7 @@
         "PGN":65025,
         "Id":"generatorPhaseAAcReactivePower",
         "Description":"Generator Phase A AC Reactive Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5781,6 +5809,7 @@
         "PGN":65026,
         "Id":"generatorPhaseAAcPower",
         "Description":"Generator Phase A AC Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5826,6 +5855,7 @@
         "PGN":65027,
         "Id":"generatorPhaseABasicAcQuantities",
         "Description":"Generator Phase A Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5899,6 +5929,7 @@
         "PGN":65028,
         "Id":"generatorTotalAcReactivePower",
         "Description":"Generator Total AC Reactive Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -5966,6 +5997,7 @@
         "PGN":65029,
         "Id":"generatorTotalAcPower",
         "Description":"Generator Total AC Power",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -6011,6 +6043,7 @@
         "PGN":65030,
         "Id":"generatorAverageBasicAcQuantities",
         "Description":"Generator Average Basic AC Quantities",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -6242,6 +6275,7 @@
         "PGN":65280,
         "Id":"furunoHeave",
         "Description":"Furuno: Heave",
+        "Priority":2,
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -6322,6 +6356,7 @@
         "PGN":65284,
         "Id":"maretronProprietaryDcBreakerCurrent",
         "Description":"Maretron: Proprietary DC Breaker Current",
+        "Priority":6,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -6428,6 +6463,7 @@
         "PGN":65285,
         "Id":"airmarBootStateAcknowledgment",
         "Description":"Airmar: Boot State Acknowledgment",
+        "Priority":5,
         "URL":"http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
         "Type":"Single",
         "Complete":false,
@@ -6973,6 +7009,7 @@
         "PGN":65288,
         "Id":"seatalkAlarm",
         "Description":"Seatalk: Alarm",
+        "Priority":7,
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -7350,6 +7387,7 @@
         "PGN":65293,
         "Id":"diverseYachtServicesLoadCell",
         "Description":"Diverse Yacht Services: Load Cell",
+        "Priority":2,
         "Type":"Single",
         "Complete":false,
         "Missing":["Resolution","Interval"
@@ -7441,6 +7479,7 @@
         "PGN":65302,
         "Id":"simnetApUnknown1",
         "Description":"Simnet: AP Unknown 1",
+        "Priority":7,
         "Explanation":"Seen as sent by AC-42 only so far.",
         "Type":"Single",
         "Complete":false,
@@ -8068,6 +8107,7 @@
         "PGN":65309,
         "Id":"navicoWirelessBatteryStatus",
         "Description":"Navico: Wireless Battery Status",
+        "Priority":7,
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -8174,6 +8214,7 @@
         "PGN":65312,
         "Id":"navicoWirelessSignalStatus",
         "Description":"Navico: Wireless Signal Status",
+        "Priority":7,
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","Interval"
@@ -8266,6 +8307,7 @@
         "PGN":65340,
         "Id":"simnetApUnknown2",
         "Description":"Simnet: AP Unknown 2",
+        "Priority":3,
         "Explanation":"Seen as sent by AC-42 only so far.",
         "Type":"Single",
         "Complete":false,
@@ -8398,6 +8440,7 @@
         "PGN":65341,
         "Id":"simnetAutopilotAngle",
         "Description":"Simnet: Autopilot Angle",
+        "Priority":6,
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -8679,6 +8722,7 @@
         "PGN":65359,
         "Id":"seatalkPilotHeading",
         "Description":"Seatalk: Pilot Heading",
+        "Priority":7,
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -8784,6 +8828,7 @@
         "PGN":65360,
         "Id":"seatalkPilotLockedHeading",
         "Description":"Seatalk: Pilot Locked Heading",
+        "Priority":7,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -9239,6 +9284,7 @@
         "PGN":65379,
         "Id":"seatalkPilotMode",
         "Description":"Seatalk: Pilot Mode",
+        "Priority":7,
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -9338,6 +9384,7 @@
         "PGN":65408,
         "Id":"airmarDepthQualityFactor",
         "Description":"Airmar: Depth Quality Factor",
+        "Priority":7,
         "URL":"http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
         "Type":"Single",
         "Complete":false,
@@ -9431,6 +9478,7 @@
         "PGN":65409,
         "Id":"airmarSpeedPulseCount",
         "Description":"Airmar: Speed Pulse Count",
+        "Priority":7,
         "URL":"http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
         "Type":"Single",
         "Complete":false,
@@ -9538,6 +9586,7 @@
         "PGN":65410,
         "Id":"airmarDeviceInformation",
         "Description":"Airmar: Device Information",
+        "Priority":7,
         "URL":"http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
         "Type":"Single",
         "Complete":false,
@@ -9648,6 +9697,7 @@
         "PGN":65420,
         "Id":"simnetApUnknown3",
         "Description":"Simnet: AP Unknown 3",
+        "Priority":6,
         "Explanation":"Seen as sent by AC-42 only so far.",
         "Type":"Single",
         "Complete":false,
@@ -15578,6 +15628,7 @@
         "PGN":126992,
         "Id":"systemTime",
         "Description":"System Time",
+        "Priority":3,
         "Explanation":"The purpose of this PGN is twofold: To provide a regular transmission of UTC time and date. To provide synchronism for measurement data.",
         "Type":"Single",
         "Complete":true,
@@ -15658,6 +15709,7 @@
         "PGN":126993,
         "Id":"heartbeat",
         "Description":"Heartbeat",
+        "Priority":7,
         "Explanation":"Reception of this PGN confirms that a device is still present on the network.  Reception of this PGN may also be used to maintain an address to NAME association table within the receiving device.  The transmission interval may be used by the receiving unit to determine the time-out value for the connection supervision.  The value contained in Field 1 of this PGN reflects the PGN's current Transmission Interval. Changes to this PGN's Transmission Interval shall be reflected in Field 1.  The transmission interval can only be changed by using the Request Group Function PGN 126208 with no pairs of request parameters provided. Field 3 of the Request Group Function PGN 126208 may contain values between 1,000ms and 60,000ms.  This PGN cannot be requested by the ISO Request PGN 059904 or Request Group Function PGN 126208. In Request Group Function PGN 126208, setting Field 3 to a value of 0xFFFF FFFF and Field 4 to a value of 0xFFFF: 'Transmit now without changing timing variables.' is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for additional context.",
         "URL":"http://www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf",
         "Type":"Single",
@@ -15754,6 +15806,7 @@
         "PGN":126996,
         "Id":"productInformation",
         "Description":"Product Information",
+        "Priority":6,
         "Explanation":"Provides product information onto the network that could be important for determining quality of data coming from this product.",
         "Type":"Fast",
         "Complete":true,
@@ -15855,6 +15908,7 @@
         "PGN":126998,
         "Id":"configurationInformation",
         "Description":"Configuration Information",
+        "Priority":6,
         "Explanation":"Free-form alphanumeric fields describing the installation (e.g., starboard engine room location) of the device and installation notes (e.g., calibration data).",
         "Type":"Fast",
         "Complete":true,
@@ -16144,6 +16198,7 @@
         "PGN":127237,
         "Id":"headingTrackControl",
         "Description":"Heading/Track control",
+        "Priority":2,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":18,
@@ -16413,6 +16468,7 @@
         "PGN":127245,
         "Id":"rudder",
         "Description":"Rudder",
+        "Priority":2,
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
@@ -16502,6 +16558,7 @@
         "PGN":127250,
         "Id":"vesselHeading",
         "Description":"Vessel Heading",
+        "Priority":2,
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
@@ -16596,6 +16653,7 @@
         "PGN":127251,
         "Id":"rateOfTurn",
         "Description":"Rate of Turn",
+        "Priority":2,
         "Type":"Single",
         "Complete":true,
         "FieldCount":3,
@@ -16646,6 +16704,7 @@
         "PGN":127252,
         "Id":"heave",
         "Description":"Heave",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -16697,6 +16756,7 @@
         "PGN":127257,
         "Id":"attitude",
         "Description":"Attitude",
+        "Priority":2,
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -16777,6 +16837,7 @@
         "PGN":127258,
         "Id":"magneticVariation",
         "Description":"Magnetic Variation",
+        "Priority":6,
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
@@ -16866,6 +16927,7 @@
         "PGN":127488,
         "Id":"engineParametersRapidUpdate",
         "Description":"Engine Parameters, Rapid Update",
+        "Priority":2,
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -16945,6 +17007,7 @@
         "PGN":127489,
         "Id":"engineParametersDynamic",
         "Description":"Engine Parameters, Dynamic",
+        "Priority":2,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":14,
@@ -18297,6 +18360,7 @@
         "PGN":127501,
         "Id":"binarySwitchBankStatus",
         "Description":"Binary Switch Bank Status",
+        "Priority":3,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -19133,6 +19197,7 @@
         "PGN":127503,
         "Id":"acInputStatus",
         "Description":"AC Input Status",
+        "Priority":6,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":12,
@@ -19315,6 +19380,7 @@
         "PGN":127504,
         "Id":"acOutputStatus",
         "Description":"AC Output Status",
+        "Priority":6,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":12,
@@ -19498,6 +19564,7 @@
         "PGN":127505,
         "Id":"fluidLevel",
         "Description":"Fluid Level",
+        "Priority":6,
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -19576,6 +19643,7 @@
         "PGN":127506,
         "Id":"dcDetailedStatus",
         "Description":"DC Detailed Status",
+        "Priority":6,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":8,
@@ -19700,6 +19768,7 @@
         "PGN":127507,
         "Id":"chargerStatus",
         "Description":"Charger Status",
+        "Priority":6,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":8,
@@ -19819,6 +19888,7 @@
         "PGN":127508,
         "Id":"batteryStatus",
         "Description":"Battery Status",
+        "Priority":6,
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -19902,6 +19972,7 @@
         "PGN":127509,
         "Id":"inverterStatus",
         "Description":"Inverter Status",
+        "Priority":6,
         "Explanation":"The NMEA wrote in the link in the URL that this PGN is obsolete and superceded by PGN 127751, but that PGN reference is obviously incorrect. They probably meant PGN 127511. The other interesting thing is that this PGN is only four bytes long but still referenced as a Fast PGN, which matches various sources; see github issue #428.",
         "URL":"https://web.archive.org/web/20140913025729/https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf",
         "Type":"Fast",
@@ -21672,6 +21743,7 @@
         "PGN":128259,
         "Id":"speed",
         "Description":"Speed",
+        "Priority":2,
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
@@ -21764,6 +21836,7 @@
         "PGN":128267,
         "Id":"waterDepth",
         "Description":"Water Depth",
+        "Priority":3,
         "Type":"Single",
         "Complete":true,
         "FieldCount":4,
@@ -21837,6 +21910,7 @@
         "PGN":128275,
         "Id":"distanceLog",
         "Description":"Distance Log",
+        "Priority":6,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":4,
@@ -23278,6 +23352,7 @@
         "PGN":129025,
         "Id":"positionRapidUpdate",
         "Description":"Position, Rapid Update",
+        "Priority":2,
         "Type":"Single",
         "Complete":true,
         "FieldCount":2,
@@ -23320,6 +23395,7 @@
         "PGN":129026,
         "Id":"cogSogRapidUpdate",
         "Description":"COG & SOG, Rapid Update",
+        "Priority":2,
         "URL":"http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf",
         "Type":"Single",
         "Complete":true,
@@ -23410,6 +23486,7 @@
         "PGN":129027,
         "Id":"positionDeltaRapidUpdate",
         "Description":"Position Delta, Rapid Update",
+        "Priority":2,
         "Type":"Single",
         "Complete":false,
         "Missing":["SampleData"
@@ -23486,6 +23563,7 @@
         "PGN":129028,
         "Id":"altitudeDeltaRapidUpdate",
         "Description":"Altitude Delta, Rapid Update",
+        "Priority":2,
         "Type":"Single",
         "Complete":false,
         "Missing":["SampleData"
@@ -23590,6 +23668,7 @@
         "PGN":129029,
         "Id":"gnssPositionData",
         "Description":"GNSS Position Data",
+        "Priority":3,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":18,
@@ -23860,6 +23939,7 @@
         "PGN":129033,
         "Id":"timeDate",
         "Description":"Time & Date",
+        "Priority":3,
         "Type":"Single",
         "Complete":true,
         "FieldCount":3,
@@ -23917,6 +23997,7 @@
         "PGN":129038,
         "Id":"aisClassAPositionReport",
         "Description":"AIS Class A Position Report",
+        "Priority":4,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
@@ -24201,6 +24282,7 @@
         "PGN":129039,
         "Id":"aisClassBPositionReport",
         "Description":"AIS Class B Position Report",
+        "Priority":4,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
@@ -24527,6 +24609,7 @@
         "PGN":129040,
         "Id":"aisClassBExtendedPositionReport",
         "Description":"AIS Class B Extended Position Report",
+        "Priority":4,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
@@ -24899,6 +24982,7 @@
         "PGN":129041,
         "Id":"aisAidsToNavigationAtonReport",
         "Description":"AIS Aids to Navigation (AtoN) Report",
+        "Priority":4,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
@@ -25217,6 +25301,7 @@
         "PGN":129044,
         "Id":"datum",
         "Description":"Datum",
+        "Priority":6,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":5,
@@ -25450,6 +25535,7 @@
         "PGN":129283,
         "Id":"crossTrackError",
         "Description":"Cross Track Error",
+        "Priority":3,
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
@@ -25538,6 +25624,7 @@
         "PGN":129284,
         "Id":"navigationData",
         "Description":"Navigation Data",
+        "Priority":3,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":15,
@@ -25765,6 +25852,7 @@
         "PGN":129285,
         "Id":"navigationRouteWpInformation",
         "Description":"Navigation - Route/WP Information",
+        "Priority":7,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":13,
@@ -26414,6 +26502,7 @@
         "PGN":129539,
         "Id":"gnssDops",
         "Description":"GNSS DOPs",
+        "Priority":6,
         "Type":"Single",
         "Complete":true,
         "FieldCount":7,
@@ -26519,6 +26608,7 @@
         "PGN":129540,
         "Id":"gnssSatsInView",
         "Description":"GNSS Sats in View",
+        "Priority":6,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":11,
@@ -28150,6 +28240,7 @@
         "PGN":129793,
         "Id":"aisUtcAndDateReport",
         "Description":"AIS UTC and Date Report",
+        "Priority":7,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
@@ -28363,6 +28454,7 @@
         "PGN":129794,
         "Id":"aisClassAStaticAndVoyageRelatedData",
         "Description":"AIS Class A Static and Voyage Related Data",
+        "Priority":6,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
@@ -28954,6 +29046,7 @@
         "PGN":129797,
         "Id":"aisBinaryBroadcastMessage",
         "Description":"AIS Binary Broadcast Message",
+        "Priority":7,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
@@ -30121,6 +30214,7 @@
         "PGN":129805,
         "Id":"aisDataLinkManagementMessage",
         "Description":"AIS Data Link Management Message",
+        "Priority":7,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":false,
@@ -31291,6 +31385,7 @@
         "PGN":129809,
         "Id":"aisClassBStaticDataMsg24PartA",
         "Description":"AIS Class B static data (msg 24 Part A)",
+        "Priority":6,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
@@ -31391,6 +31486,7 @@
         "PGN":129810,
         "Id":"aisClassBStaticDataMsg24PartB",
         "Description":"AIS Class B static data (msg 24 Part B)",
+        "Priority":6,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
@@ -33648,6 +33744,7 @@
         "PGN":130306,
         "Id":"windData",
         "Description":"Wind Data",
+        "Priority":2,
         "URL":"http://askjackrabbit.typepad.com/ask_jack_rabbit/page/7/",
         "Type":"Single",
         "Complete":true,
@@ -33728,6 +33825,7 @@
         "PGN":130310,
         "Id":"environmentalParametersObsolete",
         "Description":"Environmental Parameters (obsolete)",
+        "Priority":5,
         "Explanation":"This PGN was succeeded by PGN 130310, but it should no longer be generated and separate PGNs in range 130312..130315 should be used",
         "Type":"Single",
         "Complete":true,
@@ -33809,6 +33907,7 @@
         "PGN":130311,
         "Id":"environmentalParameters",
         "Description":"Environmental Parameters",
+        "Priority":5,
         "Explanation":"This PGN was introduced as a better version of PGN 130310, but it should no longer be generated and separate PGNs in range 130312..130315 should be used",
         "Type":"Single",
         "Complete":true,
@@ -33907,6 +34006,7 @@
         "PGN":130312,
         "Id":"temperature",
         "Description":"Temperature",
+        "Priority":5,
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
@@ -33999,6 +34099,7 @@
         "PGN":130313,
         "Id":"humidity",
         "Description":"Humidity",
+        "Priority":5,
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
@@ -34089,6 +34190,7 @@
         "PGN":130314,
         "Id":"actualPressure",
         "Description":"Actual Pressure",
+        "Priority":5,
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -34166,6 +34268,7 @@
         "PGN":130315,
         "Id":"setPressure",
         "Description":"Set Pressure",
+        "Priority":5,
         "Type":"Single",
         "Complete":true,
         "FieldCount":5,
@@ -34243,6 +34346,7 @@
         "PGN":130316,
         "Id":"temperatureExtendedRange",
         "Description":"Temperature Extended Range",
+        "Priority":5,
         "Type":"Single",
         "Complete":false,
         "Missing":["Interval"
@@ -34794,6 +34898,7 @@
         "PGN":130323,
         "Id":"meteorologicalStationData",
         "Description":"Meteorological Station Data",
+        "Priority":6,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData"
@@ -35265,6 +35370,7 @@
         "PGN":130330,
         "Id":"lightingSystemSettings",
         "Description":"Lighting System Settings",
+        "Priority":7,
         "Explanation":"This PGN provides a lighting controller settings and number of supported capabilities.",
         "Type":"Fast",
         "Complete":false,
@@ -38723,6 +38829,7 @@
         "PGN":130816,
         "Id":"sonichubInit2",
         "Description":"SonicHub: Init #2",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -38844,6 +38951,7 @@
         "PGN":130816,
         "Id":"sonichubAmRadio",
         "Description":"SonicHub: AM Radio",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -39013,6 +39121,7 @@
         "PGN":130816,
         "Id":"sonichubZoneInfo",
         "Description":"SonicHub: Zone info",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -39121,6 +39230,7 @@
         "PGN":130816,
         "Id":"sonichubSource",
         "Description":"SonicHub: Source",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -39230,6 +39340,7 @@
         "PGN":130816,
         "Id":"sonichubSourceList",
         "Description":"SonicHub: Source List",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -39360,6 +39471,7 @@
         "PGN":130816,
         "Id":"sonichubControl",
         "Description":"SonicHub: Control",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -39469,6 +39581,7 @@
         "PGN":130816,
         "Id":"sonichubFmRadio",
         "Description":"SonicHub: FM Radio",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -39638,6 +39751,7 @@
         "PGN":130816,
         "Id":"sonichubPlaylist",
         "Description":"SonicHub: Playlist",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -39816,6 +39930,7 @@
         "PGN":130816,
         "Id":"sonichubTrack",
         "Description":"SonicHub: Track",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -39933,6 +40048,7 @@
         "PGN":130816,
         "Id":"sonichubArtist",
         "Description":"SonicHub: Artist",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -40050,6 +40166,7 @@
         "PGN":130816,
         "Id":"sonichubAlbum",
         "Description":"SonicHub: Album",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -40167,6 +40284,7 @@
         "PGN":130816,
         "Id":"sonichubMenuItem",
         "Description":"SonicHub: Menu Item",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -40323,6 +40441,7 @@
         "PGN":130816,
         "Id":"sonichubZones",
         "Description":"SonicHub: Zones",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -40431,6 +40550,7 @@
         "PGN":130816,
         "Id":"sonichubMaxVolume",
         "Description":"SonicHub: Max Volume",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -40552,6 +40672,7 @@
         "PGN":130816,
         "Id":"sonichubVolume",
         "Description":"SonicHub: Volume",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Interval"
@@ -40673,6 +40794,7 @@
         "PGN":130816,
         "Id":"sonichubInit1",
         "Description":"SonicHub: Init #1",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -40768,6 +40890,7 @@
         "PGN":130816,
         "Id":"sonichubPosition",
         "Description":"SonicHub: Position",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -40878,6 +41001,7 @@
         "PGN":130816,
         "Id":"sonichubInit3",
         "Description":"SonicHub: Init #3",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -40999,6 +41123,7 @@
         "PGN":130816,
         "Id":"simradTextMessage",
         "Description":"Simrad: Text Message",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -41154,6 +41279,7 @@
         "PGN":130817,
         "Id":"navicoProductInformation",
         "Description":"Navico: Product Information",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -41297,6 +41423,7 @@
         "PGN":130817,
         "Id":"lowranceProductInformation",
         "Description":"Lowrance: Product Information",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -41440,6 +41567,7 @@
         "PGN":130818,
         "Id":"simnetReprogramData",
         "Description":"Simnet: Reprogram Data",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -41531,6 +41659,7 @@
         "PGN":130819,
         "Id":"simnetRequestReprogram",
         "Description":"Simnet: Request Reprogram",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["FieldLengths","SampleData","Interval"
@@ -41586,6 +41715,7 @@
         "PGN":130820,
         "Id":"simnetReprogramStatus",
         "Description":"Simnet: Reprogram Status",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["FieldLengths","SampleData","Interval"
@@ -41674,6 +41804,7 @@
         "PGN":130820,
         "Id":"furunoUnknown130820",
         "Description":"Furuno: Unknown 130820",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -41794,6 +41925,7 @@
         "PGN":130820,
         "Id":"fusionSourceName",
         "Description":"Fusion: Source Name",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -41939,6 +42071,7 @@
         "PGN":130820,
         "Id":"fusionTrackInfo",
         "Description":"Fusion: Track Info",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -42158,6 +42291,7 @@
         "PGN":130820,
         "Id":"fusionTrack",
         "Description":"Fusion: Track",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -42264,6 +42398,7 @@
         "PGN":130820,
         "Id":"fusionArtist",
         "Description":"Fusion: Artist",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -42370,6 +42505,7 @@
         "PGN":130820,
         "Id":"fusionAlbum",
         "Description":"Fusion: Album",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -42476,6 +42612,7 @@
         "PGN":130820,
         "Id":"fusionUnitName",
         "Description":"Fusion: Unit Name",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -42569,6 +42706,7 @@
         "PGN":130820,
         "Id":"fusionZoneName",
         "Description":"Fusion: Zone Name",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -42675,6 +42813,7 @@
         "PGN":130820,
         "Id":"fusionPlayProgress",
         "Description":"Fusion: Play Progress",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -42787,6 +42926,7 @@
         "PGN":130820,
         "Id":"fusionAmFmStation",
         "Description":"Fusion: AM/FM Station",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -42935,6 +43075,7 @@
         "PGN":130820,
         "Id":"fusionVhf",
         "Description":"Fusion: VHF",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -43058,6 +43199,7 @@
         "PGN":130820,
         "Id":"fusionSquelch",
         "Description":"Fusion: Squelch",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -43168,6 +43310,7 @@
         "PGN":130820,
         "Id":"fusionScan",
         "Description":"Fusion: Scan",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -43292,6 +43435,7 @@
         "PGN":130820,
         "Id":"fusionMenuItem",
         "Description":"Fusion: Menu Item",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -43476,6 +43620,7 @@
         "PGN":130820,
         "Id":"fusionReplay",
         "Description":"Fusion: Replay",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -43666,6 +43811,7 @@
         "PGN":130820,
         "Id":"fusionMute",
         "Description":"Fusion: Mute",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -43764,6 +43910,7 @@
         "PGN":130820,
         "Id":"fusionSubVolume",
         "Description":"Fusion: Sub Volume",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -43900,6 +44047,7 @@
         "PGN":130820,
         "Id":"fusionTone",
         "Description":"Fusion: Tone",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -44036,6 +44184,7 @@
         "PGN":130820,
         "Id":"fusionVolume",
         "Description":"Fusion: Volume",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -44172,6 +44321,7 @@
         "PGN":130820,
         "Id":"fusionPowerState",
         "Description":"Fusion: Power State",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -44270,6 +44420,7 @@
         "PGN":130820,
         "Id":"fusionSiriusxmChannel",
         "Description":"Fusion: SiriusXM Channel",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -44363,6 +44514,7 @@
         "PGN":130820,
         "Id":"fusionSiriusxmTitle",
         "Description":"Fusion: SiriusXM Title",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -44456,6 +44608,7 @@
         "PGN":130820,
         "Id":"fusionSiriusxmArtist",
         "Description":"Fusion: SiriusXM Artist",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -44549,6 +44702,7 @@
         "PGN":130820,
         "Id":"fusionSiriusxmGenre",
         "Description":"Fusion: SiriusXM Genre",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -44642,6 +44796,7 @@
         "PGN":130821,
         "Id":"navicoAsciiData",
         "Description":"Navico: ASCII Data",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -44719,6 +44874,7 @@
         "PGN":130821,
         "Id":"furunoUnknown130821",
         "Description":"Furuno: Unknown 130821",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -44904,6 +45060,7 @@
         "PGN":130822,
         "Id":"navicoUnknown1",
         "Description":"Navico: Unknown 1",
+        "Priority":3,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -44969,6 +45126,7 @@
         "PGN":130823,
         "Id":"maretronProprietaryTemperatureHighRange",
         "Description":"Maretron: Proprietary Temperature High Range",
+        "Priority":3,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Interval"
@@ -45094,6 +45252,7 @@
         "PGN":130824,
         "Id":"bGKeyValueData",
         "Description":"B&G: key-value data",
+        "Priority":2,
         "Explanation":"Contains any number of key/value pairs, sent by various B&G devices such as MFDs and Sailing Processors.",
         "Type":"Fast",
         "Complete":false,
@@ -45189,6 +45348,7 @@
         "PGN":130824,
         "Id":"maretronAnnunciator",
         "Description":"Maretron: Annunciator",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -46082,6 +46242,7 @@
         "PGN":130836,
         "Id":"maretronSwitchStatusCounter",
         "Description":"Maretron: Switch Status Counter",
+        "Priority":6,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":12,
@@ -46310,6 +46471,7 @@
         "PGN":130837,
         "Id":"maretronSwitchStatusTimer",
         "Description":"Maretron: Switch Status Timer",
+        "Priority":6,
         "Type":"Fast",
         "Complete":true,
         "FieldCount":12,
@@ -46599,6 +46761,7 @@
         "PGN":130840,
         "Id":"simnetDataUserGroupConfiguration",
         "Description":"Simnet: Data User Group Configuration",
+        "Priority":3,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
@@ -47931,6 +48094,7 @@
         "PGN":130850,
         "Id":"simnetApCommand",
         "Description":"Simnet: AP Command",
+        "Priority":2,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -48094,6 +48258,7 @@
         "PGN":130850,
         "Id":"simnetEventCommandApCommand",
         "Description":"Simnet: Event Command: AP command",
+        "Priority":2,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -48260,6 +48425,7 @@
         "PGN":130850,
         "Id":"simnetAlarm",
         "Description":"Simnet: Alarm",
+        "Priority":2,
         "Explanation":"There may follow a PGN 130856 'Simnet: Alarm Text' message with a textual explanation of the alarm",
         "Type":"Fast",
         "Complete":false,
@@ -48420,6 +48586,7 @@
         "PGN":130851,
         "Id":"simnetEventReplyApCommand",
         "Description":"Simnet: Event Reply: AP command",
+        "Priority":7,
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -48692,6 +48859,7 @@
         "PGN":130860,
         "Id":"simnetApUnknown4",
         "Description":"Simnet: AP Unknown 4",
+        "Priority":7,
         "Explanation":"Seen as sent by AC-42 and H5000 AP only so far.",
         "Type":"Fast",
         "Complete":false,
@@ -49055,6 +49223,7 @@
         "PGN":130944,
         "Id":"airmarPost",
         "Description":"Airmar: POST",
+        "Priority":7,
         "URL":"http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
         "Type":"Fast",
         "Complete":false,

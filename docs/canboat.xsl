@@ -157,6 +157,9 @@
 
             <xsl:call-template name="HandleRepeatingFields"/>
 
+            <xsl:if test="Priority">
+              The default priority (as observed in the field) is <xsl:value-of select="Priority"/>.
+            </xsl:if>
             <xsl:if test="TransmissionInterval">
               It is normally transmitted every <xsl:value-of select="TransmissionInterval"/> milliseconds.
             </xsl:if>

@@ -594,8 +594,8 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 0.01, .unit = "K", .fieldType = "TEMPERATURE" \
   }
 
-#define TEMPERATURE_UINT8_OFFSET_FIELD(nam)                                                              \
-  {                                                                                          	 		 \
+#define TEMPERATURE_UINT8_OFFSET_FIELD(nam)                                                                             \
+  {                                                                                                                     \
     .name = nam, .size = BYTES(1), .offset = 233, .resolution = 1, .unit = "K", .fieldType = "TEMPERATURE_UINT8_OFFSET" \
   }
 
@@ -769,8 +769,8 @@ typedef struct
     .name = nam, .size = BYTES(1), .resolution = 1, .unit = "%", .fieldType = "PERCENTAGE_UINT8" \
   }
 
-#define PERCENTAGE_U8_HIGHRES_FIELD(nam)                                                          \
-  {                                                                                               \
+#define PERCENTAGE_U8_HIGHRES_FIELD(nam)                                                                  \
+  {                                                                                                       \
     .name = nam, .size = BYTES(1), .resolution = .4, .unit = "%", .fieldType = "PERCENTAGE_UINT8_HIGHRES" \
   }
 
@@ -794,9 +794,10 @@ typedef struct
     .name = nam, .size = BYTES(2), .resolution = 0.25, .hasSign = false, .unit = "rpm", .fieldType = "ROTATION_UFIX16_RPM" \
   }
 
-#define ROTATION_UFIX16_RPM_HIGHRES_FIELD(nam, desc)																				\
-  {																																	\
-	.name = nam, .size = BYTES(2), .resolution = 0.125, .hasSign = false, .unit = "rpm", .fieldType = "ROTATION_UFIX16_RPM_HIGHRES" \
+#define ROTATION_UFIX16_RPM_HIGHRES_FIELD(nam, desc)                                     \
+  {                                                                                      \
+    .name = nam, .size = BYTES(2), .resolution = 0.125, .hasSign = false, .unit = "rpm", \
+    .fieldType = "ROTATION_UFIX16_RPM_HIGHRES"                                           \
   }
 
 #define ROTATION_FIX32_FIELD(nam)                                                                                               \
@@ -814,9 +815,8 @@ typedef struct
     .name = nam, .size = BYTES(1), .resolution = 500, .unit = "Pa", .fieldType = "PRESSURE_UINT8_KPA" \
   }
 
-
-#define PRESSURE_UINT8_2KPA_FIELD(nam)                                                                   \
-  {                                                                                                      \
+#define PRESSURE_UINT8_2KPA_FIELD(nam)                                                                  \
+  {                                                                                                     \
     .name = nam, .size = BYTES(1), .resolution = 2000, .unit = "Pa", .fieldType = "PRESSURE_UINT8_2KPA" \
   }
 
@@ -925,6 +925,7 @@ struct Pgn
   const char *explanation;      /* Preferably the NMEA 2000 explanation from the NMEA PGN field list */
   const char *url;              /* External URL */
   uint16_t    interval;         /* Milliseconds between transmissions, standard. 0 is: not known, UINT16_MAX = never */
+  uint8_t     priority;         /* Default priority */
   uint8_t     repeatingCount1;  /* How many fields repeat in set 1? */
   uint8_t     repeatingCount2;  /* How many fields repeat in set 2? */
   uint8_t     repeatingStart1;  /* At which field does the first set start? */
@@ -1179,8 +1180,7 @@ Pgn pgnList[] = {
      .explanation = "Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
-	/* None defined at this time */
-
+    /* None defined at this time */
 
     /* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
 
@@ -1195,33 +1195,23 @@ Pgn pgnList[] = {
                     "0xFEFF (61440 - 65279). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
-	/* J1939 ECU #2 PGN 61443 */
+    /* J1939 ECU #2 PGN 61443 */
 
     ,
     {"ECU #2",
      61443,
      PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {RESERVED_FIELD(BYTES(1)),
-	  PERCENTAGE_U8_HIGHRES_FIELD("Throttle Lever"),
-	  RESERVED_FIELD(BYTES(6)),
-	  END_OF_FIELDS}}
+     PACKET_SINGLE,
+     {RESERVED_FIELD(BYTES(1)), PERCENTAGE_U8_HIGHRES_FIELD("Throttle Lever"), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
-
-
-	/* J1939 ECU #1 PGN 61444 */
+    /* J1939 ECU #1 PGN 61444 */
 
     ,
     {"ECU #1",
      61444,
      PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {RESERVED_FIELD(BYTES(3)),
-	  ROTATION_UFIX16_RPM_HIGHRES_FIELD("Engine RPM", NULL),
-	  RESERVED_FIELD(BYTES(3)),
-	  END_OF_FIELDS}}
-
-
+     PACKET_SINGLE,
+     {RESERVED_FIELD(BYTES(3)), ROTATION_UFIX16_RPM_HIGHRES_FIELD("Engine RPM", NULL), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS}}
 
     /* Maretron ACM 100 manual documents PGN 65001-65030 */
 
@@ -1515,22 +1505,22 @@ Pgn pgnList[] = {
       CURRENT_UFIX16_A_FIELD("AC RMS Current"),
       END_OF_FIELDS}}
 
-	,
-	{"Active Trouble Codes",	/* J1939 PGN 65226 See https://embeddedflakes.com/j1939-diagnostics-part-1/ */
-	 65226,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {BINARY_FIELD("Malfunction Lamp Status", 2, "Fault Lamps"),	/* Lamp modes are: 0 = off, 01 = on		*/
-	  BINARY_FIELD("Red Stop Lamp Status", 2, "Fault Lamps"),		/* 10 = flashing 1Hz, 11 = flashing 2Hz	*/
-	  BINARY_FIELD("Amber Warning Lamp Status", 2, "Fault Lamps"),
-	  BINARY_FIELD("Protect Lamp Status", 2, "Fault Lamps"),
-	  RESERVED_FIELD(BYTES(1)),
-	  BINARY_FIELD("SPN", 19,"Suspect Parameter Number"),	/* These four fields comprise a Diagnostic Trouble Code (DTC) */
-	  BINARY_FIELD("FMI", 5,"Fault Mode Indicator"),		/* If there is more han one DTC the message is sent using TP  */
-	  BINARY_FIELD("CM", 1, "SPN Conversion Method"),		/* Not sure how to handle that actually... */
-	  BINARY_FIELD("OC", 7, "Occurance Count"),
-	  END_OF_FIELDS}}
-	 
+    ,
+    {"Active Trouble Codes", /* J1939 PGN 65226 See https://embeddedflakes.com/j1939-diagnostics-part-1/ */
+     65226,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {BINARY_FIELD("Malfunction Lamp Status", 2, "Fault Lamps"), /* Lamp modes are: 0 = off, 01 = on		*/
+      BINARY_FIELD("Red Stop Lamp Status", 2, "Fault Lamps"),    /* 10 = flashing 1Hz, 11 = flashing 2Hz	*/
+      BINARY_FIELD("Amber Warning Lamp Status", 2, "Fault Lamps"),
+      BINARY_FIELD("Protect Lamp Status", 2, "Fault Lamps"),
+      RESERVED_FIELD(BYTES(1)),
+      BINARY_FIELD("SPN", 19, "Suspect Parameter Number"), /* These four fields comprise a Diagnostic Trouble Code (DTC) */
+      BINARY_FIELD("FMI", 5, "Fault Mode Indicator"),      /* If there is more han one DTC the message is sent using TP  */
+      BINARY_FIELD("CM", 1, "SPN Conversion Method"),      /* Not sure how to handle that actually... */
+      BINARY_FIELD("OC", 7, "Occurance Count"),
+      END_OF_FIELDS}}
+
     ,
     {"ISO Commanded Address",
      65240,
@@ -1551,49 +1541,43 @@ Pgn pgnList[] = {
       UINT8_FIELD("New Source Address"),
       END_OF_FIELDS}}
 
-	,
-	{"Engine Temp #1",
-	 65262,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {TEMPERATURE_UINT8_OFFSET_FIELD("Engine Coolant Temp"),
-	  END_OF_FIELDS}}
+    ,
+    {"Engine Temp #1",
+     65262,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {TEMPERATURE_UINT8_OFFSET_FIELD("Engine Coolant Temp"), END_OF_FIELDS}}
 
-	,
-	{"Fuel Economy",
-	 65266,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {RESERVED_FIELD(BYTES(6)),
-	  PERCENTAGE_U8_HIGHRES_FIELD("Throttle Position"),
-	  END_OF_FIELDS}}
+    ,
+    {"Fuel Economy",
+     65266,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {RESERVED_FIELD(BYTES(6)), PERCENTAGE_U8_HIGHRES_FIELD("Throttle Position"), END_OF_FIELDS}}
 
-	,
-	{"Ambient Conditions",
-	 65269,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {PRESSURE_UINT8_KPA_FIELD("Barometric Pressure"),
-	  END_OF_FIELDS}}
+    ,
+    {"Ambient Conditions",
+     65269,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {PRESSURE_UINT8_KPA_FIELD("Barometric Pressure"), END_OF_FIELDS}}
 
-	,
-	{"Inlet/Exhaust Conditions",
-	 65270,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {RESERVED_FIELD(BYTES(2)),
-	  TEMPERATURE_UINT8_OFFSET_FIELD("Intake Manifold Temp"),
-	  PRESSURE_UINT8_2KPA_FIELD("Air Inlet Pressure"),
-	  END_OF_FIELDS}}
+    ,
+    {"Inlet/Exhaust Conditions",
+     65270,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {RESERVED_FIELD(BYTES(2)),
+      TEMPERATURE_UINT8_OFFSET_FIELD("Intake Manifold Temp"),
+      PRESSURE_UINT8_2KPA_FIELD("Air Inlet Pressure"),
+      END_OF_FIELDS}}
 
-	,
-	{"Vehicle Electrical Power",
-	 65271,
-	 PACKET_INCOMPLETE,
-	 PACKET_SINGLE,
-	 {RESERVED_FIELD(BYTES(4)),
-	  VOLTAGE_U16_50MV_FIELD("Battery Voltage"),
-	  END_OF_FIELDS}}
+    ,
+    {"Vehicle Electrical Power",
+     65271,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {RESERVED_FIELD(BYTES(4)), VOLTAGE_U16_50MV_FIELD("Battery Voltage"), END_OF_FIELDS}}
 
     /* proprietary PDU2 (non addressed) single-frame range 0xFF00 to 0xFFFF (65280 - 65535) */
 
@@ -1607,7 +1591,6 @@ Pgn pgnList[] = {
      .explanation = "Manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xFF00 to "
                     "0xFFFF (65280 - 65535). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
-
 
     /* PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (126208 - 126464) */
     /* Only 0x1ED00 and 0x1EE00 seem to be used? */
@@ -1623,7 +1606,6 @@ Pgn pgnList[] = {
                     "0x1EE00 (65536 - 126464). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
-
     /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
 
     ,
@@ -1636,7 +1618,6 @@ Pgn pgnList[] = {
      .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN range 0x1EF00 to "
                     "0x1EFFF (126720 - 126975). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
-
 
     /* PDU2 (non addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815) */
 
@@ -1651,7 +1632,6 @@ Pgn pgnList[] = {
                     "0x1FEFF (126976 - 130815). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
- 
     /* proprietary PDU2 (non addressed) fast packet PGN range 0x1FF00 to 0x1FFFF (130816 - 131071) */
 
     ,
@@ -1666,7 +1646,7 @@ Pgn pgnList[] = {
        "0x1FFFF (130816 - 131071). "
        "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
-    };
+};
 
 const size_t pgnListSize  = ARRAY_SIZE(pgnList);
 const size_t pgnRangeSize = ARRAY_SIZE(pgnRange);

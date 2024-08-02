@@ -1,11 +1,11 @@
-<xs:schema version="2.1.0"
+<xs:schema version="2.1.1"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="PGNDefinitions" type="PGNDefinitions">
     <xs:annotation>
       <xs:documentation>
-CANboat version v5.0.3
+CANboat version v5.1.0
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -600,6 +600,7 @@ limitations under the License.
       <xs:element type="xs:int" name="PGN"/>
       <xs:element type="xs:string" name="Id"/>
       <xs:element type="xs:string" name="Description"/>
+      <xs:element type="xs:unsignedShort" name="Priority" minOccurs="0"/>
       <xs:element type="xs:string" name="Explanation" minOccurs="0"/>
       <xs:element type="xs:string" name="URL" minOccurs="0"/>
       <xs:element type="xs:string" name="Type">

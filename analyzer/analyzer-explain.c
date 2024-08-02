@@ -508,6 +508,10 @@ static void explainPGN(Pgn pgn)
   {
     printf("     The PGN is transmitted on-demand or when data is available\n");
   }
+  if (pgn.priority != 0)
+  {
+    printf("     The default priority is %u\n", pgn.priority);
+  }
 
   for (i = 0; i < ARRAY_SIZE(pgn.fieldList) && pgn.fieldList[i].name; i++)
   {
@@ -708,6 +712,10 @@ static void explainPGNXML(Pgn pgn)
   printXML(6, "Description", pgn.description);
   if (!doV1)
   {
+    if (pgn.priority != 0)
+    {
+      printf("    <Priority>%u</Priority>\n", pgn.priority);
+    }
     printXML(6, "Explanation", pgn.explanation);
     printXML(6, "URL", pgn.url);
   }

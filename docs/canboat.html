@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta charset="UTF-8"/><meta name="description" content="CANBoat PGN documentation"/><link rel="stylesheet" type="text/css" href="canboat.css"/><script src="canboat.js"></script><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet"/></head><body><div id="sidenav" class="sidenav"><a class="closebtn" onclick="closeNav(event)">×</a><a href="#main">Top</a><a href="#pgn-list">PGN list</a><a href="#physical-quantities">Physical Quantities</a><a href="#field-types">Field Types</a><a href="#lookup-enumerations">Lookup enumerations</a><a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a><a href="#bitfield-enumerations">Bitfield enumerations</a><a href="#lookupfieldtype-enumerations">Lookup with FieldType enumerations</a><a href="#notes">Notes</a></div><div id="sidenav-closed" class="sidenav"><a onclick="openNav(event)" id="hamburger"><span></span><span></span><span></span></a></div><div id="main"><p>
             The CANBoat project PGN documentation version
-            5.0.3.
-          </p><h3>Copyright</h3><p class="xs">CANboat version v5.0.3
+            5.1.0.
+          </p><h3>Copyright</h3><p class="xs">CANboat version v5.1.0
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -97,6 +97,8 @@ limitations under the License.
             bytes long and contains 4 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Control</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -119,6 +121,8 @@ limitations under the License.
             3
             bytes long and contains 1 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
@@ -305,6 +309,8 @@ limitations under the License.
             bytes long and contains 10 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Unique Number</td><td>ISO Identity Number</td><td><div class="xs">0 .. 2097149</div></td><td>21 bits
                   
@@ -445,6 +451,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -466,6 +474,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -487,6 +497,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -508,6 +520,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -529,6 +543,8 @@ limitations under the License.
             8
             bytes long and contains 2 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Total Energy Export</td><td/><td><a href="#pq-ELECTRICAL_ENERGY">kWh</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
@@ -546,6 +562,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -567,6 +585,8 @@ limitations under the License.
             8
             bytes long and contains 2 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Real Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -586,6 +606,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -609,6 +631,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -630,6 +654,8 @@ limitations under the License.
             8
             bytes long and contains 2 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Real Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -649,6 +675,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -672,6 +700,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -694,6 +724,8 @@ limitations under the License.
             8
             bytes long and contains 2 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Real Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -713,6 +745,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -736,6 +770,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -758,6 +794,8 @@ limitations under the License.
             8
             bytes long and contains 2 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Real Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -777,6 +815,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -800,6 +840,8 @@ limitations under the License.
             8
             bytes long and contains 2 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Total Energy Export</td><td/><td><a href="#pq-ELECTRICAL_ENERGY">kWh</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
@@ -817,6 +859,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -839,6 +883,8 @@ limitations under the License.
             8
             bytes long and contains 2 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Real Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -858,6 +904,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -881,6 +929,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -903,6 +953,8 @@ limitations under the License.
             8
             bytes long and contains 2 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Real Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -922,6 +974,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -945,6 +999,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -967,6 +1023,8 @@ limitations under the License.
             8
             bytes long and contains 2 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Real Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -986,6 +1044,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -1009,6 +1069,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -1031,6 +1093,8 @@ limitations under the License.
             8
             bytes long and contains 2 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Real Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2000000000 .. 2294967293</div></td><td>32 bits
                   
                         signed
@@ -1050,6 +1114,8 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Line-Line AC RMS Voltage</td><td/><td><a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -1117,6 +1183,8 @@ limitations under the License.
             8
             bytes long and contains 5 fields.
 
+            
+              The default priority (as observed in the field) is 2.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
                   Furuno</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -1143,6 +1211,8 @@ limitations under the License.
             8
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>137:
                   Maretron</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -1175,6 +1245,8 @@ limitations under the License.
             8
             bytes long and contains 5 fields.
 
+            
+              The default priority (as observed in the field) is 5.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -1354,6 +1426,8 @@ limitations under the License.
             8
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -1479,6 +1553,8 @@ limitations under the License.
             8
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 2.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>641:
                   Diverse Yacht Services</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -1508,6 +1584,8 @@ limitations under the License.
             8
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
@@ -1711,6 +1789,8 @@ limitations under the License.
             8
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -1743,6 +1823,8 @@ limitations under the License.
             8
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -1772,6 +1854,8 @@ limitations under the License.
             8
             bytes long and contains 9 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
@@ -1812,6 +1896,8 @@ limitations under the License.
             8
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -1895,6 +1981,8 @@ limitations under the License.
             8
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -1925,6 +2013,8 @@ limitations under the License.
             8
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -2058,6 +2148,8 @@ limitations under the License.
             8
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -2086,6 +2178,8 @@ limitations under the License.
             8
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -2117,6 +2211,8 @@ limitations under the License.
             8
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -2151,6 +2247,8 @@ limitations under the License.
             8
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
@@ -2187,6 +2285,8 @@ limitations under the License.
             8
             bytes long and contains 9 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
@@ -4098,6 +4198,8 @@ limitations under the License.
             bytes long and contains 5 fields.
 
             
+              The default priority (as observed in the field) is 3.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -4121,6 +4223,8 @@ limitations under the License.
             8
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Data transmit offset</td><td>Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset.</td><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 65.533</div></td><td>16 bits
                   
                         unsigned
@@ -4151,6 +4255,8 @@ limitations under the License.
             bytes long and contains 8 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>NMEA 2000 Version</td><td/><td>0.001 <div class="xs">0 .. 65.533</div></td><td>16 bits
                   
@@ -4180,6 +4286,8 @@ limitations under the License.
               at least 0
             bytes long and contains 3 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Installation Description #1</td><td/><td> </td><td>
@@ -4262,6 +4370,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 18 fields.
 
             
+              The default priority (as observed in the field) is 2.
+            
               It is normally transmitted every 250 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Rudder Limit Exceeded</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
@@ -4327,6 +4437,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 6 fields.
 
             
+              The default priority (as observed in the field) is 2.
+            
               It is normally transmitted every 100 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -4353,6 +4465,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 2.
             
               It is normally transmitted every 100 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -4383,6 +4497,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 3 fields.
 
             
+              The default priority (as observed in the field) is 2.
+            
               It is normally transmitted every 100 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -4402,6 +4518,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 3 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -4420,6 +4538,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 5 fields.
 
+            
+              The default priority (as observed in the field) is 2.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -4446,6 +4566,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -4474,6 +4596,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 5 fields.
 
             
+              The default priority (as observed in the field) is 2.
+            
               It is normally transmitted every 100 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -4499,6 +4623,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             26
             bytes long and contains 14 fields.
 
+            
+              The default priority (as observed in the field) is 2.
             
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -4870,6 +4996,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 29 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -5075,6 +5203,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         2 
         (with name "Number of Lines".)
       
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 1500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -5130,6 +5260,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         2 
         (with name "Number of Lines".)
       
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 1500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -5177,6 +5309,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 5 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 2500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
@@ -5202,6 +5336,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             11
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 1500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -5240,6 +5376,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 8 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 1500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -5275,6 +5413,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 5 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 1500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -5302,6 +5442,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             4
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 1500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -5833,6 +5975,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 6 fields.
 
             
+              The default priority (as observed in the field) is 2.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -5862,6 +6006,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 4 fields.
 
             
+              The default priority (as observed in the field) is 3.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -5886,6 +6032,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             14
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Date</td><td/><td><a href="#pq-DATE">d</a><div class="xs">0 .. 65533</div></td><td>16 bits
@@ -6266,6 +6414,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 2 fields.
 
             
+              The default priority (as observed in the field) is 2.
+            
               It is normally transmitted every 100 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
                   
@@ -6284,6 +6434,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 2.
             
               It is normally transmitted every 250 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -6314,6 +6466,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 5 fields.
 
             
+              The default priority (as observed in the field) is 2.
+            
               It is normally transmitted every 100 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -6339,6 +6493,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 2.
             
               It is normally transmitted every 100 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -6380,6 +6536,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         15 
         (with name "Reference Stations".)
       
+              The default priority (as observed in the field) is 3.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -6443,6 +6601,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 3 fields.
 
             
+              The default priority (as observed in the field) is 3.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Date</td><td/><td><a href="#pq-DATE">d</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
@@ -6462,6 +6622,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             28
             bytes long and contains 20 fields.
 
+            
+              The default priority (as observed in the field) is 4.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -6529,6 +6691,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             27
             bytes long and contains 23 fields.
 
+            
+              The default priority (as observed in the field) is 4.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -6605,6 +6769,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             54
             bytes long and contains 27 fields.
 
+            
+              The default priority (as observed in the field) is 4.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -6689,6 +6855,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 23 fields.
 
             
+              The default priority (as observed in the field) is 4.
+            
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
@@ -6764,6 +6932,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 5 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 10000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Local Datum</td><td>defined in IHO Publication S-60, Appendices B and C. First three chars are datum ID as per IHO tables. Fourth char is local datum subdivision code.</td><td> </td><td>32 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr><tr><td>2</td><td>Delta Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
@@ -6829,6 +6999,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 6 fields.
 
             
+              The default priority (as observed in the field) is 3.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -6855,6 +7027,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             34
             bytes long and contains 15 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -6920,6 +7094,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         2 
         (with name "nItems".)
       
+              The default priority (as observed in the field) is 7.
+            
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Start RPS#</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
@@ -7104,6 +7280,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 7 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -7144,6 +7322,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         4 
         (with name "Sats in View".)
       
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -7606,6 +7786,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 15 fields.
 
             
+              The default priority (as observed in the field) is 7.
+            
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
@@ -7655,6 +7837,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             75
             bytes long and contains 21 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -7805,6 +7989,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               at least 8
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -8139,6 +8325,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "Offset")
         form repeating set 1. The set is repeated until there is no more data in the PGN.
       
+              The default priority (as observed in the field) is 7.
+            
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
@@ -8447,6 +8635,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 7 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
@@ -8478,6 +8668,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             35
             bytes long and contains 16 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -9219,6 +9411,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 5 fields.
 
             
+              The default priority (as observed in the field) is 2.
+            
               It is normally transmitted every 100 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -9247,6 +9441,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 5 fields.
 
             
+              The default priority (as observed in the field) is 5.
+            
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -9272,6 +9468,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 5.
             
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -9304,6 +9502,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 6 fields.
 
             
+              The default priority (as observed in the field) is 5.
+            
               It is normally transmitted every 2000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -9332,6 +9532,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 5.
             
               It is normally transmitted every 2000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -9362,6 +9564,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 5 fields.
 
             
+              The default priority (as observed in the field) is 5.
+            
               It is normally transmitted every 2000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -9388,6 +9592,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 5 fields.
 
             
+              The default priority (as observed in the field) is 5.
+            
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -9413,6 +9619,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 5 fields.
 
+            
+              The default priority (as observed in the field) is 5.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -9564,6 +9772,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 15 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
@@ -9673,6 +9883,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               at least 12
             bytes long and contains 12 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Global Enable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                         unsigned
@@ -10751,6 +10963,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             9
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -10787,6 +11001,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             43
             bytes long and contains 12 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -10831,6 +11047,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             6
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -10864,6 +11082,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             6
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -10897,6 +11117,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             39
             bytes long and contains 9 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -10934,6 +11156,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             6
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -10967,6 +11191,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             43
             bytes long and contains 12 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11011,6 +11237,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             23
             bytes long and contains 12 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11059,6 +11287,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             41
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11093,6 +11323,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             41
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11127,6 +11359,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             41
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11161,6 +11395,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             44
             bytes long and contains 11 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11204,6 +11440,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             6
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11237,6 +11475,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             7
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11273,6 +11513,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             7
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11309,6 +11551,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             5
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11339,6 +11583,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             9
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11372,6 +11618,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             7
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11408,6 +11656,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             41
             bytes long and contains 11 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11451,6 +11701,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             113
             bytes long and contains 11 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11489,6 +11741,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             113
             bytes long and contains 11 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>140:
                   Lowrance</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11527,6 +11781,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             223
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11556,6 +11812,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             2
             bytes long and contains 3 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11578,6 +11836,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             7
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11605,6 +11865,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             7
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
                   Furuno</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11642,6 +11904,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             13
             bytes long and contains 10 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11684,6 +11948,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             23
             bytes long and contains 15 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11743,6 +12009,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             19
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11776,6 +12044,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             19
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11809,6 +12079,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             19
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11842,6 +12114,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             18
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11872,6 +12146,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             18
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11905,6 +12181,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11940,6 +12218,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             21
             bytes long and contains 10 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -11982,6 +12262,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             9
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12020,6 +12302,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             6
             bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12055,6 +12339,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             6
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12093,6 +12379,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             16
             bytes long and contains 13 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12144,6 +12432,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             14
             bytes long and contains 13 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12197,6 +12487,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             5
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12229,6 +12521,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 9 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12270,6 +12564,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 9 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12311,6 +12607,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 9 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12352,6 +12650,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             5
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12384,6 +12684,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             19
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12414,6 +12716,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             19
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12444,6 +12748,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             19
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12474,6 +12780,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             19
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12504,6 +12812,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             259
             bytes long and contains 5 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12530,6 +12840,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             12
             bytes long and contains 13 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
                   Furuno</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12582,6 +12894,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             233
             bytes long and contains 4 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12605,6 +12919,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             9
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>137:
                   Maretron</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12649,6 +12965,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "Key")
         form repeating set 1. The set is repeated until there is no more data in the PGN.
       
+              The default priority (as observed in the field) is 2.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>381:
                   B &amp; G</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -12682,6 +13000,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             9
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>137:
                   Maretron</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -12978,6 +13298,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 12 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 15000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>137:
                   Maretron</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -13046,6 +13368,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             23
             bytes long and contains 12 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 15000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>137:
@@ -13137,6 +13461,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             2
             bytes long and contains 3 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -13541,6 +13867,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             11
             bytes long and contains 11 fields.
 
+            
+              The default priority (as observed in the field) is 2.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -13584,6 +13912,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             12
             bytes long and contains 11 fields.
 
+            
+              The default priority (as observed in the field) is 2.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -13632,6 +13962,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 11 fields.
 
             
+              The default priority (as observed in the field) is 2.
+            
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
@@ -13676,6 +14008,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             12
             bytes long and contains 11 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
@@ -13757,6 +14091,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             23
             bytes long and contains 9 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
@@ -13871,6 +14207,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             6
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   

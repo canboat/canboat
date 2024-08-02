@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v5.0.3
+CANboat version v5.1.0
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -23,12 +23,12 @@ limitations under the License.
 -->
 <?xml-stylesheet type="text/xsl" href="canboat.xsl"?>
 <PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SchemaVersion>2.1.0</SchemaVersion>
+  <SchemaVersion>2.1.1</SchemaVersion>
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>5.0.3</Version>
-  <Copyright>CANboat version v5.0.3
+  <Version>5.1.0</Version>
+  <Copyright>CANboat version v5.1.0
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -2694,6 +2694,7 @@ limitations under the License.
       <PGN>59392</PGN>
       <Id>isoAcknowledgement</Id>
       <Description>ISO Acknowledgement</Description>
+    <Priority>6</Priority>
       <Explanation>This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. This message is the possible response to acknowledge the reception of a 'normal broadcast' message or the response to a specific command to indicate compliance or failure.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
@@ -2758,6 +2759,7 @@ limitations under the License.
       <PGN>59904</PGN>
       <Id>isoRequest</Id>
       <Description>ISO Request</Description>
+    <Priority>6</Priority>
       <Explanation>As defined by ISO, this message has a data length of 3 bytes with no padding added to complete the single frame. The appropriate response to this message is based on the PGN being requested, and whether the receiver supports the requested PGN.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
@@ -3211,6 +3213,7 @@ limitations under the License.
       <PGN>60928</PGN>
       <Id>isoAddressClaim</Id>
       <Description>ISO Address Claim</Description>
+    <Priority>6</Priority>
       <Explanation>This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
@@ -3812,6 +3815,7 @@ limitations under the License.
       <PGN>65001</PGN>
       <Id>bus1PhaseCBasicAcQuantities</Id>
       <Description>Bus #1 Phase C Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -3881,6 +3885,7 @@ limitations under the License.
       <PGN>65002</PGN>
       <Id>bus1PhaseBBasicAcQuantities</Id>
       <Description>Bus #1 Phase B Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -3950,6 +3955,7 @@ limitations under the License.
       <PGN>65003</PGN>
       <Id>bus1PhaseABasicAcQuantities</Id>
       <Description>Bus #1 Phase A Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4019,6 +4025,7 @@ limitations under the License.
       <PGN>65004</PGN>
       <Id>bus1AverageBasicAcQuantities</Id>
       <Description>Bus #1 Average Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4091,6 +4098,7 @@ limitations under the License.
       <PGN>65005</PGN>
       <Id>utilityTotalAcEnergy</Id>
       <Description>Utility Total AC Energy</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4136,6 +4144,7 @@ limitations under the License.
       <PGN>65006</PGN>
       <Id>utilityPhaseCAcReactivePower</Id>
       <Description>Utility Phase C AC Reactive Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4203,6 +4212,7 @@ limitations under the License.
       <PGN>65007</PGN>
       <Id>utilityPhaseCAcPower</Id>
       <Description>Utility Phase C AC Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4249,6 +4259,7 @@ limitations under the License.
       <PGN>65008</PGN>
       <Id>utilityPhaseCBasicAcQuantities</Id>
       <Description>Utility Phase C Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4323,6 +4334,7 @@ limitations under the License.
       <PGN>65009</PGN>
       <Id>utilityPhaseBAcReactivePower</Id>
       <Description>Utility Phase B AC Reactive Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4390,6 +4402,7 @@ limitations under the License.
       <PGN>65010</PGN>
       <Id>utilityPhaseBAcPower</Id>
       <Description>Utility Phase B AC Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4436,6 +4449,7 @@ limitations under the License.
       <PGN>65011</PGN>
       <Id>utilityPhaseBBasicAcQuantities</Id>
       <Description>Utility Phase B Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4510,6 +4524,7 @@ limitations under the License.
       <PGN>65012</PGN>
       <Id>utilityPhaseAAcReactivePower</Id>
       <Description>Utility Phase A AC Reactive Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4578,6 +4593,7 @@ limitations under the License.
       <PGN>65013</PGN>
       <Id>utilityPhaseAAcPower</Id>
       <Description>Utility Phase A AC Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4624,6 +4640,7 @@ limitations under the License.
       <PGN>65014</PGN>
       <Id>utilityPhaseABasicAcQuantities</Id>
       <Description>Utility Phase A Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4698,6 +4715,7 @@ limitations under the License.
       <PGN>65015</PGN>
       <Id>utilityTotalAcReactivePower</Id>
       <Description>Utility Total AC Reactive Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4766,6 +4784,7 @@ limitations under the License.
       <PGN>65016</PGN>
       <Id>utilityTotalAcPower</Id>
       <Description>Utility Total AC Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4812,6 +4831,7 @@ limitations under the License.
       <PGN>65017</PGN>
       <Id>utilityAverageBasicAcQuantities</Id>
       <Description>Utility Average Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4886,6 +4906,7 @@ limitations under the License.
       <PGN>65018</PGN>
       <Id>generatorTotalAcEnergy</Id>
       <Description>Generator Total AC Energy</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4931,6 +4952,7 @@ limitations under the License.
       <PGN>65019</PGN>
       <Id>generatorPhaseCAcReactivePower</Id>
       <Description>Generator Phase C AC Reactive Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4999,6 +5021,7 @@ limitations under the License.
       <PGN>65020</PGN>
       <Id>generatorPhaseCAcPower</Id>
       <Description>Generator Phase C AC Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5045,6 +5068,7 @@ limitations under the License.
       <PGN>65021</PGN>
       <Id>generatorPhaseCBasicAcQuantities</Id>
       <Description>Generator Phase C Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5119,6 +5143,7 @@ limitations under the License.
       <PGN>65022</PGN>
       <Id>generatorPhaseBAcReactivePower</Id>
       <Description>Generator Phase B AC Reactive Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5187,6 +5212,7 @@ limitations under the License.
       <PGN>65023</PGN>
       <Id>generatorPhaseBAcPower</Id>
       <Description>Generator Phase B AC Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5233,6 +5259,7 @@ limitations under the License.
       <PGN>65024</PGN>
       <Id>generatorPhaseBBasicAcQuantities</Id>
       <Description>Generator Phase B Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5307,6 +5334,7 @@ limitations under the License.
       <PGN>65025</PGN>
       <Id>generatorPhaseAAcReactivePower</Id>
       <Description>Generator Phase A AC Reactive Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5375,6 +5403,7 @@ limitations under the License.
       <PGN>65026</PGN>
       <Id>generatorPhaseAAcPower</Id>
       <Description>Generator Phase A AC Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5421,6 +5450,7 @@ limitations under the License.
       <PGN>65027</PGN>
       <Id>generatorPhaseABasicAcQuantities</Id>
       <Description>Generator Phase A Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5495,6 +5525,7 @@ limitations under the License.
       <PGN>65028</PGN>
       <Id>generatorTotalAcReactivePower</Id>
       <Description>Generator Total AC Reactive Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5563,6 +5594,7 @@ limitations under the License.
       <PGN>65029</PGN>
       <Id>generatorTotalAcPower</Id>
       <Description>Generator Total AC Power</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5609,6 +5641,7 @@ limitations under the License.
       <PGN>65030</PGN>
       <Id>generatorAverageBasicAcQuantities</Id>
       <Description>Generator Average Basic AC Quantities</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5909,6 +5942,7 @@ limitations under the License.
       <PGN>65280</PGN>
       <Id>furunoHeave</Id>
       <Description>Furuno: Heave</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -5993,6 +6027,7 @@ limitations under the License.
       <PGN>65284</PGN>
       <Id>maretronProprietaryDcBreakerCurrent</Id>
       <Description>Maretron: Proprietary DC Breaker Current</Description>
+    <Priority>6</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -6100,6 +6135,7 @@ limitations under the License.
       <PGN>65285</PGN>
       <Id>airmarBootStateAcknowledgment</Id>
       <Description>Airmar: Boot State Acknowledgment</Description>
+    <Priority>5</Priority>
       <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -6658,6 +6694,7 @@ limitations under the License.
       <PGN>65288</PGN>
       <Id>seatalkAlarm</Id>
       <Description>Seatalk: Alarm</Description>
+    <Priority>7</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -7055,6 +7092,7 @@ limitations under the License.
       <PGN>65293</PGN>
       <Id>diverseYachtServicesLoadCell</Id>
       <Description>Diverse Yacht Services: Load Cell</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -7148,6 +7186,7 @@ limitations under the License.
       <PGN>65302</PGN>
       <Id>simnetApUnknown1</Id>
       <Description>Simnet: AP Unknown 1</Description>
+    <Priority>7</Priority>
       <Explanation>Seen as sent by AC-42 only so far.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -7783,6 +7822,7 @@ limitations under the License.
       <PGN>65309</PGN>
       <Id>navicoWirelessBatteryStatus</Id>
       <Description>Navico: Wireless Battery Status</Description>
+    <Priority>7</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -7893,6 +7933,7 @@ limitations under the License.
       <PGN>65312</PGN>
       <Id>navicoWirelessSignalStatus</Id>
       <Description>Navico: Wireless Signal Status</Description>
+    <Priority>7</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -7987,6 +8028,7 @@ limitations under the License.
       <PGN>65340</PGN>
       <Id>simnetApUnknown2</Id>
       <Description>Simnet: AP Unknown 2</Description>
+    <Priority>3</Priority>
       <Explanation>Seen as sent by AC-42 only so far.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -8122,6 +8164,7 @@ limitations under the License.
       <PGN>65341</PGN>
       <Id>simnetAutopilotAngle</Id>
       <Description>Simnet: Autopilot Angle</Description>
+    <Priority>6</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -8416,6 +8459,7 @@ limitations under the License.
       <PGN>65359</PGN>
       <Id>seatalkPilotHeading</Id>
       <Description>Seatalk: Pilot Heading</Description>
+    <Priority>7</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -8525,6 +8569,7 @@ limitations under the License.
       <PGN>65360</PGN>
       <Id>seatalkPilotLockedHeading</Id>
       <Description>Seatalk: Pilot Locked Heading</Description>
+    <Priority>7</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -8990,6 +9035,7 @@ limitations under the License.
       <PGN>65379</PGN>
       <Id>seatalkPilotMode</Id>
       <Description>Seatalk: Pilot Mode</Description>
+    <Priority>7</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -9093,6 +9139,7 @@ limitations under the License.
       <PGN>65408</PGN>
       <Id>airmarDepthQualityFactor</Id>
       <Description>Airmar: Depth Quality Factor</Description>
+    <Priority>7</Priority>
       <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -9190,6 +9237,7 @@ limitations under the License.
       <PGN>65409</PGN>
       <Id>airmarSpeedPulseCount</Id>
       <Description>Airmar: Speed Pulse Count</Description>
+    <Priority>7</Priority>
       <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -9298,6 +9346,7 @@ limitations under the License.
       <PGN>65410</PGN>
       <Id>airmarDeviceInformation</Id>
       <Description>Airmar: Device Information</Description>
+    <Priority>7</Priority>
       <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -9411,6 +9460,7 @@ limitations under the License.
       <PGN>65420</PGN>
       <Id>simnetApUnknown3</Id>
       <Description>Simnet: AP Unknown 3</Description>
+    <Priority>6</Priority>
       <Explanation>Seen as sent by AC-42 only so far.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -15558,6 +15608,7 @@ limitations under the License.
       <PGN>126992</PGN>
       <Id>systemTime</Id>
       <Description>System Time</Description>
+    <Priority>3</Priority>
       <Explanation>The purpose of this PGN is twofold: To provide a regular transmission of UTC time and date. To provide synchronism for measurement data.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
@@ -15638,6 +15689,7 @@ limitations under the License.
       <PGN>126993</PGN>
       <Id>heartbeat</Id>
       <Description>Heartbeat</Description>
+    <Priority>7</Priority>
       <Explanation>Reception of this PGN confirms that a device is still present on the network.  Reception of this PGN may also be used to maintain an address to NAME association table within the receiving device.  The transmission interval may be used by the receiving unit to determine the time-out value for the connection supervision.  The value contained in Field 1 of this PGN reflects the PGN's current Transmission Interval. Changes to this PGN's Transmission Interval shall be reflected in Field 1.  The transmission interval can only be changed by using the Request Group Function PGN 126208 with no pairs of request parameters provided. Field 3 of the Request Group Function PGN 126208 may contain values between 1,000ms and 60,000ms.  This PGN cannot be requested by the ISO Request PGN 059904 or Request Group Function PGN 126208. In Request Group Function PGN 126208, setting Field 3 to a value of 0xFFFF FFFF and Field 4 to a value of 0xFFFF: 'Transmit now without changing timing variables.' is prohibited.  The Command Group Function PGN 126208 shall not be used with this PGN.  Fields 3 and 4 of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for additional context.</Explanation>
       <URL>http://www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf</URL>
       <Type>Single</Type>
@@ -15735,6 +15787,7 @@ limitations under the License.
       <PGN>126996</PGN>
       <Id>productInformation</Id>
       <Description>Product Information</Description>
+    <Priority>6</Priority>
       <Explanation>Provides product information onto the network that could be important for determining quality of data coming from this product.</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -15836,6 +15889,7 @@ limitations under the License.
       <PGN>126998</PGN>
       <Id>configurationInformation</Id>
       <Description>Configuration Information</Description>
+    <Priority>6</Priority>
       <Explanation>Free-form alphanumeric fields describing the installation (e.g., starboard engine room location) of the device and installation notes (e.g., calibration data).</Explanation>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -16135,6 +16189,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127237</PGN>
       <Id>headingTrackControl</Id>
       <Description>Heading/Track control</Description>
+    <Priority>2</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>18</FieldCount>
@@ -16404,6 +16459,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127245</PGN>
       <Id>rudder</Id>
       <Description>Rudder</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -16493,6 +16549,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127250</PGN>
       <Id>vesselHeading</Id>
       <Description>Vessel Heading</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -16587,6 +16644,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127251</PGN>
       <Id>rateOfTurn</Id>
       <Description>Rate of Turn</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>3</FieldCount>
@@ -16637,6 +16695,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127252</PGN>
       <Id>heave</Id>
       <Description>Heave</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -16692,6 +16751,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127257</PGN>
       <Id>attitude</Id>
       <Description>Attitude</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -16772,6 +16832,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127258</PGN>
       <Id>magneticVariation</Id>
       <Description>Magnetic Variation</Description>
+    <Priority>6</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -16861,6 +16922,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127488</PGN>
       <Id>engineParametersRapidUpdate</Id>
       <Description>Engine Parameters, Rapid Update</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -16940,6 +17002,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127489</PGN>
       <Id>engineParametersDynamic</Id>
       <Description>Engine Parameters, Dynamic</Description>
+    <Priority>2</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>14</FieldCount>
@@ -18313,6 +18376,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127501</PGN>
       <Id>binarySwitchBankStatus</Id>
       <Description>Binary Switch Bank Status</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -19151,6 +19215,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127503</PGN>
       <Id>acInputStatus</Id>
       <Description>AC Input Status</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
@@ -19333,6 +19398,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127504</PGN>
       <Id>acOutputStatus</Id>
       <Description>AC Output Status</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
@@ -19516,6 +19582,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127505</PGN>
       <Id>fluidLevel</Id>
       <Description>Fluid Level</Description>
+    <Priority>6</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -19594,6 +19661,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127506</PGN>
       <Id>dcDetailedStatus</Id>
       <Description>DC Detailed Status</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>8</FieldCount>
@@ -19718,6 +19786,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127507</PGN>
       <Id>chargerStatus</Id>
       <Description>Charger Status</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>8</FieldCount>
@@ -19837,6 +19906,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127508</PGN>
       <Id>batteryStatus</Id>
       <Description>Battery Status</Description>
+    <Priority>6</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -19920,6 +19990,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127509</PGN>
       <Id>inverterStatus</Id>
       <Description>Inverter Status</Description>
+    <Priority>6</Priority>
       <Explanation>The NMEA wrote in the link in the URL that this PGN is obsolete and superceded by PGN 127751, but that PGN reference is obviously incorrect. They probably meant PGN 127511. The other interesting thing is that this PGN is only four bytes long but still referenced as a Fast PGN, which matches various sources; see github issue #428.</Explanation>
       <URL>https://web.archive.org/web/20140913025729/https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf</URL>
       <Type>Fast</Type>
@@ -21730,6 +21801,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>128259</PGN>
       <Id>speed</Id>
       <Description>Speed</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -21822,6 +21894,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>128267</PGN>
       <Id>waterDepth</Id>
       <Description>Water Depth</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>4</FieldCount>
@@ -21895,6 +21968,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>128275</PGN>
       <Id>distanceLog</Id>
       <Description>Distance Log</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>4</FieldCount>
@@ -23360,6 +23434,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129025</PGN>
       <Id>positionRapidUpdate</Id>
       <Description>Position, Rapid Update</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>2</FieldCount>
@@ -23402,6 +23477,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129026</PGN>
       <Id>cogSogRapidUpdate</Id>
       <Description>COG &amp; SOG, Rapid Update</Description>
+    <Priority>2</Priority>
       <URL>http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
@@ -23492,6 +23568,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129027</PGN>
       <Id>positionDeltaRapidUpdate</Id>
       <Description>Position Delta, Rapid Update</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -23569,6 +23646,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129028</PGN>
       <Id>altitudeDeltaRapidUpdate</Id>
       <Description>Altitude Delta, Rapid Update</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -23674,6 +23752,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129029</PGN>
       <Id>gnssPositionData</Id>
       <Description>GNSS Position Data</Description>
+    <Priority>3</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>18</FieldCount>
@@ -23944,6 +24023,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129033</PGN>
       <Id>timeDate</Id>
       <Description>Time &amp; Date</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>3</FieldCount>
@@ -24001,6 +24081,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129038</PGN>
       <Id>aisClassAPositionReport</Id>
       <Description>AIS Class A Position Report</Description>
+    <Priority>4</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -24285,6 +24366,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129039</PGN>
       <Id>aisClassBPositionReport</Id>
       <Description>AIS Class B Position Report</Description>
+    <Priority>4</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -24611,6 +24693,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129040</PGN>
       <Id>aisClassBExtendedPositionReport</Id>
       <Description>AIS Class B Extended Position Report</Description>
+    <Priority>4</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -24984,6 +25067,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129041</PGN>
       <Id>aisAidsToNavigationAtonReport</Id>
       <Description>AIS Aids to Navigation (AtoN) Report</Description>
+    <Priority>4</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -25302,6 +25386,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129044</PGN>
       <Id>datum</Id>
       <Description>Datum</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -25535,6 +25620,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129283</PGN>
       <Id>crossTrackError</Id>
       <Description>Cross Track Error</Description>
+    <Priority>3</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -25623,6 +25709,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129284</PGN>
       <Id>navigationData</Id>
       <Description>Navigation Data</Description>
+    <Priority>3</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>15</FieldCount>
@@ -25850,6 +25937,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129285</PGN>
       <Id>navigationRouteWpInformation</Id>
       <Description>Navigation - Route/WP Information</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>13</FieldCount>
@@ -26512,6 +26600,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129539</PGN>
       <Id>gnssDops</Id>
       <Description>GNSS DOPs</Description>
+    <Priority>6</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
@@ -26617,6 +26706,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129540</PGN>
       <Id>gnssSatsInView</Id>
       <Description>GNSS Sats in View</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>11</FieldCount>
@@ -28287,6 +28377,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129793</PGN>
       <Id>aisUtcAndDateReport</Id>
       <Description>AIS UTC and Date Report</Description>
+    <Priority>7</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -28503,6 +28594,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129794</PGN>
       <Id>aisClassAStaticAndVoyageRelatedData</Id>
       <Description>AIS Class A Static and Voyage Related Data</Description>
+    <Priority>6</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -29094,6 +29186,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129797</PGN>
       <Id>aisBinaryBroadcastMessage</Id>
       <Description>AIS Binary Broadcast Message</Description>
+    <Priority>7</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -30284,6 +30377,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129805</PGN>
       <Id>aisDataLinkManagementMessage</Id>
       <Description>AIS Data Link Management Message</Description>
+    <Priority>7</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -31472,6 +31566,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129809</PGN>
       <Id>aisClassBStaticDataMsg24PartA</Id>
       <Description>AIS Class B static data (msg 24 Part A)</Description>
+    <Priority>6</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -31572,6 +31667,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129810</PGN>
       <Id>aisClassBStaticDataMsg24PartB</Id>
       <Description>AIS Class B static data (msg 24 Part B)</Description>
+    <Priority>6</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -33890,6 +33986,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130306</PGN>
       <Id>windData</Id>
       <Description>Wind Data</Description>
+    <Priority>2</Priority>
       <URL>http://askjackrabbit.typepad.com/ask_jack_rabbit/page/7/</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
@@ -33970,6 +34067,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130310</PGN>
       <Id>environmentalParametersObsolete</Id>
       <Description>Environmental Parameters (obsolete)</Description>
+    <Priority>5</Priority>
       <Explanation>This PGN was succeeded by PGN 130310, but it should no longer be generated and separate PGNs in range 130312..130315 should be used</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
@@ -34051,6 +34149,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130311</PGN>
       <Id>environmentalParameters</Id>
       <Description>Environmental Parameters</Description>
+    <Priority>5</Priority>
       <Explanation>This PGN was introduced as a better version of PGN 130310, but it should no longer be generated and separate PGNs in range 130312..130315 should be used</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
@@ -34149,6 +34248,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130312</PGN>
       <Id>temperature</Id>
       <Description>Temperature</Description>
+    <Priority>5</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -34241,6 +34341,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130313</PGN>
       <Id>humidity</Id>
       <Description>Humidity</Description>
+    <Priority>5</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -34331,6 +34432,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130314</PGN>
       <Id>actualPressure</Id>
       <Description>Actual Pressure</Description>
+    <Priority>5</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -34408,6 +34510,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130315</PGN>
       <Id>setPressure</Id>
       <Description>Set Pressure</Description>
+    <Priority>5</Priority>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -34485,6 +34588,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130316</PGN>
       <Id>temperatureExtendedRange</Id>
       <Description>Temperature Extended Range</Description>
+    <Priority>5</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -35042,6 +35146,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130323</PGN>
       <Id>meteorologicalStationData</Id>
       <Description>Meteorological Station Data</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -35521,6 +35626,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130330</PGN>
       <Id>lightingSystemSettings</Id>
       <Description>Lighting System Settings</Description>
+    <Priority>7</Priority>
       <Explanation>This PGN provides a lighting controller settings and number of supported capabilities.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -39104,6 +39210,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubInit2</Id>
       <Description>SonicHub: Init #2</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -39230,6 +39337,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubAmRadio</Id>
       <Description>SonicHub: AM Radio</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -39404,6 +39512,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubZoneInfo</Id>
       <Description>SonicHub: Zone info</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -39516,6 +39625,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubSource</Id>
       <Description>SonicHub: Source</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -39629,6 +39739,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubSourceList</Id>
       <Description>SonicHub: Source List</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -39763,6 +39874,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubControl</Id>
       <Description>SonicHub: Control</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -39876,6 +39988,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubFmRadio</Id>
       <Description>SonicHub: FM Radio</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -40049,6 +40162,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubPlaylist</Id>
       <Description>SonicHub: Playlist</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -40231,6 +40345,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubTrack</Id>
       <Description>SonicHub: Track</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -40352,6 +40467,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubArtist</Id>
       <Description>SonicHub: Artist</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -40473,6 +40589,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubAlbum</Id>
       <Description>SonicHub: Album</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -40594,6 +40711,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubMenuItem</Id>
       <Description>SonicHub: Menu Item</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -40754,6 +40872,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubZones</Id>
       <Description>SonicHub: Zones</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -40866,6 +40985,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubMaxVolume</Id>
       <Description>SonicHub: Max Volume</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -40991,6 +41111,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubVolume</Id>
       <Description>SonicHub: Volume</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -41113,6 +41234,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubInit1</Id>
       <Description>SonicHub: Init #1</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -41212,6 +41334,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubPosition</Id>
       <Description>SonicHub: Position</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -41326,6 +41449,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>sonichubInit3</Id>
       <Description>SonicHub: Init #3</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -41452,6 +41576,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130816</PGN>
       <Id>simradTextMessage</Id>
       <Description>Simrad: Text Message</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -41611,6 +41736,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130817</PGN>
       <Id>navicoProductInformation</Id>
       <Description>Navico: Product Information</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -41758,6 +41884,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130817</PGN>
       <Id>lowranceProductInformation</Id>
       <Description>Lowrance: Product Information</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -41905,6 +42032,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130818</PGN>
       <Id>simnetReprogramData</Id>
       <Description>Simnet: Reprogram Data</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -42000,6 +42128,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130819</PGN>
       <Id>simnetRequestReprogram</Id>
       <Description>Simnet: Request Reprogram</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -42058,6 +42187,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>simnetReprogramStatus</Id>
       <Description>Simnet: Reprogram Status</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -42149,6 +42279,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>furunoUnknown130820</Id>
       <Description>Furuno: Unknown 130820</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -42273,6 +42404,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionSourceName</Id>
       <Description>Fusion: Source Name</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -42422,6 +42554,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionTrackInfo</Id>
       <Description>Fusion: Track Info</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -42645,6 +42778,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionTrack</Id>
       <Description>Fusion: Track</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -42755,6 +42889,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionArtist</Id>
       <Description>Fusion: Artist</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -42865,6 +43000,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionAlbum</Id>
       <Description>Fusion: Album</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -42975,6 +43111,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionUnitName</Id>
       <Description>Fusion: Unit Name</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -43072,6 +43209,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionZoneName</Id>
       <Description>Fusion: Zone Name</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -43182,6 +43320,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionPlayProgress</Id>
       <Description>Fusion: Play Progress</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -43298,6 +43437,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionAmFmStation</Id>
       <Description>Fusion: AM/FM Station</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -43450,6 +43590,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionVhf</Id>
       <Description>Fusion: VHF</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -43577,6 +43718,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionSquelch</Id>
       <Description>Fusion: Squelch</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -43691,6 +43833,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionScan</Id>
       <Description>Fusion: Scan</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -43819,6 +43962,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionMenuItem</Id>
       <Description>Fusion: Menu Item</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -44007,6 +44151,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionReplay</Id>
       <Description>Fusion: Replay</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -44201,6 +44346,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionMute</Id>
       <Description>Fusion: Mute</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -44303,6 +44449,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionSubVolume</Id>
       <Description>Fusion: Sub Volume</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -44443,6 +44590,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionTone</Id>
       <Description>Fusion: Tone</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -44584,6 +44732,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionVolume</Id>
       <Description>Fusion: Volume</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -44725,6 +44874,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionPowerState</Id>
       <Description>Fusion: Power State</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -44828,6 +44978,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionSiriusxmChannel</Id>
       <Description>Fusion: SiriusXM Channel</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -44926,6 +45077,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionSiriusxmTitle</Id>
       <Description>Fusion: SiriusXM Title</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -45024,6 +45176,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionSiriusxmArtist</Id>
       <Description>Fusion: SiriusXM Artist</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -45122,6 +45275,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130820</PGN>
       <Id>fusionSiriusxmGenre</Id>
       <Description>Fusion: SiriusXM Genre</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -45220,6 +45374,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130821</PGN>
       <Id>navicoAsciiData</Id>
       <Description>Navico: ASCII Data</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -45301,6 +45456,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130821</PGN>
       <Id>furunoUnknown130821</Id>
       <Description>Furuno: Unknown 130821</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -45490,6 +45646,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130822</PGN>
       <Id>navicoUnknown1</Id>
       <Description>Navico: Unknown 1</Description>
+    <Priority>3</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -45559,6 +45716,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130823</PGN>
       <Id>maretronProprietaryTemperatureHighRange</Id>
       <Description>Maretron: Proprietary Temperature High Range</Description>
+    <Priority>3</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -45685,6 +45843,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130824</PGN>
       <Id>bGKeyValueData</Id>
       <Description>B&amp;G: key-value data</Description>
+    <Priority>2</Priority>
       <Explanation>Contains any number of key/value pairs, sent by various B&amp;G devices such as MFDs and Sailing Processors.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -45781,6 +45940,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130824</PGN>
       <Id>maretronAnnunciator</Id>
       <Description>Maretron: Annunciator</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -46720,6 +46880,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130836</PGN>
       <Id>maretronSwitchStatusCounter</Id>
       <Description>Maretron: Switch Status Counter</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
@@ -46953,6 +47114,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130837</PGN>
       <Id>maretronSwitchStatusTimer</Id>
       <Description>Maretron: Switch Status Timer</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
@@ -47252,6 +47414,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130840</PGN>
       <Id>simnetDataUserGroupConfiguration</Id>
       <Description>Simnet: Data User Group Configuration</Description>
+    <Priority>3</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -48630,6 +48793,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130850</PGN>
       <Id>simnetApCommand</Id>
       <Description>Simnet: AP Command</Description>
+    <Priority>2</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -48797,6 +48961,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130850</PGN>
       <Id>simnetEventCommandApCommand</Id>
       <Description>Simnet: Event Command: AP command</Description>
+    <Priority>2</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -48967,6 +49132,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130850</PGN>
       <Id>simnetAlarm</Id>
       <Description>Simnet: Alarm</Description>
+    <Priority>2</Priority>
       <Explanation>There may follow a PGN 130856 'Simnet: Alarm Text' message with a textual explanation of the alarm</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -49130,6 +49296,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130851</PGN>
       <Id>simnetEventReplyApCommand</Id>
       <Description>Simnet: Event Reply: AP command</Description>
+    <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -49409,6 +49576,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130860</PGN>
       <Id>simnetApUnknown4</Id>
       <Description>Simnet: AP Unknown 4</Description>
+    <Priority>7</Priority>
       <Explanation>Seen as sent by AC-42 and H5000 AP only so far.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -49785,6 +49953,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130944</PGN>
       <Id>airmarPost</Id>
       <Description>Airmar: POST</Description>
+    <Priority>7</Priority>
       <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
