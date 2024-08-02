@@ -31,6 +31,7 @@ enum RawFormats
   RAWFORMAT_PLAIN,
   RAWFORMAT_FAST,
   RAWFORMAT_PLAIN_OR_FAST,
+  RAWFORMAT_PLAIN_MIX_FAST,
   RAWFORMAT_AIRMAR,
   RAWFORMAT_CHETCO,
   RAWFORMAT_GARMIN_CSV1,
@@ -45,6 +46,7 @@ const char *RAW_FORMAT_STR[] = {"UNKNOWN",
                                 "PLAIN",
                                 "FAST",
                                 "PLAIN_OR_FAST",
+                                "PLAIN_MIX_FAST",
                                 "AIRMAR",
                                 "CHETCO",
                                 "GARMIN_CSV1",
@@ -110,6 +112,7 @@ static bool            printField(const Field   *field,
                                   size_t        *bits);
 static void            printCanRaw(const RawMessage *msg);
 static void            showBuffers(void);
+static unsigned int    getMessageByteCount(const char *const msg);
 
 static void usage(char **argv, char **av)
 {
@@ -293,7 +296,8 @@ int main(int argc, char **argv)
         if (strcasecmp(av[2], RAW_FORMAT_STR[i]) == 0)
         {
           format = (enum RawFormats) i;
-          if (format != RAWFORMAT_PLAIN && format != RAWFORMAT_PLAIN_OR_FAST)
+          if (format != RAWFORMAT_PLAIN && format != RAWFORMAT_PLAIN_OR_FAST && format != RAWFORMAT_PLAIN_MIX_FAST
+              && format != RAWFORMAT_YDWG02)
           {
             multiPackets = MULTIPACKETS_COALESCED;
           }
@@ -368,33 +372,42 @@ int main(int argc, char **argv)
     switch (format)
     {
       case RAWFORMAT_PLAIN_OR_FAST:
-        multiPackets = MULTIPACKETS_SEPARATE;
-        r            = parseRawFormatPlain(msg, &m, showJson);
-        logDebug("plain_or_fast: plain r=%d\n", r);
-        if (r < 0)
+        if (getMessageByteCount(msg) <= 8)
         {
-          multiPackets = MULTIPACKETS_COALESCED;
-          r            = parseRawFormatFast(msg, &m, showJson);
+          r = parseRawFormatPlain(msg, &m, showJson);
+          logDebug("plain_or_fast: plain r=%d\n", r);
+        }
+        else
+        {
+          r = parseRawFormatFast(msg, &m, showJson);
+          if (r >= 0)
+          {
+            format       = RAWFORMAT_FAST;
+            multiPackets = MULTIPACKETS_COALESCED;
+            logDebug("plain_or_fast: fast r=%d\n", r);
+          }
+        }
+        break;
+
+      case RAWFORMAT_PLAIN_MIX_FAST:
+        if (getMessageByteCount(msg) <= 8)
+        {
+          r = parseRawFormatPlain(msg, &m, showJson);
+          logDebug("plain_or_fast: plain r=%d\n", r);
+        }
+        else
+        {
+          r = parseRawFormatFast(msg, &m, showJson);
           logDebug("plain_or_fast: fast r=%d\n", r);
         }
         break;
 
       case RAWFORMAT_PLAIN:
         r = parseRawFormatPlain(msg, &m, showJson);
-        if (r >= 0)
-        {
-          break;
-        }
-        // Else fall through to fast!
+        break;
 
       case RAWFORMAT_FAST:
         r = parseRawFormatFast(msg, &m, showJson);
-        if (r >= 0 && format == RAWFORMAT_PLAIN)
-        {
-          logInfo("Detected normal format with all frames on one line\n");
-          multiPackets = MULTIPACKETS_COALESCED;
-          format       = RAWFORMAT_FAST;
-        }
         break;
 
       case RAWFORMAT_AIRMAR:
@@ -437,10 +450,27 @@ int main(int argc, char **argv)
   return 0;
 }
 
-static enum RawFormats detectFormat(const char *msg)
+static unsigned int getMessageByteCount(const char *const msg)
 {
-  char        *p;
+  const char  *p;
   int          r;
+  unsigned int len;
+
+  p = strchr(msg, ',');
+  if (p)
+  {
+    r = sscanf(p, ",%*u,%*u,%*u,%*u,%u,%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x", &len);
+    if (r >= 1)
+    {
+      return len;
+    }
+  }
+  return 0;
+}
+
+static enum RawFormats detectFormat(const char *const msg)
+{
+  const char  *p;
   unsigned int len;
 
   if (msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
@@ -476,23 +506,17 @@ static enum RawFormats detectFormat(const char *msg)
     return RAWFORMAT_AIRMAR;
   }
 
-  p = strchr(msg, ',');
-  if (p)
+  len = getMessageByteCount(msg);
+  if (len > 0)
   {
-    r = sscanf(p, ",%*u,%*u,%*u,%*u,%u,%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x,%*x", &len);
-    if (r < 1)
-    {
-      return RAWFORMAT_UNKNOWN;
-    }
     if (len > 8)
     {
-      logInfo("Detected normal format with all frames on one line\n");
+      logInfo("Detected FAST format with all frames on one line\n");
       multiPackets = MULTIPACKETS_COALESCED;
       return RAWFORMAT_FAST;
     }
-    logInfo("Assuming normal format with one line per frame\n");
-    multiPackets = MULTIPACKETS_SEPARATE;
-    return RAWFORMAT_PLAIN;
+    logInfo("Assuming PLAIN_OR_FAST format with one line per frame or one line per message\n");
+    return RAWFORMAT_PLAIN_OR_FAST;
   }
 
   {
@@ -684,7 +708,7 @@ static void printCanFormat(RawMessage *msg)
   {
     pgn = searchForUnknownPgn(msg->pgn);
   }
-  if (multiPackets == MULTIPACKETS_COALESCED || !pgn || pgn->type != PACKET_FAST)
+  if (multiPackets == MULTIPACKETS_COALESCED || !pgn || pgn->type != PACKET_FAST || msg->len > 8)
   {
     // No reassembly needed
     printPgn(msg, msg->data, msg->len, showData, showJson);
