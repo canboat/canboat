@@ -10,6 +10,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+## [5.1.1]
+
 - #451: candump2analyzer format 3 does not handle CRLF line endings correctly.
 
 ## [5.1.0] 
@@ -682,7 +684,9 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v5.0.3...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v5.1.1...HEAD
+[5.1.1]: https://github.com/canboat/canboat/compare/v5.1.0...v5.1.1
+[5.1.0]: https://github.com/canboat/canboat/compare/v5.0.3...v5.1.0
 [5.0.3]: https://github.com/canboat/canboat/compare/v5.0.2...v5.0.3
 [5.0.2]: https://github.com/canboat/canboat/compare/v5.0.1...v5.0.2
 [5.0.1]: https://github.com/canboat/canboat/compare/v5.0.0...v5.0.1
