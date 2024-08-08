@@ -10,6 +10,12 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #451: candump2analyzer format 3 does not handle CRLF line endings correctly.
+
+## [5.1.0] 
+
+### Fixed
+
 - #439: Improve PGN 65379 Raymarine 
 - #442: Fix PGN 129799 Radio Frequency/Mode/Power field lengths and types.
 - #423: Add support for Garmin Backlight level + day/night mode.

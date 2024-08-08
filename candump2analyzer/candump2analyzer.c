@@ -79,14 +79,30 @@ int main(int argc, char **argv)
   //
   int          format           = FMT_TBD;
   unsigned int candump_data_inc = CANDUMP_DATA_INC_3;
+
+  msg[sizeof(msg) - 1] = '\0'; // Make sure algorithm ends
   while (fgets(msg, sizeof(msg) - 1, infile))
   {
+    char *p = msg;
+
     // Ignore empty and comment lines within the candump input.
     //
-    if (*msg == 0 || *msg == '\n' || *msg == '#')
+    while (isspace(*p))
+    {
+      p++;
+    }
+    if (*p == 0 || *p == '\r' || *p == '\n' || *p == '#')
     {
       continue;
     }
+
+    // Remove whitespace (including CR, LF) at end
+    char *e = p + strlen(msg) - 1;
+    while (e >= p && isspace(*e))
+    {
+      e--;
+    }
+    e[1] = '\0';
 
     // Process the CAN ID
     //
@@ -103,25 +119,25 @@ int main(int argc, char **argv)
       // Format not yet detected.
       // See if we can match one.
       //
-      if (sscanf(msg, "<%x> [%d] ", &canid, &size) == 2)
+      if (sscanf(p, "<%x> [%d] ", &canid, &size) == 2)
       {
         format = FMT_1;
       }
-      else if (sscanf(msg, " %*s %x [%d] ", &canid, &size) == 2)
+      else if (sscanf(p, " %*s %x [%d] ", &canid, &size) == 2)
       {
         format = FMT_2;
       }
-      else if (sscanf(msg, "(%lf) %*s %8x#", &currentTime, &canid) == 2)
+      else if (sscanf(p, "(%lf) %*s %8x#", &currentTime, &canid) == 2)
       {
         format           = FMT_3;
         candump_data_inc = CANDUMP_DATA_INC_2;
-        size             = (strlen(strchr(msg, '#')) - 1) / 2;
+        size             = (strlen(strchr(p, '#')) - 1) / 2;
       }
-      else if (strstr(msg, "CAN 16 XTD:") != NULL)
+      else if (strstr(p, "CAN 16 XTD:") != NULL)
       {
         format = FMT_4;
       }
-      else if (sscanf(msg, "%07x %02hhx %02hhx %02hhx %02hhx", &currentTimeInt, u, u + 1, u + 2, u + 3) == 5)
+      else if (sscanf(p, "%07x %02hhx %02hhx %02hhx %02hhx", &currentTimeInt, u, u + 1, u + 2, u + 3) == 5)
       {
         format = FMT_5;
       }
@@ -132,29 +148,29 @@ int main(int argc, char **argv)
     }
     else if (format == FMT_1)
     {
-      if (sscanf(msg, "<%x> [%d] ", &canid, &size) != 2)
+      if (sscanf(p, "<%x> [%d] ", &canid, &size) != 2)
       {
         continue;
       }
     }
     else if (format == FMT_2)
     {
-      if (sscanf(msg, " %*s %x [%d] ", &canid, &size) != 2)
+      if (sscanf(p, " %*s %x [%d] ", &canid, &size) != 2)
       {
         continue;
       }
     }
     else if (format == FMT_3)
     {
-      if (sscanf(msg, "(%lf) %*s %8x#", &currentTime, &canid) != 2)
+      if (sscanf(p, "(%lf) %*s %8x#", &currentTime, &canid) != 2)
       {
         continue;
       }
-      size = (strlen(strchr(msg, '#')) - 1) / 2;
+      size = (strlen(strchr(p, '#')) - 1) / 2;
     }
     else if (format == FMT_4)
     {
-      if (sscanf(msg, "%*d %lf %*s CAN %d XTD: 0x%8x   ", &currentTime, &size, &canid) != 3)
+      if (sscanf(p, "%*d %lf %*s CAN %d XTD: 0x%8x   ", &currentTime, &size, &canid) != 3)
       {
         continue;
       }
@@ -162,7 +178,7 @@ int main(int argc, char **argv)
     }
     else if (format == FMT_5)
     {
-      if (sscanf(msg, "%07x %02hhx %02hhx %02hhx %02hhx %02x", &currentTimeInt, u, u + 1, u + 2, u + 3, &size) != 6)
+      if (sscanf(p, "%07x %02hhx %02hhx %02hhx %02hhx %02x", &currentTimeInt, u, u + 1, u + 2, u + 3, &size) != 6)
       {
         continue;
       }
@@ -216,11 +232,9 @@ int main(int argc, char **argv)
     // Now process the data bytes.
     //
     int          i;
-    char        *p;
     char         separator;
     unsigned int data;
 
-    p = msg;
     if (format == FMT_5)
     {
       p = strstr(p, " ");
