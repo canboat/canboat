@@ -3404,7 +3404,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {INSTANCE_FIELD,
-      VOLTAGE_U16_10MV_FIELD("Voltage"),
+      VOLTAGE_I16_10MV_FIELD("Voltage"),
       CURRENT_FIX16_DA_FIELD("Current"),
       TEMPERATURE_FIELD("Temperature"),
       UINT8_FIELD("SID"),
