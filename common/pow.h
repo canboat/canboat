@@ -32,7 +32,7 @@ limitations under the License.
  * Can be used for values 0..39
  */
 
-#define POW2(n) 1. DUP(n, *2)
+#define POW2(n) 1. DUP(n, *2.)
 
 /**
  * POW2NEG(n) evaluates to the floating point value
@@ -42,5 +42,11 @@ limitations under the License.
  */
 
 #define POW2NEG(n) 1. DUP(n, / 2)
+
+/**
+ * POW10I(n) evaluates to the int64_t value of 10^n
+ *
+ */
+#define POW10I(n) UINT64_C(1) DUP(n, *UINT64_C(10))
 
 #endif

@@ -30909,7 +30909,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1099511627773,
+            "RangeMax":9999999999,
             "FieldType":"DECIMAL"
           },
           {
@@ -31012,7 +31012,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1099511627773,
+            "RangeMax":9999999999,
             "FieldType":"DECIMAL"
           },
           {
@@ -31172,7 +31172,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1099511627773,
+            "RangeMax":9999999999,
             "FieldType":"DECIMAL"
           },
           {
@@ -31275,7 +31275,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1099511627773,
+            "RangeMax":9999999999,
             "FieldType":"DECIMAL"
           },
           {

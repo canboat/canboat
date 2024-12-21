@@ -27840,7 +27840,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1099511627773},
+            "RangeMax":9999999999},
           {
             "Order":4,
             "Id":"natureOfDistress",
@@ -27961,7 +27961,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1099511627773},
+            "RangeMax":9999999999},
           {
             "Order":13,
             "Id":"dscEosSymbol",
@@ -28127,7 +28127,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1099511627773},
+            "RangeMax":9999999999},
           {
             "Order":4,
             "Id":"1stTelecommand",
@@ -28250,7 +28250,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1099511627773},
+            "RangeMax":9999999999},
           {
             "Order":13,
             "Id":"dscEosSymbol",

@@ -492,9 +492,8 @@ typedef struct
    .rangeMax   = 999999999, \
    .fieldType  = "MMSI"}
 
-#define DECIMAL_FIELD(nam, len, desc) {.name = nam, .size = len, .resolution = 1, .description = desc, .fieldType = "DECIMAL"}
-
-#define DECIMAL_UNIT_FIELD(nam, len, unt) {.name = nam, .size = len, .resolution = 1, .unit = unt, .fieldType = "DECIMAL"}
+#define DECIMAL_FIELD(nam, len, desc) \
+  {.name = nam, .size = len * 4, .resolution = 1, .description = desc, .fieldType = "DECIMAL", .rangeMax = (POW10I(len) - 1)}
 
 #define STRINGLZ_FIELD(nam, len) {.name = nam, .size = len, .resolution = 0, .fieldType = "STRING_LZ"}
 
@@ -4763,7 +4762,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {LOOKUP_FIELD("DSC Format", BYTES(1), DSC_FORMAT),
       MATCH_FIELD("DSC Category", BYTES(1), 112, "Distress"),
-      DECIMAL_FIELD("DSC Message Address", BYTES(5), "MMSI, Geographic Area or blank"),
+      DECIMAL_FIELD("DSC Message Address", 10, "MMSI, Geographic Area or blank"),
       LOOKUP_FIELD("Nature of Distress", BYTES(1), DSC_NATURE),
       LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
       STRING_FIX_FIELD("Proposed Rx Frequency/Channel", BYTES(6)),
@@ -4772,7 +4771,7 @@ Pgn pgnList[] = {
       LATITUDE_I32_FIELD("Latitude of Vessel Reported"),
       LONGITUDE_I32_FIELD("Longitude of Vessel Reported"),
       TIME_FIELD("Time of Position"),
-      DECIMAL_FIELD("MMSI of Ship In Distress", BYTES(5), NULL),
+      DECIMAL_FIELD("MMSI of Ship In Distress", 10, NULL),
       UINT8_FIELD("DSC EOS Symbol"),
       LOOKUP_FIELD("Expansion Enabled", 2, YES_NO),
       RESERVED_FIELD(6),
@@ -4797,7 +4796,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {LOOKUP_FIELD("DSC Format Symbol", BYTES(1), DSC_FORMAT),
       LOOKUP_FIELD("DSC Category Symbol", BYTES(1), DSC_CATEGORY),
-      DECIMAL_FIELD("DSC Message Address", BYTES(5), "MMSI, Geographic Area or blank"),
+      DECIMAL_FIELD("DSC Message Address", 10, "MMSI, Geographic Area or blank"),
       LOOKUP_FIELD("1st Telecommand", BYTES(1), DSC_FIRST_TELECOMMAND),
       LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
       STRING_FIX_FIELD("Proposed Rx Frequency/Channel", BYTES(6)),
@@ -4806,7 +4805,7 @@ Pgn pgnList[] = {
       LATITUDE_I32_FIELD("Latitude of Vessel Reported"),
       LONGITUDE_I32_FIELD("Longitude of Vessel Reported"),
       TIME_FIELD("Time of Position"),
-      DECIMAL_FIELD("MMSI of Ship In Distress", BYTES(5), NULL),
+      DECIMAL_FIELD("MMSI of Ship In Distress", 10, NULL),
       UINT8_FIELD("DSC EOS Symbol"),
       LOOKUP_FIELD("Expansion Enabled", 2, YES_NO),
       RESERVED_FIELD(6),

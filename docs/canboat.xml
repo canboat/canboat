@@ -31086,7 +31086,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1099511627773</RangeMax>
+          <RangeMax>9999999999</RangeMax>
           <FieldType>DECIMAL</FieldType>
         </Field>
         <Field>
@@ -31189,7 +31189,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1099511627773</RangeMax>
+          <RangeMax>9999999999</RangeMax>
           <FieldType>DECIMAL</FieldType>
         </Field>
         <Field>
@@ -31353,7 +31353,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1099511627773</RangeMax>
+          <RangeMax>9999999999</RangeMax>
           <FieldType>DECIMAL</FieldType>
         </Field>
         <Field>
@@ -31456,7 +31456,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1099511627773</RangeMax>
+          <RangeMax>9999999999</RangeMax>
           <FieldType>DECIMAL</FieldType>
         </Field>
         <Field>
