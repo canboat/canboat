@@ -1129,8 +1129,15 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
 {
   int i;
 
-  printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-         "<!--\n" COPYRIGHT "\n-->\n");
+  printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+  if (doV1)
+  {
+    printf("<!-- WARNING WARNING WARNING\n"
+           "     THIS FILE IS OBSOLETE AND WILL BE REMOVED IN THE NEXT MAJOR RELEASE!!!\n"
+           "     Please use docs/canboat.xml which is a much more complete format.\n"
+           "-->\n");
+  }
+  printf("<!--\n" COPYRIGHT "\n-->\n");
   if (!doV1)
   {
     printf("<?xml-stylesheet type=\"text/xsl\" href=\"canboat.xsl\"?>\n");
@@ -1146,8 +1153,16 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
     printf("<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
            "Version=\"0.1\">\n");
   }
-  printf("  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
-         "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
+  if (doV1)
+  {
+    printf("  <Comment>WARNING: DO NOT USE THIS FILE. IT IS INCLUDED FOR HISTORICAL DOWNSTREAM PROJECTS. See "
+           "https://github.com/canboat/canboat for the full source code and the recommended new file to use.</Comment>\n");
+  }
+  else
+  {
+    printf("  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n");
+  }
+  printf("  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
          "  <License>Apache License Version 2.0</License>\n"
          "  <Version>" VERSION "</Version>\n");
   if (!doV1)

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- WARNING WARNING WARNING
+     THIS FILE IS OBSOLETE AND WILL BE REMOVED IN THE NEXT MAJOR RELEASE!!!
+     Please use docs/canboat.xml which is a much more complete format.
+-->
 <!--
 CANboat version v5.1.1
 
@@ -22,7 +26,7 @@ limitations under the License.
 
 -->
 <PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1">
-  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
+  <Comment>WARNING: DO NOT USE THIS FILE. IT IS INCLUDED FOR HISTORICAL DOWNSTREAM PROJECTS. See https://github.com/canboat/canboat for the full source code and the recommended new file to use.</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
   <Version>5.1.1</Version>
