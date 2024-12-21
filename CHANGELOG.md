@@ -10,6 +10,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #464: PGN 127508 Voltage should be signed
+
 ## [5.1.1]
 
 - #451: candump2analyzer format 3 does not handle CRLF line endings correctly.

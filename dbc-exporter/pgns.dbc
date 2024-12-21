@@ -1,4 +1,4 @@
-VERSION "5.1.0"
+VERSION "5.1.1"
 
 
 NS_ : 
@@ -674,7 +674,7 @@ BO_ 2582779134 PGN_127508_batteryStatus: 8 Vector__XXX
  SG_ sid : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ temperature : 40|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ current : 24|16@1- (0.1,0) [0|0] "A" Vector__XXX
- SG_ voltage : 8|16@1+ (0.01,0) [0|0] "V" Vector__XXX
+ SG_ voltage : 8|16@1- (0.01,0) [0|0] "V" Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582779390 PGN_127509_inverterStatus: 8 Vector__XXX
