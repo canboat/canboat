@@ -775,7 +775,7 @@ static void printCanFormat(RawMessage *msg)
     if (frame == 0 && p->frames == 0)
     {
       p->size      = msg->data[1];
-      p->allFrames = (1 << (1 + (p->size / 7))) - 1;
+      p->allFrames = (uint32_t) ((UINT64_C(1) << (1 + (p->size / 7))) - 1);
     }
 
     memcpy(&p->data[idx], &msg->data[msgIdx], frameLen);

@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #463: Fast packet with size 223 (32 frames) doesn't assemble properly on 32 bit platform
 - #464: PGN 127508 Voltage should be signed
 
 ## [5.1.1]
