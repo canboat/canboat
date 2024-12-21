@@ -39,7 +39,7 @@ limitations under the License.
 // DST800 shows value in Celcius, but I (Kees) really doubt this.
 // By checking for a 'ridiculous' value in kelvin, we can have our cake and eat it.
 // Anything below 173 deg K is assumed to be really in Celcius.
-#define TEMP_K_TO_C(t) (((t) < 173.15) ? (t) : ((t) -273.15))
+#define TEMP_K_TO_C(t) (((t) < 173.15) ? (t) : ((t) - 273.15))
 
 extern void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg);
 extern void nmea0183CreateMessage(StringBuffer *msg183, int src, const char *format, ...);
