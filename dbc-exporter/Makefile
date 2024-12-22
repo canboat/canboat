@@ -15,7 +15,7 @@ pgns.dbc: dbc-exporter ../analyzer/pgns.json
 	"$(VENV)/bin/python3" ../analyzer/fixup-version.py -w $(TARGETDIR)/analyzer pgns.dbc
 
 dbc-exporter: $(VENV)
-	"$(VENV)/bin/python3" setup.py install
+	"$(VENV)/bin/pip" install .
 
 $(VENV):
 	python3 -m venv "$(VENV)"
