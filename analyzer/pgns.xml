@@ -31619,7 +31619,7 @@ limitations under the License.
           <Order>13</Order>
           <Id>spare13</Id>
           <Name>Spare</Name>
-          <BitLength>6</BitLength>
+          <BitLength>2</BitLength>
           <BitOffset>258</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
@@ -31627,6 +31627,31 @@ limitations under the License.
         </Field>
         <Field>
           <Order>14</Order>
+          <Id>gnssType</Id>
+          <Name>GNSS type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>260</BitOffset>
+          <BitStart>4</BitStart>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>15</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Default: undefined' />
+            <EnumPair Value='1' Name='GPS' />
+            <EnumPair Value='2' Name='GLONASS' />
+            <EnumPair Value='3' Name='Combined GPS/GLONASS' />
+            <EnumPair Value='4' Name='Loran-C' />
+            <EnumPair Value='5' Name='Chayka' />
+            <EnumPair Value='6' Name='Integrated navigation system' />
+            <EnumPair Value='7' Name='Surveyed' />
+            <EnumPair Value='8' Name='Galileo' />
+            <EnumPair Value='15' Name='Internal GNSS' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>15</Order>
           <Id>aisTransceiverInformation</Id>
           <Name>AIS Transceiver information</Name>
           <BitLength>5</BitLength>
@@ -31647,8 +31672,8 @@ limitations under the License.
           </EnumValues>
         </Field>
         <Field>
-          <Order>15</Order>
-          <Id>reserved15</Id>
+          <Order>16</Order>
+          <Id>reserved16</Id>
           <Name>Reserved</Name>
           <BitLength>3</BitLength>
           <BitOffset>269</BitOffset>
@@ -31657,7 +31682,7 @@ limitations under the License.
           <Signed>false</Signed>
         </Field>
         <Field>
-          <Order>16</Order>
+          <Order>17</Order>
           <Id>sequenceId</Id>
           <Name>Sequence ID</Name>
           <BitLength>8</BitLength>

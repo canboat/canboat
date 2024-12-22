@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #356: Add GNSS type to PGN 129810
 - #467: dbc-exporter build fails on newer python installations
 - #466: RangeMax is incorrect for DECIMAL fields
 - #465: Document obsoleteness of pgns.xml and pgns.json

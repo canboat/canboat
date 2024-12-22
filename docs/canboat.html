@@ -8666,7 +8666,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              fast-packet 
             PGN is
             35
-            bytes long and contains 16 fields.
+            bytes long and contains 17 fields.
 
             
               The default priority (as observed in the field) is 6.
@@ -8702,12 +8702,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-MMSI">MMSI</a></td></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>13</td><td>Spare</td><td/><td/><td>6 bits
-                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>14</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>13</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td></tr><tr><td>14</td><td>GNSS type</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td></tr><tr><td>15</td><td>Reserved</td><td/><td/><td>3 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>16</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-POSITION_FIX_DEVICE">POSITION_FIX_DEVICE</a></td></tr><tr><td>15</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td></tr><tr><td>16</td><td>Reserved</td><td/><td/><td>3 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>17</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td></tr></table><p>
