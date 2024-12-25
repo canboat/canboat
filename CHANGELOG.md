@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #452: Add define to compile replay binary on strict linux systems
 - #450: Maretron 130836 Switch Counter Status field lengths incorrect
 - #468: Remove Unicode characters in canboat.json and canboat.xml
 - #467: dbc-exporter build fails on newer python installations

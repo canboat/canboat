@@ -23,6 +23,7 @@ limitations under the License.
 
 */
 
+#define _XOPEN_SOURCE /* to get strptime() */
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
