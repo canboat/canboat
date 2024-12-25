@@ -3593,7 +3593,7 @@ Pgn pgnList[] = {
       LENGTH_UFIX32_CM_FIELD("CPA", NULL),
       TIME_FIX32_MS_FIELD("TCPA", "negative = time elapsed since event, positive = time to go"),
       TIME_FIELD("UTC of Fix"),
-      STRING_FIX_FIELD("Name", BYTES(FASTPACKET_MAX_SIZE)),
+      STRING_FIX_FIELD("Name", BYTES(208)),
       END_OF_FIELDS},
      .interval = 1000}
 
@@ -6579,7 +6579,7 @@ Pgn pgnList[] = {
      130821,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275), SIMPLE_FIELD("A", BYTES(1)), STRING_FIX_FIELD("Message", BYTES(256)), END_OF_FIELDS},
+     {COMPANY(275), SIMPLE_FIELD("A", BYTES(1)), STRING_FIX_FIELD("Message", BYTES(230)), END_OF_FIELDS},
      .priority = 7}
 
     /* M/V Dirona */

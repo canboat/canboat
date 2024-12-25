@@ -22049,7 +22049,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>15</FieldCount>
-      <Length>248</Length>
+      <Length>233</Length>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
@@ -22255,7 +22255,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>15</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLength>1784</BitLength>
+          <BitLength>1664</BitLength>
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_FIX</FieldType>
@@ -45399,7 +45399,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>5</FieldCount>
-      <Length>259</Length>
+      <Length>233</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -45460,7 +45460,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>5</Order>
           <Id>message</Id>
           <Name>Message</Name>
-          <BitLength>2048</BitLength>
+          <BitLength>1840</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_FIX</FieldType>

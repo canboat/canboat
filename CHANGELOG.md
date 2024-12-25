@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #461: fix 128520 and 130821 max string length
 - #452: Add define to compile replay binary on strict linux systems
 - #450: Maretron 130836 Switch Counter Status field lengths incorrect
 - #468: Remove Unicode characters in canboat.json and canboat.xml

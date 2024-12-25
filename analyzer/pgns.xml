@@ -20512,7 +20512,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>248</Length>
+      <Length>233</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -20726,7 +20726,7 @@ limitations under the License.
           <Order>15</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLength>1784</BitLength>
+          <BitLength>1664</BitLength>
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII text</Type>
@@ -45610,7 +45610,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>259</Length>
+      <Length>233</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -45669,7 +45669,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>message</Id>
           <Name>Message</Name>
-          <BitLength>2048</BitLength>
+          <BitLength>1840</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII text</Type>

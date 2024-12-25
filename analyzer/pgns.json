@@ -18604,7 +18604,7 @@
         "Complete":false,
         "Missing":[
           "SampleData"],
-        "Length":248,
+        "Length":233,
         "Fields":[
           {
             "Order":1,
@@ -18800,7 +18800,7 @@
             "Order":15,
             "Id":"name",
             "Name":"Name",
-            "BitLength":1784,
+            "BitLength":1664,
             "BitOffset":200,
             "BitStart":0,
             "Type":"ASCII text",
@@ -41374,7 +41374,7 @@
           "FieldLengths",
           "Resolution",
           "Interval"],
-        "Length":259,
+        "Length":233,
         "Fields":[
           {
             "Order":1,
@@ -41429,7 +41429,7 @@
             "Order":5,
             "Id":"message",
             "Name":"Message",
-            "BitLength":2048,
+            "BitLength":1840,
             "BitOffset":24,
             "BitStart":0,
             "Type":"ASCII text",
