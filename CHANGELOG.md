@@ -10,13 +10,17 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #450: Maretron 130836 Switch Counter Status field lengths incorrect
 - #468: Remove Unicode characters in canboat.json and canboat.xml
-- #356: Add GNSS type to PGN 129810
 - #467: dbc-exporter build fails on newer python installations
 - #466: RangeMax is incorrect for DECIMAL fields
 - #465: Document obsoleteness of pgns.xml and pgns.json
 - #463: Fast packet with size 223 (32 frames) doesn't assemble properly on 32 bit platform
 - #464: PGN 127508 Voltage should be signed
+
+### Added
+
+- #356: Add GNSS type to PGN 129810
 
 ## [5.1.1]
 

@@ -47706,7 +47706,7 @@ limitations under the License.
       <Description>Maretron: Switch Status Counter</Description>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <Length>14</Length>
+      <Length>23</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -47807,47 +47807,47 @@ limitations under the License.
           <Order>8</Order>
           <Id>offCounter</Id>
           <Name>OFF Counter</Name>
-          <BitLength>8</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>onCounter</Id>
           <Name>ON Counter</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>errorCounter</Id>
           <Name>ERROR Counter</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>96</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>11</Order>
           <Id>switchStatus</Id>
           <Name>Switch Status</Name>
           <BitLength>2</BitLength>
-          <BitOffset>104</BitOffset>
+          <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
@@ -47864,7 +47864,7 @@ limitations under the License.
           <Id>reserved12</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
-          <BitOffset>106</BitOffset>
+          <BitOffset>178</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
