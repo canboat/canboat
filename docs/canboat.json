@@ -26353,11 +26353,13 @@
             "BitLength":16,
             "BitOffset":0,
             "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":65533,
-            "FieldType":"NUMBER"
+            "Unit":"rad",
+            "Resolution":0.0001,
+            "Signed":true,
+            "RangeMin":-3.2767,
+            "RangeMax":3.2765,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ANGLE"
           },
           {
             "Order":2,
@@ -26368,9 +26370,9 @@
             "BitOffset":16,
             "BitStart":0,
             "Resolution":0.01,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":655.33,
+            "Signed":true,
+            "RangeMin":-327.67,
+            "RangeMax":327.65,
             "FieldType":"NUMBER"
           },
           {
@@ -26382,9 +26384,9 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":0.01,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":655.33,
+            "Signed":true,
+            "RangeMin":-327.67,
+            "RangeMax":327.65,
             "FieldType":"NUMBER"
           },
           {
@@ -26397,9 +26399,9 @@
             "BitStart":0,
             "Unit":"dB",
             "Resolution":0.01,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":655.33,
+            "Signed":true,
+            "RangeMin":-327.67,
+            "RangeMax":327.65,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"SIGNAL_TO_NOISE_RATIO"
           },
@@ -26466,11 +26468,11 @@
             "BitStart":0,
             "Unit":"m",
             "Resolution":0.01,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":655.33,
+            "Signed":true,
+            "RangeMin":-327.67,
+            "RangeMax":327.65,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"LENGTH"
+            "PhysicalQuantity":"DISTANCE"
           },
           {
             "Order":10,

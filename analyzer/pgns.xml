@@ -25299,11 +25299,12 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <Units>rad</Units>
+          <Type>Number</Type>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3.2767</RangeMin>
+          <RangeMax>3.2765</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
@@ -25315,9 +25316,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Number</Type>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>655.33</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -25329,9 +25330,9 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Type>Number</Type>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>655.33</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
         <Field>
           <Order>4</Order>
@@ -25344,9 +25345,9 @@ limitations under the License.
           <Units>dB</Units>
           <Type>Number</Type>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>655.33</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
@@ -25421,9 +25422,9 @@ limitations under the License.
           <Units>m</Units>
           <Type>Number</Type>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>655.33</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
         <Field>
           <Order>10</Order>

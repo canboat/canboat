@@ -7237,18 +7237,18 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SV Elevation Mask</td><td>Will not use SV below this elevation</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>SV Elevation Mask</td><td>Will not use SV below this elevation</td><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>PDOP Mask</td><td>Will not report position above this PDOP</td><td>0.01 <div class="xs">0 .. 655.33</div></td><td>16 bits
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>PDOP Mask</td><td>Will not report position above this PDOP</td><td>0.01 <div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>PDOP Switch</td><td>Will report 2D position above this PDOP</td><td>0.01 <div class="xs">0 .. 655.33</div></td><td>16 bits
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>PDOP Switch</td><td>Will report 2D position above this PDOP</td><td>0.01 <div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>SNR Mask</td><td>Will not use SV below this SNR</td><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>SNR Mask</td><td>Will not use SV below this SNR</td><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>GNSS Mode (desired)</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
@@ -7261,9 +7261,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Max Correction Age</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Antenna Altitude for 2D Mode</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Antenna Altitude for 2D Mode</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Use Antenna Altitude for 2D Mode</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup

@@ -26451,11 +26451,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3.2767</RangeMin>
+          <RangeMax>3.2765</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>
@@ -26466,9 +26468,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>655.33</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -26480,9 +26482,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>655.33</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -26495,9 +26497,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>dB</Unit>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>655.33</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>SIGNAL_TO_NOISE_RATIO</PhysicalQuantity>
         </Field>
@@ -26564,11 +26566,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>655.33</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>
