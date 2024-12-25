@@ -10,6 +10,12 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+### Added
+
+### [5.1.2]
+
+### Fixed
+
 - #454: Fix 129538
 - #469: Fix compiler warnings
 - #461: fix 128520 and 130821 max string length
@@ -700,7 +706,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v5.1.1...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v5.1.2...HEAD
+[5.1.2]: https://github.com/canboat/canboat/compare/v5.1.1...v5.1.2
 [5.1.1]: https://github.com/canboat/canboat/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/canboat/canboat/compare/v5.0.3...v5.1.0
 [5.0.3]: https://github.com/canboat/canboat/compare/v5.0.2...v5.0.3
