@@ -611,7 +611,7 @@ limitations under the License.
             <EnumPair Value='315' Name='ICOM' />
             <EnumPair Value='328' Name='Qwerty' />
             <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
+            <EnumPair Value='341' Name='Boening Automationstechnologie GmbH &amp; Co. KG' />
             <EnumPair Value='345' Name='Korean Maritime University' />
             <EnumPair Value='351' Name='Thrane and Thrane' />
             <EnumPair Value='355' Name='Mastervolt' />
@@ -3072,7 +3072,7 @@ limitations under the License.
             <EnumPair Value='315' Name='ICOM' />
             <EnumPair Value='328' Name='Qwerty' />
             <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
+            <EnumPair Value='341' Name='Boening Automationstechnologie GmbH &amp; Co. KG' />
             <EnumPair Value='345' Name='Korean Maritime University' />
             <EnumPair Value='351' Name='Thrane and Thrane' />
             <EnumPair Value='355' Name='Mastervolt' />
@@ -7662,7 +7662,7 @@ limitations under the License.
             <EnumPair Value='315' Name='ICOM' />
             <EnumPair Value='328' Name='Qwerty' />
             <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
+            <EnumPair Value='341' Name='Boening Automationstechnologie GmbH &amp; Co. KG' />
             <EnumPair Value='345' Name='Korean Maritime University' />
             <EnumPair Value='351' Name='Thrane and Thrane' />
             <EnumPair Value='355' Name='Mastervolt' />
@@ -7995,7 +7995,7 @@ limitations under the License.
             <EnumPair Value='315' Name='ICOM' />
             <EnumPair Value='328' Name='Qwerty' />
             <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
+            <EnumPair Value='341' Name='Boening Automationstechnologie GmbH &amp; Co. KG' />
             <EnumPair Value='345' Name='Korean Maritime University' />
             <EnumPair Value='351' Name='Thrane and Thrane' />
             <EnumPair Value='355' Name='Mastervolt' />
@@ -8335,7 +8335,7 @@ limitations under the License.
             <EnumPair Value='315' Name='ICOM' />
             <EnumPair Value='328' Name='Qwerty' />
             <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
+            <EnumPair Value='341' Name='Boening Automationstechnologie GmbH &amp; Co. KG' />
             <EnumPair Value='345' Name='Korean Maritime University' />
             <EnumPair Value='351' Name='Thrane and Thrane' />
             <EnumPair Value='355' Name='Mastervolt' />
@@ -8675,7 +8675,7 @@ limitations under the License.
             <EnumPair Value='315' Name='ICOM' />
             <EnumPair Value='328' Name='Qwerty' />
             <EnumPair Value='329' Name='Dief' />
-            <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
+            <EnumPair Value='341' Name='Boening Automationstechnologie GmbH &amp; Co. KG' />
             <EnumPair Value='345' Name='Korean Maritime University' />
             <EnumPair Value='351' Name='Thrane and Thrane' />
             <EnumPair Value='355' Name='Mastervolt' />
@@ -25801,7 +25801,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>almanacReferenceTime</Id>
           <Name>Almanac Reference Time</Name>
-          <Description>'t~oa~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'t oa' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -25816,7 +25816,7 @@ limitations under the License.
           <Order>6</Order>
           <Id>inclinationAngle</Id>
           <Name>Inclination Angle</Name>
-          <Description>'δ~i~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'delta i' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -25831,7 +25831,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>rateOfRightAscension</Id>
           <Name>Rate of Right Ascension</Name>
-          <Description>'̇Ω' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'OMEGADOT' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -25846,7 +25846,7 @@ limitations under the License.
           <Order>8</Order>
           <Id>rootOfSemiMajorAxis</Id>
           <Name>Root of Semi-major Axis</Name>
-          <Description>'√ a' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'(A)^0.5' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>24</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
@@ -25861,7 +25861,7 @@ limitations under the License.
           <Order>9</Order>
           <Id>argumentOfPerigee</Id>
           <Name>Argument of Perigee</Name>
-          <Description>'Ω~0~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'(OMEGA)0' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>24</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
@@ -25876,7 +25876,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>longitudeOfAscensionNode</Id>
           <Name>Longitude of Ascension Node</Name>
-          <Description>'ω' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'small-omega' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>24</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
@@ -25891,7 +25891,7 @@ limitations under the License.
           <Order>11</Order>
           <Id>meanAnomaly</Id>
           <Name>Mean Anomaly</Name>
-          <Description>'M~0~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'M 0' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>24</BitLength>
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
@@ -25906,7 +25906,7 @@ limitations under the License.
           <Order>12</Order>
           <Id>clockParameter1</Id>
           <Name>Clock Parameter 1</Name>
-          <Description>'a~f0~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'a f0' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>11</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
@@ -25921,7 +25921,7 @@ limitations under the License.
           <Order>13</Order>
           <Id>clockParameter2</Id>
           <Name>Clock Parameter 2</Name>
-          <Description>'a~f1~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'a f1' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>11</BitLength>
           <BitOffset>195</BitOffset>
           <BitStart>3</BitStart>

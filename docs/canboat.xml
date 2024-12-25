@@ -405,7 +405,7 @@ limitations under the License.
       <EnumPair Value='315' Name='ICOM' />
       <EnumPair Value='328' Name='Qwerty' />
       <EnumPair Value='329' Name='Dief' />
-      <EnumPair Value='341' Name='Böning Automationstechnologie GmbH &amp; Co. KG' />
+      <EnumPair Value='341' Name='Boening Automationstechnologie GmbH &amp; Co. KG' />
       <EnumPair Value='345' Name='Korean Maritime University' />
       <EnumPair Value='351' Name='Thrane and Thrane' />
       <EnumPair Value='355' Name='Mastervolt' />
@@ -15924,15 +15924,15 @@ limitations under the License.
       <PGN>127233</PGN>
       <Id>manOverboardNotification</Id>
       <Description>Man Overboard Notification</Description>
-      <Explanation>The MOB PGN is intended to provide notification from a MOB monitoring system. The included position information may be that of the vessel or the MOB device itself as identified in field “X”, position source. Additional information may include the current state of the MOB device, time of activation, and MOB device battery status.
+      <Explanation>The MOB PGN is intended to provide notification from a MOB monitoring system. The included position information may be that of the vessel or the MOB device itself as identified in field 'X', position source. Additional information may include the current state of the MOB device, time of activation, and MOB device battery status.
 This PGN may be used to set a MOB waypoint, or to initiate an alert process.
 This PGN may be used to command or register a MOB device emitter Ids or other applicable fields in the message with an MOB System or other equipment. If the fields in this PGN are configured over the network, the Command Group Function (PGN 126208) shall be used.
 Queries for this PGN shall be requested using either the ISO Request (PGN 059904) or the NMEA Request Group Function (PGN 126208).
 A device receiving an ISO (PGN 059904) for this PGN (127233), shall respond by providing as many of these PGNs (127233) as necessary for every MOB Emitter ID that has associated data fields.
 If a Request Group Function (PGN 126208) requesting this PGN (127233) is received, the receiving device shall respond in the following manner:
-•If no requested fields have been included with the Request Group Function then the response is to return one or more PGNs, just like responding to the ISO Request (PGN 055904) described above.
-•If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response shall be filtered by these fields contained within this request resulting in one or more PGN (127233) responses.
-If the MOB Emitter ID requested is not considered a valid MOB Emitter ID by the receiving device, then the appropriate response would be the Acknowledge Group Function (PGN 126208), containing the error state for PGN error code (Field 3) of “0x3 = Access denied.” And the requested MOB Emitter ID field parameter error code (Field 6) of “0x3 = Requested or command parameter out-of- range;”.
+* If no requested fields have been included with the Request Group Function then the response is to return one or more PGNs, just like responding to the ISO Request (PGN 055904) described above.
+* If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response shall be filtered by these fields contained within this request resulting in one or more PGN (127233) responses.
+If the MOB Emitter ID requested is not considered a valid MOB Emitter ID by the receiving device, then the appropriate response would be the Acknowledge Group Function (PGN 126208), containing the error state for PGN error code (Field 3) of '0x3 = Access denied.' And the requested MOB Emitter ID field parameter error code (Field 6) of '0x3 = Requested or command parameter out-of- range;'.
 The Default update rate of this PGN is autonomous, as it is dependant upon notification rates of MOB devices.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -26867,6 +26867,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129541</PGN>
       <Id>gpsAlmanacData</Id>
       <Description>GPS Almanac Data</Description>
+      <URL>https://www.gps.gov/technical/icwg/ICD-GPS-200C.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -26933,7 +26934,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>5</Order>
           <Id>almanacReferenceTime</Id>
           <Name>Almanac Reference Time</Name>
-          <Description>'t~oa~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'t oa' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -26948,7 +26949,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>6</Order>
           <Id>inclinationAngle</Id>
           <Name>Inclination Angle</Name>
-          <Description>'δ~i~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'delta i' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -26963,7 +26964,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>7</Order>
           <Id>rateOfRightAscension</Id>
           <Name>Rate of Right Ascension</Name>
-          <Description>'̇Ω' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'OMEGADOT' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -26978,7 +26979,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>8</Order>
           <Id>rootOfSemiMajorAxis</Id>
           <Name>Root of Semi-major Axis</Name>
-          <Description>'√ a' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'(A)^0.5' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>24</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
@@ -26993,7 +26994,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>9</Order>
           <Id>argumentOfPerigee</Id>
           <Name>Argument of Perigee</Name>
-          <Description>'Ω~0~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'(OMEGA)0' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>24</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
@@ -27008,7 +27009,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>10</Order>
           <Id>longitudeOfAscensionNode</Id>
           <Name>Longitude of Ascension Node</Name>
-          <Description>'ω' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'small-omega' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>24</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
@@ -27023,7 +27024,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>11</Order>
           <Id>meanAnomaly</Id>
           <Name>Mean Anomaly</Name>
-          <Description>'M~0~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'M 0' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>24</BitLength>
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
@@ -27038,7 +27039,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>12</Order>
           <Id>clockParameter1</Id>
           <Name>Clock Parameter 1</Name>
-          <Description>'a~f0~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'a f0' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>11</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
@@ -27053,7 +27054,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>13</Order>
           <Id>clockParameter2</Id>
           <Name>Clock Parameter 2</Name>
-          <Description>'a~f1~' in table 20-VI in ICD-GPS-200</Description>
+          <Description>'a f1' in table 20-VI in ICD-GPS-200</Description>
           <BitLength>11</BitLength>
           <BitOffset>195</BitOffset>
           <BitStart>3</BitStart>
@@ -36507,7 +36508,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130565</PGN>
       <Id>lightingColorSequence</Id>
       <Description>Lighting Color Sequence</Description>
-      <Explanation>Sequences could be 1 to (PGN Lighting – System Configuration) Max Color Sequence Color Count colors.</Explanation>
+      <Explanation>Sequences could be 1 to (PGN Lighting - System Configuration) Max Color Sequence Color Count colors.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>

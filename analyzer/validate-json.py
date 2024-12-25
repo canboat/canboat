@@ -43,6 +43,8 @@ if (sys.argv[1] == '--range'):
 else:
     file = open(sys.argv[1])
 data = json.loads(file.read())
+file.close()
+
 pgns = data["PGNs"]
 pMap = {}
 for pgn in pgns:
@@ -79,8 +81,23 @@ for pgn in pgns:
                         print(field)
                         res = 1
 
-file.close()
 
 if (res == 0):
+    s1 = json.dumps(data, indent = 2)
+    s2 = json.dumps(data, indent = 2, ensure_ascii = False)
+    if (s1 != s2):
+        s1 = s1.splitlines()
+        s2 = s2.splitlines()
+        print("ERROR: JSON contains non-ASCII characters")
+        i = 0
+        while (i < len(s1)):
+            if (s1[i] != s2[i]):
+                print(str(i) + " < " + s1[i])
+                print(str(i) + " > " + s2[i])
+            i = i + 1
+        res = 1
+    
+if (res == 0):
     print("JSON in", sys.argv[1], "seems valid.")
+
 exit(res)

@@ -2742,7 +2742,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .explanation
      = "The MOB PGN is intended to provide notification from a MOB monitoring system. The included position information may be "
-       "that of the vessel or the MOB device itself as identified in field “X”, position source. Additional information may "
+       "that of the vessel or the MOB device itself as identified in field 'X', position source. Additional information may "
        "include the current state of the MOB device, time of activation, and MOB device battery status.\n"
        "This PGN may be used to set a MOB waypoint, or to initiate an alert process.\n"
        "This PGN may be used to command or register a MOB device emitter Ids or other applicable fields in the message with an "
@@ -2756,15 +2756,15 @@ Pgn pgnList[] = {
        "necessary for every MOB Emitter ID that has associated data fields.\n"
        "If a Request Group Function (PGN 126208) requesting this PGN (127233) is received, the receiving device shall respond in "
        "the following manner:\n"
-       "•If no requested fields have been included with the Request Group Function then the response is to return one or more "
+       "* If no requested fields have been included with the Request Group Function then the response is to return one or more "
        "PGNs, just like responding to the ISO Request (PGN 055904) described above.\n"
-       "•If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response "
+       "* If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response "
        "shall "
        "be filtered by these fields contained within this request resulting in one or more PGN (127233) responses.\n"
        "If the MOB Emitter ID requested is not considered a valid MOB Emitter ID by the receiving device, then the appropriate "
        "response would be the Acknowledge Group Function (PGN 126208), containing the error state for PGN error code (Field 3) of "
-       "“0x3 = Access denied.” And the requested MOB Emitter ID field parameter error code (Field 6) of “0x3 = Requested or "
-       "command parameter out-of- range;”.\n"
+       "'0x3 = Access denied.' And the requested MOB Emitter ID field parameter error code (Field 6) of '0x3 = Requested or "
+       "command parameter out-of- range;'.\n"
        "The Default update rate of this PGN is autonomous, as it is dependant upon notification rates of MOB devices."}
 
     ,
@@ -4211,37 +4211,38 @@ Pgn pgnList[] = {
       UINT16_FIELD("GPS Week number"),
       BINARY_FIELD("SV Health Bits", BYTES(1), NULL),
       UNSIGNED_ALMANAC_PARAMETER_FIELD("Eccentricity", BYTES(2), POW2NEG(21), "m/m", "'e' in table 20-VI in ICD-GPS-200"),
-      UNSIGNED_ALMANAC_PARAMETER_FIELD("Almanac Reference Time", BYTES(1), POW2(12), "s", "'t~oa~' in table 20-VI in ICD-GPS-200"),
+      UNSIGNED_ALMANAC_PARAMETER_FIELD("Almanac Reference Time", BYTES(1), POW2(12), "s", "'t oa' in table 20-VI in ICD-GPS-200"),
       SIGNED_ALMANAC_PARAMETER_FIELD("Inclination Angle",
                                      BYTES(2),
                                      POW2NEG(19),
                                      "semi-circle",
-                                     "'\u03b4~i~' in table 20-VI in ICD-GPS-200"),
+                                     "'delta i' in table 20-VI in ICD-GPS-200"),
       SIGNED_ALMANAC_PARAMETER_FIELD("Rate of Right Ascension",
                                      BYTES(2),
                                      POW2NEG(38),
                                      "semi-circle/s",
-                                     "'\u0307\u2126' in table 20-VI in ICD-GPS-200"),
+                                     "'OMEGADOT' in table 20-VI in ICD-GPS-200"),
       UNSIGNED_ALMANAC_PARAMETER_FIELD("Root of Semi-major Axis",
                                        BYTES(3),
                                        POW2NEG(11),
                                        "sqrt(m)",
-                                       "'\u221a a' in table 20-VI in ICD-GPS-200"),
+                                       "'(A)^0.5' in table 20-VI in ICD-GPS-200"),
       SIGNED_ALMANAC_PARAMETER_FIELD("Argument of Perigee",
                                      BYTES(3),
                                      POW2NEG(23),
                                      "semi-circle",
-                                     "'\u2126~0~' in table 20-VI in ICD-GPS-200"),
+                                     "'(OMEGA)0' in table 20-VI in ICD-GPS-200"),
       SIGNED_ALMANAC_PARAMETER_FIELD("Longitude of Ascension Node",
                                      BYTES(3),
                                      POW2NEG(23),
                                      "semi-circle",
-                                     "'\u03c9' in table 20-VI in ICD-GPS-200"),
-      SIGNED_ALMANAC_PARAMETER_FIELD("Mean Anomaly", BYTES(3), POW2NEG(23), "semi-circle", "'M~0~' in table 20-VI in ICD-GPS-200"),
-      SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 1", 11, POW2NEG(20), "s", "'a~f0~' in table 20-VI in ICD-GPS-200"),
-      SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 2", 11, POW2NEG(38), "s/s", "'a~f1~' in table 20-VI in ICD-GPS-200"),
+                                     "'small-omega' in table 20-VI in ICD-GPS-200"),
+      SIGNED_ALMANAC_PARAMETER_FIELD("Mean Anomaly", BYTES(3), POW2NEG(23), "semi-circle", "'M 0' in table 20-VI in ICD-GPS-200"),
+      SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 1", 11, POW2NEG(20), "s", "'a f0' in table 20-VI in ICD-GPS-200"),
+      SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 2", 11, POW2NEG(38), "s/s", "'a f1' in table 20-VI in ICD-GPS-200"),
       RESERVED_FIELD(2),
       END_OF_FIELDS},
+     .url      = "https://www.gps.gov/technical/icwg/ICD-GPS-200C.pdf",
      .interval = UINT16_MAX}
 
     ,
@@ -5540,7 +5541,7 @@ Pgn pgnList[] = {
      .repeatingCount1 = 5,
      .repeatingStart1 = 3,
      .repeatingField1 = 2,
-     .explanation     = "Sequences could be 1 to (PGN Lighting – System Configuration) Max Color Sequence Color Count colors."}
+     .explanation     = "Sequences could be 1 to (PGN Lighting - System Configuration) Max Color Sequence Color Count colors."}
 
     ,
     {"Lighting Program",
