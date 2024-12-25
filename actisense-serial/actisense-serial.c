@@ -87,7 +87,6 @@ int main(int argc, char **argv)
   struct stat    statbuf;
   int            speed = 115200;
   int            i;
-  int            wait;
   time_t         lastPing = time(0);
 
   setProgName(argv[0]);
@@ -279,7 +278,7 @@ int main(int argc, char **argv)
     }
   }
 
-  for (wait = timeout;;)
+  for (;;)
   {
     unsigned char msg[BUFFER_SIZE];
     int r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, timeout);
@@ -310,11 +309,9 @@ int main(int argc, char **argv)
         fprintf(stdout, "%s", msg);
         fflush(stdout);
       }
-      wait = 0;
     }
     else
     {
-      wait = timeout;
       if (writeonly)
       {
         break;

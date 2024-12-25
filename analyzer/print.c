@@ -484,6 +484,7 @@ extern bool fieldPrintLookup(const Field   *field,
                              size_t         startBit,
                              size_t        *bits)
 {
+  char        lookfor[20];
   const char *s = NULL;
 
   int64_t value;
@@ -497,8 +498,6 @@ extern bool fieldPrintLookup(const Field   *field,
 
   if (field->unit && field->unit[0] == '=' && isdigit((unsigned char) field->unit[1]))
   {
-    char lookfor[20];
-
     sprintf(lookfor, "=%" PRId64, value);
     if (strcmp(lookfor, field->unit) != 0)
     {

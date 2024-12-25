@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #469: Fix compiler warnings
 - #461: fix 128520 and 130821 max string length
 - #452: Add define to compile replay binary on strict linux systems
 - #450: Maretron 130836 Switch Counter Status field lengths incorrect

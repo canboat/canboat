@@ -23,11 +23,14 @@ limitations under the License.
 
 */
 
-#define _XOPEN_SOURCE /* to get strptime() */
+#define _XOPEN_SOURCE   /* to get strptime() */
+#define _DEFAULT_SOURCE /* to get timegm() in glibc > 2.19 */
+#define _BSD_SOURCE     /* to get timegm in glibc <= 2.19 */
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <time.h>
 #include <unistd.h>
 
