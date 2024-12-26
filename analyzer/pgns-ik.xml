@@ -4,7 +4,7 @@
      Please use docs/canboat.xml which is a much more complete format.
 -->
 <!--
-CANboat version v5.1.1
+CANboat version v5.1.3
 
 (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -29,7 +29,7 @@ limitations under the License.
   <Comment>WARNING: DO NOT USE THIS FILE. IT IS INCLUDED FOR HISTORICAL DOWNSTREAM PROJECTS. See https://github.com/canboat/canboat for the full source code and the recommended new file to use.</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>5.1.1</Version>
+  <Version>5.1.3</Version>
   <PGNs>
     <PGNInfo>
       <PGN>262400</PGN>

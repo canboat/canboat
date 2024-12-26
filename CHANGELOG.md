@@ -12,6 +12,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+### [5.1.3]
+
+No functional changes, release because v5.1.2 was released incompletely.
+
 ### [5.1.2]
 
 ### Fixed
@@ -706,8 +710,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v5.1.2...HEAD
-[5.1.2]: https://github.com/canboat/canboat/compare/v5.1.1...v5.1.2
+[Unreleased]: https://github.com/canboat/canboat/compare/v5.1.3...HEAD
+[5.1.3]: https://github.com/canboat/canboat/compare/v5.1.1...v5.1.3
 [5.1.1]: https://github.com/canboat/canboat/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/canboat/canboat/compare/v5.0.3...v5.1.0
 [5.0.3]: https://github.com/canboat/canboat/compare/v5.0.2...v5.0.3
