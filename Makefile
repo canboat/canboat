@@ -93,7 +93,7 @@ format:
 release:
 	$(MAKE) clean generated
 	git diff --exit-code
-	git tag v$(sed -En 's/.*\ VERSION\ \"([0-9]+\.)([0-9]+\.)?([0-9]+)\"/\1\2\3/p' common/version.h)
+	git tag v`sed -En 's/.*\ VERSION\ \"([0-9]+\.)([0-9]+\.)?([0-9]+)\"/\1\2\3/p' common/version.h`
 	git push --tags
 
 .PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated compile
