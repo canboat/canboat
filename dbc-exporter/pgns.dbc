@@ -529,7 +529,7 @@ BO_ 2582715134 PGN_127258_magneticVariation: 8 Vector__XXX
 
 BO_ 2582774014 PGN_127488_engineParametersRapid: 8 Vector__XXX
  SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ tiltTrim : 40|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ tiltTrim : 40|8@1- (1,0) [0|0] "%" Vector__XXX
  SG_ boostPressure : 24|16@1+ (100,0) [0|0] "Pa" Vector__XXX
  SG_ speed : 8|16@1+ (0.25,0) [0|0] "rpm" Vector__XXX
  SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX

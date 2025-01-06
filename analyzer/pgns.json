@@ -13871,6 +13871,7 @@
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
+            "Units":"%",
             "Type":"Integer",
             "Resolution":1,
             "Signed":true,

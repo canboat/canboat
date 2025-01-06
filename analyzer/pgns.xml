@@ -15250,6 +15250,7 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
+          <Units>%</Units>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>true</Signed>

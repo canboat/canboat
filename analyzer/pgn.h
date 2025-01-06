@@ -2674,7 +2674,8 @@ Pgn pgnList[] = {
        "ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for "
        "additional context.",
      .priority = 7,
-     .url      = "http://www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf"}
+     .url      = "https://web.archive.org/web/20170609023206/http://www.nmea.org/Assets/"
+                 "20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf"}
 
     ,
     {"Product Information",
@@ -2890,7 +2891,7 @@ Pgn pgnList[] = {
      {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       ROTATION_UFIX16_RPM_FIELD("Speed", NULL),
       PRESSURE_UFIX16_HPA_FIELD("Boost Pressure"),
-      SIMPLE_SIGNED_FIELD("Tilt/Trim", BYTES(1)),
+      PERCENTAGE_I8_FIELD("Tilt/Trim"),
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
      .interval = 100,

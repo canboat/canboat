@@ -10,6 +10,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #472: PGN 127488 field Tilt/Trim is a percentage field
+
 ### Added
 
 ### [5.1.3]
