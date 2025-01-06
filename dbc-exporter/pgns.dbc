@@ -1017,11 +1017,11 @@ BO_ 2583300606 PGN_129545_gnssRaimOutput: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583300862 PGN_129546_gnssRaimSettings: 8 Vector__XXX
- SG_ reserved : 32|32@1+ (1,0) [0|0] "" Vector__XXX
- SG_ pseudorangeResidualFilteringTime : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ probabilityOfMissedDetection : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ probabilityOfFalseAlarm : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ radialPositionErrorMaximumThresh : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ pseudorangeResidualFilteringTime : 32|16@1+ (1,0) [0|0] "s" Vector__XXX
+ SG_ probabilityOfMissedDetection : 24|8@1- (1,0) [0|0] "%" Vector__XXX
+ SG_ probabilityOfFalseAlarm : 16|8@1- (1,0) [0|0] "%" Vector__XXX
+ SG_ radialPositionErrorMaximumThresh : 0|16@1- (0.01,0) [0|0] "m" Vector__XXX
 
 BO_ 2583301118 PGN_129547_gnssPseudorangeErrorS: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX

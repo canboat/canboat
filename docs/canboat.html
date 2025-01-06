@@ -7488,8 +7488,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-129546">0x1FA0A:
             PGN 129546
             - GNSS RAIM Settings</h3><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
+              </p><p>
             This
              single-frame 
             PGN is
@@ -7498,19 +7498,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Radial Position Error Maximum Threshold</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Radial Position Error Maximum Threshold</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Probability of False Alarm</td><td/><td>%<div class="xs">-127 .. 125</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Probability of Missed Detection</td><td/><td>%<div class="xs">-127 .. 125</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Pseudorange Residual Filtering Time Constant</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>2</td><td>Probability of False Alarm</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>3</td><td>Probability of Missed Detection</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4</td><td>Pseudorange Residual Filtering Time Constant</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>32 bits
+                      <a href="#ft-TIME">TIME</a></td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td></tr></table><h3 id="pgn-129547">0x1FA0B:
             PGN 129547
             - GNSS Pseudorange Error Statistics</h3><p/><p>

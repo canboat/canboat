@@ -27352,13 +27352,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>gnssRaimSettings</Id>
       <Description>GNSS RAIM Settings</Description>
       <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>5</FieldCount>
       <Length>8</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
@@ -27367,26 +27361,29 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>radialPositionErrorMaximumThreshold</Id>
           <Name>Radial Position Error Maximum Threshold</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>probabilityOfFalseAlarm</Id>
           <Name>Probability of False Alarm</Name>
           <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>%</Unit>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>125</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -27394,33 +27391,36 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>probabilityOfMissedDetection</Id>
           <Name>Probability of Missed Detection</Name>
           <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>%</Unit>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>125</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>pseudorangeResidualFilteringTimeConstant</Id>
           <Name>Pseudorange Residual Filtering Time Constant</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>s</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65533</RangeMax>
+          <FieldType>TIME</FieldType>
+          <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>32</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
