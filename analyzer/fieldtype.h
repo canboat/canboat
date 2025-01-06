@@ -338,6 +338,12 @@ static const PhysicalQuantity CONCENTRATION
        .unit         = "parts per million",
        .abbreviation = "ppm"};
 
+static const PhysicalQuantity SIGNAL_STRENGTH = {.name        = "SIGNAL_STRENGTH",
+                                                 .description = "Signal strength expressed in dB with respect to 1 uV/m",
+                                                 .url = "https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications",
+                                                 .abbreviation = "dB",
+                                                 .unit         = "decibel"};
+
 static const PhysicalQuantity SIGNAL_TO_NOISE_RATIO = {.name         = "SIGNAL_TO_NOISE_RATIO",
                                                        .description  = "Signal-to-noise ratio",
                                                        .url          = "https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
@@ -368,6 +374,7 @@ const PhysicalQuantity *const PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
                                                         &PRESSURE,
                                                         &PRESSURE_RATE,
                                                         &CONCENTRATION,
+                                                        &SIGNAL_STRENGTH,
                                                         &SIGNAL_TO_NOISE_RATIO,
                                                         NULL};
 
@@ -604,6 +611,13 @@ FieldType fieldTypeList[] = {
      .resolution    = 0.01,
      .baseFieldType = "UFIX16"},
 
+    {.name          = "SIGNALSTRENGTH_FIX32",
+     .description   = "Signal strength expressed in dB with respect to 1 uV/m",
+     .url           = "https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications",
+     .resolution    = 0.01,
+     .physical      = &SIGNAL_STRENGTH,
+     .baseFieldType = "FIX32"},
+
     {.name          = "SIGNALTONOISERATIO_FIX16",
      .description   = "Signal-to-noise ratio",
      .url           = "https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
@@ -817,6 +831,13 @@ FieldType fieldTypeList[] = {
     {.name          = "TIME_UFIX16_CS",
      .description   = "Time delta, 16 bits with centisecond resolution",
      .resolution    = 0.01,
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "TIME"},
+
+    {.name          = "TIME_UFIX16_DS",
+     .description   = "Time delta, 16 bits with decisecond resolution",
+     .resolution    = 0.1,
      .size          = 16,
      .hasSign       = False,
      .baseFieldType = "TIME"},
@@ -1164,28 +1185,34 @@ FieldType fieldTypeList[] = {
      .baseFieldType       = "UFIX16"},
 
     {.name          = "SPEED_FIX16_MM",
-     .description   = "Speed, with millimeter resolution",
+     .description   = "Speed, with millimeter per second resolution",
      .resolution    = 0.001,
      .physical      = &SPEED,
      .baseFieldType = "FIX16"},
 
     {.name          = "SPEED_FIX16_CM",
-     .description   = "Speed, with centimeter resolution",
+     .description   = "Speed, with centimeter per second resolution",
      .resolution    = 0.01,
      .physical      = &SPEED,
      .baseFieldType = "FIX16"},
 
     {.name          = "SPEED_UFIX16_CM",
-     .description   = "Speed, unsigned, with centimeter resolution",
+     .description   = "Speed, unsigned, with centimeter per second resolution",
      .resolution    = 0.01,
      .physical      = &SPEED,
      .baseFieldType = "UFIX16"},
 
     {.name          = "SPEED_UFIX16_DM",
-     .description   = "Speed, unsigned, with decimeter resolution",
+     .description   = "Speed, unsigned, with decimeter per second resolution",
      .resolution    = 0.1,
      .physical      = &SPEED,
      .baseFieldType = "UFIX16"},
+
+    {.name          = "SPEED_FIX16_DMM",
+     .description   = "Speed, with 0.1 millimeter per second resolution",
+     .resolution    = 0.0001,
+     .physical      = &SPEED,
+     .baseFieldType = "FIX16"},
 
     {.name          = "DISTANCE_FIX16_M",
      .description   = "Distance, with meter resolution",
@@ -1208,6 +1235,12 @@ FieldType fieldTypeList[] = {
     {.name          = "DISTANCE_FIX32_MM",
      .description   = "Distance, high range, with millimeter resolution",
      .resolution    = 0.001,
+     .physical      = &DISTANCE,
+     .baseFieldType = "FIX32"},
+
+    {.name          = "DISTANCE_FIX32_DMM",
+     .description   = "Distance, high range, with 0.1 millimeter resolution",
+     .resolution    = 0.0001,
      .physical      = &DISTANCE,
      .baseFieldType = "FIX32"},
 

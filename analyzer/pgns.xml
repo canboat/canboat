@@ -22860,8 +22860,8 @@ limitations under the License.
             <EnumPair Value='8' Name='Under way sailing' />
             <EnumPair Value='9' Name='Hazardous material - High Speed' />
             <EnumPair Value='10' Name='Hazardous material - Wing in Ground' />
-            <EnumPair Value='11' Name='Power-driven vessl towing astern' />
-            <EnumPair Value='12' Name='Power-driven vessl pushing ahead or towing alongside' />
+            <EnumPair Value='11' Name='Power-driven vessel towing astern' />
+            <EnumPair Value='12' Name='Power-driven vessel pushing ahead or towing alongside' />
             <EnumPair Value='14' Name='AIS-SART' />
           </EnumValues>
         </Field>
@@ -26290,14 +26290,8 @@ limitations under the License.
       <Id>gnssPseudorangeErrorStatistics</Id>
       <Description>GNSS Pseudorange Error Statistics</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
-      <Length>9</Length>
+      <Complete>true</Complete>
+      <Length>15</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -26319,89 +26313,96 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>stdDevOfMajorErrorEllipse</Id>
           <Name>Std Dev of Major error ellipse</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>stdDevOfMinorErrorEllipse</Id>
           <Name>Std Dev of Minor error ellipse</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>orientationOfErrorEllipse</Id>
           <Name>Orientation of error ellipse</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Units>rad</Units>
+          <Type>Number</Type>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>6.5533</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>stdDevLatError</Id>
           <Name>Std Dev Lat Error</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>stdDevLonError</Id>
           <Name>Std Dev Lon Error</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>stdDevAltError</Id>
           <Name>Std Dev Alt Error</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -26410,14 +26411,8 @@ limitations under the License.
       <Id>dgnssCorrections</Id>
       <Description>DGNSS Corrections</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
-      <Length>13</Length>
+      <Complete>true</Complete>
+      <Length>16</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -26436,61 +26431,80 @@ limitations under the License.
           <Order>2</Order>
           <Id>referenceStationId</Id>
           <Name>Reference Station ID</Name>
-          <BitLength>16</BitLength>
+          <BitLength>12</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>4093</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>referenceStationType</Id>
           <Name>Reference Station Type</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <BitLength>4</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='GPS' />
+            <EnumPair Value='1' Name='GLONASS' />
+            <EnumPair Value='2' Name='GPS+GLONASS' />
+            <EnumPair Value='3' Name='GPS+SBAS/WAAS' />
+            <EnumPair Value='4' Name='GPS+SBAS/WAAS+GLONASS' />
+            <EnumPair Value='5' Name='Chayka' />
+            <EnumPair Value='6' Name='integrated' />
+            <EnumPair Value='7' Name='surveyed' />
+            <EnumPair Value='8' Name='Galileo' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>timeOfCorrections</Id>
           <Name>Time of corrections</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Units>s</Units>
+          <Type>Time</Type>
+          <Resolution>0.001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65.533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>stationHealth</Id>
           <Name>Station Health</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>4</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Not Working' />
+            <EnumPair Value='1' Name='Unmonitored' />
+            <EnumPair Value='2' Name='Healthy Operational' />
+            <EnumPair Value='3' Name='Healthy Test Mode' />
+            <EnumPair Value='4' Name='Test Mode' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>4</BitLength>
+          <BitOffset>44</BitOffset>
+          <BitStart>4</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -26499,7 +26513,7 @@ limitations under the License.
           <Id>satelliteId</Id>
           <Name>Satellite ID</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -26511,47 +26525,50 @@ limitations under the License.
           <Order>8</Order>
           <Id>prc</Id>
           <Name>PRC</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-214748.3647</RangeMin>
+          <RangeMax>214748.3645</RangeMax>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>rrc</Id>
           <Name>RRC</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Units>m/s</Units>
+          <Type>Number</Type>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3.2767</RangeMin>
+          <RangeMax>3.2765</RangeMax>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>udre</Id>
           <Name>UDRE</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>655.33</RangeMax>
         </Field>
         <Field>
           <Order>11</Order>
           <Id>iod</Id>
           <Name>IOD</Name>
           <BitLength>8</BitLength>
-          <BitOffset>96</BitOffset>
+          <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -26565,15 +26582,9 @@ limitations under the License.
       <PGN>129550</PGN>
       <Id>gnssDifferentialCorrectionReceiverInterface</Id>
       <Description>GNSS Differential Correction Receiver Interface</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
-      <Length>6</Length>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -26592,66 +26603,112 @@ limitations under the License.
           <Order>2</Order>
           <Id>frequency</Id>
           <Name>Frequency</Name>
-          <BitLength>8</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Units>Hz</Units>
+          <Type>Number</Type>
+          <Resolution>10</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>42949672930</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>serialInterfaceBitRate</Id>
           <Name>Serial Interface Bit Rate</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitLength>5</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>29</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='25' />
+            <EnumPair Value='1' Name='50' />
+            <EnumPair Value='2' Name='100' />
+            <EnumPair Value='3' Name='200' />
+            <EnumPair Value='4' Name='300' />
+            <EnumPair Value='5' Name='600' />
+            <EnumPair Value='6' Name='1200' />
+            <EnumPair Value='7' Name='2400' />
+            <EnumPair Value='8' Name='4800' />
+            <EnumPair Value='9' Name='9600' />
+            <EnumPair Value='10' Name='19200' />
+            <EnumPair Value='11' Name='19200' />
+            <EnumPair Value='12' Name='38400' />
+            <EnumPair Value='13' Name='57600' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>serialInterfaceDetectionMode</Id>
           <Name>Serial Interface Detection Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <BitLength>3</BitLength>
+          <BitOffset>45</BitOffset>
+          <BitStart>5</BitStart>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>6</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Auto bit rate' />
+            <EnumPair Value='1' Name='Manual bit rate' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>differentialSource</Id>
           <Name>Differential Source</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>4</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Auto' />
+            <EnumPair Value='1' Name='Loran' />
+            <EnumPair Value='2' Name='MSK Beacon' />
+            <EnumPair Value='3' Name='FM Subcarrier' />
+            <EnumPair Value='4' Name='AIS' />
+            <EnumPair Value='5' Name='Ground based radio' />
+            <EnumPair Value='6' Name='SBAS' />
+            <EnumPair Value='7' Name='Satellite' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>differentialOperationMode</Id>
           <Name>Differential Operation Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <BitLength>4</BitLength>
+          <BitOffset>52</BitOffset>
+          <BitStart>4</BitStart>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Manual' />
+            <EnumPair Value='1' Name='Auto Power' />
+            <EnumPair Value='2' Name='Auto Range' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>
@@ -26660,14 +26717,8 @@ limitations under the License.
       <Id>gnssDifferentialCorrectionReceiverSignal</Id>
       <Description>GNSS Differential Correction Receiver Signal</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
-      <Length>14</Length>
+      <Complete>true</Complete>
+      <Length>20</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -26699,113 +26750,152 @@ limitations under the License.
           <Order>3</Order>
           <Id>signalStrength</Id>
           <Name>Signal Strength</Name>
-          <BitLength>8</BitLength>
+          <Description>Signal strength in dB relative to 1 uV/m</Description>
+          <BitLength>32</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Units>dB</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-21474836.47</RangeMin>
+          <RangeMax>21474836.45</RangeMax>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>signalSnr</Id>
           <Name>Signal SNR</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Units>dB</Units>
+          <Type>Number</Type>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>frequency</Id>
           <Name>Frequency</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Units>Hz</Units>
+          <Type>Number</Type>
+          <Resolution>10</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>42949672930</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>stationType</Id>
           <Name>Station Type</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>4</BitLength>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='GPS' />
+            <EnumPair Value='1' Name='GLONASS' />
+            <EnumPair Value='2' Name='GPS+GLONASS' />
+            <EnumPair Value='3' Name='GPS+SBAS/WAAS' />
+            <EnumPair Value='4' Name='GPS+SBAS/WAAS+GLONASS' />
+            <EnumPair Value='5' Name='Chayka' />
+            <EnumPair Value='6' Name='integrated' />
+            <EnumPair Value='7' Name='surveyed' />
+            <EnumPair Value='8' Name='Galileo' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>stationId</Id>
-          <Name>Station ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
+          <Id>referenceStationId</Id>
+          <Name>Reference Station ID</Name>
+          <BitLength>12</BitLength>
+          <BitOffset>100</BitOffset>
+          <BitStart>4</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4093</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>differentialSignalBitRate</Id>
           <Name>Differential Signal Bit Rate</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitLength>5</BitLength>
+          <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>29</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='25' />
+            <EnumPair Value='1' Name='50' />
+            <EnumPair Value='2' Name='100' />
+            <EnumPair Value='3' Name='200' />
+            <EnumPair Value='4' Name='300' />
+            <EnumPair Value='5' Name='600' />
+            <EnumPair Value='6' Name='1200' />
+            <EnumPair Value='7' Name='2400' />
+            <EnumPair Value='8' Name='4800' />
+            <EnumPair Value='9' Name='9600' />
+            <EnumPair Value='10' Name='19200' />
+            <EnumPair Value='11' Name='19200' />
+            <EnumPair Value='12' Name='38400' />
+            <EnumPair Value='13' Name='57600' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>differentialSignalDetectionMode</Id>
           <Name>Differential Signal Detection Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <BitLength>3</BitLength>
+          <BitOffset>117</BitOffset>
+          <BitStart>5</BitStart>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>6</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Auto bit rate' />
+            <EnumPair Value='1' Name='Manual bit rate' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>usedAsCorrectionSource</Id>
           <Name>Used as Correction Source</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitLength>2</BitLength>
+          <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='No' />
+            <EnumPair Value='1' Name='Yes' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>11</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>2</BitLength>
+          <BitOffset>122</BitOffset>
+          <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -26813,40 +26903,52 @@ limitations under the License.
           <Order>12</Order>
           <Id>differentialSource</Id>
           <Name>Differential Source</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <BitLength>4</BitLength>
+          <BitOffset>124</BitOffset>
+          <BitStart>4</BitStart>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Auto' />
+            <EnumPair Value='1' Name='Loran' />
+            <EnumPair Value='2' Name='MSK Beacon' />
+            <EnumPair Value='3' Name='FM Subcarrier' />
+            <EnumPair Value='4' Name='AIS' />
+            <EnumPair Value='5' Name='Ground based radio' />
+            <EnumPair Value='6' Name='SBAS' />
+            <EnumPair Value='7' Name='Satellite' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>13</Order>
           <Id>timeSinceLastSatDifferentialSync</Id>
           <Name>Time since Last Sat Differential Sync</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>96</BitOffset>
+          <Description>Age of differential corrections</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Units>s</Units>
+          <Type>Time</Type>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>655.33</RangeMax>
         </Field>
         <Field>
           <Order>14</Order>
           <Id>satelliteServiceIdNo</Id>
           <Name>Satellite Service ID No.</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>104</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -26855,13 +26957,7 @@ limitations under the License.
       <Id>glonassAlmanacData</Id>
       <Description>GLONASS Almanac Data</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <Length>26</Length>
       <Fields>
         <Field>

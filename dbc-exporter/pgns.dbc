@@ -1032,8 +1032,13 @@ BO_ 2583301630 PGN_129549_dgnssCorrections: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583301886 PGN_129550_gnssDifferentialCorre: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ differentialOperationMode : 52|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ differentialSource : 48|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ serialInterfaceDetectionMode : 45|3@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ serialInterfaceBitRate : 40|5@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ frequency : 8|32@1+ (10,0) [0|0] "Hz" Vector__XXX
+ SG_ channel : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583302142 PGN_129551_gnssDifferentialCorre: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
@@ -2020,6 +2025,10 @@ VAL_ 2583233534 xteMode 0 "Autonomous" 1 "Differential enhanced" 2 "Estimated" 3
 VAL_ 2583235582 setReference 0 "True" 1 "Magnetic" 2 "Error" ;
 VAL_ 2583299070 actualMode 0 "1D" 1 "2D" 2 "3D" 3 "Auto" ;
 VAL_ 2583299070 desiredMode 0 "1D" 1 "2D" 2 "3D" 3 "Auto" ;
+VAL_ 2583301886 differentialOperationMode 0 "Manual" 1 "Auto Power" 2 "Auto Range" ;
+VAL_ 2583301886 differentialSource 0 "Auto" 1 "Loran" 2 "MSK Beacon" 3 "FM Subcarrier" 4 "AIS" 5 "Ground based radio" 6 "SBAS" 7 "Satellite" ;
+VAL_ 2583301886 serialInterfaceDetectionMode 0 "Auto bit rate" 1 "Manual bit rate" ;
+VAL_ 2583301886 serialInterfaceBitRate 0 "25" 1 "50" 2 "100" 3 "200" 4 "300" 5 "600" 6 "1200" 7 "2400" 8 "4800" 9 "9600" 10 "19200" 11 "19200" 12 "38400" 13 "57600" ;
 VAL_ 2583495422 reference 0 "True (ground referenced to North)" 1 "Magnetic (ground referenced to Magnetic North)" 2 "Apparent" 3 "True (boat referenced)" 4 "True (water referenced)" ;
 VAL_ 2583496702 humiditySource 0 "Inside" 1 "Outside" ;
 VAL_ 2583496702 temperatureSource 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" 15 "Shaft Seal Temperature" ;

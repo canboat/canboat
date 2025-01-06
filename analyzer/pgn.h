@@ -262,6 +262,9 @@ typedef struct
    .fieldType   = "DILUTION_OF_PRECISION_FIX16",     \
    .description = desc}
 
+#define SIGNALSTRENGTH_FIX32_FIELD(nam, desc) \
+  {.name = nam, .size = BYTES(4), .resolution = 0.01, .hasSign = true, .fieldType = "SIGNALSTRENGTH_FIX32", .description = desc}
+
 #define SIGNALTONOISERATIO_UFIX16_FIELD(nam, desc) \
   {.name = nam, .size = BYTES(2), .resolution = 0.01, .fieldType = "SIGNALTONOISERATIO_UFIX16", .description = desc}
 
@@ -302,6 +305,15 @@ typedef struct
 
 #define SPEED_U16_DM_FIELD(nam, desc) \
   {.name = nam, .size = BYTES(2), .resolution = 0.1, .unit = "m/s", .fieldType = "SPEED_UFIX16_DM", .description = desc}
+
+#define SPEED_I16_DMM_FIELD(nam, desc) \
+  {.name        = nam,                 \
+   .size        = BYTES(2),            \
+   .resolution  = 0.0001,              \
+   .unit        = "m/s",               \
+   .hasSign     = true,                \
+   .fieldType   = "SPEED_FIX16_DMM",   \
+   .description = desc}
 
 #define DISTANCE_FIX16_M_FIELD(nam, desc) \
   {.name        = nam,                    \
@@ -347,6 +359,15 @@ typedef struct
    .unit        = "m",                     \
    .description = desc,                    \
    .fieldType   = "DISTANCE_FIX32_CM"}
+
+#define DISTANCE_FIX32_DMM_FIELD(nam, desc) \
+  {.name        = nam,                      \
+   .size        = BYTES(4),                 \
+   .resolution  = 0.0001,                   \
+   .hasSign     = true,                     \
+   .unit        = "m",                      \
+   .description = desc,                     \
+   .fieldType   = "DISTANCE_FIX32_DMM"}
 
 #define DISTANCE_FIX64_FIELD(nam, desc) \
   {.name        = nam,                  \
@@ -438,11 +459,13 @@ typedef struct
       RESERVED_PROP_FIELD(2, "Only in PGN when Commanded PGN is proprietary"),     \
       INDUSTRY_FIELD(NULL, "Only in PGN when Commanded PGN is proprietary", true)
 
-#define INTEGER_DESC_FIELD(nam, len, desc) {.name = nam, .size = len, .resolution = 1, .description = desc}
+#define INTEGER_DESC_FIELD(nam, len, desc) \
+  {.name = nam, .size = len, .resolution = 1, .description = desc, .fieldType = "UNSIGNED_INTEGER"}
 
 #define INTEGER_UNIT_FIELD(nam, len, unt) {.name = nam, .size = len, .resolution = 1, .unit = unt}
 
-#define SIGNED_INTEGER_UNIT_FIELD(nam, len, unt) {.name = nam, .size = len, .resolution = 1, .unit = unt, .hasSign = true}
+#define SIGNED_INTEGER_UNIT_FIELD(nam, len, unt) \
+  {.name = nam, .size = len, .resolution = 1, .unit = unt, .hasSign = true, .fieldType = "SIGNED_INTEGER"}
 
 #define INTEGER_FIELD(nam, len) INTEGER_DESC_FIELD(nam, len, "")
 
@@ -574,6 +597,15 @@ typedef struct
    .unit        = "s",                  \
    .hasSign     = false,                \
    .fieldType   = "TIME_UFIX16_CS",     \
+   .description = desc}
+
+#define TIME_UFIX16_DS_FIELD(nam, desc) \
+  {.name        = nam,                  \
+   .size        = BYTES(2),             \
+   .resolution  = 0.1,                  \
+   .unit        = "s",                  \
+   .hasSign     = false,                \
+   .fieldType   = "TIME_UFIX16_DS",     \
    .description = desc}
 
 #define TIME_FIX16_5CS_FIELD(nam, desc) \
@@ -4296,34 +4328,34 @@ Pgn pgnList[] = {
     ,
     {"GNSS Pseudorange Error Statistics",
      129547,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_COMPLETE,
      PACKET_FAST,
      {UINT8_FIELD("SID"),
-      UINT16_FIELD("RMS Std Dev of Range Inputs"),
-      UINT8_FIELD("Std Dev of Major error ellipse"),
-      UINT8_FIELD("Std Dev of Minor error ellipse"),
-      UINT8_FIELD("Orientation of error ellipse"),
-      UINT8_FIELD("Std Dev Lat Error"),
-      UINT8_FIELD("Std Dev Lon Error"),
-      UINT8_FIELD("Std Dev Alt Error"),
+      DISTANCE_FIX16_CM_FIELD("RMS Std Dev of Range Inputs", ""),
+      DISTANCE_FIX16_CM_FIELD("Std Dev of Major error ellipse", ""),
+      DISTANCE_FIX16_CM_FIELD("Std Dev of Minor error ellipse", ""),
+      ANGLE_U16_FIELD("Orientation of error ellipse", ""),
+      DISTANCE_FIX16_CM_FIELD("Std Dev Lat Error", ""),
+      DISTANCE_FIX16_CM_FIELD("Std Dev Lon Error", ""),
+      DISTANCE_FIX16_CM_FIELD("Std Dev Alt Error", ""),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
     ,
     {"DGNSS Corrections",
      129549,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_COMPLETE,
      PACKET_FAST,
      {UINT8_FIELD("SID"),
-      UINT16_FIELD("Reference Station ID"),
-      UINT16_FIELD("Reference Station Type"),
-      UINT8_FIELD("Time of corrections"),
-      UINT8_FIELD("Station Health"),
-      RESERVED_FIELD(BYTES(1)),
+      INTEGER_FIELD("Reference Station ID", 12),
+      LOOKUP_FIELD("Reference Station Type", 4, GNS),
+      TIME_UFIX16_MS_FIELD("Time of corrections", NULL),
+      LOOKUP_FIELD("Station Health", 4, STATION_HEALTH),
+      RESERVED_FIELD(BITS(4)),
       UINT8_FIELD("Satellite ID"),
-      UINT8_FIELD("PRC"),
-      UINT8_FIELD("RRC"),
-      UINT8_FIELD("UDRE"),
+      DISTANCE_FIX32_DMM_FIELD("PRC", NULL),
+      SPEED_I16_DMM_FIELD("RRC", NULL),
+      LENGTH_UFIX16_CM_FIELD("UDRE"),
       UINT8_FIELD("IOD"),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
@@ -4331,43 +4363,44 @@ Pgn pgnList[] = {
     ,
     {"GNSS Differential Correction Receiver Interface",
      129550,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
-     PACKET_FAST,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
      {UINT8_FIELD("Channel"),
-      UINT8_FIELD("Frequency"),
-      UINT8_FIELD("Serial Interface Bit Rate"),
-      UINT8_FIELD("Serial Interface Detection Mode"),
-      UINT8_FIELD("Differential Source"),
-      UINT8_FIELD("Differential Operation Mode"),
+      RADIO_FREQUENCY_FIELD("Frequency", 10),
+      LOOKUP_FIELD("Serial Interface Bit Rate", 5, SERIAL_BIT_RATE),
+      LOOKUP_FIELD("Serial Interface Detection Mode", 3, SERIAL_DETECTION_MODE),
+      LOOKUP_FIELD("Differential Source", 4, DIFFERENTIAL_SOURCE),
+      LOOKUP_FIELD("Differential Operation Mode", 4, DIFFERENTIAL_MODE),
+      RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
     ,
     {"GNSS Differential Correction Receiver Signal",
      129551,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_COMPLETE,
      PACKET_FAST,
      {UINT8_FIELD("SID"),
       UINT8_FIELD("Channel"),
-      UINT8_FIELD("Signal Strength"),
-      UINT8_FIELD("Signal SNR"),
-      UINT8_FIELD("Frequency"),
-      UINT8_FIELD("Station Type"),
-      UINT8_FIELD("Station ID"),
-      UINT8_FIELD("Differential Signal Bit Rate"),
-      UINT8_FIELD("Differential Signal Detection Mode"),
-      UINT8_FIELD("Used as Correction Source"),
-      RESERVED_FIELD(BYTES(1)),
-      UINT8_FIELD("Differential Source"),
-      UINT8_FIELD("Time since Last Sat Differential Sync"),
-      UINT8_FIELD("Satellite Service ID No."),
+      SIGNALSTRENGTH_FIX32_FIELD("Signal Strength", "Signal strength in dB relative to 1 uV/m"),
+      SIGNALTONOISERATIO_FIX16_FIELD("Signal SNR", ""),
+      RADIO_FREQUENCY_FIELD("Frequency", 10),
+      LOOKUP_FIELD("Station Type", 4, GNS),
+      INTEGER_FIELD("Reference Station ID", 12),
+      LOOKUP_FIELD("Differential Signal Bit Rate", 5, SERIAL_BIT_RATE),
+      LOOKUP_FIELD("Differential Signal Detection Mode", 3, SERIAL_DETECTION_MODE),
+      LOOKUP_FIELD("Used as Correction Source", 2, YES_NO),
+      RESERVED_FIELD(BITS(2)),
+      LOOKUP_FIELD("Differential Source", 4, DIFFERENTIAL_SOURCE),
+      TIME_UFIX16_CS_FIELD("Time since Last Sat Differential Sync", "Age of differential corrections"),
+      UINT16_FIELD("Satellite Service ID No."),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
     ,
     {"GLONASS Almanac Data",
      129556,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_COMPLETE,
      PACKET_FAST,
      {UINT8_DESC_FIELD("PRN", "Satellite ID number"),
       UINT16_DESC_FIELD("NA", "Calendar day count within the four year period beginning with the previous leap year"),
