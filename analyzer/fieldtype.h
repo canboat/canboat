@@ -1366,7 +1366,8 @@ FieldType fieldTypeList[] = {
      .description = "Variable",
      .encodingDescription
      = "The definition of the field is that of the reference PGN and reference field, this is totally variable.",
-     .pf = fieldPrintVariable},
+     .variableSize = True,
+     .pf           = fieldPrintVariable},
 
     {.name        = "KEY_VALUE",
      .description = "Key/value",

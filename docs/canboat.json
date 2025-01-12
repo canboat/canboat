@@ -317,7 +317,8 @@
     {
         "Name":"VARIABLE",
       "Description":"Variable",
-      "EncodingDescription":"The definition of the field is that of the reference PGN and reference field, this is totally variable."
+      "EncodingDescription":"The definition of the field is that of the reference PGN and reference field, this is totally variable.",
+      "VariableSize":true
       },
     {
         "Name":"KEY_VALUE",

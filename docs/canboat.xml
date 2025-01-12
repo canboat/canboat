@@ -318,6 +318,7 @@ limitations under the License.
     <FieldType Name="VARIABLE">
       <Description>Variable</Description>
       <EncodingDescription>The definition of the field is that of the reference PGN and reference field, this is totally variable.</EncodingDescription>
+      <VariableSize>true</VariableSize>
     </FieldType>
     <FieldType Name="KEY_VALUE">
       <Description>Key/value</Description>
