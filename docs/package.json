@@ -1,0 +1,31 @@
+{
+  "name": "@canboat/pgns2",
+  "version": "6.0.0",
+  "description": "JSON description of canboat supported pgns",
+  "main": "canboat.json",
+  "scripts": {
+    "test": "mocha --exit",
+    "changelog": "github-changes -o canboat -r pgns2 -a --only-pulls --use-commit-body --data=pulls  --tag-name=v$npm_package_version",
+    "release": "git tag -d v$npm_package_version; npm run changelog && git add CHANGELOG.md && git commit -m 'chore: update changelog' && git tag v$npm_package_version && git push --tags && git push"
+  },
+  "author": "Scott Bender <scott@scottbender.net>",
+  "contributors": [
+    {
+      "name": "Kees Verruijt",
+      "email": "kees@verruijt.net"
+    },
+    {
+      "name": "Teppo Kurki",
+      "email": "teppo.kurki@iki.fi"
+    },
+    {
+      "name": "Jouni Hartikainen",
+      "email": "jouni.hartikainen@iki.fi"
+    }
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/canboat/canboat.git"
+  }
+}
