@@ -10,6 +10,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- Updated copyrights to 2025.
 - #475: FieldType VARIABLE should have the VariableSize attribute set to True.
 - #474: PGN updates
 - #473: PGN 129546 field lengths and types

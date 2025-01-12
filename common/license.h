@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -37,6 +37,6 @@ limitations under the License.
 
 #define COPYRIGHT                                                 \
   "CANboat version v" VERSION "\n\n"                              \
-  "(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.\n"   \
+  "(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.\n"   \
   "For more information see https://github.com/canboat/canboat\n" \
   "\n" LICENSE "\n"

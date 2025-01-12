@@ -9,7 +9,7 @@ Further info re: SocketCAN and the can-utils can be viewed here...
 
 http://en.wikipedia.org/wiki/SocketCAN
 
-(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 

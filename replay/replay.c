@@ -5,7 +5,7 @@ in the first field and delaying by the time difference between this
 and the previous message, unless it is not in the range 0..10s;
 in that case the message is sent immediately.
 
-(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 

@@ -1,11 +1,19 @@
 #!/bin/bash
 
-year=$(date +%Y)
-for file in $(git diff --name-only f69073317cfefe45a75433c187539d76f91f0a6e)
+set -euo pipefail
+
+if [ "$(uname)" != "Darwin" ]
+then
+  echo "$0: this only works with macOS sed"
+  exit 2
+fi
+
+year="$(date '+%Y')"
+for f in $(grep -lR ' 2009-20[0-9][0-9], ' .)
 do
-  if grep -- '-20[0-9][0-9], Kees Verruijt' "${file}" 
+  if [ "${f}" != "./build/update-copyright.sh" ]
   then
-    echo "--- <$file>"
-    sed -i "" 's/-20[0-9][0-9], Kees Verruijt/-'${year}', Kees Verruijt/' "${file}"
+    sed -I .bak "s/ 2009-20[0-9][0-9], / 2009-${year}, /" $f && rm -- "${f}".bak
   fi
 done
+

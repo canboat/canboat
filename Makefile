@@ -1,7 +1,7 @@
 #
 # Makefile for all UNIX style platforms including Cygwin
 #
-# (C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands
+# (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands
 #
 # $Id:$
 #
@@ -96,7 +96,12 @@ release:
 	git tag v`sed -En 's/.*\ VERSION\ \"([0-9]+\.)([0-9]+\.)?([0-9]+)\"/\1\2\3/p' common/version.h`
 	git push --tags
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated compile
+copyright:
+	$(MAKE) clean
+	rm -rf rel/
+	./util/update-copyright.sh
+
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated compile copyright
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)

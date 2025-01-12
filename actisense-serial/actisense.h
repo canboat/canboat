@@ -2,7 +2,7 @@
 
 Defines to interface with an Actisense NGT-1
 
-(C) 2009-2023, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
