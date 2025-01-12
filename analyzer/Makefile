@@ -24,20 +24,21 @@ ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
 ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
 ANALYZER_EXPLAIN_J1939=$(TARGETDIR)/analyzer-explain-j1939
 TARGETS=$(ANALYZER) $(ANALYZER_J1939) $(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_J1939)
-XMLFILE=pgns.xml
-XMLFILE_J1939=pgns-j1939.xml
-JSONFILE=pgns.json
-JSONFILE_J1939=pgns-j1939.json
+XMLFILE=../obsolete/pgns.xml
+XMLFILE_J1939=../obsolete/pgns-j1939.xml
+JSONFILE=../obsolete/pgns.json
+JSONFILE_J1939=../obsolete/pgns-j1939.json
 XSL2FILE=../docs/canboat.xsl
 XML2FILE=../docs/canboat.xml
 XSD2FILE=../docs/canboat.xsd
 JSON2FILE=../docs/canboat.json
 HTML2FILE=../docs/canboat.html
-NGTXMLFILE=pgns-ngt.xml
-NGTJSONFILE=pgns-ngt.json
-IKXMLFILE=pgns-ik.xml
-IKJSONFILE=pgns-ik.json
-NPMFILE=package.json
+NGTXMLFILE=../obsolete/pgns-ngt.xml
+NGTJSONFILE=../obsolete/pgns-ngt.json
+IKXMLFILE=../obsolete/pgns-ik.xml
+IKJSONFILE=../obsolete/pgns-ik.json
+NPMFILE=../obsolete/package.json
+NPM2FILE=../docs/package.json
 HEADERS=analyzer.h pgn.h lookup.h fieldtype.h
 HEADERS_J1939=analyzer.h pgn-j1939.h lookup.h fieldtype.h
 COMMONDIR=../common
@@ -114,7 +115,10 @@ $(IKJSONFILE): $(IKXMLFILE) pgns2json.xslt validate-json.py
 $(NPMFILE): ../common/version.h $(ANALYZER) fixup-version.py
 	python3 fixup-version.py $(ANALYZER) $(NPMFILE)
 
-generated: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE) $(NPMFILE) $(HTML2FILE)
+$(NPM2FILE): ../common/version.h $(ANALYZER) fixup-version.py
+	python3 fixup-version.py $(ANALYZER) $(NPM2FILE)
+
+generated: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE) $(NPMFILE) $(NPM2FILE) $(HTML2FILE)
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

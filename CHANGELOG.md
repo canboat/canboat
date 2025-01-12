@@ -8,8 +8,14 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### [6.0.0]
+
+The reason for the semver major version change is that analyzer/pgns.xml and analyzer/pgns.json have been
+moved to the obsolete directory.
+
 ### Fixed
 
+- #478: Make pgns.xml and pgns.json obsolete.
 - Updated copyrights to 2025.
 - #475: FieldType VARIABLE should have the VariableSize attribute set to True.
 - #474: PGN updates
