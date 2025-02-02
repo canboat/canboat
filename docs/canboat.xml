@@ -17053,6 +17053,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>engineParametersDynamic</Id>
       <Description>Engine Parameters, Dynamic</Description>
     <Priority>2</Priority>
+      <URL>https://archive.org/details/manualzilla-id-5985199</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>14</FieldCount>
@@ -18427,6 +18428,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>binarySwitchBankStatus</Id>
       <Description>Binary Switch Bank Status</Description>
     <Priority>3</Priority>
+      <URL>https://archive.org/details/manualzilla-id-5985199</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -18846,6 +18848,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127502</PGN>
       <Id>switchBankControl</Id>
       <Description>Switch Bank Control</Description>
+      <URL>https://archive.org/details/manualzilla-id-5985199</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -19266,6 +19269,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>acInputStatus</Id>
       <Description>AC Input Status</Description>
     <Priority>6</Priority>
+      <URL>https://archive.org/details/manualzilla-id-5985199</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
@@ -19449,6 +19453,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>acOutputStatus</Id>
       <Description>AC Output Status</Description>
     <Priority>6</Priority>
+      <URL>https://archive.org/details/manualzilla-id-5985199</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
@@ -19633,6 +19638,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>fluidLevel</Id>
       <Description>Fluid Level</Description>
     <Priority>6</Priority>
+      <URL>https://archive.org/details/manualzilla-id-5985199</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -19837,6 +19843,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>chargerStatus</Id>
       <Description>Charger Status</Description>
     <Priority>6</Priority>
+      <URL>https://archive.org/details/manualzilla-id-5985199</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>8</FieldCount>
@@ -19957,6 +19964,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>batteryStatus</Id>
       <Description>Battery Status</Description>
     <Priority>6</Priority>
+      <URL>https://archive.org/details/manualzilla-id-5985199</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>

@@ -2914,7 +2914,7 @@ Pgn pgnList[] = {
     /* Engine group PGNs all derived PGN Numbers from              */
     /* http://www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf  */
     /* http://www.floscan.com/html/blue/NMEA2000.php               */
-    /* http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf */
+    /* https://archive.org/details/manualzilla-id-5985199 */
     ,
     {"Engine Parameters, Rapid Update",
      127488,
@@ -2929,7 +2929,7 @@ Pgn pgnList[] = {
      .interval = 100,
      .priority = 2}
 
-    // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
+    // https://archive.org/details/manualzilla-id-5985199
     // samples/susteranna-actisense-serial.raw:
     //   2016-04-09T16:41:39.628Z,2,127489,16,255,26,00,2f,06,ff,ff,e3,73,65,05,ff,7f,72,10,00,00,ff,ff,ff,ff,ff,06,00,00,00,7f,7f
     ,
@@ -2953,7 +2953,8 @@ Pgn pgnList[] = {
       PERCENTAGE_I8_FIELD("Engine Torque"),
       END_OF_FIELDS},
      .interval = 500,
-     .priority = 2}
+     .priority = 2,
+     .url      = "https://archive.org/details/manualzilla-id-5985199"}
 
     ,
     {"Electric Drive Status, Dynamic",
@@ -3139,8 +3140,10 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Indicator27", 2, OFF_ON),
       LOOKUP_FIELD("Indicator28", 2, OFF_ON),
       END_OF_FIELDS},
-     .priority = 3},
+     .priority = 3,
+     .url      = "https://archive.org/details/manualzilla-id-5985199"}
 
+    ,
     {"Switch Bank Control",
      127502,
      PACKET_COMPLETE,
@@ -3174,7 +3177,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Switch26", 2, OFF_ON),
       LOOKUP_FIELD("Switch27", 2, OFF_ON),
       LOOKUP_FIELD("Switch28", 2, OFF_ON),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .url = "https://archive.org/details/manualzilla-id-5985199"}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
@@ -3199,7 +3203,8 @@ Pgn pgnList[] = {
      .priority        = 6,
      .repeatingField1 = 2,
      .repeatingCount1 = 10,
-     .repeatingStart1 = 3}
+     .repeatingStart1 = 3,
+     .url             = "https://archive.org/details/manualzilla-id-5985199"}
 
     /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
@@ -3224,7 +3229,8 @@ Pgn pgnList[] = {
      .priority        = 6,
      .repeatingField1 = 2,
      .repeatingCount1 = 10,
-     .repeatingStart1 = 3}
+     .repeatingStart1 = 3,
+     .url             = "https://archive.org/details/manualzilla-id-5985199"}
 
     /* http://www.maretron.com/support/manuals/TLA100UM_1.2.pdf */
     /* Observed from EP65R */
@@ -3240,7 +3246,8 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .priority = 6,
-     .interval = 2500}
+     .interval = 2500,
+     .url      = "https://archive.org/details/manualzilla-id-5985199"}
 
     ,
     {"DC Detailed Status",
@@ -3259,7 +3266,7 @@ Pgn pgnList[] = {
      .priority = 6,
      .interval = 1500}
 
-    // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
+    // https://archive.org/details/manualzilla-id-5985199
     ,
     {"Charger Status",
      127507,
@@ -3275,7 +3282,8 @@ Pgn pgnList[] = {
       TIME_UFIX16_MIN_FIELD("Equalization Time Remaining", NULL),
       END_OF_FIELDS},
      .priority = 6,
-     .interval = 1500}
+     .interval = 1500,
+     .url      = "https://archive.org/details/manualzilla-id-5985199"}
 
     ,
     {"Battery Status",
@@ -3289,7 +3297,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("SID"),
       END_OF_FIELDS},
      .priority = 6,
-     .interval = 1500}
+     .interval = 1500,
+     .url      = "https://archive.org/details/manualzilla-id-5985199"}
 
     ,
     {"Inverter Status",
