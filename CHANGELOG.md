@@ -19,6 +19,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+- #481: Add manufacturer code for Revatek
+
 ### [5.1.3]
 
 No functional changes, release because v5.1.2 was released incompletely.
