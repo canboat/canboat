@@ -16502,10 +16502,10 @@
             "BitStart":0,
             "Units":"V",
             "Type":"Number",
-            "Resolution":0.01,
+            "Resolution":0.001,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":655.33},
+            "RangeMax":65.533},
           {
             "Order":8,
             "Id":"remainingCapacity",

@@ -18172,10 +18172,10 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Units>V</Units>
           <Type>Number</Type>
-          <Resolution>0.01</Resolution>
+          <Resolution>0.001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>655.33</RangeMax>
+          <RangeMax>65.533</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>

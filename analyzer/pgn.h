@@ -275,6 +275,9 @@ typedef struct
 
 #define VOLTAGE_U16_V_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 1.0, .unit = "V", .fieldType = "VOLTAGE_UFIX16_V"}
 
+#define VOLTAGE_U16_1MV_FIELD(nam) \
+  {.name = nam, .size = BYTES(2), .resolution = 0.001, .unit = "V", .fieldType = "VOLTAGE_UFIX16_1MV"}
+
 #define VOLTAGE_U16_10MV_FIELD(nam) \
   {.name = nam, .size = BYTES(2), .resolution = 0.01, .unit = "V", .fieldType = "VOLTAGE_UFIX16_10MV"}
 
@@ -3253,7 +3256,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("State of Charge"),
       UINT8_FIELD("State of Health"),
       TIME_UFIX16_MIN_FIELD("Time Remaining", "Time remaining at current rate of discharge"),
-      VOLTAGE_U16_10MV_FIELD("Ripple Voltage"),
+      VOLTAGE_U16_1MV_FIELD("Ripple Voltage"),
       ELECTRIC_CHARGE_UFIX16_AH("Remaining capacity"),
       END_OF_FIELDS},
      .priority = 6,

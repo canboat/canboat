@@ -901,6 +901,12 @@ FieldType fieldTypeList[] = {
      .pf                  = fieldPrintDate,
      .v1Type              = "Date"},
 
+    {.name          = "VOLTAGE_UFIX16_1MV",
+     .description   = "Voltage",
+     .resolution    = 0.001,
+     .physical      = &POTENTIAL_DIFFERENCE,
+     .baseFieldType = "UFIX16"},
+
     {.name          = "VOLTAGE_UFIX16_10MV",
      .description   = "Voltage",
      .resolution    = 0.01,

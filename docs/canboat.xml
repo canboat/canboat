@@ -19808,10 +19808,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Unit>V</Unit>
-          <Resolution>0.01</Resolution>
+          <Resolution>0.001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>655.33</RangeMax>
+          <RangeMax>65.533</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>POTENTIAL_DIFFERENCE</PhysicalQuantity>
         </Field>
