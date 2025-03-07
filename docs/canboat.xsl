@@ -175,6 +175,7 @@
               <th> Description </th>
               <th> Unit </th>
               <th> Type </th>
+              <th> PartOfPrimaryKey </th>
             </tr>
             <xsl:for-each select="Fields/*">
               <xsl:variable name="resolution" select="Resolution"/>
@@ -322,6 +323,7 @@
                     </xsl:otherwise>
                   </xsl:choose>
                 </td>
+                <td> <xsl:value-of select="PartOfPrimaryKey"/> </td>
               </tr>
             </xsl:for-each>
           </table>
