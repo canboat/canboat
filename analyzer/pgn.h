@@ -6969,6 +6969,22 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"SeaTalk: Waypoint Information",
+     130848,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(1851),
+      UINT8_FIELD("SID"),
+      STRING_FIX_FIELD("Waypoint Name", BYTES(16)),
+      STRING_FIX_FIELD("Waypoint Sequence", BYTES(4)),
+      ANGLE_U16_FIELD("Bearing to Waypoint, True", NULL),
+      ANGLE_U16_FIELD("Bearing to Waypoint, Magnetic", NULL),
+      LENGTH_UFIX32_CM_FIELD("Distance to Waypoint", NULL),
+      END_OF_FIELDS},
+     .priority = 7,
+     .interval = 1000}
+
+    ,
     {"Simnet: AP Command",
      130850,
      PACKET_INCOMPLETE,
@@ -7094,6 +7110,23 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Dewpoint"),
       END_OF_FIELDS},
      .url = "http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf"}
+
+    ,
+    {"SeaTalk: Route Information",
+     130918,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(1851),
+      UINT16_FIELD("Current Waypoint Sequence"),
+      STRING_FIX_FIELD("Current Waypoint Name", BYTES(16)),
+      UINT16_FIELD("Next Waypoint Sequence"),
+      STRING_FIX_FIELD("Next Waypoint Name", BYTES(16)),
+      LENGTH_UFIX32_CM_FIELD("Distance to Waypoint", NULL),
+      ANGLE_U16_FIELD("Bearing to Waypoint, True", NULL),
+      ANGLE_U16_FIELD("Bearing to Next Waypoint, True", NULL),
+      END_OF_FIELDS},
+     .priority = 7,
+     .interval = 1000}
 
     ,
     {"Airmar: POST",

@@ -48883,6 +48883,143 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130848</PGN>
+      <Id>seatalkWaypointInformation</Id>
+      <Description>SeaTalk: Waypoint Information</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <FieldCount>9</FieldCount>
+      <Length>31</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Raymarine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1851</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>sid</Id>
+          <Name>SID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>waypointName</Id>
+          <Name>Waypoint Name</Name>
+          <BitLength>128</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>waypointSequence</Id>
+          <Name>Waypoint Sequence</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>152</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>bearingToWaypointTrue</Id>
+          <Name>Bearing to Waypoint, True</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>184</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6.5533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>bearingToWaypointMagnetic</Id>
+          <Name>Bearing to Waypoint, Magnetic</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>200</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6.5533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>distanceToWaypoint</Id>
+          <Name>Distance to Waypoint</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>216</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>42949672.93</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130850</PGN>
       <Id>simnetApCommand</Id>
       <Description>Simnet: AP Command</Description>
@@ -50039,6 +50176,156 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130918</PGN>
+      <Id>seatalkRouteInformation</Id>
+      <Description>SeaTalk: Route Information</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <Length>46</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Raymarine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1851</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>currentWaypointSequence</Id>
+          <Name>Current Waypoint Sequence</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>currentWaypointName</Id>
+          <Name>Current Waypoint Name</Name>
+          <BitLength>128</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>nextWaypointSequence</Id>
+          <Name>Next Waypoint Sequence</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>160</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>nextWaypointName</Id>
+          <Name>Next Waypoint Name</Name>
+          <BitLength>128</BitLength>
+          <BitOffset>176</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>distanceToWaypoint</Id>
+          <Name>Distance to Waypoint</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>304</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>42949672.93</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>bearingToWaypointTrue</Id>
+          <Name>Bearing to Waypoint, True</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>336</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6.5533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>bearingToNextWaypointTrue</Id>
+          <Name>Bearing to Next Waypoint, True</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>352</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6.5533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
