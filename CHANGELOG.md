@@ -16,6 +16,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - #473: PGN 129546 field lengths and types
 - #472: PGN 127488 field Tilt/Trim is a percentage field
 - #483: PGN 127506 field ripple voltage is 1 mV precision
+- #489: Raymarine sends C style strings in `STRING_FIXED` fields
 
 ### Added
 

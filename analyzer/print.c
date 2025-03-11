@@ -1007,16 +1007,29 @@ static void print_ascii_json_escaped(const uint8_t *data, int len)
 
 static bool printString(const char *fieldName, const uint8_t *data, size_t len)
 {
-  const uint8_t *lastbyte;
+  const uint8_t *p;
 
   if (len > 0)
   {
-    // rtrim funny stuff from end, we see all sorts
-    lastbyte = &data[len - 1];
-    while (len > 0 && (*lastbyte == 0xff || isspace((unsigned char) *lastbyte) || *lastbyte == 0 || *lastbyte == '@'))
+    // find the first zero byte (Raymarine does this, followed by junk)
+    for (p = data; p < data + len - 1; p++)
+    {
+      if (*p == '\0')
+      {
+        logDebug("printString: shorten len from %zu to %zu (C string seen)\n", len, p - data);
+        len = p - data;
+        p--;
+        break;
+        // still do the next part, maybe they have @ or spaces at the end still?
+      }
+    }
+    // rtrim funny stuff from end, we see all sorts. 0xff is believed to be the correct
+    // content according to NMEA 2000. '@' originates from badly converted NMEA AIS data.
+    // Space is just to avoid funny strings, 0 looks like incorrect C data.
+    while (len > 0 && (*p == 0xff || isspace((unsigned char) *p) || *p == 0 || *p == '@'))
     {
       len--;
-      lastbyte--;
+      p--;
     }
   }
 
