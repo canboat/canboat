@@ -19,6 +19,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+- #488: Added Raymarine PGNS 130848 and 130918
 - #481: Add manufacturer code for Revatek
 
 ### [5.1.3]
