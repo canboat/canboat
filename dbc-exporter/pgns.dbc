@@ -1448,6 +1448,10 @@ BO_ 2583633918 PGN_130847_seatalkNodeStatistics: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2583634174 PGN_130848_seatalkWaypointInform: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2583634942 PGN_130851_simnetEventReplyApCom: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1465,6 +1469,10 @@ BO_ 2583642366 PGN_130880_airmarAdditionalWeath: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583642622 PGN_130881_airmarHeaterControl: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583652094 PGN_130918_seatalkRouteInformati: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -1784,11 +1792,13 @@ CM_ BO_ 2583631614 "Simnet: Fluid Level Warning";
 CM_ BO_ 2583631870 "Simnet: Pressure Sensor Configuration";
 CM_ BO_ 2583632126 "Simnet: Data User Group Configuration";
 CM_ BO_ 2583633918 "SeaTalk: Node Statistics";
+CM_ BO_ 2583634174 "SeaTalk: Waypoint Information";
 CM_ BO_ 2583634942 "Simnet: Event Reply: AP command";
 CM_ BO_ 2583636222 "Simnet: Alarm Message";
 CM_ BO_ 2583637246 "Simnet: AP Unknown 4";
 CM_ BO_ 2583642366 "Airmar: Additional Weather Data";
 CM_ BO_ 2583642622 "Airmar: Heater Control";
+CM_ BO_ 2583652094 "SeaTalk: Route Information";
 CM_ BO_ 2583658750 "Airmar: POST";
 BA_DEF_ BO_  "SystemMessageLongSymbol" STRING ;
 BA_DEF_ SG_  "SystemSignalLongSymbol" STRING ;
@@ -1910,8 +1920,10 @@ BA_ "SystemMessageLongSymbol" BO_ 2583630846 "PGN_130835_simnetSetEngineAndTankC
 BA_ "SystemMessageLongSymbol" BO_ 2583631614 "PGN_130838_simnetFluidLevelWarning";
 BA_ "SystemMessageLongSymbol" BO_ 2583631870 "PGN_130839_simnetPressureSensorConfiguration";
 BA_ "SystemMessageLongSymbol" BO_ 2583632126 "PGN_130840_simnetDataUserGroupConfiguration";
+BA_ "SystemMessageLongSymbol" BO_ 2583634174 "PGN_130848_seatalkWaypointInformation";
 BA_ "SystemMessageLongSymbol" BO_ 2583634942 "PGN_130851_simnetEventReplyApCommand";
 BA_ "SystemMessageLongSymbol" BO_ 2583642366 "PGN_130880_airmarAdditionalWeatherData";
+BA_ "SystemMessageLongSymbol" BO_ 2583652094 "PGN_130918_seatalkRouteInformation";
 VAL_ 2565341438 control 0 "ACK" 1 "NAK" 2 "Access Denied" 3 "Address Busy" ;
 VAL_ 2565734654 industryGroup 0 "Global" 1 "Highway" 2 "Agriculture" 3 "Construction" 4 "Marine" 5 "Industrial" ;
 VAL_ 2565734654 deviceClass 0 "Reserved for 2000 Use" 10 "System tools" 20 "Safety systems" 25 "Internetwork device" 30 "Electrical Distribution" 35 "Electrical Generation" 40 "Steering and Control surfaces" 50 "Propulsion" 60 "Navigation" 70 "Communication" 75 "Sensor Communication Interface" 80 "Instrumentation/general systems" 85 "External Environment" 90 "Internal Environment" 100 "Deck + cargo + fishing equipment systems" 110 "Human Interface" 120 "Display" 125 "Entertainment" ;
