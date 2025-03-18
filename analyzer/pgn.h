@@ -7121,9 +7121,10 @@ Pgn pgnList[] = {
       STRING_FIX_FIELD("Current Waypoint Name", BYTES(16)),
       UINT16_FIELD("Next Waypoint Sequence"),
       STRING_FIX_FIELD("Next Waypoint Name", BYTES(16)),
-      LENGTH_UFIX32_CM_FIELD("Distance to Waypoint", NULL),
-      ANGLE_U16_FIELD("Bearing to Waypoint, True", NULL),
-      ANGLE_U16_FIELD("Bearing to Next Waypoint, True", NULL),
+      UINT8_FIELD("Unknown"), // Maybe DIRECTION_REFERENCE? I've never seen Raymarine originate a magnetic yet
+      LENGTH_UFIX32_M_FIELD("Distance, Position to Next Waypoint", NULL),
+      ANGLE_U16_FIELD("Bearing, Position to Next Waypoint, True", NULL),
+      ANGLE_U16_FIELD("Bearing, Current Waypoint to Next Waypoint, True", NULL),
       END_OF_FIELDS},
      .priority = 7,
      .interval = 1000}
