@@ -78,7 +78,7 @@ limitations under the License.
             protocol byte and seven data bytes. Up to 32 packets can be used for a single message so the total maxing data length
             is 6 + 31 * 7 = 223 bytes.
             The first byte in all frames contains a sequence counter in the high 3 bits and a frame counter in the lower 5 bits.
-            The second byte in the first frame contains the total number of frames that will be sent.
+            The second byte in the first frame contains the total number of bytes in all packets that will be sent (excluding the single header byte in each of the following packets).
             As there is no way to acknowledge or deny reception, if a message is missed the receiver will have to wait for the next
             transmission of the message.
           </p><p>
