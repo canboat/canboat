@@ -463,14 +463,8 @@
   <xsl:template match="PGNs">
     "PGNs":[
       <xsl:for-each select="*">
-        <xsl:choose>
-          <xsl:when test="./Fallback = 'true'">
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates/>
-            <xsl:if test="following-sibling::*">,</xsl:if>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:apply-templates/>
+        <xsl:if test="following-sibling::*">,</xsl:if>
       </xsl:for-each>
     ]
   }</xsl:template>
