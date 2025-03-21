@@ -957,6 +957,11 @@ static void explainPGNXML(Pgn pgn)
         explainLookupFunction(&f.lookup);
       }
 
+      if (f.partOfPrimaryKey)
+      {
+        printXML(10, "PartOfPrimaryKey", "true");
+      }
+
       if ((ft != NULL && ft->variableSize) || f.proprietary)
       {
         showBitOffset = false; // From here on there is no good bitoffset to be printed
