@@ -13860,7 +13860,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Node Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130848">0x1FF20:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130848">0x1FF20:
             PGN 130848
             - SeaTalk: Waypoint Information</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13877,27 +13877,27 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               The default priority (as observed in the field) is 7.
             
               It is normally transmitted every 1000 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Waypoint Name</td><td/><td> </td><td>128 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr><tr><td>6</td><td>Waypoint Sequence</td><td/><td> </td><td>32 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr><tr><td>7</td><td>Bearing to Waypoint, True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Waypoint Name</td><td/><td> </td><td>128 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>6</td><td>Waypoint Sequence</td><td/><td> </td><td>32 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>7</td><td>Bearing to Waypoint, True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8</td><td>Bearing to Waypoint, Magnetic</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Bearing to Waypoint, Magnetic</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Distance to Waypoint</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 42949672.93</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Distance to Waypoint</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 42949672.93</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
@@ -14257,7 +14257,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               The default priority (as observed in the field) is 7.
             
               It is normally transmitted every 1000 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
@@ -14266,67 +14266,27 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>C</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Current Waypoint Sequence</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Plate Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Current Waypoint Name</td><td/><td> </td><td>128 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>6</td><td>Next Waypoint Sequence</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>6</td><td>Air Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Next Waypoint Name</td><td/><td> </td><td>128 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>8</td><td>Unknown</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Dewpoint</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Distance, Position to Next Waypoint</td><td/><td><a href="#pq-LENGTH">m</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><p>
-              Source:
-              <a href="http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf">http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf</a></p><h3 id="pgn-130918">0x1FF66:
-            PGN 130918
-            - SeaTalk: Route Information</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            47
-            bytes long and contains 11 fields.
-
-            
-              The default priority (as observed in the field) is 7.
-            
-              It is normally transmitted every 1000 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
-                  Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td></tr><tr><td>4</td><td>Current Waypoint Sequence</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Bearing, Position to Next Waypoint, True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Current Waypoint Name</td><td/><td> </td><td>128 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr><tr><td>6</td><td>Next Waypoint Sequence</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Bearing, Current Waypoint to Next Waypoint, True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Next Waypoint Name</td><td/><td> </td><td>128 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td></tr><tr><td>8</td><td>Unknown</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Distance, Position to Next Waypoint</td><td/><td><a href="#pq-LENGTH">m</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>10</td><td>Bearing, Position to Next Waypoint, True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>11</td><td>Bearing, Current Waypoint to Next Waypoint, True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="pgn-130944">0x1FF80:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130944">0x1FF80:
             PGN 130944
             - Airmar: POST</h3><p>
               This PGN description applies when the following field(s) match:
