@@ -17,6 +17,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - #472: PGN 127488 field Tilt/Trim is a percentage field
 - #483: PGN 127506 field ripple voltage is 1 mV precision
 - #489: Raymarine sends C style strings in `STRING_FIXED` fields
+- #493: Remove Fallback filter from canboat.json
 
 ### Added
 
