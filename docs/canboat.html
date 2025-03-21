@@ -318,7 +318,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Manufacturer Code</td><td/><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>3</td><td>Device Instance Lower</td><td>ISO ECU Instance</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>3</td><td>Device Instance Lower</td><td>ISO ECU Instance</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>4</td><td>Device Instance Upper</td><td>ISO Function Instance</td><td><div class="xs">0 .. 29</div></td><td>5 bits
@@ -1143,7 +1143,7 @@ limitations under the License.
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>2</td><td>Manufacturer Code</td><td/><td>Manufacturer Code<div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>3</td><td>Device Instance Lower</td><td>ISO ECU Instance</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>3</td><td>Device Instance Lower</td><td>ISO ECU Instance</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>4</td><td>Device Instance Upper</td><td>ISO Function Instance</td><td><div class="xs">0 .. 29</div></td><td>5 bits
@@ -1189,12 +1189,12 @@ limitations under the License.
                   Furuno</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Heave</td><td/><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-2147483.647 .. 2147483.645</div></td><td>32 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Heave</td><td/><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-2147483.647 .. 2147483.645</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>16 bits
@@ -1251,12 +1251,12 @@ limitations under the License.
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Boot State</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Boot State</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
                       <a href="#lookup-BOOT_STATE">BOOT_STATE</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>45 bits
@@ -1279,12 +1279,12 @@ limitations under the License.
                   Lowrance</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Temperature Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Temperature Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td/></tr><tr><td>5</td><td>Actual Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
@@ -1348,12 +1348,12 @@ limitations under the License.
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
               Source:
               <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-65287">0xFF07:
@@ -1373,12 +1373,12 @@ limitations under the License.
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Format Code</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Format Code</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Access Level</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
@@ -1407,12 +1407,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65288">0xFF08:
             PGN 65288
             - Seatalk: Alarm</h3><p>
@@ -1432,12 +1432,12 @@ limitations under the License.
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td/><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>SID</td><td/><td/><td>8 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>5</td><td>Alarm Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -1465,12 +1465,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65290">0xFF0A:
             PGN 65290
             - Simnet: Paddle Wheel Speed Configuration</h3><p>
@@ -1488,12 +1488,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65292">0xFF0C:
             PGN 65292
             - Simnet: Clear Fluid Level Warnings</h3><p>
@@ -1511,12 +1511,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65293">0xFF0D:
             PGN 65293
             - Simnet: LGC-2000 Configuration</h3><p>
@@ -1534,12 +1534,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65293">0xFF0D:
             PGN 65293
             - Diverse Yacht Services: Load Cell</h3><p>
@@ -1559,12 +1559,12 @@ limitations under the License.
                   Diverse Yacht Services</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
@@ -1592,12 +1592,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -1629,12 +1629,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL</a></td><td/></tr><tr><td>5</td><td>Report</td><td>2:
@@ -1664,12 +1664,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL</a></td><td/></tr><tr><td>5</td><td>Report</td><td>3:
@@ -1696,12 +1696,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL</a></td><td/></tr><tr><td>5</td><td>Report</td><td>10:
@@ -1731,12 +1731,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL</a></td><td/></tr><tr><td>5</td><td>Report</td><td>11:
@@ -1763,12 +1763,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Model</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_DEVICE_MODEL">SIMNET_DEVICE_MODEL</a></td><td/></tr><tr><td>5</td><td>Report</td><td>23:
@@ -1795,12 +1795,12 @@ limitations under the License.
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Battery Status</td><td/><td>%<div class="xs">0 .. 253</div></td><td>8 bits
@@ -1829,12 +1829,12 @@ limitations under the License.
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Unknown</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Unknown</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Signal Strength</td><td/><td>%<div class="xs">0 .. 253</div></td><td>8 bits
@@ -1862,12 +1862,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -1902,12 +1902,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -1932,12 +1932,12 @@ limitations under the License.
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Wind Datum</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Wind Datum</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Rolling Average Wind Angle</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
@@ -1987,12 +1987,12 @@ limitations under the License.
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td/><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>SID</td><td/><td/><td>8 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>5</td><td>Heading True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
@@ -2019,12 +2019,12 @@ limitations under the License.
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td/><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>SID</td><td/><td/><td>8 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>5</td><td>Target Heading True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
@@ -2049,12 +2049,12 @@ limitations under the License.
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Alarm ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Alarm ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SEATALK_ALARM_ID">SEATALK_ALARM_ID</a></td><td/></tr><tr><td>5</td><td>Alarm Group</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -2154,12 +2154,12 @@ limitations under the License.
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Pilot Mode</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Pilot Mode</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
                       <a href="#lookup-SEATALK_PILOT_MODE_16">SEATALK_PILOT_MODE_16</a></td><td/></tr><tr><td>5</td><td>Sub Mode</td><td/><td/><td>16 bits
@@ -2184,12 +2184,12 @@ limitations under the License.
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Depth Quality Factor</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -2217,12 +2217,12 @@ limitations under the License.
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Duration of interval</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 65.533</div></td><td>16 bits
@@ -2255,12 +2255,12 @@ limitations under the License.
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Internal Device Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
@@ -2293,12 +2293,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -2331,12 +2331,12 @@ limitations under the License.
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h2 id="pgn-126208">0x1ED00 - 0x1EE00: Standardized fast-packet addressed</h2><p>Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (65536 - 126464). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126208">0x1ED00:
             PGN 126208
             - NMEA - Request group function</h3><p>
@@ -2507,11 +2507,11 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Industry Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Number of Selection Pairs</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -2568,11 +2568,11 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Industry Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Number of Selection Pairs</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -2631,11 +2631,11 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Industry Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Number of Selection Pairs</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -2694,11 +2694,11 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Industry Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Number of Selection Pairs</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -2929,12 +2929,12 @@ limitations under the License.
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>23:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td>23:
                   Mute</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -2958,12 +2958,12 @@ limitations under the License.
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>24:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td>24:
                   Set Zone Volume</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -2993,12 +2993,12 @@ limitations under the License.
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>25:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td>25:
                   Set All Volumes</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -3635,12 +3635,12 @@ limitations under the License.
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>46:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td>46:
                   NMEA 2000 options</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -3692,12 +3692,12 @@ limitations under the License.
                   Maretron</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Product code</td><td>0x1b2=SSC200</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Product code</td><td>0x1b2=SSC200</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Software code</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
@@ -3726,12 +3726,12 @@ limitations under the License.
                   Garmin</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Unknown ID 1</td><td>222:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Unknown ID 1</td><td>222:
                   Always 222</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -3773,12 +3773,12 @@ limitations under the License.
                   Garmin</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Unknown ID 1</td><td>222:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Unknown ID 1</td><td>222:
                   Always 222</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -3820,12 +3820,12 @@ limitations under the License.
                   Garmin</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Unknown ID 1</td><td>222:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Unknown ID 1</td><td>222:
                   Always 222</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -4207,7 +4207,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Source</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-SYSTEM_TIME">SYSTEM_TIME</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
+                      <a href="#lookup-SYSTEM_TIME">SYSTEM_TIME</a></td><td>true</td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>Date</td><td/><td><a href="#pq-DATE">d</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -4266,8 +4266,8 @@ limitations under the License.
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Model ID</td><td/><td> </td><td>256 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td>true</td></tr><tr><td>4</td><td>Software Version Code</td><td/><td> </td><td>256 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>5</td><td>Model Version</td><td/><td> </td><td>256 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>6</td><td>Model Serial Code</td><td/><td> </td><td>256 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td>true</td></tr><tr><td>5</td><td>Model Version</td><td/><td> </td><td>256 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td>true</td></tr><tr><td>6</td><td>Model Serial Code</td><td/><td> </td><td>256 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td>true</td></tr><tr><td>7</td><td>Certification Level</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -4354,7 +4354,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>16</td><td>MMSI of vessel of origin</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>17</td><td>MOB Emitter Battery Low Status</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>17</td><td>MOB Emitter Battery Low Status</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
                       <a href="#lookup-LOW_BATTERY">LOW_BATTERY</a></td><td/></tr><tr><td>18</td><td>Reserved</td><td/><td/><td>5 bits
@@ -4681,7 +4681,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Inverter/Motor Identifier</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Operating Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Operating Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
@@ -4714,7 +4714,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Energy Storage Identifier</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>State of Charge</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>State of Charge</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Time Remaining</td><td>Time remaining at current rate of discharge</td><td>60 <a href="#pq-TIME">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
@@ -4785,7 +4785,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Inverter/Motor Identifier</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Motor Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Motor Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
@@ -4833,7 +4833,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Energy Storage Identifier</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Motor Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Motor Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
@@ -7755,7 +7755,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
@@ -7920,7 +7920,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
@@ -7930,7 +7930,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>6 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>6 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Retransmit flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                         unsigned
@@ -7966,7 +7966,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
@@ -8127,14 +8127,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
                       <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>3 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr></table><p>
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr></table><p>
               Source:
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129801">0x1FB09:
             PGN 129801
@@ -8158,7 +8158,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
                       <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Sequence Number</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
@@ -8168,7 +8168,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>8</td><td>Retransmit flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>8</td><td>Retransmit flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>7 bits
@@ -8197,7 +8197,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
                       <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>3 bits
@@ -8226,7 +8226,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
@@ -8234,7 +8234,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Destination ID 1</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>8</td><td>Message ID 1.1</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>8</td><td>Message ID 1.1</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                       lookup
                       <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>9</td><td>Slot Offset 1.1</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
@@ -8251,7 +8251,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>14</td><td>Destination ID 2</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>15</td><td>Message ID 2.1</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>15</td><td>Message ID 2.1</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                       lookup
                       <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>16</td><td>Slot Offset 2.1</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
@@ -8286,14 +8286,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
                       <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>3 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Destination ID A</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>7</td><td>Offset A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>7</td><td>Offset A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Increment A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
@@ -8302,7 +8302,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Destination ID B</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>10</td><td>Offset B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>10</td><td>Offset B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Increment B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
@@ -8340,7 +8340,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
                       <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>3 bits
@@ -8380,7 +8380,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
                       <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>3 bits
@@ -8447,7 +8447,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td/></tr><tr><td>4</td><td>Spare</td><td/><td/><td>2 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Spare</td><td/><td/><td>2 bits
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>5</td><td>Tx/Rx Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
@@ -11013,12 +11013,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Proprietary ID</td><td>4:
                   AM Radio</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -11059,12 +11059,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Proprietary ID</td><td>5:
                   Zone Info</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
@@ -11668,17 +11668,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Proprietary ID</td><td>50:
                   Text</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_COMMAND">SIMNET_COMMAND</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_COMMAND">SIMNET_COMMAND</a></td><td>true</td></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -11713,15 +11713,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Product Code</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Product Code</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Model</td><td/><td> </td><td>256 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Model</td><td/><td> </td><td>256 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -11753,15 +11753,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Lowrance</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Product Code</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Product Code</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Model</td><td/><td> </td><td>256 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Model</td><td/><td> </td><td>256 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -11793,12 +11793,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Version</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Version</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Sequence</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
@@ -11824,12 +11824,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - Simnet: Reprogram Status</h3><p>
               This PGN description applies when the following field(s) match:
@@ -11848,12 +11848,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -11877,12 +11877,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Furuno</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -11916,12 +11916,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>2:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>2:
                   Source</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -11960,12 +11960,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>4:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>4:
                   Track Info</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12021,12 +12021,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>5:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>5:
                   Track Title</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12056,12 +12056,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>6:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>6:
                   Track Artist</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12091,12 +12091,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>7:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>7:
                   Track Album</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12126,12 +12126,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>33:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>33:
                   Unit Name</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12158,12 +12158,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>45:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>45:
                   Zone Name</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12193,12 +12193,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>9:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>9:
                   Track Progress</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12230,12 +12230,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>11:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>11:
                   AM/FM Station</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12274,12 +12274,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>12:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>12:
                   VHF</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12314,12 +12314,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>13:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>13:
                   Squelch</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12351,12 +12351,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>14:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>14:
                   Scan</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12391,12 +12391,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>17:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>17:
                   Menu Item</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12444,12 +12444,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>20:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>20:
                   Replay</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12499,12 +12499,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>23:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>23:
                   Mute</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12533,12 +12533,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>26:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>26:
                   Sub Volume</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12576,12 +12576,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>27:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>27:
                   Tone</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12619,12 +12619,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>29:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>29:
                   Volume</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12662,12 +12662,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>32:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32:
                   Power</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12696,12 +12696,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>36:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>36:
                   SiriusXM Channel</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12728,12 +12728,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>37:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>37:
                   SiriusXM Title</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12760,12 +12760,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>38:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>38:
                   SiriusXM Artist</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12792,12 +12792,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>40:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>40:
                   SiriusXM Genre</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
@@ -12824,12 +12824,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Message</td><td/><td> </td><td>1840 bits
@@ -12852,12 +12852,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Furuno</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -12906,12 +12906,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>1848 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Data</td><td/><td/><td>1848 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130823">0x1FF07:
             PGN 130823
             - Maretron: Proprietary Temperature High Range</h3><p>
@@ -12978,12 +12978,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   B &amp; G</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Key</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Key</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
                   
                       lookup
                       <a href="#lookup-BANDG_KEY_VALUE">BANDG_KEY_VALUE</a>
@@ -13012,12 +13012,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Maretron</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Field 4</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Field 4</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Field 5</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -13049,12 +13049,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Navico</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>80 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Data</td><td/><td/><td>80 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130827">0x1FF0B:
             PGN 130827
             - Lowrance: unknown</h3><p>
@@ -13072,12 +13072,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Lowrance</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -13112,12 +13112,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130831">0x1FF0F:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130831">0x1FF0F:
             PGN 130831
             - Suzuki: Engine and Storage Device Config</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13134,12 +13134,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Suzuki Motor Corporation</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130832">0x1FF10:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130832">0x1FF10:
             PGN 130832
             - Simnet: Fuel Used - High Resolution</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13156,12 +13156,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130833">0x1FF11:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130833">0x1FF11:
             PGN 130833
             - B&amp;G: User and Remote rename</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13178,12 +13178,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   B &amp; G</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data Type</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Data Type</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
                   
                       lookup
                       <a href="#lookup-BANDG_KEY_VALUE">BANDG_KEY_VALUE</a>
@@ -13214,12 +13214,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130835">0x1FF13:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130835">0x1FF13:
             PGN 130835
             - Simnet: Set Engine and Tank Configuration</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13236,12 +13236,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130836">0x1FF14:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130836">0x1FF14:
             PGN 130836
             - Simnet: Fluid Level Sensor Configuration</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13356,12 +13356,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130837">0x1FF15:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130837">0x1FF15:
             PGN 130837
             - Maretron: Switch Status Timer</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13427,12 +13427,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130839">0x1FF17:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130839">0x1FF17:
             PGN 130839
             - Simnet: Pressure Sensor Configuration</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13449,12 +13449,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130840">0x1FF18:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130840">0x1FF18:
             PGN 130840
             - Simnet: Data User Group Configuration</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13473,12 +13473,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130842">0x1FF1A:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130842">0x1FF1A:
             PGN 130842
             - Simnet: AIS Class B static data (msg 24 Part A)</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13495,12 +13495,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>0:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>0:
                   Msg 24 Part A</td><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                         unsigned
@@ -13534,12 +13534,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Furuno</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
@@ -13583,12 +13583,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>1:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>1:
                   Msg 24 Part B</td><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                         unsigned
@@ -13643,12 +13643,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Furuno</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -13680,12 +13680,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130845">0x1FF1D:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130845">0x1FF1D:
             PGN 130845
             - Furuno: Multi Sats In View Extended</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13702,12 +13702,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Furuno</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130845">0x1FF1D:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130845">0x1FF1D:
             PGN 130845
             - Simnet: Key Value</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13727,12 +13727,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -13773,12 +13773,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td>00, 01 or FF observed</td><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -13818,12 +13818,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Furuno</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130847">0x1FF1F:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr></table><h3 id="pgn-130847">0x1FF1F:
             PGN 130847
             - SeaTalk: Node Statistics</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13840,12 +13840,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Product Code</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Product Code</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Year</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -13881,12 +13881,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Waypoint Name</td><td/><td> </td><td>128 bits
@@ -13919,12 +13919,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
@@ -13964,12 +13964,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>2:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td>2:
                   AP command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -14015,12 +14015,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
@@ -14060,12 +14060,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>2:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td>2:
                   AP command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -14109,12 +14109,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -14145,12 +14145,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Simrad</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
@@ -14185,12 +14185,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>C</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>C</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Apparent Windchill Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
@@ -14221,12 +14221,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>C</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>C</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Plate Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
@@ -14261,12 +14261,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Raymarine</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Current Waypoint Sequence</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Current Waypoint Sequence</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Current Waypoint Name</td><td/><td> </td><td>128 bits
@@ -14305,12 +14305,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Airmar</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Control</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Control</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
                       <a href="#lookup-AIRMAR_POST_CONTROL">AIRMAR_POST_CONTROL</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>7 bits
