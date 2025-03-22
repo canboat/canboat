@@ -548,6 +548,10 @@ static void explainPGN(Pgn pgn)
     {
       printf("                  Offset: %d\n", f.offset);
     }
+    if (f.partOfPrimaryKey)
+    {
+      printf("                  Part Of Primary Key: true\n");
+    }
 
     if (f.lookup.function.pairEnumerator != NULL)
     {
