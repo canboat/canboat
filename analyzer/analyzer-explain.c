@@ -950,10 +950,6 @@ static void explainPGNXML(Pgn pgn)
       if (!doV1)
       {
         printXML(10, "FieldType", getV2Type(f.ft));
-        if (f.partOfPrimaryKey)
-        {
-          printXML(10, "PartOfPrimaryKey", "true");
-        }
         if (ft->physical != NULL)
         {
           printXML(10, "PhysicalQuantity", ft->physical->name);
@@ -963,6 +959,11 @@ static void explainPGNXML(Pgn pgn)
       if (f.lookup.function.pairEnumerator != NULL && (!doV1 || f.unit == NULL || f.unit[0] != '='))
       {
         explainLookupFunction(&f.lookup);
+      }
+
+      if (!doV1 && f.partOfPrimaryKey)
+      {
+        printXML(10, "PartOfPrimaryKey", "true");
       }
 
       if ((ft != NULL && ft->variableSize) || f.proprietary)

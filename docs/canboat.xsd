@@ -505,14 +505,6 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:boolean" name="PartOfPrimaryKey " minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-            If present and set to true, this field serves as a component of the primary key for the PGN.
-            It uniquely identifies records in conjunction with other key fields.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
       <xs:element type="xs:string" name="FieldType">
         <xs:annotation>
           <xs:documentation>
@@ -567,6 +559,14 @@ limitations under the License.
             When the FieldType is LOOKUP_FIELDTYPE, the field value has meaning derived from 
             the lookup table mentioned here. It also defines the field type of a
             following variable field.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:boolean" name="PartOfPrimaryKey" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            If present and set to true, this field serves as a component of the primary key for the PGN.
+            It uniquely identifies records in conjunction with other key fields.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
