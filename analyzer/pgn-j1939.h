@@ -102,6 +102,7 @@ typedef struct
   double unitOffset;  /* Only used for K->C conversion in non-SI print */
   bool   proprietary; /* Field is only present if earlier PGN field is in proprietary range */
   bool   hasSign;     /* Is the value signed, e.g. has both positive and negative values? */
+  bool   partOfPrimaryKey; /* Is the value part of the primary key for the message */
 
   /* The following fields are filled by C, no need to set in initializers */
   uint8_t    order;

@@ -102,6 +102,7 @@ typedef struct
   double unitOffset;  /* Only used for K->C conversion in non-SI print */
   bool   proprietary; /* Field is only present if earlier PGN field is in proprietary range */
   bool   hasSign;     /* Is the value signed, e.g. has both positive and negative values? */
+  bool   partOfPrimaryKey; /* Is the value part of the primary key for the message */
 
   /* The following fields are filled by C, no need to set in initializers */
   uint8_t    order;
@@ -123,6 +124,17 @@ typedef struct
    .size              = len,              \
    .resolution        = 1,                \
    .hasSign           = false,            \
+   .lookup.type       = LOOKUP_TYPE_PAIR, \
+   LOOKUP_PAIR_MEMBER = lookup##typ,      \
+   .lookup.name       = xstr(typ),        \
+   .fieldType         = "LOOKUP"}
+
+#define LOOKUP_PRIMARY_KEY_FIELD(nam, len, typ)       \
+  {.name              = nam,              \
+   .size              = len,              \
+   .resolution        = 1,                \
+   .hasSign           = false,            \
+   .partOfPrimaryKey  = true,            \
    .lookup.type       = LOOKUP_TYPE_PAIR, \
    LOOKUP_PAIR_MEMBER = lookup##typ,      \
    .lookup.name       = xstr(typ),        \
@@ -417,7 +429,7 @@ typedef struct
 
 #define PGN_FIELD(nam, desc) {.name = nam, .size = BYTES(3), .resolution = 1, .fieldType = "PGN", .description = desc}
 
-#define INSTANCE_FIELD {.name = "Instance", .size = BYTES(1), .resolution = 1, .description = NULL, .fieldType = "UINT8"}
+#define INSTANCE_FIELD {.name = "Instance", .size = BYTES(1), .resolution = 1, .description = NULL, .partOfPrimaryKey = true, .fieldType = "UINT8"}
 
 #define POWER_FACTOR_U16_FIELD \
   {.name = "Power factor", .size = BYTES(2), .resolution = 1 / 16384., .unit = "Cos Phi", .fieldType = "UFIX16"}
@@ -437,6 +449,7 @@ typedef struct
    LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, \
    .lookup.name       = "MANUFACTURER_CODE",     \
    .proprietary       = prop,                    \
+   .partOfPrimaryKey  = true,                    \
    .fieldType         = "MANUFACTURER"}
 
 #define INDUSTRY_FIELD(unt, desc, prop)      \
@@ -449,6 +462,7 @@ typedef struct
    LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, \
    .lookup.name       = "INDUSTRY_CODE",     \
    .proprietary       = prop,                \
+   .partOfPrimaryKey  = true,                \
    .fieldType         = "INDUSTRY"}
 
 #define MARINE_INDUSTRY_FIELD INDUSTRY_FIELD("=4", "Marine Industry", false)
@@ -474,13 +488,21 @@ typedef struct
 
 #define UINT8_DESC_FIELD(nam, desc) {.name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "UINT8", .description = desc}
 
+#define UINT8_DESC_PRIMARY_KEY_FIELD(nam, desc) {.name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "UINT8", .description = desc, .partOfPrimaryKey = true}
+
 #define FIELD_INDEX(nam, desc) {.name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "FIELD_INDEX", .description = desc}
 
 #define UINT8_FIELD(nam) UINT8_DESC_FIELD(nam, NULL)
 
+#define UINT8_PRIMARY_KEY_FIELD(nam) UINT8_DESC_PRIMARY_KEY_FIELD(nam, NULL)
+
 #define UINT16_DESC_FIELD(nam, desc) {.name = nam, .size = BYTES(2), .resolution = 1, .fieldType = "UINT16", .description = desc}
 
+#define UINT16_PRIMARY_KEY_DESC_FIELD(nam, desc) {.name = nam, .size = BYTES(2), .resolution = 1, .fieldType = "UINT16", .description = desc, .partOfPrimaryKey = true}
+
 #define UINT16_FIELD(nam) UINT16_DESC_FIELD(nam, NULL)
+
+#define UINT16_PRIMARY_KEY_FIELD(nam) UINT16_PRIMARY_KEY_DESC_FIELD(nam, NULL)
 
 #define UINT32_DESC_FIELD(nam, desc) {.name = nam, .size = BYTES(4), .resolution = 1, .fieldType = "UINT32", .description = desc}
 
@@ -499,23 +521,46 @@ typedef struct
       .unit              = "=" xstr(id),      \
   }
 
+#define MATCH_LOOKUP_PRIMARY_KEY_FIELD(nam, len, id, typ) \
+  {                                           \
+      .name              = nam,               \
+      .size              = len,               \
+      .resolution        = 1,                 \
+      .hasSign           = false,             \
+      .partOfPrimaryKey  = true,             \
+      .lookup.type       = LOOKUP_TYPE_PAIR,  \
+      LOOKUP_PAIR_MEMBER = lookup##typ,       \
+      .lookup.name       = xstr(typ),         \
+      .fieldType         = "LOOKUP",          \
+      .unit              = "=" xstr(id),      \
+  }
+
 #define MATCH_FIELD(nam, len, id, desc) \
   {.name = nam, .size = len, .resolution = 1, .unit = "=" xstr(id), .description = desc, .fieldType = "UNSIGNED_INTEGER"}
+
+#define MATCH_PRIMARY_KEY_FIELD(nam, len, id, desc) \
+  {.name = nam, .size = len, .resolution = 1, .unit = "=" xstr(id), .description = desc, .partOfPrimaryKey = true, .fieldType = "UNSIGNED_INTEGER"}
 
 #define SIMPLE_DESC_FIELD(nam, len, desc) \
   {.name = nam, .size = len, .resolution = 1, .description = desc, .fieldType = "UNSIGNED_INTEGER"}
 
+#define SIMPLE_DESC_PRIMARY_KEY_FIELD(nam, len, desc) \
+  {.name = nam, .size = len, .resolution = 1, .description = desc, .partOfPrimaryKey = true, .fieldType = "UNSIGNED_INTEGER"}
+
 #define SIMPLE_FIELD(nam, len) {.name = nam, .size = len, .resolution = 1, .fieldType = "UNSIGNED_INTEGER"}
+
+#define SIMPLE_PRIMARY_KEY_FIELD(nam, len) {.name = nam, .size = len, .resolution = 1, .partOfPrimaryKey = true, .fieldType = "UNSIGNED_INTEGER"}
 
 #define SIMPLE_SIGNED_FIELD(nam, len) {.name = nam, .size = len, .resolution = 1, .hasSign = true, .fieldType = "INTEGER"}
 
-#define MMSI_FIELD(nam)     \
-  {.name       = nam,       \
-   .size       = BYTES(4),  \
-   .resolution = 1,         \
-   .hasSign    = false,     \
-   .rangeMin   = 2000000,   \
-   .rangeMax   = 999999999, \
+#define MMSI_FIELD(nam)      \
+  {.name       = nam,        \
+   .size       = BYTES(4),   \
+   .resolution = 1,          \
+   .hasSign    = false,      \
+   .partOfPrimaryKey = true, \
+   .rangeMin   = 2000000,    \
+   .rangeMax   = 999999999,  \
    .fieldType  = "MMSI"}
 
 #define DECIMAL_FIELD(nam, len, desc) \
@@ -526,11 +571,16 @@ typedef struct
 #define STRING_FIX_DESC_FIELD(nam, len, desc) \
   {.name = nam, .size = len, .resolution = 0, .description = desc, .fieldType = "STRING_FIX"}
 
-#define STRINGVAR_FIELD(nam) {.name = nam, .size = LEN_VARIABLE, .resolution = 0, .fieldType = "STRING_LZ"}
+#define STRING_FIX_DESC_PRIMARY_KEY_FIELD(nam, len, desc) \
+  {.name = nam, .size = len, .resolution = 0, .description = desc, .partOfPrimaryKey = true, .fieldType = "STRING_FIX"}
+
+  #define STRINGVAR_FIELD(nam) {.name = nam, .size = LEN_VARIABLE, .resolution = 0, .fieldType = "STRING_LZ"}
 
 #define STRINGLAU_FIELD(nam) {.name = nam, .size = LEN_VARIABLE, .resolution = 0, .fieldType = "STRING_LAU"}
 
 #define STRING_FIX_FIELD(nam, len) STRING_FIX_DESC_FIELD(nam, len, NULL)
+
+#define STRING_FIX_PRIMARY_KEY_FIELD(nam, len) STRING_FIX_DESC_PRIMARY_KEY_FIELD(nam, len, NULL)
 
 #define TEMPERATURE_HIGH_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 0.1, .unit = "K", .fieldType = "TEMPERATURE_HIGH"}
 
@@ -1037,12 +1087,12 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {SIMPLE_DESC_FIELD("Unique Number", 21, "ISO Identity Number"),
       MANUFACTURER_FIELD(NULL, NULL, false),
-      SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
-      SIMPLE_DESC_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
+      SIMPLE_DESC_PRIMARY_KEY_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
+      SIMPLE_DESC_PRIMARY_KEY_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
       LOOKUP_TRIPLET_FIELD("Device Function", BYTES(1), DEVICE_FUNCTION, "ISO Function", 7 /*Device Class*/),
       SPARE_FIELD(1),
       LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
-      SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
+      SIMPLE_DESC_PRIMARY_KEY_FIELD("System Instance", 4, "ISO Device Class Instance"),
       LOOKUP_FIELD("Industry Group", 3, INDUSTRY_CODE),
       // "Arbitrary address capable" is explained at
       // https://embeddedflakes.com/network-management-in-sae-j1939/#Arbitrary_Address_Capable
@@ -1076,7 +1126,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1851),
-      MATCH_FIELD("Proprietary ID", BYTES(1), 1, "Wireless Keypad Light Control"),
+      MATCH_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 1, "Wireless Keypad Light Control"),
       UINT8_FIELD("Variant"),
       UINT8_FIELD("Wireless Setting"),
       UINT8_FIELD("Wired Setting"),
@@ -1089,7 +1139,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1851),
-      UINT8_FIELD("PID"),
+      UINT8_PRIMARY_KEY_FIELD("PID"),
       UINT8_FIELD("Variant"),
       UINT8_FIELD("Beep Control"),
       RESERVED_FIELD(BYTES(3)),
@@ -1446,12 +1496,12 @@ Pgn pgnList[] = {
      the data portion of the message must match the name information of the node whose network address is to be set. */
      {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
       MANUFACTURER_FIELD("Manufacturer Code", NULL, false),
-      SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
-      SIMPLE_DESC_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
+      SIMPLE_DESC_PRIMARY_KEY_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
+      SIMPLE_DESC_PRIMARY_KEY_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
       LOOKUP_TRIPLET_FIELD("Device Function", BYTES(1), DEVICE_FUNCTION, "ISO Function", 7 /*Device Class*/),
       RESERVED_FIELD(1),
       LOOKUP_FIELD("Device Class", 7, DEVICE_CLASS),
-      SIMPLE_DESC_FIELD("System Instance", 4, "ISO Device Class Instance"),
+      SIMPLE_DESC_PRIMARY_KEY_FIELD("System Instance", 4, "ISO Device Class Instance"),
       LOOKUP_FIELD("Industry Code", 3, INDUSTRY_CODE),
       RESERVED_FIELD(1),
       UINT8_FIELD("New Source Address"),
@@ -1484,7 +1534,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {COMPANY(137),
-      UINT8_FIELD("Bank Instance"),
+      UINT8_PRIMARY_KEY_FIELD("Bank Instance"),
       UINT8_FIELD("Indicator Number"),
       CURRENT_UFIX16_DA_FIELD("Breaker Current"),
       RESERVED_FIELD(BYTES(2)),
@@ -1806,7 +1856,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1851),
-      UINT8_FIELD("Proprietary ID"),
+      UINT8_PRIMARY_KEY_FIELD("Proprietary ID"),
       UINT8_FIELD("First key"),
       UINT8_FIELD("Second key"),
       SIMPLE_FIELD("First key state", 2),
@@ -1822,7 +1872,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1851),
-      UINT8_FIELD("Proprietary ID"),
+      UINT8_PRIMARY_KEY_FIELD("Proprietary ID"),
       UINT8_FIELD("Variant"),
       UINT8_FIELD("Status"),
       RESERVED_FIELD(BYTES(3)),
@@ -2122,7 +2172,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1851),
-      MATCH_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
+      MATCH_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
       MATCH_FIELD("command", BYTES(1), 132, "0x84"),
       BINARY_FIELD("Unknown 1", BYTES(3), NULL),
       LOOKUP_FIELD("Pilot Mode", BYTES(1), SEATALK_PILOT_MODE),
@@ -2137,7 +2187,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(419),
-      MATCH_FIELD("Proprietary ID", BYTES(1), 3, "Media Control"),
+      MATCH_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 3, "Media Control"),
       UINT8_FIELD("Unknown"),
       UINT8_FIELD("Source ID"),
       LOOKUP_FIELD("Command", BYTES(1), FUSION_COMMAND),
@@ -2149,7 +2199,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(419),
-      MATCH_FIELD("Proprietary ID", BYTES(1), 30, "Sirius Control"),
+      MATCH_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 30, "Sirius Control"),
       UINT8_FIELD("Unknown"),
       UINT8_FIELD("Source ID"),
       LOOKUP_FIELD("Command", BYTES(1), FUSION_SIRIUS_COMMAND),
@@ -2216,7 +2266,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1851),
-      MATCH_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
+      MATCH_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
       MATCH_FIELD("command", BYTES(1), 134, "0x86"),
       UINT8_FIELD("device"),
       LOOKUP_FIELD("key", BYTES(1), SEATALK_KEYSTROKE),
@@ -2232,7 +2282,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1851),
-      MATCH_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
+      MATCH_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(2), 33264, "0x81f0"),
       MATCH_FIELD("command", BYTES(1), 144, "0x90"),
       RESERVED_FIELD(BYTES(1)),
       LOOKUP_FIELD("device", BYTES(1), SEATALK_DEVICE_ID),
@@ -2244,7 +2294,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1851),
-      MATCH_FIELD("Proprietary ID", BYTES(2), 3212, "0x0c8c"),
+      MATCH_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(2), 3212, "0x0c8c"),
       LOOKUP_FIELD("Group", BYTES(1), SEATALK_NETWORK_GROUP),
       BINARY_FIELD("Unknown 1", BYTES(1), NULL),
       MATCH_FIELD("Command", BYTES(1), 0, "Brightness"),
@@ -2258,7 +2308,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1851),
-      MATCH_FIELD("Proprietary ID", BYTES(2), 3212, "0x0c8c"),
+      MATCH_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(2), 3212, "0x0c8c"),
       LOOKUP_FIELD("Group", BYTES(1), SEATALK_NETWORK_GROUP),
       BINARY_FIELD("Unknown 1", BYTES(1), NULL),
       MATCH_FIELD("Command", BYTES(1), 1, "Color"),
@@ -2367,7 +2417,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(135),
       MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 42, AIRMAR_COMMAND),
-      LOOKUP_FIELD("Temperature instance", 2, AIRMAR_TEMPERATURE_INSTANCE),
+      LOOKUP_PRIMARY_KEY_FIELD("Temperature instance", 2, AIRMAR_TEMPERATURE_INSTANCE),
       RESERVED_FIELD(6),
       TEMPERATURE_DELTA_FIX16_FIELD("Temperature offset", "actual range is -9.999 to +9.999 K"),
       END_OF_FIELDS},
@@ -2450,7 +2500,7 @@ Pgn pgnList[] = {
      126720,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(135), UINT8_FIELD("Proprietary ID"), END_OF_FIELDS}}
+     {COMPANY(135), UINT8_PRIMARY_KEY_FIELD("Proprietary ID"), END_OF_FIELDS}}
 
     ,
     {"Maretron: Slave Response",
@@ -2535,7 +2585,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
       SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
-      UINT8_FIELD("Data Source Instance"),
+      UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
       LOOKUP_FIELD("Temporary Silence Status", 1, YES_NO),
@@ -2563,7 +2613,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
       SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
-      UINT8_FIELD("Data Source Instance"),
+      UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
       SIMPLE_FIELD("Acknowledge Source Network ID NAME", BYTES(8)),
@@ -2582,7 +2632,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
       SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
-      UINT8_FIELD("Data Source Instance"),
+      UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
       LOOKUP_FIELD("Language ID", BYTES(1), ALERT_LANGUAGE_ID),
@@ -2601,7 +2651,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
       SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
-      UINT8_FIELD("Data Source Instance"),
+      UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
       /* Unknown field lengths past this point, except Alert Control is likely 2 bits */
@@ -2624,7 +2674,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
       SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
-      UINT8_FIELD("Data Source Instance"),
+      UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
       UINT8_DESC_FIELD("Number of Parameters", "Total Number of Threshold Parameters"),
@@ -2648,7 +2698,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
       SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
-      UINT8_FIELD("Data Source Instance"),
+      UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
       UINT8_DESC_FIELD("Number of Parameters", "Total Number of Value Parameters"),
@@ -2667,7 +2717,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {UINT8_FIELD("SID"),
-      LOOKUP_FIELD("Source", 4, SYSTEM_TIME),
+      LOOKUP_PRIMARY_KEY_FIELD("Source", 4, SYSTEM_TIME),
       RESERVED_FIELD(4),
       DATE_FIELD("Date"),
       TIME_FIELD("Time"),
@@ -2718,11 +2768,11 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_FAST,
      {VERSION_FIELD("NMEA 2000 Version"),
-      UINT16_FIELD("Product Code"),
-      STRING_FIX_FIELD("Model ID", BYTES(32)),
-      STRING_FIX_FIELD("Software Version Code", BYTES(32)),
-      STRING_FIX_FIELD("Model Version", BYTES(32)),
-      STRING_FIX_FIELD("Model Serial Code", BYTES(32)),
+      UINT16_PRIMARY_KEY_FIELD("Product Code"),
+      STRING_FIX_PRIMARY_KEY_FIELD("Model ID", BYTES(32)),
+      STRING_FIX_PRIMARY_KEY_FIELD("Software Version Code", BYTES(32)),
+      STRING_FIX_PRIMARY_KEY_FIELD("Model Version", BYTES(32)),
+      STRING_FIX_PRIMARY_KEY_FIELD("Model Serial Code", BYTES(32)),
       UINT8_FIELD("Certification Level"),
       UINT8_FIELD("Load Equivalency"),
       END_OF_FIELDS},
@@ -2923,7 +2973,7 @@ Pgn pgnList[] = {
      127488,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
+     {LOOKUP_PRIMARY_KEY_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       ROTATION_UFIX16_RPM_FIELD("Speed", NULL),
       PRESSURE_UFIX16_HPA_FIELD("Boost Pressure"),
       PERCENTAGE_I8_FIELD("Tilt/Trim"),
@@ -2940,7 +2990,7 @@ Pgn pgnList[] = {
      127489,
      PACKET_COMPLETE,
      PACKET_FAST,
-     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
+     {LOOKUP_PRIMARY_KEY_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       PRESSURE_UFIX16_HPA_FIELD("Oil pressure"),
       TEMPERATURE_HIGH_FIELD("Oil temperature"),
       TEMPERATURE_FIELD("Temperature"),
@@ -2963,7 +3013,7 @@ Pgn pgnList[] = {
      127490,
      PACKET_PDF_ONLY,
      PACKET_FAST,
-     {UINT8_FIELD("Inverter/Motor Identifier"),
+     {UINT8_PRIMARY_KEY_FIELD("Inverter/Motor Identifier"),
       SIMPLE_FIELD("Operating Mode", 4),
       RESERVED_FIELD(4),
       TEMPERATURE_FIELD("Motor Temperature"),
@@ -2980,7 +3030,7 @@ Pgn pgnList[] = {
      127491,
      PACKET_PDF_ONLY,
      PACKET_FAST,
-     {UINT8_FIELD("Energy Storage Identifier"),
+     {UINT8_PRIMARY_KEY_FIELD("Energy Storage Identifier"),
       UINT8_FIELD("State of Charge"),
       TIME_UFIX16_MIN_FIELD("Time Remaining", "Time remaining at current rate of discharge"),
       TEMPERATURE_FIELD("Highest Cell Temperature"),
@@ -2998,7 +3048,7 @@ Pgn pgnList[] = {
      127493,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {LOOKUP_FIELD("Instance", 8, ENGINE_INSTANCE),
+     {LOOKUP_PRIMARY_KEY_FIELD("Instance", 8, ENGINE_INSTANCE),
       LOOKUP_FIELD("Transmission Gear", 2, GEAR_STATUS),
       RESERVED_FIELD(6),
       PRESSURE_UFIX16_HPA_FIELD("Oil pressure"),
@@ -3013,7 +3063,7 @@ Pgn pgnList[] = {
      127494,
      PACKET_PDF_ONLY,
      PACKET_FAST,
-     {UINT8_FIELD("Inverter/Motor Identifier"),
+     {UINT8_PRIMARY_KEY_FIELD("Inverter/Motor Identifier"),
       SIMPLE_FIELD("Motor Type", 4),
       RESERVED_FIELD(4),
       VOLTAGE_U16_100MV_FIELD("Motor Voltage Rating"),
@@ -3034,7 +3084,7 @@ Pgn pgnList[] = {
      127495,
      PACKET_PDF_ONLY,
      PACKET_FAST,
-     {UINT8_FIELD("Energy Storage Identifier"),
+     {UINT8_PRIMARY_KEY_FIELD("Energy Storage Identifier"),
       SIMPLE_FIELD("Motor Type", 4),
       RESERVED_FIELD(4),
       SIMPLE_FIELD("Storage Chemistry/Conversion", 8),
@@ -3071,7 +3121,7 @@ Pgn pgnList[] = {
      127497,
      PACKET_COMPLETE,
      PACKET_FAST,
-     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
+     {LOOKUP_PRIMARY_KEY_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       VOLUME_UFIX16_L_FIELD("Trip Fuel Used"),
       VOLUMETRIC_FLOW_FIELD("Fuel Rate, Average"),
       VOLUMETRIC_FLOW_FIELD("Fuel Rate, Economy"),
@@ -3084,7 +3134,7 @@ Pgn pgnList[] = {
      127498,
      PACKET_COMPLETE,
      PACKET_FAST,
-     {LOOKUP_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
+     {LOOKUP_PRIMARY_KEY_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       ROTATION_UFIX16_RPM_FIELD("Rated Engine Speed", NULL),
       STRING_FIX_FIELD("VIN", BYTES(17)),
       STRING_FIX_FIELD("Software ID", BYTES(32)),
@@ -3236,7 +3286,7 @@ Pgn pgnList[] = {
      127505,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {SIMPLE_FIELD("Instance", 4),
+     {SIMPLE_PRIMARY_KEY_FIELD("Instance", 4),
       LOOKUP_FIELD("Type", 4, TANK_TYPE),
       PERCENTAGE_I16_FIELD("Level"),
       VOLUME_UFIX32_DL_FIELD("Capacity"),
@@ -3269,7 +3319,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_FAST,
      {INSTANCE_FIELD,
-      UINT8_FIELD("Battery Instance"),
+      UINT8_PRIMARY_KEY_FIELD("Battery Instance"),
       LOOKUP_FIELD("Operating State", 4, CHARGER_STATE),
       LOOKUP_FIELD("Charge Mode", 4, CHARGER_MODE),
       LOOKUP_FIELD("Enabled", 2, OFF_ON),
@@ -3300,8 +3350,8 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_FAST,
      {INSTANCE_FIELD,
-      UINT8_FIELD("AC Instance"),
-      UINT8_FIELD("DC Instance"),
+      UINT8_PRIMARY_KEY_FIELD("AC Instance"),
+      UINT8_PRIMARY_KEY_FIELD("DC Instance"),
       LOOKUP_FIELD("Operating State", 4, INVERTER_STATE),
       LOOKUP_FIELD("Inverter Enable", 2, OFF_ON),
       RESERVED_FIELD(2),
@@ -3322,7 +3372,7 @@ Pgn pgnList[] = {
      PACKET_PDF_ONLY,
      PACKET_FAST,
      {INSTANCE_FIELD,
-      UINT8_FIELD("Battery Instance"),
+      UINT8_PRIMARY_KEY_FIELD("Battery Instance"),
       LOOKUP_FIELD("Charger Enable/Disable", 2, OFF_ON),
       RESERVED_FIELD(6),
       PERCENTAGE_U8_FIELD("Charge Current Limit"),
@@ -3345,8 +3395,8 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {INSTANCE_FIELD,
-      UINT8_FIELD("AC Instance"),
-      UINT8_FIELD("DC Instance"),
+      UINT8_PRIMARY_KEY_FIELD("AC Instance"),
+      UINT8_PRIMARY_KEY_FIELD("DC Instance"),
       SIMPLE_FIELD("Inverter Enable/Disable", 2),
       RESERVED_FIELD(6),
       UINT8_FIELD("Inverter Mode"),
@@ -3361,7 +3411,7 @@ Pgn pgnList[] = {
      127512,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {INSTANCE_FIELD, UINT8_FIELD("Generator Instance"), UINT8_FIELD("AGS Mode"), RESERVED_FIELD(BYTES(5)), END_OF_FIELDS},
+     {INSTANCE_FIELD, UINT8_PRIMARY_KEY_FIELD("Generator Instance"), UINT8_FIELD("AGS Mode"), RESERVED_FIELD(BYTES(5)), END_OF_FIELDS},
      .interval = UINT16_MAX}
 
     /* #143, @ksltd writes that it is definitely 10 bytes and that
@@ -3399,7 +3449,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {INSTANCE_FIELD,
-      UINT8_FIELD("Generator Instance"),
+      UINT8_PRIMARY_KEY_FIELD("Generator Instance"),
       UINT8_FIELD("AGS Operating State"),
       UINT8_FIELD("Generator State"),
       UINT8_FIELD("Generator On Reason"),
@@ -5941,7 +5991,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 1, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 1, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT16_FIELD("A"),
       UINT16_FIELD("B"),
@@ -5955,7 +6005,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 4, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 4, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Item", BYTES(1), SONICHUB_TUNING),
       RADIO_FREQUENCY_FIELD("Frequency", 1),
@@ -5973,7 +6023,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 5, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 5, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT8_FIELD("Zone"),
       END_OF_FIELDS},
@@ -5986,7 +6036,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 6, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 6, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Source", BYTES(1), SONICHUB_SOURCE),
       END_OF_FIELDS},
@@ -5999,7 +6049,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 8, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 8, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT8_FIELD("Source ID"),
       UINT8_FIELD("A"),
@@ -6014,7 +6064,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 9, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 9, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Item", BYTES(1), FUSION_MUTE_COMMAND),
       END_OF_FIELDS},
@@ -6027,7 +6077,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 12, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 12, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Item", BYTES(1), SONICHUB_TUNING),
       RADIO_FREQUENCY_FIELD("Frequency", 1),
@@ -6047,7 +6097,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 13, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 13, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       LOOKUP_FIELD("Item", BYTES(1), SONICHUB_PLAYLIST),
       UINT8_FIELD("A"),
@@ -6065,7 +6115,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 14, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 14, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT32_FIELD("Item"),
       STRINGLZ_FIELD("Text", BYTES(32)),
@@ -6079,7 +6129,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 15, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 15, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT32_FIELD("Item"),
       STRINGLZ_FIELD("Text", BYTES(32)),
@@ -6093,7 +6143,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 16, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 16, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT32_FIELD("Item"),
       STRINGLZ_FIELD("Text", BYTES(32)),
@@ -6107,7 +6157,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 19, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 19, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT32_FIELD("Item"),
       UINT8_FIELD("C"),
@@ -6124,7 +6174,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 20, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 20, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT8_FIELD("Zones"),
       END_OF_FIELDS},
@@ -6137,7 +6187,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 23, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 23, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT8_FIELD("Zone"),
       UINT8_FIELD("Level"),
@@ -6151,7 +6201,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 24, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 24, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT8_FIELD("Zone"),
       UINT8_FIELD("Level"),
@@ -6165,7 +6215,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 25, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 25, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       END_OF_FIELDS},
      .priority = 7}
@@ -6177,7 +6227,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 48, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 48, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       TIME_UFIX32_MS_FIELD("Position", NULL),
       END_OF_FIELDS},
@@ -6190,7 +6240,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 50, SONICHUB_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 50, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
       UINT8_FIELD("A"),
       UINT8_FIELD("B"),
@@ -6204,7 +6254,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 50, SIMNET_COMMAND),
+      MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 50, SIMNET_COMMAND),
       UINT8_FIELD("A"),
       UINT8_FIELD("B"),
       UINT8_FIELD("C"),
@@ -6220,7 +6270,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(275),
-      UINT16_FIELD("Product Code"),
+      UINT16_PRIMARY_KEY_FIELD("Product Code"),
       STRING_FIX_FIELD("Model", BYTES(32)),
       UINT8_FIELD("A"),
       UINT8_FIELD("B"),
@@ -6237,7 +6287,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(140),
-      UINT16_FIELD("Product Code"),
+      UINT16_PRIMARY_KEY_FIELD("Product Code"),
       STRING_FIX_FIELD("Model", BYTES(32)),
       UINT8_FIELD("A"),
       UINT8_FIELD("B"),
@@ -6768,7 +6818,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(1857),
       UINT8_FIELD("C"),
-      UINT8_FIELD("Device"),
+      UINT8_PRIMARY_KEY_FIELD("Device"),
       INSTANCE_FIELD,
       SIMPLE_FIELD("F", 1 * 4),
       LOOKUP_FIELD("Tank type", 1 * 4, TANK_TYPE),

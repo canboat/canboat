@@ -562,6 +562,14 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element type="xs:boolean" name="PartOfPrimaryKey" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            If present and set to true, this field serves as a component of the primary key for the PGN.
+            It uniquely identifies records in conjunction with other key fields.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="Fields">
