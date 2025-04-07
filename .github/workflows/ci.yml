@@ -40,7 +40,9 @@ jobs:
 
       - name: Build for ARMv7 musl
         run: |
-          export PATH=$PATH:$HOME/musl/*cross/bin
+          export TARGET=armv7l-linux-musleabihf
+          export BUILDDIR=rel/$TARGET
+          export PATH=$PATH:$HOME/musl/$TARGET/bin
           echo $PATH
           ls -l $HOME/musl/*cross/bin
           CC=armv7l-linux-musleabihf-gcc make
