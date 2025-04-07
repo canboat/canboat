@@ -44,10 +44,10 @@ jobs:
           export TARGET=armv7l-linux-musleabihf
           export BUILDDIR=rel/$TARGET
           export PATH=$PATH:$HOME/musl/$TARGET/bin
-          rehash
+          export CC=$HOME/musl/${TARGET}/bin/${TARGET}-gcc
           echo $PATH
-          ls -l $HOME/musl/$TARGET/bin
-          CC=${TARGET}-gcc make
+          ls -l $CC
+          make
 
   build-windows:
     runs-on: windows-latest
