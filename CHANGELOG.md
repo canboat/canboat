@@ -8,6 +8,12 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+This is a minor upgrade because there is a new interesting field added to the XML,
+`PartOfPrimaryKey` which is a boolean attribute; any field carrying this (have the 
+field present with a `true` value) contributes to the _Primary key_ of the data -- 
+e.g. any message with a different primary key is from a different source. Fields 
+like `Source Id`, `Message Id` or `Instance` will have this set to true.
+
 ### Fixed
 
 - Updated copyrights to 2025.
@@ -18,6 +24,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - #483: PGN 127506 field ripple voltage is 1 mV precision
 - #489: Raymarine sends C style strings in `STRING_FIXED` fields
 - #493: Remove Fallback filter from canboat.json
+- #486: Missing identity designation in the canboat schema
 
 ### Added
 
