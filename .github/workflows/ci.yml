@@ -41,6 +41,8 @@ jobs:
 
       - name: Build for ARMv7 musl
         run: |
+          echo $PATH
+          ls -l $HOME/musl/*cross/bin
           CC=armv7l-linux-musleabihf-gcc make
 
   build-windows:
