@@ -25,6 +25,7 @@ like `Source Id`, `Message Id` or `Instance` will have this set to true.
 - #489: Raymarine sends C style strings in `STRING_FIXED` fields
 - #493: Remove Fallback filter from canboat.json
 - #486: Missing identity designation in the canboat schema
+- #500: PGN 129540 parameter Range residuals has incorrect resolution and unit
 
 ### Added
 

@@ -27359,11 +27359,13 @@
             "BitLength":32,
             "BitOffset":80,
             "BitStart":0,
-            "Resolution":1,
+            "Unit":"m",
+            "Resolution":1e-05,
             "Signed":true,
-            "RangeMin":-2147483647,
-            "RangeMax":2147483645,
-            "FieldType":"NUMBER"
+            "RangeMin":-21474.83647,
+            "RangeMax":21474.83645,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DISTANCE"
           },
           {
             "Order":10,

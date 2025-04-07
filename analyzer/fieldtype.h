@@ -1250,6 +1250,12 @@ FieldType fieldTypeList[] = {
      .physical      = &DISTANCE,
      .baseFieldType = "FIX32"},
 
+    {.name          = "DISTANCE_FIX32_MMM",
+     .description   = "Distance, high range, with 0.01 millimeter resolution",
+     .resolution    = 0.00001,
+     .physical      = &DISTANCE,
+     .baseFieldType = "FIX32"},
+
     {.name          = "DISTANCE_FIX32_CM",
      .description   = "Distance, high range, with centimeter resolution",
      .resolution    = 0.01,

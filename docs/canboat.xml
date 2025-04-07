@@ -27109,11 +27109,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>m</Unit>
+          <Resolution>1e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
+          <RangeMin>-21474.83647</RangeMin>
+          <RangeMax>21474.83645</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>

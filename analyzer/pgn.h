@@ -93,15 +93,15 @@ typedef struct
   const char *unit; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) */
   const char *description;
 
-  int32_t offset;     /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
-                       *    of two's complement as used by NMEA 2000.
-                       *    See http://en.wikipedia.org/wiki/Offset_binary
-                       */
-  double resolution;  /* Either a positive real value or zero */
-  int    precision;   /* How many decimal digits after the decimal point to print; usually 0 = automatic */
-  double unitOffset;  /* Only used for K->C conversion in non-SI print */
-  bool   proprietary; /* Field is only present if earlier PGN field is in proprietary range */
-  bool   hasSign;     /* Is the value signed, e.g. has both positive and negative values? */
+  int32_t offset;          /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
+                            *    of two's complement as used by NMEA 2000.
+                            *    See http://en.wikipedia.org/wiki/Offset_binary
+                            */
+  double resolution;       /* Either a positive real value or zero */
+  int    precision;        /* How many decimal digits after the decimal point to print; usually 0 = automatic */
+  double unitOffset;       /* Only used for K->C conversion in non-SI print */
+  bool   proprietary;      /* Field is only present if earlier PGN field is in proprietary range */
+  bool   hasSign;          /* Is the value signed, e.g. has both positive and negative values? */
   bool   partOfPrimaryKey; /* Is the value part of the primary key for the message */
 
   /* The following fields are filled by C, no need to set in initializers */
@@ -129,15 +129,15 @@ typedef struct
    .lookup.name       = xstr(typ),        \
    .fieldType         = "LOOKUP"}
 
-#define LOOKUP_PRIMARY_KEY_FIELD(nam, len, typ)       \
-  {.name              = nam,              \
-   .size              = len,              \
-   .resolution        = 1,                \
-   .hasSign           = false,            \
-   .partOfPrimaryKey  = true,            \
-   .lookup.type       = LOOKUP_TYPE_PAIR, \
-   LOOKUP_PAIR_MEMBER = lookup##typ,      \
-   .lookup.name       = xstr(typ),        \
+#define LOOKUP_PRIMARY_KEY_FIELD(nam, len, typ) \
+  {.name              = nam,                    \
+   .size              = len,                    \
+   .resolution        = 1,                      \
+   .hasSign           = false,                  \
+   .partOfPrimaryKey  = true,                   \
+   .lookup.type       = LOOKUP_TYPE_PAIR,       \
+   LOOKUP_PAIR_MEMBER = lookup##typ,            \
+   .lookup.name       = xstr(typ),              \
    .fieldType         = "LOOKUP"}
 
 #define LOOKUP_FIELDTYPE_FIELD(nam, len, typ)       \
@@ -384,6 +384,15 @@ typedef struct
    .description = desc,                     \
    .fieldType   = "DISTANCE_FIX32_DMM"}
 
+#define DISTANCE_FIX32_MMM_FIELD(nam, desc) \
+  {.name        = nam,                      \
+   .size        = BYTES(4),                 \
+   .resolution  = 0.00001,                  \
+   .hasSign     = true,                     \
+   .unit        = "m",                      \
+   .description = desc,                     \
+   .fieldType   = "DISTANCE_FIX32_MMM"}
+
 #define DISTANCE_FIX64_FIELD(nam, desc) \
   {.name        = nam,                  \
    .size        = BYTES(8),             \
@@ -429,7 +438,8 @@ typedef struct
 
 #define PGN_FIELD(nam, desc) {.name = nam, .size = BYTES(3), .resolution = 1, .fieldType = "PGN", .description = desc}
 
-#define INSTANCE_FIELD {.name = "Instance", .size = BYTES(1), .resolution = 1, .description = NULL, .partOfPrimaryKey = true, .fieldType = "UINT8"}
+#define INSTANCE_FIELD \
+  {.name = "Instance", .size = BYTES(1), .resolution = 1, .description = NULL, .partOfPrimaryKey = true, .fieldType = "UINT8"}
 
 #define POWER_FACTOR_U16_FIELD \
   {.name = "Power factor", .size = BYTES(2), .resolution = 1 / 16384., .unit = "Cos Phi", .fieldType = "UFIX16"}
@@ -488,7 +498,8 @@ typedef struct
 
 #define UINT8_DESC_FIELD(nam, desc) {.name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "UINT8", .description = desc}
 
-#define UINT8_DESC_PRIMARY_KEY_FIELD(nam, desc) {.name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "UINT8", .description = desc, .partOfPrimaryKey = true}
+#define UINT8_DESC_PRIMARY_KEY_FIELD(nam, desc) \
+  {.name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "UINT8", .description = desc, .partOfPrimaryKey = true}
 
 #define FIELD_INDEX(nam, desc) {.name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "FIELD_INDEX", .description = desc}
 
@@ -498,7 +509,8 @@ typedef struct
 
 #define UINT16_DESC_FIELD(nam, desc) {.name = nam, .size = BYTES(2), .resolution = 1, .fieldType = "UINT16", .description = desc}
 
-#define UINT16_PRIMARY_KEY_DESC_FIELD(nam, desc) {.name = nam, .size = BYTES(2), .resolution = 1, .fieldType = "UINT16", .description = desc, .partOfPrimaryKey = true}
+#define UINT16_PRIMARY_KEY_DESC_FIELD(nam, desc) \
+  {.name = nam, .size = BYTES(2), .resolution = 1, .fieldType = "UINT16", .description = desc, .partOfPrimaryKey = true}
 
 #define UINT16_FIELD(nam) UINT16_DESC_FIELD(nam, NULL)
 
@@ -522,24 +534,30 @@ typedef struct
   }
 
 #define MATCH_LOOKUP_PRIMARY_KEY_FIELD(nam, len, id, typ) \
-  {                                           \
-      .name              = nam,               \
-      .size              = len,               \
-      .resolution        = 1,                 \
-      .hasSign           = false,             \
-      .partOfPrimaryKey  = true,             \
-      .lookup.type       = LOOKUP_TYPE_PAIR,  \
-      LOOKUP_PAIR_MEMBER = lookup##typ,       \
-      .lookup.name       = xstr(typ),         \
-      .fieldType         = "LOOKUP",          \
-      .unit              = "=" xstr(id),      \
+  {                                                       \
+      .name              = nam,                           \
+      .size              = len,                           \
+      .resolution        = 1,                             \
+      .hasSign           = false,                         \
+      .partOfPrimaryKey  = true,                          \
+      .lookup.type       = LOOKUP_TYPE_PAIR,              \
+      LOOKUP_PAIR_MEMBER = lookup##typ,                   \
+      .lookup.name       = xstr(typ),                     \
+      .fieldType         = "LOOKUP",                      \
+      .unit              = "=" xstr(id),                  \
   }
 
 #define MATCH_FIELD(nam, len, id, desc) \
   {.name = nam, .size = len, .resolution = 1, .unit = "=" xstr(id), .description = desc, .fieldType = "UNSIGNED_INTEGER"}
 
 #define MATCH_PRIMARY_KEY_FIELD(nam, len, id, desc) \
-  {.name = nam, .size = len, .resolution = 1, .unit = "=" xstr(id), .description = desc, .partOfPrimaryKey = true, .fieldType = "UNSIGNED_INTEGER"}
+  {.name             = nam,                         \
+   .size             = len,                         \
+   .resolution       = 1,                           \
+   .unit             = "=" xstr(id),                \
+   .description      = desc,                        \
+   .partOfPrimaryKey = true,                        \
+   .fieldType        = "UNSIGNED_INTEGER"}
 
 #define SIMPLE_DESC_FIELD(nam, len, desc) \
   {.name = nam, .size = len, .resolution = 1, .description = desc, .fieldType = "UNSIGNED_INTEGER"}
@@ -549,19 +567,20 @@ typedef struct
 
 #define SIMPLE_FIELD(nam, len) {.name = nam, .size = len, .resolution = 1, .fieldType = "UNSIGNED_INTEGER"}
 
-#define SIMPLE_PRIMARY_KEY_FIELD(nam, len) {.name = nam, .size = len, .resolution = 1, .partOfPrimaryKey = true, .fieldType = "UNSIGNED_INTEGER"}
+#define SIMPLE_PRIMARY_KEY_FIELD(nam, len) \
+  {.name = nam, .size = len, .resolution = 1, .partOfPrimaryKey = true, .fieldType = "UNSIGNED_INTEGER"}
 
 #define SIMPLE_SIGNED_FIELD(nam, len) {.name = nam, .size = len, .resolution = 1, .hasSign = true, .fieldType = "INTEGER"}
 
-#define MMSI_FIELD(nam)      \
-  {.name       = nam,        \
-   .size       = BYTES(4),   \
-   .resolution = 1,          \
-   .hasSign    = false,      \
-   .partOfPrimaryKey = true, \
-   .rangeMin   = 2000000,    \
-   .rangeMax   = 999999999,  \
-   .fieldType  = "MMSI"}
+#define MMSI_FIELD(nam)           \
+  {.name             = nam,       \
+   .size             = BYTES(4),  \
+   .resolution       = 1,         \
+   .hasSign          = false,     \
+   .partOfPrimaryKey = true,      \
+   .rangeMin         = 2000000,   \
+   .rangeMax         = 999999999, \
+   .fieldType        = "MMSI"}
 
 #define DECIMAL_FIELD(nam, len, desc) \
   {.name = nam, .size = len * 4, .resolution = 1, .description = desc, .fieldType = "DECIMAL", .rangeMax = (POW10I(len) - 1)}
@@ -574,7 +593,7 @@ typedef struct
 #define STRING_FIX_DESC_PRIMARY_KEY_FIELD(nam, len, desc) \
   {.name = nam, .size = len, .resolution = 0, .description = desc, .partOfPrimaryKey = true, .fieldType = "STRING_FIX"}
 
-  #define STRINGVAR_FIELD(nam) {.name = nam, .size = LEN_VARIABLE, .resolution = 0, .fieldType = "STRING_LZ"}
+#define STRINGVAR_FIELD(nam) {.name = nam, .size = LEN_VARIABLE, .resolution = 0, .fieldType = "STRING_LZ"}
 
 #define STRINGLAU_FIELD(nam) {.name = nam, .size = LEN_VARIABLE, .resolution = 0, .fieldType = "STRING_LAU"}
 
@@ -3411,7 +3430,11 @@ Pgn pgnList[] = {
      127512,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {INSTANCE_FIELD, UINT8_PRIMARY_KEY_FIELD("Generator Instance"), UINT8_FIELD("AGS Mode"), RESERVED_FIELD(BYTES(5)), END_OF_FIELDS},
+     {INSTANCE_FIELD,
+      UINT8_PRIMARY_KEY_FIELD("Generator Instance"),
+      UINT8_FIELD("AGS Mode"),
+      RESERVED_FIELD(BYTES(5)),
+      END_OF_FIELDS},
      .interval = UINT16_MAX}
 
     /* #143, @ksltd writes that it is definitely 10 bytes and that
@@ -4278,7 +4301,7 @@ Pgn pgnList[] = {
       ANGLE_I16_FIELD("Elevation", NULL),
       ANGLE_U16_FIELD("Azimuth", NULL),
       SIGNALTONOISERATIO_UFIX16_FIELD("SNR", NULL),
-      INT32_FIELD("Range residuals", NULL),
+      DISTANCE_FIX32_MMM_FIELD("Range residuals", NULL),
       LOOKUP_FIELD("Status", 4, SATELLITE_STATUS),
       RESERVED_FIELD(4),
       END_OF_FIELDS},

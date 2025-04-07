@@ -25701,11 +25701,12 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>1e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
+          <RangeMin>-21474.83647</RangeMin>
+          <RangeMax>21474.83645</RangeMax>
         </Field>
         <Field>
           <Order>10</Order>
