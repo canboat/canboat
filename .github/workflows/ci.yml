@@ -35,13 +35,13 @@ jobs:
       - name: Setup musl cross compiler
         run: |
           mkdir $HOME/musl && cd $_
-          wget https://musl.cc/x86_64-linux-musl-cross.tgz
-          tar xvf x86_64-linux-musl-cross.tgz
-          export PATH=$PATH:$HOME/musl/bin
+          wget https://musl.cc/armv7l-linux-musl-cross.tgz
+          tar xvf armv7l-linux-musl-cross.tgz
+          export PATH=$PATH:$HOME/musl/*cross/bin
 
       - name: Build for ARMv7 musl
         run: |
-          CC=arm-linux-musleabihf-gcc make
+          CC=armv7l-linux-musleabihf-gcc make
 
   build-windows:
     runs-on: windows-latest
