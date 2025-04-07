@@ -37,10 +37,10 @@ jobs:
           mkdir $HOME/musl && cd $_
           wget https://musl.cc/armv7l-linux-musleabihf-cross.tgz
           tar xvf armv7l-linux-musleabihf-cross.tgz
-          export PATH=$PATH:$HOME/musl/*cross/bin
 
       - name: Build for ARMv7 musl
         run: |
+          export PATH=$PATH:$HOME/musl/*cross/bin
           echo $PATH
           ls -l $HOME/musl/*cross/bin
           CC=armv7l-linux-musleabihf-gcc make
