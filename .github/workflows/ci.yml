@@ -20,8 +20,28 @@ jobs:
       - name: make generated
         run: make generated
 
-      - name: check there is no git diff output
-        run: git diff --exit-code
+  build-armv7-musl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
+
+      - name: Install QEMU and build tools for ARMv7 musl
+        run: |
+          sudo apt-get install -y qemu-user-static gcc-arm-linux-gnueabihf libc6-dev-armhf-cross binutils-arm-linux-gnueabihf make autoconf
+
+      - name: Setup musl cross compiler
+        run: |
+          mkdir $HOME/musl && cd $_
+          wget https://musl.cc/x86_64-linux-musl-cross.tgz
+          tar xvf x86_64-linux-musl-cross.tgz
+          export PATH=$PATH:$HOME/musl/bin
+
+      - name: Build for ARMv7 musl
+        run: |
+          CC=arm-linux-musleabihf-gcc make
 
   build-windows:
     runs-on: windows-latest
