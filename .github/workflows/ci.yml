@@ -45,7 +45,6 @@ jobs:
           export BUILDDIR=rel/$TARGET
           export PATH=$PATH:$HOME/musl/${TARGET}-cross/bin
           export CC=$HOME/musl/${TARGET}-cross/bin/${TARGET}-gcc
-          echo $PATH
           ls -l $CC
           make
 
