@@ -548,6 +548,10 @@ static void explainPGN(Pgn pgn)
     {
       printf("                  Offset: %d\n", f.offset);
     }
+    if (f.partOfPrimaryKey)
+    {
+      printf("                  Part Of Primary Key: true\n");
+    }
 
     if (f.lookup.function.pairEnumerator != NULL)
     {
@@ -955,6 +959,11 @@ static void explainPGNXML(Pgn pgn)
       if (f.lookup.function.pairEnumerator != NULL && (!doV1 || f.unit == NULL || f.unit[0] != '='))
       {
         explainLookupFunction(&f.lookup);
+      }
+
+      if (!doV1 && f.partOfPrimaryKey)
+      {
+        printXML(10, "PartOfPrimaryKey", "true");
       }
 
       if ((ft != NULL && ft->variableSize) || f.proprietary)
