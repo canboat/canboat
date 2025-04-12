@@ -18,6 +18,7 @@ like `Source Id`, `Message Id` or `Instance` will have this set to true.
 
 - Updated copyrights to 2025.
 - Updated URLs to refer to web archive where needed and available (not all...)
+- Updated company lookup to refer to all companies known in Oct 2024.
 - #475: FieldType VARIABLE should have the VariableSize attribute set to True.
 - #474: PGN updates
 - #473: PGN 129546 field lengths and types
@@ -27,6 +28,7 @@ like `Source Id`, `Message Id` or `Instance` will have this set to true.
 - #493: Remove Fallback filter from canboat.json
 - #486: Missing identity designation in the canboat schema
 - #500: PGN 129540 parameter Range residuals has incorrect resolution and unit
+- #506: 0x1ED00 and 0x1EE00 are not single frame but fast packet
 
 ### Added
 
