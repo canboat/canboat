@@ -1327,9 +1327,10 @@ FieldType fieldTypeList[] = {
      .description = "A varying length string containing single byte codepoints encoded with a length byte and terminating zero.",
      .encodingDescription = "The length of the string is determined by a starting length byte. It also contains a terminating "
                             "zero byte. The length byte includes the zero byte but not itself.",
-     .comment
-     = "It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values "
-       "are supported.",
+     .comment = "These fields have a length containing what we believe to be the maximum allowed length. Unfortunately, these are "
+                "only used in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced, and for neither do we have "
+                "any logfiles. Therefore the exact way to parse these fields is unclear at the moment.  It is unclear what "
+                "character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.",
      .variableSize = True,
      .pf           = fieldPrintStringLZ,
      .v1Type       = "ASCII string starting with length byte"},
