@@ -2225,10 +2225,10 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Duration of interval</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 65.533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Duration of interval</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 65.533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>6</td><td>Number of pulses received</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>6</td><td>Number of pulses received</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
@@ -2367,13 +2367,13 @@ limitations under the License.
                       <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Requested PGN</td><td><div class="xs">0 .. 16777213</div></td><td>24 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Transmission interval</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Transmission interval</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>4</td><td>Transmission interval offset</td><td/><td>0.01 <a href="#pq-TIME">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>Transmission interval offset</td><td/><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Number of Parameters</td><td>How many parameter pairs will follow</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>Number of Parameters</td><td>How many parameter pairs will follow</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>Parameter</td><td>Parameter index</td><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -3276,13 +3276,13 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>X-axis angular offset</td><td/><td>0.1 <a href="#pq-ANGLE">deg</a><div class="xs">-3276.7 .. 3276.5</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Pitch and Roll damping</td><td>default 30, range 0 to 200</td><td>0.05 <a href="#pq-TIME">s</a><div class="xs">-1638.35 .. 1638.25</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Pitch and Roll damping</td><td>default 30, range 0 to 200</td><td>0.05 <a href="#pq-DURATION">s</a><div class="xs">-1638.35 .. 1638.25</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>16</td><td>Compass/Rate gyro damping</td><td>default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations</td><td>0.05 <a href="#pq-TIME">s</a><div class="xs">-1638.35 .. 1638.25</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>16</td><td>Compass/Rate gyro damping</td><td>default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations</td><td>0.05 <a href="#pq-DURATION">s</a><div class="xs">-1638.35 .. 1638.25</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><p>
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><p>
               Source:
               <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
@@ -3503,10 +3503,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Sample interval</td><td>Interval of time between successive samples of the paddlewheel pulse accumulator</td><td>0.01 <a href="#pq-TIME">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Sample interval</td><td>Interval of time between successive samples of the paddlewheel pulse accumulator</td><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><p>
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><p>
               Source:
               <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
@@ -3541,13 +3541,13 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Sample interval</td><td>Interval of time between successive samples of the paddlewheel pulse accumulator</td><td>0.01 <a href="#pq-TIME">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Sample interval</td><td>Interval of time between successive samples of the paddlewheel pulse accumulator</td><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>8</td><td>Filter duration</td><td>Duration of filter, must be bigger than the sample interval</td><td>0.01 <a href="#pq-TIME">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>8</td><td>Filter duration</td><td>Duration of filter, must be bigger than the sample interval</td><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><p>
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><p>
               Source:
               <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
@@ -3582,10 +3582,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Sample interval</td><td>Interval of time between successive samples of the water temperature thermistor</td><td>0.01 <a href="#pq-TIME">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Sample interval</td><td>Interval of time between successive samples of the water temperature thermistor</td><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><p>
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><p>
               Source:
               <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
@@ -3620,13 +3620,13 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Sample interval</td><td>Interval of time between successive samples of the water temperature thermistor</td><td>0.01 <a href="#pq-TIME">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Sample interval</td><td>Interval of time between successive samples of the water temperature thermistor</td><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>8</td><td>Filter duration</td><td>Duration of filter, must be bigger than the sample interval</td><td>0.01 <a href="#pq-TIME">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>8</td><td>Filter duration</td><td>Duration of filter, must be bigger than the sample interval</td><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><p>
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><p>
               Source:
               <a href="http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
@@ -4237,10 +4237,10 @@ limitations under the License.
 
             
               The default priority (as observed in the field) is 7.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Data transmit offset</td><td>Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset.</td><td>0.01 <a href="#pq-TIME">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Data transmit offset</td><td>Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset.</td><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>2</td><td>Sequence Counter</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>2</td><td>Sequence Counter</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Controller 1 State</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
@@ -4657,10 +4657,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Fuel Rate</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.7 .. 3276.5</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Total Engine hours</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Total Engine hours</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>8</td><td>Coolant Pressure</td><td/><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553300</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>8</td><td>Coolant Pressure</td><td/><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553300</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Fuel Pressure</td><td/><td>1000 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 65533000</div></td><td>16 bits
@@ -4729,10 +4729,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>State of Charge</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Time Remaining</td><td>Time remaining at current rate of discharge</td><td>60 <a href="#pq-TIME">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Time Remaining</td><td>Time remaining at current rate of discharge</td><td>60 <a href="#pq-DURATION">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>4</td><td>Highest Cell Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>Highest Cell Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Lowest Cell Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
@@ -4828,10 +4828,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Motor DC-Voltage Cut Off Threshold</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.3</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Drive/Motor Hours</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Drive/Motor Hours</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><h3 id="pgn-127495">0x1F207:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-127495">0x1F207:
             PGN 127495
             - Electric Energy Storage Information</h3><p>This PGN is used to provide the status on power storage sources such as batteries.This PGN is new in v3.0 and has not been observed yet; field lengths and precisions are guesses.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -4899,19 +4899,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
 
             
               It is normally transmitted every 1000 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Time to Empty</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Time to Empty</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>2</td><td>Distance to Empty</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 42949672.93</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>2</td><td>Distance to Empty</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 42949672.93</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Estimated Fuel Remaining</td><td/><td><a href="#pq-VOLUME">L</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Trip Run Time</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Trip Run Time</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><h3 id="pgn-127497">0x1F209:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-127497">0x1F209:
             PGN 127497
             - Trip Parameters, Engine</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -5373,10 +5373,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>State of Health</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Time Remaining</td><td>Time remaining at current rate of discharge</td><td>60 <a href="#pq-TIME">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Time Remaining</td><td>Time remaining at current rate of discharge</td><td>60 <a href="#pq-DURATION">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>7</td><td>Ripple Voltage</td><td/><td>0.001 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65.533</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>7</td><td>Ripple Voltage</td><td/><td>0.001 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65.533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Remaining capacity</td><td/><td><a href="#pq-ELECTRICAL_CHARGE">Ah</a><div class="xs">0 .. 65533</div></td><td>16 bits
@@ -5416,10 +5416,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Equalization Time Remaining</td><td/><td>60 <a href="#pq-TIME">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Equalization Time Remaining</td><td/><td>60 <a href="#pq-DURATION">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><h3 id="pgn-127508">0x1F214:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-127508">0x1F214:
             PGN 127508
             - Battery Status</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -5523,10 +5523,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>10</td><td>Over Charge Enable/Disable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>11</td><td>Equalize Time</td><td/><td>60 <a href="#pq-TIME">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
+                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>11</td><td>Equalize Time</td><td/><td>60 <a href="#pq-DURATION">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><h3 id="pgn-127511">0x1F217:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-127511">0x1F217:
             PGN 127511
             - Inverter Configuration Status</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -5919,10 +5919,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Control Events</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       bitfield
-                      <a href="#lookupbit-THRUSTER_CONTROL_EVENTS">THRUSTER_CONTROL_EVENTS</a></td><td/></tr><tr><td>8</td><td>Command Timeout</td><td/><td>0.005 <a href="#pq-TIME">s</a><div class="xs">0 .. 1.265</div></td><td>8 bits
+                      <a href="#lookupbit-THRUSTER_CONTROL_EVENTS">THRUSTER_CONTROL_EVENTS</a></td><td/></tr><tr><td>8</td><td>Command Timeout</td><td/><td>0.005 <a href="#pq-DURATION">s</a><div class="xs">0 .. 1.265</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>9</td><td>Azimuth Control</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>9</td><td>Azimuth Control</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-128007">0x1F407:
@@ -5978,10 +5978,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Operating Time</td><td/><td>60 <a href="#pq-TIME">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Operating Time</td><td/><td>60 <a href="#pq-DURATION">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><h3 id="pgn-128259">0x1F503:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-128259">0x1F503:
             PGN 128259
             - Speed</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -6111,10 +6111,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>CPA</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 42949672.93</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>TCPA</td><td>negative = time elapsed since event, positive = time to go</td><td>0.001 <a href="#pq-TIME">s</a><div class="xs">-2147483.647 .. 2147483.645</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>TCPA</td><td>negative = time elapsed since event, positive = time to go</td><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.647 .. 2147483.645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>14</td><td>UTC of Fix</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86402</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>14</td><td>UTC of Fix</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86402</div></td><td>32 bits
                   <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>15</td><td>Name</td><td/><td> </td><td>1664 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr></table><h3 id="pgn-128538">0x1F61A:
             PGN 128538
@@ -6311,10 +6311,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>11</td><td>Anchor Light</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>12</td><td>Command Timeout</td><td>If timeout elapses the thruster stops operating and reverts to static mode</td><td>0.005 <a href="#pq-TIME">s</a><div class="xs">0 .. 1.265</div></td><td>8 bits
+                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>12</td><td>Command Timeout</td><td>If timeout elapses the thruster stops operating and reverts to static mode</td><td>0.005 <a href="#pq-DURATION">s</a><div class="xs">0 .. 1.265</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>13</td><td>Windlass Control Events</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>13</td><td>Windlass Control Events</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
                   
                       bitfield
                       <a href="#lookupbit-WINDLASS_CONTROL">WINDLASS_CONTROL</a></td><td/></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>12 bits
@@ -6387,10 +6387,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Motor current</td><td/><td><a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Total Motor Time</td><td/><td>60 <a href="#pq-TIME">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Total Motor Time</td><td/><td>60 <a href="#pq-DURATION">s</a><div class="xs">0 .. 3931980</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
               Source:
               <a href="https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf">https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf</a></p><h3 id="pgn-128780">0x1F70C:
@@ -6604,10 +6604,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-GNS">GNS</a></td><td/></tr><tr><td class="repeating">17<div>Set 1</div></td><td>Reference Station ID</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">18<div>Set 1</div></td><td>Age of DGNSS Corrections</td><td/><td>0.01 <a href="#pq-TIME">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">18<div>Set 1</div></td><td>Age of DGNSS Corrections</td><td/><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><h3 id="pgn-129033">0x1F809:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-129033">0x1F809:
             PGN 129033
             - Time &amp; Date</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -6626,10 +6626,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>2</td><td>Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86402</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>3</td><td>Local Offset</td><td/><td>60 <a href="#pq-TIME">s</a><div class="xs">-1966020 .. 1965900</div></td><td>16 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>3</td><td>Local Offset</td><td/><td>60 <a href="#pq-DURATION">s</a><div class="xs">-1966020 .. 1965900</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><h3 id="pgn-129038">0x1F80E:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-129038">0x1F80E:
             PGN 129038
             - AIS Class A Position Report</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -7191,10 +7191,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Time to mark</td><td>negative = elapsed since event, positive = time to go</td><td>0.001 <a href="#pq-TIME">s</a><div class="xs">-2147483.647 .. 2147483.645</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Time to mark</td><td>negative = elapsed since event, positive = time to go</td><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.647 .. 2147483.645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>3</td><td>Mark Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>Mark Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
                       <a href="#lookup-MARK_TYPE">MARK_TYPE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>4 bits
@@ -7525,10 +7525,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Probability of Missed Detection</td><td/><td>%<div class="xs">-127 .. 125</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Pseudorange Residual Filtering Time Constant</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Pseudorange Residual Filtering Time Constant</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-129547">0x1FA0B:
             PGN 129547
             - GNSS Pseudorange Error Statistics</h3><p/><p>
@@ -7588,10 +7588,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reference Station Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-GNS">GNS</a></td><td/></tr><tr><td>4</td><td>Time of corrections</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 65.533</div></td><td>16 bits
+                      <a href="#lookup-GNS">GNS</a></td><td/></tr><tr><td>4</td><td>Time of corrections</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 65.533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Station Health</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>Station Health</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
                       <a href="#lookup-STATION_HEALTH">STATION_HEALTH</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>4 bits
@@ -7689,10 +7689,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>12</td><td>Differential Source</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-DIFFERENTIAL_SOURCE">DIFFERENTIAL_SOURCE</a></td><td/></tr><tr><td>13</td><td>Time since Last Sat Differential Sync</td><td>Age of differential corrections</td><td>0.01 <a href="#pq-TIME">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#lookup-DIFFERENTIAL_SOURCE">DIFFERENTIAL_SOURCE</a></td><td/></tr><tr><td>13</td><td>Time since Last Sat Differential Sync</td><td>Age of differential corrections</td><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>14</td><td>Satellite Service ID No.</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>14</td><td>Satellite Service ID No.</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129556">0x1FA14:
@@ -10312,10 +10312,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>22</td><td>Brine Water Flow</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.7 .. 3276.5</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>23</td><td>Run Time</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>23</td><td>Run Time</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><p>
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><p>
               Source:
               <a href="https://web.archive.org/web/20170609065450/https://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf">https://web.archive.org/web/20170609065450/https://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf</a></p><h3 id="pgn-130569">0x1FE09:
             PGN 130569
@@ -10343,13 +10343,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Play status</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-ENTERTAINMENT_PLAY_STATUS">ENTERTAINMENT_PLAY_STATUS</a></td><td/></tr><tr><td>6</td><td>Elapsed Track Time</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-ENTERTAINMENT_PLAY_STATUS">ENTERTAINMENT_PLAY_STATUS</a></td><td/></tr><tr><td>6</td><td>Elapsed Track Time</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>7</td><td>Track Time</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>7</td><td>Track Time</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>8</td><td>Repeat Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>8</td><td>Repeat Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
                       <a href="#lookup-ENTERTAINMENT_REPEAT_STATUS">ENTERTAINMENT_REPEAT_STATUS</a></td><td/></tr><tr><td>9</td><td>Shuffle Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -11292,13 +11292,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Tracks</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Length</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Length</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>12</td><td>Position in track</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>12</td><td>Position in track</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><h3 id="pgn-130816">0x1FF00:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-130816">0x1FF00:
             PGN 130816
             - SonicHub: Track</h3><p>
               This PGN description applies when the following field(s) match:
@@ -11626,10 +11626,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-SONICHUB_COMMAND">SONICHUB_COMMAND</a></td><td>true</td></tr><tr><td>6</td><td>Control</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SONICHUB_CONTROL">SONICHUB_CONTROL</a></td><td/></tr><tr><td>7</td><td>Position</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                      <a href="#lookup-SONICHUB_CONTROL">SONICHUB_CONTROL</a></td><td/></tr><tr><td>7</td><td>Position</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><h3 id="pgn-130816">0x1FF00:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-130816">0x1FF00:
             PGN 130816
             - SonicHub: Init #3</h3><p>
               This PGN description applies when the following field(s) match:
@@ -12011,13 +12011,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>E</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Length</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Length</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>14</td><td>Position in track</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>14</td><td>Position in track</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>15</td><td>H</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>15</td><td>H</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -12226,10 +12226,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Progress</td><td/><td>0.001 <a href="#pq-TIME">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Progress</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - Fusion: AM/FM Station</h3><p>
               This PGN description applies when the following field(s) match:
@@ -13415,16 +13415,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>7</td><td>Start Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86402</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>8</td><td>Accumulated OFF Period</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>8</td><td>Accumulated OFF Period</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>9</td><td>Accumulated ON Period</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>9</td><td>Accumulated ON Period</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>10</td><td>Accumulated ERROR Period</td><td/><td><a href="#pq-TIME">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>10</td><td>Accumulated ERROR Period</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>11</td><td>Switch Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>11</td><td>Switch Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>6 bits
@@ -14385,7 +14385,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           For more information see:
           <a href="https://en.wikipedia.org/wiki/Calendar_date">https://en.wikipedia.org/wiki/Calendar_date</a></p><h3 id="pq-TIME">TIME - Time</h3><p>Time is what clocks measure. We use time to place events in sequence one after the other, and we use time to compare how long events last. Absolute times in NMEA2000 are expressed as seconds since midnight(in an undefined timezone)</p><p>In the CAN data these are expressed in Second, abbreviated as s.</p><p>
           For more information see:
-          <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="pq-GEOGRAPHICAL_COORDINATE">GEOGRAPHICAL_COORDINATE - Geographical coordinate</h3><p>Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.</p><p>In the CAN data these are expressed in degree, abbreviated as deg.</p><p>
+          <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="pq-DURATION">DURATION - Duration of an event or interval between two points in time</h3><p/><p>In the CAN data these are expressed in Second, abbreviated as s.</p><h3 id="pq-GEOGRAPHICAL_COORDINATE">GEOGRAPHICAL_COORDINATE - Geographical coordinate</h3><p>Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.</p><p>In the CAN data these are expressed in degree, abbreviated as deg.</p><p>
           For more information see:
           <a href="https://en.wikipedia.org/wiki/Geographic_coordinate_system">https://en.wikipedia.org/wiki/Geographic_coordinate_system</a></p><h3 id="pq-TEMPERATURE">TEMPERATURE - Temperature</h3><p/><p>In the CAN data these are expressed in Kelvin, abbreviated as K.</p><p>
           For more information see:
@@ -14428,7 +14428,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             Encoding:
             Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean</p><h3 id="ft-TIME">TIME - Time</h3><p/><p>
           For more information see:
-          <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="ft-DATE">DATE - Date</h3><p/><p>16 bits
+          <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="ft-DURATION">DURATION - Duration</h3><p/><h3 id="ft-DATE">DATE - Date</h3><p/><p>16 bits
             
                 unsigned
               
@@ -14869,7 +14869,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>41</td><td>Timezone offset</td><td>60 s</td><td>16 bits 
               
                     signed
-                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>260</td><td>True wind high</td><td>0.01 m/s</td><td>16 bits 
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>260</td><td>True wind high</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>264</td><td>Deep water</td><td>0.01 m</td><td>32 bits 
@@ -15057,7 +15057,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>117</td><td>Race Timer</td><td>0.001 s</td><td>32 bits 
               
                     signed
-                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>124</td><td>Polar Performance</td><td>0.1 %</td><td>16 bits 
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>124</td><td>Polar Performance</td><td>0.1 %</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>125</td><td>Target Boat Speed</td><td>0.01 m/s</td><td>16 bits 
@@ -15171,7 +15171,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>256</td><td>Layline Time</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>258</td><td>Layline Distance</td><td>0.01 m</td><td>32 bits 
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>258</td><td>Layline Distance</td><td>0.01 m</td><td>32 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>259</td><td>Layline Distance</td><td>0.01 m</td><td>32 bits 
@@ -15180,16 +15180,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>260</td><td>Sailing Time to Waypoint</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>261</td><td>Sailing Distance to Waypoint</td><td>0.01 m</td><td>32 bits 
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>261</td><td>Sailing Distance to Waypoint</td><td>0.01 m</td><td>32 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>262</td><td>Sailing ETA</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>265</td><td>Trip Time</td><td>0.001 s</td><td>32 bits 
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>265</td><td>Trip Time</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-TIME">TIME</a></td></tr><tr><td>270</td><td>Bow Latitude</td><td>1e-07 deg</td><td>32 bits 
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>270</td><td>Bow Latitude</td><td>1e-07 deg</td><td>32 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>271</td><td>Bow Longitude</td><td>1e-07 deg</td><td>32 bits 

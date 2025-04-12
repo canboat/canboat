@@ -624,93 +624,99 @@ typedef struct
 
 #define VOLUME_UFIX32_DL_FIELD(nam) {.name = nam, .size = BYTES(4), .resolution = 0.1, .unit = "L", .fieldType = "VOLUME_UFIX32_DL"}
 
-#define TIME_UFIX16_S_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 1, .unit = "s", .fieldType = "TIME_UFIX16_S"}
+#define DURATION_UFIX16_S_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 1, .unit = "s", .fieldType = "DURATION_UFIX16_S"}
 
-#define TIME_FIX32_MS_FIELD(nam, desc) \
-  {.name        = nam,                 \
-   .size        = BYTES(4),            \
-   .resolution  = 0.001,               \
-   .unit        = "s",                 \
-   .hasSign     = true,                \
-   .fieldType   = "TIME_FIX32_MS",     \
+#define DURATION_FIX32_MS_FIELD(nam, desc) \
+  {.name        = nam,                     \
+   .size        = BYTES(4),                \
+   .resolution  = 0.001,                   \
+   .unit        = "s",                     \
+   .hasSign     = true,                    \
+   .fieldType   = "DURATION_FIX32_MS",     \
    .description = desc}
 
-#define TIME_UFIX8_5MS_FIELD(nam, desc) \
-  {.name        = nam,                  \
-   .size        = BYTES(1),             \
-   .resolution  = 0.005,                \
-   .unit        = "s",                  \
-   .hasSign     = false,                \
-   .fieldType   = "TIME_UFIX8_5MS",     \
+#define DURATION_UFIX8_5MS_FIELD(nam, desc) \
+  {.name        = nam,                      \
+   .size        = BYTES(1),                 \
+   .resolution  = 0.005,                    \
+   .unit        = "s",                      \
+   .hasSign     = false,                    \
+   .fieldType   = "DURATION_UFIX8_5MS",     \
    .description = desc}
 
-#define TIME_UFIX16_MIN_FIELD(nam, desc) \
-  {.name        = nam,                   \
-   .size        = BYTES(2),              \
-   .resolution  = 60,                    \
-   .unit        = "s",                   \
-   .hasSign     = false,                 \
-   .fieldType   = "TIME_UFIX16_MIN",     \
+#define DURATION_UFIX16_MIN_FIELD(nam, desc) \
+  {.name        = nam,                       \
+   .size        = BYTES(2),                  \
+   .resolution  = 60,                        \
+   .unit        = "s",                       \
+   .hasSign     = false,                     \
+   .fieldType   = "DURATION_UFIX16_MIN",     \
    .description = desc}
 
-#define TIME_UFIX16_MS_FIELD(nam, desc) \
-  {.name        = nam,                  \
-   .size        = BYTES(2),             \
-   .resolution  = 0.001,                \
-   .unit        = "s",                  \
-   .hasSign     = false,                \
-   .fieldType   = "TIME_UFIX16_MS",     \
+#define DURATION_UFIX16_MS_FIELD(nam, desc) \
+  {.name        = nam,                      \
+   .size        = BYTES(2),                 \
+   .resolution  = 0.001,                    \
+   .unit        = "s",                      \
+   .hasSign     = false,                    \
+   .fieldType   = "DURATION_UFIX16_MS",     \
    .description = desc}
 
-#define TIME_UFIX16_CS_FIELD(nam, desc) \
-  {.name        = nam,                  \
-   .size        = BYTES(2),             \
-   .resolution  = 0.01,                 \
-   .unit        = "s",                  \
-   .hasSign     = false,                \
-   .fieldType   = "TIME_UFIX16_CS",     \
+#define DURATION_UFIX16_CS_FIELD(nam, desc) \
+  {.name        = nam,                      \
+   .size        = BYTES(2),                 \
+   .resolution  = 0.01,                     \
+   .unit        = "s",                      \
+   .hasSign     = false,                    \
+   .fieldType   = "DURATION_UFIX16_CS",     \
    .description = desc}
 
-#define TIME_UFIX16_DS_FIELD(nam, desc) \
-  {.name        = nam,                  \
-   .size        = BYTES(2),             \
-   .resolution  = 0.1,                  \
-   .unit        = "s",                  \
-   .hasSign     = false,                \
-   .fieldType   = "TIME_UFIX16_DS",     \
+#define DURATION_UFIX16_DS_FIELD(nam, desc) \
+  {.name        = nam,                      \
+   .size        = BYTES(2),                 \
+   .resolution  = 0.1,                      \
+   .unit        = "s",                      \
+   .hasSign     = false,                    \
+   .fieldType   = "DURATION_UFIX16_DS",     \
    .description = desc}
 
-#define TIME_FIX16_5CS_FIELD(nam, desc) \
-  {.name        = nam,                  \
-   .size        = BYTES(2),             \
-   .resolution  = 0.05,                 \
-   .unit        = "s",                  \
-   .hasSign     = true,                 \
-   .fieldType   = "TIME_FIX16_5CS",     \
+#define DURATION_FIX16_5CS_FIELD(nam, desc) \
+  {.name        = nam,                      \
+   .size        = BYTES(2),                 \
+   .resolution  = 0.05,                     \
+   .unit        = "s",                      \
+   .hasSign     = true,                     \
+   .fieldType   = "DURATION_FIX16_5CS",     \
    .description = desc}
 
-#define TIME_FIX16_MIN_FIELD(nam) \
-  {.name = nam, .size = BYTES(2), .resolution = 60., .unit = "s", .hasSign = true, .fieldType = "TIME_FIX16_MIN"}
+#define DURATION_FIX16_MIN_FIELD(nam) \
+  {.name = nam, .size = BYTES(2), .resolution = 60., .unit = "s", .hasSign = true, .fieldType = "DURATION_FIX16_MIN"}
 
-#define TIME_UFIX24_MS_FIELD(nam, desc) \
-  {.name        = nam,                  \
-   .size        = BYTES(3),             \
-   .resolution  = 0.001,                \
-   .unit        = "s",                  \
-   .hasSign     = false,                \
-   .fieldType   = "TIME_UFIX24_MS",     \
+#define DURATION_UFIX24_MS_FIELD(nam, desc) \
+  {.name        = nam,                      \
+   .size        = BYTES(3),                 \
+   .resolution  = 0.001,                    \
+   .unit        = "s",                      \
+   .hasSign     = false,                    \
+   .fieldType   = "DURATION_UFIX24_MS",     \
    .description = desc}
 
-#define TIME_UFIX32_S_FIELD(nam, desc) \
-  {.name = nam, .size = BYTES(4), .resolution = 1, .unit = "s", .hasSign = false, .fieldType = "TIME_UFIX32_S", .description = desc}
+#define DURATION_UFIX32_S_FIELD(nam, desc) \
+  {.name        = nam,                     \
+   .size        = BYTES(4),                \
+   .resolution  = 1,                       \
+   .unit        = "s",                     \
+   .hasSign     = false,                   \
+   .fieldType   = "DURATION_UFIX32_S",     \
+   .description = desc}
 
-#define TIME_UFIX32_MS_FIELD(nam, desc) \
-  {.name        = nam,                  \
-   .size        = BYTES(4),             \
-   .resolution  = 0.001,                \
-   .unit        = "s",                  \
-   .hasSign     = false,                \
-   .fieldType   = "TIME_UFIX32_MS",     \
+#define DURATION_UFIX32_MS_FIELD(nam, desc) \
+  {.name        = nam,                      \
+   .size        = BYTES(4),                 \
+   .resolution  = 0.001,                    \
+   .unit        = "s",                      \
+   .hasSign     = false,                    \
+   .fieldType   = "DURATION_UFIX32_MS",     \
    .description = desc}
 
 #define TIME_FIELD(nam)                     \
@@ -1929,7 +1935,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {COMPANY(135),
       UINT8_FIELD("SID"),
-      TIME_UFIX16_MS_FIELD("Duration of interval", NULL),
+      DURATION_UFIX16_MS_FIELD("Duration of interval", NULL),
       UINT16_FIELD("Number of pulses received"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
@@ -1991,8 +1997,8 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {MATCH_LOOKUP_FIELD("Function Code", BYTES(1), 0, GROUP_FUNCTION),
       PGN_FIELD("PGN", "Requested PGN"),
-      TIME_UFIX32_MS_FIELD("Transmission interval", NULL),
-      TIME_UFIX16_CS_FIELD("Transmission interval offset", NULL),
+      DURATION_UFIX32_MS_FIELD("Transmission interval", NULL),
+      DURATION_UFIX16_CS_FIELD("Transmission interval offset", NULL),
       UINT8_DESC_FIELD("Number of Parameters", "How many parameter pairs will follow"),
       FIELD_INDEX("Parameter", "Parameter index"),
       VARIABLE_FIELD("Value", "Parameter value"),
@@ -2378,9 +2384,10 @@ Pgn pgnList[] = {
       MAGNETIC_FIX16_FIELD("Y-axis linear offset", "default 0, range -320.00 to 320.00"),
       MAGNETIC_FIX16_FIELD("Z-axis linear offset", "default 0, range -320.00 to 320.00"),
       ANGLE_FIX16_DDEG_FIELD("X-axis angular offset", "default 0, range 0 to 3600"),
-      TIME_FIX16_5CS_FIELD("Pitch and Roll damping", "default 30, range 0 to 200"),
-      TIME_FIX16_5CS_FIELD("Compass/Rate gyro damping",
-                           "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"),
+      DURATION_FIX16_5CS_FIELD("Pitch and Roll damping", "default 30, range 0 to 200"),
+      DURATION_FIX16_5CS_FIELD(
+          "Compass/Rate gyro damping",
+          "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
@@ -2464,7 +2471,8 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 43, AIRMAR_COMMAND),
       MATCH_FIELD("Filter type", 4, 0, "No filter"),
       RESERVED_FIELD(4),
-      TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the paddlewheel pulse accumulator"),
+      DURATION_UFIX16_CS_FIELD("Sample interval",
+                               "Interval of time between successive samples of the paddlewheel pulse accumulator"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
@@ -2478,8 +2486,9 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 43, AIRMAR_COMMAND),
       MATCH_FIELD("Filter type", 4, 1, "IIR filter"),
       RESERVED_FIELD(4),
-      TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the paddlewheel pulse accumulator"),
-      TIME_UFIX16_CS_FIELD("Filter duration", "Duration of filter, must be bigger than the sample interval"),
+      DURATION_UFIX16_CS_FIELD("Sample interval",
+                               "Interval of time between successive samples of the paddlewheel pulse accumulator"),
+      DURATION_UFIX16_CS_FIELD("Filter duration", "Duration of filter, must be bigger than the sample interval"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
@@ -2493,7 +2502,8 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 44, AIRMAR_COMMAND),
       MATCH_FIELD("Filter type", 4, 0, "No filter"),
       RESERVED_FIELD(4),
-      TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the water temperature thermistor"),
+      DURATION_UFIX16_CS_FIELD("Sample interval",
+                               "Interval of time between successive samples of the water temperature thermistor"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
@@ -2507,8 +2517,9 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Proprietary ID", BYTES(1), 44, AIRMAR_COMMAND),
       MATCH_FIELD("Filter type", 4, 1, "IIR filter"),
       RESERVED_FIELD(4),
-      TIME_UFIX16_CS_FIELD("Sample interval", "Interval of time between successive samples of the water temperature thermistor"),
-      TIME_UFIX16_CS_FIELD("Filter duration", "Duration of filter, must be bigger than the sample interval"),
+      DURATION_UFIX16_CS_FIELD("Sample interval",
+                               "Interval of time between successive samples of the water temperature thermistor"),
+      DURATION_UFIX16_CS_FIELD("Filter duration", "Duration of filter, must be bigger than the sample interval"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
@@ -2765,7 +2776,7 @@ Pgn pgnList[] = {
      126993,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {TIME_UFIX16_CS_FIELD(
+     {DURATION_UFIX16_CS_FIELD(
           "Data transmit offset",
           "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset."),
       UINT8_FIELD("Sequence Counter"),
@@ -3027,7 +3038,7 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Temperature"),
       VOLTAGE_I16_10MV_FIELD("Alternator Potential"),
       VOLUMETRIC_FLOW_FIELD("Fuel Rate"),
-      TIME_UFIX32_S_FIELD("Total Engine hours", NULL),
+      DURATION_UFIX32_S_FIELD("Total Engine hours", NULL),
       PRESSURE_UFIX16_HPA_FIELD("Coolant Pressure"),
       PRESSURE_UFIX16_KPA_FIELD("Fuel Pressure"),
       RESERVED_FIELD(BYTES(1)),
@@ -3063,7 +3074,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {UINT8_PRIMARY_KEY_FIELD("Energy Storage Identifier"),
       UINT8_FIELD("State of Charge"),
-      TIME_UFIX16_MIN_FIELD("Time Remaining", "Time remaining at current rate of discharge"),
+      DURATION_UFIX16_MIN_FIELD("Time Remaining", "Time remaining at current rate of discharge"),
       TEMPERATURE_FIELD("Highest Cell Temperature"),
       TEMPERATURE_FIELD("Lowest Cell Temperature"),
       TEMPERATURE_FIELD("Average Cell Temperature"),
@@ -3106,7 +3117,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Motor Shaft Torque Rating"),
       VOLTAGE_U16_100MV_FIELD("Motor DC-Voltage Derating Threshold"),
       VOLTAGE_U16_100MV_FIELD("Motor DC-Voltage Cut Off Threshold"),
-      TIME_UFIX32_S_FIELD("Drive/Motor Hours", NULL),
+      DURATION_UFIX32_S_FIELD("Drive/Motor Hours", NULL),
       END_OF_FIELDS},
      .explanation = "This PGN is used to provide information about electric motor specifications and ratings."}
 
@@ -3140,10 +3151,10 @@ Pgn pgnList[] = {
      127496,
      PACKET_COMPLETE,
      PACKET_FAST,
-     {TIME_UFIX32_MS_FIELD("Time to Empty", NULL),
+     {DURATION_UFIX32_MS_FIELD("Time to Empty", NULL),
       LENGTH_UFIX32_CM_FIELD("Distance to Empty", NULL),
       VOLUME_UFIX16_L_FIELD("Estimated Fuel Remaining"),
-      TIME_UFIX32_MS_FIELD("Trip Run Time", NULL),
+      DURATION_UFIX32_MS_FIELD("Trip Run Time", NULL),
       END_OF_FIELDS},
      .interval = 1000}
 
@@ -3336,7 +3347,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("DC Type", BYTES(1), DC_SOURCE),
       UINT8_FIELD("State of Charge"),
       UINT8_FIELD("State of Health"),
-      TIME_UFIX16_MIN_FIELD("Time Remaining", "Time remaining at current rate of discharge"),
+      DURATION_UFIX16_MIN_FIELD("Time Remaining", "Time remaining at current rate of discharge"),
       VOLTAGE_U16_1MV_FIELD("Ripple Voltage"),
       ELECTRIC_CHARGE_UFIX16_AH("Remaining capacity"),
       END_OF_FIELDS},
@@ -3356,7 +3367,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Enabled", 2, OFF_ON),
       LOOKUP_FIELD("Equalization Pending", 2, OFF_ON),
       RESERVED_FIELD(4),
-      TIME_UFIX16_MIN_FIELD("Equalization Time Remaining", NULL),
+      DURATION_UFIX16_MIN_FIELD("Equalization Time Remaining", NULL),
       END_OF_FIELDS},
      .priority = 6,
      .interval = 1500}
@@ -3416,7 +3427,7 @@ Pgn pgnList[] = {
           "If there is no battery temperature sensor the charger will use this field to steer the charging algorithm"),
       LOOKUP_FIELD("Equalize One Time Enable/Disable", 2, OFF_ON),
       LOOKUP_FIELD("Over Charge Enable/Disable", 2, OFF_ON),
-      TIME_UFIX16_MIN_FIELD("Equalize Time", NULL),
+      DURATION_UFIX16_MIN_FIELD("Equalize Time", NULL),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
@@ -3622,7 +3633,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Retract Control", 2, THRUSTER_RETRACT_CONTROL),
       PERCENTAGE_U8_FIELD("Speed Control"),
       BITLOOKUP_FIELD("Control Events", BYTES(1), THRUSTER_CONTROL_EVENTS),
-      TIME_UFIX8_5MS_FIELD("Command Timeout", NULL),
+      DURATION_UFIX8_5MS_FIELD("Command Timeout", NULL),
       ANGLE_U16_FIELD("Azimuth Control", NULL),
       END_OF_FIELDS}}
 
@@ -3649,7 +3660,7 @@ Pgn pgnList[] = {
       BITLOOKUP_FIELD("Motor Events", BYTES(1), THRUSTER_MOTOR_EVENTS),
       CURRENT_UFIX8_A_FIELD("Current"),
       TEMPERATURE_FIELD("Temperature"),
-      TIME_UFIX16_MIN_FIELD("Operating Time", NULL),
+      DURATION_UFIX16_MIN_FIELD("Operating Time", NULL),
       END_OF_FIELDS}}
 
     /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
@@ -3713,7 +3724,7 @@ Pgn pgnList[] = {
       ANGLE_U16_FIELD("Course", NULL),
       SPEED_U16_CM_FIELD("Speed"),
       LENGTH_UFIX32_CM_FIELD("CPA", NULL),
-      TIME_FIX32_MS_FIELD("TCPA", "negative = time elapsed since event, positive = time to go"),
+      DURATION_FIX32_MS_FIELD("TCPA", "negative = time elapsed since event, positive = time to go"),
       TIME_FIELD("UTC of Fix"),
       STRING_FIX_FIELD("Name", BYTES(208)),
       END_OF_FIELDS},
@@ -3807,7 +3818,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Mechanical Lock", 2, OFF_ON),
       LOOKUP_FIELD("Deck and Anchor Wash", 2, OFF_ON),
       LOOKUP_FIELD("Anchor Light", 2, OFF_ON),
-      TIME_UFIX8_5MS_FIELD("Command Timeout", "If timeout elapses the thruster stops operating and reverts to static mode"),
+      DURATION_UFIX8_5MS_FIELD("Command Timeout", "If timeout elapses the thruster stops operating and reverts to static mode"),
       BITLOOKUP_FIELD("Windlass Control Events", 4, WINDLASS_CONTROL),
       RESERVED_FIELD(12),
       END_OF_FIELDS},
@@ -3841,7 +3852,7 @@ Pgn pgnList[] = {
       BITLOOKUP_FIELD("Windlass Monitoring Events", 8, WINDLASS_MONITORING),
       VOLTAGE_UFIX8_200MV_FIELD("Controller voltage"),
       CURRENT_UFIX8_A_FIELD("Motor current"),
-      TIME_UFIX16_MIN_FIELD("Total Motor Time", NULL),
+      DURATION_UFIX16_MIN_FIELD("Total Motor Time", NULL),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .url = "https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf"}
@@ -3945,7 +3956,7 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("Reference Stations", BYTES(1), "Number of reference stations"),
       LOOKUP_FIELD("Reference Station Type", 4, GNS),
       SIMPLE_FIELD("Reference Station ID", 12),
-      TIME_UFIX16_CS_FIELD("Age of DGNSS Corrections", NULL),
+      DURATION_UFIX16_CS_FIELD("Age of DGNSS Corrections", NULL),
       END_OF_FIELDS},
      .priority        = 3,
      .interval        = 1000,
@@ -3958,7 +3969,7 @@ Pgn pgnList[] = {
      129033,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {DATE_FIELD("Date"), TIME_FIELD("Time"), TIME_FIX16_MIN_FIELD("Local Offset"), END_OF_FIELDS},
+     {DATE_FIELD("Date"), TIME_FIELD("Time"), DURATION_FIX16_MIN_FIELD("Local Offset"), END_OF_FIELDS},
      .priority = 3,
      .interval = 1000}
 
@@ -4238,7 +4249,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {UINT8_FIELD("SID"),
-      TIME_FIX32_MS_FIELD("Time to mark", "negative = elapsed since event, positive = time to go"),
+      DURATION_FIX32_MS_FIELD("Time to mark", "negative = elapsed since event, positive = time to go"),
       LOOKUP_FIELD("Mark Type", 4, MARK_TYPE),
       RESERVED_FIELD(4),
       UINT32_FIELD("Mark ID"),
@@ -4409,7 +4420,7 @@ Pgn pgnList[] = {
      {DISTANCE_FIX16_CM_FIELD("Radial Position Error Maximum Threshold", ""),
       PERCENTAGE_I8_FIELD("Probability of False Alarm"),
       PERCENTAGE_I8_FIELD("Probability of Missed Detection"),
-      TIME_UFIX16_S_FIELD("Pseudorange Residual Filtering Time Constant"),
+      DURATION_UFIX16_S_FIELD("Pseudorange Residual Filtering Time Constant"),
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
@@ -4438,7 +4449,7 @@ Pgn pgnList[] = {
      {UINT8_FIELD("SID"),
       INTEGER_FIELD("Reference Station ID", 12),
       LOOKUP_FIELD("Reference Station Type", 4, GNS),
-      TIME_UFIX16_MS_FIELD("Time of corrections", NULL),
+      DURATION_UFIX16_MS_FIELD("Time of corrections", NULL),
       LOOKUP_FIELD("Station Health", 4, STATION_HEALTH),
       RESERVED_FIELD(BITS(4)),
       UINT8_FIELD("Satellite ID"),
@@ -4481,7 +4492,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Used as Correction Source", 2, YES_NO),
       RESERVED_FIELD(BITS(2)),
       LOOKUP_FIELD("Differential Source", 4, DIFFERENTIAL_SOURCE),
-      TIME_UFIX16_CS_FIELD("Time since Last Sat Differential Sync", "Age of differential corrections"),
+      DURATION_UFIX16_CS_FIELD("Time since Last Sat Differential Sync", "Age of differential corrections"),
       UINT16_FIELD("Satellite Service ID No."),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
@@ -5719,7 +5730,7 @@ Pgn pgnList[] = {
       PRESSURE_UFIX16_KPA_FIELD("System High Pressure"),
       VOLUMETRIC_FLOW_FIELD("Product Water Flow"),
       VOLUMETRIC_FLOW_FIELD("Brine Water Flow"),
-      TIME_UFIX32_S_FIELD("Run Time", NULL),
+      DURATION_UFIX32_S_FIELD("Run Time", NULL),
       END_OF_FIELDS},
      .url = "https://web.archive.org/web/20170609065450/https://www.nmea.org/Assets/"
             "20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf"}
@@ -5734,8 +5745,8 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("Number", "Source number per type"),
       UINT32_DESC_FIELD("ID", "Unique file ID"),
       LOOKUP_FIELD("Play status", BYTES(1), ENTERTAINMENT_PLAY_STATUS),
-      TIME_UFIX16_S_FIELD("Elapsed Track Time"),
-      TIME_UFIX16_S_FIELD("Track Time"),
+      DURATION_UFIX16_S_FIELD("Elapsed Track Time"),
+      DURATION_UFIX16_S_FIELD("Track Time"),
       LOOKUP_FIELD("Repeat Status", 4, ENTERTAINMENT_REPEAT_STATUS),
       LOOKUP_FIELD("Shuffle Status", 4, ENTERTAINMENT_SHUFFLE_STATUS),
       UINT8_DESC_FIELD("Save Favorite Number", "Used to command AV to save current station as favorite"),
@@ -6149,8 +6160,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("A"),
       UINT32_FIELD("Current Track"),
       UINT32_FIELD("Tracks"),
-      TIME_UFIX32_MS_FIELD("Length", NULL),
-      TIME_UFIX32_MS_FIELD("Position in track", NULL),
+      DURATION_UFIX32_MS_FIELD("Length", NULL),
+      DURATION_UFIX32_MS_FIELD("Position in track", NULL),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6275,7 +6286,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       MATCH_LOOKUP_PRIMARY_KEY_FIELD("Proprietary ID", BYTES(1), 48, SONICHUB_COMMAND),
       LOOKUP_FIELD("Control", BYTES(1), SONICHUB_CONTROL),
-      TIME_UFIX32_MS_FIELD("Position", NULL),
+      DURATION_UFIX32_MS_FIELD("Position", NULL),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6409,8 +6420,8 @@ Pgn pgnList[] = {
       UINT16_FIELD("C"),
       UINT16_FIELD("Track Count"),
       UINT16_FIELD("E"),
-      TIME_UFIX24_MS_FIELD("Length", NULL),
-      TIME_UFIX24_MS_FIELD("Position in track", NULL),
+      DURATION_UFIX24_MS_FIELD("Length", NULL),
+      DURATION_UFIX24_MS_FIELD("Position in track", NULL),
       UINT16_FIELD("H")},
      .priority = 7}
 
@@ -6487,7 +6498,7 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Message ID", BYTES(1), 9, FUSION_MESSAGE_ID),
       UINT8_FIELD("A"),
       UINT8_FIELD("B"),
-      TIME_UFIX24_MS_FIELD("Progress", NULL),
+      DURATION_UFIX24_MS_FIELD("Progress", NULL),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6910,9 +6921,9 @@ Pgn pgnList[] = {
       UINT8_FIELD("Indicator Number"),
       DATE_FIELD("Start Date"),
       TIME_FIELD("Start Time"),
-      TIME_UFIX32_S_FIELD("Accumulated OFF Period", NULL),
-      TIME_UFIX32_S_FIELD("Accumulated ON Period", NULL),
-      TIME_UFIX32_S_FIELD("Accumulated ERROR Period", NULL),
+      DURATION_UFIX32_S_FIELD("Accumulated OFF Period", NULL),
+      DURATION_UFIX32_S_FIELD("Accumulated ON Period", NULL),
+      DURATION_UFIX32_S_FIELD("Accumulated ERROR Period", NULL),
       LOOKUP_FIELD("Switch Status", 2, OFF_ON),
       RESERVED_FIELD(6),
       END_OF_FIELDS},

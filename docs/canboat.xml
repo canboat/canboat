@@ -178,6 +178,11 @@ limitations under the License.
       <UnitDescription>Second</UnitDescription>
       <Unit>s</Unit>
     </PhysicalQuantity>
+    <PhysicalQuantity Name="DURATION">
+      <Description>Duration of an event or interval between two points in time</Description>
+      <UnitDescription>Second</UnitDescription>
+      <Unit>s</Unit>
+    </PhysicalQuantity>
     <PhysicalQuantity Name="GEOGRAPHICAL_COORDINATE">
       <Description>Geographical coordinate</Description>
       <Comment>Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.</Comment>
@@ -267,6 +272,10 @@ limitations under the License.
     <FieldType Name="TIME">
       <Description>Time</Description>
       <URL>https://en.wikipedia.org/wiki/Time</URL>
+      <Unit>s</Unit>
+    </FieldType>
+    <FieldType Name="DURATION">
+      <Description>Duration</Description>
       <Unit>s</Unit>
     </FieldType>
     <FieldType Name="DATE">
@@ -2452,7 +2461,7 @@ limitations under the License.
     <LookupFieldTypeEnumeration Name='SIMNET_KEY_VALUE' MaxValue='65535'>
       <EnumFieldType Value='0' Name='Heading Offset' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
-      <EnumFieldType Value='41' Name='Timezone offset' FieldType='TIME' Signed='true'
+      <EnumFieldType Value='41' Name='Timezone offset' FieldType='DURATION' Signed='true'
  Resolution='60' Unit='s' Bits='16'/>
       <EnumFieldType Value='260' Name='True wind high' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
@@ -2589,7 +2598,7 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='113' Name='Next Leg AWS' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='117' Name='Race Timer' FieldType='TIME' Signed='true'
+      <EnumFieldType Value='117' Name='Race Timer' FieldType='DURATION' Signed='true'
  Resolution='0.001' Unit='s' Bits='32'/>
       <EnumFieldType Value='124' Name='Polar Performance' FieldType='NUMBER' Signed='true'
  Resolution='0.1' Unit='%' Bits='16'/>
@@ -2665,19 +2674,19 @@ limitations under the License.
  Resolution='0.001' Bits='16'/>
       <EnumFieldType Value='248' Name='Remote 9' FieldType='NUMBER' Signed='false'
  Resolution='0.001' Bits='16'/>
-      <EnumFieldType Value='256' Name='Layline Time' FieldType='TIME' Signed='false'
+      <EnumFieldType Value='256' Name='Layline Time' FieldType='DURATION' Signed='false'
  Resolution='0.001' Unit='s' Bits='32'/>
       <EnumFieldType Value='258' Name='Layline Distance' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='259' Name='Layline Distance' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
-      <EnumFieldType Value='260' Name='Sailing Time to Waypoint' FieldType='TIME' Signed='false'
+      <EnumFieldType Value='260' Name='Sailing Time to Waypoint' FieldType='DURATION' Signed='false'
  Resolution='0.001' Unit='s' Bits='32'/>
       <EnumFieldType Value='261' Name='Sailing Distance to Waypoint' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
-      <EnumFieldType Value='262' Name='Sailing ETA' FieldType='TIME' Signed='false'
+      <EnumFieldType Value='262' Name='Sailing ETA' FieldType='DURATION' Signed='false'
  Resolution='0.001' Unit='s' Bits='32'/>
-      <EnumFieldType Value='265' Name='Trip Time' FieldType='TIME' Signed='false'
+      <EnumFieldType Value='265' Name='Trip Time' FieldType='DURATION' Signed='false'
  Resolution='0.001' Unit='s' Bits='32'/>
       <EnumFieldType Value='270' Name='Bow Latitude' FieldType='NUMBER' Signed='true'
  Resolution='1e-07' Unit='deg' Bits='32'/>
@@ -9558,8 +9567,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65.533</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -9998,8 +10007,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967.293000001</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
@@ -10013,8 +10022,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -12843,8 +12852,8 @@ limitations under the License.
           <Signed>true</Signed>
           <RangeMin>-1638.35</RangeMin>
           <RangeMax>1638.25</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>16</Order>
@@ -12859,8 +12868,8 @@ limitations under the License.
           <Signed>true</Signed>
           <RangeMin>-1638.35</RangeMin>
           <RangeMax>1638.25</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -13505,8 +13514,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -13619,8 +13628,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -13635,8 +13644,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -13749,8 +13758,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -13863,8 +13872,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -13879,8 +13888,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -16059,8 +16068,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>
@@ -17468,8 +17477,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967293</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -17753,8 +17762,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931980</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
@@ -18162,8 +18171,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967293</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -18421,8 +18430,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967.293000001</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>
@@ -18466,8 +18475,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967.293000001</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -20121,8 +20130,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931980</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -20273,8 +20282,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931980</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -20623,8 +20632,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931980</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -21973,8 +21982,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>1.265</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -22182,8 +22191,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931980</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -22623,8 +22632,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>true</Signed>
           <RangeMin>-2147483.647</RangeMin>
           <RangeMax>2147483.645</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>14</Order>
@@ -23439,8 +23448,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>1.265</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>13</Order>
@@ -23711,8 +23720,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931980</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -24404,8 +24413,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -24462,8 +24471,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>true</Signed>
           <RangeMin>-1966020</RangeMin>
           <RangeMax>1965900</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -26630,8 +26639,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>true</Signed>
           <RangeMin>-2147483.647</RangeMin>
           <RangeMax>2147483.645</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -27811,8 +27820,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -28018,8 +28027,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65.533</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -28412,8 +28421,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>655.33</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>14</Order>
@@ -37536,8 +37545,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967293</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -37640,8 +37649,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -37655,8 +37664,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -40880,8 +40889,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967.293000001</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>12</Order>
@@ -40895,8 +40904,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967.293000001</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -42026,8 +42035,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967.293000001</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -43351,8 +43360,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>16777.213</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>14</Order>
@@ -43366,8 +43375,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>16777.213</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>15</Order>
@@ -44050,8 +44059,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>16777.213</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -47926,8 +47935,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967293</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -47941,8 +47950,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967293</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>
@@ -47956,8 +47965,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4294967293</RangeMax>
-          <FieldType>TIME</FieldType>
-          <PhysicalQuantity>TIME</PhysicalQuantity>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>11</Order>

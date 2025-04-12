@@ -33,6 +33,7 @@ like `Source Id`, `Message Id` or `Instance` will have this set to true.
 - #496: Show bitoffset for first variable length field
 - #498: Document uncertainty around STRING_LZ fields.
 - #499: DataTransmitOffset is in centiseconds, not millis.
+- #501: Split TIME into TIME and DURATION.
 
 ### Added
 

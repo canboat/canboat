@@ -155,6 +155,12 @@
       "Unit":"s"
       },
     {
+        "Name":"DURATION",
+      "Description":"Duration of an event or interval between two points in time",
+      "UnitDescription":"Second",
+      "Unit":"s"
+      },
+    {
         "Name":"GEOGRAPHICAL_COORDINATE",
       "Description":"Geographical coordinate",
       "Comment":"Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.",
@@ -258,6 +264,11 @@
         "Name":"TIME",
       "Description":"Time",
       "URL":"https://en.wikipedia.org/wiki/Time",
+      "Unit":"s"
+      },
+    {
+        "Name":"DURATION",
+      "Description":"Duration",
       "Unit":"s"
       },
     {
@@ -3261,7 +3272,7 @@
         "MaxValue":65535,
         "EnumFieldTypeValues":[
         {"name": "Heading Offset", "value": 0, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
-        {"name": "Timezone offset", "value": 41, "FieldType": "TIME", "Resolution": 60, "Unit": "s", "Bits": "16"},
+        {"name": "Timezone offset", "value": 41, "FieldType": "DURATION", "Resolution": 60, "Unit": "s", "Bits": "16"},
         {"name": "True wind high", "value": 260, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "Deep water", "value": 264, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "32"},
         {"name": "True wind low", "value": 516, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
@@ -3329,7 +3340,7 @@
         {"name": "Wind Direction", "value": 109, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Next Leg AWA", "value": 111, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Next Leg AWS", "value": 113, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
-        {"name": "Race Timer", "value": 117, "FieldType": "TIME", "Resolution": 0.001, "Unit": "s", "Bits": "32"},
+        {"name": "Race Timer", "value": 117, "FieldType": "DURATION", "Resolution": 0.001, "Unit": "s", "Bits": "32"},
         {"name": "Polar Performance", "value": 124, "FieldType": "NUMBER", "Resolution": 0.1, "Unit": "%", "Bits": "16"},
         {"name": "Target Boat Speed", "value": 125, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "Polar Speed", "value": 126, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
@@ -3367,13 +3378,13 @@
         {"name": "Remote 7", "value": 246, "FieldType": "NUMBER", "Resolution": 0.001, "Bits": "16"},
         {"name": "Remote 8", "value": 247, "FieldType": "NUMBER", "Resolution": 0.001, "Bits": "16"},
         {"name": "Remote 9", "value": 248, "FieldType": "NUMBER", "Resolution": 0.001, "Bits": "16"},
-        {"name": "Layline Time", "value": 256, "FieldType": "TIME", "Resolution": 0.001, "Unit": "s", "Bits": "32"},
+        {"name": "Layline Time", "value": 256, "FieldType": "DURATION", "Resolution": 0.001, "Unit": "s", "Bits": "32"},
         {"name": "Layline Distance", "value": 258, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "32"},
         {"name": "Layline Distance", "value": 259, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "32"},
-        {"name": "Sailing Time to Waypoint", "value": 260, "FieldType": "TIME", "Resolution": 0.001, "Unit": "s", "Bits": "32"},
+        {"name": "Sailing Time to Waypoint", "value": 260, "FieldType": "DURATION", "Resolution": 0.001, "Unit": "s", "Bits": "32"},
         {"name": "Sailing Distance to Waypoint", "value": 261, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "32"},
-        {"name": "Sailing ETA", "value": 262, "FieldType": "TIME", "Resolution": 0.001, "Unit": "s", "Bits": "32"},
-        {"name": "Trip Time", "value": 265, "FieldType": "TIME", "Resolution": 0.001, "Unit": "s", "Bits": "32"},
+        {"name": "Sailing ETA", "value": 262, "FieldType": "DURATION", "Resolution": 0.001, "Unit": "s", "Bits": "32"},
+        {"name": "Trip Time", "value": 265, "FieldType": "DURATION", "Resolution": 0.001, "Unit": "s", "Bits": "32"},
         {"name": "Bow Latitude", "value": 270, "FieldType": "NUMBER", "Resolution": 1e-07, "Unit": "deg", "Bits": "32"},
         {"name": "Bow Longitude", "value": 271, "FieldType": "NUMBER", "Resolution": 1e-07, "Unit": "deg", "Bits": "32"},
         {"name": "Start Line Bearing", "value": 272, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
@@ -10033,8 +10044,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65.533,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":6,
@@ -10458,8 +10469,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967.293000001,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":4,
@@ -10473,8 +10484,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":655.33,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":5,
@@ -13247,8 +13258,8 @@
             "Signed":true,
             "RangeMin":-1638.35,
             "RangeMax":1638.25,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":16,
@@ -13263,8 +13274,8 @@
             "Signed":true,
             "RangeMin":-1638.35,
             "RangeMax":1638.25,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -13906,8 +13917,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":655.33,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -14020,8 +14031,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":655.33,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":8,
@@ -14036,8 +14047,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":655.33,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -14150,8 +14161,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":655.33,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -14264,8 +14275,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":655.33,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":8,
@@ -14280,8 +14291,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":655.33,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -16426,8 +16437,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":655.33,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":2,
@@ -17821,8 +17832,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967293,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":8,
@@ -18096,8 +18107,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":3931980,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":4,
@@ -18500,8 +18511,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967293,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -18754,8 +18765,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967.293000001,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":2,
@@ -18799,8 +18810,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967.293000001,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -20451,8 +20462,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":3931980,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":7,
@@ -20603,8 +20614,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":3931980,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -20949,8 +20960,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":3931980,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -22265,8 +22276,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":1.265,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":9,
@@ -22472,8 +22483,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":3931980,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -22912,8 +22923,8 @@
             "Signed":true,
             "RangeMin":-2147483.647,
             "RangeMax":2147483.645,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":14,
@@ -23712,8 +23723,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":1.265,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":13,
@@ -23982,8 +23993,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":3931980,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":7,
@@ -24668,8 +24679,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":655.33,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -24726,8 +24737,8 @@
             "Signed":true,
             "RangeMin":-1966020,
             "RangeMax":1965900,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -26888,8 +26899,8 @@
             "Signed":true,
             "RangeMin":-2147483.647,
             "RangeMax":2147483.645,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":3,
@@ -28050,8 +28061,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":5,
@@ -28257,8 +28268,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65.533,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":5,
@@ -28651,8 +28662,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":655.33,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":14,
@@ -37614,8 +37625,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967293,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -37713,8 +37724,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":7,
@@ -37728,8 +37739,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65533,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":8,
@@ -40862,8 +40873,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967.293000001,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":12,
@@ -40877,8 +40888,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967.293000001,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -41975,8 +41986,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967.293000001,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -43261,8 +43272,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":16777.213,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":14,
@@ -43276,8 +43287,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":16777.213,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":15,
@@ -43936,8 +43947,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":16777.213,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },
@@ -47680,8 +47691,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967293,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":9,
@@ -47695,8 +47706,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967293,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":10,
@@ -47710,8 +47721,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967293,
-            "FieldType":"TIME",
-            "PhysicalQuantity":"TIME"
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":11,
