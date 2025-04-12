@@ -17,6 +17,7 @@ like `Source Id`, `Message Id` or `Instance` will have this set to true.
 ### Fixed
 
 - Updated copyrights to 2025.
+- Updated URLs to refer to web archive where needed and available (not all...)
 - #475: FieldType VARIABLE should have the VariableSize attribute set to True.
 - #474: PGN updates
 - #473: PGN 129546 field lengths and types

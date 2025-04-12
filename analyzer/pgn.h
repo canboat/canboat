@@ -2000,7 +2000,8 @@ Pgn pgnList[] = {
      .interval    = UINT16_MAX,
      .explanation = "This is the Request variation of this group function PGN. The receiver shall respond by sending the requested "
                     "PGN, at the desired transmission interval.",
-     .url         = "http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
+     .url         = "https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/"
+                    "20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 5,
      .repeatingCount1 = 2,
      .repeatingStart1 = 6}
@@ -2021,6 +2022,8 @@ Pgn pgnList[] = {
      .interval    = UINT16_MAX,
      .explanation = "This is the Command variation of this group function PGN. This instructs the receiver to modify its internal "
                     "state for the passed parameters. The receiver shall reply with an Acknowledge reply.",
+     .url         = "https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/"
+                    "20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 5,
      .repeatingCount1 = 2,
      .repeatingStart1 = 6}
@@ -2040,6 +2043,8 @@ Pgn pgnList[] = {
      .interval        = UINT16_MAX,
      .explanation     = "This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will "
                         "attempt to perform the command (change its parameters) and reply positively or negatively.",
+     .url             = "https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/"
+                        "20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 5,
      .repeatingCount1 = 1,
      .repeatingStart1 = 6}
@@ -2065,6 +2070,8 @@ Pgn pgnList[] = {
                     " This PGN is special as it contains two sets of repeating fields, and the fields that contain the information "
                     "how many repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if "
                     "field 2 is for a proprietary PGN",
+     .url         = "https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/"
+                    "20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 7,
      .repeatingCount1 = 2,
      .repeatingStart1 = 9,
@@ -2094,6 +2101,8 @@ Pgn pgnList[] = {
        " This PGN is special as it contains two sets of repeating fields, and the fields that contain the information how many "
        "repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if field 2 is for a "
        "proprietary PGN",
+     .url             = "https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/"
+                        "20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 7,
      .repeatingCount1 = 2,
      .repeatingStart1 = 9,
@@ -2123,6 +2132,8 @@ Pgn pgnList[] = {
                     " This PGN is special as it contains two sets of repeating fields, and the fields that contain the information "
                     "how many repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if "
                     "field 2 is for a proprietary PGN",
+     .url         = "https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/"
+                    "20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 7,
      .repeatingCount1 = 2,
      .repeatingStart1 = 9,
@@ -2152,6 +2163,8 @@ Pgn pgnList[] = {
        " This PGN is special as it contains two sets of repeating fields, and the fields that contain the information how many "
        "repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if field 2 is for a "
        "proprietary PGN",
+     .url             = "https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/"
+                        "20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 7,
      .repeatingCount1 = 2,
      .repeatingStart1 = 9,
@@ -3248,7 +3261,6 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Switch28", 2, OFF_ON),
       END_OF_FIELDS}}
 
-    /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
     {"AC Input Status",
      127503,
@@ -3269,11 +3281,11 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval        = 1500,
      .priority        = 6,
+     .url             = "https://web.archive.org/web/20161130030724/http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf",
      .repeatingField1 = 2,
      .repeatingCount1 = 10,
      .repeatingStart1 = 3}
 
-    /* http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf */
     ,
     {"AC Output Status",
      127504,
@@ -3294,11 +3306,11 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval        = 1500,
      .priority        = 6,
+     .url             = "https://web.archive.org/web/20161130030724/http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf",
      .repeatingField1 = 2,
      .repeatingCount1 = 10,
      .repeatingStart1 = 3}
 
-    /* http://www.maretron.com/support/manuals/TLA100UM_1.2.pdf */
     /* Observed from EP65R */
     ,
     {"Fluid Level",
@@ -3312,6 +3324,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .priority = 6,
+     .url      = "https://web.archive.org/web/20060511065306/http://www.maretron.com/support/manuals/TLA100UM_1.2.pdf",
      .interval = 2500}
 
     ,
@@ -3547,7 +3560,8 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {UINT8_FIELD("SID"), ANGLE_I16_FIELD("Leeway Angle", NULL), RESERVED_FIELD(BYTES(5)), END_OF_FIELDS},
-     .url         = "https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf",
+     .url
+     = "https://web.archive.org/web/20170609074636/https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf",
      .explanation = "This PGN provides the Nautical Leeway Angle. Nautical leeway angle is defined as the angle between the "
                     "direction a vessel is heading (pointing) and the direction it is actually travelling (tracking thru the "
                     "water). It is commonly provided by dual-axis speed sensors."}
@@ -4855,6 +4869,8 @@ Pgn pgnList[] = {
      .interval = UINT16_MAX}
 
     /* http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf */
+    /* https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf
+     */
     /* This is like the worst PGN ever.
      * 1. The "Nature of Distress or 1st Telecommand' field meaning depends on the 'DSC Category'.
      * 2. The "Message address" (the 'to' field) meaning depends on the 'DSC format'.
@@ -4898,7 +4914,8 @@ Pgn pgnList[] = {
      .repeatingField1 = 255,
      .repeatingCount1 = 2,
      .repeatingStart1 = 21,
-     .url             = "http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf"}
+     .url             = "https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/"
+                        "20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf"}
 
     ,
     {"DSC Call Information",
@@ -4932,7 +4949,8 @@ Pgn pgnList[] = {
      .repeatingField1 = 255,
      .repeatingCount1 = 2,
      .repeatingStart1 = 21,
-     .url             = "http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf"}
+     .url             = "https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/"
+                        "20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf"}
 
     ,
     {"AIS Class B static data (msg 24 Part A)",
@@ -5704,7 +5722,7 @@ Pgn pgnList[] = {
       VOLUMETRIC_FLOW_FIELD("Brine Water Flow"),
       TIME_UFIX32_S_FIELD("Run Time", NULL),
       END_OF_FIELDS},
-     .url = "http://www.nmea.org/Assets/"
+     .url = "https://web.archive.org/web/20170609065450/https://www.nmea.org/Assets/"
             "20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf"}
 
     ,
@@ -5730,7 +5748,8 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("Delete Favorite Number", "Used to command AV to delete current station as favorite"),
       UINT16_FIELD("Total Number of Tracks"),
       END_OF_FIELDS},
-     .url = "https://www.nmea.org/Assets/20160725%20corrigenda%20pgn%20130569%20published.pdf"}
+     .url = "https://web.archive.org/web/20170609024809/https://www.nmea.org/Assets/"
+            "20160725%20corrigenda%20pgn%20130569%20published.pdf"}
 
     ,
     {"Library Data File",
@@ -5755,7 +5774,8 @@ Pgn pgnList[] = {
       STRINGLAU_FIELD("Album Name"),
       STRINGLAU_FIELD("Station Name"),
       END_OF_FIELDS},
-     .url = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+     .url
+     = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Library Data Group",
@@ -5777,7 +5797,8 @@ Pgn pgnList[] = {
      .repeatingField1 = 7,
      .repeatingCount1 = 3,
      .repeatingStart1 = 9,
-     .url             = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+     .url
+     = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Library Data Search",
@@ -5794,7 +5815,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Group type 3", BYTES(1), ENTERTAINMENT_GROUP),
       STRINGLAU_FIELD("Group name 3"),
       END_OF_FIELDS},
-     .url = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+     .url
+     = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Supported Source Data",
@@ -5818,7 +5840,8 @@ Pgn pgnList[] = {
      .repeatingField1 = 2,
      .repeatingCount1 = 10,
      .repeatingStart1 = 4,
-     .url             = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+     .url
+     = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Supported Zone Data",
@@ -5834,7 +5857,8 @@ Pgn pgnList[] = {
      .repeatingField1 = 2,
      .repeatingCount1 = 2,
      .repeatingStart1 = 4,
-     .url             = "https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+     .url
+     = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Small Craft Status",
