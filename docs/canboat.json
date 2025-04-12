@@ -10510,6 +10510,8 @@
             "Name":"Value",
             "Description":"Parameter value",
             "BitLengthVariable":true,
+            "BitOffset":96,
+            "BitStart":0,
             "FieldType":"VARIABLE"
           }
         ]
@@ -10617,6 +10619,8 @@
             "Name":"Value",
             "Description":"Parameter value",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "FieldType":"VARIABLE"
           }
         ]
@@ -15701,6 +15705,8 @@
             "Id":"alertTextDescription",
             "Name":"Alert Text Description",
             "BitLengthVariable":true,
+            "BitOffset":136,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -16614,6 +16620,8 @@
             "Id":"installationDescription1",
             "Name":"Installation Description #1",
             "BitLengthVariable":true,
+            "BitOffset":0,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -26027,6 +26035,8 @@
             "Id":"atonName",
             "Name":"AtoN Name",
             "BitLengthVariable":true,
+            "BitOffset":208,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           }
         ]
@@ -26691,6 +26701,8 @@
             "Id":"routeName",
             "Name":"Route Name",
             "BitLengthVariable":true,
+            "BitOffset":72,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -29020,6 +29032,8 @@
             "Name":"Binary Data",
             "BitLengthVariable":true,
             "BitLengthField":11,
+            "BitOffset":136,
+            "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
           }
@@ -29687,6 +29701,8 @@
             "Name":"Binary Data",
             "BitLengthVariable":true,
             "BitLengthField":11,
+            "BitOffset":104,
+            "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
           }
@@ -29942,6 +29958,8 @@
             "Name":"Binary Data",
             "BitLengthVariable":true,
             "BitLengthField":7,
+            "BitOffset":64,
+            "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
           }
@@ -31772,6 +31790,8 @@
             "Id":"telephoneNumber",
             "Name":"Telephone Number",
             "BitLengthVariable":true,
+            "BitOffset":168,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -32035,6 +32055,8 @@
             "Id":"telephoneNumber",
             "Name":"Telephone Number",
             "BitLengthVariable":true,
+            "BitOffset":168,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -33120,6 +33142,8 @@
             "Id":"label",
             "Name":"Label",
             "BitLengthVariable":true,
+            "BitOffset":72,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           }
         ]
@@ -33346,6 +33370,8 @@
             "Id":"databaseName",
             "Name":"Database Name",
             "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -33513,6 +33539,8 @@
             "Id":"routeName",
             "Name":"Route Name",
             "BitLengthVariable":true,
+            "BitOffset":40,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -33590,6 +33618,8 @@
             "Id":"routeWpListName",
             "Name":"Route/WP-List Name",
             "BitLengthVariable":true,
+            "BitOffset":16,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -33803,6 +33833,8 @@
             "Id":"wpName",
             "Name":"WP Name",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -33931,6 +33963,8 @@
             "Id":"wpName",
             "Name":"WP Name",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           }
         ]
@@ -34164,6 +34198,8 @@
             "Id":"comment",
             "Name":"Comment",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           }
         ]
@@ -34253,6 +34289,8 @@
             "Id":"comment",
             "Name":"Comment",
             "BitLengthVariable":true,
+            "BitOffset":48,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           }
         ]
@@ -34329,6 +34367,8 @@
             "Id":"comment",
             "Name":"Comment",
             "BitLengthVariable":true,
+            "BitOffset":40,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           }
         ]
@@ -34536,6 +34576,8 @@
             "Id":"wpName",
             "Name":"WP Name",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -35401,6 +35443,8 @@
             "Id":"stationId",
             "Name":"Station ID",
             "BitLengthVariable":true,
+            "BitOffset":152,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -35542,6 +35586,8 @@
             "Id":"stationId",
             "Name":"Station ID",
             "BitLengthVariable":true,
+            "BitOffset":168,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -35714,6 +35760,8 @@
             "Id":"stationId",
             "Name":"Station ID",
             "BitLengthVariable":true,
+            "BitOffset":200,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -35925,6 +35973,8 @@
             "Id":"stationId",
             "Name":"Station ID",
             "BitLengthVariable":true,
+            "BitOffset":208,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -36252,6 +36302,8 @@
             "Id":"nameOfTheLightingController",
             "Name":"Name of the lighting controller",
             "BitLengthVariable":true,
+            "BitOffset":8,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -36460,6 +36512,8 @@
             "Id":"zoneName",
             "Name":"Zone Name",
             "BitLengthVariable":true,
+            "BitOffset":8,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -36627,6 +36681,8 @@
             "Id":"zoneName",
             "Name":"Zone Name",
             "BitLengthVariable":true,
+            "BitOffset":8,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -36810,6 +36866,8 @@
             "Id":"nameOfLightingDevice",
             "Name":"Name of Lighting Device",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -37188,6 +37246,8 @@
             "Id":"nameOfProgram",
             "Name":"Name of Program",
             "BitLengthVariable":true,
+            "BitOffset":8,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -37886,6 +37946,8 @@
             "Id":"name",
             "Name":"Name",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -38171,6 +38233,8 @@
             "Id":"name",
             "Name":"Name",
             "BitLengthVariable":true,
+            "BitOffset":152,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -38255,6 +38319,8 @@
             "Id":"groupName1",
             "Name":"Group name 1",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -38401,6 +38467,8 @@
             "Id":"name",
             "Name":"Name",
             "BitLengthVariable":true,
+            "BitOffset":72,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -38549,6 +38617,8 @@
             "Id":"name",
             "Name":"Name",
             "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           }
         ]
@@ -39097,6 +39167,8 @@
             "Id":"zoneName",
             "Name":"Zone name",
             "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           }
         ]
@@ -39278,6 +39350,8 @@
             "Id":"presetName",
             "Name":"Preset name",
             "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           }
         ]
@@ -39365,6 +39439,8 @@
             "Id":"deviceName",
             "Name":"Device name",
             "BitLengthVariable":true,
+            "BitOffset":80,
+            "BitStart":0,
             "FieldType":"STRING_LAU"
           },
           {
@@ -46324,6 +46400,8 @@
             "Name":"Value",
             "Description":"Data value",
             "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
             "FieldType":"KEY_VALUE"
           }
         ]
@@ -48788,6 +48866,8 @@
             "Name":"Value",
             "Description":"Data value",
             "BitLengthVariable":true,
+            "BitOffset":80,
+            "BitStart":0,
             "FieldType":"KEY_VALUE"
           }
         ]
@@ -48948,6 +49028,8 @@
             "Name":"Value",
             "Description":"Data value",
             "BitLengthVariable":true,
+            "BitOffset":88,
+            "BitStart":0,
             "FieldType":"KEY_VALUE"
           }
         ]

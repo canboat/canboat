@@ -6812,6 +6812,8 @@
             "Name":"Value",
             "Description":"Parameter value",
             "BitLengthVariable":true,
+            "BitOffset":96,
+            "BitStart":0,
             "Signed":false}]},
       {
         "PGN":126208,
@@ -6914,6 +6916,8 @@
             "Name":"Value",
             "Description":"Parameter value",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "Signed":false}]},
       {
         "PGN":126208,
@@ -12657,6 +12661,8 @@
             "Id":"alertTextDescription",
             "Name":"Alert Text Description",
             "BitLengthVariable":true,
+            "BitOffset":136,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -13506,6 +13512,8 @@
             "Id":"installationDescription1",
             "Name":"Installation Description #1",
             "BitLengthVariable":true,
+            "BitOffset":0,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -22579,6 +22587,8 @@
             "Id":"atonName",
             "Name":"AtoN Name",
             "BitLengthVariable":true,
+            "BitOffset":208,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -23179,6 +23189,8 @@
             "Id":"routeName",
             "Name":"Route Name",
             "BitLengthVariable":true,
+            "BitOffset":72,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -25424,6 +25436,8 @@
             "Name":"Binary Data",
             "BitLengthVariable":true,
             "BitLengthField":11,
+            "BitOffset":136,
+            "BitStart":0,
             "Type":"Binary data",
             "Resolution":1,
             "Signed":false}]},
@@ -26212,6 +26226,8 @@
             "Name":"Binary Data",
             "BitLengthVariable":true,
             "BitLengthField":11,
+            "BitOffset":104,
+            "BitStart":0,
             "Type":"Binary data",
             "Resolution":1,
             "Signed":false}]},
@@ -26512,6 +26528,8 @@
             "Name":"Binary Data",
             "BitLengthVariable":true,
             "BitLengthField":7,
+            "BitOffset":64,
+            "BitStart":0,
             "Type":"Binary data",
             "Resolution":1,
             "Signed":false}]},
@@ -28620,6 +28638,8 @@
             "Id":"telephoneNumber",
             "Name":"Telephone Number",
             "BitLengthVariable":true,
+            "BitOffset":168,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -28909,6 +28929,8 @@
             "Id":"telephoneNumber",
             "Name":"Telephone Number",
             "BitLengthVariable":true,
+            "BitOffset":168,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -30086,6 +30108,8 @@
             "Id":"label",
             "Name":"Label",
             "BitLengthVariable":true,
+            "BitOffset":72,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -30296,6 +30320,8 @@
             "Id":"databaseName",
             "Name":"Database Name",
             "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -30449,6 +30475,8 @@
             "Id":"routeName",
             "Name":"Route Name",
             "BitLengthVariable":true,
+            "BitOffset":40,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -30520,6 +30548,8 @@
             "Id":"routeWpListName",
             "Name":"Route/WP-List Name",
             "BitLengthVariable":true,
+            "BitOffset":16,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -30715,6 +30745,8 @@
             "Id":"wpName",
             "Name":"WP Name",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -30832,6 +30864,8 @@
             "Id":"wpName",
             "Name":"WP Name",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -31048,6 +31082,8 @@
             "Id":"comment",
             "Name":"Comment",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -31131,6 +31167,8 @@
             "Id":"comment",
             "Name":"Comment",
             "BitLengthVariable":true,
+            "BitOffset":48,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -31202,6 +31240,8 @@
             "Id":"comment",
             "Name":"Comment",
             "BitLengthVariable":true,
+            "BitOffset":40,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -31394,6 +31434,8 @@
             "Id":"wpName",
             "Name":"WP Name",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -32216,6 +32258,8 @@
             "Id":"stationId",
             "Name":"Station ID",
             "BitLengthVariable":true,
+            "BitOffset":152,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -32345,6 +32389,8 @@
             "Id":"stationId",
             "Name":"Station ID",
             "BitLengthVariable":true,
+            "BitOffset":168,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -32499,6 +32545,8 @@
             "Id":"stationId",
             "Name":"Station ID",
             "BitLengthVariable":true,
+            "BitOffset":200,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -32692,6 +32740,8 @@
             "Id":"stationId",
             "Name":"Station ID",
             "BitLengthVariable":true,
+            "BitOffset":208,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -32997,6 +33047,8 @@
             "Id":"nameOfTheLightingController",
             "Name":"Name of the lighting controller",
             "BitLengthVariable":true,
+            "BitOffset":8,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -33187,6 +33239,8 @@
             "Id":"zoneName",
             "Name":"Zone Name",
             "BitLengthVariable":true,
+            "BitOffset":8,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -33343,6 +33397,8 @@
             "Id":"zoneName",
             "Name":"Zone Name",
             "BitLengthVariable":true,
+            "BitOffset":8,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -33512,6 +33568,8 @@
             "Id":"nameOfLightingDevice",
             "Name":"Name of Lighting Device",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -33865,6 +33923,8 @@
             "Id":"nameOfProgram",
             "Name":"Name of Program",
             "BitLengthVariable":true,
+            "BitOffset":8,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -34633,6 +34693,8 @@
             "Id":"name",
             "Name":"Name",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -34952,6 +35014,8 @@
             "Id":"name",
             "Name":"Name",
             "BitLengthVariable":true,
+            "BitOffset":152,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -35068,6 +35132,8 @@
             "Id":"groupName1",
             "Name":"Group name 1",
             "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -35253,6 +35319,8 @@
             "Id":"name",
             "Name":"Name",
             "BitLengthVariable":true,
+            "BitOffset":72,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -35437,6 +35505,8 @@
             "Id":"name",
             "Name":"Name",
             "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -35969,6 +36039,8 @@
             "Id":"zoneName",
             "Name":"Zone name",
             "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -36170,6 +36242,8 @@
             "Id":"presetName",
             "Name":"Preset name",
             "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false}]},
       {
@@ -36254,6 +36328,8 @@
             "Id":"deviceName",
             "Name":"Device name",
             "BitLengthVariable":true,
+            "BitOffset":80,
+            "BitStart":0,
             "Type":"ASCII or UNICODE string starting with length and control byte",
             "Signed":false},
           {
@@ -42727,6 +42803,8 @@
             "Name":"Value",
             "Description":"Data value",
             "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
             "Signed":false}]},
       {
         "PGN":130824,
@@ -45184,6 +45262,8 @@
             "Name":"Value",
             "Description":"Data value",
             "BitLengthVariable":true,
+            "BitOffset":80,
+            "BitStart":0,
             "Signed":false}]},
       {
         "PGN":130846,
@@ -45352,6 +45432,8 @@
             "Name":"Value",
             "Description":"Data value",
             "BitLengthVariable":true,
+            "BitOffset":88,
+            "BitStart":0,
             "Signed":false}]},
       {
         "PGN":130846,

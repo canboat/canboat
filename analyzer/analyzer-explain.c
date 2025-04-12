@@ -831,11 +831,6 @@ static void explainPGNXML(Pgn pgn)
       printXML(10, "Id", f.camelName);
       printXML(10, "Name", f.name);
 
-      if (f.size == LEN_VARIABLE)
-      {
-        showBitOffset = false;
-      }
-
       if (f.description && f.description[0] && f.description[0] != ',')
       {
         printXML(10, "Description", f.description);
@@ -966,7 +961,7 @@ static void explainPGNXML(Pgn pgn)
         printXML(10, "PartOfPrimaryKey", "true");
       }
 
-      if ((ft != NULL && ft->variableSize) || f.proprietary)
+      if ((ft != NULL && ft->variableSize) || f.proprietary || f.size == LEN_VARIABLE)
       {
         showBitOffset = false; // From here on there is no good bitoffset to be printed
       }
