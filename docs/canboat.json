@@ -16422,10 +16422,10 @@
             "BitOffset":0,
             "BitStart":0,
             "Unit":"s",
-            "Resolution":0.001,
+            "Resolution":0.01,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65.533,
+            "RangeMax":655.33,
             "FieldType":"TIME",
             "PhysicalQuantity":"TIME"
           },

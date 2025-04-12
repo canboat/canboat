@@ -468,7 +468,7 @@ BO_ 2582647294 PGN_126993_heartbeat: 8 Vector__XXX
  SG_ controller2State : 26|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ controller1State : 24|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sequenceCounter : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ dataTransmitOffset : 0|16@1+ (0.001,0) [0|0] "s" Vector__XXX
+ SG_ dataTransmitOffset : 0|16@1+ (0.01,0) [0|0] "s" Vector__XXX
 
 BO_ 2582648062 PGN_126996_productInformation: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX

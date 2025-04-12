@@ -16055,10 +16055,10 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
-          <Resolution>0.001</Resolution>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65.533</RangeMax>
+          <RangeMax>655.33</RangeMax>
           <FieldType>TIME</FieldType>
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>

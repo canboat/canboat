@@ -13335,10 +13335,10 @@
             "BitStart":0,
             "Units":"s",
             "Type":"Time",
-            "Resolution":0.001,
+            "Resolution":0.01,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65.533},
+            "RangeMax":655.33},
           {
             "Order":2,
             "Id":"sequenceCounter",
