@@ -425,9 +425,9 @@ FieldType fieldTypeList[] = {
     {.name        = "NUMBER",
      .description = "Number",
      .encodingDescription
-     = "Binary numbers are little endian. Number fields that use two or three bits use one special encoding, for the maximum "
-       "value.  When present, this means that the field is not present. Number fields that use four bits or more use two special "
-       "encodings. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that "
+     = "Binary numbers are little endian. Number fields are at least two bits in length, with the highest two values "
+       "generally having a special value. "
+       "The maximum positive value means that the field is not present. The maximum positive value minus 1 means that "
        "the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive "
        "value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
      .url    = "https://en.wikipedia.org/wiki/Binary_number",
@@ -539,8 +539,13 @@ FieldType fieldTypeList[] = {
     {.name                = "LOOKUP",
      .description         = "Number value where each value encodes for a distinct meaning",
      .encodingDescription = "Each lookup has a LookupEnumeration defining what the possible values mean",
-     .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
-                "occurs that has no corresponding textual explanation.",
+     .comment
+     = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
+       "occurs that has no corresponding textual explanation. "
+       "Generally the same special values for Error (max value - 1) and Unknown (max value) are used for lookups, but some define "
+       "a lookup string for the maximum possible value in that field. It is unclear whether this is on purpose or just an "
+       "oversight"
+       " on the part of the NMEA committee.",
      .hasSign = False,
      .pf      = fieldPrintLookup,
      .v1Type  = "Lookup table"},

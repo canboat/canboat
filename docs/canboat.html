@@ -14405,7 +14405,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
 
     <h3 id="ft-NUMBER">NUMBER - Number</h3><p/><p>
             Encoding:
-            Binary numbers are little endian. Number fields that use two or three bits use one special encoding, for the maximum value.  When present, this means that the field is not present. Number fields that use four bits or more use two special encodings. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.</p><p>
+            Binary numbers are little endian. Number fields are at least two bits in length, with the highest two values generally having a special value. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.</p><p>
           For more information see:
           <a href="https://en.wikipedia.org/wiki/Binary_number">https://en.wikipedia.org/wiki/Binary_number</a></p><h3 id="ft-FLOAT">FLOAT - 32 bit IEEE-754 floating point number</h3><p/><p>32 bits
             
@@ -14418,7 +14418,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             Encoding:
             Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number with an odd number of digits will have 0 as the first digit in the first byte.</p><p>
           For more information see:
-          <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">https://en.wikipedia.org/wiki/Binary-coded_decimal</a></p><h3 id="ft-LOOKUP">LOOKUP - Number value where each value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</p><p>
+          <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">https://en.wikipedia.org/wiki/Binary-coded_decimal</a></p><h3 id="ft-LOOKUP">LOOKUP - Number value where each value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) are used for lookups, but some define a lookup string for the maximum possible value in that field. It is unclear whether this is on purpose or just an oversight on the part of the NMEA committee.</p><p>
             Encoding:
             Each lookup has a LookupEnumeration defining what the possible values mean</p><h3 id="ft-INDIRECT_LOOKUP">INDIRECT_LOOKUP - Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</p><p>
             Encoding:
