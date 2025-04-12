@@ -3446,8 +3446,8 @@
       
       {
         "PGN":59392,
-        "Id":"0xe8000xeeffStandardizedSingleFrameAddressed",
-        "Description":"0xE800-0xEEFF: Standardized single-frame addressed",
+        "Id":"0xe8000xee00StandardizedSingleFrameAddressed",
+        "Description":"0xE800-0xEE00: Standardized single-frame addressed",
         "Explanation":"Standardized PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to 0xEE00 (59392 - 60928). When this is shown during analysis it means the PGN is not reverse engineered yet.",
         "Type":"Single",
         "Complete":false,
@@ -10380,7 +10380,7 @@
         "PGN":126208,
         "Id":"0x1ed000x1ee00StandardizedFastPacketAddressed",
         "Description":"0x1ED00 - 0x1EE00: Standardized fast-packet addressed",
-        "Explanation":"Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (65536 - 126464). When this is shown during analysis it means the PGN is not reverse engineered yet.",
+        "Explanation":"Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (126208 - 126464). When this is shown during analysis it means the PGN is not reverse engineered yet.",
         "Type":"Fast",
         "Complete":false,
         "Fallback":true,
@@ -11413,9 +11413,9 @@
       },
       {
         "PGN":126720,
-        "Id":"0x1ef000x1efffManufacturerProprietaryFastPacketAddressed",
-        "Description":"0x1EF00-0x1EFFF: Manufacturer Proprietary fast-packet addressed",
-        "Explanation":"Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975). When this is shown during analysis it means the PGN is not reverse engineered yet.",
+        "Id":"0x1ef00ManufacturerProprietaryFastPacketAddressed",
+        "Description":"0x1EF00: Manufacturer Proprietary fast-packet addressed",
+        "Explanation":"Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.",
         "Type":"Fast",
         "Complete":false,
         "Fallback":true,

@@ -939,9 +939,9 @@ PgnRange pgnRange[] = {{0xe800, 0xee00, 256, "ISO 11783", PACKET_SINGLE},
 
 Pgn pgnList[] = {
 
-    /* PDU1 (addressed) single-frame PGN range 0E800 to 0xEEFF (59392 - 61183) */
+    /* PDU1 (addressed) single-frame PGN range 0E800 to 0xEE00 (59392 - 61183) */
 
-    {"0xE800-0xEEFF: Standardized single-frame addressed",
+    {"0xE800-0xEE00: Standardized single-frame addressed",
      0xe800,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -1981,7 +1981,7 @@ Pgn pgnList[] = {
      {BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), NULL), END_OF_FIELDS},
      .fallback    = true,
      .explanation = "Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to "
-                    "0x1EE00 (65536 - 126464). "
+                    "0x1EE00 (126208 - 126464). "
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     ,
@@ -2185,17 +2185,16 @@ Pgn pgnList[] = {
      .repeatingCount1 = 1,
      .repeatingStart1 = 2}
 
-    /* proprietary PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975) */
+    /* proprietary PDU1 (addressed) fast-packet PGN 0x1EF00 (126720 ) */
 
     ,
-    {"0x1EF00-0x1EFFF: Manufacturer Proprietary fast-packet addressed",
+    {"0x1EF00: Manufacturer Proprietary fast-packet addressed",
      126720,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), NULL), END_OF_FIELDS},
      .fallback    = true,
-     .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN range 0x1EF00 to "
-                    "0x1EFFF (126720 - 126975). "
+     .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720)."
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     ,

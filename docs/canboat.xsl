@@ -818,7 +818,7 @@
               <tr><td><a href="#pgn-61184">0xEF00</a></td><td>61184</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Single frame</td></tr>
               <tr><td><a href="#pgn-61440">0xF000-0xFEFF</a></td><td>61440 - 65279</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame</td></tr>
               <tr><td><a href="#pgn-65280">0xFF00-0xFFFF</a></td><td>65280 - 65535</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame</td></tr>
-              <tr><td><a href="#pgn-65536">0x1ED00-0x1EE00</a></td><td>126208 - 126464</td><td>PDU1</td><td>256</td><td>2</td><td>Standardized (protocol)</td><td>Single frame</td></tr>
+              <tr><td><a href="#pgn-126208">0x1ED00-0x1EE00</a></td><td>126208 - 126464</td><td>PDU1</td><td>256</td><td>2</td><td>Standardized (protocol)</td><td>Fast packet</td></tr>
               <tr><td><a href="#pgn-126720">0x1EF00</a></td><td>126720</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Fast packet</td></tr>
               <tr><td><a href="#pgn-126976">0x1F000-0x1FEFF</a></td><td>126976 - 130815</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Mixed single/fast</td></tr>
               <tr><td><a href="#pgn-130816">0x1FF00-0x1FFFF</a></td><td>130816 - 131071</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Fast packet</td></tr>
