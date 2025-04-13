@@ -163,6 +163,158 @@ bool adjustDataLenStart(const uint8_t **data, size_t *dataLen, size_t *startBit)
   return false;
 }
 
+/*
+ *
+ * This is perhaps as good a place as any to explain how CAN messages are layed out by the
+ * NMEA. Basically, it's a mess once the bytes are recomposed into bytes (the on-the-wire
+ * format is fine).
+ *
+ * For fields that are aligned on bytes there isn't much of an issue, they appear in our
+ * buffers in standard Intel 'least endian' format.
+ * For instance the MMSI # 244050447 is, in hex: 0x0E8BEA0F. This will be found in the CAN data as:
+ * byte x+0: 0x0F
+ * byte x+1: 0xEA
+ * byte x+2: 0x8B
+ * byte x+3: 0x0e
+ *
+ * To gather together we loop over the bytes, and keep increasing the magnitude of what we are
+ * adding:
+ *    for (i = 0, magnitude = 0; i < 4; i++)
+ *    {
+ *      value += data[i] << magnitude;
+ *      magnitude += 8;
+ *    }
+ *
+ * However, when there are two bit fields after each other, lets say A of 2 and then B of 6 bits:
+ * then that is layed out MSB first, so the bit mask is 0b11000000 for the first
+ * field and 0b00111111 for the second field.
+ *
+ * This means that if we have a bit field that crosses a byte boundary and does not start on
+ * a byte boundary, the bit masks are like this (for a 16 bit field starting at the 3rd bit):
+ *
+ * 0b00111111 0b11111111 0b11000000
+ *     ------   --------   --
+ *     000000   11110000   11
+ *     543210   32109876   54
+ *
+ * So we are forced to mask bits 0 and 1 of the first byte. Since we need to process the previous
+ * field first, we cannot repeatedly shift bits out of the byte: if we shift left we get the first
+ * field first, but in MSB order. We need bit values in LSB order, as the next byte will be more
+ * significant. But we can't shift right as that will give us bits in LSB order but then we get the
+ * two fields in the wrong order...
+ *
+ * So for that reason we explicitly test, per byte, how many bits we need and how many we have already
+ * used.
+ *
+ */
+
+bool extractNumber(const Field   *field,
+                   const uint8_t *data,
+                   size_t         dataLen,
+                   size_t         startBit,
+                   size_t         bits,
+                   int64_t       *value,
+                   int64_t       *maxValue)
+{
+  const bool  hasSign = field ? field->hasSign : false;
+  const char *name    = field ? field->name : "<bits>";
+
+  size_t   firstBit;
+  size_t   bitsRemaining = bits;
+  size_t   magnitude     = 0;
+  size_t   bitsInThisByte;
+  uint64_t bitMask;
+  uint64_t allOnes;
+  uint64_t valueInThisByte;
+  uint64_t maxv;
+
+  logDebug("extractNumber <%s> startBit=%zu bits=%zu\n", name, startBit, bits);
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
+  firstBit = startBit;
+  *value   = 0;
+  maxv     = 0;
+
+  while (bitsRemaining > 0 && dataLen > 0)
+  {
+    bitsInThisByte = min(8 - firstBit, bitsRemaining);
+    allOnes        = (uint64_t) ((((uint64_t) 1) << bitsInThisByte) - 1);
+
+    // How are bits ordered in bytes for bit fields? There are two ways, first field at LSB or first
+    // field as MSB.
+    // Experimentation, using the 129026 PGN, has shown that the most likely candidate is LSB.
+    bitMask         = allOnes << firstBit;
+    valueInThisByte = (*data & bitMask) >> firstBit;
+
+    *value |= valueInThisByte << magnitude;
+    maxv |= allOnes << magnitude;
+
+    magnitude += bitsInThisByte;
+    bitsRemaining -= bitsInThisByte;
+    firstBit += bitsInThisByte;
+    if (firstBit >= 8)
+    {
+      firstBit -= 8;
+      data++;
+      dataLen--;
+    }
+  }
+  if (bitsRemaining > 0)
+  {
+    logDebug("Insufficient length in PGN to fill field '%s'\n", name);
+    return false;
+  }
+
+  if (hasSign)
+  {
+    maxv >>= 1;
+
+    if (field && field->offset) /* J1939 Excess-K notation */
+    {
+      *value += field->offset;
+      maxv += field->offset;
+    }
+    else
+    {
+      bool negative = (*value & (((uint64_t) 1) << (bits - 1))) > 0;
+
+      if (negative)
+      {
+        /* Sign extend value for cases where bits < 64 */
+        /* Assume we have bits = 16 and value = -2 then we do: */
+        /* 0000.0000.0000.0000.0111.1111.1111.1101 value    */
+        /* 0000.0000.0000.0000.0111.1111.1111.1111 maxvalue */
+        /* 1111.1111.1111.1111.1000.0000.0000.0000 ~maxvalue */
+        *value |= ~maxv;
+      }
+    }
+  }
+  else
+  {
+    if (field && field->offset) /* J1939 Excess-K notation */
+    {
+      *value += field->offset;
+      maxv += field->offset;
+    }
+  }
+
+  *maxValue = (int64_t) maxv;
+
+  logDebug("extractNumber <%s> startBit=%zu bits=%zu value=%" PRId64 " (%" PRIx64 ") max=%" PRId64 "\n",
+           name,
+           startBit,
+           bits,
+           *value,
+           *value,
+           *maxValue);
+
+  return true;
+}
+
 bool extractNumberByOrder(const Pgn *pgn, size_t order, const uint8_t *data, size_t dataLen, int64_t *value)
 {
   const Field *field     = &pgn->fieldList[order - 1];
@@ -565,6 +717,131 @@ extern bool fieldPrintLookup(const Field   *field,
     else if (showJson)
     {
       mprintf("%" PRId64, value);
+    }
+    else
+    {
+      mprintf("%" PRId64, value);
+    }
+  }
+
+  return true;
+}
+
+extern bool fieldPrintName(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits)
+{
+  const Pgn *pgn            = NULL;
+  size_t     variableFields = 0;
+
+  uint64_t value;
+  uint64_t maxValue;
+
+  if (!extractNumber(field, data, dataLen, startBit, *bits, (int64_t *) &value, (int64_t *) &maxValue))
+  {
+    return true;
+  }
+
+  logDebug("printFieldName %zu @ %p = %" PRIx64 "\n", dataLen, data, value);
+
+  pgn = searchForPgn(60928);
+
+  logDebug("printFieldName v=%" PRIu64 " max=%" PRIu64 " high=%d\n", value, maxValue, (bool) (value > maxValue - 2));
+
+  if (value > maxValue - 2)
+  {
+    printEmpty(fieldName, value - maxValue);
+  }
+  else
+  {
+    if (showJson)
+    {
+      mprintf("%" PRIu64, value);
+
+      if (pgn != NULL && showJsonValue)
+      {
+        mprintf(",\"name\":{");
+        sep = "";
+        printFields(pgn, data + ((startBit) >> 3), BYTES(8), showData, showJson, &variableFields);
+        mprintf("}}");
+      }
+    }
+    else
+    {
+      mprintf("0x%" PRIx64, value);
+
+      if (pgn != NULL)
+      {
+        mprintf(" name = [");
+        sep = "";
+        printFields(pgn, data + ((startBit) >> 3), BYTES(8), showData, showJson, &variableFields);
+        mprintf("]");
+      }
+    }
+  }
+
+  return true;
+}
+
+extern bool fieldPrintPGN(const Field   *field,
+                          const char    *fieldName,
+                          const uint8_t *data,
+                          size_t         dataLen,
+                          size_t         startBit,
+                          size_t        *bits)
+{
+  const char *s   = NULL;
+  const Pgn  *pgn = NULL;
+
+  int64_t value;
+  int64_t maxValue;
+
+  if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+
+  if (!IS_MANUFACTURER_PGN(value))
+  {
+    pgn = searchForPgn(value);
+    if (pgn != NULL)
+    {
+      s = pgn->description;
+    }
+  }
+
+  if (value >= maxValue - 2)
+  {
+    printEmpty(fieldName, value - maxValue);
+  }
+  else if (s != NULL)
+  {
+    if (showJsonValue)
+    {
+      mprintf("%" PRId64 ",\"name\":\"%s\"}", value, s);
+    }
+    else if (showJson)
+    {
+      mprintf("%" PRId64, value);
+    }
+    else
+    {
+      mprintf("%" PRId64 " (%s)", value, s);
+    }
+  }
+  else
+  {
+    if (showJsonValue)
+    {
+      mprintf("%" PRId64, value);
+      if (showJsonEmpty)
+      {
+        mprintf(",\"name\":null");
+      }
+      mprintf("}");
     }
     else
     {

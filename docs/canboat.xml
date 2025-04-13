@@ -231,7 +231,7 @@ limitations under the License.
   <FieldTypes>
     <FieldType Name="NUMBER">
       <Description>Number</Description>
-      <EncodingDescription>Binary numbers are little endian. Number fields are at least two bits in length, with the highest two values generally having a special value. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.</EncodingDescription>
+      <EncodingDescription>Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the highest value minus one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but there are few fields that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.</EncodingDescription>
       <URL>https://en.wikipedia.org/wiki/Binary_number</URL>
     </FieldType>
     <FieldType Name="FLOAT">
@@ -249,7 +249,7 @@ limitations under the License.
     <FieldType Name="LOOKUP">
       <Description>Number value where each value encodes for a distinct meaning</Description>
       <EncodingDescription>Each lookup has a LookupEnumeration defining what the possible values mean</EncodingDescription>
-      <Comment>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) are used for lookups, but some define a lookup string for the maximum possible value in that field. It is unclear whether this is on purpose or just an oversight on the part of the NMEA committee.</Comment>
+      <Comment>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a lookup key/value pair for the maximum possible value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup fields that specify four actual valid values. This makes it impossible to send an unknown value for these fields. </Comment>
       <Signed>false</Signed>
     </FieldType>
     <FieldType Name="INDIRECT_LOOKUP">
@@ -285,6 +285,15 @@ limitations under the License.
       <Bits>16</Bits>
       <Unit>d</Unit>
       <Signed>false</Signed>
+    </FieldType>
+    <FieldType Name="PGN">
+      <Description>Parameter Group Number</Description>
+      <EncodingDescription>A 24 bit number referring to a PGN</EncodingDescription>
+    </FieldType>
+    <FieldType Name="ISO_NAME">
+      <Description>ISO NAME field</Description>
+      <EncodingDescription>A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of PGN 60928 to explain the subfields.</EncodingDescription>
+      <Bits>64</Bits>
     </FieldType>
     <FieldType Name="STRING_FIX">
       <Description>A fixed length string containing single byte codepoints.</Description>
@@ -2908,10 +2917,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -2935,10 +2943,9 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3056,10 +3063,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3137,10 +3143,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3218,10 +3223,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3299,10 +3303,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3362,10 +3365,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -3374,7 +3376,7 @@ limitations under the License.
       <Id>isoAddressClaim</Id>
       <Description>ISO Address Claim</Description>
     <Priority>6</Priority>
-      <Explanation>This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination.</Explanation>
+      <Explanation>This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination. Note that there are several places where this 64-bit data also occurs, these are named ISO_NAME and can be recursively explained.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>10</FieldCount>
@@ -9990,10 +9992,9 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -10105,10 +10106,9 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -10214,10 +10214,9 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -10324,10 +10323,9 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -10480,10 +10478,9 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -10643,10 +10640,9 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -10806,10 +10802,9 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -10960,10 +10955,9 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -14807,10 +14801,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>18446744073709551615</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1.844674407370955e+19</RangeMax>
+          <FieldType>ISO_NAME</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -14954,10 +14947,9 @@ limitations under the License.
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>18446744073709551615</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1.844674407370955e+19</RangeMax>
+          <FieldType>ISO_NAME</FieldType>
         </Field>
         <Field>
           <Order>18</Order>
@@ -15103,10 +15095,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>18446744073709551615</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1.844674407370955e+19</RangeMax>
+          <FieldType>ISO_NAME</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -15156,10 +15147,9 @@ limitations under the License.
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>18446744073709551615</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1.844674407370955e+19</RangeMax>
+          <FieldType>ISO_NAME</FieldType>
         </Field>
         <Field>
           <Order>11</Order>
@@ -15274,10 +15264,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>18446744073709551615</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1.844674407370955e+19</RangeMax>
+          <FieldType>ISO_NAME</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -15441,10 +15430,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>18446744073709551615</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1.844674407370955e+19</RangeMax>
+          <FieldType>ISO_NAME</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -15654,10 +15642,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>18446744073709551615</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1.844674407370955e+19</RangeMax>
+          <FieldType>ISO_NAME</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -15858,10 +15845,9 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>18446744073709551615</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1.844674407370955e+19</RangeMax>
+          <FieldType>ISO_NAME</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -33061,10 +33047,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>131071</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
         <Field>
           <Order>7</Order>

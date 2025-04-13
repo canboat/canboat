@@ -809,6 +809,8 @@ static void showBytesOrBits(const uint8_t *data, size_t startBit, size_t bits)
   const char *s;
   uint8_t     byte;
 
+  logDebug("showBytesOrBits(%p, %zu, %zu)\n", data, startBit, bits);
+
   if (showJson)
   {
     size_t location = mlocation();
@@ -926,11 +928,12 @@ static bool printField(const Field   *field,
     resolution = field->ft->resolution;
   }
 
-  logDebug("PGN %u: printField(<%s>, \"%s\", ..., dataLen=%zu, startBit=%zu) resolution=%g\n",
+  logDebug("PGN %u: printField(<%s>, \"%s\", ..., dataLen=%zu, data=%p, startBit=%zu) resolution=%g\n",
            field->pgn->pgn,
            field->name,
            fieldName,
            dataLen,
+           data,
            startBit,
            field->resolution);
 
@@ -1050,15 +1053,9 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
 {
   const Pgn *pgn;
 
-  size_t  i;
-  size_t  bits;
-  size_t  startBit;
-  int     repetition;
-  char    fieldName[60];
-  bool    r;
-  size_t  variableFields; // How many variable fields remain (product of repetition count * # of fields)
-  uint8_t variableFieldStart;
-  uint8_t variableFieldCount;
+  size_t i;
+  bool   r;
+  size_t variableFields = 0; // How many variable fields remain (product of repetition count * # of fields)
 
   if (msg == NULL)
   {
@@ -1123,95 +1120,7 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
     mprintf("%s %u %3u %3u %6u %s:", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     sep = " ";
   }
-
-  logDebug("fieldCount=%d repeatingStart1=%" PRIu8 "\n", pgn->fieldCount, pgn->repeatingStart1);
-
-  g_variableFieldRepeat[0] = 255; // Can be overridden by '# of parameters'
-  g_variableFieldRepeat[1] = 0;   // Can be overridden by '# of parameters'
-  repetition               = 0;
-  variableFields           = 0;
-  r                        = true;
-  for (i = 0, startBit = 0; (startBit >> 3) < length; i++)
-  {
-    const Field *field = &pgn->fieldList[i];
-
-    if (variableFields == 0)
-    {
-      repetition = 0;
-    }
-
-    if (pgn->repeatingCount1 > 0 && field->order == pgn->repeatingStart1 && repetition == 0)
-    {
-      if (showJson)
-      {
-        mprintf("%s\"list\":[{", getSep());
-        strcat(closingBraces, "]}");
-        sep = "";
-      }
-      // Only now is g_variableFieldRepeat set
-      variableFields     = pgn->repeatingCount1 * g_variableFieldRepeat[0];
-      variableFieldCount = pgn->repeatingCount1;
-      variableFieldStart = pgn->repeatingStart1;
-      repetition         = 1;
-    }
-    if (pgn->repeatingCount2 > 0 && field->order == pgn->repeatingStart2 && repetition == 0)
-    {
-      if (showJson)
-      {
-        mprintf("}],\"list2\":[{");
-        sep = "";
-      }
-      // Only now is g_variableFieldRepeat set
-      variableFields     = pgn->repeatingCount2 * g_variableFieldRepeat[1];
-      variableFieldCount = pgn->repeatingCount2;
-      variableFieldStart = pgn->repeatingStart2;
-      repetition         = 1;
-    }
-
-    if (variableFields > 0)
-    {
-      if (i + 1 == variableFieldStart + variableFieldCount)
-      {
-        i     = variableFieldStart - 1;
-        field = &pgn->fieldList[i];
-        repetition++;
-        if (showJson)
-        {
-          mprintf("},{");
-          sep = "";
-        }
-      }
-      logDebug("variableFields: repetition=%d field=%" PRIu8 " variableFieldStart=%" PRIu8 " variableFieldCount=%" PRIu8
-               " remaining=%zu\n",
-               repetition,
-               i + 1,
-               variableFieldStart,
-               variableFieldCount,
-               variableFields);
-      variableFields--;
-    }
-
-    if (!field->camelName && !field->name)
-    {
-      logDebug("PGN %u has unknown bytes at end: %u\n", msg->pgn, length - (startBit >> 3));
-      break;
-    }
-
-    strcpy(fieldName, field->camelName ? field->camelName : field->name);
-    if (repetition >= 1 && !showJson)
-    {
-      strcat(fieldName, field->camelName ? "_" : " ");
-      sprintf(fieldName + strlen(fieldName), "%u", repetition);
-    }
-
-    if (!printField(field, fieldName, data, length, startBit, &bits))
-    {
-      r = false;
-      break;
-    }
-
-    startBit += bits;
-  }
+  r = printFields(pgn, data, length, showData, showJson, &variableFields);
 
   if (showJson)
   {
@@ -1244,6 +1153,110 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   {
     setSystemClock();
   }
+  return r;
+}
+
+extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool showData, bool showJson, size_t *variableFields)
+{
+  size_t  i;
+  size_t  bits;
+  size_t  startBit;
+  int     repetition;
+  char    fieldName[60];
+  uint8_t variableFieldStart;
+  uint8_t variableFieldCount;
+
+  bool r = true;
+
+  logDebug("fieldCount=%d repeatingStart1=%" PRIu8 "\n", pgn->fieldCount, pgn->repeatingStart1);
+
+  g_variableFieldRepeat[0] = 255; // Can be overridden by '# of parameters'
+  g_variableFieldRepeat[1] = 0;   // Can be overridden by '# of parameters'
+  repetition               = 0;
+  *variableFields          = 0;
+
+  for (i = 0, startBit = 0; (startBit >> 3) < length; i++)
+  {
+    const Field *field = &pgn->fieldList[i];
+
+    if (*variableFields == 0)
+    {
+      repetition = 0;
+    }
+
+    if (pgn->repeatingCount1 > 0 && field->order == pgn->repeatingStart1 && repetition == 0)
+    {
+      if (showJson)
+      {
+        mprintf("%s\"list\":[{", getSep());
+        strcat(closingBraces, "]}");
+        sep = "";
+      }
+      // Only now is g_variableFieldRepeat set
+      *variableFields    = pgn->repeatingCount1 * g_variableFieldRepeat[0];
+      variableFieldCount = pgn->repeatingCount1;
+      variableFieldStart = pgn->repeatingStart1;
+      repetition         = 1;
+    }
+    if (pgn->repeatingCount2 > 0 && field->order == pgn->repeatingStart2 && repetition == 0)
+    {
+      if (showJson)
+      {
+        mprintf("}],\"list2\":[{");
+        sep = "";
+      }
+      // Only now is g_variableFieldRepeat set
+      *variableFields    = pgn->repeatingCount2 * g_variableFieldRepeat[1];
+      variableFieldCount = pgn->repeatingCount2;
+      variableFieldStart = pgn->repeatingStart2;
+      repetition         = 1;
+    }
+
+    if (*variableFields > 0)
+    {
+      if (i + 1 == variableFieldStart + variableFieldCount)
+      {
+        i     = variableFieldStart - 1;
+        field = &pgn->fieldList[i];
+        repetition++;
+        if (showJson)
+        {
+          mprintf("},{");
+          sep = "";
+        }
+      }
+      logDebug("variableFields: repetition=%d field=%" PRIu8 " variableFieldStart=%" PRIu8 " variableFieldCount=%" PRIu8
+               " remaining=%zu\n",
+               repetition,
+               i + 1,
+               variableFieldStart,
+               variableFieldCount,
+               *variableFields);
+      (*variableFields)--;
+    }
+
+    if (!field->camelName && !field->name)
+    {
+      logDebug("PGN %u has unknown bytes at end: %u\n", pgn->pgn, length - (startBit >> 3));
+      break;
+    }
+
+    strcpy(fieldName, field->camelName ? field->camelName : field->name);
+    if (repetition >= 1 && !showJson)
+    {
+      strcat(fieldName, field->camelName ? "_" : " ");
+      sprintf(fieldName + strlen(fieldName), "%u", repetition);
+    }
+
+    if (!printField(field, fieldName, data, length, startBit, &bits))
+    {
+      r = false;
+      break;
+    }
+
+    startBit += bits;
+  }
+
   return r;
 }
 

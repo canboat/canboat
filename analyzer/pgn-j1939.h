@@ -93,15 +93,15 @@ typedef struct
   const char *unit; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) */
   const char *description;
 
-  int32_t offset;     /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
-                       *    of two's complement as used by NMEA 2000.
-                       *    See http://en.wikipedia.org/wiki/Offset_binary
-                       */
-  double resolution;  /* Either a positive real value or zero */
-  int    precision;   /* How many decimal digits after the decimal point to print; usually 0 = automatic */
-  double unitOffset;  /* Only used for K->C conversion in non-SI print */
-  bool   proprietary; /* Field is only present if earlier PGN field is in proprietary range */
-  bool   hasSign;     /* Is the value signed, e.g. has both positive and negative values? */
+  int32_t offset;          /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
+                            *    of two's complement as used by NMEA 2000.
+                            *    See http://en.wikipedia.org/wiki/Offset_binary
+                            */
+  double resolution;       /* Either a positive real value or zero */
+  int    precision;        /* How many decimal digits after the decimal point to print; usually 0 = automatic */
+  double unitOffset;       /* Only used for K->C conversion in non-SI print */
+  bool   proprietary;      /* Field is only present if earlier PGN field is in proprietary range */
+  bool   hasSign;          /* Is the value signed, e.g. has both positive and negative values? */
   bool   partOfPrimaryKey; /* Is the value part of the primary key for the message */
 
   /* The following fields are filled by C, no need to set in initializers */
@@ -822,6 +822,8 @@ void camelCase(bool upperCamelCase);
 
 /* lookup.c */
 extern void fillLookups(void);
+
+#define IS_MANUFACTURER_PGN(x) (((x) >= 0xff00 && (x) <= 0xffff) || (x) >= 0x1ef00 || ((x) >= 0x1ff00 && (x) <= 0x1ffff))
 
 #ifdef GLOBALS
 PgnRange pgnRange[] = {{0xe800, 0xee00, 256, "ISO 11783", PACKET_SINGLE},

@@ -14,8 +14,13 @@ field present with a `true` value) contributes to the _Primary key_ of the data 
 e.g. any message with a different primary key is from a different source. Fields 
 like `Source Id`, `Message Id` or `Instance` will have this set to true.
 
-Also, in -json -nv mode and in text mode all fields that refer to a PGN will explain
+Also, in `-json -nv` mode and in text mode all fields that refer to a PGN will explain
 the meaning of the PGN value (if it is not a proprietary PGN number.)
+
+Also, in `json -nv` mode any NAME fields that occur (so far, only in the Alerts PGNs)
+will contain in the `name:` attribute a recursive expansion of the fields contained
+in that single NAME field. These subfields are the same fields as described in PGN
+60928 (Address Claim.)
 
 ### Fixed
 
@@ -38,6 +43,7 @@ the meaning of the PGN value (if it is not a proprietary PGN number.)
 - #499: DataTransmitOffset is in centiseconds, not millis.
 - #501: Split TIME into TIME and DURATION.
 - #503: Introduce PGN field type.
+- #502: Introduce ISO_NAME fieldtype.
 
 ### Added
 

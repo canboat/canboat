@@ -107,10 +107,8 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>24 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>PGN</td><td>Parameter Group Number of requested information</td><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-59904">0xEA00:
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>PGN</td><td>Parameter Group Number of requested information</td><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><h3 id="pgn-59904">0xEA00:
             PGN 59904
             - ISO Request</h3><p>As defined by ISO, this message has a data length of 3 bytes with no padding added to complete the single frame. The appropriate response to this message is based on the PGN being requested, and whether the receiver supports the requested PGN.</p><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -125,10 +123,8 @@ limitations under the License.
               The default priority (as observed in the field) is 6.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-60160">0xEB00:
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>PGN</td><td/><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><h3 id="pgn-60160">0xEB00:
             PGN 60160
             - ISO Transport Protocol, Data Transfer</h3><p>ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN represents a single packet of a multipacket message.</p><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -173,10 +169,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Packets reply</td><td>packets sent in response to CTS</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><p>
               Source:
               <a href="https://embeddedflakes.com/j1939-transport-protocol/">https://embeddedflakes.com/j1939-transport-protocol/</a></p><h3 id="pgn-60416">0xEC00:
             PGN 60416
@@ -204,10 +198,8 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><p>
               Source:
               <a href="https://embeddedflakes.com/j1939-transport-protocol/">https://embeddedflakes.com/j1939-transport-protocol/</a></p><h3 id="pgn-60416">0xEC00:
             PGN 60416
@@ -235,10 +227,8 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><p>
               Source:
               <a href="https://embeddedflakes.com/j1939-transport-protocol/">https://embeddedflakes.com/j1939-transport-protocol/</a></p><h3 id="pgn-60416">0xEC00:
             PGN 60416
@@ -266,10 +256,8 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><p>
               Source:
               <a href="https://embeddedflakes.com/j1939-transport-protocol/">https://embeddedflakes.com/j1939-transport-protocol/</a></p><h3 id="pgn-60416">0xEC00:
             PGN 60416
@@ -292,14 +280,12 @@ limitations under the License.
                       lookup
                       <a href="#lookup-ISO_COMMAND">ISO_COMMAND</a></td><td/></tr><tr><td>2</td><td>Reason</td><td/><td/><td>8 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>24 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>PGN</td><td/><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><p>
               Source:
               <a href="https://embeddedflakes.com/j1939-transport-protocol/">https://embeddedflakes.com/j1939-transport-protocol/</a></p><h3 id="pgn-60928">0xEE00:
             PGN 60928
-            - ISO Address Claim</h3><p>This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination.</p><p>
+            - ISO Address Claim</h3><p>This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination. Note that there are several places where this 64-bit data also occurs, these are named ISO_NAME and can be recursively explained.</p><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
               </p><p>
             This
@@ -2364,10 +2350,8 @@ limitations under the License.
                   Request</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Requested PGN</td><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Transmission interval</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Requested PGN</td><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Transmission interval</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>Transmission interval offset</td><td/><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
@@ -2410,10 +2394,8 @@ limitations under the License.
                   Command</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Priority</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Priority</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
                       <a href="#lookup-PRIORITY">PRIORITY</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>4 bits
@@ -2454,10 +2436,8 @@ limitations under the License.
                   Acknowledge</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>PGN error code</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>PGN error code</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
                       <a href="#lookup-PGN_ERROR_CODE">PGN_ERROR_CODE</a></td><td/></tr><tr><td>4</td><td>Transmission interval/Priority error code</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -2505,10 +2485,8 @@ limitations under the License.
                   Read Fields</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
                       <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
@@ -2568,10 +2546,8 @@ limitations under the License.
                   Read Fields Reply</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
                       <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
@@ -2633,10 +2609,8 @@ limitations under the License.
                   Write Fields</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
                       <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
@@ -2698,10 +2672,8 @@ limitations under the License.
                   Write Fields Reply</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                      <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Commanded PGN</td><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
                   
                       lookup
                       <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
@@ -2751,10 +2723,8 @@ limitations under the License.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Function Code</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-PGN_LIST_FUNCTION">PGN_LIST_FUNCTION</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">2<div>Set 1</div></td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h2 id="pgn-126720">0x1EF00: Manufacturer Proprietary fast-packet addressed</h2><p>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126720">0x1EF00:
+                      <a href="#lookup-PGN_LIST_FUNCTION">PGN_LIST_FUNCTION</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">2<div>Set 1</div></td><td>PGN</td><td/><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><h2 id="pgn-126720">0x1EF00: Manufacturer Proprietary fast-packet addressed</h2><p>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Seatalk1: Pilot Mode</h3><p>
               This PGN description applies when the following field(s) match:
@@ -3888,10 +3858,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Alert ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 18446744073709551615</div></td><td>64 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 1.844674407370955e+19</div></td><td>64 bits
+                  <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Data Source Index-Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -3919,10 +3887,8 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>16</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>17</td><td>Acknowledge Source Network ID NAME</td><td/><td><div class="xs">0 .. 18446744073709551615</div></td><td>64 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>18</td><td>Trigger Condition</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>17</td><td>Acknowledge Source Network ID NAME</td><td/><td><div class="xs">0 .. 1.844674407370955e+19</div></td><td>64 bits
+                  <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>18</td><td>Trigger Condition</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
                       <a href="#lookup-ALERT_TRIGGER_CONDITION">ALERT_TRIGGER_CONDITION</a></td><td/></tr><tr><td>19</td><td>Threshold Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -3960,10 +3926,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Alert ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 18446744073709551615</div></td><td>64 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 1.844674407370955e+19</div></td><td>64 bits
+                  <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Data Source Index-Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -3972,10 +3936,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Alert Occurrence Number</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Acknowledge Source Network ID NAME</td><td/><td><div class="xs">0 .. 18446744073709551615</div></td><td>64 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Response Command</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Acknowledge Source Network ID NAME</td><td/><td><div class="xs">0 .. 1.844674407370955e+19</div></td><td>64 bits
+                  <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>11</td><td>Response Command</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-ALERT_RESPONSE_COMMAND">ALERT_RESPONSE_COMMAND</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>6 bits
@@ -4006,10 +3968,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Alert ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 18446744073709551615</div></td><td>64 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 1.844674407370955e+19</div></td><td>64 bits
+                  <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Data Source Index-Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -4051,10 +4011,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Alert ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 18446744073709551615</div></td><td>64 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 1.844674407370955e+19</div></td><td>64 bits
+                  <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Data Source Index-Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -4113,10 +4071,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Alert ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 18446744073709551615</div></td><td>64 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 1.844674407370955e+19</div></td><td>64 bits
+                  <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Data Source Index-Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -4174,10 +4130,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Alert ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 18446744073709551615</div></td><td>64 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data Source Network ID NAME</td><td/><td><div class="xs">0 .. 1.844674407370955e+19</div></td><td>64 bits
+                  <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>7</td><td>Data Source Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Data Source Index-Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -8925,10 +8879,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>5</td><td>Source NAME</td><td/><td><div class="xs">0 .. 18446744073709551615</div></td><td>64 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>PGN</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Data Source Instance Field Number</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>PGN</td><td/><td><div class="xs">0 .. 131071</div></td><td>24 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>7</td><td>Data Source Instance Field Number</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Data Source Instance Value</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -14405,7 +14357,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
 
     <h3 id="ft-NUMBER">NUMBER - Number</h3><p/><p>
             Encoding:
-            Binary numbers are little endian. Number fields are at least two bits in length, with the highest two values generally having a special value. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.</p><p>
+            Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the highest value minus one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but there are few fields that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.</p><p>
           For more information see:
           <a href="https://en.wikipedia.org/wiki/Binary_number">https://en.wikipedia.org/wiki/Binary_number</a></p><h3 id="ft-FLOAT">FLOAT - 32 bit IEEE-754 floating point number</h3><p/><p>32 bits
             
@@ -14418,7 +14370,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             Encoding:
             Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number with an odd number of digits will have 0 as the first digit in the first byte.</p><p>
           For more information see:
-          <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">https://en.wikipedia.org/wiki/Binary-coded_decimal</a></p><h3 id="ft-LOOKUP">LOOKUP - Number value where each value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) are used for lookups, but some define a lookup string for the maximum possible value in that field. It is unclear whether this is on purpose or just an oversight on the part of the NMEA committee.</p><p>
+          <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">https://en.wikipedia.org/wiki/Binary-coded_decimal</a></p><h3 id="ft-LOOKUP">LOOKUP - Number value where each value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a lookup key/value pair for the maximum possible value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup fields that specify four actual valid values. This makes it impossible to send an unknown value for these fields. </p><p>
             Encoding:
             Each lookup has a LookupEnumeration defining what the possible values mean</p><h3 id="ft-INDIRECT_LOOKUP">INDIRECT_LOOKUP - Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</p><p>
             Encoding:
@@ -14437,7 +14389,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             Encoding:
             The date, in days since 1 January 1970.</p><p>
           For more information see:
-          <a href="https://en.wikipedia.org/wiki/Calendar_date">https://en.wikipedia.org/wiki/Calendar_date</a></p><h3 id="ft-STRING_FIX">STRING_FIX - A fixed length string containing single byte codepoints.</h3><p>It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.</p><p>
+          <a href="https://en.wikipedia.org/wiki/Calendar_date">https://en.wikipedia.org/wiki/Calendar_date</a></p><h3 id="ft-PGN">PGN - Parameter Group Number</h3><p/><p>
+            Encoding:
+            A 24 bit number referring to a PGN</p><h3 id="ft-ISO_NAME">ISO_NAME - ISO NAME field</h3><p/><p>64 bits
+            
+                unsigned
+              
+            number
+            </p><p>
+            Encoding:
+            A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of PGN 60928 to explain the subfields.</p><h3 id="ft-STRING_FIX">STRING_FIX - A fixed length string containing single byte codepoints.</h3><p>It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.</p><p>
             Encoding:
             The length of the string is determined by the PGN field definition. Trailing bytes have been observed as '@', ' ', 0x0 or 0xff.</p><h3 id="ft-STRING_LZ">STRING_LZ - A varying length string containing single byte codepoints encoded with a length byte and terminating zero.</h3><p>These fields have a length containing what we believe to be the maximum allowed length. Unfortunately, these are only used in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced, and for neither do we have any logfiles. Therefore the exact way to parse these fields is unclear at the moment.  It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.</p><p>
             Encoding:

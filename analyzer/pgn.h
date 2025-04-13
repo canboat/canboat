@@ -436,7 +436,18 @@ typedef struct
 
 // Fully defined NUMBER fields
 
-#define PGN_FIELD(nam, desc) {.name = nam, .size = BYTES(3), .resolution = 1, .fieldType = "PGN", .description = desc}
+#define PGN_FIELD(nam, desc) \
+  {.name        = nam,       \
+   .size        = BYTES(3),  \
+   .resolution  = 1,         \
+   .fieldType   = "PGN",     \
+   .hasSign     = false,     \
+   .description = desc,      \
+   .rangeMin    = 0,         \
+   .rangeMax    = 0x1ffff}
+
+#define ISO_NAME_FIELD(nam) \
+  {.name = nam, .size = BYTES(8), .resolution = 1, .fieldType = "ISO_NAME", .hasSign = false, .rangeMin = 0, .rangeMax = UINT64_MAX}
 
 #define INSTANCE_FIELD \
   {.name = "Instance", .size = BYTES(1), .resolution = 1, .description = NULL, .partOfPrimaryKey = true, .fieldType = "UINT8"}
@@ -933,6 +944,8 @@ void camelCase(bool upperCamelCase);
 /* lookup.c */
 extern void fillLookups(void);
 
+#define IS_MANUFACTURER_PGN(x) (((x) >= 0xff00 && (x) <= 0xffff) || (x) == 0x1ef00 || ((x) >= 0x1ff00 && (x) <= 0x1ffff))
+
 #ifdef GLOBALS
 PgnRange pgnRange[] = {{0xe800, 0xee00, 256, "ISO 11783", PACKET_SINGLE},
                        {0xef00, 0xef00, 256, "NMEA", PACKET_SINGLE},
@@ -1130,7 +1143,9 @@ Pgn pgnList[] = {
      .priority    = 6,
      .explanation = "This network management message is used to claim network address, reply to devices requesting the claimed "
                     "address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group "
-                    "Function. This PGN contains several fields that are requestable, either independently or in any combination."}
+                    "Function. This PGN contains several fields that are requestable, either independently or in any combination. "
+                    "Note that there are several places where this 64-bit data also occurs, these are named ISO_NAME and can be "
+                    "recursively explained."}
 
     /* PDU1 (addressed) single-frame PGN range 0EF00 to 0xEFFF (61184 - 61439) */
 
@@ -2626,7 +2641,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert System"),
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
-      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
       UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
@@ -2637,7 +2652,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Acknowledge Support", 1, YES_NO),
       LOOKUP_FIELD("Escalation Support", 1, YES_NO),
       RESERVED_FIELD(2),
-      SIMPLE_FIELD("Acknowledge Source Network ID NAME", BYTES(8)),
+      ISO_NAME_FIELD("Acknowledge Source Network ID NAME"),
       LOOKUP_FIELD("Trigger Condition", 4, ALERT_TRIGGER_CONDITION),
       LOOKUP_FIELD("Threshold Status", 4, ALERT_THRESHOLD_STATUS),
       UINT8_FIELD("Alert Priority"),
@@ -2654,11 +2669,11 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert System"),
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
-      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
       UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
-      SIMPLE_FIELD("Acknowledge Source Network ID NAME", BYTES(8)),
+      ISO_NAME_FIELD("Acknowledge Source Network ID NAME"),
       LOOKUP_FIELD("Response Command", 2, ALERT_RESPONSE_COMMAND),
       RESERVED_FIELD(6),
       END_OF_FIELDS}}
@@ -2673,7 +2688,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert System"),
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
-      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
       UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
@@ -2692,7 +2707,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert System"),
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
-      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
       UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
@@ -2715,7 +2730,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert System"),
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
-      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
       UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),
@@ -2739,7 +2754,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Alert System"),
       UINT8_FIELD("Alert Sub-System"),
       UINT16_FIELD("Alert ID"),
-      SIMPLE_FIELD("Data Source Network ID NAME", BYTES(8)),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
       UINT8_PRIMARY_KEY_FIELD("Data Source Instance"),
       UINT8_FIELD("Data Source Index-Source"),
       UINT8_FIELD("Alert Occurrence Number"),

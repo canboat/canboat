@@ -130,12 +130,24 @@ extern bool fieldPrintVariable(const Field   *field,
                                size_t         dataLen,
                                size_t         startBit,
                                size_t        *bits);
+extern bool fieldPrintPGN(const Field   *field,
+                          const char    *fieldName,
+                          const uint8_t *data,
+                          size_t         dataLen,
+                          size_t         startBit,
+                          size_t        *bits);
 extern bool fieldPrintKeyValue(const Field   *field,
                                const char    *fieldName,
                                const uint8_t *data,
                                size_t         dataLen,
                                size_t         startBit,
                                size_t        *bits);
+extern bool fieldPrintName(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits);
 extern void fixupUnit(Field *f);
 
 typedef enum Bool
@@ -431,11 +443,12 @@ FieldType fieldTypeList[] = {
     {.name        = "NUMBER",
      .description = "Number",
      .encodingDescription
-     = "Binary numbers are little endian. Number fields are at least two bits in length, with the highest two values "
-       "generally having a special value. "
-       "The maximum positive value means that the field is not present. The maximum positive value minus 1 means that "
-       "the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive "
-       "value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
+     = "Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to "
+       "represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the highest value minus "
+       "one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but there are few fields "
+       "that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For signed numbers "
+       "the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum "
+       "negative value.",
      .url    = "https://en.wikipedia.org/wiki/Binary_number",
      .v1Type = "Number",
      .pf     = fieldPrintNumber},
@@ -545,13 +558,12 @@ FieldType fieldTypeList[] = {
     {.name                = "LOOKUP",
      .description         = "Number value where each value encodes for a distinct meaning",
      .encodingDescription = "Each lookup has a LookupEnumeration defining what the possible values mean",
-     .comment
-     = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
-       "occurs that has no corresponding textual explanation. "
-       "Generally the same special values for Error (max value - 1) and Unknown (max value) are used for lookups, but some define "
-       "a lookup string for the maximum possible value in that field. It is unclear whether this is on purpose or just an "
-       "oversight"
-       " on the part of the NMEA committee.",
+     .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
+                "occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) "
+                "and Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a "
+                "lookup key/value pair for the maximum possible "
+                "value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup fields that specify "
+                "four actual valid values. This makes it impossible to send an unknown value for these fields. ",
      .hasSign = False,
      .pf      = fieldPrintLookup,
      .v1Type  = "Lookup table"},
@@ -1289,7 +1301,20 @@ FieldType fieldTypeList[] = {
      .comment       = "Devices that support multiple sensors TODO",
      .baseFieldType = "UINT8"},
 
-    {.name = "PGN", .description = "PRN number", .resolution = 1, .baseFieldType = "UINT24"},
+    {.name                = "PGN",
+     .description         = "Parameter Group Number",
+     .resolution          = 1,
+     .pf                  = fieldPrintPGN,
+     .encodingDescription = "A 24 bit number referring to a PGN"},
+
+    {.name                = "ISO_NAME",
+     .description         = "ISO NAME field",
+     .resolution          = 1,
+     .size                = 64,
+     .hasSign             = false,
+     .pf                  = fieldPrintName,
+     .encodingDescription = "A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of "
+                            "PGN 60928 to explain the subfields."},
 
     {.name          = "POWER_FACTOR_UFIX16",
      .description   = "Power Factor",

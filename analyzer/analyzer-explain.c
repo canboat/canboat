@@ -1239,6 +1239,11 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
          "</PGNDefinitions>\n");
 }
 
+extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool showData, bool showJson, size_t *variableFields)
+{
+  return false;
+}
+
 extern bool fieldPrintVariable(const Field   *field,
                                const char    *fieldName,
                                const uint8_t *data,

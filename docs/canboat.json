@@ -216,7 +216,7 @@
     {
         "Name":"NUMBER",
       "Description":"Number",
-      "EncodingDescription":"Binary numbers are little endian. Number fields are at least two bits in length, with the highest two values generally having a special value. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
+      "EncodingDescription":"Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the highest value minus one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but there are few fields that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
       "URL":"https://en.wikipedia.org/wiki/Binary_number"
       },
     {
@@ -237,7 +237,7 @@
         "Name":"LOOKUP",
       "Description":"Number value where each value encodes for a distinct meaning",
       "EncodingDescription":"Each lookup has a LookupEnumeration defining what the possible values mean",
-      "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) are used for lookups, but some define a lookup string for the maximum possible value in that field. It is unclear whether this is on purpose or just an oversight on the part of the NMEA committee.",
+      "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a lookup key/value pair for the maximum possible value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup fields that specify four actual valid values. This makes it impossible to send an unknown value for these fields. ",
       "Signed":false
       },
     {
@@ -279,6 +279,17 @@
       "Bits":16,
       "Unit":"d",
       "Signed":false
+      },
+    {
+        "Name":"PGN",
+      "Description":"Parameter Group Number",
+      "EncodingDescription":"A 24 bit number referring to a PGN"
+      },
+    {
+        "Name":"ISO_NAME",
+      "Description":"ISO NAME field",
+      "EncodingDescription":"A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of PGN 60928 to explain the subfields.",
+      "Bits":64
       },
     {
         "Name":"STRING_FIX",
@@ -3538,10 +3549,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           }
         ]
       },
@@ -3565,10 +3575,9 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           }
         ]
       },
@@ -3686,10 +3695,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           }
         ]
       },
@@ -3767,10 +3775,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           }
         ]
       },
@@ -3848,10 +3855,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           }
         ]
       },
@@ -3929,10 +3935,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           }
         ]
       },
@@ -3992,10 +3997,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           }
         ]
       },
@@ -4004,7 +4008,7 @@
         "Id":"isoAddressClaim",
         "Description":"ISO Address Claim",
         "Priority":6,
-        "Explanation":"This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination.",
+        "Explanation":"This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination. Note that there are several places where this 64-bit data also occurs, these are named ISO_NAME and can be recursively explained.",
         "Type":"Single",
         "Complete":true,
         "FieldCount":10,
@@ -10452,10 +10456,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           },
           {
             "Order":3,
@@ -10567,10 +10570,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           },
           {
             "Order":3,
@@ -10676,10 +10678,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           },
           {
             "Order":3,
@@ -10783,10 +10784,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           },
           {
             "Order":3,
@@ -10939,10 +10939,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           },
           {
             "Order":3,
@@ -11102,10 +11101,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           },
           {
             "Order":3,
@@ -11265,10 +11263,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           },
           {
             "Order":3,
@@ -11419,10 +11416,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           }
         ]
       },
@@ -15187,10 +15183,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":18446744073709551615,
-            "FieldType":"NUMBER"
+            "RangeMax":1.844674407370955e+19,
+            "FieldType":"ISO_NAME"
           },
           {
             "Order":7,
@@ -15334,10 +15329,9 @@
             "BitOffset":136,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":18446744073709551615,
-            "FieldType":"NUMBER"
+            "RangeMax":1.844674407370955e+19,
+            "FieldType":"ISO_NAME"
           },
           {
             "Order":18,
@@ -15482,10 +15476,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":18446744073709551615,
-            "FieldType":"NUMBER"
+            "RangeMax":1.844674407370955e+19,
+            "FieldType":"ISO_NAME"
           },
           {
             "Order":7,
@@ -15535,10 +15528,9 @@
             "BitOffset":128,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":18446744073709551615,
-            "FieldType":"NUMBER"
+            "RangeMax":1.844674407370955e+19,
+            "FieldType":"ISO_NAME"
           },
           {
             "Order":11,
@@ -15652,10 +15644,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":18446744073709551615,
-            "FieldType":"NUMBER"
+            "RangeMax":1.844674407370955e+19,
+            "FieldType":"ISO_NAME"
           },
           {
             "Order":7,
@@ -15815,10 +15806,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":18446744073709551615,
-            "FieldType":"NUMBER"
+            "RangeMax":1.844674407370955e+19,
+            "FieldType":"ISO_NAME"
           },
           {
             "Order":7,
@@ -16026,10 +16016,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":18446744073709551615,
-            "FieldType":"NUMBER"
+            "RangeMax":1.844674407370955e+19,
+            "FieldType":"ISO_NAME"
           },
           {
             "Order":7,
@@ -16228,10 +16217,9 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":18446744073709551615,
-            "FieldType":"NUMBER"
+            "RangeMax":1.844674407370955e+19,
+            "FieldType":"ISO_NAME"
           },
           {
             "Order":7,
@@ -33237,10 +33225,9 @@
             "BitOffset":88,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":131071,
+            "FieldType":"PGN"
           },
           {
             "Order":7,

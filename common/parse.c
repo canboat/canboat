@@ -89,7 +89,7 @@ int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
              &junk);
   if (r < 5)
   {
-    logError("Error reading message, scanned %u from %s", r, msg);
+    logError("Error reading message, scanned %zu from %s", r, msg);
     if (!showJson)
       fprintf(stdout, "%s", msg);
     return 2;
@@ -131,11 +131,10 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
   memcpy(m->timestamp, msg, p - msg);
   m->timestamp[p - msg] = 0;
 
-  /* Moronic Windows does not support %hh<type> so we use intermediate variables */
   r = sscanf(p, ",%u,%u,%u,%u,%u ", &prio, &pgn, &src, &dst, &len);
   if (r < 5)
   {
-    logError("Error reading message, scanned %u from %s", r, msg);
+    logError("Error reading message, scanned %zu from %s", r, msg);
     if (!showJson)
       fprintf(stdout, "%s", msg);
     return 2;
@@ -144,7 +143,7 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
   p = findOccurrence(p, ',', 6);
   if (!p)
   {
-    logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
+    logError("Error reading message, cannot find sixth comma in %s", msg);
     if (!showJson)
       fprintf(stdout, "%s", msg);
     return 2;

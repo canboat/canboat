@@ -100,6 +100,8 @@ extern int64_t      g_length;
 
 /* analyzer.c */
 
+extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool showData, bool showJson, size_t *variableFields);
+
 /* print.c */
 
 extern char  *getSep(void);

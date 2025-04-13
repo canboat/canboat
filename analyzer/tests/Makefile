@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 tests
 
 all:	tests
 
@@ -107,4 +107,12 @@ test10:
 	diff $(TEMPDIR)/mixed-format.out mixed-format.out
 	diff $(TEMPDIR)/mixed-format.err mixed-format.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10
+#
+# This tests that analyzer correctly parses files with nested ISO_NAME fields
+#
+test11:	
+	$(ANALYZER) -json -nv < pgn-126983.in > $(TEMPDIR)/pgn-126983-nv.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-126983-nv.err
+	diff $(TEMPDIR)/pgn-126983-nv.out pgn-126983-nv.out
+	diff $(TEMPDIR)/pgn-126983-nv.err pgn-126983-nv.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11
