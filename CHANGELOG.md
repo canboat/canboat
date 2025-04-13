@@ -14,6 +14,9 @@ field present with a `true` value) contributes to the _Primary key_ of the data 
 e.g. any message with a different primary key is from a different source. Fields 
 like `Source Id`, `Message Id` or `Instance` will have this set to true.
 
+Also, in -json -nv mode and in text mode all fields that refer to a PGN will explain
+the meaning of the PGN value (if it is not a proprietary PGN number.)
+
 ### Fixed
 
 - Updated copyrights to 2025.
@@ -34,6 +37,7 @@ like `Source Id`, `Message Id` or `Instance` will have this set to true.
 - #498: Document uncertainty around STRING_LZ fields.
 - #499: DataTransmitOffset is in centiseconds, not millis.
 - #501: Split TIME into TIME and DURATION.
+- #503: Introduce PGN field type.
 
 ### Added
 
