@@ -1529,7 +1529,7 @@ CM_ SG_ 2566848766 industryCode "Marine Industry";
 CM_ SG_ 2566848766 manufacturerCode "Furuno";
 CM_ BO_ 2566849790 "Maretron: Proprietary DC Breaker Current";
 CM_ SG_ 2566849790 industryCode "Marine Industry";
-CM_ SG_ 2566849790 manufacturerCode "Maretron (Littelfuse, Inc)";
+CM_ SG_ 2566849790 manufacturerCode "Maretron";
 CM_ BO_ 2566850814 "Seatalk: Alarm";
 CM_ SG_ 2566850814 industryCode "Marine Industry";
 CM_ SG_ 2566850814 manufacturerCode "Raymarine";
