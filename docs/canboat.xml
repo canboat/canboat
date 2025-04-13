@@ -388,10 +388,12 @@ limitations under the License.
       <EnumPair Value='147' Name='Nautibus Electronic GmbH' />
       <EnumPair Value='148' Name='Blue Water Data' />
       <EnumPair Value='154' Name='Westerbeke' />
+      <EnumPair Value='157' Name='ISSPRO Inc' />
       <EnumPair Value='161' Name='Offshore Systems (UK) Ltd.' />
       <EnumPair Value='163' Name='Evinrude/BRP' />
       <EnumPair Value='165' Name='CPAC Systems AB' />
       <EnumPair Value='168' Name='Xantrex Technology Inc.' />
+      <EnumPair Value='169' Name='Marlin Technologies, Inc.' />
       <EnumPair Value='172' Name='Yanmar Marine' />
       <EnumPair Value='174' Name='Volvo Penta' />
       <EnumPair Value='175' Name='Honda Marine' />
@@ -478,7 +480,9 @@ limitations under the License.
       <EnumPair Value='517' Name='NoLand Engineering' />
       <EnumPair Value='518' Name='Transas USA' />
       <EnumPair Value='529' Name='National Instruments Korea' />
+      <EnumPair Value='530' Name='National Marine Electronics Association' />
       <EnumPair Value='532' Name='Onwa Marine' />
+      <EnumPair Value='540' Name='Webasto' />
       <EnumPair Value='571' Name='Marinecraft (South Korea)' />
       <EnumPair Value='573' Name='McMurdo Group aka Orolia LTD' />
       <EnumPair Value='578' Name='Advansea' />
@@ -499,14 +503,18 @@ limitations under the License.
       <EnumPair Value='645' Name='Garmin' />
       <EnumPair Value='658' Name='Shenzhen Jiuzhou Himunication' />
       <EnumPair Value='688' Name='Rockford Corp' />
+      <EnumPair Value='699' Name='Harman International' />
       <EnumPair Value='704' Name='JL Audio' />
+      <EnumPair Value='708' Name='Lars Thrane' />
       <EnumPair Value='715' Name='Autonnic' />
       <EnumPair Value='717' Name='Yacht Devices' />
       <EnumPair Value='734' Name='REAP Systems' />
       <EnumPair Value='735' Name='Au Electronics Group' />
       <EnumPair Value='739' Name='LxNav' />
+      <EnumPair Value='741' Name='Littelfuse, Inc (formerly Carling Technologies)' />
       <EnumPair Value='743' Name='DaeMyung' />
       <EnumPair Value='744' Name='Woosung' />
+      <EnumPair Value='748' Name='ISOTTA IFRA srl' />
       <EnumPair Value='773' Name='Clarion US' />
       <EnumPair Value='776' Name='HMI Systems' />
       <EnumPair Value='777' Name='Ocean Signal' />
@@ -523,6 +531,7 @@ limitations under the License.
       <EnumPair Value='811' Name='Blue Water Desalination' />
       <EnumPair Value='815' Name='FLIR' />
       <EnumPair Value='824' Name='Undheim Systems' />
+      <EnumPair Value='826' Name='Lewmar Inc' />
       <EnumPair Value='838' Name='TeamSurv' />
       <EnumPair Value='844' Name='Fell Marine' />
       <EnumPair Value='847' Name='Oceanvolt' />
@@ -534,12 +543,113 @@ limitations under the License.
       <EnumPair Value='905' Name='ASA Electronics' />
       <EnumPair Value='909' Name='Marines Co (South Korea)' />
       <EnumPair Value='911' Name='Nautic-on' />
+      <EnumPair Value='917' Name='Sentinel' />
+      <EnumPair Value='929' Name='JL Marine ystems' />
       <EnumPair Value='930' Name='Ecotronix' />
+      <EnumPair Value='944' Name='Zontisa Marine' />
+      <EnumPair Value='951' Name='EXOR International' />
       <EnumPair Value='962' Name='Timbolier Industries' />
       <EnumPair Value='963' Name='TJC Micro' />
       <EnumPair Value='968' Name='Cox Powertrain' />
       <EnumPair Value='969' Name='Blue Seas' />
+      <EnumPair Value='981' Name='Kobelt Manufacturing Co. Ltd' />
+      <EnumPair Value='992' Name='Blue Ocean IOT' />
+      <EnumPair Value='997' Name='Xenta Systems' />
+      <EnumPair Value='1004' Name='Ultraflex SpA' />
+      <EnumPair Value='1008' Name='Lintest SmartBoat' />
+      <EnumPair Value='1011' Name='Soundmax' />
+      <EnumPair Value='1020' Name='Team Italia Marine (Onyx Marine Automation s.r.l)' />
+      <EnumPair Value='1021' Name='Entratech' />
+      <EnumPair Value='1022' Name='ITC Inc.' />
+      <EnumPair Value='1029' Name='The Marine Guardian LLC' />
+      <EnumPair Value='1047' Name='Sonic Corporation' />
+      <EnumPair Value='1051' Name='ProNav' />
+      <EnumPair Value='1053' Name='Vetus Maxwell INC.' />
+      <EnumPair Value='1056' Name='Lithium Pros' />
+      <EnumPair Value='1059' Name='Boatrax' />
+      <EnumPair Value='1062' Name='Marol Co ltd' />
+      <EnumPair Value='1065' Name='CALYPSO Instruments' />
+      <EnumPair Value='1066' Name='Spot Zero Water' />
+      <EnumPair Value='1069' Name='Lithionics Battery LLC' />
+      <EnumPair Value='1070' Name='Quick-teck Electronics Ltd' />
+      <EnumPair Value='1075' Name='Uniden America' />
+      <EnumPair Value='1083' Name='Nauticoncept' />
+      <EnumPair Value='1084' Name='Shadow-Caster LED lighting LLC' />
+      <EnumPair Value='1085' Name='Wet Sounds, LLC' />
+      <EnumPair Value='1088' Name='E-T-A Circuit Breakers' />
+      <EnumPair Value='1092' Name='Scheiber' />
+      <EnumPair Value='1100' Name='Smart Yachts International Limited' />
+      <EnumPair Value='1109' Name='Dockmate' />
+      <EnumPair Value='1114' Name='Bobs Machine' />
+      <EnumPair Value='1118' Name='L3Harris ASV' />
+      <EnumPair Value='1119' Name='Balmar LLC' />
+      <EnumPair Value='1120' Name='Elettromedia spa' />
+      <EnumPair Value='1127' Name='Electromaax' />
+      <EnumPair Value='1140' Name='Across Oceans Systems Ltd.' />
+      <EnumPair Value='1145' Name='Kiwi Yachting' />
+      <EnumPair Value='1150' Name='BSB Artificial Intelligence GmbH' />
+      <EnumPair Value='1151' Name='Orca Technologoes AS' />
+      <EnumPair Value='1154' Name='TBS Electronics BV' />
+      <EnumPair Value='1158' Name='Technoton Electroics' />
+      <EnumPair Value='1160' Name='MG Energy Systems B.V.' />
+      <EnumPair Value='1169' Name='Sea Macine Robotics Inc.' />
+      <EnumPair Value='1171' Name='Vista Manufacturing' />
+      <EnumPair Value='1183' Name='Zipwake' />
+      <EnumPair Value='1186' Name='Sailmon BV' />
+      <EnumPair Value='1192' Name='Airmoniq Pro Kft' />
+      <EnumPair Value='1194' Name='Sierra Marine' />
+      <EnumPair Value='1200' Name='Xinuo Information Technology (Xiamen)' />
+      <EnumPair Value='1218' Name='Septentrio' />
+      <EnumPair Value='1233' Name='NKE Marine Elecronics' />
+      <EnumPair Value='1238' Name='SuperTrack Aps' />
+      <EnumPair Value='1239' Name='Honda Electronics Co., LTD' />
+      <EnumPair Value='1245' Name='Raritan Engineering Company, Inc' />
+      <EnumPair Value='1249' Name='Integrated Power Solutions AG' />
+      <EnumPair Value='1260' Name='Interactive Technologies, Inc.' />
+      <EnumPair Value='1283' Name='LTG-Tech' />
+      <EnumPair Value='1299' Name='Energy Solutions (UK) LTD.' />
+      <EnumPair Value='1300' Name='WATT Fuel Cell Corp' />
+      <EnumPair Value='1302' Name='Pro Mainer' />
+      <EnumPair Value='1305' Name='Dragonfly Energy' />
+      <EnumPair Value='1306' Name='Koden Electronics Co., Ltd' />
+      <EnumPair Value='1311' Name='Humphree AB' />
+      <EnumPair Value='1316' Name='Hinkley Yachts' />
+      <EnumPair Value='1317' Name='Global Marine Management GmbH (GMM)' />
+      <EnumPair Value='1320' Name='Triskel Marine Ltd' />
+      <EnumPair Value='1330' Name='Warwick Control Technologies' />
+      <EnumPair Value='1331' Name='Dolphin Charger' />
+      <EnumPair Value='1337' Name='Barnacle Systems Inc' />
+      <EnumPair Value='1348' Name='Radian IoT, Inc.' />
+      <EnumPair Value='1353' Name='Ocean LED Marine Ltd' />
+      <EnumPair Value='1359' Name='BluNav' />
+      <EnumPair Value='1361' Name='OVA (Nantong Saiyang Electronics Co., Ltd)' />
+      <EnumPair Value='1368' Name='RAD Propulsion' />
+      <EnumPair Value='1369' Name='Electric Yacht' />
+      <EnumPair Value='1372' Name='Elco Motor Yachts' />
+      <EnumPair Value='1384' Name='Tecnoseal Foundry S.r.l' />
+      <EnumPair Value='1385' Name='Pro Charging Systems, LLC' />
+      <EnumPair Value='1389' Name='EVEX Co., LTD' />
+      <EnumPair Value='1398' Name='Gobius Sensor Technology AB' />
+      <EnumPair Value='1403' Name='Arco Marine' />
+      <EnumPair Value='1408' Name='Lenco Marine Inc.' />
+      <EnumPair Value='1413' Name='Naocontrol S.L.' />
       <EnumPair Value='1417' Name='Revatek' />
+      <EnumPair Value='1438' Name='Aeolionics' />
+      <EnumPair Value='1439' Name='PredictWind Ltd' />
+      <EnumPair Value='1440' Name='Egis Mobile Electric' />
+      <EnumPair Value='1445' Name='Starboard Yacht Group' />
+      <EnumPair Value='1446' Name='Roswell Marine' />
+      <EnumPair Value='1451' Name='ePropulsion (Guangdong ePropulsion Technology Ltd.)' />
+      <EnumPair Value='1452' Name='Micro-Air LLC' />
+      <EnumPair Value='1453' Name='Vital Battery' />
+      <EnumPair Value='1458' Name='Ride Controller LLC' />
+      <EnumPair Value='1460' Name='Tocaro Blue' />
+      <EnumPair Value='1461' Name='Vanquish Yachts' />
+      <EnumPair Value='1471' Name='FT Technologies' />
+      <EnumPair Value='1478' Name='Alps Alpine Co., Ltd.' />
+      <EnumPair Value='1481' Name='E-Force Marine' />
+      <EnumPair Value='1482' Name='CMC Marine' />
+      <EnumPair Value='1483' Name='Nanjing Sandemarine Information Technology Co., Ltd.' />
       <EnumPair Value='1850' Name='Teleflex Marine (SeaStar Solutions)' />
       <EnumPair Value='1851' Name='Raymarine' />
       <EnumPair Value='1852' Name='Navionics' />
@@ -17628,6 +17738,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>8</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -19983,6 +20094,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
