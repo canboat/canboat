@@ -26,7 +26,6 @@ in that single NAME field. These subfields are the same fields as described in P
 
 - Updated copyrights to 2025.
 - Updated URLs to refer to web archive where needed and available (not all...)
-- Updated company lookup to refer to all companies known in Oct 2024.
 - #475: FieldType VARIABLE should have the VariableSize attribute set to True.
 - #474: PGN updates
 - #473: PGN 129546 field lengths and types
@@ -49,6 +48,8 @@ in that single NAME field. These subfields are the same fields as described in P
 
 - #488: Added Raymarine PGNS 130848 and 130918
 - #481: Add manufacturer code for Revatek
+- #482: Add PGNs 127747-127749.
+- Updated manufacturer codes to refer to all companies known in Oct 2024.
 
 ### [5.1.3]
 

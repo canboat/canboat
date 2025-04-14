@@ -733,6 +733,27 @@ BO_ 2582840062 PGN_127746_acPowerCurrentPhaseC: 8 Vector__XXX
  SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2582840318 PGN_127747_acVoltageFrequencyPha: 8 Vector__XXX
+ SG_ frequency : 48|16@1+ (0.1,0) [0|0] "Hz" Vector__XXX
+ SG_ acVoltageLineToLine : 32|16@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ acVoltageLineToNeutral : 16|16@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2582840574 PGN_127748_acVoltageFrequencyPha: 8 Vector__XXX
+ SG_ frequency : 48|16@1+ (0.1,0) [0|0] "Hz" Vector__XXX
+ SG_ acVoltageLineToLine : 32|16@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ acVoltageLineToNeutral : 16|16@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2582840830 PGN_127749_acVoltageFrequencyPha: 8 Vector__XXX
+ SG_ frequency : 48|16@1+ (0.1,0) [0|0] "Hz" Vector__XXX
+ SG_ acVoltageLineToLine : 32|16@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ acVoltageLineToNeutral : 16|16@1+ (0.1,0) [0|0] "V" Vector__XXX
+ SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2582841086 PGN_127750_converterStatus: 8 Vector__XXX
  SG_ reserved : 32|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ rippleState : 30|2@1+ (1,0) [0|0] "" Vector__XXX
@@ -1643,6 +1664,9 @@ CM_ BO_ 2582780670 "AGS Status";
 CM_ BO_ 2582839550 "AC Power / Current - Phase A";
 CM_ BO_ 2582839806 "AC Power / Current - Phase B";
 CM_ BO_ 2582840062 "AC Power / Current - Phase C";
+CM_ BO_ 2582840318 "AC Voltage / Frequency - Phase A";
+CM_ BO_ 2582840574 "AC Voltage / Frequency - Phase B";
+CM_ BO_ 2582840830 "AC Voltage / Frequency - Phase C";
 CM_ BO_ 2582841086 "Converter Status";
 CM_ BO_ 2582841342 "DC Voltage/Current";
 CM_ BO_ 2582905086 "Leeway Angle";
@@ -1853,6 +1877,9 @@ BA_ "SystemMessageLongSymbol" BO_ 2582779646 "PGN_127510_chargerConfigurationSta
 BA_ "SystemMessageLongSymbol" BO_ 2582779902 "PGN_127511_inverterConfigurationStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2582780158 "PGN_127512_agsConfigurationStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2582780414 "PGN_127513_batteryConfigurationStatus";
+BA_ "SystemMessageLongSymbol" BO_ 2582840318 "PGN_127747_acVoltageFrequencyPhaseA";
+BA_ "SystemMessageLongSymbol" BO_ 2582840574 "PGN_127748_acVoltageFrequencyPhaseB";
+BA_ "SystemMessageLongSymbol" BO_ 2582840830 "PGN_127749_acVoltageFrequencyPhaseC";
 BA_ "SystemMessageLongSymbol" BO_ 2582905598 "PGN_128002_electricDriveStatusRapidUpdate";
 BA_ "SystemMessageLongSymbol" BO_ 2582905854 "PGN_128003_electricEnergyStorageStatusRapidUpdate";
 BA_ "SystemSignalLongSymbol" SG_ 2583101694 motorAccelerationDecelerationPro "motorAccelerationDecelerationProfileSelection";

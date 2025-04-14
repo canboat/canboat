@@ -3553,6 +3553,42 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"AC Voltage / Frequency - Phase A",
+     127747,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {UINT8_FIELD("SID"),
+      UINT8_FIELD("Connection Number"),
+      VOLTAGE_U16_100MV_FIELD("AC Voltage Line to Neutral"),
+      VOLTAGE_U16_100MV_FIELD("AC Voltage Line to Line"),
+      FREQUENCY_FIELD("Frequency", 0.1),
+      END_OF_FIELDS}}
+
+    ,
+    {"AC Voltage / Frequency - Phase B",
+     127748,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {UINT8_FIELD("SID"),
+      UINT8_FIELD("Connection Number"),
+      VOLTAGE_U16_100MV_FIELD("AC Voltage Line to Neutral"),
+      VOLTAGE_U16_100MV_FIELD("AC Voltage Line to Line"),
+      FREQUENCY_FIELD("Frequency", 0.1),
+      END_OF_FIELDS}}
+
+    ,
+    {"AC Voltage / Frequency - Phase C",
+     127749,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {UINT8_FIELD("SID"),
+      UINT8_FIELD("Connection Number"),
+      VOLTAGE_U16_100MV_FIELD("AC Voltage Line to Neutral"),
+      VOLTAGE_U16_100MV_FIELD("AC Voltage Line to Line"),
+      FREQUENCY_FIELD("Frequency", 0.1),
+      END_OF_FIELDS}}
+
+    ,
     {"Converter Status",
      127750,
      PACKET_COMPLETE,
