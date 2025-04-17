@@ -444,7 +444,7 @@ typedef struct
    .hasSign     = false,     \
    .description = desc,      \
    .rangeMin    = 0,         \
-   .rangeMax    = 0x1ffff}
+   .rangeMax    = 0x3ffff}
 
 #define ISO_NAME_FIELD(nam) \
   {.name = nam, .size = BYTES(8), .resolution = 1, .fieldType = "ISO_NAME", .hasSign = false, .rangeMin = 0, .rangeMax = UINT64_MAX}
@@ -1134,8 +1134,9 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Industry Group", 3, INDUSTRY_CODE),
       // "Arbitrary address capable" is explained at
       // https://embeddedflakes.com/network-management-in-sae-j1939/#Arbitrary_Address_Capable
-      SIMPLE_DESC_FIELD("Arbitrary address capable",
+      LOOKUP_FIELD_DESC("Arbitrary address capable",
                         1,
+                        YES_NO,
                         "Field indicates whether the device is capable to claim arbitrary source "
                         "address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims"),
       END_OF_FIELDS},
@@ -4949,7 +4950,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {LOOKUP_FIELD("DSC Format", BYTES(1), DSC_FORMAT),
-      MATCH_FIELD("DSC Category", BYTES(1), 112, "Distress"),
+      MATCH_LOOKUP_FIELD("DSC Category", BYTES(1), 112, DSC_CATEGORY),
       DECIMAL_FIELD("DSC Message Address", 10, "MMSI, Geographic Area or blank"),
       LOOKUP_FIELD("Nature of Distress", BYTES(1), DSC_NATURE),
       LOOKUP_FIELD("Subsequent Communication Mode or 2nd Telecommand", BYTES(1), DSC_SECOND_TELECOMMAND),
@@ -5122,7 +5123,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {SIMPLE_FIELD("Hardware Channel ID", 8),
-      SIMPLE_FIELD("PGN", 24),
+      PGN_FIELD("PGN", NULL),
       SIMPLE_FIELD("Data Source Instance Field Number", 8),
       SIMPLE_FIELD("Data Source Instance Value", 8),
       SIMPLE_FIELD("Secondary Enumeration Field Number", 8),
@@ -5140,7 +5141,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Source Selection Status", 2),
       RESERVED_FIELD(2),
       BINARY_FIELD("NAME Selection Criteria Mask", 12, NULL),
-      SIMPLE_FIELD("Source NAME", BYTES(8)),
+      ISO_NAME_FIELD("Source NAME"),
       PGN_FIELD("PGN", NULL),
       UINT8_FIELD("Data Source Instance Field Number"),
       UINT8_FIELD("Data Source Instance Value"),

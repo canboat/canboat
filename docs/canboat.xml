@@ -2927,7 +2927,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -2953,7 +2953,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -3073,7 +3073,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -3153,7 +3153,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -3233,7 +3233,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -3313,7 +3313,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -3375,7 +3375,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -3532,7 +3532,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
@@ -10002,7 +10003,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -10116,7 +10117,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -10224,7 +10225,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -10333,7 +10334,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -10488,7 +10489,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -10650,7 +10651,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -10812,7 +10813,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -10965,7 +10966,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -31789,7 +31790,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>DSC_CATEGORY</LookupEnumeration>
         </Field>
         <Field>
           <Order>3</Order>
@@ -33151,10 +33153,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>262143</RangeMax>
+          <FieldType>PGN</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
@@ -33300,10 +33301,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>18446744073709551615</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1.844674407370955e+19</RangeMax>
+          <FieldType>ISO_NAME</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -33314,7 +33314,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>

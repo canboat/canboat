@@ -567,6 +567,11 @@ limitations under the License.
           <xs:documentation>
             If present and set to true, this field serves as a component of the primary key for the PGN.
             It uniquely identifies records in conjunction with other key fields.
+            Pure simplistic analyzers or software that just passes this data on can ignore this field.
+            Software that stores data organised by source can store data indexed by all primary key
+            fields. In other words: if a PGN repeats but it contains a different value in the primary
+            key fields, it is for a different object. The prime example is AIS, where a different source
+            MMSI means it is from a different ship. 
           </xs:documentation>
         </xs:annotation>
       </xs:element>

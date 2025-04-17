@@ -92,7 +92,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -114,7 +114,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -227,7 +227,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -302,7 +302,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -377,7 +377,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -452,7 +452,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -510,7 +510,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -968,11 +968,15 @@ limitations under the License.
           <BitLength>1</BitLength>
           <BitOffset>63</BitOffset>
           <BitStart>7</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='No' />
+            <EnumPair Value='1' Name='Yes' />
+          </EnumValues>
         </Field>
       </Fields>
     </PGNInfo>
@@ -7460,7 +7464,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -7566,7 +7570,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -7679,7 +7683,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -7805,7 +7809,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -8248,7 +8252,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -8698,7 +8702,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -9148,7 +9152,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -9595,7 +9599,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -31645,7 +31649,7 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Match>112</Match>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -33292,11 +33296,10 @@ limitations under the License.
           <BitLength>24</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
@@ -33442,11 +33445,10 @@ limitations under the License.
           <BitLength>64</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>18446744073709551615</RangeMax>
+          <RangeMax>1.844674407370955e+19</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
@@ -33458,7 +33460,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>131071</RangeMax>
+          <RangeMax>262143</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>

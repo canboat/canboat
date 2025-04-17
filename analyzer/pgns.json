@@ -62,7 +62,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071}]},
+            "RangeMax":262143}]},
       {
         "PGN":59904,
         "Id":"isoRequest",
@@ -81,7 +81,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071}]},
+            "RangeMax":262143}]},
       {
         "PGN":60160,
         "Id":"isoTransportProtocolDataTransfer",
@@ -183,7 +183,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071}]},
+            "RangeMax":262143}]},
       {
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementClearToSend",
@@ -251,7 +251,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071}]},
+            "RangeMax":262143}]},
       {
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementEndOfMessage",
@@ -319,7 +319,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071}]},
+            "RangeMax":262143}]},
       {
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementBroadcastAnnounce",
@@ -387,7 +387,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071}]},
+            "RangeMax":262143}]},
       {
         "PGN":60416,
         "Id":"isoTransportProtocolConnectionManagementAbort",
@@ -439,7 +439,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071}]},
+            "RangeMax":262143}]},
       {
         "PGN":60928,
         "Id":"isoAddressClaim",
@@ -882,11 +882,14 @@
             "BitLength":1,
             "BitOffset":63,
             "BitStart":7,
-            "Type":"Integer",
+            "Type":"Lookup table",
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1}]},
+            "RangeMax":1,
+            "EnumValues":[
+              {"name": "No", "value": 0},
+              {"name": "Yes", "value": 1}]}]},
       {
         "PGN":61184,
         "Id":"seatalkWirelessKeypadLightControl",
@@ -6764,7 +6767,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071},
+            "RangeMax":262143},
           {
             "Order":3,
             "Id":"transmissionInterval",
@@ -6861,7 +6864,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071},
+            "RangeMax":262143},
           {
             "Order":3,
             "Id":"priority",
@@ -6964,7 +6967,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071},
+            "RangeMax":262143},
           {
             "Order":3,
             "Id":"pgnErrorCode",
@@ -7078,7 +7081,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071},
+            "RangeMax":262143},
           {
             "Order":3,
             "Id":"manufacturerCode",
@@ -7506,7 +7509,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071},
+            "RangeMax":262143},
           {
             "Order":3,
             "Id":"manufacturerCode",
@@ -7940,7 +7943,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071},
+            "RangeMax":262143},
           {
             "Order":3,
             "Id":"manufacturerCode",
@@ -8374,7 +8377,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071},
+            "RangeMax":262143},
           {
             "Order":3,
             "Id":"manufacturerCode",
@@ -8804,7 +8807,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071}]},
+            "RangeMax":262143}]},
       {
         "PGN":126720,
         "Id":"seatalk1PilotMode",
@@ -28797,7 +28800,7 @@
             "BitOffset":8,
             "BitStart":0,
             "Match":112,
-            "Type":"Integer",
+            "Type":"Lookup table",
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -30290,11 +30293,10 @@
             "BitLength":24,
             "BitOffset":8,
             "BitStart":0,
-            "Type":"Integer",
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213},
+            "RangeMax":262143},
           {
             "Order":3,
             "Id":"dataSourceInstanceFieldNumber",
@@ -30426,11 +30428,10 @@
             "BitLength":64,
             "BitOffset":24,
             "BitStart":0,
-            "Type":"Integer",
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":18446744073709551615},
+            "RangeMax":1.844674407370955e+19},
           {
             "Order":6,
             "Id":"pgn",
@@ -30441,7 +30442,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":131071},
+            "RangeMax":262143},
           {
             "Order":7,
             "Id":"dataSourceInstanceFieldNumber",

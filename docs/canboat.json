@@ -3559,7 +3559,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           }
         ]
@@ -3585,7 +3585,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           }
         ]
@@ -3705,7 +3705,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           }
         ]
@@ -3785,7 +3785,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           }
         ]
@@ -3865,7 +3865,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           }
         ]
@@ -3945,7 +3945,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           }
         ]
@@ -4007,7 +4007,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           }
         ]
@@ -4164,7 +4164,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":1,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"YES_NO"
           }
         ]
       },
@@ -10466,7 +10467,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           },
           {
@@ -10580,7 +10581,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           },
           {
@@ -10688,7 +10689,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           },
           {
@@ -10794,7 +10795,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           },
           {
@@ -10949,7 +10950,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           },
           {
@@ -11111,7 +11112,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           },
           {
@@ -11273,7 +11274,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           },
           {
@@ -11426,7 +11427,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           }
         ]
@@ -31985,7 +31986,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"DSC_CATEGORY"
           },
           {
             "Order":3,
@@ -33329,10 +33331,9 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777213,
-            "FieldType":"NUMBER"
+            "RangeMax":262143,
+            "FieldType":"PGN"
           },
           {
             "Order":3,
@@ -33475,10 +33476,9 @@
             "BitOffset":24,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":18446744073709551615,
-            "FieldType":"NUMBER"
+            "RangeMax":1.844674407370955e+19,
+            "FieldType":"ISO_NAME"
           },
           {
             "Order":6,
@@ -33489,7 +33489,7 @@
             "BitStart":0,
             "Resolution":1,
             "RangeMin":0,
-            "RangeMax":131071,
+            "RangeMax":262143,
             "FieldType":"PGN"
           },
           {
