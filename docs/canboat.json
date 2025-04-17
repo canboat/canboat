@@ -1841,8 +1841,12 @@
         "Name":"FUSION_PLAY_STATUS",
         "MaxValue":15,
         "EnumValues":[
+          {"Name":"Invalid", "Value":0},
           {"Name":"Playing", "Value":1},
-          {"Name":"Paused", "Value":2}
+          {"Name":"Paused", "Value":2},
+          {"Name":"Stopped", "Value":3},
+          {"Name":"Skip Forward", "Value":4},
+          {"Name":"Skip Rewind", "Value":5}
         ]
       },
       {

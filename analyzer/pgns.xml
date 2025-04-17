@@ -43991,8 +43991,12 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>13</RangeMax>
           <EnumValues>
+            <EnumPair Value='0' Name='Invalid' />
             <EnumPair Value='1' Name='Playing' />
             <EnumPair Value='2' Name='Paused' />
+            <EnumPair Value='3' Name='Stopped' />
+            <EnumPair Value='4' Name='Skip Forward' />
+            <EnumPair Value='5' Name='Skip Rewind' />
           </EnumValues>
         </Field>
         <Field>

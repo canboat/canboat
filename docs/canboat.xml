@@ -1503,8 +1503,12 @@ limitations under the License.
       <EnumPair Value='6' Name='Prev' />
     </LookupEnumeration>
     <LookupEnumeration Name='FUSION_PLAY_STATUS' MaxValue='15'>
+      <EnumPair Value='0' Name='Invalid' />
       <EnumPair Value='1' Name='Playing' />
       <EnumPair Value='2' Name='Paused' />
+      <EnumPair Value='3' Name='Stopped' />
+      <EnumPair Value='4' Name='Skip Forward' />
+      <EnumPair Value='5' Name='Skip Rewind' />
     </LookupEnumeration>
     <LookupEnumeration Name='FUSION_SIRIUS_COMMAND' MaxValue='255'>
       <EnumPair Value='1' Name='Next' />

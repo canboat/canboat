@@ -39970,8 +39970,12 @@
             "RangeMin":0,
             "RangeMax":13,
             "EnumValues":[
+              {"name": "Invalid", "value": 0},
               {"name": "Playing", "value": 1},
-              {"name": "Paused", "value": 2}]},
+              {"name": "Paused", "value": 2},
+              {"name": "Stopped", "value": 3},
+              {"name": "Skip Forward", "value": 4},
+              {"name": "Skip Rewind", "value": 5}]},
           {
             "Order":7,
             "Id":"x",
