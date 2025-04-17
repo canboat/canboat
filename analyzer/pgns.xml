@@ -43989,33 +43989,10 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>24</RangeMax>
+          <RangeMax>13</RangeMax>
           <EnumValues>
-            <EnumPair Value='0' Name='Play' />
-            <EnumPair Value='1' Name='Pause' />
-            <EnumPair Value='2' Name='Stop' />
-            <EnumPair Value='3' Name='FF 1x' />
-            <EnumPair Value='4' Name='FF 2x' />
-            <EnumPair Value='5' Name='FF 3x' />
-            <EnumPair Value='6' Name='FF 4x' />
-            <EnumPair Value='7' Name='RW 1x' />
-            <EnumPair Value='8' Name='RW 2x' />
-            <EnumPair Value='9' Name='RW 3x' />
-            <EnumPair Value='10' Name='RW 4x' />
-            <EnumPair Value='11' Name='Skip ahead' />
-            <EnumPair Value='12' Name='Skip back' />
-            <EnumPair Value='13' Name='Jog ahead' />
-            <EnumPair Value='14' Name='Jog back' />
-            <EnumPair Value='15' Name='Seek up' />
-            <EnumPair Value='16' Name='Seek down' />
-            <EnumPair Value='17' Name='Scan up' />
-            <EnumPair Value='18' Name='Scan down' />
-            <EnumPair Value='19' Name='Tune up' />
-            <EnumPair Value='20' Name='Tune down' />
-            <EnumPair Value='21' Name='Slow motion .75x' />
-            <EnumPair Value='22' Name='Slow motion .5x' />
-            <EnumPair Value='23' Name='Slow motion .25x' />
-            <EnumPair Value='24' Name='Slow motion .125x' />
+            <EnumPair Value='1' Name='Playing' />
+            <EnumPair Value='2' Name='Paused' />
           </EnumValues>
         </Field>
         <Field>

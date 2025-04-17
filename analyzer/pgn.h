@@ -6465,7 +6465,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_LOOKUP_FIELD("Message ID", BYTES(1), 4, FUSION_MESSAGE_ID),
       UINT16_FIELD("A"),
-      LOOKUP_FIELD("Transport", 4, ENTERTAINMENT_PLAY_STATUS),
+      LOOKUP_FIELD("Transport", 4, FUSION_PLAY_STATUS),
       SIMPLE_FIELD("X", 4),
       UINT8_FIELD("B"),
       UINT16_FIELD("Track #"),

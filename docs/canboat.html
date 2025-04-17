@@ -12016,10 +12016,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Transport</td><td/><td><div class="xs">0 .. 24</div></td><td>4 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Transport</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-ENTERTAINMENT_PLAY_STATUS">ENTERTAINMENT_PLAY_STATUS</a></td><td/></tr><tr><td>7</td><td>X</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#lookup-FUSION_PLAY_STATUS">FUSION_PLAY_STATUS</a></td><td/></tr><tr><td>7</td><td>X</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -14658,7 +14658,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Transmit PGN list</td></tr><tr><td>1</td><td>Receive PGN list</td></tr></table><h3 id="lookup-FUSION_COMMAND">FUSION_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Play</td></tr><tr><td>2</td><td>Pause</td></tr><tr><td>4</td><td>Next</td></tr><tr><td>6</td><td>Prev</td></tr></table><h3 id="lookup-FUSION_SIRIUS_COMMAND">FUSION_SIRIUS_COMMAND
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Play</td></tr><tr><td>2</td><td>Pause</td></tr><tr><td>4</td><td>Next</td></tr><tr><td>6</td><td>Prev</td></tr></table><h3 id="lookup-FUSION_PLAY_STATUS">FUSION_PLAY_STATUS
+        (0 - 15)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Playing</td></tr><tr><td>2</td><td>Paused</td></tr></table><h3 id="lookup-FUSION_SIRIUS_COMMAND">FUSION_SIRIUS_COMMAND
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Next</td></tr><tr><td>2</td><td>Prev</td></tr></table><h3 id="lookup-FUSION_MUTE_COMMAND">FUSION_MUTE_COMMAND
         (0 - 255)

@@ -1838,6 +1838,14 @@
         ]
       },
       {
+        "Name":"FUSION_PLAY_STATUS",
+        "MaxValue":15,
+        "EnumValues":[
+          {"Name":"Playing", "Value":1},
+          {"Name":"Paused", "Value":2}
+        ]
+      },
+      {
         "Name":"FUSION_SIRIUS_COMMAND",
         "MaxValue":255,
         "EnumValues":[
@@ -43428,9 +43436,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":24,
+            "RangeMax":13,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"ENTERTAINMENT_PLAY_STATUS"
+            "LookupEnumeration":"FUSION_PLAY_STATUS"
           },
           {
             "Order":7,
