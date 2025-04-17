@@ -21291,7 +21291,7 @@
             "BitStart":0,
             "Resolution":0.002,
             "Signed":false,
-            "Offset":500,
+            "Offset":1,
             "RangeMin":1,
             "RangeMax":1.506,
             "FieldType":"NUMBER"

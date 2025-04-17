@@ -20970,7 +20970,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Resolution>0.002</Resolution>
           <Signed>false</Signed>
-          <Offset>500</Offset>
+          <Offset>1</Offset>
           <RangeMin>1</RangeMin>
           <RangeMax>1.506</RangeMax>
           <FieldType>NUMBER</FieldType>

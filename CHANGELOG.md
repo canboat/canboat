@@ -40,9 +40,7 @@ in that single NAME field. These subfields are the same fields as described in P
 - #496: Show bitoffset for first variable length field
 - #498: Document uncertainty around STRING_LZ fields.
 - #499: DataTransmitOffset is in centiseconds, not millis.
-- #501: Split TIME into TIME and DURATION.
-- #503: Introduce PGN field type.
-- #502: Introduce ISO_NAME fieldtype.
+- #508: Offset for Peukert coefficient is wrong.
 
 ### Added
 
@@ -50,6 +48,9 @@ in that single NAME field. These subfields are the same fields as described in P
 - #481: Add manufacturer code for Revatek
 - #482: Add PGNs 127747-127749.
 - Updated manufacturer codes to refer to all companies known in Oct 2024.
+- #501: Split TIME into TIME and DURATION.
+- #503: Introduce PGN field type.
+- #502: Introduce ISO_NAME fieldtype.
 
 ### [5.1.3]
 

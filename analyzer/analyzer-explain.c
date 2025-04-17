@@ -546,7 +546,14 @@ static void explainPGN(Pgn pgn)
     printf("                  Signed: %s\n", (f.hasSign) ? "true" : "false");
     if (f.offset != 0)
     {
-      printf("                  Offset: %d\n", f.offset);
+      if (f.resolution == 1.0 || f.resolution == 0.0)
+      {
+        printf("                  Offset: %d\n", f.offset);
+      }
+      else
+      {
+        printf("                  Offset: %" PRId64 "\n", (int64_t) (f.offset * f.resolution));
+      }
     }
     if (f.partOfPrimaryKey)
     {
@@ -907,7 +914,14 @@ static void explainPGNXML(Pgn pgn)
 
       if (f.offset != 0)
       {
-        printf("          <Offset>%d</Offset>\n", f.offset);
+        if (f.resolution == 1.0 || f.resolution == 0.0)
+        {
+          printf("          <Offset>%d</Offset>\n", f.offset);
+        }
+        else
+        {
+          printf("          <Offset>%" PRId64 "</Offset>\n", (int64_t) (f.offset * f.resolution));
+        }
       }
 
       if (!isnan(f.rangeMin))
@@ -1096,7 +1110,14 @@ static void explainFieldTypesXML(void)
     }
     if (ft->offset != 0)
     {
-      printf("      <Offset>%d</Offset>\n", ft->offset);
+      if (ft->resolution == 1.0 || ft->resolution == 0.0)
+      {
+        printf("      <Offset>%d</Offset>\n", ft->offset);
+      }
+      else
+      {
+        printf("      <Offset>%" PRId64 "</Offset>\n", (int64_t) (ft->offset * ft->resolution));
+      }
     }
     if (ft->variableSize != Null)
     {

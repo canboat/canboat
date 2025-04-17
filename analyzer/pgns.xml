@@ -19694,7 +19694,7 @@ limitations under the License.
           <Type>Number</Type>
           <Resolution>0.002</Resolution>
           <Signed>false</Signed>
-          <Offset>500</Offset>
+          <Offset>1</Offset>
           <RangeMin>1</RangeMin>
           <RangeMax>1.506</RangeMax>
         </Field>
