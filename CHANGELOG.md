@@ -41,6 +41,7 @@ in that single NAME field. These subfields are the same fields as described in P
 - #498: Document uncertainty around STRING_LZ fields.
 - #499: DataTransmitOffset is in centiseconds, not millis.
 - #508: Offset for Peukert coefficient is wrong.
+- #509: Fix fusion transport lookup
 
 ### Added
 
