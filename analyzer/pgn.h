@@ -6455,8 +6455,7 @@ Pgn pgnList[] = {
        UINT8_FIELD("Build Number"),
        END_OF_FIELDS},
       .priority = 7}
-      ,
-
+    ,
     {"Fusion: Source",
      130820,
      PACKET_COMPLETE,
@@ -6489,7 +6488,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32772, FUSION_STATUS_MESSAGE_ID),
       UINT8_FIELD("Source ID"),
-      LOOKUP_FIELD("Flags", 16, ENTERTAINMENT_PLAY_STATUS),
+      LOOKUP_FIELD("Flags", BYTES(2), FUSION_PLAY_STATUS),
       UINT32_FIELD("Track Number"),
       UINT32_FIELD("Total Number of Tracks"),
       DURATION_UFIX32_MS_FIELD("Track Length", NULL),
