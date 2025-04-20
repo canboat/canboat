@@ -1983,6 +1983,73 @@ limitations under the License.
       <EnumPair Value='40' Name='SiriusXM Genre' />
       <EnumPair Value='45' Name='Zone Name' />
     </LookupEnumeration>
+    <LookupEnumeration Name='FUSION_SOURCE_TYPE' MaxValue='255'>
+      <EnumPair Value='0' Name='AM' />
+      <EnumPair Value='1' Name='FM' />
+      <EnumPair Value='2' Name='Aux' />
+      <EnumPair Value='3' Name='Sirius' />
+      <EnumPair Value='4' Name='Ipod' />
+      <EnumPair Value='5' Name='USB' />
+      <EnumPair Value='6' Name='DVD' />
+      <EnumPair Value='7' Name='VHF' />
+      <EnumPair Value='8' Name='Invalid' />
+      <EnumPair Value='9' Name='MTP' />
+      <EnumPair Value='10' Name='Bluetooth' />
+      <EnumPair Value='11' Name='ARC' />
+      <EnumPair Value='12' Name='Android' />
+      <EnumPair Value='13' Name='Pandora' />
+      <EnumPair Value='14' Name='DAB' />
+      <EnumPair Value='15' Name='AirPlay' />
+      <EnumPair Value='16' Name='UPNP' />
+      <EnumPair Value='17' Name='Unknown' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='FUSION_STATUS_MESSAGE_ID' MaxValue='65535'>
+      <EnumPair Value='1' Name='Unknown' />
+      <EnumPair Value='32769' Name='API Version' />
+      <EnumPair Value='32770' Name='Source' />
+      <EnumPair Value='32771' Name='Source Count' />
+      <EnumPair Value='32772' Name='Media' />
+      <EnumPair Value='32773' Name='Track Name' />
+      <EnumPair Value='32774' Name='Artist Name' />
+      <EnumPair Value='32775' Name='Album Name' />
+      <EnumPair Value='32776' Name='Cover Art' />
+      <EnumPair Value='32777' Name='Track Position' />
+      <EnumPair Value='32778' Name='Tuner Align' />
+      <EnumPair Value='32779' Name='Tuner' />
+      <EnumPair Value='32780' Name='Marine Tuner' />
+      <EnumPair Value='32781' Name='Marine Squelch' />
+      <EnumPair Value='32782' Name='Marine Scan Mode' />
+      <EnumPair Value='32783' Name='Menu Action' />
+      <EnumPair Value='32784' Name='Menu Count' />
+      <EnumPair Value='32785' Name='Menu Item' />
+      <EnumPair Value='32786' Name='Menu Lock ID' />
+      <EnumPair Value='32787' Name='Aux Gain' />
+      <EnumPair Value='32788' Name='Setting' />
+      <EnumPair Value='32789' Name='Settings' />
+      <EnumPair Value='32790' Name='Update Firmware Result' />
+      <EnumPair Value='32791' Name='Mute' />
+      <EnumPair Value='32792' Name='Balance' />
+      <EnumPair Value='32793' Name='Low Pass Filter' />
+      <EnumPair Value='32794' Name='Sublevels' />
+      <EnumPair Value='32795' Name='EQ' />
+      <EnumPair Value='32796' Name='Volume Limits' />
+      <EnumPair Value='32797' Name='Volumes' />
+      <EnumPair Value='32798' Name='Capabilities' />
+      <EnumPair Value='32799' Name='Line Level Control' />
+      <EnumPair Value='32801' Name='Device Name' />
+      <EnumPair Value='32802' Name='Sirius' />
+      <EnumPair Value='32803' Name='Sirius Preset Event' />
+      <EnumPair Value='32804' Name='Sirius Channel' />
+      <EnumPair Value='32805' Name='Sirius Title' />
+      <EnumPair Value='32806' Name='Sirius Artist' />
+      <EnumPair Value='32807' Name='Sirius Content Info' />
+      <EnumPair Value='32808' Name='Sirius Category' />
+      <EnumPair Value='32809' Name='Sirius Signal' />
+      <EnumPair Value='32810' Name='Sirius Parental Request' />
+      <EnumPair Value='32811' Name='Sirius Diagnostics' />
+      <EnumPair Value='32812' Name='Sirius Presets' />
+      <EnumPair Value='32813' Name='Zone Name' />
+    </LookupEnumeration>
     <LookupEnumeration Name='SONICHUB_CONTROL' MaxValue='255'>
       <EnumPair Value='0' Name='Set' />
       <EnumPair Value='128' Name='Ack' />
@@ -2073,13 +2140,87 @@ limitations under the License.
       <EnumPair Value='0' Name='AM' />
       <EnumPair Value='1' Name='FM' />
     </LookupEnumeration>
-    <LookupEnumeration Name='FUSION_REPLAY_MODE' MaxValue='255'>
+    <LookupEnumeration Name='FUSION_SETTING' MaxValue='0'>
+      <EnumPair Value='0' Name='Alpha Search Threshold' />
+      <EnumPair Value='1' Name='iPod Subtitles' />
+      <EnumPair Value='2' Name='Zone 2 Linked' />
+      <EnumPair Value='3' Name='Zone 2 Enabled' />
+      <EnumPair Value='4' Name='Zone 3 Enabled' />
+      <EnumPair Value='5' Name='Zone 4 Enabled' />
+      <EnumPair Value='6' Name='Telemute' />
+      <EnumPair Value='7' Name='Tuner Region' />
+      <EnumPair Value='8' Name='Marine Zone' />
       <EnumPair Value='9' Name='USB repeat' />
       <EnumPair Value='10' Name='USB shuffle' />
+      <EnumPair Value='11' Name='iPod Album Artwork' />
       <EnumPair Value='12' Name='iPod repeat' />
       <EnumPair Value='13' Name='iPod shuffle' />
+      <EnumPair Value='14' Name='AM Preset 0' />
+      <EnumPair Value='15' Name='AM Preset 1' />
+      <EnumPair Value='16' Name='AM Preset 2' />
+      <EnumPair Value='17' Name='AM Preset 3' />
+      <EnumPair Value='18' Name='AM Preset 4' />
+      <EnumPair Value='19' Name='AM Preset 5' />
+      <EnumPair Value='20' Name='AM Preset 6' />
+      <EnumPair Value='21' Name='AM Preset 7' />
+      <EnumPair Value='22' Name='AM Preset 8' />
+      <EnumPair Value='23' Name='AM Preset 9' />
+      <EnumPair Value='24' Name='AM Preset 10' />
+      <EnumPair Value='25' Name='AM Preset 11' />
+      <EnumPair Value='26' Name='AM Preset 12' />
+      <EnumPair Value='27' Name='AM Preset 13' />
+      <EnumPair Value='28' Name='AM Preset 14' />
+      <EnumPair Value='29' Name='FM Preset 0' />
+      <EnumPair Value='30' Name='FM Preset 1' />
+      <EnumPair Value='31' Name='FM Preset 2' />
+      <EnumPair Value='32' Name='FM Preset 3' />
+      <EnumPair Value='33' Name='FM Preset 4' />
+      <EnumPair Value='34' Name='FM Preset 5' />
+      <EnumPair Value='35' Name='FM Preset 6' />
+      <EnumPair Value='36' Name='FM Preset 7' />
+      <EnumPair Value='37' Name='FM Preset 8' />
+      <EnumPair Value='38' Name='FM Preset 9' />
+      <EnumPair Value='39' Name='FM Preset 10' />
+      <EnumPair Value='40' Name='FM Preset 11' />
+      <EnumPair Value='41' Name='FM Preset 12' />
+      <EnumPair Value='42' Name='FM Preset 13' />
+      <EnumPair Value='43' Name='FM Preset 14' />
+      <EnumPair Value='44' Name='VHF Preset 0' />
+      <EnumPair Value='45' Name='VHF Preset 1' />
+      <EnumPair Value='46' Name='VHF Preset 2' />
+      <EnumPair Value='47' Name='VHF Preset 3' />
+      <EnumPair Value='48' Name='VHF Preset 4' />
+      <EnumPair Value='49' Name='VHF Preset 5' />
+      <EnumPair Value='50' Name='VHF Preset 6' />
+      <EnumPair Value='51' Name='VHF Preset 7' />
+      <EnumPair Value='52' Name='VHF Preset 8' />
+      <EnumPair Value='53' Name='VHF Preset 9' />
+      <EnumPair Value='54' Name='VHF Preset 10' />
+      <EnumPair Value='55' Name='VHF Preset 11' />
+      <EnumPair Value='56' Name='VHF Preset 12' />
+      <EnumPair Value='57' Name='VHF Preset 13' />
+      <EnumPair Value='58' Name='VHF Preset 14' />
+      <EnumPair Value='59' Name='Clock Time' />
+      <EnumPair Value='60' Name='Clock Alarm' />
+      <EnumPair Value='61' Name='iPod Video Signal' />
+      <EnumPair Value='62' Name='iPod Monitor Aspect' />
+      <EnumPair Value='63' Name='Aux Name Index' />
+      <EnumPair Value='64' Name='AM Enabled' />
+      <EnumPair Value='65' Name='VHF Enabled' />
+      <EnumPair Value='66' Name='Language' />
+      <EnumPair Value='67' Name='Internal Amps On' />
+      <EnumPair Value='68' Name='MTP Repeat' />
+      <EnumPair Value='69' Name='MTP Shuffle' />
+      <EnumPair Value='70' Name='Id Accessory Source' />
+      <EnumPair Value='71' Name='NMEA Power' />
+      <EnumPair Value='72' Name='Low Power Mode' />
+      <EnumPair Value='73' Name='DVD region' />
+      <EnumPair Value='74' Name='Volume Zone Sync' />
+      <EnumPair Value='75' Name='Max Volume Start' />
+      <EnumPair Value='76' Name='BT Auto Connect' />
+      <EnumPair Value='77' Name='Null Setting' />
     </LookupEnumeration>
-    <LookupEnumeration Name='FUSION_REPLAY_STATUS' MaxValue='255'>
+    <LookupEnumeration Name='FUSION_REPEAT_STATUS' MaxValue='0'>
       <EnumPair Value='0' Name='Off' />
       <EnumPair Value='1' Name='One/track' />
       <EnumPair Value='2' Name='All/album' />
@@ -43276,18 +43417,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionSourceName</Id>
-      <Description>Fusion: Source Name</Description>
+      <Id>fusionSource</Id>
+      <Description>Fusion: Source</Description>
     <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>10</FieldCount>
+      <FieldCount>9</FieldCount>
       <Length>13</Length>
       <Fields>
         <Field>
@@ -43339,32 +43477,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>messageId</Id>
           <Name>Message ID</Name>
           <Description>Source</Description>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>2</Match>
+          <Match>32770</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
           <BitLength>8</BitLength>
@@ -43377,7 +43502,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>6</Order>
           <Id>currentSourceId</Id>
           <Name>Current Source ID</Name>
           <BitLength>8</BitLength>
@@ -43390,9 +43515,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>d</Id>
-          <Name>D</Name>
+          <Order>7</Order>
+          <Id>sourceType</Id>
+          <Name>Source Type</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -43400,12 +43525,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_SOURCE_TYPE</LookupEnumeration>
         </Field>
         <Field>
-          <Order>9</Order>
-          <Id>e</Id>
-          <Name>E</Name>
+          <Order>8</Order>
+          <Id>flags</Id>
+          <Name>Flags</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -43416,7 +43542,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>9</Order>
           <Id>source</Id>
           <Name>Source</Name>
           <BitLength>40</BitLength>
@@ -43993,19 +44119,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionUnitName</Id>
-      <Description>Fusion: Unit Name</Description>
+      <Id>fusionDeviceName</Id>
+      <Description>Fusion: Device Name</Description>
     <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
-      <Length>18</Length>
+      <FieldCount>5</FieldCount>
+      <Length>20</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -44055,37 +44178,24 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Unit Name</Description>
-          <BitLength>8</BitLength>
+          <Description>Device Name</Description>
+          <BitLength>32</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>33</Match>
+          <Match>32801</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>name</Id>
           <Name>Name</Name>
           <BitLength>112</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LZ</FieldType>
         </Field>
@@ -44104,8 +44214,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>7</FieldCount>
-      <Length>18</Length>
+      <FieldCount>6</FieldCount>
+      <Length>20</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -44156,23 +44266,23 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>messageId</Id>
           <Name>Message ID</Name>
           <Description>Zone Name</Description>
-          <BitLength>8</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>45</Match>
+          <Match>32813</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>zone</Id>
+          <Name>Zone</Name>
           <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -44182,23 +44292,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>number</Id>
-          <Name>Number</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>7</Order>
           <Id>name</Id>
           <Name>Name</Name>
           <BitLength>104</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LZ</FieldType>
         </Field>
@@ -45049,19 +45146,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionReplay</Id>
-      <Description>Fusion: Replay</Description>
+      <Id>fusionUsbRepeatStatus</Id>
+      <Description>Fusion: USB Repeat Status</Description>
     <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>13</FieldCount>
-      <Length>14</Length>
+      <FieldCount>6</FieldCount>
+      <Length>12</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -45112,135 +45206,46 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>messageId</Id>
           <Name>Message ID</Name>
           <Description>Replay</Description>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>20</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <Id>settingId</Id>
+          <Name>Setting ID</Name>
+          <Description>USB repeat</Description>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Match>9</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>4294967293</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_SETTING</LookupEnumeration>
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>mode</Id>
-          <Name>Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>FUSION_REPLAY_MODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>c</Id>
-          <Name>C</Name>
-          <BitLength>24</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>d</Id>
-          <Name>D</Name>
-          <BitLength>8</BitLength>
+          <Id>status</Id>
+          <Name>Status</Name>
+          <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>e</Id>
-          <Name>E</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>10</Order>
-          <Id>status</Id>
-          <Name>Status</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>FUSION_REPLAY_STATUS</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>h</Id>
-          <Name>H</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>i</Id>
-          <Name>I</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>96</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>13</Order>
-          <Id>j</Id>
-          <Name>J</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>104</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <LookupEnumeration>FUSION_REPEAT_STATUS</LookupEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
@@ -45788,13 +45793,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
+      <FieldCount>5</FieldCount>
       <Length>5</Length>
       <Fields>
         <Field>
@@ -45845,33 +45846,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Power</Description>
-          <BitLength>8</BitLength>
+          <Description></Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>32</Match>
+          <Match>32800</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>state</Id>
           <Name>State</Name>
           <BitLength>8</BitLength>

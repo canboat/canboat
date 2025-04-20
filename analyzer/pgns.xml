@@ -43752,14 +43752,11 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionSourceName</Id>
-      <Description>Fusion: Source Name</Description>
+      <Id>fusionSource</Id>
+      <Description>Fusion: Source</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>13</Length>
@@ -43809,31 +43806,18 @@ limitations under the License.
           <Id>messageId</Id>
           <Name>Message ID</Name>
           <Description>Source</Description>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>2</Match>
+          <Match>32770</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
           <BitLength>8</BitLength>
@@ -43846,7 +43830,7 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>6</Order>
           <Id>currentSourceId</Id>
           <Name>Current Source ID</Name>
           <BitLength>8</BitLength>
@@ -43859,22 +43843,42 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>d</Id>
-          <Name>D</Name>
+          <Order>7</Order>
+          <Id>sourceType</Id>
+          <Name>Source Type</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='AM' />
+            <EnumPair Value='1' Name='FM' />
+            <EnumPair Value='2' Name='Aux' />
+            <EnumPair Value='3' Name='Sirius' />
+            <EnumPair Value='4' Name='Ipod' />
+            <EnumPair Value='5' Name='USB' />
+            <EnumPair Value='6' Name='DVD' />
+            <EnumPair Value='7' Name='VHF' />
+            <EnumPair Value='8' Name='Invalid' />
+            <EnumPair Value='9' Name='MTP' />
+            <EnumPair Value='10' Name='Bluetooth' />
+            <EnumPair Value='11' Name='ARC' />
+            <EnumPair Value='12' Name='Android' />
+            <EnumPair Value='13' Name='Pandora' />
+            <EnumPair Value='14' Name='DAB' />
+            <EnumPair Value='15' Name='AirPlay' />
+            <EnumPair Value='16' Name='UPNP' />
+            <EnumPair Value='17' Name='Unknown' />
+          </EnumValues>
         </Field>
         <Field>
-          <Order>9</Order>
-          <Id>e</Id>
-          <Name>E</Name>
+          <Order>8</Order>
+          <Id>flags</Id>
+          <Name>Flags</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -43885,7 +43889,7 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>9</Order>
           <Id>source</Id>
           <Name>Source</Name>
           <BitLength>40</BitLength>
@@ -44443,17 +44447,14 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionUnitName</Id>
-      <Description>Fusion: Unit Name</Description>
+      <Id>fusionDeviceName</Id>
+      <Description>Fusion: Device Name</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>18</Length>
+      <Length>20</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -44499,36 +44500,23 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Unit Name</Description>
-          <BitLength>8</BitLength>
+          <Description>Device Name</Description>
+          <BitLength>32</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>33</Match>
+          <Match>32801</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>name</Id>
           <Name>Name</Name>
           <BitLength>112</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
@@ -44547,7 +44535,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>18</Length>
+      <Length>20</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -44594,22 +44582,22 @@ limitations under the License.
           <Id>messageId</Id>
           <Name>Message ID</Name>
           <Description>Zone Name</Description>
-          <BitLength>8</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>45</Match>
+          <Match>32813</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>zone</Id>
+          <Name>Zone</Name>
           <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -44619,23 +44607,10 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>number</Id>
-          <Name>Number</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>7</Order>
           <Id>name</Id>
           <Name>Name</Name>
           <BitLength>104</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII string starting with length byte</Type>
           <Signed>false</Signed>
@@ -45451,17 +45426,14 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionReplay</Id>
-      <Description>Fusion: Replay</Description>
+      <Id>fusionUsbRepeatStatus</Id>
+      <Description>Fusion: USB Repeat Status</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>14</Length>
+      <Length>12</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -45508,7 +45480,7 @@ limitations under the License.
           <Id>messageId</Id>
           <Name>Message ID</Name>
           <Description>Replay</Description>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>20</Match>
@@ -45516,135 +45488,40 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <Id>settingId</Id>
+          <Name>Setting ID</Name>
+          <Description>USB repeat</Description>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Match>9</Match>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>mode</Id>
-          <Name>Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <EnumValues>
-            <EnumPair Value='9' Name='USB repeat' />
-            <EnumPair Value='10' Name='USB shuffle' />
-            <EnumPair Value='12' Name='iPod repeat' />
-            <EnumPair Value='13' Name='iPod shuffle' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>c</Id>
-          <Name>C</Name>
-          <BitLength>24</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>d</Id>
-          <Name>D</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>e</Id>
-          <Name>E</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>10</Order>
           <Id>status</Id>
           <Name>Status</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
+          <BitLength>32</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Off' />
             <EnumPair Value='1' Name='One/track' />
             <EnumPair Value='2' Name='All/album' />
           </EnumValues>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>h</Id>
-          <Name>H</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>i</Id>
-          <Name>I</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>96</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>13</Order>
-          <Id>j</Id>
-          <Name>J</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>104</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -46166,10 +46043,6 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>5</Length>
@@ -46218,32 +46091,19 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Power</Description>
-          <BitLength>8</BitLength>
+          <Description></Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>32</Match>
+          <Match>32800</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>state</Id>
           <Name>State</Name>
           <BitLength>8</BitLength>
