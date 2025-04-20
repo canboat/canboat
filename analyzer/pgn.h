@@ -6493,6 +6493,7 @@ Pgn pgnList[] = {
       UINT32_FIELD("Total Number of Tracks"),
       DURATION_UFIX32_MS_FIELD("Track Length", NULL),
       DURATION_UFIX32_MS_FIELD("Track Position", NULL),
+      END_OF_FIELDS},
      .priority = 7}
 
     ,
