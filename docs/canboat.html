@@ -2917,7 +2917,7 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td>23:
-                  Mute</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  </td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Command</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -11943,6 +11943,49 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
+            - Fusion: Versions</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32769</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            11
+            bytes long and contains 9 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32769:
+                  API Version</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>HW Version Major</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>HW Version Minor</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>SW Version Major</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>SW Version Minor</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Build Number</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+            PGN 130820
             - Fusion: Source</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32770</td></tr></table></p><p/><p>
@@ -11951,7 +11994,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            13
+            
+              at least 8
             bytes long and contains 9 fields.
 
             
@@ -11981,19 +12025,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-FUSION_SOURCE_TYPE">FUSION_SOURCE_TYPE</a></td><td/></tr><tr><td>8</td><td>Flags</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Source</td><td/><td> </td><td>40 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Source</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Track Info</h3><p>
+            - Fusion: Source Count</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32771</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            23
-            bytes long and contains 15 fields.
+            5
+            bytes long and contains 5 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12006,54 +12051,71 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>4:
-                  Track Info</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32771:
+                  Source Count</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Transport</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
-                  
-                      lookup
-                      <a href="#lookup-FUSION_PLAY_STATUS">FUSION_PLAY_STATUS</a></td><td/></tr><tr><td>7</td><td>X</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Track #</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>C</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Track Count</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>E</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Length</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>14</td><td>Position in track</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>15</td><td>H</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source Count</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Track</h3><p>
+            - Fusion: Media</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>5</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32772</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            19
+            23
+            bytes long and contains 10 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32772:
+                  Media</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Flags</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_PLAY_STATUS">FUSION_PLAY_STATUS</a></td><td/></tr><tr><td>7</td><td>Track Number</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Total Number of Tracks</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Track Length</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>10</td><td>Track Position</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+            PGN 130820
+            - Fusion: Track Name</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32773</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 9
             bytes long and contains 7 fields.
 
             
@@ -12067,28 +12129,30 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>5:
-                  Track Title</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32773:
+                  Track Name</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td/><td><div class="xs">0 .. 1099511627773</div></td><td>40 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Index</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Track</td><td/><td> </td><td>80 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Artist</h3><p>
+            - Fusion: Artist Name</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>6</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32774</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            19
+            
+              at least 9
             bytes long and contains 7 fields.
 
             
@@ -12102,28 +12166,30 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>6:
-                  Track Artist</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32774:
+                  Artist Name</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td/><td><div class="xs">0 .. 1099511627773</div></td><td>40 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Index</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Artist</td><td/><td> </td><td>80 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Album</h3><p>
+            - Fusion: Album Name</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>7</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32775</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            19
+            
+              at least 9
             bytes long and contains 7 fields.
 
             
@@ -12137,17 +12203,18 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>7:
-                  Track Album</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32775:
+                  Album Name</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td/><td><div class="xs">0 .. 1099511627773</div></td><td>40 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Index</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Album</td><td/><td> </td><td>80 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - Fusion: Device Name</h3><p>
@@ -12158,7 +12225,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            20
+            
+              at least 4
             bytes long and contains 5 fields.
 
             
@@ -12173,21 +12241,23 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32801:
-                  Device Name</td><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  Device Name</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Name</td><td/><td> </td><td>112 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Name</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - Fusion: Zone Name</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32813</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            20
+            
+              at least 5
             bytes long and contains 6 fields.
 
             
@@ -12202,25 +12272,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32813:
-                  Zone Name</td><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  Zone Name</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Name</td><td/><td> </td><td>104 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Name</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Play Progress</h3><p>
+            - Fusion: Track Position</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>9</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32777</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
             8
-            bytes long and contains 7 fields.
+            bytes long and contains 6 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12233,31 +12304,29 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>9:
-                  Track Progress</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32777:
+                  Track Position</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Progress</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Position</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
                   
                         unsigned
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: AM/FM Station</h3><p>
+            - Fusion: Tuner</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>11</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32779</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            21
-            bytes long and contains 10 fields.
+            
+              at least 11
+            bytes long and contains 9 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12270,37 +12339,36 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>11:
-                  AM/FM Station</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32779:
+                  Tuner</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>AM/FM</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_RADIO_SOURCE">FUSION_RADIO_SOURCE</a></td><td/></tr><tr><td>7</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_RADIO_SOURCE">FUSION_RADIO_SOURCE</a></td><td/></tr><tr><td>6</td><td>Scanning</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Frequency</td><td/><td><a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Frequency</td><td/><td><a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>C</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Signal Strength</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Track</td><td/><td> </td><td>80 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>RDS</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: VHF</h3><p>
+            - Fusion: MARINE_TUNER</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>12</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32780</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            9
+            
+              at least 7
             bytes long and contains 8 fields.
 
             
@@ -12314,34 +12382,33 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>12:
-                  VHF</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32780:
+                  Marine Tuner</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Channel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Signal Strength</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>D</td><td/><td><div class="xs">0 .. 16777213</div></td><td>24 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Name</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Squelch</h3><p>
+            - Fusion: Marine Squelch</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>13</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32781</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
             6
-            bytes long and contains 7 fields.
+            bytes long and contains 6 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12354,31 +12421,28 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>13:
-                  Squelch</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32781:
+                  Marine Squelch</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Squelch</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Minimum Level</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Scan</h3><p>
+            - Fusion: Marine Scan Mode</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>14</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32782</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
             6
-            bytes long and contains 8 fields.
+            bytes long and contains 6 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12391,34 +12455,29 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>14:
-                  Scan</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32782:
+                  Marine Scan Mode</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Scan</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Scan</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>8</td><td>C</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - Fusion: Menu Item</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>17</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32785</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            16
-            bytes long and contains 13 fields.
+            
+              at least 11
+            bytes long and contains 9 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12431,40 +12490,29 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>17:
-                  Menu Item</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32785:
+                  Menu Item</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Item Index</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Line</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Flags</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>E</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Lock ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>F</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>G</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>H</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>I</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Text</td><td/><td> </td><td>40 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Name</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - Fusion: USB Repeat Status</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>20</td></tr><tr><td>Setting ID</td><td>9</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32788</td></tr><tr><td>ID</td><td>9</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -12484,28 +12532,28 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>20:
-                  Replay</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32788:
+                  Setting</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Setting ID</td><td>9:
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>ID</td><td>9:
                   USB repeat</td><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_SETTING">FUSION_SETTING</a></td><td/></tr><tr><td>6</td><td>Status</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#lookup-FUSION_SETTING">FUSION_SETTING</a></td><td/></tr><tr><td>6</td><td>Value</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                       lookup
                       <a href="#lookup-FUSION_REPEAT_STATUS">FUSION_REPEAT_STATUS</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Mute</h3><p>
+            - Fusion: Setting</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>23</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32788</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            5
+            12
             bytes long and contains 6 fields.
 
             
@@ -12519,28 +12567,104 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>23:
-                  Mute</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32788:
+                  Setting</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>ID</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_SETTING">FUSION_SETTING</a></td><td/></tr><tr><td>6</td><td>Value</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Mute</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+            PGN 130820
+            - Fusion: Settings</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32789</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 8
+            bytes long and contains 7 fields.
+
+            
+        The 2 fields starting at field 
+        6 
+        (with name "ID")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        5 
+        (with name "Count".)
+      
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32789:
+                  Settings</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Count</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>ID</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_SETTING">FUSION_SETTING</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Value</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+            PGN 130820
+            - Fusion: Mute</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32791</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            5
+            bytes long and contains 5 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32791:
+                  Mute</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Mute</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-FUSION_MUTE_COMMAND">FUSION_MUTE_COMMAND</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Sub Volume</h3><p>
+            - Fusion: Sublevels</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>26</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32794</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
             8
-            bytes long and contains 9 fields.
+            bytes long and contains 8 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12553,37 +12677,34 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>26:
-                  Sub Volume</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32794:
+                  Sublevels</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone 1 Sublevel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 1</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2 Sublevel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Zone 2</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Zone 3 Sublevel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Zone 3</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Zone 4</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Zone 4 Sublevel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Tone</h3><p>
+            - Fusion: EQ</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>27</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32795</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
             8
-            bytes long and contains 9 fields.
+            bytes long and contains 8 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12596,37 +12717,34 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>27:
-                  Tone</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32795:
+                  EQ</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Bass</td><td/><td><div class="xs">-127 .. 125</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Bass</td><td/><td><div class="xs">-127 .. 125</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Mid</td><td/><td><div class="xs">-127 .. 125</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Middle</td><td/><td><div class="xs">-127 .. 125</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Treble</td><td/><td><div class="xs">-127 .. 125</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Treble</td><td/><td><div class="xs">-127 .. 125</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: Volume</h3><p>
+            - Fusion: Volumes</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>29</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32797</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
             8
-            bytes long and contains 9 fields.
+            bytes long and contains 8 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12639,23 +12757,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>29:
-                  Volume</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32797:
+                  Volumes</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone 1 Volume</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 1</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2 Volume</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Zone 2</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Zone 3 Volume</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Zone 3</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Zone 4</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Zone 4 Volume</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -12683,7 +12798,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32800:
-                  </td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  Power State</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
                       <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>State</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -12691,16 +12806,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       lookup
                       <a href="#lookup-FUSION_POWER_STATE">FUSION_POWER_STATE</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: SiriusXM Channel</h3><p>
+            - Fusion: SiriusXM</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>36</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32802</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            19
-            bytes long and contains 6 fields.
+            10
+            bytes long and contains 9 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12713,26 +12828,75 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>36:
-                  SiriusXM Channel</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32802:
+                  Sirius</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Channel</td><td/><td> </td><td>96 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Com State</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_SIRIUS_COM_STATE">FUSION_SIRIUS_COM_STATE</a></td><td/></tr><tr><td>7</td><td>Alert</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_SIRIUS_COM_STATE">FUSION_SIRIUS_COM_STATE</a></td><td/></tr><tr><td>8</td><td>Advisory Channel</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Tuning Mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_SIRIUS_TUNING_MODE">FUSION_SIRIUS_TUNING_MODE</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+            PGN 130820
+            - Fusion: SiriusXM Channel</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32804</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 7
+            bytes long and contains 7 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2045</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32804:
+                  Sirius Channel</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - Fusion: SiriusXM Title</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>37</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32805</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            19
-            bytes long and contains 6 fields.
+            
+              at least 7
+            bytes long and contains 7 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12745,26 +12909,31 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>37:
-                  SiriusXM Title</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32805:
+                  Sirius Title</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Title</td><td/><td> </td><td>96 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - Fusion: SiriusXM Artist</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>38</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32806</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            19
-            bytes long and contains 6 fields.
+            
+              at least 7
+            bytes long and contains 7 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12777,26 +12946,31 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>38:
-                  SiriusXM Artist</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32806:
+                  Sirius Artist</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Artist</td><td/><td> </td><td>96 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - Fusion: SiriusXM Genre</h3><p>
+            - Fusion: SiriusXM Category</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>40</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32808</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            19
-            bytes long and contains 6 fields.
+            
+              at least 7
+            bytes long and contains 7 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -12809,14 +12983,18 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>40:
-                  SiriusXM Genre</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Message ID</td><td>32808:
+                  Sirius Category</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Genre</td><td/><td> </td><td>96 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                    Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
             PGN 130821
             - Navico: ASCII Data</h3><p>
@@ -14626,9 +14804,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Transmit PGN list</td></tr><tr><td>1</td><td>Receive PGN list</td></tr></table><h3 id="lookup-FUSION_COMMAND">FUSION_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Play</td></tr><tr><td>2</td><td>Pause</td></tr><tr><td>4</td><td>Next</td></tr><tr><td>6</td><td>Prev</td></tr></table><h3 id="lookup-FUSION_PLAY_STATUS">FUSION_PLAY_STATUS
-        (0 - 15)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Invalid</td></tr><tr><td>1</td><td>Playing</td></tr><tr><td>2</td><td>Paused</td></tr><tr><td>3</td><td>Stopped</td></tr><tr><td>4</td><td>Skip Forward</td></tr><tr><td>5</td><td>Skip Rewind</td></tr></table><h3 id="lookup-FUSION_SIRIUS_COMMAND">FUSION_SIRIUS_COMMAND
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Play</td></tr><tr><td>2</td><td>Pause</td></tr><tr><td>4</td><td>Next</td></tr><tr><td>6</td><td>Prev</td></tr></table><h3 id="lookup-FUSION_SIRIUS_COMMAND">FUSION_SIRIUS_COMMAND
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Next</td></tr><tr><td>2</td><td>Prev</td></tr></table><h3 id="lookup-FUSION_MUTE_COMMAND">FUSION_MUTE_COMMAND
         (0 - 255)
@@ -14774,11 +14950,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>57</td><td>Low boat speed</td></tr><tr><td>58</td><td>Wind data missing</td></tr></table><h3 id="lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Request Status</td></tr><tr><td>2</td><td>Source</td></tr><tr><td>4</td><td>Track Info</td></tr><tr><td>5</td><td>Track Title</td></tr><tr><td>6</td><td>Track Artist</td></tr><tr><td>7</td><td>Track Album</td></tr><tr><td>9</td><td>Track Progress</td></tr><tr><td>11</td><td>AM/FM Station</td></tr><tr><td>12</td><td>VHF</td></tr><tr><td>13</td><td>Squelch</td></tr><tr><td>14</td><td>Scan</td></tr><tr><td>17</td><td>Menu Item</td></tr><tr><td>20</td><td>Replay</td></tr><tr><td>23</td><td>Mute</td></tr><tr><td>24</td><td>Set Zone Volume</td></tr><tr><td>25</td><td>Set All Volumes</td></tr><tr><td>26</td><td>Sub Volume</td></tr><tr><td>27</td><td>Tone</td></tr><tr><td>29</td><td>Volume</td></tr><tr><td>32</td><td>Power</td></tr><tr><td>33</td><td>Unit Name</td></tr><tr><td>36</td><td>SiriusXM Channel</td></tr><tr><td>37</td><td>SiriusXM Title</td></tr><tr><td>38</td><td>SiriusXM Artist</td></tr><tr><td>40</td><td>SiriusXM Genre</td></tr><tr><td>45</td><td>Zone Name</td></tr></table><h3 id="lookup-FUSION_SOURCE_TYPE">FUSION_SOURCE_TYPE
-        (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>AM</td></tr><tr><td>1</td><td>FM</td></tr><tr><td>2</td><td>Aux</td></tr><tr><td>3</td><td>Sirius</td></tr><tr><td>4</td><td>Ipod</td></tr><tr><td>5</td><td>USB</td></tr><tr><td>6</td><td>DVD</td></tr><tr><td>7</td><td>VHF</td></tr><tr><td>8</td><td>Invalid</td></tr><tr><td>9</td><td>MTP</td></tr><tr><td>10</td><td>Bluetooth</td></tr><tr><td>11</td><td>ARC</td></tr><tr><td>12</td><td>Android</td></tr><tr><td>13</td><td>Pandora</td></tr><tr><td>14</td><td>DAB</td></tr><tr><td>15</td><td>AirPlay</td></tr><tr><td>16</td><td>UPNP</td></tr><tr><td>17</td><td>Unknown</td></tr></table><h3 id="lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Request Status</td></tr><tr><td>2</td><td>Source</td></tr><tr><td>4</td><td>Track Info</td></tr><tr><td>5</td><td>Track Title</td></tr><tr><td>6</td><td>Track Artist</td></tr><tr><td>7</td><td>Track Album</td></tr><tr><td>9</td><td>Track Progress</td></tr><tr><td>11</td><td>AM/FM Station</td></tr><tr><td>12</td><td>VHF</td></tr><tr><td>13</td><td>Squelch</td></tr><tr><td>14</td><td>Scan</td></tr><tr><td>17</td><td>Mute</td></tr><tr><td>20</td><td>Replay</td></tr><tr><td>24</td><td>Set Zone Volume</td></tr><tr><td>25</td><td>Set All Volumes</td></tr><tr><td>26</td><td>Sub Volume</td></tr><tr><td>27</td><td>Tone</td></tr><tr><td>29</td><td>Volume</td></tr><tr><td>32</td><td>Power</td></tr><tr><td>33</td><td>Unit Name</td></tr><tr><td>36</td><td>SiriusXM Channel</td></tr><tr><td>37</td><td>SiriusXM Title</td></tr><tr><td>38</td><td>SiriusXM Artist</td></tr><tr><td>40</td><td>SiriusXM Genre</td></tr><tr><td>45</td><td>Zone Name</td></tr></table><h3 id="lookup-FUSION_PLAY_STATUS">FUSION_PLAY_STATUS
         (0 - 65535)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Unknown</td></tr><tr><td>32769</td><td>API Version</td></tr><tr><td>32770</td><td>Source</td></tr><tr><td>32771</td><td>Source Count</td></tr><tr><td>32772</td><td>Media</td></tr><tr><td>32773</td><td>Track Name</td></tr><tr><td>32774</td><td>Artist Name</td></tr><tr><td>32775</td><td>Album Name</td></tr><tr><td>32776</td><td>Cover Art</td></tr><tr><td>32777</td><td>Track Position</td></tr><tr><td>32778</td><td>Tuner Align</td></tr><tr><td>32779</td><td>Tuner</td></tr><tr><td>32780</td><td>Marine Tuner</td></tr><tr><td>32781</td><td>Marine Squelch</td></tr><tr><td>32782</td><td>Marine Scan Mode</td></tr><tr><td>32783</td><td>Menu Action</td></tr><tr><td>32784</td><td>Menu Count</td></tr><tr><td>32785</td><td>Menu Item</td></tr><tr><td>32786</td><td>Menu Lock ID</td></tr><tr><td>32787</td><td>Aux Gain</td></tr><tr><td>32788</td><td>Setting</td></tr><tr><td>32789</td><td>Settings</td></tr><tr><td>32790</td><td>Update Firmware Result</td></tr><tr><td>32791</td><td>Mute</td></tr><tr><td>32792</td><td>Balance</td></tr><tr><td>32793</td><td>Low Pass Filter</td></tr><tr><td>32794</td><td>Sublevels</td></tr><tr><td>32795</td><td>EQ</td></tr><tr><td>32796</td><td>Volume Limits</td></tr><tr><td>32797</td><td>Volumes</td></tr><tr><td>32798</td><td>Capabilities</td></tr><tr><td>32799</td><td>Line Level Control</td></tr><tr><td>32801</td><td>Device Name</td></tr><tr><td>32802</td><td>Sirius</td></tr><tr><td>32803</td><td>Sirius Preset Event</td></tr><tr><td>32804</td><td>Sirius Channel</td></tr><tr><td>32805</td><td>Sirius Title</td></tr><tr><td>32806</td><td>Sirius Artist</td></tr><tr><td>32807</td><td>Sirius Content Info</td></tr><tr><td>32808</td><td>Sirius Category</td></tr><tr><td>32809</td><td>Sirius Signal</td></tr><tr><td>32810</td><td>Sirius Parental Request</td></tr><tr><td>32811</td><td>Sirius Diagnostics</td></tr><tr><td>32812</td><td>Sirius Presets</td></tr><tr><td>32813</td><td>Zone Name</td></tr></table><h3 id="lookup-SONICHUB_CONTROL">SONICHUB_CONTROL
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Invalid</td></tr><tr><td>1</td><td>Playing</td></tr><tr><td>2</td><td>Paused</td></tr><tr><td>3</td><td>Stopped</td></tr><tr><td>4</td><td>Skip Forward</td></tr><tr><td>5</td><td>Skip Rewind</td></tr></table><h3 id="lookup-FUSION_SOURCE_TYPE">FUSION_SOURCE_TYPE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>AM</td></tr><tr><td>1</td><td>FM</td></tr><tr><td>2</td><td>Aux</td></tr><tr><td>3</td><td>Sirius</td></tr><tr><td>4</td><td>Ipod</td></tr><tr><td>5</td><td>USB</td></tr><tr><td>6</td><td>DVD</td></tr><tr><td>7</td><td>VHF</td></tr><tr><td>8</td><td>Invalid</td></tr><tr><td>9</td><td>MTP</td></tr><tr><td>10</td><td>Bluetooth</td></tr><tr><td>11</td><td>ARC</td></tr><tr><td>12</td><td>Android</td></tr><tr><td>13</td><td>Pandora</td></tr><tr><td>14</td><td>DAB</td></tr><tr><td>15</td><td>AirPlay</td></tr><tr><td>16</td><td>UPNP</td></tr><tr><td>17</td><td>Unknown</td></tr></table><h3 id="lookup-FUSION_SIRIUS_COM_STATE">FUSION_SIRIUS_COM_STATE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>255</td><td>Unknown</td></tr><tr><td>1</td><td>Off</td></tr><tr><td>2</td><td>Initialising</td></tr><tr><td>3</td><td>On</td></tr></table><h3 id="lookup-FUSION_SIRIUS_ALERT">FUSION_SIRIUS_ALERT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>255</td><td>Unknown</td></tr><tr><td>1</td><td>None</td></tr><tr><td>2</td><td>Antenna</td></tr><tr><td>3</td><td>NoSignal</td></tr><tr><td>4</td><td>Subscription Update</td></tr></table><h3 id="lookup-FUSION_SIRIUS_TUNING_MODE">FUSION_SIRIUS_TUNING_MODE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Normal</td></tr><tr><td>2</td><td>Category</td></tr><tr><td>3</td><td>Preset</td></tr></table><h3 id="lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID
+        (0 - 65535)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Unknown</td></tr><tr><td>32769</td><td>API Version</td></tr><tr><td>32770</td><td>Source</td></tr><tr><td>32771</td><td>Source Count</td></tr><tr><td>32772</td><td>Media</td></tr><tr><td>32773</td><td>Track Name</td></tr><tr><td>32774</td><td>Artist Name</td></tr><tr><td>32775</td><td>Album Name</td></tr><tr><td>32776</td><td>Cover Art</td></tr><tr><td>32777</td><td>Track Position</td></tr><tr><td>32778</td><td>Tuner Align</td></tr><tr><td>32779</td><td>Tuner</td></tr><tr><td>32780</td><td>Marine Tuner</td></tr><tr><td>32781</td><td>Marine Squelch</td></tr><tr><td>32782</td><td>Marine Scan Mode</td></tr><tr><td>32783</td><td>Menu Action</td></tr><tr><td>32784</td><td>Menu Count</td></tr><tr><td>32785</td><td>Menu Item</td></tr><tr><td>32786</td><td>Menu Lock ID</td></tr><tr><td>32787</td><td>Aux Gain</td></tr><tr><td>32788</td><td>Setting</td></tr><tr><td>32789</td><td>Settings</td></tr><tr><td>32790</td><td>Update Firmware Result</td></tr><tr><td>32791</td><td>Mute</td></tr><tr><td>32792</td><td>Balance</td></tr><tr><td>32793</td><td>Low Pass Filter</td></tr><tr><td>32794</td><td>Sublevels</td></tr><tr><td>32795</td><td>EQ</td></tr><tr><td>32796</td><td>Volume Limits</td></tr><tr><td>32797</td><td>Volumes</td></tr><tr><td>32798</td><td>Capabilities</td></tr><tr><td>32799</td><td>Line Level Control</td></tr><tr><td>32800</td><td>Power State</td></tr><tr><td>32801</td><td>Device Name</td></tr><tr><td>32802</td><td>Sirius</td></tr><tr><td>32803</td><td>Sirius Preset Event</td></tr><tr><td>32804</td><td>Sirius Channel</td></tr><tr><td>32805</td><td>Sirius Title</td></tr><tr><td>32806</td><td>Sirius Artist</td></tr><tr><td>32807</td><td>Sirius Content Info</td></tr><tr><td>32808</td><td>Sirius Category</td></tr><tr><td>32809</td><td>Sirius Signal</td></tr><tr><td>32810</td><td>Sirius Parental Request</td></tr><tr><td>32811</td><td>Sirius Diagnostics</td></tr><tr><td>32812</td><td>Sirius Presets</td></tr><tr><td>32813</td><td>Zone Name</td></tr></table><h3 id="lookup-SONICHUB_CONTROL">SONICHUB_CONTROL
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Set</td></tr><tr><td>128</td><td>Ack</td></tr></table><h3 id="lookup-SONICHUB_SOURCE">SONICHUB_SOURCE
         (0 - 255)

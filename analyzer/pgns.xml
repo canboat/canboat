@@ -10223,7 +10223,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>Mute</Description>
+          <Description></Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -43752,6 +43752,139 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
+      <Id>fusionVersions</Id>
+      <Description>Fusion: Versions</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>11</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>API Version</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32769</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>hwVersionMajor</Id>
+          <Name>HW Version Major</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>hwVersionMinor</Id>
+          <Name>HW Version Minor</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>swVersionMajor</Id>
+          <Name>SW Version Major</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>swVersionMinor</Id>
+          <Name>SW Version Minor</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>buildNumber</Id>
+          <Name>Build Number</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
       <Id>fusionSource</Id>
       <Description>Fusion: Source</Description>
       <Type>Fast</Type>
@@ -43759,7 +43892,7 @@ limitations under the License.
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>13</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -43892,7 +44025,7 @@ limitations under the License.
           <Order>9</Order>
           <Id>source</Id>
           <Name>Source</Name>
-          <BitLength>40</BitLength>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII string starting with length byte</Type>
@@ -43902,14 +44035,92 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionTrackInfo</Id>
-      <Description>Fusion: Track Info</Description>
+      <Id>fusionSourceCount</Id>
+      <Description>Fusion: Source Count</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>5</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Source Count</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32771</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceCount</Id>
+          <Name>Source Count</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionMedia</Id>
+      <Description>Fusion: Media</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>23</Length>
@@ -43958,42 +44169,42 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Track Info</Description>
-          <BitLength>8</BitLength>
+          <Description>Media</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>4</Match>
+          <Match>32772</Match>
           <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
         </Field>
         <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
           <Order>6</Order>
-          <Id>transport</Id>
-          <Name>Transport</Name>
-          <BitLength>4</BitLength>
+          <Id>flags</Id>
+          <Name>Flags</Name>
+          <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>65533</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='Invalid' />
             <EnumPair Value='1' Name='Playing' />
@@ -44005,87 +44216,35 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>x</Id>
-          <Name>X</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>44</BitOffset>
-          <BitStart>4</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>track</Id>
-          <Name>Track #</Name>
-          <BitLength>16</BitLength>
+          <Id>trackNumber</Id>
+          <Name>Track Number</Name>
+          <BitLength>32</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
-          <Order>10</Order>
-          <Id>c</Id>
-          <Name>C</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>trackCount</Id>
-          <Name>Track Count</Name>
-          <BitLength>16</BitLength>
+          <Order>8</Order>
+          <Id>totalNumberOfTracks</Id>
+          <Name>Total Number of Tracks</Name>
+          <BitLength>32</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
-          <Order>12</Order>
-          <Id>e</Id>
-          <Name>E</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>104</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-        </Field>
-        <Field>
-          <Order>13</Order>
-          <Id>length</Id>
-          <Name>Length</Name>
-          <BitLength>24</BitLength>
+          <Order>9</Order>
+          <Id>trackLength</Id>
+          <Name>Track Length</Name>
+          <BitLength>32</BitLength>
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Units>s</Units>
@@ -44093,802 +44252,31 @@ limitations under the License.
           <Resolution>0.001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777.213</RangeMax>
-        </Field>
-        <Field>
-          <Order>14</Order>
-          <Id>positionInTrack</Id>
-          <Name>Position in track</Name>
-          <BitLength>24</BitLength>
-          <BitOffset>144</BitOffset>
-          <BitStart>0</BitStart>
-          <Units>s</Units>
-          <Type>Time</Type>
-          <Resolution>0.001</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16777.213</RangeMax>
-        </Field>
-        <Field>
-          <Order>15</Order>
-          <Id>h</Id>
-          <Name>H</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>168</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130820</PGN>
-      <Id>fusionTrack</Id>
-      <Description>Fusion: Track</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>19</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Fusion Electronics</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>419</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
-          <Description>Track Title</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>5</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>40</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1099511627773</RangeMax>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>track</Id>
-          <Name>Track</Name>
-          <BitLength>80</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>ASCII string starting with length byte</Type>
-          <Signed>false</Signed>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130820</PGN>
-      <Id>fusionArtist</Id>
-      <Description>Fusion: Artist</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>19</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Fusion Electronics</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>419</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
-          <Description>Track Artist</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>6</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>40</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1099511627773</RangeMax>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>artist</Id>
-          <Name>Artist</Name>
-          <BitLength>80</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>ASCII string starting with length byte</Type>
-          <Signed>false</Signed>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130820</PGN>
-      <Id>fusionAlbum</Id>
-      <Description>Fusion: Album</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>19</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Fusion Electronics</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>419</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
-          <Description>Track Album</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>7</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>40</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1099511627773</RangeMax>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>album</Id>
-          <Name>Album</Name>
-          <BitLength>80</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>ASCII string starting with length byte</Type>
-          <Signed>false</Signed>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130820</PGN>
-      <Id>fusionDeviceName</Id>
-      <Description>Fusion: Device Name</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>20</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Fusion Electronics</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>419</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
-          <Description>Device Name</Description>
-          <BitLength>32</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>32801</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4294967293</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
-          <BitLength>112</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>ASCII string starting with length byte</Type>
-          <Signed>false</Signed>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130820</PGN>
-      <Id>fusionZoneName</Id>
-      <Description>Fusion: Zone Name</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>20</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Fusion Electronics</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>419</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
-          <Description>Zone Name</Description>
-          <BitLength>32</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>32813</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4294967293</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>zone</Id>
-          <Name>Zone</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
-          <BitLength>104</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>ASCII string starting with length byte</Type>
-          <Signed>false</Signed>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130820</PGN>
-      <Id>fusionPlayProgress</Id>
-      <Description>Fusion: Play Progress</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>8</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Fusion Electronics</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>419</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
-          <Description>Track Progress</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>9</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>progress</Id>
-          <Name>Progress</Name>
-          <BitLength>24</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Units>s</Units>
-          <Type>Time</Type>
-          <Resolution>0.001</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16777.213</RangeMax>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130820</PGN>
-      <Id>fusionAmFmStation</Id>
-      <Description>Fusion: AM/FM Station</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <Length>21</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Fusion Electronics</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>419</Match>
-          <Type>Manufacturer code</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2045</RangeMax>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
-          <Description>AM/FM Station</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>11</Match>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>amFm</Id>
-          <Name>AM/FM</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Lookup table</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <EnumValues>
-            <EnumPair Value='0' Name='AM' />
-            <EnumPair Value='1' Name='FM' />
-          </EnumValues>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>frequency</Id>
-          <Name>Frequency</Name>
-          <BitLength>32</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Units>Hz</Units>
-          <Type>Number</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4294967293</RangeMax>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>c</Id>
-          <Name>C</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967.293000001</RangeMax>
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>track</Id>
-          <Name>Track</Name>
-          <BitLength>80</BitLength>
-          <BitOffset>88</BitOffset>
+          <Id>trackPosition</Id>
+          <Name>Track Position</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
-          <Type>ASCII string starting with length byte</Type>
+          <Units>s</Units>
+          <Type>Time</Type>
+          <Resolution>0.001</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967.293000001</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionVhf</Id>
-      <Description>Fusion: VHF</Description>
+      <Id>fusionTrackName</Id>
+      <Description>Fusion: Track Name</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>9</Length>
@@ -44937,34 +44325,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>VHF</Description>
-          <BitLength>8</BitLength>
+          <Description>Track Name</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>12</Match>
+          <Match>32773</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -44975,7 +44350,718 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
+          <Order>6</Order>
+          <Id>index</Id>
+          <Name>Index</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+        </Field>
+        <Field>
           <Order>7</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII string starting with length byte</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionArtistName</Id>
+      <Description>Fusion: Artist Name</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>9</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Artist Name</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32774</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>index</Id>
+          <Name>Index</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII string starting with length byte</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionAlbumName</Id>
+      <Description>Fusion: Album Name</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>9</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Album Name</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32775</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>index</Id>
+          <Name>Index</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII string starting with length byte</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionDeviceName</Id>
+      <Description>Fusion: Device Name</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>4</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Device Name</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32801</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII string starting with length byte</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionZoneName</Id>
+      <Description>Fusion: Zone Name</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>5</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Zone Name</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32813</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>source</Id>
+          <Name>Source</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII string starting with length byte</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionTrackPosition</Id>
+      <Description>Fusion: Track Position</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Track Position</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32777</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>position</Id>
+          <Name>Position</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>s</Units>
+          <Type>Time</Type>
+          <Resolution>0.001</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>16777.213</RangeMax>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionTuner</Id>
+      <Description>Fusion: Tuner</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>11</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Tuner</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32779</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='AM' />
+            <EnumPair Value='1' Name='FM' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>scanning</Id>
+          <Name>Scanning</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>frequency</Id>
+          <Name>Frequency</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>Hz</Units>
+          <Type>Number</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>signalStrength</Id>
+          <Name>Signal Strength</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>rds</Id>
+          <Name>RDS</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII string starting with length byte</Type>
+          <Signed>false</Signed>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionMarineTuner</Id>
+      <Description>Fusion: MARINE_TUNER</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>7</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Marine Tuner</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32780</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
           <Id>channel</Id>
           <Name>Channel</Name>
           <BitLength>8</BitLength>
@@ -44988,30 +45074,37 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>d</Id>
-          <Name>D</Name>
-          <BitLength>24</BitLength>
+          <Order>7</Order>
+          <Id>signalStrength</Id>
+          <Name>Signal Strength</Name>
+          <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777213</RangeMax>
+          <RangeMax>253</RangeMax>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>ASCII string starting with length byte</Type>
+          <Signed>false</Signed>
         </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionSquelch</Id>
-      <Description>Fusion: Squelch</Description>
+      <Id>fusionMarineSquelch</Id>
+      <Description>Fusion: Marine Squelch</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
@@ -45060,34 +45153,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Squelch</Description>
-          <BitLength>8</BitLength>
+          <Description>Marine Squelch</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>13</Match>
+          <Match>32781</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -45098,9 +45178,9 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>squelch</Id>
-          <Name>Squelch</Name>
+          <Order>6</Order>
+          <Id>minimumLevel</Id>
+          <Name>Minimum Level</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -45114,14 +45194,11 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionScan</Id>
-      <Description>Fusion: Scan</Description>
+      <Id>fusionMarineScanMode</Id>
+      <Description>Fusion: Marine Scan Mode</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>6</Length>
@@ -45170,34 +45247,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Scan</Description>
-          <BitLength>8</BitLength>
+          <Description>Marine Scan Mode</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>14</Match>
+          <Match>32782</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -45208,34 +45272,21 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>6</Order>
           <Id>scan</Id>
           <Name>Scan</Name>
-          <BitLength>2</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>253</RangeMax>
           <EnumValues>
             <EnumPair Value='0' Name='No' />
             <EnumPair Value='1' Name='Yes' />
           </EnumValues>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>c</Id>
-          <Name>C</Name>
-          <BitLength>6</BitLength>
-          <BitOffset>42</BitOffset>
-          <BitStart>2</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -45246,12 +45297,9 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>16</Length>
+      <Length>11</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -45298,33 +45346,20 @@ limitations under the License.
           <Id>messageId</Id>
           <Name>Message ID</Name>
           <Description>Menu Item</Description>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>17</Match>
+          <Match>32785</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -45335,61 +45370,22 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>line</Id>
-          <Name>Line</Name>
-          <BitLength>8</BitLength>
+          <Order>6</Order>
+          <Id>itemIndex</Id>
+          <Name>Item Index</Name>
+          <BitLength>32</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>e</Id>
-          <Name>E</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>f</Id>
-          <Name>F</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>10</Order>
-          <Id>g</Id>
-          <Name>G</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>h</Id>
-          <Name>H</Name>
+          <Order>7</Order>
+          <Id>flags</Id>
+          <Name>Flags</Name>
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -45400,9 +45396,9 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>12</Order>
-          <Id>i</Id>
-          <Name>I</Name>
+          <Order>8</Order>
+          <Id>lockId</Id>
+          <Name>Lock ID</Name>
           <BitLength>8</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
@@ -45413,10 +45409,10 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>13</Order>
-          <Id>text</Id>
-          <Name>Text</Name>
-          <BitLength>40</BitLength>
+          <Order>9</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII string starting with length byte</Type>
@@ -45479,11 +45475,11 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Replay</Description>
+          <Description>Setting</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>20</Match>
+          <Match>32788</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -45492,8 +45488,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>settingId</Id>
-          <Name>Setting ID</Name>
+          <Id>id</Id>
+          <Name>ID</Name>
           <Description>USB repeat</Description>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
@@ -45507,8 +45503,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>status</Id>
-          <Name>Status</Name>
+          <Id>value</Id>
+          <Name>Value</Name>
           <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
@@ -45527,14 +45523,375 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
+      <Id>fusionSetting</Id>
+      <Description>Fusion: Setting</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>12</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Setting</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32788</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>id</Id>
+          <Name>ID</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Alpha Search Threshold' />
+            <EnumPair Value='1' Name='iPod Subtitles' />
+            <EnumPair Value='2' Name='Zone 2 Linked' />
+            <EnumPair Value='3' Name='Zone 2 Enabled' />
+            <EnumPair Value='4' Name='Zone 3 Enabled' />
+            <EnumPair Value='5' Name='Zone 4 Enabled' />
+            <EnumPair Value='6' Name='Telemute' />
+            <EnumPair Value='7' Name='Tuner Region' />
+            <EnumPair Value='8' Name='Marine Zone' />
+            <EnumPair Value='9' Name='USB repeat' />
+            <EnumPair Value='10' Name='USB shuffle' />
+            <EnumPair Value='11' Name='iPod Album Artwork' />
+            <EnumPair Value='12' Name='iPod repeat' />
+            <EnumPair Value='13' Name='iPod shuffle' />
+            <EnumPair Value='14' Name='AM Preset 0' />
+            <EnumPair Value='15' Name='AM Preset 1' />
+            <EnumPair Value='16' Name='AM Preset 2' />
+            <EnumPair Value='17' Name='AM Preset 3' />
+            <EnumPair Value='18' Name='AM Preset 4' />
+            <EnumPair Value='19' Name='AM Preset 5' />
+            <EnumPair Value='20' Name='AM Preset 6' />
+            <EnumPair Value='21' Name='AM Preset 7' />
+            <EnumPair Value='22' Name='AM Preset 8' />
+            <EnumPair Value='23' Name='AM Preset 9' />
+            <EnumPair Value='24' Name='AM Preset 10' />
+            <EnumPair Value='25' Name='AM Preset 11' />
+            <EnumPair Value='26' Name='AM Preset 12' />
+            <EnumPair Value='27' Name='AM Preset 13' />
+            <EnumPair Value='28' Name='AM Preset 14' />
+            <EnumPair Value='29' Name='FM Preset 0' />
+            <EnumPair Value='30' Name='FM Preset 1' />
+            <EnumPair Value='31' Name='FM Preset 2' />
+            <EnumPair Value='32' Name='FM Preset 3' />
+            <EnumPair Value='33' Name='FM Preset 4' />
+            <EnumPair Value='34' Name='FM Preset 5' />
+            <EnumPair Value='35' Name='FM Preset 6' />
+            <EnumPair Value='36' Name='FM Preset 7' />
+            <EnumPair Value='37' Name='FM Preset 8' />
+            <EnumPair Value='38' Name='FM Preset 9' />
+            <EnumPair Value='39' Name='FM Preset 10' />
+            <EnumPair Value='40' Name='FM Preset 11' />
+            <EnumPair Value='41' Name='FM Preset 12' />
+            <EnumPair Value='42' Name='FM Preset 13' />
+            <EnumPair Value='43' Name='FM Preset 14' />
+            <EnumPair Value='44' Name='VHF Preset 0' />
+            <EnumPair Value='45' Name='VHF Preset 1' />
+            <EnumPair Value='46' Name='VHF Preset 2' />
+            <EnumPair Value='47' Name='VHF Preset 3' />
+            <EnumPair Value='48' Name='VHF Preset 4' />
+            <EnumPair Value='49' Name='VHF Preset 5' />
+            <EnumPair Value='50' Name='VHF Preset 6' />
+            <EnumPair Value='51' Name='VHF Preset 7' />
+            <EnumPair Value='52' Name='VHF Preset 8' />
+            <EnumPair Value='53' Name='VHF Preset 9' />
+            <EnumPair Value='54' Name='VHF Preset 10' />
+            <EnumPair Value='55' Name='VHF Preset 11' />
+            <EnumPair Value='56' Name='VHF Preset 12' />
+            <EnumPair Value='57' Name='VHF Preset 13' />
+            <EnumPair Value='58' Name='VHF Preset 14' />
+            <EnumPair Value='59' Name='Clock Time' />
+            <EnumPair Value='60' Name='Clock Alarm' />
+            <EnumPair Value='61' Name='iPod Video Signal' />
+            <EnumPair Value='62' Name='iPod Monitor Aspect' />
+            <EnumPair Value='63' Name='Aux Name Index' />
+            <EnumPair Value='64' Name='AM Enabled' />
+            <EnumPair Value='65' Name='VHF Enabled' />
+            <EnumPair Value='66' Name='Language' />
+            <EnumPair Value='67' Name='Internal Amps On' />
+            <EnumPair Value='68' Name='MTP Repeat' />
+            <EnumPair Value='69' Name='MTP Shuffle' />
+            <EnumPair Value='70' Name='Id Accessory Source' />
+            <EnumPair Value='71' Name='NMEA Power' />
+            <EnumPair Value='72' Name='Low Power Mode' />
+            <EnumPair Value='73' Name='DVD region' />
+            <EnumPair Value='74' Name='Volume Zone Sync' />
+            <EnumPair Value='75' Name='Max Volume Start' />
+            <EnumPair Value='76' Name='BT Auto Connect' />
+            <EnumPair Value='77' Name='Null Setting' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionSettings</Id>
+      <Description>Fusion: Settings</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>8</Length>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1CountField>5</RepeatingFieldSet1CountField>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Settings</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32789</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>count</Id>
+          <Name>Count</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>id</Id>
+          <Name>ID</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Alpha Search Threshold' />
+            <EnumPair Value='1' Name='iPod Subtitles' />
+            <EnumPair Value='2' Name='Zone 2 Linked' />
+            <EnumPair Value='3' Name='Zone 2 Enabled' />
+            <EnumPair Value='4' Name='Zone 3 Enabled' />
+            <EnumPair Value='5' Name='Zone 4 Enabled' />
+            <EnumPair Value='6' Name='Telemute' />
+            <EnumPair Value='7' Name='Tuner Region' />
+            <EnumPair Value='8' Name='Marine Zone' />
+            <EnumPair Value='9' Name='USB repeat' />
+            <EnumPair Value='10' Name='USB shuffle' />
+            <EnumPair Value='11' Name='iPod Album Artwork' />
+            <EnumPair Value='12' Name='iPod repeat' />
+            <EnumPair Value='13' Name='iPod shuffle' />
+            <EnumPair Value='14' Name='AM Preset 0' />
+            <EnumPair Value='15' Name='AM Preset 1' />
+            <EnumPair Value='16' Name='AM Preset 2' />
+            <EnumPair Value='17' Name='AM Preset 3' />
+            <EnumPair Value='18' Name='AM Preset 4' />
+            <EnumPair Value='19' Name='AM Preset 5' />
+            <EnumPair Value='20' Name='AM Preset 6' />
+            <EnumPair Value='21' Name='AM Preset 7' />
+            <EnumPair Value='22' Name='AM Preset 8' />
+            <EnumPair Value='23' Name='AM Preset 9' />
+            <EnumPair Value='24' Name='AM Preset 10' />
+            <EnumPair Value='25' Name='AM Preset 11' />
+            <EnumPair Value='26' Name='AM Preset 12' />
+            <EnumPair Value='27' Name='AM Preset 13' />
+            <EnumPair Value='28' Name='AM Preset 14' />
+            <EnumPair Value='29' Name='FM Preset 0' />
+            <EnumPair Value='30' Name='FM Preset 1' />
+            <EnumPair Value='31' Name='FM Preset 2' />
+            <EnumPair Value='32' Name='FM Preset 3' />
+            <EnumPair Value='33' Name='FM Preset 4' />
+            <EnumPair Value='34' Name='FM Preset 5' />
+            <EnumPair Value='35' Name='FM Preset 6' />
+            <EnumPair Value='36' Name='FM Preset 7' />
+            <EnumPair Value='37' Name='FM Preset 8' />
+            <EnumPair Value='38' Name='FM Preset 9' />
+            <EnumPair Value='39' Name='FM Preset 10' />
+            <EnumPair Value='40' Name='FM Preset 11' />
+            <EnumPair Value='41' Name='FM Preset 12' />
+            <EnumPair Value='42' Name='FM Preset 13' />
+            <EnumPair Value='43' Name='FM Preset 14' />
+            <EnumPair Value='44' Name='VHF Preset 0' />
+            <EnumPair Value='45' Name='VHF Preset 1' />
+            <EnumPair Value='46' Name='VHF Preset 2' />
+            <EnumPair Value='47' Name='VHF Preset 3' />
+            <EnumPair Value='48' Name='VHF Preset 4' />
+            <EnumPair Value='49' Name='VHF Preset 5' />
+            <EnumPair Value='50' Name='VHF Preset 6' />
+            <EnumPair Value='51' Name='VHF Preset 7' />
+            <EnumPair Value='52' Name='VHF Preset 8' />
+            <EnumPair Value='53' Name='VHF Preset 9' />
+            <EnumPair Value='54' Name='VHF Preset 10' />
+            <EnumPair Value='55' Name='VHF Preset 11' />
+            <EnumPair Value='56' Name='VHF Preset 12' />
+            <EnumPair Value='57' Name='VHF Preset 13' />
+            <EnumPair Value='58' Name='VHF Preset 14' />
+            <EnumPair Value='59' Name='Clock Time' />
+            <EnumPair Value='60' Name='Clock Alarm' />
+            <EnumPair Value='61' Name='iPod Video Signal' />
+            <EnumPair Value='62' Name='iPod Monitor Aspect' />
+            <EnumPair Value='63' Name='Aux Name Index' />
+            <EnumPair Value='64' Name='AM Enabled' />
+            <EnumPair Value='65' Name='VHF Enabled' />
+            <EnumPair Value='66' Name='Language' />
+            <EnumPair Value='67' Name='Internal Amps On' />
+            <EnumPair Value='68' Name='MTP Repeat' />
+            <EnumPair Value='69' Name='MTP Shuffle' />
+            <EnumPair Value='70' Name='Id Accessory Source' />
+            <EnumPair Value='71' Name='NMEA Power' />
+            <EnumPair Value='72' Name='Low Power Mode' />
+            <EnumPair Value='73' Name='DVD region' />
+            <EnumPair Value='74' Name='Volume Zone Sync' />
+            <EnumPair Value='75' Name='Max Volume Start' />
+            <EnumPair Value='76' Name='BT Auto Connect' />
+            <EnumPair Value='77' Name='Null Setting' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967293</RangeMax>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
       <Id>fusionMute</Id>
       <Description>Fusion: Mute</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>5</Length>
@@ -45584,31 +45941,18 @@ limitations under the License.
           <Id>messageId</Id>
           <Name>Message ID</Name>
           <Description>Mute</Description>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>23</Match>
+          <Match>32791</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>mute</Id>
           <Name>Mute</Name>
           <BitLength>8</BitLength>
@@ -45628,14 +45972,11 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionSubVolume</Id>
-      <Description>Fusion: Sub Volume</Description>
+      <Id>fusionSublevels</Id>
+      <Description>Fusion: Sublevels</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -45684,34 +46025,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sub Volume</Description>
-          <BitLength>8</BitLength>
+          <Description>Sublevels</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>26</Match>
+          <Match>32794</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>zone1</Id>
-          <Name>Zone 1</Name>
+          <Id>zone1Sublevel</Id>
+          <Name>Zone 1 Sublevel</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -45722,9 +46050,9 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>zone2</Id>
-          <Name>Zone 2</Name>
+          <Order>6</Order>
+          <Id>zone2Sublevel</Id>
+          <Name>Zone 2 Sublevel</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -45735,9 +46063,9 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>zone3</Id>
-          <Name>Zone 3</Name>
+          <Order>7</Order>
+          <Id>zone3Sublevel</Id>
+          <Name>Zone 3 Sublevel</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -45748,9 +46076,9 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>9</Order>
-          <Id>zone4</Id>
-          <Name>Zone 4</Name>
+          <Order>8</Order>
+          <Id>zone4Sublevel</Id>
+          <Name>Zone 4 Sublevel</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -45764,15 +46092,11 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionTone</Id>
-      <Description>Fusion: Tone</Description>
+      <Id>fusionEq</Id>
+      <Description>Fusion: EQ</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -45821,34 +46145,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Tone</Description>
-          <BitLength>8</BitLength>
+          <Description>EQ</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>27</Match>
+          <Match>32795</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
+          <Id>zone</Id>
+          <Name>Zone</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -45859,7 +46170,7 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>6</Order>
           <Id>bass</Id>
           <Name>Bass</Name>
           <BitLength>8</BitLength>
@@ -45872,9 +46183,9 @@ limitations under the License.
           <RangeMax>125</RangeMax>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>mid</Id>
-          <Name>Mid</Name>
+          <Order>7</Order>
+          <Id>middle</Id>
+          <Name>Middle</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -45885,7 +46196,7 @@ limitations under the License.
           <RangeMax>125</RangeMax>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>8</Order>
           <Id>treble</Id>
           <Name>Treble</Name>
           <BitLength>8</BitLength>
@@ -45901,15 +46212,11 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionVolume</Id>
-      <Description>Fusion: Volume</Description>
+      <Id>fusionVolumes</Id>
+      <Description>Fusion: Volumes</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -45958,34 +46265,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Volume</Description>
-          <BitLength>8</BitLength>
+          <Description>Volumes</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>29</Match>
+          <Match>32797</Match>
           <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>zone1</Id>
-          <Name>Zone 1</Name>
+          <Id>zone1Volume</Id>
+          <Name>Zone 1 Volume</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -45996,9 +46290,9 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>zone2</Id>
-          <Name>Zone 2</Name>
+          <Order>6</Order>
+          <Id>zone2Volume</Id>
+          <Name>Zone 2 Volume</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -46009,9 +46303,9 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>zone3</Id>
-          <Name>Zone 3</Name>
+          <Order>7</Order>
+          <Id>zone3Volume</Id>
+          <Name>Zone 3 Volume</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -46022,9 +46316,9 @@ limitations under the License.
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>9</Order>
-          <Id>zone4</Id>
-          <Name>Zone 4</Name>
+          <Order>8</Order>
+          <Id>zone4Volume</Id>
+          <Name>Zone 4 Volume</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -46091,7 +46385,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description></Description>
+          <Description>Power State</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -46123,18 +46417,14 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionSiriusxmChannel</Id>
-      <Description>Fusion: SiriusXM Channel</Description>
+      <Id>fusionSiriusxm</Id>
+      <Description>Fusion: SiriusXM</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>19</Length>
+      <Length>10</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -46180,35 +46470,198 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>SiriusXM Channel</Description>
-          <BitLength>8</BitLength>
+          <Description>Sirius</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>36</Match>
+          <Match>32802</Match>
           <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>32</BitLength>
-          <BitOffset>24</BitOffset>
+          <Order>6</Order>
+          <Id>comState</Id>
+          <Name>Com State</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>255</RangeMax>
+          <EnumValues>
+            <EnumPair Value='255' Name='Unknown' />
+            <EnumPair Value='1' Name='Off' />
+            <EnumPair Value='2' Name='Initialising' />
+            <EnumPair Value='3' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>alert</Id>
+          <Name>Alert</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>255</RangeMax>
+          <EnumValues>
+            <EnumPair Value='255' Name='Unknown' />
+            <EnumPair Value='1' Name='Off' />
+            <EnumPair Value='2' Name='Initialising' />
+            <EnumPair Value='3' Name='On' />
+          </EnumValues>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>advisoryChannel</Id>
+          <Name>Advisory Channel</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>4294967293</RangeMax>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>tuningMode</Id>
+          <Name>Tuning Mode</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <EnumValues>
+            <EnumPair Value='1' Name='Normal' />
+            <EnumPair Value='2' Name='Category' />
+            <EnumPair Value='3' Name='Preset' />
+          </EnumValues>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionSiriusxmChannel</Id>
+      <Description>Fusion: SiriusXM Channel</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <Length>7</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Type>Manufacturer code</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Sirius Channel</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32804</Match>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>channel</Id>
           <Name>Channel</Name>
-          <BitLength>96</BitLength>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII string starting with length byte</Type>
@@ -46223,13 +46676,9 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>19</Length>
+      <Length>7</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -46275,35 +46724,48 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>SiriusXM Title</Description>
-          <BitLength>8</BitLength>
+          <Description>Sirius Title</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>37</Match>
+          <Match>32805</Match>
           <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>32</BitLength>
-          <BitOffset>24</BitOffset>
+          <Order>6</Order>
+          <Id>channel</Id>
+          <Name>Channel</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>4294967293</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
-          <Order>6</Order>
-          <Id>title</Id>
-          <Name>Title</Name>
-          <BitLength>96</BitLength>
+          <Order>7</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII string starting with length byte</Type>
@@ -46318,13 +46780,9 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>19</Length>
+      <Length>7</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -46370,35 +46828,48 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>SiriusXM Artist</Description>
-          <BitLength>8</BitLength>
+          <Description>Sirius Artist</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>38</Match>
+          <Match>32806</Match>
           <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>32</BitLength>
-          <BitOffset>24</BitOffset>
+          <Order>6</Order>
+          <Id>channel</Id>
+          <Name>Channel</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>4294967293</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
-          <Order>6</Order>
-          <Id>artist</Id>
-          <Name>Artist</Name>
-          <BitLength>96</BitLength>
+          <Order>7</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII string starting with length byte</Type>
@@ -46408,18 +46879,14 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>fusionSiriusxmGenre</Id>
-      <Description>Fusion: SiriusXM Genre</Description>
+      <Id>fusionSiriusxmCategory</Id>
+      <Description>Fusion: SiriusXM Category</Description>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <Length>19</Length>
+      <Length>7</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -46465,35 +46932,48 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>SiriusXM Genre</Description>
-          <BitLength>8</BitLength>
+          <Description>Sirius Category</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Match>40</Match>
+          <Match>32808</Match>
           <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>32</BitLength>
-          <BitOffset>24</BitOffset>
+          <Order>6</Order>
+          <Id>channel</Id>
+          <Name>Channel</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>4294967293</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
-          <Order>6</Order>
-          <Id>genre</Id>
-          <Name>Genre</Name>
-          <BitLength>96</BitLength>
+          <Order>7</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII string starting with length byte</Type>
