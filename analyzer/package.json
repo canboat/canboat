@@ -1,6 +1,6 @@
 {
   "name": "@canboat/pgns",
-  "version": "5.1.3",
+  "version": "5.2.0",
   "description": "Json description of canboat supported pgns",
   "main": "pgns.json",
   "scripts": {
