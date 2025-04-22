@@ -52,6 +52,7 @@ in that single NAME field. These subfields are the same fields as described in P
 - #501: Split TIME into TIME and DURATION.
 - #503: Introduce PGN field type.
 - #502: Introduce ISO_NAME fieldtype.
+- #515: Rework Fusion PGNs.
 
 ### [5.1.3]
 
