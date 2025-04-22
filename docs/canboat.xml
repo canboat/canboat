@@ -43883,6 +43883,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -44041,6 +44042,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -44151,6 +44153,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -44261,6 +44264,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -44455,6 +44459,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -44552,6 +44557,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -44656,6 +44662,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>253</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_RADIO_SOURCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -44794,6 +44801,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -44917,6 +44925,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -45018,6 +45027,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -45120,6 +45130,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -45168,6 +45179,108 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LZ</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionAuxGain</Id>
+      <Description>Fusion: Aux Gain</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Aux Gain</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32787</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>gain</Id>
+          <Name>Gain</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -45587,6 +45700,210 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
+      <Id>fusionBalance</Id>
+      <Description>Fusion: Balance</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Balance</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32792</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>zone</Id>
+          <Name>Zone</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>value</Id>
+          <Name>VALUE</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionLowPassFilter</Id>
+      <Description>Fusion: Low Pass Filter</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Low Pass Filter</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32793</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>zone</Id>
+          <Name>Zone</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>filter</Id>
+          <Name>Filter</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
       <Id>fusionSublevels</Id>
       <Description>Fusion: Sublevels</Description>
     <Priority>7</Priority>
@@ -45797,6 +46114,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -45835,6 +46153,133 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>true</Signed>
           <RangeMin>-127</RangeMin>
           <RangeMax>125</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionVolumeLimits</Id>
+      <Description>Fusion: Volume Limits</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>8</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Volume Limits</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32796</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>zone1VolumeLimit</Id>
+          <Name>Zone 1 Volume Limit</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>zone2VolumeLimit</Id>
+          <Name>Zone 2 Volume Limit</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>zone3VolumeLimit</Id>
+          <Name>Zone 3 Volume Limit</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>zone4VolumeLimit</Id>
+          <Name>Zone 4 Volume Limit</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -45957,6 +46402,248 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Name>Zone 4 Volume</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionCapabilities</Id>
+      <Description>Fusion: Capabilities</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>9</FieldCount>
+      <Length>14</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Capabilities</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32798</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>zone1</Id>
+          <Name>Zone 1</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>zone2</Id>
+          <Name>Zone 2</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>zone3</Id>
+          <Name>Zone 3</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>zone4</Id>
+          <Name>Zone 4</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>global</Id>
+          <Name>Global</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionLineLevelControl</Id>
+      <Description>Fusion: Line Level Control</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Line Level Control</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32799</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>zone</Id>
+          <Name>Zone</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>control</Id>
+          <Name>Control</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -46140,6 +46827,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -46283,6 +46971,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -46393,6 +47082,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -46503,6 +47193,118 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>channel</Id>
+          <Name>Channel</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_LZ</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionSiriusxmContentInfo</Id>
+      <Description>Fusion: SiriusXM Content Info</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <MinLength>7</MinLength>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Sirius Content Info</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32807</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -46613,6 +47415,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -46635,6 +47438,222 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LZ</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionSiriusxmSignal</Id>
+      <Description>Fusion: SiriusXM Signal</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Sirius Signal</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32809</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>signal</Id>
+          <Name>Signal</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionSiriusxmPresets</Id>
+      <Description>Fusion: SiriusXM Presets</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <MinLength>6</MinLength>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2045</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Sirius Presets</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32812</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>count</Id>
+          <Name>Count</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>values</Id>
+          <Name>Values</Name>
+          <Description>Preset Values. There will be Count / 4 presets stored</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>6</BitLengthField>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

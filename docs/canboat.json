@@ -43821,7 +43821,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -43978,7 +43979,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -44087,7 +44089,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -44196,7 +44199,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -44388,7 +44392,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -44484,7 +44489,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -44587,7 +44593,8 @@
             "RangeMin":0,
             "RangeMax":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_RADIO_SOURCE"
+            "LookupEnumeration":"FUSION_RADIO_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -44724,7 +44731,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -44846,7 +44854,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -44946,7 +44955,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -45047,7 +45057,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -45096,6 +45107,107 @@
             "BitOffset":88,
             "BitStart":0,
             "FieldType":"STRING_LZ"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
+        "Id":"fusionAuxGain",
+        "Description":"Fusion: Aux Gain",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":6,
+        "Length":6,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"Aux Gain",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32787,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+          },
+          {
+            "Order":5,
+            "Id":"sourceId",
+            "Name":"Source ID",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":6,
+            "Id":"gain",
+            "Name":"Gain",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
           }
         ]
       },
@@ -45511,6 +45623,208 @@
       },
       {
         "PGN":130820,
+        "Id":"fusionBalance",
+        "Description":"Fusion: Balance",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":6,
+        "Length":6,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"Balance",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32792,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+          },
+          {
+            "Order":5,
+            "Id":"zone",
+            "Name":"Zone",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":6,
+            "Id":"value",
+            "Name":"VALUE",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
+        "Id":"fusionLowPassFilter",
+        "Description":"Fusion: Low Pass Filter",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":6,
+        "Length":6,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"Low Pass Filter",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32793,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+          },
+          {
+            "Order":5,
+            "Id":"zone",
+            "Name":"Zone",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":6,
+            "Id":"filter",
+            "Name":"Filter",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
         "Id":"fusionSublevels",
         "Description":"Fusion: Sublevels",
         "Priority":7,
@@ -45718,7 +46032,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -45757,6 +46072,132 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":125,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
+        "Id":"fusionVolumeLimits",
+        "Description":"Fusion: Volume Limits",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":8,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"Volume Limits",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32796,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+          },
+          {
+            "Order":5,
+            "Id":"zone1VolumeLimit",
+            "Name":"Zone 1 Volume Limit",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"zone2VolumeLimit",
+            "Name":"Zone 2 Volume Limit",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"zone3VolumeLimit",
+            "Name":"Zone 3 Volume Limit",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"zone4VolumeLimit",
+            "Name":"Zone 4 Volume Limit",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
             "FieldType":"NUMBER"
           }
         ]
@@ -45878,6 +46319,246 @@
             "Name":"Zone 4 Volume",
             "BitLength":8,
             "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
+        "Id":"fusionCapabilities",
+        "Description":"Fusion: Capabilities",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":9,
+        "Length":14,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"Capabilities",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32798,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+          },
+          {
+            "Order":5,
+            "Id":"zone1",
+            "Name":"Zone 1",
+            "BitLength":16,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"zone2",
+            "Name":"Zone 2",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"zone3",
+            "Name":"Zone 3",
+            "BitLength":16,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"zone4",
+            "Name":"Zone 4",
+            "BitLength":16,
+            "BitOffset":80,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"global",
+            "Name":"Global",
+            "BitLength":16,
+            "BitOffset":96,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
+        "Id":"fusionLineLevelControl",
+        "Description":"Fusion: Line Level Control",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":6,
+        "Length":6,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"Line Level Control",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32799,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+          },
+          {
+            "Order":5,
+            "Id":"zone",
+            "Name":"Zone",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":6,
+            "Id":"control",
+            "Name":"Control",
+            "BitLength":8,
+            "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
@@ -46058,7 +46739,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -46200,7 +46882,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -46309,7 +46992,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -46418,7 +47102,118 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":6,
+            "Id":"channel",
+            "Name":"Channel",
+            "BitLength":16,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"name",
+            "Name":"Name",
+            "BitLengthVariable":true,
+            "BitOffset":56,
+            "BitStart":0,
+            "FieldType":"STRING_LZ"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
+        "Id":"fusionSiriusxmContentInfo",
+        "Description":"Fusion: SiriusXM Content Info",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":7,
+        "MinLength":7,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"Sirius Content Info",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32807,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+          },
+          {
+            "Order":5,
+            "Id":"sourceId",
+            "Name":"Source ID",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -46527,7 +47322,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -46550,6 +47346,220 @@
             "BitOffset":56,
             "BitStart":0,
             "FieldType":"STRING_LZ"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
+        "Id":"fusionSiriusxmSignal",
+        "Description":"Fusion: SiriusXM Signal",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":6,
+        "Length":6,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"Sirius Signal",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32809,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+          },
+          {
+            "Order":5,
+            "Id":"sourceId",
+            "Name":"Source ID",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":6,
+            "Id":"signal",
+            "Name":"Signal",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
+        "Id":"fusionSiriusxmPresets",
+        "Description":"Fusion: SiriusXM Presets",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":7,
+        "MinLength":6,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"Sirius Presets",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32812,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65533,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+          },
+          {
+            "Order":5,
+            "Id":"sourceId",
+            "Name":"Source ID",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":6,
+            "Id":"count",
+            "Name":"Count",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"values",
+            "Name":"Values",
+            "Description":"Preset Values. There will be Count / 4 presets stored",
+            "BitLengthVariable":true,
+            "BitLengthField":6,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
